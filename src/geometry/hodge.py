@@ -1,0 +1,365 @@
+"""
+Hodge Decomposition for Sheaf Cochains
+
+The Hodge theorem gives orthogonal decomposition:
+
+  C^k(X, F) = H^k ⊕ im(δ) ⊕ im(δ*)
+               ↑       ↑        ↑
+           HARMONIC  EXACT   CO-EXACT
+
+Where:
+- H^k = ker(Δ) = ker(δ) ∩ ker(δ*) = harmonic cochains
+- im(δ) = exact cochains (coboundaries from C^{k-1})
+- im(δ*) = co-exact cochains (from C^{k+1})
+
+The Laplacian: Δ = δ*δ + δδ*
+
+For encryption:
+- MESSAGE lives in H^k (harmonics are protected)
+- NOISE lives in im(δ) ⊕ im(δ*) (coboundary noise hides structure)
+
+This is the NATURAL lattice for our sheaf encryption.
+"""
+
+import numpy as np
+from typing import Tuple, Dict, List, Optional
+from dataclasses import dataclass
+
+
+@dataclass
+class HodgeDecomposition:
+    """
+    Result of Hodge decomposition.
+    
+    cochain = harmonic + exact + coexact
+    """
+    harmonic: np.ndarray      # ker(Δ) component
+    exact: np.ndarray         # im(δ) component  
+    coexact: np.ndarray       # im(δ*) component
+    
+    # Projectors
+    P_harmonic: np.ndarray    # Projection onto H^k
+    P_exact: np.ndarray       # Projection onto im(δ)
+    P_coexact: np.ndarray     # Projection onto im(δ*)
+
+
+def build_coboundary_operator(
+    nerve: Dict[int, List[Tuple]],
+    stalk_dim: int = 1
+) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Build the coboundary operators δ_0: C^0 → C^1 and δ_1: C^1 → C^2.
+    
+    For a simplicial complex:
+    - δ_0(f)(e) = f(∂_1 e) - f(∂_0 e) = f(head) - f(tail)
+    - δ_1 similar for higher simplices
+    
+    Args:
+        nerve: Čech nerve (0-cells, 1-cells, 2-cells)
+        stalk_dim: Dimension of stalks (default 1)
+        
+    Returns:
+        (δ_0, δ_1) coboundary matrices
+    """
+    vertices = nerve.get(0, [])
+    edges = nerve.get(1, [])
+    triangles = nerve.get(2, [])
+    
+    n_v = len(vertices)
+    n_e = len(edges)
+    n_t = len(triangles)
+    
+    # Build vertex index map
+    v_idx = {tuple(v): i for i, v in enumerate(vertices)}
+    e_idx = {tuple(e): i for i, e in enumerate(edges)}
+    
+    # δ_0: C^0 → C^1 (vertices to edges)
+    # Size: (n_e * stalk_dim) x (n_v * stalk_dim)
+    delta_0 = np.zeros((n_e * stalk_dim, n_v * stalk_dim))
+    
+    for i, edge in enumerate(edges):
+        if len(edge) >= 2:
+            v0, v1 = edge[0], edge[1]
+            
+            # Find vertex indices
+            v0_key = (v0,) if isinstance(v0, int) else v0
+            v1_key = (v1,) if isinstance(v1, int) else v1
+            
+            # For each stalk dimension
+            for d in range(stalk_dim):
+                row = i * stalk_dim + d
+                
+                if v0_key in v_idx:
+                    col0 = v_idx[v0_key] * stalk_dim + d
+                    delta_0[row, col0] = -1
+                    
+                if v1_key in v_idx:
+                    col1 = v_idx[v1_key] * stalk_dim + d
+                    delta_0[row, col1] = 1
+    
+    # δ_1: C^1 → C^2 (edges to triangles)
+    delta_1 = np.zeros((max(n_t, 1) * stalk_dim, n_e * stalk_dim))
+    
+    for i, tri in enumerate(triangles):
+        if len(tri) >= 3:
+            # Triangle has 3 edges with alternating signs
+            v0, v1, v2 = tri[:3]
+            
+            # Edges: (v0,v1), (v1,v2), (v0,v2)
+            edges_of_tri = [
+                tuple(sorted([v0, v1])),
+                tuple(sorted([v1, v2])),
+                tuple(sorted([v0, v2]))
+            ]
+            signs = [1, 1, -1]  # Orientation
+            
+            for d in range(stalk_dim):
+                row = i * stalk_dim + d
+                for e_tuple, sign in zip(edges_of_tri, signs):
+                    if e_tuple in e_idx:
+                        col = e_idx[e_tuple] * stalk_dim + d
+                        delta_1[row, col] = sign
+    
+    return delta_0, delta_1
+
+
+def compute_laplacian_from_coboundary(
+    delta: np.ndarray,
+    delta_prev: Optional[np.ndarray] = None
+) -> np.ndarray:
+    """
+    Compute Laplacian from coboundary operators.
+    
+    Δ_k = δ*_{k} δ_k + δ_{k-1} δ*_{k-1}
+    
+    In matrix terms:
+    Δ = δ^T δ + δ_{prev} δ_{prev}^T
+    """
+    n = delta.shape[1]  # Domain dimension
+    
+    # δ*δ term (from above)
+    laplacian = delta.T @ delta
+    
+    # δδ* term (from below) - if we have δ_{k-1}
+    if delta_prev is not None and delta_prev.shape[0] == n:
+        laplacian += delta_prev @ delta_prev.T
+    
+    return laplacian
+
+
+def hodge_decomposition(
+    cochain: np.ndarray,
+    laplacian: np.ndarray,
+    delta: Optional[np.ndarray] = None,
+    delta_prev: Optional[np.ndarray] = None,
+    tolerance: float = 1e-6
+) -> HodgeDecomposition:
+    """
+    Compute full Hodge decomposition of a cochain.
+    
+    C^k = H^k ⊕ im(δ) ⊕ im(δ*)
+    
+    Args:
+        cochain: Input cochain to decompose
+        laplacian: Laplacian matrix Δ
+        delta: Coboundary δ: C^k → C^{k+1} (for co-exact)
+        delta_prev: Coboundary δ: C^{k-1} → C^k (for exact)
+        tolerance: Eigenvalue threshold for harmonics
+        
+    Returns:
+        HodgeDecomposition with harmonic, exact, coexact components
+    """
+    n = len(cochain)
+    
+    # Eigendecomposition of Laplacian
+    eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
+    
+    # 1. HARMONIC projection: ker(Δ)
+    harmonic_mask = eigenvalues < tolerance
+    n_harmonic = np.sum(harmonic_mask)
+    
+    if n_harmonic > 0:
+        V_harmonic = eigenvectors[:, harmonic_mask]
+        P_harmonic = V_harmonic @ V_harmonic.T
+    else:
+        P_harmonic = np.zeros((n, n))
+    
+    harmonic = P_harmonic @ cochain
+    
+    # 2. EXACT projection: im(δ_{k-1})
+    if delta_prev is not None:
+        # im(δ_{k-1}) = range of delta_prev
+        # Orthogonal projector: δ(δ^T δ)^{-1} δ^T (pseudoinverse projection)
+        try:
+            P_exact = delta_prev @ np.linalg.pinv(delta_prev)
+        except:
+            P_exact = np.zeros((n, n))
+    else:
+        # No lower-degree cochains, no exact part
+        P_exact = np.zeros((n, n))
+    
+    exact = P_exact @ cochain
+    
+    # 3. CO-EXACT projection: im(δ*_k) = im(δ^T) from higher degree
+    if delta is not None:
+        # im(δ*) = im(δ^T) 
+        delta_star = delta.T
+        try:
+            P_coexact = delta_star @ np.linalg.pinv(delta_star)
+        except:
+            P_coexact = np.zeros((n, n))
+    else:
+        P_coexact = np.zeros((n, n))
+    
+    coexact = P_coexact @ cochain
+    
+    # Orthogonalize: subtract overlaps
+    # True Hodge: harmonic, exact, coexact are orthogonal
+    exact_orth = exact - P_harmonic @ exact
+    coexact_orth = coexact - P_harmonic @ coexact - P_exact @ coexact
+    
+    return HodgeDecomposition(
+        harmonic=harmonic,
+        exact=exact_orth,
+        coexact=coexact_orth,
+        P_harmonic=P_harmonic,
+        P_exact=P_exact,
+        P_coexact=P_coexact
+    )
+
+
+def hodge_noise(
+    laplacian: np.ndarray,
+    delta: Optional[np.ndarray] = None,
+    delta_prev: Optional[np.ndarray] = None,
+    sigma_exact: float = 3.0,
+    sigma_coexact: float = 3.0,
+    sigma_harmonic: float = 0.1,
+    tolerance: float = 1e-6
+) -> np.ndarray:
+    """
+    Generate Hodge-structured noise.
+    
+    Noise distribution:
+    - SMALL in harmonic (protects message)
+    - LARGE in exact (hides structure)
+    - LARGE in co-exact (hides structure)
+    
+    e = e_H + e_exact + e_coexact
+    
+    Args:
+        laplacian: Laplacian for harmonic subspace
+        delta: For co-exact subspace
+        delta_prev: For exact subspace
+        sigma_exact: Noise in exact directions
+        sigma_coexact: Noise in co-exact directions  
+        sigma_harmonic: Noise in harmonic (small!)
+        
+    Returns:
+        Hodge-structured noise vector
+    """
+    import secrets
+    
+    n = laplacian.shape[0]
+    
+    # Compute projectors
+    eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
+    harmonic_mask = eigenvalues < tolerance
+    
+    # Harmonic projector
+    if np.any(harmonic_mask):
+        V_H = eigenvectors[:, harmonic_mask]
+        P_H = V_H @ V_H.T
+    else:
+        P_H = np.zeros((n, n))
+    
+    # Exact projector (from below)
+    if delta_prev is not None:
+        P_exact = delta_prev @ np.linalg.pinv(delta_prev)
+    else:
+        P_exact = np.zeros((n, n))
+    
+    # Co-exact projector (from above)
+    if delta is not None:
+        P_coexact = delta.T @ np.linalg.pinv(delta.T)
+    else:
+        P_coexact = np.zeros((n, n))
+    
+    # Sample noise
+    seed = int.from_bytes(secrets.token_bytes(8), 'big')
+    rng = np.random.Generator(np.random.PCG64(seed))
+    z = rng.standard_normal(n)
+    
+    # Project and scale
+    e_H = sigma_harmonic * (P_H @ z)
+    e_exact = sigma_exact * (P_exact @ z)
+    e_coexact = sigma_coexact * (P_coexact @ z)
+    
+    # Combine (they're orthogonal)
+    noise = e_H + e_exact + e_coexact
+    
+    # Fill in remaining directions with generic noise
+    remainder = z - P_H @ z - P_exact @ z - P_coexact @ z
+    noise += sigma_exact * remainder
+    
+    return noise
+
+
+# ============================================================================
+# TEST
+# ============================================================================
+
+if __name__ == "__main__":
+    print("=" * 60)
+    print("HODGE DECOMPOSITION TEST")
+    print("=" * 60)
+    
+    # Build simple nerve (triangle)
+    nerve = {
+        0: [(0,), (1,), (2,)],       # 3 vertices
+        1: [(0, 1), (1, 2), (0, 2)],  # 3 edges
+        2: [(0, 1, 2)]               # 1 triangle
+    }
+    
+    print("\n1. Build coboundary operators:")
+    delta_0, delta_1 = build_coboundary_operator(nerve)
+    print(f"   δ_0 shape: {delta_0.shape} (vertices → edges)")
+    print(f"   δ_1 shape: {delta_1.shape} (edges → triangles)")
+    print(f"   δ_0:\n{delta_0}")
+    
+    # Check δ_1 ∘ δ_0 = 0 (fundamental property!)
+    composition = delta_1 @ delta_0
+    print(f"\n2. Verify δ² = 0:")
+    print(f"   ||δ_1 ∘ δ_0|| = {np.linalg.norm(composition):.6f}")
+    
+    # Compute Laplacian on edges (C^1)
+    print("\n3. Laplacian on C^1 (edges):")
+    L = compute_laplacian_from_coboundary(delta_1, delta_0)
+    print(f"   L shape: {L.shape}")
+    eigs = np.sort(np.linalg.eigvalsh(L))
+    print(f"   Spectrum: {np.round(eigs, 4)}")
+    print(f"   # Harmonics (β_1): {np.sum(eigs < 1e-6)}")
+    
+    # Hodge decomposition
+    print("\n4. Hodge decomposition:")
+    cochain = np.array([1.0, 2.0, 3.0])  # C^1 element
+    result = hodge_decomposition(cochain, L, delta_1, delta_0)
+    print(f"   Input: {cochain}")
+    print(f"   Harmonic: {np.round(result.harmonic, 4)}")
+    print(f"   Exact: {np.round(result.exact, 4)}")
+    print(f"   Co-exact: {np.round(result.coexact, 4)}")
+    print(f"   Sum: {np.round(result.harmonic + result.exact + result.coexact, 4)}")
+    
+    # Hodge noise
+    print("\n5. Hodge-structured noise:")
+    noise = hodge_noise(L, delta_1, delta_0, sigma_exact=5.0, sigma_harmonic=0.1)
+    print(f"   Noise: {np.round(noise, 2)}")
+    
+    result_noise = hodge_decomposition(noise, L, delta_1, delta_0)
+    print(f"   Harmonic component: {np.linalg.norm(result_noise.harmonic):.4f} (should be small)")
+    print(f"   Exact component: {np.linalg.norm(result_noise.exact):.4f} (should be large)")
+    print(f"   Co-exact component: {np.linalg.norm(result_noise.coexact):.4f}")
+    
+    print("\n" + "=" * 60)
+    print("✅ HODGE DECOMPOSITION: C^k = H^k ⊕ im(δ) ⊕ im(δ*)")
+    print("=" * 60)
