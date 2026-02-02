@@ -1,5 +1,133 @@
 # Security Vulnerabilities: Analysis & Mitigations
 
+## ⚠️ CRITICAL: Hodge-Hardness is a NOVEL Assumption
+
+### The Honest Truth
+
+**Hodge-hardness is NOT standard LWE**. It's a novel cryptographic assumption that:
+
+1. **Has NOT been cryptanalyzed by the research community**
+2. **Has NO published security reductions**
+3. **Is mathematically interesting but UNPROVEN**
+
+### What We Claim
+
+```
+Hodge-Hardness Problem:
+Given:  b = h + e  where h ∈ ker(Δ), e ∈ im(δ) ⊕ im(δ*)
+Without: The Laplacian Δ
+Find:   h
+```
+
+**Intuition**: Finding the harmonic projection without knowing the Laplacian's eigendecomposition should be hard. But intuition ≠ proof.
+
+### What We DON'T Have
+
+| Standard Crypto | Our System | Status |
+|-----------------|------------|--------|
+| LWE security proof | Hodge-hardness claim | ❌ NO PROOF |
+| 20+ years of cryptanalysis | Novel (2024-2026) | ❌ UNTESTED |
+| NIST standardization | Custom construction | ❌ NOT REVIEWED |
+| Reduction to hard problem | Conjectured reduction | ⚠️ INFORMAL |
+
+### Honest Assessment
+
+The claim "Hodge-hardness reduces to LWE" needs formal proof:
+
+```
+Claim (UNPROVEN):
+If adversary A can solve Hodge-hardness with advantage ε,
+then adversary B can solve LWE with advantage ε' = f(ε).
+
+Status: We believe this but HAVE NOT PROVEN IT.
+```
+
+### Risk Level: HIGH
+
+Until peer-reviewed cryptanalysis and formal security proofs exist:
+- **DO NOT** use for high-security applications
+- **DO NOT** claim "post-quantum secure" without caveats
+- **DO** treat as research prototype
+- **DO** invite cryptographic review
+
+### Mitigation Path
+
+1. **Publish formal security analysis** (reduce to known problems)
+2. **Submit to crypto conferences** (ePrint, CRYPTO, EUROCRYPT)
+3. **Bug bounty for cryptanalysis** (incentivize breaking)
+4. **Gradual deployment** (low-stakes first)
+
+---
+
+## VII. Implementation-Specific Weaknesses (New)
+
+### A. Deterministic Message Placement
+
+**Current Code**:
+```python
+if i == 0:
+    # First vertex gets the message (in "harmonic" position)
+    vertex_blocks[v[0]] = msg_lattice.copy()
+```
+
+**Weakness**: Adversary knows message is always at vertex 0.
+
+**Fix**: Randomize placement, distribute shares across vertices.
+
+### B. XOR Encryption in Onion Routing
+
+**Current Code** (fiber_bundle.py):
+```python
+ciphertext = message ^ (key_stream * 255).astype(np.uint8)
+```
+
+**Weakness**: Simple XOR is NOT secure cipher. Demo only.
+
+**Fix**: Replace with proper AEAD (AES-GCM, ChaCha20-Poly1305).
+
+### C. Path Hint in Cleartext
+
+**Issue**: Ephemeral decrypt needs `path_hint` which is sent unencrypted.
+
+**Weakness**: May leak information about key derivation path.
+
+**Analysis**: Path is on Čech nerve which is public anyway. But timing of path generation could correlate with sender activity.
+
+**Fix**: Encrypt path_hint with recipient's public key.
+
+### D. Sender Fingerprint in Ciphertext
+
+**Current**: `sender_fingerprint` included in `FibrationCiphertext`.
+
+**Weakness**: Identifies sender (not anonymous).
+
+**Fix for anonymity**: Use ring signatures or homotopy anonymity proofs.
+
+### E. message_length Before Padding
+
+**Issue**: `message_length` stored in ciphertext header.
+
+**Note**: Constant padding is applied AFTER this, so length IS hidden in final wire format. But internal structure reveals it if attacker can parse.
+
+**Fix**: Encrypt header or remove length field (derive from decryption).
+
+### F. Dimension Fallback to Gaussian
+
+**Current Code**:
+```python
+if use_hodge_noise and L_1.shape[0] == dim:
+    noise = hodge_noise(...)
+else:
+    # Fallback: use discrete Gaussian
+    noise = discrete_gaussian(dim, sigma_exact)
+```
+
+**Weakness**: When dimension mismatch, falls back to unstructured noise. This weakens the Hodge-hardness claim.
+
+**Fix**: Ensure dimension always matches; fail loudly if not.
+
+---
+
 ## I. Cryptographic Layer Vulnerabilities
 
 ### A. Lattice Basis Reduction Attacks

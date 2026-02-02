@@ -228,38 +228,26 @@ def hodge_decomposition(
     )
 
 
-def hodge_noise(
+def compute_hodge_projectors(
     laplacian: np.ndarray,
     delta: Optional[np.ndarray] = None,
     delta_prev: Optional[np.ndarray] = None,
-    sigma_exact: float = 3.0,
-    sigma_coexact: float = 3.0,
-    sigma_harmonic: float = 0.1,
     tolerance: float = 1e-6
-) -> np.ndarray:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
-    Generate Hodge-structured noise.
+    Compute Hodge projectors P_harmonic, P_exact, P_coexact.
     
-    Noise distribution:
-    - SMALL in harmonic (protects message)
-    - LARGE in exact (hides structure)
-    - LARGE in co-exact (hides structure)
-    
-    e = e_H + e_exact + e_coexact
+    These projectors satisfy: I = P_H + P_exact + P_coexact (approx)
     
     Args:
         laplacian: Laplacian for harmonic subspace
-        delta: For co-exact subspace
-        delta_prev: For exact subspace
-        sigma_exact: Noise in exact directions
-        sigma_coexact: Noise in co-exact directions  
-        sigma_harmonic: Noise in harmonic (small!)
+        delta: Coboundary δ for co-exact subspace
+        delta_prev: Coboundary δ_{prev} for exact subspace
+        tolerance: Eigenvalue threshold for harmonics
         
     Returns:
-        Hodge-structured noise vector
+        (P_harmonic, P_exact, P_coexact) projector matrices
     """
-    import secrets
-    
     n = laplacian.shape[0]
     
     # Compute projectors
@@ -285,24 +273,10 @@ def hodge_noise(
     else:
         P_coexact = np.zeros((n, n))
     
-    # Sample noise
-    seed = int.from_bytes(secrets.token_bytes(8), 'big')
-    rng = np.random.Generator(np.random.PCG64(seed))
-    z = rng.standard_normal(n)
-    
-    # Project and scale
-    e_H = sigma_harmonic * (P_H @ z)
-    e_exact = sigma_exact * (P_exact @ z)
-    e_coexact = sigma_coexact * (P_coexact @ z)
-    
-    # Combine (they're orthogonal)
-    noise = e_H + e_exact + e_coexact
-    
-    # Fill in remaining directions with generic noise
-    remainder = z - P_H @ z - P_exact @ z - P_coexact @ z
-    noise += sigma_exact * remainder
-    
-    return noise
+    return P_H, P_exact, P_coexact
+
+
+# Note: hodge_noise moved to geometry/noise.py as hodge_structured_noise()
 
 
 # ============================================================================
@@ -350,15 +324,12 @@ if __name__ == "__main__":
     print(f"   Co-exact: {np.round(result.coexact, 4)}")
     print(f"   Sum: {np.round(result.harmonic + result.exact + result.coexact, 4)}")
     
-    # Hodge noise
-    print("\n5. Hodge-structured noise:")
-    noise = hodge_noise(L, delta_1, delta_0, sigma_exact=5.0, sigma_harmonic=0.1)
-    print(f"   Noise: {np.round(noise, 2)}")
-    
-    result_noise = hodge_decomposition(noise, L, delta_1, delta_0)
-    print(f"   Harmonic component: {np.linalg.norm(result_noise.harmonic):.4f} (should be small)")
-    print(f"   Exact component: {np.linalg.norm(result_noise.exact):.4f} (should be large)")
-    print(f"   Co-exact component: {np.linalg.norm(result_noise.coexact):.4f}")
+    # Hodge projectors
+    print("\n5. Hodge projectors:")
+    P_H, P_exact, P_coexact = compute_hodge_projectors(L, delta_1, delta_0)
+    print(f"   P_harmonic rank: {np.linalg.matrix_rank(P_H)}")
+    print(f"   P_exact rank: {np.linalg.matrix_rank(P_exact)}")
+    print(f"   P_coexact rank: {np.linalg.matrix_rank(P_coexact)}")
     
     print("\n" + "=" * 60)
     print("✅ HODGE DECOMPOSITION: C^k = H^k ⊕ im(δ) ⊕ im(δ*)")

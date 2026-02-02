@@ -2,18 +2,18 @@
 Encryption via Cochain Embedding
 
 Encryption process:
-1. Encode message as lattice element
+1. Encode message as lattice element in HARMONIC subspace
 2. Embed in 0-cochain space (distribute across vertices)
 3. Apply coboundary operator δ
-4. Add noise for CPA security (discrete Gaussian for quantum resistance)
+4. Add HODGE-STRUCTURED noise (exact ⊕ coexact subspaces)
 
 The ciphertext is a cochain: assignment of data to each cell of the nerve.
 
 Post-Quantum Security:
-- Uses LWE (Learning With Errors) noise
-- Discrete Gaussian distribution (not continuous)
-- Cryptographically secure randomness throughout
-- Resistant to Shor's algorithm
+- Noise is Hodge-structured (NOT random Gaussian)
+- Large σ in im(δ) ⊕ im(δ*) → hides structure
+- Small σ in ker(Δ) → preserves message
+- Decryption projects onto harmonic subspace
 """
 
 from dataclasses import dataclass, field
@@ -23,11 +23,24 @@ import hashlib
 import time
 
 from .credential import FibrationCredential, SpectralFingerprint
-from .lwe import (
-    discrete_gaussian,
+from .lattice import (
+    ornstein_uhlenbeck_noise,
     secure_random_vector,
     secure_random_bytes,
-    DEFAULT_SIGMA
+    spectral_noise,
+)
+from ..geometry.hodge import (
+    build_coboundary_operator,
+    compute_laplacian_from_coboundary
+)
+from ..geometry.noise import hodge_structured_noise as hodge_noise
+
+# Harmonic invariant gates
+from ..invariants.harmonic import (
+    embed_in_harmonic,
+    validate_harmonic_embedding,
+    validate_noise_structure,
+    is_in_hodge_complement,
 )
 
 
@@ -58,6 +71,10 @@ class FibrationCiphertext:
         data += self.sender_fingerprint[:64].ljust(64, b'\x00')
         data += self.nonce[:24].ljust(24, b'\x00')
         data += struct.pack("<Q", self.timestamp)
+        
+        # Message metadata (CRITICAL for decryption!)
+        data += struct.pack("<I", self.message_length)
+        data += self.message_hash[:32].ljust(32, b'\x00')
         
         # Vertex blocks
         data += struct.pack("<I", len(self.vertex_blocks))
@@ -98,6 +115,13 @@ class FibrationCiphertext:
         timestamp = struct.unpack_from("<Q", data, offset)[0]
         offset += 8
         
+        # Message metadata
+        message_length = struct.unpack_from("<I", data, offset)[0]
+        offset += 4
+        
+        message_hash = data[offset:offset+32]
+        offset += 32
+        
         # Vertex blocks
         n_vertices = struct.unpack_from("<I", data, offset)[0]
         offset += 4
@@ -135,25 +159,37 @@ class FibrationCiphertext:
             vertex_blocks=vertex_blocks,
             edge_syndromes=edge_syndromes,
             nonce=nonce,
-            timestamp=timestamp
+            timestamp=timestamp,
+            message_length=message_length,
+            message_hash=message_hash
         )
 
 
 def encrypt(
     message: bytes,
     credential: FibrationCredential,
-    noise_stddev: float = 3.0
+    sigma_exact: float = 5.0,
+    sigma_harmonic: float = 0.1,
+    use_hodge_noise: bool = True
 ) -> FibrationCiphertext:
     """
-    Encrypt message using fibration credential.
+    Encrypt message using fibration credential with Hodge-structured noise.
     
     Args:
         message: Plaintext bytes to encrypt
         credential: FibrationCredential with fibration (private key)
-        noise_stddev: Standard deviation of Gaussian noise (for security)
+        sigma_exact: Noise σ in exact⊕coexact (large = more hiding)
+        sigma_harmonic: Noise σ in harmonic (small = preserves message)
+        use_hodge_noise: If True, use Hodge-structured noise; else discrete Gaussian
         
     Returns:
         FibrationCiphertext ready for transmission
+        
+    Noise Strategy:
+        C^k = H^k ⊕ im(δ) ⊕ im(δ*)
+        - Message encoded in harmonic-like subspace (protected)
+        - Large noise in exact⊕coexact (hides structure)
+        - Decryption projects onto harmonic to recover message
     """
     modulus = credential.modulus
     dim = credential.hilbert_dim
@@ -161,20 +197,29 @@ def encrypt(
     # 1. Encode message as lattice element
     msg_lattice = _encode_message(message, dim, modulus)
     
-    # 2. Distribute across vertices (0-cochain embedding)
+    # 2. Build Hodge structure from topology
+    delta_0, delta_1 = build_coboundary_operator(credential.topology, stalk_dim=1)
+    
+    # Build Laplacian for C^0 (vertices) and C^1 (edges)
+    # L_0 = δ_0^T δ_0 (no lower cochains for vertices)
+    L_0 = delta_0.T @ delta_0
+    # L_1 = δ_1^T δ_1 + δ_0 δ_0^T
+    L_1 = compute_laplacian_from_coboundary(delta_1, delta_0)
+    
+    # 3. Distribute across vertices (0-cochain embedding)
     vertices = credential.topology.get(0, [])
     n_vertices = len(vertices)
     
     vertex_blocks = {}
     for i, v in enumerate(vertices):
         if i == 0:
-            # First vertex gets the message
+            # First vertex gets the message (in "harmonic" position)
             vertex_blocks[v[0]] = msg_lattice.copy()
         else:
             # Other vertices get random shares (SECURE)
             vertex_blocks[v[0]] = secure_random_vector(dim, modulus).astype(np.float64)
     
-    # 3. Apply coboundary (encryption transform)
+    # 4. Apply coboundary (encryption transform)
     edges = credential.topology.get(1, [])
     edge_syndromes = {}
     
@@ -189,25 +234,43 @@ def encrypt(
         # Coboundary: δ(c)_e = A·c_j - c_i
         syndrome = (A @ vj_data - vi_data) % modulus
         
-        # Add DISCRETE GAUSSIAN noise for CPA security (quantum-resistant)
-        noise = discrete_gaussian(dim, noise_stddev)
-        syndrome = (syndrome + noise) % modulus
+        # Add HODGE-STRUCTURED noise (exact⊕coexact large, harmonic small)
+        if use_hodge_noise and L_1.shape[0] == dim:
+            noise = hodge_noise(
+                L_1, delta_1, delta_0,
+                sigma_exact=sigma_exact,
+                sigma_coexact=sigma_exact,
+                sigma_harmonic=sigma_harmonic
+            )
+        else:
+            # Fallback: use O-U noise
+            noise = ornstein_uhlenbeck_noise(dim, volatility=sigma_exact)
         
+        syndrome = (syndrome + noise) % modulus
         edge_syndromes[edge] = syndrome
     
-    # 4. Add DISCRETE GAUSSIAN noise to vertex blocks too
+    # 5. Add HODGE-STRUCTURED noise to vertex blocks
     for vid in vertex_blocks:
-        noise = discrete_gaussian(dim, noise_stddev)
+        if use_hodge_noise and L_0.shape[0] == dim:
+            noise = hodge_noise(
+                L_0, delta_0, None,  # No lower coboundary for C^0
+                sigma_exact=sigma_exact,
+                sigma_coexact=sigma_exact,
+                sigma_harmonic=sigma_harmonic
+            )
+        else:
+            noise = ornstein_uhlenbeck_noise(dim, volatility=sigma_exact)
+        
         vertex_blocks[vid] = (vertex_blocks[vid] + noise) % modulus
     
-    # 5. Build ciphertext with SECURE nonce
+    # 6. Build ciphertext with SECURE nonce
     nonce = secure_random_bytes(24)
     
-    # 6. Hash message for verification
+    # 7. Hash message for verification
     message_hash = hashlib.sha256(message).digest()
     
     return FibrationCiphertext(
-        version=1,
+        version=2,  # v2 = Hodge-structured noise
         topology_hash=credential.spectrum.topology_hash,
         sender_fingerprint=credential.spectrum.fingerprint_hash(),
         vertex_blocks=vertex_blocks,
@@ -247,3 +310,171 @@ def _encode_message(message: bytes, dim: int, modulus: int) -> np.ndarray:
             lattice[len(msg_bits) + i] = val
     
     return lattice
+
+
+# ============================================================================
+# CONSTANT PADDING (Metadata Protection)
+# ============================================================================
+
+# Default constant ciphertext sizes (in bytes)
+CONSTANT_SIZE_SMALL = 4096     # 4 KB
+CONSTANT_SIZE_MEDIUM = 16384   # 16 KB  
+CONSTANT_SIZE_LARGE = 65536    # 64 KB
+CONSTANT_SIZE_DEFAULT = CONSTANT_SIZE_MEDIUM
+
+
+def pad_ciphertext_to_constant(
+    ciphertext: FibrationCiphertext,
+    target_size: int = CONSTANT_SIZE_DEFAULT
+) -> bytes:
+    """
+    Pad serialized ciphertext to constant size.
+    
+    For panopticon resilience: all ciphertexts same size = 
+    traffic analysis learns nothing about message length.
+    
+    Args:
+        ciphertext: The FibrationCiphertext to pad
+        target_size: Target size in bytes (default 16KB)
+        
+    Returns:
+        Padded bytes of exactly target_size
+        
+    Raises:
+        ValueError: If ciphertext is larger than target_size
+    """
+    serialized = ciphertext.serialize()
+    current_size = len(serialized)
+    
+    if current_size > target_size:
+        raise ValueError(
+            f"Ciphertext size {current_size} exceeds target {target_size}. "
+            f"Use a larger constant size or shorter message."
+        )
+    
+    # Pad with cryptographically secure random bytes
+    padding_needed = target_size - current_size
+    padding = secure_random_bytes(padding_needed)
+    
+    # Format: [original_length: 4 bytes][ciphertext][random padding]
+    import struct
+    result = struct.pack("<I", current_size) + serialized + padding
+    
+    # Final result should be exactly target_size + 4
+    return result
+
+
+def unpad_ciphertext(padded_data: bytes) -> FibrationCiphertext:
+    """
+    Remove constant padding and deserialize ciphertext.
+    
+    Args:
+        padded_data: Output from pad_ciphertext_to_constant
+        
+    Returns:
+        The original FibrationCiphertext
+    """
+    import struct
+    
+    # Read original length
+    original_length = struct.unpack_from("<I", padded_data, 0)[0]
+    
+    # Extract just the ciphertext (ignore padding)
+    ciphertext_bytes = padded_data[4:4 + original_length]
+    
+    return FibrationCiphertext.deserialize(ciphertext_bytes)
+
+
+def encrypt_with_constant_padding(
+    message: bytes,
+    credential: FibrationCredential,
+    target_size: int = CONSTANT_SIZE_DEFAULT,
+    sigma_exact: float = 5.0,
+    sigma_harmonic: float = 0.1
+) -> bytes:
+    """
+    Encrypt message with constant-size padding (full panopticon protection).
+    
+    Combines:
+    - Hodge-structured noise (content protection)
+    - Constant padding (length protection)
+    
+    Args:
+        message: Plaintext to encrypt
+        credential: Encryption credential
+        target_size: Constant output size in bytes
+        
+    Returns:
+        Padded ciphertext of exactly target_size + 4 bytes
+    """
+    ciphertext = encrypt(
+        message, 
+        credential,
+        sigma_exact=sigma_exact,
+        sigma_harmonic=sigma_harmonic
+    )
+    
+    return pad_ciphertext_to_constant(ciphertext, target_size)
+
+
+def decrypt_with_constant_padding(
+    padded_data: bytes,
+    credential: FibrationCredential
+) -> bytes:
+    """
+    Decrypt constant-padded ciphertext.
+    
+    Inverse of encrypt_with_constant_padding.
+    """
+    from .decrypt import decrypt
+    
+    ciphertext = unpad_ciphertext(padded_data)
+    return decrypt(ciphertext, credential)
+
+
+# ============================================================================
+# DECOY TRAFFIC (Cover Traffic)
+# ============================================================================
+
+def generate_decoy_ciphertext(
+    credential: FibrationCredential,
+    target_size: int = CONSTANT_SIZE_DEFAULT
+) -> bytes:
+    """
+    Generate a fake ciphertext indistinguishable from real traffic.
+    
+    For panopticon resilience: mix real messages with decoys.
+    Adversary cannot distinguish real from decoy.
+    
+    The decoy:
+    - Has valid structure (encrypts random bytes)
+    - Same size as real messages
+    - Statistically indistinguishable noise
+    """
+    # Generate random message of appropriate size
+    # Max message size is ~1/8 of target (each byte = 8 bits)
+    max_msg_bytes = credential.hilbert_dim // 8
+    msg_length = max(1, np.random.randint(1, max_msg_bytes + 1))
+    random_message = secure_random_bytes(msg_length)
+    
+    # Encrypt with same parameters
+    return encrypt_with_constant_padding(
+        random_message,
+        credential,
+        target_size=target_size
+    )
+
+
+def is_decoy_ciphertext(padded_data: bytes) -> bool:
+    """
+    Check if ciphertext is a decoy.
+    
+    NOTE: This should NOT be possible from ciphertext alone!
+    This function exists only for testing - in production,
+    decoys are indistinguishable from real messages.
+    
+    Returns: Always False (by design - can't distinguish)
+    """
+    # By design, decoys are indistinguishable from real messages.
+    # This function always returns False to enforce this.
+    return False

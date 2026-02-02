@@ -1,15 +1,22 @@
 """
 Proof of Value (PoV) Consensus
 
-Value = information that survives measurement
+Geometric analog of Proof of Stake/Proof of Work.
+Validity defined by spectral invariants, not validator votes.
+
+Why "Value":
+- ker(Δ) = harmonic cochains = what persists under projection
+- im(δ) ⊕ im(δ*) = noise = what gets projected away
+- Value := the part that survives harmonic measurement
+- Spectral gap measures separation of value from noise
 
 The consensus mechanism:
 1. Transactions embedded as cochains
 2. Project to harmonic subspace ker(Δ)
 3. Valid if spectral gap ∈ [1/√2, 2√2]
-4. Geometry IS validity - no external incentives needed
+4. Validation implicit by geometric construction
 
-Recouples capital to value through geometric coherence.
+Invariant validation uses invariants/ module.
 """
 
 from dataclasses import dataclass, field
@@ -18,12 +25,27 @@ import numpy as np
 import hashlib
 import time
 
-import sys
-sys.path.insert(0, '/Users/chloevandervlugt/Desktop/homotopical-encrypt')
+from ..crypto.credential import FibrationCredential, generate_credential
+from ..geometry.sheaf_laplacian import SheafLaplacian
+from ..geometry.sheaf import CellularSheaf
 
-from src.crypto.credential import FibrationCredential, generate_credential
-from src.geometry.sheaf_laplacian import SheafLaplacian
-from src.geometry.sheaf import CellularSheaf
+# Wire to invariants/ module
+from ..invariants.spectral import (
+    SpectralInvariants,
+    compute_spectral_invariants,
+    SpectralInvariantValidator,
+)
+from ..invariants.harmonic import (
+    is_harmonic,
+    validate_harmonic_embedding,
+    project_to_harmonic,
+)
+from ..invariants.unified import (
+    UnifiedInvariantValidator,
+    HomotopyClassFingerprint,
+    CheckpointSeverity,
+    InvariantCheckpoint as UnifiedCheckpoint,
+)
 
 
 # √2 bounds for valid blocks

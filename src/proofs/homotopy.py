@@ -26,6 +26,23 @@ import hashlib
 
 from ..crypto.credential import FibrationCredential, SpectralFingerprint
 
+# Wire to invariants/ module
+from ..invariants.spectral import (
+    SpectralInvariants,
+    compute_spectral_invariants,
+    spectra_match,
+)
+from ..invariants.homotopical import (
+    HomotopicalLogicInvariants,
+    HLevel,
+    compute_homotopical_invariants,
+    invariants_match as homotopical_invariants_match,
+)
+from ..invariants.unified import (
+    HomotopyClassFingerprint,
+    fingerprints_equivalent,
+)
+
 
 @dataclass
 class HomotopyStatement:

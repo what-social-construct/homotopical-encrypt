@@ -18,7 +18,7 @@ from typing import Tuple, Optional
 import numpy as np
 import hashlib
 
-from .cochain import (
+from ..primitives.cochain import (
     Cochain, VertexCochain, EdgeCochain, CochainComplex
 )
 

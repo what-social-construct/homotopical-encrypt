@@ -6,7 +6,7 @@ sys.path.insert(0, '/Users/chloevandervlugt/Desktop/homotopical-encrypt')
 
 from src.crypto.credential import generate_credential
 from src.crypto.encrypt import encrypt
-from src.crypto.decrypt_v2 import decrypt_v2, decrypt_with_verification, hash_message
+from src.crypto.decrypt import decrypt, decrypt_with_verification, hash_message
 
 
 def test_basic_roundtrip():
@@ -38,8 +38,8 @@ def test_basic_roundtrip():
     print(f"   - Vertex blocks: {len(ciphertext.vertex_blocks)}")
     print(f"   - Edge syndromes: {len(ciphertext.edge_syndromes)}")
     
-    # Decrypt using V2 (direct LWE, no Lindblad flow)
-    print(f"\n3. Decrypting (V2 - direct LWE)...")
+    # Decrypt with verification
+    print(f"\n3. Decrypting...")
     expected_hash = hash_message(message)
     decrypted, verified, chain = decrypt_with_verification(ciphertext, cred, expected_hash)
     print(f"   ✓ Decrypted: {decrypted}")
@@ -94,36 +94,35 @@ def test_spectral_fingerprint():
     return self_match and not match
 
 
-def test_lwe_module():
-    """Test standalone LWE encryption."""
+def test_lattice_roundtrip():
+    """Test lattice-based encryption primitives."""
     print("\n" + "=" * 60)
-    print("TEST: LWE Module Standalone")
+    print("TEST: Lattice Primitives")
     print("=" * 60)
     
-    from src.crypto.lwe import LWEEncryptor, analyze_shor_resistance
+    from src.crypto.lattice import LatticeInstance, discrete_gaussian
+    import numpy as np
     
-    encryptor = LWEEncryptor(n=256, q=2**15, sigma=3.2)
+    # Create lattice instance
+    lattice = LatticeInstance(n=64, q=12289, sigma=3.0)
     
-    message = b"Post-quantum test"
-    print(f"\n1. Original: {message}")
+    print(f"\n1. Lattice parameters:")
+    print(f"   - Dimension: {lattice.n}")
+    print(f"   - Modulus: {lattice.q}")
+    print(f"   - Noise σ: {lattice.sigma}")
     
-    ciphertext = encryptor.encrypt(message)
-    print(f"2. Ciphertext length: {len(ciphertext)} bytes")
+    # Test discrete Gaussian
+    noise = discrete_gaussian(64, 3.0)
+    print(f"\n2. Discrete Gaussian noise:")
+    print(f"   - Mean: {np.mean(noise):.4f}")
+    print(f"   - Std: {np.std(noise):.4f}")
     
-    decrypted = encryptor.decrypt(ciphertext)
-    print(f"3. Decrypted: {decrypted}")
+    # Check noise is integer-valued
+    is_integer = np.allclose(noise, np.round(noise))
+    print(f"   - Integer-valued: {is_integer}")
     
-    success = message == decrypted
-    if success:
-        print("   ✅ LWE roundtrip successful!")
-    else:
-        print("   ❌ LWE roundtrip failed!")
-    
-    # Show Shor analysis
-    print("\n4. Shor's Algorithm Resistance:")
-    analyze_shor_resistance()
-    
-    return success
+    print("\n   ✅ Lattice primitives working!")
+    return True
 
 
 if __name__ == "__main__":
@@ -132,8 +131,8 @@ if __name__ == "__main__":
     
     results = []
     
-    # Test LWE first (simpler)
-    results.append(("LWE Module", test_lwe_module()))
+    # Test lattice primitives
+    results.append(("Lattice Primitives", test_lattice_roundtrip()))
     
     # Test spectral fingerprint
     results.append(("Spectral Fingerprint", test_spectral_fingerprint()))

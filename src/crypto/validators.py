@@ -133,11 +133,11 @@ def validate_ciphertext(
             f"Expected {expected_edges} edge syndromes, got {actual_edges}"
         )
     
-    # Check version
-    if ciphertext.version != 1:
+    # Check version (v1 = discrete Gaussian, v2 = Hodge-structured noise)
+    if ciphertext.version not in (1, 2):
         return ValidationResult(
             False, "VERSION_CHECK",
-            f"Unknown ciphertext version {ciphertext.version}"
+            f"Unknown ciphertext version {ciphertext.version} (valid: 1=Gaussian, 2=Hodge)"
         )
     
     return ValidationResult(True, "CIPHERTEXT_VALID", "All ciphertext checks passed")

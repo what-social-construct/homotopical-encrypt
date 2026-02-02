@@ -68,13 +68,15 @@ from .cochain import (
     cochain_mod,
 )
 
-# Cryptographic primitives (from cochain)
-from .commitment import (
-    CochainCommitment,
-    BlindedCommitment,
-    VectorCommitment,
-    add_commitments,
-    scalar_mult_commitment,
+# Homotopy equivalence (core relation)
+from .homotopy import (
+    HomotopyInvariants,
+    HomotopyEquivalence,
+    HomotopyClass,
+    HomotopyPath,
+    KeyRotation,
+    rotate_within_class,
+    verify_equivalence,
 )
 
 __all__ = [
@@ -86,12 +88,6 @@ __all__ = [
     "CochainComplex",
     "inner_product",
     "cochain_mod",
-    # Cryptographic primitives
-    "CochainCommitment",
-    "BlindedCommitment",
-    "VectorCommitment",
-    "add_commitments",
-    "scalar_mult_commitment",
     # Algebra
     "wedge",
     "wedge_k", 
@@ -119,4 +115,12 @@ __all__ = [
     "create_private_stalk",
     "create_public_stalk",
     "create_zk_stalk",
+    # Homotopy equivalence
+    "HomotopyInvariants",
+    "HomotopyEquivalence",
+    "HomotopyClass",
+    "HomotopyPath",
+    "KeyRotation",
+    "rotate_within_class",
+    "verify_equivalence",
 ]

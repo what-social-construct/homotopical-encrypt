@@ -1,8 +1,19 @@
 # Digital Financial Sovereignty via Homotopical Encryption
 
-## The Vision: Individual Sovereignty in Net Neutral Ecosystems
+## The Vision: Individual Agency in Net Neutral Ecosystems
 
-This cryptographic framework enables **personal digital financial sovereignty** while maintaining **net neutrality** - no single party has special access or power.
+This cryptographic framework enables **personal digital financial sovereignty** - the mathematical guarantee that **you control your own economic destiny**.
+
+### Core Design Principles
+
+| Centralized Architecture | Distributed Geometry |
+|--------------------------|---------------------|
+| Authority issues identity | You ARE your spectral fingerprint |
+| Single ledger controls history | Peer topology emerges from connections |
+| Permission required to transact | Cryptographic validity = permission |
+| Surveillance by default | Privacy as mathematical structure |
+
+The difference isn't ideological - it's **geometric**. Centralized systems require a privileged node. Our topology treats all vertices equally because the Laplacian doesn't care who you are.
 
 ## How The Primitives Enable This
 

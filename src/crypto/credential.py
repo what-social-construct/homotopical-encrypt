@@ -20,7 +20,49 @@ import numpy as np
 import hashlib
 
 from ..geometry.sheaf import CellularSheaf, build_cech_nerve
-from .lwe import secure_random_vector, secure_random_matrix
+from .lattice import secure_random_vector, secure_random_matrix
+
+
+def _count_connected_components(nerve: Dict[int, List[Tuple]]) -> int:
+    """
+    Count connected components using DFS.
+    
+    β₀ = number of connected components in the nerve.
+    For a connected topology (alice-bob), β₀ = 1.
+    """
+    vertices = nerve.get(0, [])
+    edges = nerve.get(1, [])
+    
+    if not vertices:
+        return 0
+    
+    # Build adjacency from vertex tuples
+    vertex_ids = [v[0] if isinstance(v, tuple) else v for v in vertices]
+    adjacency = {v: set() for v in vertex_ids}
+    
+    for edge in edges:
+        if len(edge) >= 2:
+            i, j = edge[0], edge[1]
+            if i in adjacency:
+                adjacency[i].add(j)
+            if j in adjacency:
+                adjacency[j].add(i)
+    
+    visited = set()
+    components = 0
+    
+    def dfs(node):
+        visited.add(node)
+        for neighbor in adjacency.get(node, []):
+            if neighbor not in visited:
+                dfs(neighbor)
+    
+    for v in adjacency:
+        if v not in visited:
+            dfs(v)
+            components += 1
+    
+    return components
 
 
 @dataclass
@@ -306,16 +348,16 @@ def _compute_spectrum(
     else:
         eigenvalues = np.array([0.0])
     
-    # Compute Betti numbers
+    # Compute Betti numbers from TOPOLOGY (not Laplacian eigenvalues!)
     n_vertices = len(nerve.get(0, []))
     n_edges = len(nerve.get(1, []))
     n_triangles = len(nerve.get(2, []))
-    
-    # β_0 = connected components (from kernel of L_0)
-    beta_0 = int(np.sum(eigenvalues < 1e-6))
-    
-    # β_1 from Euler characteristic (simplified)
-    chi = n_vertices - n_edges + n_triangles
+
+    # β_0 = connected components (from graph structure)
+    beta_0 = _count_connected_components(nerve)
+
+    # β_1 = loops (from Euler characteristic)
+    chi = n_vertices - n_edges + n_triangles  # Euler = β₀ - β₁ + β₂
     beta_1 = max(0, n_edges - n_vertices + beta_0)
     
     # Spectral gap (smallest nonzero eigenvalue)

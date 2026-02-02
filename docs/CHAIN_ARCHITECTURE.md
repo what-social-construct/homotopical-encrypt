@@ -210,25 +210,72 @@ def verify_block(block):
 
 ## State Model
 
-### Account State
+### Unified SheafState (chloe_protocol pattern)
+
+Inspired by chloe_protocol's `SystemState + HashChain` pattern:
+
 ```python
 @dataclass
-class HcryptAccount:
-    fingerprint: bytes          # Spectral fingerprint (address)
-    balance: Dict[str, float]   # Token balances
-    topology: Dict              # Current connection topology
-    nonce: int                  # Transaction counter
-    sovereignty_proof: bytes    # Proof of valid fibration generation
+class SheafState:
+    """Unified chain state with HashChain tracing."""
+    
+    # Identity layer (sovereignty)
+    accounts: Dict[bytes, AccountState]
+    
+    # Value layer (UTXO)
+    utxos: Dict[bytes, UTXO]
+    spent_key_images: Set[bytes]
+    
+    # Block layer
+    block_headers: Dict[bytes, BlockHeader]
+    tip_hash: bytes
+    tip_height: int
+    
+    # Pending layer
+    mempool: Dict[bytes, Transaction]
+    
+    # Hash chain (ALL transformations traced!)
+    hash_chain: HashChain
+    
+    # Spectral cache (invalidated when topology changes)
+    spectral_cache: SpectralCache
 ```
 
-### Global State
+### HashChain (cryptographic tracing)
+
 ```python
-@dataclass  
-class HcryptState:
-    accounts: Dict[bytes, HcryptAccount]
-    current_topology: Dict      # Global connection nerve
-    spectral_cache: Dict        # Cached eigenvalues per topology
-    block_height: int
+class HashChain:
+    """
+    Merkle-tree-like audit trail.
+    genesis → sovereignty_claim → connection → transfer → key_rotation → block → ...
+    """
+    
+    def add_sovereignty_claim(fingerprint, homotopy_class_id, topology_hash) -> str
+    def add_connection(party_a, party_b, topology_hash) -> str
+    def add_transfer(tx_hash, key_images, output_commitments) -> str
+    def add_key_rotation(fingerprint, rotation_count, homotopy_class_id) -> str
+    def add_block(block_hash, height, spectral_gap, tx_count) -> str
+    
+    def verify_chain() -> bool  # Verify entire chain integrity
+```
+
+### Key Design Decisions
+
+1. **Topology implicit** - computed on-demand from account connections
+2. **Stalk types** - use primitives/stalk.py for elegance
+3. **ONE HashChain** - unified with 'type' field per entry
+4. **Cache + invalidation** - cache eigenvalues, recompute when topology changes
+
+### Account State (at each vertex)
+```python
+@dataclass
+class AccountState:
+    fingerprint: bytes           # Spectral fingerprint (address)
+    homotopy_class_id: bytes     # Equivalence class (key rotation)
+    balance: float               # Current balance
+    nonce: int                   # Transaction counter
+    connected_to: Set[bytes]     # Connections to other accounts
+    rotation_count: int          # Key rotation history
 ```
 
 ## Network Architecture
