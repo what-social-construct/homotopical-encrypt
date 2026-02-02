@@ -7,7 +7,29 @@ Blocks contain:
 - PoV proof (spectral gap in √2 bounds)
 
 Consensus: Block is valid if spectral gap λ₁ ∈ [1/√2, 2√2]
-This is NOT arbitrary - it's the geometry of measurement itself (Tsirelson bound).
+
+TSIRELSON BOUND - GEOMETRIC MEANING:
+
+The bounds [1/√2, 2√2] are the maximum quantum correlation achievable in
+bipartite systems, first proven by Tsirelson (1980). Geometrically:
+
+    Classical correlations:     |⟨A⊗B⟩| ≤ 2          (product states)
+    Quantum correlations:       |⟨A⊗B⟩| ≤ 2√2        (entangled states)
+    No-signaling correlations:  |⟨A⊗B⟩| ≤ 4          (any box)
+
+For sheaf Laplacians Δ on a graph G:
+    
+    λ₁(Δ) = spectral gap = Fiedler eigenvalue
+    
+    Lower bound 1/√2:  Ensures connected topology (no isolated components)
+    Upper bound 2√2:   Ensures causal structure (information propagates correctly)
+    
+The ratio λ₁/λ₀ measures the "quantum coherence" of the sheaf structure.
+At exactly 2√2, we saturate the Tsirelson bound - maximum entanglement
+while preserving causality. This is the geometry of measurement itself:
+correlations that exceed 2√2 would allow superluminal signaling.
+
+Reference: Tsirelson, B.S. (1980). "Quantum generalizations of Bell's inequality"
 """
 
 from dataclasses import dataclass, field
@@ -16,7 +38,9 @@ import numpy as np
 import hashlib
 import time
 
-from .transaction import Transaction, verify_transaction
+# Use homotopy transactions (primary)
+# Ring transactions moved to tests/benchmarks/ for comparison only
+from .homotopy_transaction import HomotopyTransaction, verify_homotopy_transaction
 from .key_image import KeyImageStore
 
 
@@ -63,13 +87,20 @@ class BlockHeader:
         return hasher.digest()
 
 
+# Transaction type alias - blocks use homotopy transactions
+Transaction = HomotopyTransaction
+
+
 @dataclass
 class Block:
     """
     Complete block with header and transactions.
+    
+    Uses HomotopyTransaction (native) by default.
+    RingTransaction only for benchmarking.
     """
     header: BlockHeader
-    transactions: List[Transaction] = field(default_factory=list)
+    transactions: List[HomotopyTransaction] = field(default_factory=list)
     
     # Block-level proof
     pov_proof: bytes = b''  # Proof that spectral gap is valid
@@ -260,9 +291,9 @@ def verify_block(
     if not _verify_pov_proof(block.pov_proof, gap):
         return (False, "Invalid PoV proof")
     
-    # 7. Verify all transactions
+    # 7. Verify all transactions (using homotopy verification)
     for i, tx in enumerate(block.transactions):
-        valid, reason = verify_transaction(tx, key_image_store)
+        valid, reason = verify_homotopy_transaction(tx, key_image_store)
         if not valid:
             return (False, f"Invalid transaction {i}: {reason}")
     

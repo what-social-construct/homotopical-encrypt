@@ -1,13 +1,20 @@
 """
-Chain State - UTXO Set and Blockchain State
+Chain State - DEPRECATED (use sheaf_state.py instead)
 
-The chain state tracks:
-- UTXO set (unspent transaction outputs)
-- Spent key images
-- Block chain (headers)
-- Current best chain
+⚠️ DEPRECATED: This file uses Bitcoin-style UTXO model.
+For production, use SheafState from sheaf_state.py which uses:
+- Harmonic-based state (message in ker(Δ))
+- Balance = projection onto harmonic subspace
+- NOT traditional UTXO outputs
 
-UTXO Model (like Bitcoin/Monero):
+This file kept ONLY for:
+- Benchmarking against ring signature approach
+- Comparison with traditional privacy coins
+- Migration path for existing code
+
+Use sheaf_state.SheafState for all new development.
+
+Legacy UTXO Model:
 - Outputs are created by transactions
 - Outputs are spent by referencing their commitment
 - Key images prevent double-spending
@@ -20,7 +27,14 @@ import hashlib
 import time
 
 from .key_image import KeyImageStore
-from .transaction import Transaction, TransactionOutput, verify_transaction
+# Use homotopy transactions (primary)
+# Ring transactions moved to tests/benchmarks/ for comparison only
+from .homotopy_transaction import HomotopyTransaction, HomotopyOutput, verify_homotopy_transaction
+
+# Alias for backward compatibility
+Transaction = HomotopyTransaction
+TransactionOutput = HomotopyOutput
+verify_transaction = verify_homotopy_transaction
 from .block import Block, BlockHeader, verify_block
 
 

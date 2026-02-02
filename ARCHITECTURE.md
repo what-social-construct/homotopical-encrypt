@@ -45,17 +45,19 @@ StalkProjection                  = changes context (PRIVATE → PUBLIC)
 | PUBLIC | 1 | Balance commitment (transparent) |
 | ZK | 32 | Zero-knowledge intermediate |
 
-### √2 Bounds (Bell Inequality)
+### √2 Bounds (Bell/Tsirelson Inequality)
 
 ```
-Classical bound:    2
-Quantum/Geometric:  2√2 ≈ 2.828
+Classical bound:    2       (product states, local hidden variables)
+Quantum/Geometric:  2√2     (entangled states - Tsirelson 1980)
+No-signaling:       4       (any probability distribution)
 
 Valid spectral gap: 1/√2 < λ₁ < 2√2
                     0.707 < λ₁ < 2.828
 ```
 
-This is NOT arbitrary - it's the geometry of measurement itself.
+This is the boundary of the quantum correlation polytope (Tsirelson bound).
+Exceeding 2√2 would violate causality (superluminal signaling).
 
 ## Proof of Value Consensus
 
@@ -287,14 +289,49 @@ Spectral gap:
   Geometric validity:  1/√2 < gap < 2√2
 ```
 
+### Tsirelson Bound - Geometric Meaning
+
+The bounds [1/√2, 2√2] arise from quantum information theory (Tsirelson, 1980).
+They represent the maximum achievable correlation in bipartite quantum systems:
+
+    |⟨ψ| A ⊗ B |ψ⟩| ≤ 2√2    for any entangled state |ψ⟩
+
+Geometrically, this is the **boundary of the quantum correlation polytope**:
+
+```
+    ┌───────────────────────────────────────────┐
+    │                                           │
+    │   Classical:      |correlation| ≤ 2       │
+    │   Quantum:        |correlation| ≤ 2√2     │
+    │   No-signaling:   |correlation| ≤ 4       │
+    │                                           │
+    │   2√2 is the boundary between             │
+    │   "quantum possible" and                  │
+    │   "violates causality"                    │
+    │                                           │
+    └───────────────────────────────────────────┘
+```
+
+For sheaf Laplacians Δ = δδ* + δ*δ on a graph G:
+
+    λ₁(Δ) = spectral gap = Fiedler eigenvalue
+    
+    Below 1/√2:  Topology is disconnected (no information flow)
+    Above 2√2:   Topology would permit superluminal signaling (acausal)
+
+**At exactly 2√2**, we saturate the Tsirelson bound - maximum entanglement
+while preserving causality. Correlations that exceed 2√2 would allow 
+faster-than-light communication.
+
 ### Why √2?
 
-The √2 factor appears in:
-1. **Tsirelson bound**: Maximum quantum violation of Bell inequality
+The √2 factor appears universally in:
+1. **Tsirelson bound**: Maximum quantum violation of Bell inequality (1980)
 2. **Frobenius norm**: ||A||_F / ||A||_op for rank-1 projectors
 3. **Our spectral gap**: Valid blocks have gap in [1/√2, 2√2]
+4. **CHSH game**: Maximum winning probability = (2 + √2)/4
 
-**This is NOT arbitrary** - it's the geometry of measurement itself.
+Reference: Tsirelson, B.S. (1980). "Quantum generalizations of Bell's inequality"
 
 ### In Code
 

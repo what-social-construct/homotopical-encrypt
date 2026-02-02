@@ -371,37 +371,39 @@ class AccountState:
 
 
 # =============================================================================
-# COMBINED DUAL STATE
+# COMBINED DUAL STATE (using SheafState - harmonic-based, NOT UTXO)
 # =============================================================================
 
 @dataclass
 class DualState:
     """
-    Combined UTXO + Account state.
+    Combined SheafState + Account state.
     
     This is the complete chain state with both layers:
-    - utxo_state: ChainState (from state.py)
+    - sheaf_state: SheafState (harmonic-based, NOT UTXO)
     - account_state: AccountState (sovereignty layer)
-    """
-    from .state import ChainState
     
-    utxo_state: 'ChainState'
+    NOTE: Legacy UTXO ChainState moved to tests/benchmarks/utxo_state.py
+    """
+    from .sheaf_state import SheafState
+    
+    sheaf_state: 'SheafState'
     account_state: AccountState
     
     @classmethod
     def create(cls) -> 'DualState':
         """Create new dual state."""
-        from .state import ChainState
+        from .sheaf_state import SheafState
         return cls(
-            utxo_state=ChainState(),
+            sheaf_state=SheafState(),
             account_state=AccountState()
         )
     
     def summary(self) -> str:
         """Combined state summary."""
         return (
-            f"=== UTXO Layer ===\n"
-            f"{self.utxo_state.summary()}\n\n"
+            f"=== Sheaf State (Harmonic) ===\n"
+            f"{self.sheaf_state.summary()}\n\n"
             f"=== Account Layer ===\n"
             f"{self.account_state.summary()}"
         )

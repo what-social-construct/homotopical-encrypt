@@ -261,3 +261,147 @@ Panopticon learns: ∅ (up to computational assumptions)
 This is the √2 principle applied to surveillance:
 - Observation changes nothing if system is already in eigenstate
 - Our ciphertexts ARE the eigenstate (harmonic projection)
+
+---
+
+## Future Integration: Property, Agency & Manipulation Resistance
+
+**TODO: These concepts need formalization**
+
+### 1. Intellectual Property via Homotopy Class
+```
+Work = homotopy class [W]
+Ownership = fibration credential F ∈ [W]
+Proof = spectral fingerprint matching
+```
+- Creator proves membership in class without revealing work structure
+- Ownership transfers via homotopy path (never reveals the work itself)
+- Plagiarism detection = spectral comparison
+
+### 2. Agency Preservation Under Power Imbalance
+```
+Old system: Power asymmetry → Coercion → Forced compliance
+Homotopy: Identity = class → Key rotation → Escape coercion
+```
+- **Transparent autonomy**: Actions visible but identity is class membership
+- **Deniability**: Multiple valid credentials in same class
+- **Exit capacity**: Can always rotate to new credential in same class
+- No single key to seize, no single point of control
+
+### 3. Manipulation Resistance via Agency Preservation
+
+**Definition: Agent**
+```
+Agent A = Subject at position p ∈ State Space
+        = Point in the configuration space
+        = Current state of the entity
+```
+
+**Definition: Agency Space**
+```
+Agency(A, p) = Space of available homotopy paths FROM position p
+             = { γ : [0,1] → State | γ(0) = p }
+             = All choices/actions available to agent A at position p
+```
+
+**Definition: Manipulation**
+```
+Manipulation = Subjugating the agency of another agent
+             = Restricting their available homotopy paths
+             = Smaller Agency(A, p)
+```
+
+**Definition: Sovereignty**
+```
+Sovereignty = dim(Agency(A, p)) remains unchanged under observation
+            = Agent retains all homotopy paths from current position
+            = Panopticon cannot restrict choice space
+```
+
+**The homotopical solution:**
+- Agency is defined by AVAILABLE PATHS, not current position
+- Panopticon sees current position (spectral fingerprint)
+- Panopticon CANNOT see available paths (homotopy group is private)
+- Therefore observation doesn't collapse choice space
+- Manipulation requires RESTRICTING paths → but paths are infinite (homotopy class)
+
+```
+Manipulation attempt:    "Do X or I expose your credential"
+Homotopy response:       Rotate to new credential in same class
+                        Old credential meaningless, agency preserved
+```
+
+This extends naturally to:
+- **Asset transfer**: Path from seller's fibration to buyer's
+- **Exchange**: Mutual path construction (both agents choose)
+- **Network**: Topology of available paths between agents
+
+### 4. Rules for Property Under Panopticon
+```
+Traditional property: I control X because authority says so
+Homotopical property: I control X because I know path F → X
+```
+- Property = fibration over asset
+- Transfer = homotopy equivalence proof (prover knows path, verifier doesn't learn it)
+- Dispute resolution = spectral comparison (not authority decree)
+
+### 5. Transparent Autonomy
+The paradox: **Full transparency + Full privacy = Autonomy**
+```
+Visible:     All transactions (spectral fingerprints, invariants)
+Hidden:      All credentials (fibration structure)
+Result:      System is auditable but individuals are sovereign
+```
+- Anyone can verify the math (transparent)
+- No one can link math to identity (autonomous)
+- √2 bounds are PUBLIC - everyone can validate
+- Specific fibrations are PRIVATE - no one can coerce
+
+### Implementation TODO:
+- [ ] Property credential type (fibration over asset)
+- [ ] Agency escape mechanism (rotation without approval)
+- [ ] Manipulation detection (multiple queries for same fingerprint = attack)
+- [ ] Formal autonomy model (category of autonomous agents)
+
+---
+
+## Open Source + Encrypted Security
+
+**Why open source doesn't compromise security:**
+
+The entire codebase can be public because security comes from **mathematical hardness**, not obscurity:
+
+```
+What's PUBLIC:                      What's PRIVATE:
+─────────────────────────────────────────────────────
+All algorithms ✓                    Your fibration F
+All proofs ✓                        Your parallel transport path
+All invariant checks ✓              Your eigenvalue decomposition
+All verification code ✓             Your specific Laplacian Δ
+Network protocol ✓                  Your messages (in ker(Δ))
+Chain format ✓                      Your identity credential
+```
+
+**Security guarantees:**
+1. **Hodge-hardness** = finding ker(Δ) without knowing Δ is lattice-hard
+2. **δ-hardness** = inverting sheaf coboundary is computationally infeasible
+3. **Homotopy invariance** = identity is a CLASS, not a single key
+
+**Even with full source code, adversary CANNOT:**
+- Extract your message from ciphertext (needs Δ)
+- Link your transactions (only sees spectral fingerprint)
+- Forge your credential (needs to solve SVP/CVP)
+- Restrict your agency (paths are infinite in homotopy class)
+
+```
+Traditional crypto:  "Don't show them the algorithm!"
+Homotopical crypto:  "Here's everything. Good luck solving 
+                     the shortest vector problem on our 
+                     structured lattice with Hodge noise."
+```
+
+**Open source ENHANCES security by:**
+- Enabling peer review of proofs
+- Allowing independent verification of invariants
+- Building trust through transparency
+- Proving no backdoors exist

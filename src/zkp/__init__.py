@@ -11,55 +11,57 @@ WITNESS:    The actual fibration structure (SECRET!)
 PROOF:      Spectral invariants that only depend on [F] (homotopy class)
 VERIFIER:   Checks invariants match, learns NOTHING about F
 
-Invariants used:
-- Betti numbers β_k (topological)
-- Spectral gap λ_1 (geometric)
-- Eigenvalue spectrum (spectral)
+This module re-exports from proofs/ for cleaner API.
 """
 
-from .homotopy_proof import (
-    HomotopyProof,
+# Re-export from proofs module
+from ..proofs import (
+    # Homotopy proofs
     HomotopyStatement,
+    HomotopyProof,
     prove_homotopy_equivalence,
     verify_homotopy_proof,
-)
-from .spectral_proof import (
-    # Basic spectral match
+    batch_verify_proofs,
+    InteractiveHomotopyProof,
+    interactive_prove,
+    
+    # Spectral proofs
     SpectralProof,
     prove_spectral_match,
     verify_spectral_match,
-    # Range proof for PoV
     SpectralGapProof,
     prove_spectral_gap_in_bounds,
     verify_spectral_gap_proof,
-    # Identity proof
     SpectralIdentityProof,
-    prove_spectral_identity,
-    verify_spectral_identity,
-    # Ring signatures
+    
+    # Ring signatures (for benchmarking)
     RingSpectralProof,
     prove_ring_spectral,
     verify_ring_spectral,
-    # Constants
+    
+    # √2 bounds
     SQRT2,
-    POV_LOWER,
-    POV_UPPER,
-)
-from .homotopy_anonymity import (
-    # Class membership (INFINITE anonymity set)
+    LOWER_BOUND as POV_LOWER,
+    UPPER_BOUND as POV_UPPER,
+    
+    # Homotopical anonymity (infinite anonymity set)
     HomotopyClassProof,
-    compute_spectral_fingerprint,
     prove_class_membership,
     verify_class_membership,
+    
     # Cochain balance (homomorphic)
     CochainCommitment,
     create_amount_commitment,
     verify_balance,
+    
     # Harmonic range proofs
     HarmonicRangeProof,
     create_harmonic_range_proof,
     verify_harmonic_range_proof,
 )
+
+# Alias for spectral fingerprint
+from ..invariants.spectral import compute_spectral_invariants as compute_spectral_fingerprint
 
 __all__ = [
     # Homotopy proofs
@@ -67,6 +69,9 @@ __all__ = [
     "HomotopyStatement",
     "prove_homotopy_equivalence",
     "verify_homotopy_proof",
+    "batch_verify_proofs",
+    "InteractiveHomotopyProof",
+    "interactive_prove",
     # Spectral match
     "SpectralProof",
     "prove_spectral_match",
@@ -77,9 +82,7 @@ __all__ = [
     "verify_spectral_gap_proof",
     # Identity proof
     "SpectralIdentityProof",
-    "prove_spectral_identity",
-    "verify_spectral_identity",
-    # Ring signatures
+    # Ring signatures (benchmarking)
     "RingSpectralProof",
     "prove_ring_spectral",
     "verify_ring_spectral",
@@ -87,12 +90,12 @@ __all__ = [
     "SQRT2",
     "POV_LOWER",
     "POV_UPPER",
-    # HOMOTOPICAL ANONYMITY (infinite anonymity set)
+    # Homotopical anonymity
     "HomotopyClassProof",
     "compute_spectral_fingerprint",
     "prove_class_membership",
     "verify_class_membership",
-    # Cochain balance (homomorphic)
+    # Cochain balance
     "CochainCommitment",
     "create_amount_commitment",
     "verify_balance",
