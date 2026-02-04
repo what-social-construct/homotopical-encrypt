@@ -2,7 +2,7 @@
 
 **Geometric post-quantum encryption via Hopf fibrations and spectral invariants.**
 
-> ⚠️ **Precise Terminology**: This is *quantum-resistant* (resists Shor's algorithm), not *quantum encryption* (no qubits required). Security derives from geometric hardness (LWE + spectral reconstruction), not physics.
+> ⚠️ **Precise Terminology**: This is *quantum-resistant* (resists Shor's algorithm), not *quantum encryption* (no qubits required). Security derives from geometric hardness
 
 A novel cryptographic framework combining:
 - **Grothendieck fibrations** for key structure
