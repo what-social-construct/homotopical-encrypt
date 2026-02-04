@@ -166,7 +166,7 @@ def decrypt(
     Raises:
         ValueError: If validation fails
     """
-    from .validators import validate_decryption_request
+    from .checkpoints import validate_decryption_request
     
     chain = DecryptionChain()
     

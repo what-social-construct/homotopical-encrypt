@@ -138,7 +138,7 @@ class QuantumSheafFibration:
     sheaf: CellularSheaf
     hilbert_dim: int
     
-    # Quantum channel parameters (LWE matrices)
+    # Quantum channel parameters (lattice matrices)
     vertex_keys: Dict[int, np.ndarray] = field(default_factory=dict)  # A_v
     edge_keys: Dict[Tuple[int, int], np.ndarray] = field(default_factory=dict)  # A_e
     
@@ -147,7 +147,7 @@ class QuantumSheafFibration:
         cls,
         nerve: Dict[int, List[Tuple]],
         hilbert_dim: int = 256,
-        modulus: int = 12289  # LWE modulus (prime)
+        modulus: int = 12289  # Lattice modulus (prime)
     ) -> 'QuantumSheafFibration':
         """
         Generate random fibration (secure key generation).
@@ -155,7 +155,7 @@ class QuantumSheafFibration:
         Args:
             nerve: The Čech nerve topology
             hilbert_dim: Dimension of Hilbert spaces (security parameter)
-            modulus: LWE modulus for lattice-based security
+            modulus: Lattice modulus for Hodge-hardness security
             
         Returns:
             Random fibration suitable for encryption
@@ -168,12 +168,12 @@ class QuantumSheafFibration:
         vertex_keys = {}
         
         for v in vertices:
-            # Random LWE secret key for this vertex (cryptographically secure)
+            # Random lattice secret key for this vertex (cryptographically secure)
             key = secure_random_vector(hilbert_dim, modulus)
             sheaf.set_stalk(v, key)
             vertex_keys[v[0]] = key
         
-        # Generate random restriction maps (LWE matrices) - SECURE
+        # Generate random restriction maps (lattice matrices)
         edges = nerve.get(1, [])
         edge_keys = {}
         
@@ -278,7 +278,7 @@ def generate_credential(
         parties: List of party names/IDs
         connections: Which parties can communicate directly
         security_parameter: Dimension of Hilbert spaces (λ)
-        modulus: LWE modulus (should be prime, q > 2λ)
+        modulus: Lattice modulus (should be prime, q > 2λ)
         
     Returns:
         FibrationCredential with public/private components

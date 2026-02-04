@@ -239,14 +239,18 @@ def compute_hodge_projectors(
     
     These projectors satisfy: I = P_H + P_exact + P_coexact (approx)
     
+    For C^k space:
+    - P_exact projects onto im(δ_{k-1}) - image of lower coboundary INTO C^k
+    - P_coexact projects onto im(δ*_k) = im(δ_k^T) - from higher degree
+    
     Args:
-        laplacian: Laplacian for harmonic subspace
-        delta: Coboundary δ for co-exact subspace
-        delta_prev: Coboundary δ_{prev} for exact subspace
+        laplacian: Laplacian for harmonic subspace (n x n)
+        delta: Coboundary δ_k: C^k → C^{k+1} for co-exact subspace
+        delta_prev: Coboundary δ_{k-1}: C^{k-1} → C^k for exact subspace
         tolerance: Eigenvalue threshold for harmonics
         
     Returns:
-        (P_harmonic, P_exact, P_coexact) projector matrices
+        (P_harmonic, P_exact, P_coexact) projector matrices, all (n x n)
     """
     n = laplacian.shape[0]
     
@@ -261,15 +265,32 @@ def compute_hodge_projectors(
     else:
         P_H = np.zeros((n, n))
     
-    # Exact projector (from below)
-    if delta_prev is not None:
+    # Exact projector: im(δ_{k-1}) ⊂ C^k
+    # δ_{k-1} maps C^{k-1} → C^k, so its image is in C^k
+    # P_exact = δ_{k-1} (δ_{k-1}^T δ_{k-1})^{-1} δ_{k-1}^T  (range projection)
+    if delta_prev is not None and delta_prev.shape[0] == n:
+        # delta_prev: (n, m) where m = dim(C^{k-1})
+        # Range projector: A @ pinv(A) projects onto im(A)
         P_exact = delta_prev @ np.linalg.pinv(delta_prev)
+    elif delta_prev is not None:
+        # Dimension mismatch - delta_prev rows != n
+        # This means delta_prev maps TO somewhere else, not to C^k
+        # For C^0 (vertices), there's nothing below, so exact = 0
+        P_exact = np.zeros((n, n))
     else:
         P_exact = np.zeros((n, n))
     
-    # Co-exact projector (from above)
-    if delta is not None:
-        P_coexact = delta.T @ np.linalg.pinv(delta.T)
+    # Co-exact projector: im(δ*_k) = im(δ_k^T) ⊂ C^k  
+    # δ_k: C^k → C^{k+1}, so δ_k^T: C^{k+1} → C^k
+    # Its image (range) is in C^k
+    if delta is not None and delta.shape[1] == n:
+        # delta: (m, n) where m = dim(C^{k+1})
+        # δ^T: (n, m), its range projection: δ^T @ pinv(δ^T)
+        delta_star = delta.T
+        P_coexact = delta_star @ np.linalg.pinv(delta_star)
+    elif delta is not None:
+        # Dimension mismatch
+        P_coexact = np.zeros((n, n))
     else:
         P_coexact = np.zeros((n, n))
     

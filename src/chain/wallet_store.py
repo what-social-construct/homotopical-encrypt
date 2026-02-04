@@ -1,14 +1,14 @@
 """
 Wallet Storage - Private Credential Management
 
-Uses Hodge-hardness encryption (OUR system, not external).
-Master key = spectral fingerprint of master fibration.
+Uses Homotopical Encryption with Hodge-hardness security assumption.
+Master key derived from spectral fingerprint of master fibration.
 
 Security model:
-- Master credential = your identity fibration
-- Master key = spectral fingerprint (NOT passphrase!)
-- Validates ALL invariants on load (fail loudly)
-- Uses OUR Hodge encryption (message in ker(Δ))
+- Master credential defines identity fibration
+- Master key = spectral fingerprint (not passphrase-derived)
+- Validates all invariants on load
+- Message embedded in ker(Δ), noise in im(δ) ⊕ im(δ*)
 """
 
 from pathlib import Path
@@ -19,7 +19,7 @@ import time
 import numpy as np
 
 from ..crypto.encrypt import encrypt
-from ..crypto.decrypt import decrypt_v2
+from ..crypto.decrypt import decrypt
 from ..crypto.credential import FibrationCredential
 from ..invariants.unified import UnifiedInvariantValidator, validate_fibration
 
@@ -205,7 +205,9 @@ class WalletStore:
         ciphertext_bytes = enc_cred.ciphertext_blob
         
         # Decrypt via harmonic projection
-        decrypted_data, _ = decrypt_v2(ciphertext_bytes, master_credential)
+        from ..crypto.encrypt import FibrationCiphertext
+        ciphertext = FibrationCiphertext.deserialize(ciphertext_bytes)
+        decrypted_data = decrypt(ciphertext, master_credential)
         
         # Deserialize credential
         credential = self._deserialize_credential(decrypted_data)

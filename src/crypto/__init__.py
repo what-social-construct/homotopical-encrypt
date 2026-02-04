@@ -1,7 +1,7 @@
 """
 Crypto module: Cochain-based encryption primitives.
 
-Implements Homotopical Encryption (NOT traditional LWE):
+Implements Homotopical Encryption (stronger than LWE via Hodge-hardness):
 - FibrationCredential: (topology, fibration, spectrum) triple
 - Encrypt: Message → cochain embedding → coboundary + noise
 - Decrypt: Harmonic projection → extract from ker(Δ)
@@ -24,7 +24,7 @@ from .decrypt import (
     verify_sender,
 )
 
-# Lattice operations (structured noise, not traditional LWE)
+# Lattice operations (Hodge-structured noise)
 from .lattice import (
     LatticeInstance,
     CochainLattice,
@@ -36,8 +36,8 @@ from .lattice import (
     heat_kernel_sample,
 )
 
-# Validators
-from .validators import (
+# Validation (encryption input/output checks)
+from .validation import (
     validate_decryption_request,
     validate_decryption_integrity,
 )

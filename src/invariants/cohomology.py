@@ -226,8 +226,13 @@ def compute_cohomology_invariants(
     else:
         beta_1 = n1 - ranks["rank_0"]
     
-    # β₂ from Laplacian kernel for C² (if applicable)
-    beta_2 = 0  # Simplified for now
+    # β₂ from rank-nullity theorem
+    # For finite complex: β₂ = n₂ - rank(δ₁)
+    # (assumes δ₂ = 0 for top dimension)
+    if delta_1 is not None and n2 > 0:
+        beta_2 = n2 - ranks.get("rank_1", 0)
+    else:
+        beta_2 = 0
     
     # Euler characteristic
     euler = n0 - n1 + n2  # = β₀ - β₁ + β₂

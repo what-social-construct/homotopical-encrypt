@@ -63,12 +63,8 @@ from .wallet_store import (
     WalletStore,
     EncryptedCredential,
 )
-# Routing (transaction privacy via sheaf onion)
-from .routing import (
-    TransactionRouter,
-    RelayNode,
-    RelayNetwork,
-)
+# Routing moved to network/ module
+# from ..network import TransactionRouter, RelayNode, RelayNetwork
 
 __all__ = [
     # Homotopy Transactions (primary)
@@ -98,8 +94,5 @@ __all__ = [
     "BlockStore",
     "WalletStore",
     "EncryptedCredential",
-    # Routing
-    "TransactionRouter",
-    "RelayNode",
-    "RelayNetwork",
+    # Routing moved to network/ module
 ]

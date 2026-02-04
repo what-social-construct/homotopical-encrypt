@@ -21,19 +21,37 @@ For sheaf Laplacians Δ = δδ* + δ*δ on a graph:
 The spectral gap measures how "quantum coherent" the topology is.
 Saturating 2√2 = maximum entanglement while preserving causality.
 
-This module re-exports from proofs/consensus.py for cleaner API.
+Clean separation:
+- invariant_validator.py: Validates PoV invariants (spectral bounds, conservation)
+- validator_selection.py: Selects network validators (who produces blocks)
+- proofs/consensus.py: ProofOfValue mechanics (how blocks are created)
 """
 
-# Re-export from proofs module
+# Invariant validation (NEW - from local module)
+from .invariant_validator import (
+    InvariantValidator,
+    InvariantCheckpoint,
+    POV_LOWER,
+    POV_UPPER,
+    SQRT2,
+)
+
+# PoV mechanics (from proofs/)
 from ..proofs.consensus import (
     ProofOfValue,
     Transaction,
     Block,
-    InvariantValidator,
-    InvariantCheckpoint,
-    SQRT2,
-    LOWER_BOUND,
-    UPPER_BOUND,
+)
+
+# Re-export bounds with legacy names
+LOWER_BOUND = POV_LOWER
+UPPER_BOUND = POV_UPPER
+
+# Validator selection
+from .validator_selection import (
+    Validator,
+    ValidatorSet,
+    select_validator_for_block,
 )
 
 __all__ = [
@@ -45,4 +63,8 @@ __all__ = [
     'SQRT2',
     'LOWER_BOUND',
     'UPPER_BOUND',
+    # Validator selection
+    'Validator',
+    'ValidatorSet',
+    'select_validator_for_block',
 ]

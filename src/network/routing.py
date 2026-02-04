@@ -21,7 +21,7 @@ from ..geometry.fiber_bundle import (
     MixingNode
 )
 from ..crypto.credential import FibrationCredential
-from .homotopy_transaction import HomotopyTransaction
+from ..chain.homotopy_transaction import HomotopyTransaction
 
 
 @dataclass
