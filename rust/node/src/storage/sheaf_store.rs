@@ -12,6 +12,12 @@
 // - Keys = Simplices (vertices, edges, faces)
 // - Values = Stalk data (serialized vectors)
 //
+// - Formal functor definition F: SHEAF → STORAGE
+// - Source category (SHEAF) with objects and morphisms
+// - Target category (STORAGE) with objects and morphisms
+// - Functoriality conditions explicitly stated:
+//      1. F(id_F) = id_F(Sheaf)
+//      2. F(η ∘ μ) = F(η) ∘ F(μ)
 
 
 use anyhow::Result;
@@ -131,7 +137,7 @@ impl SheafStore {
         stalk: &Stalk,
     ) -> Result<()> {
         if stalk.context != context {
-            antml:function_calls::bail!("Stalk context mismatch");
+            anyhow::bail!("Stalk context mismatch");
         }
         
         let cf = self.db.cf_handle(context.column_family_name())

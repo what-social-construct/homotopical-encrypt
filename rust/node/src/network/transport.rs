@@ -4,7 +4,6 @@
 // - TCP transport with Noise encryption
 // - GossipSub for transaction/block propagation
 // - Kademlia DHT for peer discovery
-// - Request/Response for direct messaging
 //
 // The onion routing logic is separate (onion.rs / Python)
 
@@ -15,9 +14,8 @@ use libp2p::{
     identity::Keypair,
     kad::{self, store::MemoryStore},
     noise,
-    request_response::{self, ProtocolSupport},
     swarm::{NetworkBehaviour, SwarmEvent},
-    tcp, yamux, Multiaddr, PeerId, Swarm, StreamProtocol,
+    tcp, yamux, Multiaddr, PeerId, Swarm,
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -38,9 +36,6 @@ pub const TOPIC_TRANSACTIONS: &str = "hcrypt/tx/1.0.0";
 pub const TOPIC_BLOCKS: &str = "hcrypt/block/1.0.0";
 pub const TOPIC_ORACLE: &str = "hcrypt/oracle/1.0.0";
 
-/// Protocol for direct request/response
-pub const DIRECT_PROTOCOL: &str = "/hcrypt/direct/1.0.0";
-
 /// Network message types
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NetworkMessage {
@@ -49,7 +44,7 @@ pub enum NetworkMessage {
         /// Onion packet (opaque to network layer)
         onion_packet: Vec<u8>,
         /// Spectral fingerprint hint (for routing)
-        fingerprint_hint: [u8; 8],
+        fingerprint_hint: Vec<u8>,
     },
     
     /// New block announcement
@@ -57,7 +52,7 @@ pub enum NetworkMessage {
         /// Block height
         height: u64,
         /// Block hash
-        hash: [u8; 32],
+        hash: Vec<u8>,
         /// Full block data
         block_data: Vec<u8>,
     },
@@ -67,23 +62,9 @@ pub enum NetworkMessage {
         /// Vertex ID
         vertex_id: u64,
         /// Commitment hash
-        commitment: [u8; 32],
+        commitment: Vec<u8>,
         /// Spectral gap (scaled to u64)
         spectral_gap_scaled: u64,
-    },
-    
-    /// Peer sync request
-    SyncRequest {
-        /// Start height
-        from_height: u64,
-        /// How many blocks
-        count: u32,
-    },
-    
-    /// Peer sync response
-    SyncResponse {
-        /// Blocks
-        blocks: Vec<Vec<u8>>,
     },
 }
 
@@ -94,55 +75,12 @@ pub enum NetworkMessage {
 /// Custom network behaviour combining:
 /// - GossipSub: for broadcast
 /// - Kademlia: for peer discovery
-/// - Request/Response: for direct messaging
 #[derive(NetworkBehaviour)]
-#[behaviour(to_swarm = "HcryptEvent")]
 pub struct HcryptBehaviour {
     /// Gossip for tx/block propagation
     pub gossipsub: gossipsub::Behaviour,
     /// DHT for peer discovery
     pub kademlia: kad::Behaviour<MemoryStore>,
-    /// Direct messaging
-    pub request_response: request_response::cbor::Behaviour<DirectRequest, DirectResponse>,
-}
-
-/// Direct request type
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct DirectRequest {
-    pub msg: NetworkMessage,
-}
-
-/// Direct response type
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct DirectResponse {
-    pub success: bool,
-    pub data: Option<Vec<u8>>,
-}
-
-/// Events from our custom behaviour
-#[derive(Debug)]
-pub enum HcryptEvent {
-    Gossipsub(gossipsub::Event),
-    Kademlia(kad::Event),
-    RequestResponse(request_response::Event<DirectRequest, DirectResponse>),
-}
-
-impl From<gossipsub::Event> for HcryptEvent {
-    fn from(e: gossipsub::Event) -> Self {
-        HcryptEvent::Gossipsub(e)
-    }
-}
-
-impl From<kad::Event> for HcryptEvent {
-    fn from(e: kad::Event) -> Self {
-        HcryptEvent::Kademlia(e)
-    }
-}
-
-impl From<request_response::Event<DirectRequest, DirectResponse>> for HcryptEvent {
-    fn from(e: request_response::Event<DirectRequest, DirectResponse>) -> Self {
-        HcryptEvent::RequestResponse(e)
-    }
 }
 
 // =============================================================================
@@ -153,8 +91,6 @@ impl From<request_response::Event<DirectRequest, DirectResponse>> for HcryptEven
 pub struct P2PTransport {
     /// Our peer ID
     peer_id: PeerId,
-    /// Our keypair
-    keypair: Keypair,
     /// Channel to send commands to swarm task
     cmd_tx: mpsc::Sender<SwarmCommand>,
     /// Channel to receive events from swarm
@@ -168,8 +104,6 @@ pub struct P2PTransport {
 enum SwarmCommand {
     /// Publish to gossip topic
     Publish { topic: String, data: Vec<u8> },
-    /// Send direct request to peer
-    SendRequest { peer: PeerId, request: DirectRequest },
     /// Bootstrap from known peers
     Bootstrap { addrs: Vec<Multiaddr> },
     /// Shutdown
@@ -184,11 +118,6 @@ pub enum TransportEvent {
         topic: String,
         data: Vec<u8>,
         source: Option<PeerId>,
-    },
-    /// Received direct request
-    DirectRequest {
-        peer: PeerId,
-        msg: NetworkMessage,
     },
     /// New peer connected
     PeerConnected(PeerId),
@@ -211,7 +140,7 @@ impl P2PTransport {
         let (event_tx, event_rx) = mpsc::channel(256);
         
         // Build the swarm
-        let swarm = Self::build_swarm(keypair.clone(), port).await?;
+        let swarm = Self::build_swarm(keypair, port)?;
         
         let peers = Arc::new(RwLock::new(Vec::new()));
         let peers_clone = peers.clone();
@@ -223,7 +152,6 @@ impl P2PTransport {
         
         Ok(Self {
             peer_id,
-            keypair,
             cmd_tx,
             event_rx: Arc::new(RwLock::new(event_rx)),
             peers,
@@ -231,7 +159,7 @@ impl P2PTransport {
     }
     
     /// Build libp2p swarm with all protocols
-    async fn build_swarm(keypair: Keypair, port: u16) -> Result<Swarm<HcryptBehaviour>> {
+    fn build_swarm(keypair: Keypair, _port: u16) -> Result<Swarm<HcryptBehaviour>> {
         // GossipSub config
         let gossip_config = gossipsub::ConfigBuilder::default()
             .heartbeat_interval(Duration::from_secs(1))
@@ -257,19 +185,12 @@ impl P2PTransport {
             store,
         );
         
-        // Request/Response
-        let request_response = request_response::cbor::Behaviour::new(
-            [(StreamProtocol::new(DIRECT_PROTOCOL), ProtocolSupport::Full)],
-            request_response::Config::default(),
-        );
-        
         let behaviour = HcryptBehaviour {
             gossipsub,
             kademlia,
-            request_response,
         };
         
-        // Build swarm
+        // Build swarm using the new builder API
         let swarm = libp2p::SwarmBuilder::with_existing_identity(keypair)
             .with_tokio()
             .with_tcp(
@@ -277,7 +198,7 @@ impl P2PTransport {
                 noise::Config::new,
                 yamux::Config::default,
             )?
-            .with_behaviour(|_key| behaviour)?
+            .with_behaviour(|_key| Ok(behaviour))?
             .with_swarm_config(|cfg| {
                 cfg.with_idle_connection_timeout(Duration::from_secs(60))
             })
@@ -323,9 +244,6 @@ impl P2PTransport {
                                 warn!("Failed to publish: {:?}", e);
                             }
                         }
-                        SwarmCommand::SendRequest { peer, request } => {
-                            swarm.behaviour_mut().request_response.send_request(&peer, request);
-                        }
                         SwarmCommand::Bootstrap { addrs } => {
                             for addr in addrs {
                                 if let Err(e) = swarm.dial(addr.clone()) {
@@ -343,7 +261,7 @@ impl P2PTransport {
                 // Handle swarm events
                 event = swarm.select_next_some() => {
                     match event {
-                        SwarmEvent::Behaviour(HcryptEvent::Gossipsub(gossipsub::Event::Message {
+                        SwarmEvent::Behaviour(HcryptBehaviourEvent::Gossipsub(gossipsub::Event::Message {
                             propagation_source,
                             message,
                             ..
@@ -356,20 +274,6 @@ impl P2PTransport {
                                 data: message.data,
                                 source: Some(propagation_source),
                             }).await;
-                        }
-                        
-                        SwarmEvent::Behaviour(HcryptEvent::RequestResponse(
-                            request_response::Event::Message { peer, message }
-                        )) => {
-                            match message {
-                                request_response::Message::Request { request, .. } => {
-                                    let _ = event_tx.send(TransportEvent::DirectRequest {
-                                        peer,
-                                        msg: request.msg,
-                                    }).await;
-                                }
-                                _ => {}
-                            }
                         }
                         
                         SwarmEvent::ConnectionEstablished { peer_id, .. } => {
@@ -419,7 +323,7 @@ impl P2PTransport {
     }
     
     /// Broadcast transaction to network
-    pub async fn broadcast_transaction(&self, onion_packet: Vec<u8>, fingerprint_hint: [u8; 8]) -> Result<()> {
+    pub async fn broadcast_transaction(&self, onion_packet: Vec<u8>, fingerprint_hint: Vec<u8>) -> Result<()> {
         let msg = NetworkMessage::Transaction {
             onion_packet,
             fingerprint_hint,
@@ -438,7 +342,7 @@ impl P2PTransport {
     }
     
     /// Broadcast block to network
-    pub async fn broadcast_block(&self, height: u64, hash: [u8; 32], block_data: Vec<u8>) -> Result<()> {
+    pub async fn broadcast_block(&self, height: u64, hash: Vec<u8>, block_data: Vec<u8>) -> Result<()> {
         let msg = NetworkMessage::Block {
             height,
             hash,
@@ -458,7 +362,7 @@ impl P2PTransport {
     }
     
     /// Broadcast oracle proof
-    pub async fn broadcast_oracle_proof(&self, vertex_id: u64, commitment: [u8; 32], spectral_gap: f64) -> Result<()> {
+    pub async fn broadcast_oracle_proof(&self, vertex_id: u64, commitment: Vec<u8>, spectral_gap: f64) -> Result<()> {
         let msg = NetworkMessage::OracleProof {
             vertex_id,
             commitment,
@@ -473,19 +377,6 @@ impl P2PTransport {
             })
             .await
             .context("Failed to send publish command")?;
-        
-        Ok(())
-    }
-    
-    /// Send direct message to peer
-    pub async fn send_to_peer(&self, peer: PeerId, msg: NetworkMessage) -> Result<()> {
-        self.cmd_tx
-            .send(SwarmCommand::SendRequest {
-                peer,
-                request: DirectRequest { msg },
-            })
-            .await
-            .context("Failed to send request command")?;
         
         Ok(())
     }

@@ -1,7 +1,7 @@
 // Block Storage - RocksDB persistence for blocks
 
 use crate::types::{Block, BlockHash};
-use anyhow::{Result, bail};
+use anyhow::Result;
 use rocksdb::DB;
 use std::sync::Arc;
 use tracing::{debug, info};
@@ -89,8 +89,10 @@ impl BlockStore {
         
         match (self.db.get(height_key)?, self.db.get(hash_key)?) {
             (Some(height_bytes), Some(hash_bytes)) => {
-                let height = u64::from_be_bytes(height_bytes.as_ref().try_into()?);
-                let hash_array: [u8; 32] = hash_bytes.as_ref().try_into()?;
+                let height_slice: &[u8] = height_bytes.as_ref();
+                let height = u64::from_be_bytes(height_slice.try_into()?);
+                let hash_slice: &[u8] = hash_bytes.as_ref();
+                let hash_array: [u8; 32] = hash_slice.try_into()?;
                 let hash = BlockHash(hash_array);
                 Ok(Some((height, hash)))
             }
@@ -102,7 +104,8 @@ impl BlockStore {
     pub fn get_tip_height(&self) -> Result<Option<u64>> {
         match self.db.get(b"tip:height")? {
             Some(bytes) => {
-                let height = u64::from_be_bytes(bytes.as_ref().try_into()?);
+                let slice: &[u8] = bytes.as_ref();
+                let height = u64::from_be_bytes(slice.try_into()?);
                 Ok(Some(height))
             }
             None => Ok(None),
@@ -122,7 +125,8 @@ impl BlockStore {
         
         match self.db.get(key.as_bytes())? {
             Some(bytes) => {
-                let hash_array: [u8; 32] = bytes.as_ref().try_into()?;
+                let slice: &[u8] = bytes.as_ref();
+                let hash_array: [u8; 32] = slice.try_into()?;
                 Ok(Some(BlockHash(hash_array)))
             }
             None => Ok(None),
@@ -135,7 +139,8 @@ impl BlockStore {
         
         match self.db.get(key.as_bytes())? {
             Some(bytes) => {
-                let height = u64::from_be_bytes(bytes.as_ref().try_into()?);
+                let slice: &[u8] = bytes.as_ref();
+                let height = u64::from_be_bytes(slice.try_into()?);
                 Ok(Some(height))
             }
             None => Ok(None),

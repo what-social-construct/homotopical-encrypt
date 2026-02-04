@@ -19,7 +19,8 @@ tokio = { version = "1.35", features = ["full"] }
 tokio-util = "0.7"
 
 # Networking
-libp2p = { version = "0.53", features = ["tcp", "noise", "yamux", "gossipsub", "kad", "mdns", "macros"] }
+libp2p = { version = "0.53", features = ["tcp", "noise", "yamux", "gossipsub", "kad", "mdns", "macros", "request-response", "tokio", "cbor"] }
+futures = "0.3"
 
 # Serialization
 serde = { version = "1.0", features = ["derive"] }
@@ -45,7 +46,7 @@ thiserror = "1.0"
 
 # Utilities
 bytes = "1.5"
-hex = "0.4"
+hex = { version = "0.4", features = ["serde"] }
 clap = { version = "4.4", features = ["derive"] }
 
 # WASM (for smart contracts)
@@ -54,3 +55,4 @@ wasmtime = "16.0"
 # Testing
 proptest = "1.4"
 criterion = "0.5"
+tempfile = "3.10"

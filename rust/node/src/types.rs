@@ -61,7 +61,9 @@ pub struct ComputationStep {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WorkerSignature {
     pub worker_pubkey: [u8; 32],
-    pub signature: [u8; 64],
+    /// Signature bytes (Ed25519 = 64 bytes)
+    #[serde(with = "hex::serde")]
+    pub signature: Vec<u8>,
 }
 
 /// Transaction
