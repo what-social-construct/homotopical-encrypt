@@ -1,7 +1,5 @@
-// JSON-RPC Server
+// JSON-RPC Server Module
 
-// TODO: Implement RPC
-// - Get block
-// - Submit transaction
-// - Get balance
-// - Query state
+pub mod server;
+
+pub use server::{run_rpc_server, RpcState};
