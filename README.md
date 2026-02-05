@@ -2,13 +2,9 @@
 
 **Layer 1 Privacy Blockchain with Post-Quantum Geometric Encryption**
 
-<<<<<<< HEAD
 This is *quantum-resistant* (resists Shor's algorithm), not *quantum encryption* (no qubits required).
-=======
-> ⚠️ **Precise Terminology**: This is *quantum-resistant* (resists Shor's algorithm), not *quantum encryption* (no qubits required). Security derives from geometric hardness
->>>>>>> 2e43f9ac6492cc79a83c09ea18fd506fa9a14e60
 
-> 🚀 **Layer 1 Chain**: Full blockchain node with Proof of Value consensus, sheaf-aware storage, and libp2p networking.
+Full blockchain node with Proof of Value consensus, sheaf-aware storage, and libp2p networking.
 
 Like Monero, but with:
 - ✅ **Post-quantum secure** (spectral + lattice hardness, not ECDSA)
@@ -169,6 +165,15 @@ src/
 └── oracle/         # Oracle client
     └── client.py         # Python → Oracle RPC
 ```
+**Geometric post-quantum encryption via Hopf fibrations and spectral invariants.**
+
+> ⚠️ **Precise Terminology**: This is *quantum-resistant* (resists Shor's algorithm), not *quantum encryption* (no qubits required). Security derives from geometric hardness
+
+A novel cryptographic framework combining:
+- **Grothendieck fibrations** for key structure
+- **Sheaf Laplacians** (Hansen-Ghrist) for encryption/decryption
+- **Homotopy equivalence classes** for indistinguishability
+- **Zero-knowledge proofs** of homotopy equivalence
 
 ## Mathematical Foundation
 
