@@ -42,7 +42,7 @@ class RelayNode:
         """Extract fiber bundle from credential."""
         return FiberBundle(
             base_space=self.credential.topology,
-            fiber_dim=self.credential.security_parameter,
+            fiber_dim=self.credential.hilbert_dim,
             connection=getattr(self.credential, 'connection', {})
         )
     

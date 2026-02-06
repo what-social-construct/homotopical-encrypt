@@ -197,24 +197,47 @@ class ChainStore:
         Save current sheaf state snapshot.
         
         Note: SheafState uses harmonic components, not UTXO.
+        Properly persists all sheaf-aware fields.
         """
         state_path = self.data_dir / "state" / "current.json"
         
-        # Serialize state (basic version)
+        # Serialize accounts (with all fields)
+        accounts_dict = {}
+        for fp, acc in state.accounts.items():
+            accounts_dict[fp.hex()] = {
+                "fingerprint": acc.fingerprint.hex(),
+                "homotopy_class_id": acc.homotopy_class_id.hex(),
+                "balance": acc.balance,
+                "nonce": acc.nonce,
+                "connected_to": [c.hex() for c in acc.connected_to],
+                "rotation_count": acc.rotation_count
+            }
+        
+        # Serialize state
         state_dict = {
             "tip_height": state.tip_height,
-            "tip_hash": state.tip_hash.hex() if hasattr(state, 'tip_hash') else "",
-            "harmonic_balances": {
-                k.hex(): v for k, v in getattr(state, 'harmonic_balances', {}).items()
-            },
-            # Add more fields as needed
+            "tip_hash": state.tip_hash.hex() if isinstance(state.tip_hash, bytes) else "",
+            "accounts": accounts_dict,
+            "utxo_count": len(state.utxos),
+            "spent_key_images": [ki.hex() for ki in state.spent_key_images],
+            "hash_chain_hash": state.hash_chain.get_current_hash(),
+            "hash_chain_height": state.hash_chain.height(),
+            "spectral_gap": state.spectral_cache.spectral_gap,
+            "betti_numbers": state.compute_betti_numbers(),
         }
         
         with open(state_path, 'w') as f:
             json.dump(state_dict, f, indent=2)
+        
+        # Save hash chain separately (full audit trail)
+        chain_path = self.data_dir / "state" / "hash_chain.json"
+        with open(chain_path, 'w') as f:
+            json.dump(state.hash_chain.chain, f, indent=2)
     
     def load_state(self) -> Optional[SheafState]:
         """Load state from disk."""
+        from .sheaf_state import SheafState, HashChain, AccountState
+        
         state_path = self.data_dir / "state" / "current.json"
         
         if not state_path.exists():
@@ -223,10 +246,36 @@ class ChainStore:
         with open(state_path, 'r') as f:
             state_dict = json.load(f)
         
-        # Reconstruct state (basic version)
+        # Reconstruct state
         state = SheafState()
         state.tip_height = state_dict.get("tip_height", -1)
-        # TODO: Full state reconstruction
+        state.tip_hash = bytes.fromhex(state_dict.get("tip_hash", "00" * 32))
+        
+        # Reconstruct accounts
+        for fp_hex, acc_data in state_dict.get("accounts", {}).items():
+            fp = bytes.fromhex(fp_hex)
+            acc = AccountState(
+                fingerprint=bytes.fromhex(acc_data["fingerprint"]),
+                homotopy_class_id=bytes.fromhex(acc_data["homotopy_class_id"]),
+                balance=acc_data["balance"],
+                nonce=acc_data["nonce"],
+                connected_to={bytes.fromhex(c) for c in acc_data.get("connected_to", [])},
+                rotation_count=acc_data.get("rotation_count", 0)
+            )
+            state.accounts[fp] = acc
+        
+        # Reconstruct spent key images
+        state.spent_key_images = {
+            bytes.fromhex(ki) for ki in state_dict.get("spent_key_images", [])
+        }
+        
+        # Load hash chain (audit trail)
+        chain_path = self.data_dir / "state" / "hash_chain.json"
+        if chain_path.exists():
+            with open(chain_path, 'r') as f:
+                state.hash_chain.chain = json.load(f)
+                if state.hash_chain.chain:
+                    state.hash_chain.current_hash = state.hash_chain.chain[-1]["hash"]
         
         return state
     

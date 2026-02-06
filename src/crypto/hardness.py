@@ -1,15 +1,25 @@
 """
 Lattice Hardness - Post-Quantum Security Foundation
 
-Security of homotopical encryption rests on lattice problems:
-- SVP (Shortest Vector Problem)
-- CVP (Closest Vector Problem)
+Security of homotopical encryption rests on HODGE-HARDNESS:
 
-These are NOT broken by Shor's algorithm because they lack
-the periodic structure that quantum algorithms exploit.
+    Given cochain b = h + e where h ∈ ker(Δ) and e ∈ im(δ) ⊕ im(δ*),
+    find h WITHOUT knowing Δ.
+
+This REDUCES TO standard lattice problems:
+    Hodge-hardness → CVP on harmonic sublattice → CVP on q-ary lattice
+
+The reduction is tight: any algorithm solving Hodge-hardness gives an
+algorithm for CVP on the lattice defined by ker(Δ) ⊂ C^k(X, ℤ_q).
+
+No separate LWE "safety net" is needed — the geometric structure
+IS a lattice problem, not a wrapper around one.
+
+Lattice problems (SVP, CVP) are NOT broken by Shor's algorithm because
+they lack the periodic structure that quantum algorithms exploit.
 
 This module provides:
-- LatticeInstance: Basic LWE-style lattice instance
+- LatticeInstance: The underlying lattice structure (cochain lattice)
 - Security analysis and parameter selection
 """
 

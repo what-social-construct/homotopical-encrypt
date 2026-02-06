@@ -45,16 +45,18 @@ struct Args {
 struct Node {
     /// P2P transport
     transport: P2PTransport,
-    /// Block storage
-    block_store: BlockStore,
+    /// Block storage (Arc-wrapped for RPC sharing)
+    block_store: Arc<BlockStore>,
     /// Key image store (double-spend prevention)
-    key_image_store: KeyImageStore,
+    key_image_store: Arc<KeyImageStore>,
     /// State store (account balances)
-    state_store: StateStore,
+    state_store: Arc<StateStore>,
     /// Sheaf store (geometric data)
-    sheaf_store: SheafStore,
+    sheaf_store: Arc<SheafStore>,
     /// Is this a validator?
     is_validator: bool,
+    /// RPC port
+    rpc_port: u16,
 }
 
 impl Node {
@@ -67,10 +69,11 @@ impl Node {
         let db = init_sheaf_db(data_path)?;
         let db = Arc::new(db);
         
-        let block_store = BlockStore::new(db.clone());
-        let key_image_store = KeyImageStore::new(db.clone());
-        let state_store = StateStore::new(db.clone());
-        let sheaf_store = SheafStore::new(db.clone());
+        // Wrap stores in Arc for RPC sharing
+        let block_store = Arc::new(BlockStore::new(db.clone()));
+        let key_image_store = Arc::new(KeyImageStore::new(db.clone()));
+        let state_store = Arc::new(StateStore::new(db.clone()));
+        let sheaf_store = Arc::new(SheafStore::new(db.clone()));
         
         // Check chain tip
         if let Some((height, hash)) = block_store.get_chain_tip()? {
@@ -101,7 +104,31 @@ impl Node {
             state_store,
             sheaf_store,
             is_validator: args.validator,
+            rpc_port: args.rpc_port,
         })
+    }
+    
+    /// Start the RPC server in a background task
+    fn start_rpc_server(&self) {
+        let block_store = self.block_store.clone();
+        let state_store = self.state_store.clone();
+        let key_image_store = self.key_image_store.clone();
+        let sheaf_store = self.sheaf_store.clone();
+        let is_validator = self.is_validator;
+        let rpc_addr = format!("127.0.0.1:{}", self.rpc_port);
+        
+        tokio::spawn(async move {
+            if let Err(e) = rpc::run_rpc_server(
+                &rpc_addr,
+                block_store,
+                state_store,
+                key_image_store,
+                sheaf_store,
+                is_validator,
+            ).await {
+                error!("RPC server error: {}", e);
+            }
+        });
     }
     
     /// Main event loop
@@ -113,6 +140,9 @@ impl Node {
         } else {
             info!("📡 Running as FULL NODE - sync and relay only");
         }
+        
+        // Start RPC server
+        self.start_rpc_server();
         
         loop {
             tokio::select! {
@@ -140,10 +170,10 @@ impl Node {
     
     /// Handle network events
     async fn handle_network_event(&self, event: network::transport::TransportEvent) {
-        use network::transport::{TransportEvent, NetworkMessage, TOPIC_TRANSACTIONS, TOPIC_BLOCKS, TOPIC_ORACLE};
+        use network::transport::{TransportEvent, NetworkMessage};
         
         match event {
-            TransportEvent::GossipMessage { topic, data, source } => {
+            TransportEvent::GossipMessage { topic, data, source: _ } => {
                 debug!("Received gossip on {} ({} bytes)", topic, data.len());
                 
                 // Parse message
@@ -229,7 +259,7 @@ async fn main() -> Result<()> {
     // Initialize node
     let node = Node::new(&args).await?;
     
-    // Run main event loop
+    // Run main event loop (includes RPC server)
     node.run().await?;
 
     Ok(())

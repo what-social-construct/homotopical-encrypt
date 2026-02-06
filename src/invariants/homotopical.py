@@ -66,29 +66,33 @@ def compute_h_level(betti: Dict[int, int]) -> HLevel:
     """
     Compute h-level from Betti numbers.
     
-    h-level measures "complexity" of homotopy type:
-    - Contractible: all βₖ = 0 except β₀ = 1, and "no holes"
-    - Set: β₁ = 0 (no 1-loops)
-    - Groupoid: β₁ > 0, β₂ = 0
-    - Higher: β₂ > 0
+    h-level (truncation level) from HoTT:
+    - CONTRACTIBLE (-2): β₀ = 1, all higher βₖ = 0, and space is
+      contractible (we approximate: tree-like, β₀=1, β₁=0, β₂=0,
+      but true contractibility requires more than Betti numbers)
+    - SET (0-truncated): no 1-loops (β₁ = 0), discrete identity types
+    - GROUPOID (1-truncated): has 1-loops (β₁ > 0) but no 2-loops
+    - HIGHER (2+-truncated): has 2-loops or higher structure
+    
+    Note: We use SET for connected spaces with no holes (β₀=1, β₁=0),
+    since Betti numbers alone cannot distinguish contractible from
+    merely 0-truncated. True contractibility would require checking
+    that all homotopy groups vanish, not just homology.
     """
     beta_0 = betti.get(0, 1)
     beta_1 = betti.get(1, 0)
     beta_2 = betti.get(2, 0)
     
-    # Single component, no holes at all
-    if beta_0 == 1 and beta_1 == 0 and beta_2 == 0:
-        return HLevel.PROPOSITION
-    
-    # Multiple components but no 1-holes
+    # No 1-holes: 0-truncated (SET)
+    # Includes connected (β₀=1) and disconnected cases
     if beta_1 == 0 and beta_2 == 0:
         return HLevel.SET
     
-    # Has 1-holes but no 2-holes
+    # Has 1-holes but no 2-holes: 1-truncated (GROUPOID)
     if beta_1 > 0 and beta_2 == 0:
         return HLevel.GROUPOID
     
-    # Has 2-holes or higher
+    # Has 2-holes or higher: 2+-truncated (HIGHER)
     return HLevel.HIGHER
 
 

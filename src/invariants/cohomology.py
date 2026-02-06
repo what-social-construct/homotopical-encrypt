@@ -159,34 +159,47 @@ def check_cochain_complex_structure(
 
 def compute_hodge_decomposition_ratios(
     laplacian: np.ndarray,
-    delta: np.ndarray,
-    delta_star: Optional[np.ndarray] = None,
+    delta_above: np.ndarray,
+    delta_below: Optional[np.ndarray] = None,
     tol: float = 1e-10
 ) -> Dict[str, float]:
     """
-    Compute Hodge decomposition ratios.
+    Compute Hodge decomposition ratios for degree k.
     
-    C^k = H^k ⊕ im(δ) ⊕ im(δ*)
+    C^k = H^k ⊕ im(δ_{k-1}) ⊕ im(δ_k*)
     
-    where H^k = ker(Δ) is the harmonic subspace.
+    where:
+      H^k = ker(Δ_k)           — harmonic cochains
+      im(δ_{k-1}) ⊂ C^k       — exact (from below)
+      im(δ_k*) = im(δ_k^T) ⊂ C^k  — coexact (adjoint from above)
     
-    Ratios measure how cochain space is distributed.
+    These three subspaces are mutually orthogonal and span C^k.
+    Their dimensions must sum to dim(C^k).
+    
+    Args:
+        laplacian: Δ_k acting on C^k
+        delta_above: δ_k : C^k → C^{k+1} (coboundary going UP)
+        delta_below: δ_{k-1} : C^{k-1} → C^k (coboundary from below)
+                     If None, exact part is zero (degree 0 case)
     """
     total_dim = laplacian.shape[0]
     
-    # Harmonic: ker(Δ)
+    # Harmonic: ker(Δ_k)
     eigs = np.linalg.eigvalsh(laplacian)
     harmonic_dim = int(np.sum(np.abs(eigs) < tol))
     
-    # Exact: im(δ)
-    exact_dim = int(np.linalg.matrix_rank(delta, tol=tol))
-    
-    # Coexact: im(δ*)
-    if delta_star is not None:
-        coexact_dim = int(np.linalg.matrix_rank(delta_star, tol=tol))
+    # Exact: im(δ_{k-1}) ⊂ C^k — image of coboundary FROM BELOW
+    # For degree 0: no δ_{-1} exists, so exact_dim = 0
+    if delta_below is not None:
+        exact_dim = int(np.linalg.matrix_rank(delta_below, tol=tol))
     else:
-        # δ* = δᵀ for real inner product
-        coexact_dim = int(np.linalg.matrix_rank(delta.T, tol=tol))
+        exact_dim = 0
+    
+    # Coexact: im(δ_k*) = im(δ_k^T) ⊂ C^k — adjoint of coboundary going UP
+    coexact_dim = int(np.linalg.matrix_rank(delta_above.T, tol=tol))
+    
+    # Sanity: harmonic + exact + coexact should = total_dim
+    # (This is the Hodge theorem for finite-dimensional inner product spaces)
     
     return {
         "harmonic_ratio": harmonic_dim / total_dim if total_dim > 0 else 0.0,
@@ -220,7 +233,7 @@ def compute_cohomology_invariants(
     # β₀ = n₀ - rank(δ₀)
     beta_0 = n0 - ranks["rank_0"]
     
-    # β₁ = nullity(δ₀) - rank(δ₁) if δ₁ exists
+    # β₁ = nullity(δ₁) - rank(δ₀) = (n₁ - rank(δ₁)) - rank(δ₀)
     if delta_1 is not None:
         beta_1 = n1 - ranks["rank_0"] - ranks.get("rank_1", 0)
     else:

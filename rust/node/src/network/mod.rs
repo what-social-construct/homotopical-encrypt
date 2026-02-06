@@ -13,7 +13,7 @@ pub mod onion;
 pub mod relay;
 pub mod transport;
 
-pub use onion::OnionRouter;
+pub use onion::{OnionRouter, OnionPacket};
 pub use relay::{RelayNode, RelayNetwork};
 pub use transport::P2PTransport;
 

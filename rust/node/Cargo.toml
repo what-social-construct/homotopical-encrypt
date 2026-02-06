@@ -12,6 +12,10 @@ axum = "0.7"
 tower = "0.5"
 tower-http = { version = "0.6", features = ["cors"] }
 
+# HTTP client for Python bridge
+reqwest = { version = "0.12", features = ["json"] }
+base64 = "0.22"
+
 # Workspace deps
 tokio.workspace = true
 tokio-util.workspace = true

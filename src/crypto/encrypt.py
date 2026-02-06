@@ -223,6 +223,16 @@ def encrypt(
     edges = credential.topology.get(1, [])
     edge_syndromes = {}
     
+    # Determine noise dimensions from topology
+    # L_0 has shape (n_vertices * stalk_dim, n_vertices * stalk_dim) where stalk_dim=1
+    # L_1 has shape (n_edges * stalk_dim, n_edges * stalk_dim)
+    # These are topology-scale, NOT hilbert_dim-scale.
+    # For Hodge noise on the dim-dimensional message space, we need dim-sized noise.
+    # Strategy: use Hodge-structured noise at TOPOLOGY scale for syndromes,
+    # and O-U noise at MESSAGE scale (dim) for vertex blocks.
+    
+    n_edges = len(edges)
+    
     for edge in edges:
         i, j = edge
         vi_data = vertex_blocks.get(i, np.zeros(dim))
@@ -234,7 +244,10 @@ def encrypt(
         # Coboundary: δ(c)_e = A·c_j - c_i
         syndrome = (A @ vj_data - vi_data) % modulus
         
-        # Add HODGE-STRUCTURED noise (exact⊕coexact large, harmonic small)
+        # Add noise at message dimension
+        # Hodge noise requires Laplacian at matching dimension.
+        # When L_1 matches dim, use Hodge-structured noise;
+        # otherwise use spectral noise (O-U) which is always correct.
         if use_hodge_noise and L_1.shape[0] == dim:
             noise = hodge_noise(
                 L_1, delta_1, delta_0,
@@ -243,22 +256,23 @@ def encrypt(
                 sigma_harmonic=sigma_harmonic
             )
         else:
-            # Fallback: use O-U noise
-            noise = ornstein_uhlenbeck_noise(dim, volatility=sigma_exact)
+            # Use spectral noise: large in non-harmonic, small in harmonic-like
+            # This approximates Hodge structure without requiring dimension match
+            noise = spectral_noise(dim, sigma_exact, modulus)
         
         syndrome = (syndrome + noise) % modulus
         edge_syndromes[edge] = syndrome
     
-    # 5. Add HODGE-STRUCTURED noise to vertex blocks
+    # 5. Add noise to vertex blocks
+    # First vertex gets HARMONIC-PRESERVING noise (small, protects message)
+    # Other vertices get large noise (hides random shares)
+    vertices_list = [v[0] for v in vertices]
     for vid in vertex_blocks:
-        if use_hodge_noise and L_0.shape[0] == dim:
-            noise = hodge_noise(
-                L_0, delta_0, None,  # No lower coboundary for C^0
-                sigma_exact=sigma_exact,
-                sigma_coexact=sigma_exact,
-                sigma_harmonic=sigma_harmonic
-            )
+        if vid == vertices_list[0]:
+            # First vertex: small noise to preserve message recoverability
+            noise = ornstein_uhlenbeck_noise(dim, volatility=sigma_harmonic)
         else:
+            # Other vertices: large noise (these are random shares anyway)
             noise = ornstein_uhlenbeck_noise(dim, volatility=sigma_exact)
         
         vertex_blocks[vid] = (vertex_blocks[vid] + noise) % modulus

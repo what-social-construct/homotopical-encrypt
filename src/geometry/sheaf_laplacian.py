@@ -92,7 +92,13 @@ class SheafLaplacian:
         return L
     
     def get_laplacian_1(self) -> np.ndarray:
-        """Compute 1-Laplacian Δ₁ = δ₀δ₀* + δ₁*δ₁."""
+        """
+        Compute 1-Laplacian Δ₁ = δ₁*δ₁ + δ₀ δ₀*.
+        
+        Acts on 1-cochains (edge data).
+        Δ₁ = δ₁^T δ₁  (from above: edges→triangles)
+            + δ₀ δ₀^T  (from below: vertices→edges, then adjoint)
+        """
         if self._L1 is not None:
             return self._L1
         
@@ -101,11 +107,26 @@ class SheafLaplacian:
         if not edges:
             return np.array([[]])
         
-        # Simplified: return identity-scaled matrix for edges
-        n_edges = len(edges)
-        dim = self.sheaf.get_cochain_space_dim(1) or n_edges
+        from .hodge import build_coboundary_operator
         
-        self._L1 = np.eye(dim)
+        # Build coboundary operators from the nerve
+        delta_0, delta_1 = build_coboundary_operator(self.sheaf.nerve, stalk_dim=1)
+        
+        # Δ₁ = δ₁^T δ₁ + δ₀ δ₀^T
+        # delta_0: (n_edges, n_vertices) — maps C^0 → C^1
+        # delta_1: (n_triangles, n_edges) — maps C^1 → C^2
+        n_edges_dim = delta_0.shape[0]  # = delta_1.shape[1]
+        
+        L1 = np.zeros((n_edges_dim, n_edges_dim))
+        
+        # Upper term: δ₁* δ₁ = δ₁^T δ₁
+        if delta_1.shape[0] > 0:
+            L1 += delta_1.T @ delta_1
+        
+        # Lower term: δ₀ δ₀* = δ₀ δ₀^T
+        L1 += delta_0 @ delta_0.T
+        
+        self._L1 = L1
         return self._L1
     
     def eigendecomposition(self, k: int = 0) -> Tuple[np.ndarray, np.ndarray]:

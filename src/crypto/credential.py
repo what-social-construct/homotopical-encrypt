@@ -356,8 +356,8 @@ def _compute_spectrum(
     # β_0 = connected components (from graph structure)
     beta_0 = _count_connected_components(nerve)
 
-    # β_1 = loops (from Euler characteristic)
-    chi = n_vertices - n_edges + n_triangles  # Euler = β₀ - β₁ + β₂
+    # β_1 = independent loops (rank-nullity on δ₀)
+    # For a graph: β₁ = |E| - |V| + β₀ (cycle rank)
     beta_1 = max(0, n_edges - n_vertices + beta_0)
     
     # Spectral gap (smallest nonzero eigenvalue)

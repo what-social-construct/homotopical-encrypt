@@ -132,6 +132,14 @@ def prove_homotopy_equivalence(
         HomotopyProof that can be verified publicly
         
     Security: The proof only reveals HOMOTOPY INVARIANTS, not the fibration.
+    
+    TODO: Current implementation is a Fiat-Shamir hash commitment scaffold.
+    The verifier checks structural consistency (matching fingerprints, valid
+    challenge recomputation) but cannot verify the response without the
+    prover's randomness. For production: replace with a lattice-based
+    Σ-protocol where the response is verifiable (e.g., masked eigenvalue
+    opening with bounded noise, similar to Lyubashevsky's Fiat-Shamir
+    with Aborts for lattices).
     """
     # 1. Extract prover's invariants (from secret fibration)
     prover_betti = credential.spectrum.betti_numbers
