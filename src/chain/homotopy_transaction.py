@@ -29,6 +29,8 @@ import secrets
 
 from ..crypto.credential import FibrationCredential, SpectralFingerprint
 from ..crypto import encrypt, decrypt
+from ..crypto.commitment import CochainCommitment, BlindedCommitment, add_commitments
+from ..primitives.cochain import CochainComplex, VertexCochain
 from ..proofs.spectral import (
     SpectralProof,
     SpectralIdentityProof,
@@ -182,31 +184,44 @@ def create_homotopy_transaction(
     eigenvectors = np.diag(eigenvalues) if len(eigenvalues) > 0 else np.eye(8)
     key_image = compute_key_image(eigenvectors)
     
-    # 3. Create amount commitment (blinded)
-    amount_blinding = secrets.token_bytes(32)
-    amount_bytes = amount.to_bytes(8, 'little')
-    amount_commitment = hashlib.sha256(
-        b"HCRYPT_COMMIT" + amount_bytes + amount_blinding
-    ).digest()
+    # 3. Build CochainComplex from credential's nerve topology
+    #    The topology IS the base space; δ from this complex = commitment binding
+    vertices = sender_credential.topology.get(0, [])
+    edges = sender_credential.topology.get(1, [])
+    n_vertices = len(vertices)
+    q = sender_credential.modulus  # 12289 (lattice prime)
     
-    # 4. Create spectral identity proof
-    # Note: uses topology_hash not fingerprint
-    topology_hash = hashlib.sha256(
-        str(sender_credential.topology).encode()
-    ).digest()
+    # stalk_dim=1 for scalar amount commitments
+    complex = CochainComplex.from_graph(n_vertices, edges, stalk_dim=1)
+    
+    # 4. Create amount commitment via coboundary: Commit(amount) = δ(amount || r)
+    #    This is the REAL hcrypt mechanism — SVP-hard binding from ker(δ)
+    amount_vec = np.array([float(amount % q)])
+    input_commitment, input_opening = CochainCommitment.commit(
+        message=amount_vec,
+        complex=complex,
+        q=q
+    )
+    # Wire format bytes for Rust: modulus(4) + n_edges(4) + edges(n×8) + topo_hash(16)
+    amount_commitment = input_commitment.to_bytes()
+    
+    # 5. Create spectral identity proof
+    #    Use the credential's own topology_hash (domain-separated, includes eigenvalues)
+    #    — computed during keygen in _compute_spectrum() with HOMOTOPICAL_CREDENTIAL_V2
+    topology_hash = sender_credential.spectrum.topology_hash
     spectral_proof = prove_spectral_identity(
         eigenvalues=eigenvalues,
         topology_hash=topology_hash
     )
     
-    # 5. Extract homotopy invariants from spectrum
+    # 6. Extract homotopy invariants from spectrum
     betti = sender_spectrum.betti_numbers
     if isinstance(betti, (list, tuple)):
         betti = (betti[0], betti[1], betti[2] if len(betti) > 2 else 0)
     else:
         betti = (1, 0, 0)  # Default: connected, no holes
     
-    # 6. Create input
+    # 7. Create input
     htx_input = HomotopyInput(
         fingerprint=sender_fingerprint,
         key_image=key_image,
@@ -216,22 +231,19 @@ def create_homotopy_transaction(
         spectral_gap=sender_spectrum.spectral_gap
     )
     
-    # 7. Create encrypted output for recipient
-    out_blinding = secrets.token_bytes(32)
-    out_commitment = hashlib.sha256(
-        b"HCRYPT_COMMIT" + amount_bytes + out_blinding
-    ).digest()
+    # 8. Create output commitment (also cochain-based)
+    output_commitment, output_opening = CochainCommitment.commit(
+        message=amount_vec,
+        complex=complex,
+        q=q
+    )
+    out_commitment = output_commitment.to_bytes()
     
-    # Encrypt amount using homotopical encryption
-    # (Simplified - in production use full encrypt())
-    encrypted_amount = hashlib.sha256(
-        recipient_fingerprint + amount_bytes + secrets.token_bytes(16)
-    ).digest()[:16]
-    
-    # Topology hash from credential's nerve
-    topology_hash = hashlib.sha256(
-        str(sender_credential.topology).encode()
-    ).digest()
+    # 9. Encrypt amount using actual homotopical encryption (Hodge noise)
+    amount_bytes = amount.to_bytes(8, 'little')
+    encrypted_ciphertext = encrypt(amount_bytes, sender_credential, 
+                                    sigma_exact=2.0, sigma_harmonic=0.1)
+    encrypted_amount = encrypted_ciphertext.serialize()
     
     htx_output = HomotopyOutput(
         recipient_fingerprint=recipient_fingerprint,
@@ -240,14 +252,18 @@ def create_homotopy_transaction(
         output_topology_hash=topology_hash
     )
     
-    # 8. Fee commitment
-    fee_bytes = fee.to_bytes(8, 'little')
-    fee_blinding = secrets.token_bytes(32)
-    fee_commitment = hashlib.sha256(
-        b"HCRYPT_FEE" + fee_bytes + fee_blinding
-    ).digest()
+    # 10. Fee commitment (also cochain-based for homomorphic verification)
+    fee_vec = np.array([float(fee % q)])
+    fee_cochain_commitment, _ = CochainCommitment.commit(
+        message=fee_vec,
+        complex=complex,
+        q=q
+    )
+    fee_commitment = fee_cochain_commitment.to_bytes()
     
-    # 9. Build transaction
+    # 11. Build transaction
+    #     tx.data for each input = CochainCommitment wire bytes
+    #     Rust parse_cochain_commitment() can parse these directly
     return HomotopyTransaction(
         version=2,
         inputs=[htx_input],

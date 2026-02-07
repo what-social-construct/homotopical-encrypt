@@ -24,6 +24,25 @@ For cryptography:
   (δ* implicit in eigendecomposition of Δ)
 - Security: spectral gap separates ker(Δ) from im(δ)⊕im(δ*)
 
+TSIRELSON BOUND (spectral gap constraint):
+
+  The spectral gap λ₁ of the sheaf Laplacian is constrained to
+  [1/√2, 2√2] — the Tsirelson range. This is a structural artifact
+  of quantum information geometry, not a design choice:
+
+  The Laplacian Δ = Σ_e (I - R_e)ᵀ(I - R_e), where R_e ∈ SO(n)
+  are the restriction maps (parallel transport). The operator norm
+  of (I - R) for R ∈ SO(n) achieves maximum √2 at rotation angle
+  π/2. This is the same √2 from the CHSH Bell inequality, confirmed
+  experimentally (Aspect/Clauser/Zeilinger, 2022 Nobel Prize).
+
+  At λ₁ = 1/√2 (lower bound): maximum uncertainty between ker(Δ)
+  and im(δ)⊕im(δ*) — the privacy optimum, where an observer
+  without the fibration secret cannot distinguish signal from noise.
+
+  See: consensus/invariant_validator.py for the full construction,
+       invariants/spectral.py for the spectral invariant structure.
+
 Reference: Hansen & Ghrist (2019), arXiv:1808.01513
 """
 

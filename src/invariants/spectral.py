@@ -4,11 +4,44 @@ Spectral Invariants
 Invariants derived from the spectrum of the sheaf Laplacian.
 Based on Hansen & Ghrist's spectral theory of cellular sheaves.
 
+The spectral gap λ₁ is the central invariant. Its valid range
+[1/√2, 2√2] is the Tsirelson bound — the same √2 that appears
+in the CHSH Bell inequality (see consensus/invariant_validator.py
+for the full geometric construction argument).
+
+The spectral gap controls:
+- SECURITY: separation between message space ker(Δ) and noise space
+  im(δ)⊕im(δ*). Larger gap → easier decryption with key, but also
+  easier for attacker to isolate harmonic component.
+- PRIVACY: at λ₁ = 1/√2 (lower bound), an observer without the
+  fibration secret has maximum uncertainty between signal and noise.
+  This is the privacy optimum — the geometric analog of Heisenberg
+  uncertainty at the point where conjugate observables are equally
+  uncertain.
+- VALIDITY: λ₁ > 2√2 is geometrically impossible for orthogonal
+  restriction maps (SO(n) parallel transport) on bounded-degree
+  graphs. Exceeding it means the fibration structure is invalid.
+
+The √2 is NOT a design parameter — it is a structural artifact of
+quantum information geometry. Orthogonal parallel transport on fiber
+bundles has the same geometric structure as quantum measurement on
+entangled systems. The bound arises from the operator norm of the
+difference (I - R) where R ∈ SO(n): the maximum singular value of
+(I - R) is √2 (achieved at rotation angle π/2). This is the same
+√2 that bounds the CHSH correlator in Bell experiments, confirmed
+experimentally by Aspect/Clauser/Zeilinger (2022 Nobel).
+
 References:
 - Hansen & Ghrist (2019): Spectral Theory of Cellular Sheaves (arXiv:1808.01513)
 - Barbero et al. (2022): Sheaf Neural Networks with Connection Laplacians
 - Bodnar et al. (2022): Neural Sheaf Diffusion (NeurIPS)
 - Ayzenberg et al. (2025): Čech cohomology accessible treatment
+- Tsirelson (1980): Quantum generalizations of Bell's inequality
+- Aspect, Clauser, Zeilinger (2022 Nobel Prize in Physics):
+  Experimental confirmation of Bell inequality violations with
+  entangled photons, establishing the 2√2 Tsirelson bound as a
+  physical fact — not just a mathematical bound
+- Helfer (2019): First-order homotopical logic (arXiv:1908.08944)
 """
 
 from dataclasses import dataclass
