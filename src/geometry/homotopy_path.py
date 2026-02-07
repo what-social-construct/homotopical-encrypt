@@ -4,16 +4,31 @@ Homotopy Path Construction
 Given two fibrations F, G with matching spectral invariants,
 construct an explicit homotopy path γ: [0,1] → Fib(X) with γ(0)=F, γ(1)=G.
 
-This is the DEFINITIVE test of homotopy equivalence:
-- Spectral equivalence: same invariants (necessary)
-- Homotopy path exists: same class (sufficient)
+This is the definitive test of homotopy equivalence:
+- spectral equivalence: same invariants (necessary)
+- homotopy path exists: same class (sufficient)
 
 The path is a family of natural transformations interpolating F → G.
 
+Local-to-global coherence interpretation:
+
+  Two fibrations F, G are homotopy equivalent when their restriction
+  maps (context projections, see primitives/stalk.py) produce the
+  same global section structure — i.e., same ker(Δ), same spectrum,
+  same Betti numbers. The path γ(t) interpolates between the two
+  systems of restriction maps while preserving all spectral invariants.
+
+  Concretely: γ(t) rotates the eigenvector frame of the Laplacian
+  via geodesic on SO(n), keeping eigenvalues fixed. At each t,
+  L(t) = V(t) Λ V(t)^T defines a valid Laplacian with the same
+  spectrum. The rotation is deterministic (matrix exp/log on SO(n)).
+
 Mathematical foundation:
-- Path space: Path(F,G) = {γ: I → Fib(X) | γ(0)=F, γ(1)=G}
+- path space: Path(F,G) = {γ: I → Fib(X) | γ(0)=F, γ(1)=G}
 - F ≃ G iff Path(F,G) is non-empty
-- We construct γ via geodesic interpolation on Grassmannian
+- γ constructed via geodesic interpolation on SO(n) (Lie group)
+
+Reference: Helfer (2019), arXiv:1908.08944 (first-order homotopical logic)
 """
 
 from dataclasses import dataclass

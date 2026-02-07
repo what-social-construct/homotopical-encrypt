@@ -374,6 +374,60 @@ def _compute_spectrum(
     hasher.update(np.float64(spectral_gap).tobytes())
     topology_hash = hasher.digest()
     
+    # ── KEYGEN INVARIANT GATES (hard-fail) ──
+    # Only checks that belong at CONSTRUCTION TIME go here.
+    # √2 spectral gap bounds are a PoV consensus constraint →
+    #   enforced by unified.py validate_for_stage("transaction")
+    # Spectral matching is an identity constraint →
+    #   enforced by validation.py validate_decryption_request()
+    
+    # Gate 1: Topology must have vertices (β₀ ≥ 1)
+    if beta_0 < 1:
+        raise RuntimeError(
+            f"KEYGEN INVARIANT VIOLATION: β₀ = {beta_0} < 1. "
+            f"Topology has no vertices. Aborting."
+        )
+    
+    # Gate 2: Nerve must be a valid simplicial complex
+    # Every edge (i,j) must have both vertices i, j in the vertex set.
+    # (cohomology.py validate_nerve_structure does full check; here
+    # we do the minimal face-containment check at construction.)
+    vertex_ids = {v[0] for v in nerve.get(0, [])}
+    for edge in nerve.get(1, []):
+        for vid in edge:
+            if vid not in vertex_ids:
+                raise RuntimeError(
+                    f"KEYGEN INVARIANT VIOLATION: Edge {edge} references "
+                    f"vertex {vid} not in vertex set {vertex_ids}. "
+                    f"Nerve is not a valid simplicial complex. Aborting."
+                )
+    
+    # Gate 3: Restriction maps must have correct dimensions
+    # R_{v→e} must be (stalk_dim × stalk_dim) for each edge.
+    for edge, A in fibration.edge_keys.items():
+        if A.shape != (fibration.hilbert_dim, fibration.hilbert_dim):
+            raise RuntimeError(
+                f"KEYGEN INVARIANT VIOLATION: Restriction map for edge {edge} "
+                f"has shape {A.shape}, expected "
+                f"({fibration.hilbert_dim}, {fibration.hilbert_dim}). "
+                f"Fibration structure is malformed. Aborting."
+            )
+    
+    # Gate 4: Laplacian must be PSD (fundamental Hodge requirement)
+    # Δ₀ = δ*δ is algebraically PSD, but with lattice-scale maps (q ≈ 10⁴),
+    # float64 accumulation noise can produce λ_min ≈ -10⁻³.
+    # Use RELATIVE tolerance: |λ_min| / λ_max must be tiny (numerical dust).
+    if len(eigenvalues) > 0 and eigenvalues[0] < 0:
+        scale = max(abs(eigenvalues[-1]), 1.0)
+        relative_violation = abs(eigenvalues[0]) / scale
+        if relative_violation > 1e-10:
+            raise RuntimeError(
+                f"KEYGEN INVARIANT VIOLATION: Laplacian not PSD: "
+                f"λ_min = {eigenvalues[0]:.2e}, λ_max = {scale:.2e}, "
+                f"relative = {relative_violation:.2e}. "
+                f"Hodge decomposition would be invalid. Aborting."
+            )
+    
     return SpectralFingerprint(
         eigenvalues=eigenvalues,
         betti_numbers=[beta_0, beta_1],

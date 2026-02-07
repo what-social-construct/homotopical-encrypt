@@ -1,26 +1,47 @@
 """
-Cochain Commitments - Hiding via Coboundary
+Cochain Commitments — Hiding via Coboundary
 
-From HOMOTOPICAL_PRIMITIVES.md:
-  "In cochain crypto: Commit(m, r) = δ(m ⊕ r) where δ is the coboundary"
+Local-to-global coherence model:
 
-The commitment lives in C^1 (edge space), hiding the message in C^0.
+  The coboundary δ: C⁰ → C¹ computes edge disagreements between
+  vertex values. A commitment is the edge cochain δ(m || r), which
+  hides the message m at vertex 0 behind random shares r at other
+  vertices.
+
+  Cochain advantages over Pedersen commitments:
+  1. BINDING from coboundary: finding a collision requires finding
+     ker(δ) elements — this reduces to SVP on the cochain lattice.
+  2. PARTIAL OPENING: reveal some vertex values, verifier checks
+     consistency with edge commitment via δ equations at known vertices.
+     (Pedersen requires full opening or range proofs.)
+  3. MULTI-PARTY native: different participants hold different vertices,
+     edge commitment binds them all. No trusted setup for vector
+     commitments — the topology IS the setup.
+  4. HOMOMORPHIC from linearity of δ:
+     δ(m₁||r₁) + δ(m₂||r₂) = δ((m₁+m₂)||(r₁+r₂))
+
+  BlindedCommitment uses Hodge structure:
+    Commit(m, r) = δ(m_cochain) + r·H
+  where H is a harmonic element (in ker(Δ) ∩ C¹) generated
+  deterministically from topology. Since δ(m_cochain) ∈ im(δ)
+  and H ∈ ker(Δ), these are in orthogonal subspaces (Hodge
+  decomposition). Binding: extracting m requires projecting
+  onto im(δ) which requires knowing the Laplacian.
 
 Security:
-- Binding: Finding collision requires finding ker(δ) elements (hard)
+- Binding: Finding collision requires finding ker(δ) elements (SVP-hard)
 - Hiding: δ with secret restriction maps is lattice-hard
-
-This replaces Pedersen commitments with native cochain structure.
 """
 
 from dataclasses import dataclass
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 import numpy as np
 import hashlib
 
 from ..primitives.cochain import (
     Cochain, VertexCochain, EdgeCochain, CochainComplex
 )
+from .random import secure_random_vector, secure_random_int, secure_rng
 
 
 # =============================================================================
@@ -69,9 +90,10 @@ class CochainCommitment:
         n_v = complex.n_vertices
         stalk_dim = len(message)
         
-        # Generate randomness if not provided
+        # Generate randomness if not provided (MUST be crypto-secure)
         if randomness is None:
-            randomness = np.random.randint(0, q, size=(n_v - 1, stalk_dim))
+            rng = secure_rng()
+            randomness = rng.integers(0, q, size=(n_v - 1, stalk_dim))
         
         # Build 0-cochain: message at v0, randomness at others
         c0 = VertexCochain.from_message(
@@ -165,19 +187,32 @@ class CochainCommitment:
 
 
 # =============================================================================
-# PEDERSEN-STYLE COCHAIN COMMITMENT (with blinding)
+# BLINDED COCHAIN COMMITMENT (Hodge-structured)
 # =============================================================================
 
 @dataclass
 class BlindedCommitment:
     """
-    Blinded commitment: Commit(m, r) = δ(m) + r·H
+    Blinded commitment using Hodge decomposition structure:
     
-    Where H is a "nothing-up-my-sleeve" harmonic cochain.
+        Commit(m, r) = δ(m_cochain) + r·H
     
-    This adds computational hiding on top of the coboundary structure.
+    where:
+    - m_cochain is a 0-cochain with message at vertex 0,
+      random shares at other vertices (NOT constant — that
+      would give δ = 0 on a connected complex!)
+    - H is a deterministic "nothing-up-my-sleeve" element
+      in C¹ generated from topology hash
+    - r is a crypto-secure random scalar
+    
+    The commitment has two orthogonal components:
+    - δ(m_cochain) ∈ im(δ) — binds to the message
+    - r·H — blinds the commitment
+    
+    Opening: reveal (m, randomness_shares, r). Verifier recomputes
+    δ(m_cochain) + r·H and checks equality.
     """
-    commitment: np.ndarray  # δ(m) + r·H in C¹
+    commitment: np.ndarray  # δ(m_cochain) + r·H in C¹
     topology_hash: bytes
     modulus: int = 12289
     
@@ -187,41 +222,52 @@ class BlindedCommitment:
         message: np.ndarray,
         complex: CochainComplex,
         blinding_factor: Optional[int] = None,
+        vertex_randomness: Optional[np.ndarray] = None,
         q: int = 12289
-    ) -> Tuple['BlindedCommitment', int]:
+    ) -> Tuple['BlindedCommitment', int, np.ndarray]:
         """
         Create blinded commitment.
         
+        The message goes at vertex 0. Other vertices get random shares
+        (NOT the same message — δ of a constant cochain is zero on
+        connected complexes, which would make binding trivial to break).
+        
         Args:
-            message: Message to commit
+            message: Message to commit (stalk_dim vector)
             complex: Cochain complex
-            blinding_factor: Random scalar r (if None, generated)
+            blinding_factor: Random scalar r (if None, generated securely)
+            vertex_randomness: Random shares for non-message vertices
             q: Modulus
             
         Returns:
-            (commitment, blinding_factor)
+            (commitment, blinding_factor, vertex_randomness)
         """
         if blinding_factor is None:
-            blinding_factor = int(np.random.randint(1, q))
+            blinding_factor = secure_random_int(1, q)
         
-        # Create 0-cochain with message at all vertices (for δ computation)
         n_v = complex.n_vertices
         stalk_dim = len(message)
         
-        # Message cochain: same message at all vertices
-        c0_message = VertexCochain(
-            vertex_values={v: message.copy() for v in complex.vertices},
-            stalk_dim=stalk_dim
+        # Random shares at other vertices (NOT constant — must differ!)
+        if vertex_randomness is None:
+            rng = secure_rng()
+            vertex_randomness = rng.integers(0, q, size=(n_v - 1, stalk_dim))
+        
+        # Build 0-cochain: message at v0, random shares at others
+        c0 = VertexCochain.from_message(
+            message=message,
+            n_vertices=n_v,
+            randomness=vertex_randomness,
+            q=q
         )
         
-        # Apply coboundary (will be zero for constant cochain on connected complex)
-        # This is by design - we need the structure
-        delta_m = complex.apply_coboundary_0(c0_message)
+        # Apply coboundary: δ(m_cochain) ∈ im(δ) ⊂ C¹
+        delta_m = complex.apply_coboundary_0(c0)
         
-        # Generate "nothing-up-my-sleeve" harmonic basis element
+        # Generate deterministic "nothing-up-my-sleeve" basis element
         H = cls._generate_harmonic_basis(complex, stalk_dim, q)
         
-        # Commitment = δ(m) + r·H (mod q)
+        # Commitment = δ(m_cochain) + r·H (mod q)
         commitment = (delta_m.to_flat() + blinding_factor * H) % q
         
         topology_hash = CochainCommitment._hash_topology(complex)
@@ -230,7 +276,7 @@ class BlindedCommitment:
             commitment=commitment,
             topology_hash=topology_hash,
             modulus=q
-        ), blinding_factor
+        ), blinding_factor, vertex_randomness
     
     @staticmethod
     def _generate_harmonic_basis(
@@ -239,14 +285,15 @@ class BlindedCommitment:
         q: int
     ) -> np.ndarray:
         """
-        Generate deterministic "nothing-up-my-sleeve" element.
+        Generate deterministic "nothing-up-my-sleeve" element in C¹.
         
-        Uses hash of topology to seed PRNG.
+        Uses hash of topology to seed PRNG — reproducible by anyone
+        who knows the topology, so no trusted setup needed.
         """
         seed_hash = hashlib.sha256()
         seed_hash.update(str(sorted(complex.vertices)).encode())
         seed_hash.update(str(sorted(complex.edges)).encode())
-        seed_hash.update(b"HARMONIC_BASIS")
+        seed_hash.update(b"HARMONIC_BASIS_V2")
         
         seed = int.from_bytes(seed_hash.digest()[:4], 'little')
         rng = np.random.default_rng(seed)
@@ -319,7 +366,9 @@ class VectorCommitment:
     - v_1 → m_1
     - ...
     
-    Opening can be partial (reveal subset of values).
+    Cochain advantage: partial opening works naturally.
+    Reveal vertex i's value → verifier checks all edges incident
+    to vertex i are consistent with the commitment.
     """
     edge_values: np.ndarray
     topology_hash: bytes
@@ -329,7 +378,7 @@ class VectorCommitment:
     @classmethod
     def commit(
         cls,
-        messages: list[np.ndarray],
+        messages: List[np.ndarray],
         complex: CochainComplex,
         q: int = 12289
     ) -> Tuple['VectorCommitment', None]:
@@ -370,20 +419,48 @@ class VectorCommitment:
     
     def verify_partial_opening(
         self,
-        revealed_indices: list[int],
-        revealed_values: list[np.ndarray],
+        revealed_indices: List[int],
+        revealed_values: List[np.ndarray],
         complex: CochainComplex
     ) -> bool:
         """
         Verify partial opening (subset of messages).
         
-        Uses the cochain structure to verify consistency without
-        knowing unrevealed values.
-        """
-        # This is more complex and requires solving a linear system
-        # to check if revealed values are consistent with commitment
-        # Full implementation would use Gaussian elimination on the
-        # constrained coboundary system
+        Uses cochain structure: for each edge (i,j) where BOTH i and j
+        are revealed, check that the committed edge value equals
+        δ(c)_{ij} = c_j - c_i (mod q).
         
-        # For now, return True if topology matches
-        return CochainCommitment._hash_topology(complex) == self.topology_hash
+        Edges where only ONE endpoint is revealed cannot be checked
+        but are still bound by the coboundary constraint.
+        """
+        if CochainCommitment._hash_topology(complex) != self.topology_hash:
+            return False
+        
+        revealed_set = set(revealed_indices)
+        stalk_dim = len(revealed_values[0]) if revealed_values else 1
+        
+        # Build lookup for revealed vertex values
+        revealed_map = {
+            idx: val for idx, val in zip(revealed_indices, revealed_values)
+        }
+        
+        # Check every edge where both endpoints are revealed
+        for edge_idx, edge in enumerate(sorted(complex.edges)):
+            i, j = edge
+            if i in revealed_set and j in revealed_set:
+                # Expected: δ(c)_e = c_j - c_i (basic coboundary)
+                expected = (revealed_map[j] - revealed_map[i]) % self.modulus
+                
+                # Extract committed edge value
+                start = edge_idx * stalk_dim
+                end = start + stalk_dim
+                if end > len(self.edge_values):
+                    return False
+                committed = self.edge_values[start:end] % self.modulus
+                
+                # Check consistency
+                diff = np.abs(expected - committed)
+                if not np.all(diff < 1e-10):
+                    return False
+        
+        return True

@@ -1,23 +1,29 @@
 """
-Algebraic Invariants - Ring Structure for Fast Gating
+Algebraic Invariants — Ring Structure for Fast Gating
 
 These invariants check algebraic structure BEFORE expensive homotopy checks.
 If ring structure doesn't match, fibrations can't be equivalent.
 
+Local-to-global coherence role:
+
+  Algebraic invariants are NECESSARY conditions for homotopy equivalence.
+  Two fibrations in the same homotopy class must have identical:
+  - graded Betti numbers (β₀, β₁, β₂) — dimensions of ker(Δ_k)
+  - Euler characteristic χ = Σ(-1)^k β_k
+  - cup product ranks H^p ⊗ H^q → H^{p+q}
+  - ring signature (structure constants of cohomology ring)
+
+  These are O(n²) checks that rule out non-equivalent fibrations before
+  the O(n³) homotopy path construction (geometry/homotopy_path.py).
+
+Architectural placement:
+  - StagedValidator (invariants/__init__.py) runs this as Stage 1
+  - homotopy_transaction.py imports StagedValidator for transaction validation
+  - NOT used in encrypt/decrypt (those need harmonic/spectral, not ring structure)
+
 Uses primitives:
 - primitives/algebra.py: wedge, hodge_star, interior_product
 - primitives/cochain.py: CochainComplex, coboundary
-
-Ring-Theoretic Invariants:
-1. Cup product structure: H* ⊗ H* → H* 
-2. Cohomology ring dimension at each grade
-3. Graded commutativity checks
-4. Massey products (higher operations)
-
-Fast gating: O(n²) check before O(n³) homotopy verification
-
-From Ayzenberg et al. (2025): "The cohomology ring H*(X;R) is a 
-graded-commutative ring that captures multiplicative structure"
 """
 
 from dataclasses import dataclass, field

@@ -88,6 +88,14 @@ class SheafLaplacian:
                 L[oi:oi+di, oj:oj+dj] -= Ri.T @ Rj
                 L[oj:oj+dj, oi:oi+di] -= Rj.T @ Ri
         
+        # ── Enforce mathematical truth: Δ₀ = δ*δ is PSD by construction ──
+        # With lattice-scale restriction maps (entries up to q ≈ 10⁴),
+        # block products R^T R have entries ~10⁸. Float64 relative precision
+        # (~10⁻¹⁶) gives absolute error ~10⁻⁴ in eigenvalues.
+        # Symmetrize to eliminate asymmetry from floating-point accumulation,
+        # then the PSD gate in credential.py can use a tight tolerance.
+        L = (L + L.T) / 2
+        
         self._L0 = L
         return L
     

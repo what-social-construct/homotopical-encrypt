@@ -1,30 +1,31 @@
 """
-Consensus Module - Proof of Value
+Consensus Module — Proof of Value
 
-Geometric consensus via harmonic projection using √2 bounds.
+Proof of Value (PoV): validators prove their fibration has geometric
+quality (spectral gap in √2 bounds). Not stake, not compute — geometric
+coherence IS the value.
 
-TSIRELSON BOUND - GEOMETRIC MEANING:
+  HARMONIC CONSENSUS MODEL:
 
-The bounds [1/√2, 2√2] arise from quantum information theory (Tsirelson, 1980).
-They represent the maximum achievable correlation in bipartite quantum systems:
+  The Hodge decomposition naturally separates agreement from disagreement:
 
-    |⟨ψ| A ⊗ B |ψ⟩| ≤ 2√2    for any entangled state |ψ⟩
+    c = π_H(c) + δ(α) + δ*(β)
 
-Geometrically, this is the boundary of the quantum correlation polytope.
-For sheaf Laplacians Δ = δδ* + δ*δ on a graph:
+  - π_H(c) ∈ ker(Δ):  Consensus — what everyone agrees on
+  - δ(α) ∈ im(δ):     Gauge freedom — valid representational differences
+  - δ*(β) ∈ im(δ*):   Noise/attack — genuine inconsistency (detectable)
 
-    λ₁(Δ) ∈ [1/√2, 2√2]  ⟺  valid causal structure
-    
-    Below 1/√2:  Topology is disconnected (no information flow)
-    Above 2√2:   Topology would permit superluminal signaling (acausal)
+  Validator selection uses Fiedler centrality (topology-aware, not
+  stake-weighted). The second eigenvector of the Laplacian measures
+  how central each node is to information flow.
 
-The spectral gap measures how "quantum coherent" the topology is.
-Saturating 2√2 = maximum entanglement while preserving causality.
+  (Cochain duality advantages documented in crypto/__init__.py)
 
 Clean separation:
-- invariant_validator.py: Validates PoV invariants (spectral bounds, conservation)
-- validator_selection.py: Selects network validators (who produces blocks)
-- proofs/consensus.py: ProofOfValue mechanics (how blocks are created)
+- invariant_validator.py: Validates PoV invariants (bounds, conservation)
+- validator_selection.py: Selects who produces blocks (Fiedler centrality)
+- proofs/consensus.py: ProofOfValue mechanics (spectral gap proofs)
+- invariants/unified.py: Orchestrates all invariant checkpoints
 """
 
 # Invariant validation (NEW - from local module)

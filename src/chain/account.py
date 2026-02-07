@@ -1,18 +1,21 @@
 """
-Account State - Sovereignty & Identity Layer
+Account State — Sovereignty & Identity Layer
 
 Dual State Model:
-- UTXO layer: Private transfers (ring signatures, key images)
+- SheafState layer: Private transfers (homotopy-native, key images)
 - Account layer: Identity/sovereignty (spectral fingerprints, topology)
 
 This file implements the Account layer for:
-- Self-sovereign identity (no KYC)
+- Self-sovereign identity (no KYC — identity = spectral fingerprint)
 - Connection topology management
-- Homotopy class tracking (key rotation)
+- Homotopy class tracking (key rotation within same class)
 
 The two layers are complementary:
-- Spend coins → UTXO layer (state.py)
+- Transfer value → SheafState layer (sheaf_state.py, homotopy_transaction.py)
 - Create identity/connections → Account layer (this file)
+
+Privacy model: homotopy-native (NOT ring signatures).
+Anonymity set = entire homotopy class [F] (infinite).
 """
 
 from dataclasses import dataclass, field

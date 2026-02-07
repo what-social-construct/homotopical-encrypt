@@ -1,24 +1,64 @@
 """
 Invariants Module - Unified Validation Framework
 
-All security properties are expressed as invariant checkpoints.
-Validation proceeds in stages (fast to expensive):
+Two layers of validation, each with a different philosophy:
+
+════════════════════════════════════════════════════════════════
+LAYER 1: CONSTRUCTION-TIME GATES (hard-fail, no recovery)
+════════════════════════════════════════════════════════════════
+
+These fire at object creation. Violation = terminate immediately.
+No error correction, no retry. A failed gate means the object
+is malformed or an adversary is tampering.
+
+  noise.py        → Hodge noise ⊥ ker(Δ) (no harmonic leak)
+  harmonic.py     → Embedding ∈ ker(Δ) (Δ·embedding = 0)
+  fibration.py    → assert_orthogonal (Q^TQ = I for transport)
+                  → assert_spectral_preserved (eigenvalues unchanged)
+                  → assert_stalk_dimension (no truncation/padding)
+  credential.py   → β₀ ≥ 1 (topology has vertices)
+                  → Laplacian PSD (relative tolerance for lattice scale)
+  fiber_bundle.py → Connection matrices orthogonal at construction
+
+Design principle: objects are ALWAYS valid after construction.
+If you have a FiberBundle, its connections are orthogonal.
+If you have a harmonic embedding, it's in ker(Δ).
+If you have Hodge noise, it's in im(δ)⊕im(δ*).
+
+════════════════════════════════════════════════════════════════
+LAYER 2: STAGED EQUIVALENCE VALIDATION (operation-time)
+════════════════════════════════════════════════════════════════
+
+These run at operation boundaries (encrypt, decrypt, transact).
+Proceeds fast to expensive, short-circuiting on failure:
 
 STAGE 1: ALGEBRAIC GATE (O(n²))
-- Ring structure: graded dims, Euler, cup ranks
-- Uses: primitives/algebra.py (wedge, hodge_star)
-- Fast rejection of incompatible fibrations
+  - Ring structure: graded dims, Euler, cup ranks
+  - Uses: primitives/algebra.py (wedge, hodge_star)
+  - Fast rejection of incompatible fibrations
 
 STAGE 2: FIBRATION GATE (O(n²))
-- Fiber structure: stalk dims, holonomy, flatness
-- Uses: primitives/stalk.py (Stalk, StalkBundle)
-- Validates local geometry
+  - Fiber structure: stalk dims, holonomy, flatness
+  - Uses: primitives/stalk.py (Stalk, StalkBundle)
+  - Validates local geometry
 
 STAGE 3: FULL HOMOTOPY CHECK (O(n³))
-- Spectral: eigenvalues, gap, traces (Hansen & Ghrist)
-- Cohomology: Betti, Čech, Hodge (Ayzenberg)
-- Homotopical logic: h-level, Σ/Π-rank (Helfer)
-- Uses: primitives/cochain.py, primitives/homotopy.py
+  - Spectral: eigenvalues, gap, traces (Hansen & Ghrist)
+  - Cohomology: Betti, Čech, Hodge (Ayzenberg)
+  - Homotopical logic: h-level, Σ/Π-rank (Helfer)
+  - Uses: primitives/cochain.py, primitives/homotopy.py
+
+Pipeline integration (unified.py validate_for_stage):
+  "keygen"      → ALL stages (new credential must be fully valid)
+  "encrypt"     → Spectral + cohomology (valid topology for encoding)
+  "decrypt"     → Spectral (valid Laplacian for harmonic projection)
+  "zk_prove"    → ALL stages (proving fingerprint validity)
+  "transaction" → Cohomology + homotopical + √2 gap bounds (PoV)
+
+Currently wired:
+  wallet_store.py         → UnifiedInvariantValidator (load/store)
+  homotopy_transaction.py → StagedValidator (transaction validation)
+  proofs/consensus.py     → UnifiedInvariantValidator (block verify)
 
 References:
 - Hansen & Ghrist (2019): Spectral Theory of Cellular Sheaves (arXiv:1808.01513)
@@ -77,6 +117,10 @@ from .fibration import (
     compute_fibration_invariants,
     validate_fibration_invariants,
     validate_bundle_consistency,
+    # Geometric invariant gates (hard-fail)
+    assert_orthogonal,
+    assert_spectral_preserved,
+    assert_stalk_dimension,
 )
 
 # =============================================================================

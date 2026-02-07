@@ -309,6 +309,14 @@ def embed_in_harmonic(
     # Embed: c = V_H @ m where m is coefficients in harmonic basis
     embedding = harmonic_basis @ padded_message
     
+    # ── SELF-CHECK: verify embedding ∈ ker(Δ) ──
+    residual = np.linalg.norm(laplacian @ embedding)
+    if residual > 1e-8:
+        raise RuntimeError(
+            f"INVARIANT VIOLATION: embed_in_harmonic produced non-harmonic output: "
+            f"||Δ·embedding|| = {residual:.2e}. Aborting — possible corruption."
+        )
+    
     return embedding, True
 
 

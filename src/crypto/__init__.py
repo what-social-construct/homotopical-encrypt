@@ -1,15 +1,40 @@
 """
-Crypto module: Cochain-based encryption primitives.
+Crypto Module — Cochain-based Encryption Primitives
 
-Implements Homotopical Encryption (stronger than LWE via Hodge-hardness):
-- FibrationCredential: (topology, fibration, spectrum) triple
-- Encrypt: Message → cochain embedding → coboundary + noise
-- Decrypt: Harmonic projection → extract from ker(Δ)
+WHY COCHAINS (algebraic dual):
 
-Key insight from HOMOTOPICAL_PRIMITIVES.md:
-- Security from cochain lattice structure, not "error tolerance"
-- Structured noise in im(δ) ⊕ im(δ*), not random error
-- Deterministic Hodge projection for decryption
+  Cochains are DUAL to chains — functions on simplices rather than
+  simplices themselves. This duality is why the crypto works:
+
+  - δ (coboundary) is the TRANSPOSE of ∂ (boundary). One operator,
+    two directions. Encryption uses δ (push message to edges),
+    decryption uses δ* (project back to vertices). The adjoint
+    relationship δ* = δᵀ means encrypt/decrypt are transposes of
+    each other — mathematically forced to be inverses.
+
+  - Pullback: a map f: X → Y induces f*: C^k(Y) → C^k(X) on cochains.
+    Encryption naturally pulls back along topology maps. Chains push
+    forward, which is the wrong direction for hiding.
+
+  - Cup product: cochains multiply (α ∪ β), chains don't. This gives
+    ring structure for commitments (homomorphic addition from δ
+    linearity) and algebraic invariant gating (cup product ranks
+    detect non-equivalent fibrations cheaper than homotopy checks).
+
+  - Integration pairing ⟨c, σ⟩: cochain evaluated on chain = the
+    fundamental decrypt operation ("evaluate the section at a point").
+
+Pipeline:
+  credential.py: Generate (topology, fibration, spectrum) triple
+  encrypt.py:    Message → harmonic embedding → coboundary + Hodge noise
+  decrypt.py:    Harmonic projection onto ker(Δ) → extract message
+  commitment.py: Commit(m, r) = δ(m || r) — hiding via coboundary
+  validation.py: Hard gates (dimension, modulus, spectral, topology)
+
+Invariant orchestration:
+  invariants/unified.py provides validate_fibration() which runs all
+  invariant checkpoints (spectral + cohomology + homotopical) for a
+  given pipeline stage (keygen/encrypt/decrypt/transaction).
 """
 
 # Core types
@@ -51,6 +76,9 @@ from .commitment import (
     scalar_mult_commitment,
 )
 
+# Unified invariant validation (re-export for convenience)
+from ..invariants.unified import validate_fibration, fingerprints_equivalent
+
 __all__ = [
     # Core types
     "FibrationCredential",
@@ -83,4 +111,7 @@ __all__ = [
     "VectorCommitment",
     "add_commitments",
     "scalar_mult_commitment",
+    # Unified invariant validation
+    "validate_fibration",
+    "fingerprints_equivalent",
 ]

@@ -1,14 +1,26 @@
 """
 Cellular Sheaf over Čech Nerve
 
-A cellular sheaf assigns vector spaces (stalks) to cells of a simplicial complex
-and linear maps (restriction maps) between them.
+A cellular sheaf assigns vector spaces (stalks) to cells of a simplicial
+complex and linear maps (restriction maps) between them.
 
-For cryptography:
-- Vertices = parties
-- Edges = connections between parties
-- Stalks = local Hilbert spaces  
-- Restriction maps = quantum channels
+Local-to-global coherence:
+
+  The restriction maps R_{v→e} are context projections between stalk
+  types (see primitives/stalk.py: StalkProjection := R_{v→e}).
+
+  The coboundary δ(c)_e = R_j·c_j - R_i·c_i measures how much two
+  vertices disagree when projected to their shared edge context.
+
+  ker(Δ) = global sections = cochains consistent across all
+  restriction maps. Messages embed here; noise lives in its
+  orthogonal complement im(δ)⊕im(δ*).
+
+  For cryptography:
+  - Vertices := parties/accounts
+  - Edges := connections between parties
+  - Stalks := local state spaces (private: dim 256, public: dim 1)
+  - Restriction maps := context projections (StalkProjection)
 
 Reference: Hansen & Ghrist (2019), arXiv:1808.01513
 """

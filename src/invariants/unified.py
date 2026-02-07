@@ -1,10 +1,34 @@
 """
 Unified Invariant Validator
 
-Orchestrates all invariant checkpoints for complete homotopy class characterization:
-- Spectral invariants (Hansen & Ghrist)
-- Cohomology invariants (Čech, sheaf)  
-- Homotopical logic invariants (Helfer)
+Orchestrates all invariant checkpoints for complete homotopy class
+characterization. This is the TOP-LEVEL VALIDATOR that combines:
+- Spectral invariants (Hansen & Ghrist): eigenvalues, PSD, gap bounds
+- Cohomology invariants (Čech, sheaf): Betti numbers, cochain complex, Hodge
+- Homotopical logic invariants (Helfer): h-level, Σ/Π ranks, transport
+
+Local-to-global coherence role:
+
+  HomotopyClassFingerprint is THE definition of equivalence:
+    F ≃ G  ⟺  fingerprint(F) = fingerprint(G)
+
+  All three invariant families must match for two fibrations to be
+  considered equivalent. This provides layered defense:
+  - Spectral mismatch → different operator structure → not equivalent
+  - Cohomology mismatch → different topology → not equivalent
+  - Homotopical mismatch → different type structure → not equivalent
+
+  validate_for_stage() provides stage-appropriate subsets:
+  - "keygen": all checkpoints (new fibration must be fully valid)
+  - "encrypt": spectral + cohomology (valid topology + Laplacian)
+  - "decrypt": spectral (valid Laplacian for harmonic projection)
+  - "transaction": cohomology + homotopical (structural matching)
+
+Consumers:
+  - wallet_store.py: validates credentials on load/store
+  - proofs/consensus.py: validates blocks at consensus time
+  - proofs/homotopy.py: fingerprints_equivalent for ZK proofs
+  - invariants/__init__.py StagedValidator: transaction validation
 
 References:
 - Hansen & Ghrist (2019). Toward a Spectral Theory of Cellular Sheaves. arXiv:1808.01513

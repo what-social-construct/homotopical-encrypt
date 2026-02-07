@@ -1,12 +1,23 @@
 """
-Spectral Noise - Geometrically Native Noise Sampling
+Spectral Noise — Geometrically Native Noise Sampling
 
-Noise shaped by the Laplacian spectrum of the sheaf.
-This is fundamentally GEOMETRIC - the noise respects the
-harmonic structure of the underlying topology.
+Noise shaped by the Laplacian spectrum of the sheaf, respecting
+the Hodge decomposition C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ*).
 
-Key insight: noise variance inversely proportional to eigenvalue,
-so harmonic modes (λ=0) get most noise, high-frequency modes get less.
+Local-to-global coherence interpretation:
+
+  ker(Δ) = global sections (data consistent under all restrictions).
+  im(δ)⊕im(δ*) = disagreement subspace ⊥ ker(Δ).
+
+  For encryption, noise must live in im(δ)⊕im(δ*) so that
+  π_H (Hodge projection) recovers the message exactly. The
+  hodge_structured_noise() function projects sampled noise
+  out of ker(Δ), ensuring ⟨noise, m⟩ = 0 for all m ∈ ker(Δ).
+
+  spectral_noise() and heat_kernel_sample() shape variance by
+  eigenvalue: high-frequency modes (large λ) get less variance,
+  harmonic modes (λ ≈ 0) get most — useful for diffusion processes
+  but not for encryption noise (use hodge_structured_noise instead).
 
 Uses crypto/random.py for secure random generation.
 Uses hodge.py for projectors.
@@ -246,5 +257,16 @@ def hodge_structured_noise(
     # Fill remainder with exact noise (conservative)
     remainder = z - P_harmonic @ z - P_exact @ z - P_coexact @ z
     noise += sigma_exact * remainder
+    
+    # ── SELF-CHECK: verify noise ⊥ ker(Δ) when sigma_harmonic == 0 ──
+    if sigma_harmonic == 0:
+        harmonic_leak = P_harmonic @ noise
+        leak_norm = np.linalg.norm(harmonic_leak)
+        if leak_norm > 1e-6:
+            raise RuntimeError(
+                f"INVARIANT VIOLATION: Hodge noise leaked into ker(Δ): "
+                f"||P_H(noise)|| = {leak_norm:.2e}. "
+                f"This would corrupt messages in the harmonic subspace."
+            )
     
     return np.round(noise).astype(np.int64)

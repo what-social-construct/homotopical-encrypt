@@ -160,9 +160,9 @@ def test_onion_routing():
     
     print(f"✅ Created {len(relays)} relay bundles")
     
-    # Create message
-    message = np.random.randint(0, 256, 64).astype(np.uint8)
-    print(f"\n📝 Message (first 16 bytes): {message[:16].tobytes().hex()}")
+    # Create message matching fiber_dim
+    message = np.random.randn(16)
+    print(f"\n📝 Message (fiber_dim=16): norm={np.linalg.norm(message):.4f}")
     
     # Create onion
     print("\n🧅 Creating onion packet...")
@@ -170,7 +170,7 @@ def test_onion_routing():
     
     print(f"✅ Onion packet created!")
     print(f"   Layers: {len(packet.layers)}")
-    print(f"   Path hints: {[len(h) for h in packet.path_hints]}")
+    print(f"   Encrypted hints: {[len(h) for h in packet.encrypted_hints]}")
     
     return True
 
@@ -181,7 +181,7 @@ def test_constant_padding():
     print("TEST 3: Constant Padding")
     print("=" * 60)
     
-    from src.crypto.padding import pad_to_constant_size, remove_constant_padding
+    from src.crypto.padding import pad_to_constant, unpad_from_constant
     
     # Different size messages
     messages = [
@@ -193,11 +193,11 @@ def test_constant_padding():
     target_size = 4096  # 4KB
     
     for msg in messages:
-        padded = pad_to_constant_size(msg, target_size)
+        padded = pad_to_constant(msg, target_size)
         print(f"✅ {len(msg):4d} bytes → {len(padded):4d} bytes (constant)")
         
         # Verify unpadding
-        recovered = remove_constant_padding(padded)
+        recovered = unpad_from_constant(padded)
         assert recovered == msg, "Padding round-trip failed!"
     
     print(f"\n✅ All messages padded to uniform {target_size} bytes")

@@ -41,6 +41,10 @@ class FiberBundle:
             # Random orthogonal matrix (preserves norms)
             A = np.random.randn(fiber_dim, fiber_dim)
             Q, _ = np.linalg.qr(A)
+            
+            # ── FIBRATION GATE: orthogonality ──
+            from ..invariants.fibration import assert_orthogonal
+            assert_orthogonal(Q, label=f"connection[{edge}]")
             connection[edge] = Q
         
         return cls(base_space=nerve, fiber_dim=fiber_dim, connection=connection)
@@ -317,6 +321,13 @@ class EphemeralFiber:
         """
         if self._wiped:
             raise ValueError("Ephemeral fiber has been wiped")
+        
+        if not self._spectral_verified:
+            raise RuntimeError(
+                "INVARIANT VIOLATION: Ephemeral fiber spectral check not passed. "
+                "Transport matrix may not be orthogonal — key derivation would "
+                "corrupt data or leak spectral fingerprint. Aborting."
+            )
         
         return self._transport_matrix @ base_key
     

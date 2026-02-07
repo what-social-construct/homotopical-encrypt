@@ -9,9 +9,34 @@ CONTEXTS:
 - CONSENSUS:  Low-dim (1) for public commitments  
 - ZK PROOFS:  Connects private→public via projection
 
+ARCHITECTURE (local-to-global coherence):
+
+  StalkProjection := the restriction map R_{v→e} in the sheaf.
+  
+  When two vertices share an edge, their stalks are connected by
+  restriction maps (projections between contexts). The coboundary
+  δ(c)_e = R_j·c_j - R_i·c_i measures disagreement between how
+  two vertices project to their shared edge context.
+
+  ker(Δ) = cochains where R_j·c_j = R_i·c_i for ALL edges
+         = global sections = data consistent across all projections.
+
+  Formally:
+  - Let m ∈ ker(Δ). Then R_j·m_j = R_i·m_i for all edges (i,j),
+    so m is invariant under all restriction maps — a global section.
+  - Let e ∈ im(δ)⊕im(δ*). Then ⟨e, m⟩ = 0 for all m ∈ ker(Δ),
+    so e is orthogonal to every global section — pure disagreement.
+  - Hodge projection π_H: C^k → ker(Δ) recovers the globally
+    consistent component. For c = m + e, π_H(c) = m exactly.
+
+  The lattice (ℤ_q coordinates) operates on individual stalk
+  entries; the Hodge structure operates on global section coherence.
+  Both views are dual: lattice decoding at vertex 0 and harmonic
+  projection onto ker(Δ) must recover the same message.
+
 This primitive makes the stalk explicit and provides:
 - Type safety across contexts
-- Projection operators between stalk types
+- Projection operators between stalk types (= restriction maps)
 - Serialization/deserialization
 """
 

@@ -4,6 +4,31 @@ Homotopical Logic Invariants
 Invariants from Helfer's first-order homotopical logic that tighten
 the characterization of homotopy equivalence classes.
 
+Local-to-global coherence role:
+
+  These invariants capture the TYPE-THEORETIC structure of fibrations,
+  complementing spectral invariants (which capture operator structure).
+
+  h-level: truncation level from HoTT. Determines how complex the
+    path spaces are. SET (0-truncated) = discrete identity types;
+    GROUPOID (1-truncated) = has non-trivial loops.
+
+  Σ-rank: depth of dependent sum = existential quantification layers.
+    Controls encryption depth — higher Σ-rank = more hiding layers.
+    Corresponds to max simplex dimension + 1 in the nerve.
+
+  Π-rank: depth of dependent product = universal quantification.
+    Controls decryption — need a section on each connected component.
+    Π-rank = β₀ (number of components needing keys).
+
+  transport coherence: how well parallel transport commutes around
+    loops (holonomy). Low = flat connection (consistent restriction maps).
+
+Architectural placement:
+  - unified.py computes these as part of HomotopyClassFingerprint
+  - proofs/homotopy.py uses invariants_match for ZK equivalence proofs
+  - NOT used in encrypt/decrypt (those need harmonic/spectral structure)
+
 References:
 - Helfer (2019). First-Order Homotopical Logic. arXiv:1908.08944
 - HoTT Book (2013). Homotopy Type Theory

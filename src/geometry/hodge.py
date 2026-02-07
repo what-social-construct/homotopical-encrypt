@@ -5,7 +5,7 @@ The Hodge theorem gives orthogonal decomposition:
 
   C^k(X, F) = H^k ⊕ im(δ) ⊕ im(δ*)
                ↑       ↑        ↑
-           HARMONIC  EXACT   CO-EXACT
+           harmonic  exact   co-exact
 
 Where:
 - H^k = ker(Δ) = ker(δ) ∩ ker(δ*) = harmonic cochains
@@ -14,11 +14,21 @@ Where:
 
 The Laplacian: Δ = δ*δ + δδ*
 
-For encryption:
-- MESSAGE lives in H^k (harmonics are protected)
-- NOISE lives in im(δ) ⊕ im(δ*) (coboundary noise hides structure)
+Local-to-global coherence interpretation:
 
-This is the NATURAL lattice for our sheaf encryption.
+  The restriction maps R_{v→e} are context projections between
+  stalk types (see primitives/stalk.py). The coboundary δ measures
+  disagreement between how vertices project to shared edge contexts.
+
+  ker(Δ) = global sections = data consistent under all restrictions.
+  im(δ)⊕im(δ*) = disagreement subspace = orthogonal to all global
+  sections.
+
+  For encryption:
+  - message ∈ ker(Δ): globally coherent data, survives all projections
+  - noise ∈ im(δ)⊕im(δ*): disagreement noise, invisible to π_H
+  - decrypt := π_H (Hodge projection extracts the coherent part)
+  - lattice threshold at vertex 0 provides a dual/fallback decode path
 """
 
 import numpy as np

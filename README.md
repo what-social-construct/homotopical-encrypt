@@ -12,6 +12,41 @@ Full blockchain node with Proof of Value consensus, sheaf-aware storage, and lib
 - ✅ **Sheaf onion routing** — geometry-based transaction mixing via fiber bundles
 - ✅ **Panopticon resilient** — constant-size ciphertexts, cover traffic, timing obfuscation
 
+## Why "Homotopical"?
+
+The encrypt/decrypt operation is Hodge-theoretic (embed in ker(Δ), noise in im(δ)⊕im(δ*), project via π_H). But the name describes the *security framework*, not the subroutine:
+
+- The **secret key** is a fibration (a system of restriction maps between stalk contexts)
+- The **public identity** is its homotopy class (spectral fingerprint)
+- **Key equivalence** := homotopy equivalence of fibrations
+- The **anonymity set** is the entire homotopy class [F] — infinite, by univalence
+- The **hardness assumption** (Hodge-hardness) is: find h ∈ ker(Δ) without knowing which fibration Δ came from — hard *because* Δ encodes the homotopy type
+
+Analogous to calling RSA "number-theoretic encryption" — the operation is modular exponentiation, but the security architecture is number theory.
+
+### Local-to-Global Coherence
+
+The unifying principle is **local-to-global coherence** via cellular sheaves:
+
+```
+  StalkProjection := R_{v→e}  (context projection = restriction map)
+
+  δ(c)_e = R_j·c_j - R_i·c_i      measures disagreement between vertices
+  ker(Δ) = global sections          data consistent under all restrictions
+  im(δ)⊕im(δ*) ⊥ ker(Δ)            disagreement subspace
+
+  encrypt:  message ∈ ker(Δ), noise ∈ im(δ)⊕im(δ*)
+  decrypt:  π_H(ciphertext) = message   (Hodge projection)
+```
+
+Three independent layers consume this shared geometric substrate:
+
+| Layer | Uses | Purpose |
+|-------|------|---------|
+| `crypto/encrypt + decrypt` | Hodge decomposition | Message confidentiality |
+| `proofs/anonymity` | Spectral equivalence | Identity privacy (1/∞ anonymity) |
+| `chain/key_image + homotopy_transaction` | Geodesic paths on SO(n) | Double-spend prevention |
+
 ## Mathematical Foundation
 
 ### Core Concepts
@@ -20,8 +55,8 @@ Full blockchain node with Proof of Value consensus, sheaf-aware storage, and lib
 |---------|---------------------|-------------------|
 | Key | Fibration credential | (topology, fibration, spectrum) |
 | Ciphertext | 0-cochain on nerve | Distributed over vertices |
-| Encryption | Coboundary + noise | δx + ε |
-| Decryption | Lindblad/harmonic flow | exp(-tΔ)x → ker(Δ) |
+| Encryption | Coboundary + noise | δx + ε, message ∈ ker(Δ) |
+| Decryption | Hodge projection π_H | Extract global section from noisy cochain |
 | Security | Spectral gap λ₁ | Error tolerance |
 | Verification | Homotopy invariants | ZK-friendly |
 
@@ -361,7 +396,7 @@ src/
 │   └── noise.py          # Spectral noise generation
 ├── crypto/         # Encryption primitives
 │   ├── encrypt.py        # Hodge-structured encryption
-│   ├── decrypt.py        # Lindblad flow decryption
+│   ├── decrypt.py        # Dual decode (lattice + Hodge projection)
 │   ├── credential.py     # Fibration credentials
 │   ├── commitment.py     # Pedersen-style commitments
 │   ├── secure_memory.py  # Memory protection

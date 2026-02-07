@@ -40,6 +40,103 @@ class FibrationStatus(Enum):
     INVALID_CONSISTENCY = "invalid_consistency"
 
 
+# =============================================================================
+# GEOMETRIC INVARIANT GATES (hard-fail)
+#
+# These are the single source of truth for structural checks.
+# Every module that constructs or uses geometric objects MUST call these.
+# Violation = terminate. No recovery. Could be malicious.
+# =============================================================================
+
+def assert_orthogonal(
+    matrix: np.ndarray,
+    label: str = "matrix",
+    tolerance: float = 1e-10
+) -> None:
+    """
+    HARD GATE: Assert matrix is orthogonal (Q^T Q = I).
+    
+    Called by:
+    - FiberBundle.random() — connection construction
+    - EphemeralFiber.verify_homotopy_equivalence() — transport matrix
+    - QuantumSheafFibration — credential edge_keys
+    - _compute_holonomy_from_maps — edge restriction maps
+    
+    Orthogonal transport preserves:
+    - Norms (message integrity)
+    - Inner products (spectral fingerprints)
+    - Eigenvalues (homotopy class)
+    
+    Violation means transport WILL corrupt data. Terminate.
+    """
+    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
+        raise RuntimeError(
+            f"INVARIANT VIOLATION [{label}]: Expected square matrix, "
+            f"got shape {matrix.shape}. Aborting."
+        )
+    
+    n = matrix.shape[0]
+    err = np.linalg.norm(matrix.T @ matrix - np.eye(n))
+    if err > tolerance:
+        raise RuntimeError(
+            f"INVARIANT VIOLATION [{label}]: Not orthogonal: "
+            f"||Q^TQ - I|| = {err:.2e} > {tolerance}. "
+            f"Transport would corrupt data. Aborting."
+        )
+
+
+def assert_spectral_preserved(
+    original_eigenvalues: np.ndarray,
+    transported_eigenvalues: np.ndarray,
+    label: str = "transport",
+    tolerance: float = 1e-6
+) -> None:
+    """
+    HARD GATE: Assert eigenvalues unchanged by transport.
+    
+    If orthogonal transport changes the spectrum, something is deeply wrong:
+    either the transport isn't actually orthogonal, or the eigendecomposition
+    is corrupted. Either way, the homotopy class is broken.
+    
+    Violation = terminate. Spectral fingerprint would be wrong.
+    """
+    if len(original_eigenvalues) != len(transported_eigenvalues):
+        raise RuntimeError(
+            f"INVARIANT VIOLATION [{label}]: Eigenvalue count changed: "
+            f"{len(original_eigenvalues)} → {len(transported_eigenvalues)}. Aborting."
+        )
+    
+    orig_sorted = np.sort(original_eigenvalues)
+    trans_sorted = np.sort(transported_eigenvalues)
+    err = np.linalg.norm(orig_sorted - trans_sorted)
+    
+    if err > tolerance:
+        raise RuntimeError(
+            f"INVARIANT VIOLATION [{label}]: Spectrum changed under transport: "
+            f"||λ_orig - λ_transported|| = {err:.2e}. "
+            f"Homotopy class broken. Aborting."
+        )
+
+
+def assert_stalk_dimension(
+    data: np.ndarray,
+    expected_dim: int,
+    label: str = "stalk"
+) -> None:
+    """
+    HARD GATE: Assert stalk data matches expected fiber dimension.
+    
+    Dimension mismatch means either truncation (data loss) or
+    padding (information leak). Both are security violations.
+    """
+    if len(data) != expected_dim:
+        raise RuntimeError(
+            f"INVARIANT VIOLATION [{label}]: Dimension mismatch: "
+            f"got {len(data)}, expected {expected_dim}. "
+            f"Truncation/padding would corrupt or leak data. Aborting."
+        )
+
+
 @dataclass(frozen=True)
 class FibrationInvariants:
     """
@@ -188,13 +285,13 @@ def _compute_holonomy_from_maps(
     # Find a simple cycle (triangle) if possible
     # Check composition around the cycle
     
-    # For now, check if all maps are orthogonal (holonomy in O(n))
+    # Check if all maps are orthogonal (holonomy in O(n))
+    # Uses the centralized assert_orthogonal gate for consistency
     orthogonal_count = 0
     for edge, A in edge_maps.items():
-        if A.ndim == 2:
-            # Check orthogonality: A^T A ≈ I
-            ATA = A.T @ A
-            if np.allclose(ATA, np.eye(A.shape[1]), atol=1e-6):
+        if A.ndim == 2 and A.shape[0] == A.shape[1]:
+            err = np.linalg.norm(A.T @ A - np.eye(A.shape[0]))
+            if err < 1e-6:
                 orthogonal_count += 1
     
     # Trivial if all orthogonal (can compose to identity)
