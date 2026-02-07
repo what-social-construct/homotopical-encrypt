@@ -55,4 +55,78 @@ impl WalletStore {
     pub fn list_credentials(&self) -> Vec<&str> {
         self.credentials.keys().map(|s| s.as_str()).collect()
     }
+    
+    pub fn remove_credential(&mut self, label: &str) -> bool {
+        self.credentials.remove(label).is_some()
+    }
+    
+    pub fn has_credential(&self, label: &str) -> bool {
+        self.credentials.contains_key(label)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::PathBuf;
+    
+    fn test_credential(gap: f64) -> EncryptedCredential {
+        EncryptedCredential {
+            ciphertext: vec![0u8; 64],
+            fingerprint: [42u8; 32],
+            topology_hash: [1u8; 32],
+            spectral_gap: gap,
+            betti_numbers: (1, 0, 0),
+            encrypted_at: 1234567890,
+        }
+    }
+    
+    #[test]
+    fn test_save_and_load() {
+        let mut store = WalletStore::new(PathBuf::from("/tmp/test_wallet"));
+        
+        let cred = test_credential(1.5);
+        store.save_credential("alice", cred).unwrap();
+        
+        let loaded = store.load_credential("alice").unwrap();
+        assert_eq!(loaded.spectral_gap, 1.5);
+        assert_eq!(loaded.betti_numbers, (1, 0, 0));
+        assert_eq!(loaded.fingerprint, [42u8; 32]);
+    }
+    
+    #[test]
+    fn test_list_and_remove() {
+        let mut store = WalletStore::new(PathBuf::from("/tmp/test_wallet"));
+        
+        store.save_credential("alice", test_credential(1.5)).unwrap();
+        store.save_credential("bob", test_credential(1.8)).unwrap();
+        
+        assert_eq!(store.list_credentials().len(), 2);
+        assert!(store.has_credential("alice"));
+        assert!(store.has_credential("bob"));
+        assert!(!store.has_credential("charlie"));
+        
+        assert!(store.remove_credential("alice"));
+        assert!(!store.has_credential("alice"));
+        assert_eq!(store.list_credentials().len(), 1);
+    }
+    
+    #[test]
+    fn test_overwrite_credential() {
+        let mut store = WalletStore::new(PathBuf::from("/tmp/test_wallet"));
+        
+        store.save_credential("alice", test_credential(1.5)).unwrap();
+        assert_eq!(store.load_credential("alice").unwrap().spectral_gap, 1.5);
+        
+        // Overwrite with new gap (key rotation within homotopy class)
+        store.save_credential("alice", test_credential(1.8)).unwrap();
+        assert_eq!(store.load_credential("alice").unwrap().spectral_gap, 1.8);
+        assert_eq!(store.list_credentials().len(), 1);
+    }
+    
+    #[test]
+    fn test_missing_credential() {
+        let store = WalletStore::new(PathBuf::from("/tmp/test_wallet"));
+        assert!(store.load_credential("nonexistent").is_none());
+    }
 }

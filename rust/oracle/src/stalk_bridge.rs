@@ -440,9 +440,17 @@ mod tests {
     fn test_naturality_verification() {
         let mut bridge = StalkBridge::new();
         
-        // Add two stalks with same topology
-        let stalk0 = test_full_stalk(0, 1.5);
-        let stalk1 = test_full_stalk(1, 1.52); // Close gap
+        // Shared topology — both vertices in same nerve
+        let shared_vertices = vec![0, 1];
+        let shared_edges = vec![(0, 1)];
+        
+        let mut stalk0 = test_full_stalk(0, 1.5);
+        stalk0.nerve_vertices = shared_vertices.clone();
+        stalk0.nerve_edges = shared_edges.clone();
+        
+        let mut stalk1 = test_full_stalk(1, 1.52); // Close gap
+        stalk1.nerve_vertices = shared_vertices;
+        stalk1.nerve_edges = shared_edges;
         
         bridge.add_full_stalk(stalk0).unwrap();
         bridge.add_full_stalk(stalk1).unwrap();
@@ -463,9 +471,15 @@ mod tests {
     fn test_gluing_obstruction() {
         let mut bridge = StalkBridge::new();
         
+        // Shared topology for all vertices
+        let shared_vertices = vec![0, 1, 2];
+        let shared_edges = vec![(0, 1), (1, 2)];
+        
         // Create connected nerve
         for i in 0..3 {
-            let stalk = test_full_stalk(i, 1.4 + i as f64 * 0.01);
+            let mut stalk = test_full_stalk(i, 1.4 + i as f64 * 0.01);
+            stalk.nerve_vertices = shared_vertices.clone();
+            stalk.nerve_edges = shared_edges.clone();
             bridge.add_full_stalk(stalk).unwrap();
             bridge.compute_commitment(i).unwrap();
         }

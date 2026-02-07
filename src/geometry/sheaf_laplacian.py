@@ -4,10 +4,25 @@ Sheaf Laplacian: Hodge Laplacian for Cellular Sheaves
 The sheaf Laplacian Δ = δ*δ + δδ* generalizes the graph Laplacian to sheaves.
 Its kernel ker(Δ) = harmonic cochains represents global sections.
 
+COCHAIN DUALITY NOTE:
+
+  The adjoint δ* is implicit in the Laplacian. Decrypt uses
+  eigendecomposition of Δ (via harmonic_projection()) rather than
+  calling δ* explicitly. This is mathematically equivalent:
+
+    π_H = I - P_im(δ) - P_im(δ*)
+
+  but eigendecomposition is numerically more stable with lattice-scale
+  restriction maps (entries ~10⁴, products ~10⁸). The explicit δ*
+  is available in sheaf.py:adjoint_coboundary_0() and
+  hodge.py:compute_hodge_projectors() for cases that need it
+  (invariant validation, noise structure checking).
+
 For cryptography:
-- Encryption: embed message in cochain space
-- Decryption: project to ker(Δ) via Lindblad flow
-- Security: spectral gap determines error tolerance
+- Encryption: embed message in ker(Δ), add noise in im(δ)⊕im(δ*)
+- Decryption: harmonic_projection() extracts ker(Δ) component
+  (δ* implicit in eigendecomposition of Δ)
+- Security: spectral gap separates ker(Δ) from im(δ)⊕im(δ*)
 
 Reference: Hansen & Ghrist (2019), arXiv:1808.01513
 """

@@ -6,11 +6,33 @@ These are the morphisms in the category of sheaves.
 
 Operations:
 - pullback: f*F → pull sheaf back along topology map
-- pushforward: f_*F → push sheaf forward along topology map  
+- pushforward: f_*F → push sheaf forward along topology map
 - compose_nat: η ∘ μ → compose natural transformations
 
 Key property: Natural transformations commute with coboundary δ.
 This ensures they preserve cohomology classes (homotopy invariants).
+
+FUTURE: PULLBACK FOR TOKENOMICS / INCENTIVE LAYER
+
+  Pullback f*: C^k(Y) → C^k(X) is the natural way to transfer value
+  between topologies. Key applications:
+
+  - Cross-topology transfers: Alice has topology X, Bob has topology Y.
+    A map f: X → Y lets you pull back Bob's commitments to Alice's
+    topology. Value moves contravariantly (cochains pull back).
+
+  - Incentive distribution: validators earn rewards on global topology Y.
+    Pullback distributes rewards to their local topology X. The functorial
+    property (f∘g)* = g* ∘ f* ensures composition of distribution steps
+    is consistent.
+
+  - Staking/restaking: staked value on topology Y can be pulled back to
+    local sheaf X for computation, preserving the cohomological structure
+    (pullback commutes with δ, so invariants transfer).
+
+  Currently: pullback/pushforward are defined and tested but not yet
+  called from chain/ or consensus/. They will be wired when the
+  incentive/tokenomics layer is built.
 """
 
 from dataclasses import dataclass

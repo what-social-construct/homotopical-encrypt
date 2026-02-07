@@ -1,134 +1,37 @@
-# Documentation Index
+# docs
 
-## 🚀 Start Here
+| document | contents |
+|----------|----------|
+| [ARCHITECTURE](ARCHITECTURE.md) | full module map, mathematical pipeline, privacy model, consensus |
+| [GEOMETRY](GEOMETRY.md) | homotopy equivalence, diagonal construction, orthogonality, Tsirelson bound, Hodge-hardness |
+| [PRIMITIVES](PRIMITIVES.md) | helfer's logic → crypto: the cochain/fibration/homotopy foundations |
+| [SECURITY](SECURITY.md) | security proofs, hodge-hardness, √2 bounds, ring spectral proofs |
+| [CONSENSUS](CONSENSUS.md) | proof of value mechanics, spectral gap validation |
+| [STORAGE](STORAGE.md) | sheaf-native storage, on/off-chain separation, routing |
+| [ROADMAP](ROADMAP.md) | layer 1 implementation roadmap |
+| [WIRE_FORMAT](WIRE_FORMAT.md) | binary wire format for network messages |
 
-**[LAYER1_ROADMAP.md](LAYER1_ROADMAP.md)** - **PRIMARY DOCUMENT**
-- Complete Layer 1 blockchain architecture
-- Shipping roadmap (9 months to mainnet)
-- Native token (HCRYPT) economics
-- Modular design (Python + Rust + Oracle)
+## quick reference
 
-## 🏗️ Architecture
+```
+encrypt:   m → embed in ker(Δ) → add noise in im(δ)⊕im(δ*) → ciphertext
+decrypt:   ciphertext → π_H (harmonic projection) → extract from ker(Δ) → m
+identity:  spectral fingerprint := (eigenvalues, betti numbers, topology hash)
+anonymity: homotopy class membership (infinite anonymity set, not N decoys)
+consensus: proof of value := spectral gap ∈ [1/√2, 2√2]
+```
 
-**[CLEAN_ARCHITECTURE.md](CLEAN_ARCHITECTURE.md)**
-- Clean separation of concerns
-- Off-chain workers (Python math)
-- Oracle interface (Rust communication)
-- On-chain consensus (Rust node)
+## the key insight
 
-**[STORAGE_AND_ROUTING.md](STORAGE_AND_ROUTING.md)**
-- Wallet storage (Hodge-encrypted)
-- Transaction routing (onion, mixing, padding)
-- Privacy primitives
-- Panopticon resilience
+cochains are dual to chains. encryption uses δ (push data to edges),
+decryption uses δ* (project back to vertices). the adjoint relationship
+δ* = δᵀ means encrypt/decrypt are mathematically forced inverses.
+the hodge decomposition C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ*) is the
+cryptographic structure: message lives in ker(Δ), noise lives in its
+orthogonal complement.
 
-## 🔒 Security & Privacy
+see `src/crypto/__init__.py` for the full cochain duality explanation.
 
-**[PANOPTICON_RESILIENCE.md](PANOPTICON_RESILIENCE.md)**
-- Threat model (total surveillance)
-- Resistance strategies
-- Privacy guarantees
+## archive
 
-**[HOMOTOPY_EQUIVALENCE_PROOF.md](HOMOTOPY_EQUIVALENCE_PROOF.md)**
-- Mathematical foundation
-- Spectral fingerprints
-- Key rotation proofs
-
-**[INVARIANT_TIGHTENING.md](INVARIANT_TIGHTENING.md)**
-- Complete invariant characterization
-- √2 bounds
-- Validation criteria
-
-## 🧮 Mathematical Foundation
-
-**[HOMOTOPICAL_PRIMITIVES.md](HOMOTOPICAL_PRIMITIVES.md)**
-- Core homotopy concepts
-- Fibrations, cochains, Laplacians
-- Hodge decomposition
-
-**[INVARIANT_PHILOSOPHY.md](INVARIANT_PHILOSOPHY.md)**
-- Why invariants matter
-- By-construction security
-- Open source safety
-
-## ⛓️ Blockchain Design
-
-**[CHAIN_ARCHITECTURE.md](CHAIN_ARCHITECTURE.md)**
-- SheafState (not UTXO)
-- Proof of Value (PoV) consensus
-- Block structure
-- Transaction types
-
-**[PRIVACY_CHAIN_DESIGN.md](PRIVACY_CHAIN_DESIGN.md)**
-- Privacy-first blockchain
-- Monero comparison
-- Post-quantum security
-
-**[PROOF_OF_VALUE.md](PROOF_OF_VALUE.md)**
-- PoV consensus mechanism
-- Spectral gap validation
-- Validator economics
-
-## 🔬 Proofs & Security
-
-**[SECURITY_PROOFS.md](SECURITY_PROOFS.md)**
-- Formal security proofs
-- Lattice hardness reduction
-- Anonymity guarantees
-
-**[SECURITY_VULNERABILITIES.md](SECURITY_VULNERABILITIES.md)**
-- Known attack vectors
-- Mitigation strategies
-- Open problems
-
-## 🌐 Integration
-
-**[RBN_INTEGRATION.md](RBN_INTEGRATION.md)**
-- Random Bead Network integration
-- Cross-chain communication
-- $REVENGE token integration
-
-**[WIRE_FORMAT.md](WIRE_FORMAT.md)**
-- Network protocol
-- Serialization format
-- P2P communication
-
-## 💭 Philosophy
-
-**[PHILOSOPHY.md](PHILOSOPHY.md)**
-- Project vision
-- Mathematical beauty
-- Privacy sovereignty
-
-**[SOVEREIGNTY_VISION.md](SOVEREIGNTY_VISION.md)**
-- Individual sovereignty
-- Resistance to surveillance
-- Cryptographic freedom
-
-**[CRITIQUE.md](CRITIQUE.md)**
-- Self-critique
-- Known limitations
-- Future improvements
-
-## 📚 Archive
-
-**[archive/](archive/)** - Earlier design iterations (kept for reference)
-- Older Rust migration plans
-- Previous oracle designs
-- Superseded by LAYER1_ROADMAP.md
-
----
-
-## Quick Reference
-
-**Native Token**: HCRYPT
-**Consensus**: Proof of Value (PoV)
-**Privacy**: Homotopy-based (post-quantum)
-**State Model**: SheafState (harmonic projection)
-**Smart Contracts**: WASM with homotopy precompiles
-
-**Layer 1 Status**: In development
-**Testnet Target**: Month 6
-**Mainnet Target**: Month 9
-
-**Repository**: https://github.com/what-social-construct/homotopical-encrypt
+historical docs preserved in [archive/](archive/) for reference.

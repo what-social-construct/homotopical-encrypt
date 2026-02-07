@@ -304,7 +304,7 @@ class ThresholdCredential:
         partial_decryptions = {}
         for party_id in participating_parties:
             fibration = self.party_fibrations[party_id]
-            # Each party runs partial Lindblad flow on their vertex
+            # Each party runs partial harmonic projection on their vertex
             partial = partial_decrypt(ciphertext, fibration, party_id)
             partial_decryptions[party_id] = partial
         

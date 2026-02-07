@@ -172,7 +172,7 @@ def decrypt(
     """
     Decrypt ciphertext using credential.
     
-    Uses direct lattice decoding (not Lindblad flow).
+    Uses direct lattice decoding (harmonic projection onto ker(Δ)).
     
     Args:
         ciphertext: FibrationCiphertext to decrypt

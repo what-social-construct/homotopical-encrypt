@@ -39,7 +39,7 @@ The security of homotopical encryption rests on THREE pillars:
 
 **What it measures:**
 - How "connected" the fibration is
-- Rate of convergence of Lindblad flow
+- Rate of convergence of harmonic projection
 - Error tolerance in decryption
 
 **Security implication:**
@@ -185,7 +185,7 @@ We construct a simulator that produces indistinguishable proofs without knowing 
 
 ## Part III: Decryption Correctness
 
-### Theorem 4: Lindblad Decryption Converges
+### Theorem 4: Harmonic Projection Decryption Converges
 
 **Statement:**
 > If ciphertext c encodes message m as harmonic cochain, and λ₁ > 0, then:

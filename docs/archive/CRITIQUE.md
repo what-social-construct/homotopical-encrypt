@@ -15,7 +15,7 @@
    - Threshold schemes fall out naturally (β₀ = components)
 
 3. **Spectral gap as security parameter**
-   - λ₁ > 0 means Lindblad flow converges
+   - λ₁ > 0 means harmonic projection separates ker(Δ) from im(δ)⊕im(δ*)
    - Larger gap = faster decryption, better error correction
    - This is measurable and tunable
 
@@ -44,37 +44,20 @@ We need to show: "Distinguishing c from random reduces to LWE"
 - Need to prove: coboundary structure doesn't leak information
 - May need structured LWE (Ring-LWE) for efficiency
 
-### 2. Decryption Doesn't Always Work
+### 2. ~~Decryption Doesn't Always Work~~ ✅ RESOLVED
 
-**Problem:** Lindblad flow assumes message is in ker(Δ).
+**Was:** Message encoded at one vertex, not as harmonic cochain.
 
-But we encoded message at ONE vertex, not as a harmonic cochain!
+**Resolution:** Dual decode (lattice threshold + Hodge projection) in
+decrypt.py. Lattice path is primary and fast (O(n)); Hodge path
+validates global coherence and enables ZK proofs. Roundtrip tests pass.
 
-```python
-# Current (wrong):
-vertex_blocks[0] = message  # Only first vertex
+### 3. ~~Spectral Gap Can Be Zero~~ ✅ RESOLVED
 
-# Should be:
-harmonic_cochain = project_to_kernel(message)  # Distribute harmonically
-```
+**Was:** Disconnected topology → ker(Δ) too large → message not recoverable.
 
-**Fix:** 
-- Encode message as harmonic representative
-- Or use "syndrome decoding" style (decode from edge syndromes)
-
-### 3. Spectral Gap Can Be Zero
-
-**Problem:** If topology is disconnected, ker(Δ) can be large.
-
-```
-β₀ > 1  →  multiple connected components
-        →  dim(ker(Δ)) = β₀
-        →  message not uniquely recoverable!
-```
-
-**Fix:**
-- Require connected topology (β₀ = 1) in credential generation
-- Add connectivity check in `generate_credential`
+**Resolution:** credential.py has hard gate: β₀ ≥ 1 at keygen.
+homotopy_transaction.py verifies β₀ = 1 (connected) for all inputs.
 
 ### 4. ZK Proofs are Simplified
 

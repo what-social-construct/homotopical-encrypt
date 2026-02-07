@@ -133,7 +133,7 @@ class QuantumSheafFibration:
     The fibration structure enables:
     - Parallel transport (message propagation)
     - Holonomy (loop authentication)
-    - Lindblad flow (decryption)
+    - Harmonic projection onto ker(Δ) (decryption)
     """
     sheaf: CellularSheaf
     hilbert_dim: int
