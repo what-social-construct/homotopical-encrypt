@@ -1,11 +1,18 @@
 """
-Lattice - Compatibility Re-exports
+Lattice — Unified imports for the lattice projection layer.
 
-This module re-exports from the new modular structure:
-- geometry/lattice.py: Pure lattice math (Lattice, CochainLattice)
-- geometry/noise.py: Spectral noise functions
-- crypto/random.py: Secure random generation
-- crypto/hardness.py: Security analysis and LatticeInstance
+The lattice layer is the algebraic surface where the homotopical
+hard problem projects down to concrete computation. See:
+
+- geometry/lattice.py: Pure lattice math — the projection surface
+  (Lattice, CochainLattice, Sublattice, Hodge decomposition)
+- geometry/noise.py: Hodge-structured noise (not random Gaussian)
+- crypto/random.py: Cryptographically secure randomness
+- crypto/hardness.py: Security model — why CVP < Hodge-hardness
+  < homotopical search (LatticeInstance, BKZ cost estimates)
+
+The full hardness hierarchy (from Helfer, arXiv:1908.08944):
+    CVP < Hodge-hardness < homotopical search (full break)
 """
 
 # Lattice math from geometry

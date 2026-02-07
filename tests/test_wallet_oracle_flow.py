@@ -24,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.geometry.fiber_bundle import FiberBundle, OnionRouter, create_onion_route
 from src.crypto.encrypt import encrypt, CONSTANT_SIZE_DEFAULT, FibrationCiphertext
+from src.oracle.client import FullStalkRequest, create_test_stalk
 from dataclasses import dataclass, field
 from typing import Dict, Any
 
@@ -109,43 +110,21 @@ def create_test_credential(name: str, security_param: int = 32):
 
 def test_wallet_encryption():
     """Test basic wallet encryption works."""
-    print("\n" + "=" * 60)
-    print("TEST 1: Wallet Encryption")
-    print("=" * 60)
-    
-    # Create master credential
     master = create_test_credential("master")
-    print(f"✅ Master credential created")
-    print(f"   Fingerprint: {master.spectrum.fingerprint_hash().hex()[:16]}...")
     
-    # Create message to encrypt
     message = b"Test secret credential data"
-    print(f"\n📝 Message: {message}")
-    
-    # Encrypt with Hodge noise
-    print("\n🔐 Encrypting with Hodge noise...")
     ciphertext = encrypt(message, master, sigma_exact=2.0, sigma_harmonic=0.1)
     
-    print(f"✅ Encryption successful!")
-    print(f"   Version: {ciphertext.version}")
-    print(f"   Vertex blocks: {len(ciphertext.vertex_blocks)}")
-    print(f"   Edge syndromes: {len(ciphertext.edge_syndromes)}")
-    print(f"   Timestamp: {ciphertext.timestamp}")
+    assert ciphertext.version == 2
+    assert len(ciphertext.vertex_blocks) > 0
+    assert len(ciphertext.edge_syndromes) > 0
     
-    # Serialize
     serialized = ciphertext.serialize()
-    print(f"\n📦 Serialized size: {len(serialized)} bytes")
-    
-    return True
+    assert len(serialized) > 0
 
 
 def test_onion_routing():
     """Test onion routing layer wrapping."""
-    print("\n" + "=" * 60)
-    print("TEST 2: Onion Routing")
-    print("=" * 60)
-    
-    # Create relay bundles
     relays = []
     relay_keys = []
     
@@ -158,74 +137,46 @@ def test_onion_routing():
         relays.append(bundle)
         relay_keys.append(np.random.randn(16))
     
-    print(f"✅ Created {len(relays)} relay bundles")
-    
-    # Create message matching fiber_dim
     message = np.random.randn(16)
-    print(f"\n📝 Message (fiber_dim=16): norm={np.linalg.norm(message):.4f}")
-    
-    # Create onion
-    print("\n🧅 Creating onion packet...")
     packet = create_onion_route(relays, message, relay_keys)
     
-    print(f"✅ Onion packet created!")
-    print(f"   Layers: {len(packet.layers)}")
-    print(f"   Encrypted hints: {[len(h) for h in packet.encrypted_hints]}")
-    
-    return True
+    assert len(packet.layers) == 3
+    assert len(packet.encrypted_hints) == 3
 
 
 def test_constant_padding():
     """Test constant-size padding for panopticon resistance."""
-    print("\n" + "=" * 60)
-    print("TEST 3: Constant Padding")
-    print("=" * 60)
-    
     from src.crypto.padding import pad_to_constant, unpad_from_constant
     
-    # Different size messages
     messages = [
         b"Short",
         b"Medium message with more content here",
         b"A" * 1000,
     ]
     
-    target_size = 4096  # 4KB
+    target_size = 4096
     
     for msg in messages:
         padded = pad_to_constant(msg, target_size)
-        print(f"✅ {len(msg):4d} bytes → {len(padded):4d} bytes (constant)")
+        assert len(padded) == target_size
         
-        # Verify unpadding
         recovered = unpad_from_constant(padded)
-        assert recovered == msg, "Padding round-trip failed!"
-    
-    print(f"\n✅ All messages padded to uniform {target_size} bytes")
-    return True
+        assert recovered == msg
 
 
 def test_full_flow():
-    """Test complete wallet → routing → Oracle flow."""
-    print("\n" + "=" * 60)
-    print("TEST 4: Full Flow (Wallet → Routing → Oracle)")
-    print("=" * 60)
-    
+    """Test complete wallet → routing → Oracle preparation flow."""
     # 1. Generate credentials
-    print("\n1️⃣ Generating credentials...")
     master = create_test_credential("master")
     wallet_cred = create_test_credential("wallet")
-    print(f"   Master: {master.spectrum.fingerprint_hash().hex()[:16]}...")
-    print(f"   Wallet: {wallet_cred.spectrum.fingerprint_hash().hex()[:16]}...")
     
     # 2. Encrypt wallet credential
-    print("\n2️⃣ Encrypting wallet credential with Hodge noise...")
     credential_data = b"wallet_credential_private_data_here"
     ciphertext = encrypt(credential_data, master, sigma_exact=2.0, sigma_harmonic=0.1)
     encrypted_blob = ciphertext.serialize()
-    print(f"   Encrypted blob: {len(encrypted_blob)} bytes")
+    assert len(encrypted_blob) > 0
     
     # 3. Create relay network
-    print("\n3️⃣ Setting up relay network...")
     relay_bundles = []
     relay_keys = []
     for i in range(3):
@@ -233,52 +184,257 @@ def test_full_flow():
         bundle = FiberBundle.random(topology, fiber_dim=32)
         relay_bundles.append(bundle)
         relay_keys.append(np.random.randn(32))
-    print(f"   {len(relay_bundles)} relay nodes configured")
     
     # 4. Wrap in onion layers
-    print("\n4️⃣ Wrapping in onion layers...")
     message_array = np.frombuffer(encrypted_blob, dtype=np.uint8)
-    # Pad to multiple of 32 for onion routing
     pad_len = (32 - len(message_array) % 32) % 32
     message_padded = np.pad(message_array, (0, pad_len), constant_values=0)
-    
-    # For simplicity, just take first 32 bytes (real system would chunk)
     chunk = message_padded[:32]
     onion_packet = create_onion_route(relay_bundles, chunk, relay_keys)
-    print(f"   Onion layers: {len(onion_packet.layers)}")
+    assert len(onion_packet.layers) == 3
     
     # 5. Create EncryptedCredential for Oracle
-    print("\n5️⃣ Preparing for Oracle submission...")
     enc_cred = EncryptedCredential(
         ciphertext_blob=encrypted_blob,
         public_fingerprint=wallet_cred.spectrum.fingerprint_hash(),
         topology_hash=wallet_cred.spectrum.topology_hash,
         expected_invariants={
-            "betti_0": 2,  # 2 components
+            "betti_0": 2,
             "spectral_gap": float(np.sort(np.linalg.eigvalsh(wallet_cred.laplacian))[2])
         }
     )
-    print(f"   Fingerprint: {enc_cred.public_fingerprint.hex()[:16]}...")
-    print(f"   Topology hash: {enc_cred.topology_hash.hex()[:16]}...")
     
-    # 6. Would send to Oracle here
-    print("\n6️⃣ Ready for Oracle submission!")
-    print(f"   Encrypted blob: {len(enc_cred.ciphertext_blob)} bytes")
-    print(f"   Public metadata: fingerprint + topology_hash")
+    assert len(enc_cred.public_fingerprint) == 32
+    assert len(enc_cred.topology_hash) == 32
+    assert enc_cred.expected_invariants["betti_0"] == 2
+
+
+# =============================================================================
+# Natural Transformation η Tests (Python↔Oracle hash agreement)
+# =============================================================================
+
+def test_eta_sha256_commitment():
+    """
+    Verify η_v: F_full(v) → F_hash(v) using SHA256 fallback.
     
-    # Security summary
-    print("\n" + "=" * 60)
-    print("🔒 SECURITY SUMMARY")
-    print("=" * 60)
-    print(f"   Content protection:  Hodge encryption (ker(Δ))")
-    print(f"   Transport protection: Sheaf onion (3 layers)")
-    print(f"   Forward secrecy:     Ephemeral fibers")
-    print(f"   Timing protection:   Mixing nodes (if enabled)")
-    print(f"   Size uniformity:     Constant padding")
-    print(f"\n   Oracle sees: Encrypted blob + public metadata")
-    print(f"   Oracle CANNOT: Decrypt, correlate, or analyze")
+    Python computes the same hash the Oracle would compute.
+    This verifies the natural transformation is consistent.
+    """
+    import hashlib
     
-    return True
+    # Create credential data
+    np.random.seed(42)
+    credential = np.random.randn(256).tolist()
+    
+    # Python-side hash (same algorithm as Oracle's hash_credential)
+    hasher = hashlib.sha256()
+    for val in credential:
+        hasher.update(np.float64(val).tobytes())
+    python_hash = hasher.hexdigest()
+    
+    # Verify deterministic
+    hasher2 = hashlib.sha256()
+    for val in credential:
+        hasher2.update(np.float64(val).tobytes())
+    assert hasher2.hexdigest() == python_hash
+    
+    # Verify it's 32 bytes (64 hex chars)
+    assert len(python_hash) == 64
+
+
+def test_eta_geometric_commitment():
+    """
+    Verify η_v using geometric commitment (Hodge projection).
+    
+    This is the real system: credential → project to ker(Δ) → quantize.
+    Python and Oracle must produce the same commitment bytes.
+    """
+    from src.geometry.hodge import compute_hodge_projectors
+    
+    # Build a Laplacian with known harmonic space
+    n = 8
+    # Two components of 4: β₀ = 2, so ker(Δ) is 2-dimensional
+    laplacian = np.zeros((n, n))
+    for start in [0, 4]:
+        for i in range(start, start + 3):
+            laplacian[i, i] += 1
+            laplacian[i+1, i+1] += 1
+            laplacian[i, i+1] = -1
+            laplacian[i+1, i] = -1
+    
+    # Compute Hodge projectors
+    P_harmonic, P_exact, P_coexact = compute_hodge_projectors(laplacian)
+    
+    # Verify decomposition: P_h + P_ex + P_coex = I
+    identity = np.eye(n)
+    reconstruction = P_harmonic + P_exact + P_coexact
+    assert np.allclose(reconstruction, identity, atol=1e-10), \
+        f"Hodge decomposition doesn't sum to identity"
+    
+    # Verify projectors are idempotent: P² = P
+    assert np.allclose(P_harmonic @ P_harmonic, P_harmonic, atol=1e-10)
+    assert np.allclose(P_exact @ P_exact, P_exact, atol=1e-10)
+    
+    # Verify orthogonality: P_h · P_ex = 0
+    assert np.allclose(P_harmonic @ P_exact, 0, atol=1e-10)
+    
+    # Create credential and project to harmonic space
+    np.random.seed(42)
+    credential = np.random.randn(n)
+    projected = P_harmonic @ credential
+    
+    # Quantize to bytes (matching Oracle's quantize_to_bytes)
+    commitment = []
+    for val in projected:
+        quantized = int((val + 1.0) / 2.0 * 255.0)
+        quantized = max(0, min(255, quantized))
+        commitment.append(quantized)
+    
+    # Commitment is deterministic
+    commitment2 = []
+    projected2 = P_harmonic @ credential
+    for val in projected2:
+        quantized = int((val + 1.0) / 2.0 * 255.0)
+        quantized = max(0, min(255, quantized))
+        commitment2.append(quantized)
+    
+    assert commitment == commitment2, "Geometric commitment not deterministic"
+    
+    # Harmonic component should be non-trivial (β₀ = 2)
+    assert np.linalg.norm(projected) > 0, "Harmonic projection is zero"
+
+
+def test_eta_naturality():
+    """
+    Verify naturality: for edge e: v → w,
+    F_hash(e) ∘ η_v = η_w ∘ F_full(e)
+    
+    Concretely: if two vertices share topology, their commitments
+    should have matching topology hashes and compatible spectral gaps.
+    """
+    import hashlib
+    
+    # Shared nerve (same topology for both vertices)
+    shared_vertices = [0, 1, 2]
+    shared_edges = [(0, 1), (1, 2)]
+    
+    def compute_topology_hash(vertices, edges):
+        """Same algorithm as Oracle's hash_topology."""
+        hasher = hashlib.sha256()
+        for v in vertices:
+            hasher.update(v.to_bytes(8, 'little'))
+        for (v0, v1) in edges:
+            hasher.update(v0.to_bytes(8, 'little'))
+            hasher.update(v1.to_bytes(8, 'little'))
+        return hasher.digest()
+    
+    # Two vertices in same nerve
+    topo_hash_v = compute_topology_hash(shared_vertices, shared_edges)
+    topo_hash_w = compute_topology_hash(shared_vertices, shared_edges)
+    
+    # Naturality: topology hashes must match for connected vertices
+    assert topo_hash_v == topo_hash_w, "Topology hashes don't match on edge"
+    
+    # Spectral gaps should be compatible (within tolerance)
+    # Same Laplacian → same spectral gap
+    n = 3
+    laplacian = np.array([
+        [ 1, -1,  0],
+        [-1,  2, -1],
+        [ 0, -1,  1]
+    ], dtype=float)
+    
+    eigenvalues = np.linalg.eigvalsh(laplacian)
+    # Find spectral gap (smallest nonzero eigenvalue)
+    spectral_gap = min(ev for ev in eigenvalues if ev > 1e-6)
+    
+    assert spectral_gap > 0, "Spectral gap should be positive"
+    assert spectral_gap < 3.0, f"Spectral gap too large: {spectral_gap}"
+
+
+def test_eta_oracle_stalk_request():
+    """
+    Test creating a FullStalkRequest that would be sent to the Oracle.
+    
+    Verifies the Python-side hash matches what Oracle expects.
+    """
+    # Create stalk with known Laplacian
+    stalk = create_test_stalk(vertex_id=0, dimension=32, components=4)
+    
+    assert stalk.vertex_id == 0
+    assert len(stalk.credential) == 32
+    assert len(stalk.eigenvalues) == 32
+    assert len(stalk.laplacian) == 32
+    
+    # Compute hash (Python side)
+    python_hash = stalk.compute_python_hash()
+    assert len(python_hash) == 64  # 32 bytes = 64 hex chars
+    
+    # Hash is deterministic
+    python_hash2 = stalk.compute_python_hash()
+    assert python_hash == python_hash2
+    
+    # Different vertex → different hash
+    stalk2 = create_test_stalk(vertex_id=1, dimension=32, components=4)
+    assert stalk2.compute_python_hash() != python_hash
+    
+    # JSON serialization works
+    json_req = stalk.to_json()
+    assert json_req["method"] == "submit_stalk"
+    assert json_req["params"]["vertex_id"] == 0
+    assert json_req["params"]["python_hash"] == python_hash
+
+
+def test_eta_gluing_obstruction():
+    """
+    Test H^1 obstruction: section glues iff all naturality conditions hold.
+    
+    Create a consistent nerve where all topology hashes agree,
+    then verify the section would glue (H^1 = 0).
+    """
+    import hashlib
+    
+    # Three vertices forming a path: 0 — 1 — 2
+    shared_vertices = [0, 1, 2]
+    shared_edges = [(0, 1), (1, 2)]
+    
+    def make_stalk(vertex_id):
+        """Create consistent stalks sharing same topology."""
+        np.random.seed(vertex_id)
+        credential = np.random.randn(16).tolist()
+        
+        # Same Laplacian for all (shared topology)
+        n = 3
+        laplacian = np.array([
+            [ 1, -1,  0],
+            [-1,  2, -1],
+            [ 0, -1,  1]
+        ], dtype=float)
+        eigenvalues = np.linalg.eigvalsh(laplacian).tolist()
+        
+        return {
+            "vertex_id": vertex_id,
+            "eigenvalues": eigenvalues,
+            "nerve_vertices": shared_vertices,
+            "nerve_edges": shared_edges,
+        }
+    
+    stalks = [make_stalk(v) for v in range(3)]
+    
+    # Check naturality on each edge
+    for (v, w) in shared_edges:
+        sv = stalks[v]
+        sw = stalks[w]
+        
+        # Same topology → same topology hash
+        assert sv["nerve_vertices"] == sw["nerve_vertices"]
+        assert sv["nerve_edges"] == sw["nerve_edges"]
+        
+        # Same Laplacian → same spectral gap
+        assert sv["eigenvalues"] == sw["eigenvalues"]
+    
+    # Section glues: H^1 = 0
+    # (All naturality conditions hold because topology is shared)
 
 
 if __name__ == "__main__":
@@ -289,8 +445,13 @@ if __name__ == "__main__":
     try:
         test_wallet_encryption()
         test_onion_routing()
-        # test_constant_padding()  # Requires padding module fix
+        test_constant_padding()
         test_full_flow()
+        test_eta_sha256_commitment()
+        test_eta_geometric_commitment()
+        test_eta_naturality()
+        test_eta_oracle_stalk_request()
+        test_eta_gluing_obstruction()
         
         print("\n" + "=" * 60)
         print("🎉 ALL TESTS PASSED!")

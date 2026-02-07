@@ -120,7 +120,7 @@ pub struct BlockResponse {
     pub parent_hash: String,
     pub timestamp: u64,
     pub spectral_gap: f64,
-    pub betti_numbers: [u32; 3],
+    pub betti_numbers: (i32, i32, i32),
     pub transaction_count: usize,
 }
 

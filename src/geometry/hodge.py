@@ -301,6 +301,14 @@ def compute_hodge_projectors(
     elif delta is not None:
         # Dimension mismatch
         P_coexact = np.zeros((n, n))
+    elif delta_prev is None:
+        # No coboundary operators at all — Laplacian-only mode.
+        # For C^0 (vertex cochains): P_exact = 0, so
+        # P_coexact = I - P_harmonic completes the decomposition.
+        # More generally: non-harmonic eigenspace = im(δ) ⊕ im(δ*),
+        # but without coboundary ops we can't split them, so we assign
+        # the entire non-harmonic part to coexact.
+        P_coexact = np.eye(n) - P_H
     else:
         P_coexact = np.zeros((n, n))
     

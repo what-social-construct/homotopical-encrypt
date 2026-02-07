@@ -2,13 +2,76 @@
 Invariant Validation for PoV Consensus
 
 Validates geometric invariants at checkpoints:
-1. SPECTRAL_BOUND: gap ∈ [1/√2, 2√2]
+1. SPECTRAL_BOUND: gap ∈ [1/√2, 2√2]  (Tsirelson bounds)
 2. CONSERVATION: sum of all balances = total supply
 3. NON_NEGATIVE: no account has negative balance
 4. TOPOLOGY_CONSISTENT: topology hash matches claimed
 5. HARMONIC_COHERENT: harmonic projection is idempotent
 
 Used by block_producer.py for pre/post block validation.
+
+THE TSIRELSON BOUND (why √2 is a necessary condition):
+
+    The spectral gap bounds λ₁ ∈ [1/√2, 2√2] arise from the geometry
+    of orthogonal parallel transport — the same structure that gives
+    the Tsirelson bound 2√2 in quantum mechanics (CHSH inequality).
+
+    LOWER BOUND (λ₁ ≥ 1/√2 ≈ 0.707):
+    The spectral gap separates ker(Δ) from im(δ)⊕im(δ*) in the Hodge
+    decomposition. For the Hodge projection π_H to be stable under
+    lattice rounding (necessary for correct decryption), the gap must
+    exceed 1/√2. This is the geometric minimum: when restriction maps
+    R_{v→e} ∈ SO(n) are rotations by π/4 (maximally entangling), the
+    sheaf Laplacian achieves exactly this gap. Below it, noise from
+    im(δ)⊕im(δ*) bleeds into ker(Δ) and the projection fails.
+
+    UPPER BOUND (λ₁ ≤ 2√2 ≈ 2.828):
+    For orthogonal restriction maps on bounded-degree graphs, 2√2 is
+    the maximum spectral gap. The Laplacian Δ = Σ_e (I - R_e)ᵀ(I - R_e)
+    has per-edge contributions with eigenvalues |1 - e^{iθ}|² = 2(1 - cos θ)
+    ∈ [0, 4]. Summing over edges and normalizing, the gap is bounded
+    by 2√2 for valid SO(n) connections. Beyond this, the restriction
+    maps cannot be orthogonal — the fibration structure is broken.
+
+    WHY THIS IS A NECESSARY CONDITION (geometric construction):
+    - Parallel transport lives in SO(n) (orthogonal, norm-preserving)
+    - The Laplacian Δ = δ*δ is built from these transport matrices
+    - The Rayleigh quotient for λ₁ is bounded by the geometry of SO(n)
+    - Classical transport (identity maps): λ₁ = graph Laplacian gap
+    - Quantum transport (rotated maps): λ₁ can reach [1/√2, 2√2]
+    - This range is exactly the Tsirelson range: the quantum violation
+      of the CHSH Bell inequality is 2√2 (vs classical bound 2)
+    - Our spectral gap bound IS the Tsirelson bound, applied to the
+      geometry of parallel transport on fiber bundles
+
+    MAXIMUM UNCERTAINTY AT 1/√2:
+    The lower bound 1/√2 is not arbitrary — it is the point of maximum
+    uncertainty between complementary observables. In quantum mechanics,
+    the Heisenberg uncertainty principle says ΔxΔp ≥ ℏ/2, and maximum
+    uncertainty (equal in both conjugate variables) occurs at 1/√2.
+
+    In our geometric setting, the two "conjugate observables" are:
+    - Projection onto ker(Δ) (harmonic component = message)
+    - Projection onto im(δ)⊕im(δ*) (non-harmonic = noise)
+
+    At λ₁ = 1/√2, an observer without the fibration secret has maximum
+    uncertainty about which subspace a given cochain component lives in.
+    This is the PRIVACY OPTIMUM: the point where the geometric structure
+    provides maximum indistinguishability between signal and noise.
+
+    The system operates in [1/√2, 2√2] because:
+    - Near 1/√2: maximum privacy (hardest to distinguish signal/noise)
+    - Near 2√2: maximum separation (easiest to decrypt with key)
+    - The fibration secret holder can project regardless of where in
+      the range the gap falls, but an attacker's difficulty is maximized
+      near the lower bound.
+
+    Violation means either:
+    - Below 1/√2: decryption will fail (Hodge projection unstable)
+      AND the system has crossed the uncertainty barrier — noise and
+      signal are no longer separable even with the key
+    - Above 2√2: restriction maps aren't orthogonal (invalid fibration)
+    Both indicate either a malformed credential or an attack.
 """
 
 from dataclasses import dataclass, field

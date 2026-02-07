@@ -1,16 +1,34 @@
 """
 Lattice Operations on Cochain Spaces
 
-Pure lattice mathematics - no cryptographic framing here.
-For security analysis, see crypto/hardness.py
+The lattice structure on cochains is the algebraic PROJECTION of the
+deeper geometric/homotopical structure onto a concrete computational
+surface. See crypto/hardness.py for the full hardness hierarchy:
 
-Key insight:
+    CVP < Hodge-hardness < homotopical search
+
+This module implements the lattice operations — the bottom layer of
+the projection — without cryptographic assumptions. The lattice is
+where post-quantum hardness lives (no periodic structure for Shor),
+but it captures only the shadow of the full geometric problem.
+
+The projection chain from Helfer's fibrations to lattice operations:
+
+    Grothendieck fibration (fiber_bundle.py)
+        → parallel transport = restriction maps R_{v→e}
+        → these define the coboundary operator δ
+        → δ*δ = Laplacian Δ
+        → Hodge decomposition of C^k into sublattices:
+            C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ*)
+        → reducing mod q gives the q-ary lattice ℤ_q^n
+
+Key structures:
 - Cochains C^k(X, F) over ℤ_q form a lattice (ℤ-module mod q)
 - Coboundary δ: C^k → C^{k+1} is a lattice homomorphism
-- Hodge decomposition = sublattice decomposition:
-    C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ*)
-    
-This provides the algebraic structure that sheaf_laplacian.py builds on.
+- Hodge decomposition = sublattice decomposition
+- ker(Δ) = harmonic sublattice where messages live
+- The attacker sees the lattice but not which sublattice is ker(Δ)
+  (that requires the fibration secret / parallel transport structure)
 """
 
 from dataclasses import dataclass, field

@@ -188,18 +188,22 @@ mod tests {
     fn create_test_block(height: u64) -> Block {
         Block {
             header: BlockHeader {
+                version: 1,
                 height,
                 parent_hash: BlockHash([0; 32]),
+                cochain_root: [0; 32],
                 timestamp: 1234567890,
                 spectral_proof: SpectralProof {
                     fingerprint: SpectralFingerprint {
                         spectral_gap: 1.5,
-                        betti_numbers: [1, 0, 0],
+                        betti_numbers: (1, 0, 0),
                         hash: [0; 32],
                     },
                     computation_trace: vec![],
                     worker_signatures: vec![],
                 },
+                producer_fingerprint: [0; 32],
+                topology_hash: [0; 32],
             },
             transactions: vec![],
         }
