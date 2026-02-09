@@ -412,4 +412,204 @@ mod tests {
         };
         assert!(!fp_invalid.verify_bounds());
     }
+
+    // ── √2 boundary precision ───────────────────────────────────
+
+    #[test]
+    fn test_boundary_exact_lower() {
+        // Exactly at 1/√2 ≈ 0.70710678... → should be accepted
+        let commitment = test_oracle_commitment(POV_LOWER);
+        let (workers, my_key) = test_workers();
+        let producer = PoVProducer::new(my_key, workers);
+        assert!(producer.produce_genesis(&commitment).is_ok());
+    }
+
+    #[test]
+    fn test_boundary_exact_upper() {
+        // Exactly at 2√2 ≈ 2.82842712... → should be accepted
+        let commitment = test_oracle_commitment(POV_UPPER);
+        let (workers, my_key) = test_workers();
+        let producer = PoVProducer::new(my_key, workers);
+        assert!(producer.produce_genesis(&commitment).is_ok());
+    }
+
+    #[test]
+    fn test_boundary_just_below_lower() {
+        // Just below 1/√2 → rejected
+        let commitment = test_oracle_commitment(POV_LOWER - 1e-10);
+        let (workers, my_key) = test_workers();
+        let producer = PoVProducer::new(my_key, workers);
+        assert!(producer.produce_genesis(&commitment).is_err());
+    }
+
+    #[test]
+    fn test_boundary_just_above_upper() {
+        // Just above 2√2 → rejected
+        let commitment = test_oracle_commitment(POV_UPPER + 1e-10);
+        let (workers, my_key) = test_workers();
+        let producer = PoVProducer::new(my_key, workers);
+        assert!(producer.produce_genesis(&commitment).is_err());
+    }
+
+    // ── Block validation pipeline ───────────────────────────────
+
+    #[test]
+    fn test_verify_rejects_tampered_cochain_root() {
+        let (workers, my_key) = test_workers();
+        let producer = PoVProducer::new(my_key, workers.clone());
+        let verifier = PoVVerifier::new(workers);
+
+        let commitment = test_oracle_commitment(1.5);
+        let mut block = producer.produce_genesis(&commitment).unwrap();
+
+        // Tamper with cochain root
+        block.header.cochain_root = [0xFF; 32];
+
+        let result = verifier.verify_block(&block);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("root mismatch"));
+    }
+
+    #[test]
+    fn test_verify_rejects_bad_version() {
+        let (workers, my_key) = test_workers();
+        let producer = PoVProducer::new(my_key, workers.clone());
+        let verifier = PoVVerifier::new(workers);
+
+        let commitment = test_oracle_commitment(1.5);
+        let mut block = producer.produce_genesis(&commitment).unwrap();
+
+        block.header.version = 99;
+
+        let result = verifier.verify_block(&block);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("version"));
+    }
+
+    #[test]
+    fn test_verify_block_with_transactions() {
+        let (workers, my_key) = test_workers();
+        let producer = PoVProducer::new(my_key, workers.clone());
+        let verifier = PoVVerifier::new(workers);
+
+        let commitment = test_oracle_commitment(1.5);
+        let genesis = producer.produce_genesis(&commitment).unwrap();
+
+        // Build transactions as proper cochain commitments
+        let q: u32 = 12289;
+        let txs = vec![
+            build_test_cochain_tx(q, &[100, 200]),
+            build_test_cochain_tx(q, &[300, 400]),
+        ];
+
+        let commitment2 = test_oracle_commitment(2.0);
+        let block = producer.produce_block(&genesis, txs, &commitment2).unwrap();
+
+        // Block should verify (cochain root computed correctly)
+        verifier.verify_block(&block).unwrap();
+
+        // Verify chain linkage too
+        verifier.verify_chain(&block, &genesis).unwrap();
+    }
+
+    #[test]
+    fn test_verify_chain_wrong_parent() {
+        let (workers, my_key) = test_workers();
+        let producer = PoVProducer::new(my_key, workers.clone());
+        let verifier = PoVVerifier::new(workers);
+
+        let c1 = test_oracle_commitment(1.5);
+        let genesis = producer.produce_genesis(&c1).unwrap();
+
+        let c2 = test_oracle_commitment(2.0);
+        let block1 = producer.produce_block(&genesis, vec![], &c2).unwrap();
+
+        // Try to verify block1 against itself instead of genesis
+        let result = verifier.verify_chain(&block1, &block1);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_verify_chain_wrong_height() {
+        let (workers, my_key) = test_workers();
+        let producer = PoVProducer::new(my_key, workers.clone());
+        let verifier = PoVVerifier::new(workers);
+
+        let c1 = test_oracle_commitment(1.5);
+        let genesis = producer.produce_genesis(&c1).unwrap();
+
+        let c2 = test_oracle_commitment(2.0);
+        let block1 = producer.produce_block(&genesis, vec![], &c2).unwrap();
+
+        let c3 = test_oracle_commitment(1.8);
+        let block2 = producer.produce_block(&block1, vec![], &c3).unwrap();
+
+        // block2 (height 2) verified against genesis (height 0) → parent hash or height mismatch
+        let result = verifier.verify_chain(&block2, &genesis);
+        assert!(result.is_err());
+        let err_msg = result.unwrap_err().to_string();
+        assert!(err_msg.contains("mismatch"), "Expected mismatch error, got: {}", err_msg);
+    }
+
+    #[test]
+    fn test_three_block_chain() {
+        let (workers, my_key) = test_workers();
+        let producer = PoVProducer::new(my_key, workers.clone());
+        let verifier = PoVVerifier::new(workers);
+
+        let c1 = test_oracle_commitment(1.0);
+        let genesis = producer.produce_genesis(&c1).unwrap();
+        verifier.verify_block(&genesis).unwrap();
+
+        let c2 = test_oracle_commitment(1.5);
+        let block1 = producer.produce_block(&genesis, vec![], &c2).unwrap();
+        verifier.verify_chain(&block1, &genesis).unwrap();
+
+        let c3 = test_oracle_commitment(2.5);
+        let block2 = producer.produce_block(&block1, vec![], &c3).unwrap();
+        verifier.verify_chain(&block2, &block1).unwrap();
+
+        // Heights are correct
+        assert_eq!(genesis.header.height, 0);
+        assert_eq!(block1.header.height, 1);
+        assert_eq!(block2.header.height, 2);
+
+        // Parent hashes chain
+        assert_eq!(block1.header.parent_hash, genesis.hash());
+        assert_eq!(block2.header.parent_hash, block1.hash());
+    }
+
+    #[test]
+    fn test_cochain_root_set_correctly_on_produced_block() {
+        let (workers, my_key) = test_workers();
+        let producer = PoVProducer::new(my_key, workers);
+
+        let c = test_oracle_commitment(1.5);
+        let genesis = producer.produce_genesis(&c).unwrap();
+
+        let q: u32 = 12289;
+        let txs = vec![
+            build_test_cochain_tx(q, &[42, -7]),
+            build_test_cochain_tx(q, &[58, 7]),
+        ];
+
+        let c2 = test_oracle_commitment(2.0);
+        let block = producer.produce_block(&genesis, txs, &c2).unwrap();
+
+        // Verify the stored root matches recomputation
+        let recomputed = block.compute_cochain_root();
+        assert_eq!(block.header.cochain_root, recomputed);
+        assert_ne!(recomputed, [0u8; 32]);
+    }
+
+    /// Helper: build a Transaction with CochainCommitment wire format
+    fn build_test_cochain_tx(q: u32, edges: &[i64]) -> Transaction {
+        let mut data = Vec::new();
+        data.extend_from_slice(&q.to_le_bytes());
+        data.extend_from_slice(&(edges.len() as u32).to_le_bytes());
+        for &e in edges {
+            data.extend_from_slice(&e.to_le_bytes());
+        }
+        Transaction { data, key_image: None }
+    }
 }

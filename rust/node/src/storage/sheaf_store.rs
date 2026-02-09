@@ -1,23 +1,38 @@
-// Sheaf-Aware Storage: Stalks as Column Families
+// Sheaf-Aware Storage: Functor F: Sh(X) → RocksDB
 //
-// Natural transformation between math and storage:
+// Storage does not "store sheaves" — it IS a sheaf, functorially embedded
+// into RocksDB. The functor F maps mathematical objects to persistence:
 //
-// MATHEMATICAL STRUCTURE:
-// - Sheaf = collection of stalks over simplicial complex
-// - Stalk = local data at a vertex (dim = 1, 32, or 256)
-// - Sections = global state (coherent collection of stalks)
+//   F(Stalk)     = column family (stalks_private, stalks_public, stalks_zk)
+//   F(Vertex v)  = key "vertex:v"
+//   F(Edge e)    = key "edge:v0:v1"
+//   F(Section)   = batch write over vertex keys
+//   F(Projection) = query + context change
 //
-// STORAGE STRUCTURE:
-// - Column families = Stalk types (PRIVATE, PUBLIC, ZK)
-// - Keys = Simplices (vertices, edges, faces)
-// - Values = Stalk data (serialized vectors)
+// THREE sheaves over the same base X (nerve of accounts), one per column family:
 //
-// - Formal functor definition F: SHEAF → STORAGE
-// - Source category (SHEAF) with objects and morphisms
-// - Target category (STORAGE) with objects and morphisms
-// - Functoriality conditions explicitly stated:
-//      1. F(id_F) = id_F(Sheaf)
-//      2. F(η ∘ μ) = F(η) ∘ F(μ)
+//   F_full  (Private, dim=256) — full credential, Laplacian, Hodge, restriction maps
+//   F_zk    (Zk, dim=32)      — Hodge projection + quantization (ZK intermediate)
+//   F_hash  (Public, dim=1)   — balance commitment (harmonic projection)
+//
+// Connected by two natural transformations:
+//
+//   η₁: F_full → F_zk    (Oracle computes this: Hodge project + quantize)
+//   η₂: F_zk  → F_hash   (Node applies this: hash + compress to commitment)
+//   η = η₂ ∘ η₁: F_full → F_hash  (full pipeline)
+//
+//   F_full (Private,256) ──η₁──→ F_zk (Zk,32) ──η₂──→ F_hash (Public,1)
+//        Python wallet            Oracle               Rust Node
+//
+// The Oracle IS η₁ — it receives FullStalk (Private) and outputs HashStalk (Zk).
+// The Node IS η₂ — it receives HashStalk (Zk) and stores the public commitment.
+//
+// Privacy via exact sequence: 0 → ker(η) → F_full → F_hash → 0
+//   ker(η) = private data (fibration secrets, restriction maps)
+//
+// Functoriality:
+//   F(id_X) = id_{F(X)}
+//   F(g ∘ f) = F(g) ∘ F(f)
 
 
 use anyhow::Result;
@@ -368,10 +383,143 @@ mod tests {
         let v = SimplexKey::Vertex(42);
         let e = SimplexKey::Edge(1, 2);
         let f = SimplexKey::Face(1, 2, 3);
-        
+
         // Serialize/deserialize
         assert_eq!(SimplexKey::from_bytes(&v.to_bytes()).unwrap(), v);
         assert_eq!(SimplexKey::from_bytes(&e.to_bytes()).unwrap(), e);
         assert_eq!(SimplexKey::from_bytes(&f.to_bytes()).unwrap(), f);
+    }
+
+    // ── Stalk serialize/deserialize roundtrip ───────────────────
+
+    #[test]
+    fn test_stalk_serialize_roundtrip() {
+        // Public stalk (dim=1) for simple roundtrip
+        let stalk = Stalk::new(StalkContext::Public, vec![42.5]).unwrap();
+        let bytes = stalk.serialize().unwrap();
+        let restored = Stalk::deserialize(&bytes).unwrap();
+        assert_eq!(restored.data, vec![42.5]);
+        assert_eq!(restored.context, StalkContext::Public);
+
+        // Private stalk (dim=256)
+        let mut data = vec![0.0; 256];
+        data[0] = 1.0;
+        data[255] = -0.7;
+        let stalk2 = Stalk::new(StalkContext::Private, data.clone()).unwrap();
+        let bytes2 = stalk2.serialize().unwrap();
+        let restored2 = Stalk::deserialize(&bytes2).unwrap();
+        assert_eq!(restored2.data, data);
+        assert_eq!(restored2.context, StalkContext::Private);
+    }
+
+    #[test]
+    fn test_stalk_context_dimensions() {
+        // Private: 256-dim, Public: 1-dim, Zk: 32-dim
+        assert_eq!(StalkContext::Private.dimension(), 256);
+        assert_eq!(StalkContext::Public.dimension(), 1);
+        assert_eq!(StalkContext::Zk.dimension(), 32);
+    }
+
+    #[test]
+    fn test_stalk_dimension_validation() {
+        // Private needs exactly 256
+        assert!(Stalk::new(StalkContext::Private, vec![0.0; 256]).is_ok());
+        assert!(Stalk::new(StalkContext::Private, vec![0.0; 10]).is_err());
+
+        // Public needs exactly 1
+        assert!(Stalk::new(StalkContext::Public, vec![42.0]).is_ok());
+        assert!(Stalk::new(StalkContext::Public, vec![1.0, 2.0]).is_err());
+
+        // Zk needs exactly 32
+        assert!(Stalk::new(StalkContext::Zk, vec![0.0; 32]).is_ok());
+        assert!(Stalk::new(StalkContext::Zk, vec![0.0; 16]).is_err());
+    }
+
+    #[test]
+    fn test_stalk_zero() {
+        let z = Stalk::zero(StalkContext::Private);
+        assert_eq!(z.data.len(), 256);
+        assert!(z.data.iter().all(|&x| x == 0.0));
+    }
+
+    #[test]
+    fn test_stalk_from_value() {
+        let s = Stalk::from_value(42.0);
+        assert_eq!(s.data, vec![42.0]);
+        assert_eq!(s.context, StalkContext::Public);
+    }
+
+    // ── Edge data storage ───────────────────────────────────────
+
+    #[test]
+    fn test_edge_data_storage() {
+        let dir = tempdir().unwrap();
+        let db = init_sheaf_db(dir.path()).unwrap();
+        let store = SheafStore::new(Arc::new(db));
+
+        // Edge data is raw bytes (restriction map / cochain on 1-simplex)
+        let edge_data: Vec<u8> = vec![0xDE, 0xAD, 0xBE, 0xEF];
+        store.set_edge_data(StalkContext::Public, 0, 1, &edge_data).unwrap();
+
+        let loaded = store.get_edge_data(StalkContext::Public, 0, 1).unwrap().unwrap();
+        assert_eq!(loaded, vec![0xDE, 0xAD, 0xBE, 0xEF]);
+
+        // Non-existent edge
+        assert!(store.get_edge_data(StalkContext::Public, 99, 100).unwrap().is_none());
+    }
+
+    #[test]
+    fn test_edge_data_overwrite() {
+        let dir = tempdir().unwrap();
+        let db = init_sheaf_db(dir.path()).unwrap();
+        let store = SheafStore::new(Arc::new(db));
+
+        store.set_edge_data(StalkContext::Public, 0, 1, &[0x01]).unwrap();
+        store.set_edge_data(StalkContext::Public, 0, 1, &[0xFF]).unwrap();
+
+        let loaded = store.get_edge_data(StalkContext::Public, 0, 1).unwrap().unwrap();
+        assert_eq!(loaded, vec![0xFF]);
+    }
+
+    #[test]
+    fn test_edge_data_context_isolation() {
+        // Edge data in different contexts (column families) are separate
+        let dir = tempdir().unwrap();
+        let db = init_sheaf_db(dir.path()).unwrap();
+        let store = SheafStore::new(Arc::new(db));
+
+        store.set_edge_data(StalkContext::Public, 0, 1, &[0x01]).unwrap();
+        store.set_edge_data(StalkContext::Zk, 0, 1, &[0x02]).unwrap();
+
+        let pub_data = store.get_edge_data(StalkContext::Public, 0, 1).unwrap().unwrap();
+        let zk_data = store.get_edge_data(StalkContext::Zk, 0, 1).unwrap().unwrap();
+        assert_eq!(pub_data, vec![0x01]);
+        assert_eq!(zk_data, vec![0x02]);
+
+        // Private CF has nothing for this edge
+        assert!(store.get_edge_data(StalkContext::Private, 0, 1).unwrap().is_none());
+    }
+
+    #[test]
+    fn test_stalk_overwrite() {
+        let dir = tempdir().unwrap();
+        let db = init_sheaf_db(dir.path()).unwrap();
+        let store = SheafStore::new(Arc::new(db));
+
+        let s1 = Stalk::from_value(100.0);
+        store.set_stalk(StalkContext::Public, 0, &s1).unwrap();
+
+        let s2 = Stalk::from_value(200.0);
+        store.set_stalk(StalkContext::Public, 0, &s2).unwrap();
+
+        let loaded = store.get_stalk(StalkContext::Public, 0).unwrap().unwrap();
+        assert_eq!(loaded.data[0], 200.0);
+    }
+
+    #[test]
+    fn test_column_family_names() {
+        assert_eq!(StalkContext::Private.column_family_name(), "stalks_private");
+        assert_eq!(StalkContext::Public.column_family_name(), "stalks_public");
+        assert_eq!(StalkContext::Zk.column_family_name(), "stalks_zk");
     }
 }

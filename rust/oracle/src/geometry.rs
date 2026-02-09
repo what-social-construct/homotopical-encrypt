@@ -309,26 +309,171 @@ mod tests {
     fn test_geometric_commitment() {
         let mut bundle = FiberBundle::new(HashMap::new(), 4);
         bundle.set_connection(0, 1, DMatrix::identity(4, 4));
-        
+
         let laplacian = DMatrix::from_fn(4, 4, |i, j| {
             if i == j { 2.0 } else if (i as i32 - j as i32).abs() == 1 { -1.0 } else { 0.0 }
         });
-        
+
         let projector = HodgeProjector::new(laplacian, 1e-6).unwrap();
-        
+
         let stalk = Stalk::new(4, vec![1.0, 2.0, 3.0, 4.0]).unwrap();
         let path = vec![0, 1];
-        
+
         let commitment = compute_geometric_commitment(
             &bundle, &stalk, &projector, &path, 32
         );
-        
+
         assert_eq!(commitment.len(), 32);
-        
+
         // Determinism: same input → same output
         let commitment2 = compute_geometric_commitment(
             &bundle, &stalk, &projector, &path, 32
         );
         assert_eq!(commitment, commitment2);
+    }
+
+    // ── Holonomy (curvature of fiber bundle) ────────────────────
+
+    #[test]
+    fn test_holonomy_flat_bundle() {
+        // Flat bundle (identity connections) → holonomy = identity
+        let mut bundle = FiberBundle::new(HashMap::new(), 3);
+        bundle.set_connection(0, 1, DMatrix::identity(3, 3));
+        bundle.set_connection(1, 2, DMatrix::identity(3, 3));
+        bundle.set_connection(2, 0, DMatrix::identity(3, 3));
+
+        let loop_path = vec![0, 1, 2, 0];
+        let holonomy = bundle.holonomy(&loop_path).unwrap();
+
+        // Identity → no curvature
+        let identity = DMatrix::identity(3, 3);
+        assert!((holonomy - identity).norm() < 1e-10);
+    }
+
+    #[test]
+    fn test_holonomy_curved_bundle() {
+        // Triangle with non-identity connection → nontrivial holonomy (curvature)
+        let mut bundle = FiberBundle::new(HashMap::new(), 2);
+
+        // Rotation by 90° on edge 0→1, identity elsewhere
+        let rot = DMatrix::from_vec(2, 2, vec![0.0, 1.0, -1.0, 0.0]);
+        bundle.set_connection(0, 1, rot);                           // curvature here
+        bundle.set_connection(1, 2, DMatrix::identity(2, 2));       // flat
+        bundle.set_connection(0, 2, DMatrix::identity(2, 2));       // flat
+
+        // Loop 0 → 1 → 2 → 0: picks up rotation from edge (0,1)
+        let loop_path = vec![0, 1, 2, 0];
+        let holonomy = bundle.holonomy(&loop_path).unwrap();
+
+        let identity = DMatrix::identity(2, 2);
+        assert!((holonomy - identity).norm() > 0.1, "Curved bundle must have nontrivial holonomy");
+    }
+
+    // ── Inverse transport ───────────────────────────────────────
+
+    #[test]
+    fn test_inverse_transport_roundtrip() {
+        let mut bundle = FiberBundle::new(HashMap::new(), 3);
+        bundle.set_connection(0, 1, DMatrix::identity(3, 3));
+        bundle.set_connection(1, 2, DMatrix::identity(3, 3));
+
+        let v = DVector::from_vec(vec![1.0, 2.0, 3.0]);
+        let path = vec![0, 1, 2];
+
+        let forward = bundle.parallel_transport(&v, &path);
+        let backward = bundle.inverse_transport(&forward, &path);
+
+        // Roundtrip: forward then inverse = original
+        assert!((backward - &v).norm() < 1e-10);
+    }
+
+    // ── Spectral properties ─────────────────────────────────────
+
+    #[test]
+    fn test_spectral_gap() {
+        // 3×3 graph Laplacian: triangle has eigenvalues 0, 3, 3
+        let laplacian = DMatrix::from_vec(3, 3, vec![
+            2.0, -1.0, -1.0,
+            -1.0, 2.0, -1.0,
+            -1.0, -1.0, 2.0,
+        ]);
+
+        let projector = HodgeProjector::new(laplacian, 1e-6).unwrap();
+
+        // Spectral gap = first nonzero eigenvalue = 3.0
+        assert!((projector.spectral_gap() - 3.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_harmonic_projection_preserves_harmonic() {
+        let laplacian = DMatrix::from_vec(3, 3, vec![
+            2.0, -1.0, -1.0,
+            -1.0, 2.0, -1.0,
+            -1.0, -1.0, 2.0,
+        ]);
+
+        let projector = HodgeProjector::new(laplacian, 1e-6).unwrap();
+
+        // Constant vector is in ker(Δ) — harmonic
+        let harmonic = DVector::from_vec(vec![1.0, 1.0, 1.0]);
+        let projected = projector.project_to_harmonic(&harmonic);
+
+        // Should preserve direction (project onto normalized constant vector)
+        // All components should be equal
+        let ratio = projected[0];
+        assert!((projected[1] - ratio).abs() < 1e-10);
+        assert!((projected[2] - ratio).abs() < 1e-10);
+    }
+
+    #[test]
+    fn test_quantize_deterministic() {
+        let laplacian = DMatrix::from_fn(4, 4, |i, j| {
+            if i == j { 2.0 } else if (i as i32 - j as i32).abs() == 1 { -1.0 } else { 0.0 }
+        });
+
+        let projector = HodgeProjector::new(laplacian, 1e-6).unwrap();
+
+        let v = DVector::from_vec(vec![1.0, 2.0, 3.0, 4.0]);
+        let proj = projector.project_to_harmonic(&v);
+
+        let bytes1 = projector.quantize_to_bytes(&proj, 32);
+        let bytes2 = projector.quantize_to_bytes(&proj, 32);
+        assert_eq!(bytes1.len(), 32);
+        assert_eq!(bytes1, bytes2); // deterministic
+    }
+
+    #[test]
+    fn test_commitment_changes_with_input() {
+        // Use triangle Laplacian (valid graph Laplacian: rows sum to 0 → has ker(Δ))
+        // Previous test used tridiagonal [2,-1,0;-1,2,-1;0,-1,2] which is NOT
+        // a graph Laplacian (rows don't sum to 0 → no harmonic subspace → all
+        // projections are zero → all commitments identical regardless of input).
+        //
+        // Python computes the real Laplacian from the sheaf (SheafLaplacian.get_laplacian_0).
+        // The Oracle receives it pre-computed. This test validates the commitment is
+        // binding when the Laplacian actually has a harmonic subspace.
+        let mut bundle = FiberBundle::new(HashMap::new(), 3);
+        bundle.set_connection(0, 1, DMatrix::identity(3, 3));
+
+        // Triangle Laplacian: eigenvalues 0, 3, 3 → 1D harmonic subspace (constant vectors)
+        let laplacian = DMatrix::from_vec(3, 3, vec![
+            2.0, -1.0, -1.0,
+            -1.0, 2.0, -1.0,
+            -1.0, -1.0, 2.0,
+        ]);
+
+        let projector = HodgeProjector::new(laplacian, 1e-6).unwrap();
+        assert_eq!(projector.harmonic_dim(), 1);
+        let path = vec![0, 1];
+
+        // Stalks with different sums → different harmonic projections (different constant component)
+        let s1 = Stalk::new(3, vec![0.1, 0.1, 0.1]).unwrap();   // sum=0.3
+        let s2 = Stalk::new(3, vec![0.5, 0.5, 0.5]).unwrap();   // sum=1.5
+
+        let c1 = compute_geometric_commitment(&bundle, &s1, &projector, &path, 32);
+        let c2 = compute_geometric_commitment(&bundle, &s2, &projector, &path, 32);
+
+        // Different harmonic projections → different quantized bytes → binding
+        assert_ne!(c1, c2);
     }
 }

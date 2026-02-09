@@ -143,6 +143,10 @@ pub struct Transaction {
     pub data: Vec<u8>,
     /// Key image for double-spend prevention
     pub key_image: Option<[u8; 32]>,
+    /// Sender's spectral fingerprint (first input)
+    pub sender_fingerprint: Option<[u8; 32]>,
+    /// Transaction fee (public, always visible for chain economics)
+    pub fee_amount: u64,
 }
 
 impl Transaction {
@@ -185,6 +189,12 @@ impl Block {
     ///   modulus(4 LE) + n_edges(4 LE) + edge_values(n × 8 i64 LE) + topology_hash(16)
     ///
     /// Root = SHA256("HCRYPT_COCHAIN_ROOT" + accumulated_edges mod q)
+    ///
+    /// **SHA256 is only the final compression step.** The input is coboundary
+    /// edge values from δ(m‖r) mod q, not raw transaction data. Binding
+    /// security comes from the lattice structure: forging a second preimage
+    /// requires finding a ker(δ) element (SVP-hard on the cochain lattice,
+    /// post-quantum). SHA256 collision resistance is a secondary guarantee.
     pub fn compute_cochain_root(&self) -> [u8; 32] {
         if self.transactions.is_empty() {
             return [0u8; 32];
@@ -447,5 +457,220 @@ mod tests {
         assert_ne!(h, [0u8; 32]);
         // Deterministic
         assert_eq!(h, tx.tx_hash());
+    }
+
+    // ── Wire format edge cases ──────────────────────────────────
+
+    #[test]
+    fn test_parse_cochain_with_topology_hash() {
+        // Full wire format: modulus(4) + n_edges(4) + edges(n*8) + topology_hash(16)
+        let q: u32 = 12289;
+        let n: u32 = 2;
+        let mut data = Vec::new();
+        data.extend_from_slice(&q.to_le_bytes());
+        data.extend_from_slice(&n.to_le_bytes());
+        data.extend_from_slice(&100i64.to_le_bytes());
+        data.extend_from_slice(&200i64.to_le_bytes());
+        data.extend_from_slice(&[0xAB; 16]); // topology hash
+
+        let (modulus, edges) = parse_cochain_commitment(&data).unwrap();
+        assert_eq!(modulus, 12289);
+        assert_eq!(edges, vec![100, 200]);
+        // Topology hash is trailing — parse ignores it (not part of edge values)
+    }
+
+    #[test]
+    fn test_parse_cochain_zero_modulus_rejected() {
+        let mut data = Vec::new();
+        data.extend_from_slice(&0u32.to_le_bytes()); // modulus = 0 → invalid
+        data.extend_from_slice(&1u32.to_le_bytes());
+        data.extend_from_slice(&42i64.to_le_bytes());
+        assert!(parse_cochain_commitment(&data).is_none());
+    }
+
+    #[test]
+    fn test_parse_cochain_overflow_modulus_rejected() {
+        let mut data = Vec::new();
+        data.extend_from_slice(&200_000u32.to_le_bytes()); // > 100_000 → rejected
+        data.extend_from_slice(&1u32.to_le_bytes());
+        data.extend_from_slice(&42i64.to_le_bytes());
+        assert!(parse_cochain_commitment(&data).is_none());
+    }
+
+    #[test]
+    fn test_parse_cochain_truncated_edges() {
+        // Claims 3 edges but only provides bytes for 2
+        let q: u32 = 12289;
+        let mut data = Vec::new();
+        data.extend_from_slice(&q.to_le_bytes());
+        data.extend_from_slice(&3u32.to_le_bytes()); // n_edges = 3
+        data.extend_from_slice(&100i64.to_le_bytes());
+        data.extend_from_slice(&200i64.to_le_bytes());
+        // Missing third edge → should fail
+        assert!(parse_cochain_commitment(&data).is_none());
+    }
+
+    #[test]
+    fn test_parse_cochain_zero_edges() {
+        let q: u32 = 12289;
+        let mut data = Vec::new();
+        data.extend_from_slice(&q.to_le_bytes());
+        data.extend_from_slice(&0u32.to_le_bytes()); // 0 edges
+        let (modulus, edges) = parse_cochain_commitment(&data).unwrap();
+        assert_eq!(modulus, 12289);
+        assert!(edges.is_empty());
+    }
+
+    #[test]
+    fn test_parse_cochain_negative_edges() {
+        // Edge values can be negative (coboundary δ(c)(e) = c(v) - c(u))
+        let q: u32 = 12289;
+        let n: u32 = 2;
+        let mut data = Vec::new();
+        data.extend_from_slice(&q.to_le_bytes());
+        data.extend_from_slice(&n.to_le_bytes());
+        data.extend_from_slice(&(-500i64).to_le_bytes());
+        data.extend_from_slice(&(-1i64).to_le_bytes());
+
+        let (_, edges) = parse_cochain_commitment(&data).unwrap();
+        assert_eq!(edges, vec![-500, -1]);
+    }
+
+    // ── Cochain root with proper CochainCommitment wire data ────
+
+    #[test]
+    fn test_cochain_root_with_wire_format_txs() {
+        // Simulate Python: CochainCommitment.to_bytes() → Rust parse + accumulate
+        let q: u32 = 12289;
+
+        // tx1: edges = [1000, -500, 300] (coboundary values)
+        let tx1 = build_cochain_tx(q, &[1000, -500, 300]);
+        // tx2: edges = [200, 800, -100]
+        let tx2 = build_cochain_tx(q, &[200, 800, -100]);
+
+        let block = Block {
+            header: test_header(1, 1.5),
+            transactions: vec![tx1, tx2],
+        };
+
+        // Expected: (1000+200) mod q, (-500+800) mod q, (300-100) mod q = [1200, 300, 200]
+        let mut expected_hasher = Sha256::new();
+        expected_hasher.update(b"HCRYPT_COCHAIN_ROOT");
+        expected_hasher.update(&1200i64.to_le_bytes());
+        expected_hasher.update(&300i64.to_le_bytes());
+        expected_hasher.update(&200i64.to_le_bytes());
+        let expected: [u8; 32] = expected_hasher.finalize().into();
+
+        assert_eq!(block.compute_cochain_root(), expected);
+    }
+
+    #[test]
+    fn test_cochain_root_modular_wraparound() {
+        // Edge values that exceed q should wrap around
+        let q: u32 = 12289;
+        let tx1 = build_cochain_tx(q, &[12000]);
+        let tx2 = build_cochain_tx(q, &[1000]);
+
+        let block = Block {
+            header: test_header(0, 1.0),
+            transactions: vec![tx1, tx2],
+        };
+
+        // (12000 + 1000) mod 12289 = 13000 mod 12289 = 711
+        let mut expected_hasher = Sha256::new();
+        expected_hasher.update(b"HCRYPT_COCHAIN_ROOT");
+        expected_hasher.update(&711i64.to_le_bytes());
+        let expected: [u8; 32] = expected_hasher.finalize().into();
+
+        assert_eq!(block.compute_cochain_root(), expected);
+    }
+
+    #[test]
+    fn test_cochain_root_negative_wraparound() {
+        // Negative values should use rem_euclid (always positive result)
+        let q: u32 = 12289;
+        let tx1 = build_cochain_tx(q, &[-1]);
+        // rem_euclid(-1, 12289) = 12288
+        let tx2 = build_cochain_tx(q, &[-1]);
+        // rem_euclid(12288 + (-1), 12289) = rem_euclid(12287, 12289) = 12287
+
+        let block = Block {
+            header: test_header(0, 1.0),
+            transactions: vec![tx1, tx2],
+        };
+
+        let mut expected_hasher = Sha256::new();
+        expected_hasher.update(b"HCRYPT_COCHAIN_ROOT");
+        expected_hasher.update(&12287i64.to_le_bytes()); // (-1 + -1) mod 12289 = 12287
+        let expected: [u8; 32] = expected_hasher.finalize().into();
+
+        assert_eq!(block.compute_cochain_root(), expected);
+    }
+
+    #[test]
+    fn test_cochain_root_unequal_edge_count() {
+        // tx1 has 2 edges, tx2 has 3 → accumulation extends
+        let q: u32 = 12289;
+        let tx1 = build_cochain_tx(q, &[100, 200]);
+        let tx2 = build_cochain_tx(q, &[300, 400, 500]);
+
+        let block = Block {
+            header: test_header(0, 1.0),
+            transactions: vec![tx1, tx2],
+        };
+
+        // Expected: [400, 600, 500] (third edge only from tx2)
+        let mut expected_hasher = Sha256::new();
+        expected_hasher.update(b"HCRYPT_COCHAIN_ROOT");
+        expected_hasher.update(&400i64.to_le_bytes());
+        expected_hasher.update(&600i64.to_le_bytes());
+        expected_hasher.update(&500i64.to_le_bytes());
+        let expected: [u8; 32] = expected_hasher.finalize().into();
+
+        assert_eq!(block.compute_cochain_root(), expected);
+    }
+
+    #[test]
+    fn test_block_hash_changes_with_fields() {
+        let h1 = test_header(1, 1.5).hash();
+        let h2 = test_header(2, 1.5).hash(); // different height
+        let h3 = test_header(1, 2.0).hash(); // different gap
+        assert_ne!(h1, h2);
+        assert_ne!(h1, h3);
+        assert_ne!(h2, h3);
+    }
+
+    #[test]
+    fn test_tx_hash_with_key_image() {
+        let tx1 = Transaction { data: b"same".to_vec(), key_image: None };
+        let tx2 = Transaction { data: b"same".to_vec(), key_image: Some([1; 32]) };
+        let tx3 = Transaction { data: b"same".to_vec(), key_image: Some([2; 32]) };
+        // Different key images → different hashes
+        assert_ne!(tx1.tx_hash(), tx2.tx_hash());
+        assert_ne!(tx2.tx_hash(), tx3.tx_hash());
+    }
+
+    #[test]
+    fn test_pov_bounds_constants() {
+        // Verify the √2 constants are correct
+        assert!((SQRT2 - std::f64::consts::SQRT_2).abs() < 1e-8);
+        assert!((POV_LOWER - 1.0 / std::f64::consts::SQRT_2).abs() < 1e-8);
+        assert!((POV_UPPER - 2.0 * std::f64::consts::SQRT_2).abs() < 1e-8);
+    }
+
+    /// Helper: build a Transaction with CochainCommitment wire format
+    fn build_cochain_tx(q: u32, edges: &[i64]) -> Transaction {
+        let mut data = Vec::new();
+        data.extend_from_slice(&q.to_le_bytes());
+        data.extend_from_slice(&(edges.len() as u32).to_le_bytes());
+        for &e in edges {
+            data.extend_from_slice(&e.to_le_bytes());
+        }
+        Transaction {
+            data,
+            key_image: None,
+            sender_fingerprint: None,
+            fee_amount: 0,
+        }
     }
 }

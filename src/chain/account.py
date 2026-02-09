@@ -1,18 +1,18 @@
 """
 Account State — Sovereignty & Identity Layer
 
-Dual State Model:
-- SheafState layer: Private transfers (homotopy-native, key images)
-- Account layer: Identity/sovereignty (spectral fingerprints, topology)
+Three-Layer State Model (see docs/ARCHITECTURE.md § Three-Layer Chain):
+- Layer 3 (homotopy/wallet): credential fibration, homotopy class membership
+- Layer 2 (lattice-CVP/oracle): cochain commitments, spectral invariants
+- Layer 1 (hash projection/node): block headers, key images, SHA256 audit trail
 
-This file implements the Account layer for:
+This file implements the sovereignty semantics on top of SheafState:
 - Self-sovereign identity (no KYC — identity = spectral fingerprint)
 - Connection topology management
 - Homotopy class tracking (key rotation within same class)
 
-The two layers are complementary:
-- Transfer value → SheafState layer (sheaf_state.py, homotopy_transaction.py)
-- Create identity/connections → Account layer (this file)
+SheafState is the bus connecting all three layers.
+AccountState adds sovereignty operations (identity, connections, rotation).
 
 Privacy model: homotopy-native (NOT ring signatures).
 Anonymity set = entire homotopy class [F] (infinite).
@@ -380,13 +380,19 @@ class AccountState:
 @dataclass
 class DualState:
     """
-    Combined SheafState + Account state.
+    Combined SheafState + AccountState (three-layer bus + sovereignty).
     
-    This is the complete chain state with both layers:
-    - sheaf_state: SheafState (harmonic-based, NOT UTXO)
-    - account_state: AccountState (sovereignty layer)
+    SheafState is the bus connecting all three hardness layers:
+    - Layer 3 (homotopy): accounts, topology, key rotation
+    - Layer 2 (lattice/CVP): commitments, spectral cache
+    - Layer 1 (hash projection): key images, hash chain, block headers
     
-    NOTE: Legacy UTXO ChainState moved to tests/benchmarks/utxo_state.py
+    AccountState adds sovereignty semantics on top:
+    - Identity lifecycle (pending → active → revoked)
+    - Connection management
+    - Homotopy class indexing
+    
+    See docs/ARCHITECTURE.md § Three-Layer Chain (Hardness Hierarchy)
     """
     from .sheaf_state import SheafState
     

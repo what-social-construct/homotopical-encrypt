@@ -218,7 +218,6 @@ class ChainStore:
             "tip_height": state.tip_height,
             "tip_hash": state.tip_hash.hex() if isinstance(state.tip_hash, bytes) else "",
             "accounts": accounts_dict,
-            "utxo_count": len(state.utxos),
             "spent_key_images": [ki.hex() for ki in state.spent_key_images],
             "hash_chain_hash": state.hash_chain.get_current_hash(),
             "hash_chain_height": state.hash_chain.height(),

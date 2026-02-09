@@ -47,6 +47,48 @@ Three independent layers consume this shared geometric substrate:
 | `proofs/anonymity` | Spectral equivalence | Identity privacy (1/∞ anonymity) |
 | `chain/key_image + homotopy_transaction` | Geodesic paths on SO(n) | Double-spend prevention |
 
+## The Categorical Architecture
+
+**SheafState as the Universal Unifier**
+
+The system isn't just three layers stacked together — it's a **categorical colimit** where SheafState is the universal object that every operation factors through:
+
+```
+Homotopy Category C:
+  Objects   = homotopy equivalence classes [F₁], [F₂], ...
+  Morphisms = geodesic paths γ: [F₁] → [F₂]
+  
+Transactions ARE morphisms in this category:
+  Alice sends to Bob = construct geodesic γ: [F_Alice] → [F_Bob]
+  
+SheafState = colim(Wallet, Oracle, Node)
+  Universal property: every state change factors through apply_block()
+```
+
+**The Nerve Structure:**
+
+```
+Account Nerve (Layer 1):
+  vertices = accounts
+  edges = transactional connections
+  AccountState.connected_to tracks the 1-skeleton
+  
+Fibration Nerve (Layer 3):
+  0-cells = homotopy classes [F]
+  1-cells = homotopy paths (geodesics on SO(n))
+  2-cells = path homotopies
+  
+These coincide because transactions ARE category morphisms!
+```
+
+**Why this matters:**
+- Every transaction follows an explicit geodesic path (deterministic, shortest)
+- SheafState enforces coherence across all three layers
+- The categorical structure is preserved by the natural transformations η₁, η₂
+- Ring membership = infinite homotopy class, not finite decoys
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#the-homotopy-category-and-its-nerve) for the complete categorical picture.
+
 ## Mathematical Foundation
 
 ### Core Concepts
@@ -191,7 +233,8 @@ The system maps private geometric data (off-chain) to public commitments (on-cha
   Credential (256-dim)   ──── project ────▶   Commitment (32 bytes)
   Laplacian Δ            ── eigenvalues ──▶   Spectral gap λ₁
   Topology X             ─── Betti ───────▶   (β₀, β₁, β₂)
-  Full state             ──── hash ───────▶   SHA256
+  Amounts m              ── δ(m‖r) mod q ─▶   CochainCommitment (edge values)
+  Cochain tree           ── Σ δ(txᵢ) ────▶   Cochain root (domain-sep SHA256)
 ```
 
 **Naturality** ensures consistency: for any edge e: v → w in the nerve, the square commutes. A forgery that satisfies one vertex but not its neighbors is detected — the coboundary δ enforces global coherence from local data.

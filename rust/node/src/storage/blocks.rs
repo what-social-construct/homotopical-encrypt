@@ -259,4 +259,98 @@ mod tests {
         assert_eq!(height, 2);
         assert_eq!(tip_hash, hash2);
     }
+
+    #[test]
+    fn test_has_block() {
+        let dir = tempdir().unwrap();
+        let db = crate::storage::init_db(dir.path()).unwrap();
+        let store = BlockStore::new(Arc::new(db));
+
+        let block = create_test_block(1);
+        let hash = block.hash();
+
+        assert!(!store.has_block(&hash).unwrap());
+        store.store_block(&block).unwrap();
+        assert!(store.has_block(&hash).unwrap());
+
+        // Non-existent hash
+        assert!(!store.has_block(&BlockHash([0xFF; 32])).unwrap());
+    }
+
+    #[test]
+    fn test_delete_block() {
+        let dir = tempdir().unwrap();
+        let db = crate::storage::init_db(dir.path()).unwrap();
+        let store = BlockStore::new(Arc::new(db));
+
+        let block = create_test_block(5);
+        let hash = block.hash();
+        store.store_block(&block).unwrap();
+
+        // Block exists
+        assert!(store.has_block(&hash).unwrap());
+        assert!(store.load_block_by_height(5).unwrap().is_some());
+
+        // Delete
+        store.delete_block(5).unwrap();
+
+        // Block gone from both indexes
+        assert!(!store.has_block(&hash).unwrap());
+        assert!(store.load_block_by_height(5).unwrap().is_none());
+        assert!(store.load_block_by_hash(&hash).unwrap().is_none());
+        assert!(store.get_hash_by_height(5).unwrap().is_none());
+        assert!(store.get_height_by_hash(&hash).unwrap().is_none());
+    }
+
+    #[test]
+    fn test_height_hash_indexes() {
+        let dir = tempdir().unwrap();
+        let db = crate::storage::init_db(dir.path()).unwrap();
+        let store = BlockStore::new(Arc::new(db));
+
+        let block = create_test_block(42);
+        let hash = block.hash();
+        store.store_block(&block).unwrap();
+
+        // height → hash
+        let found_hash = store.get_hash_by_height(42).unwrap().unwrap();
+        assert_eq!(found_hash, hash);
+
+        // hash → height
+        let found_height = store.get_height_by_hash(&hash).unwrap().unwrap();
+        assert_eq!(found_height, 42);
+
+        // Missing lookups return None
+        assert!(store.get_hash_by_height(999).unwrap().is_none());
+        assert!(store.get_height_by_hash(&BlockHash([0xAA; 32])).unwrap().is_none());
+    }
+
+    #[test]
+    fn test_tip_height() {
+        let dir = tempdir().unwrap();
+        let db = crate::storage::init_db(dir.path()).unwrap();
+        let store = BlockStore::new(Arc::new(db));
+
+        assert!(store.get_tip_height().unwrap().is_none());
+
+        store.store_block(&create_test_block(0)).unwrap();
+        assert_eq!(store.get_tip_height().unwrap().unwrap(), 0);
+
+        store.store_block(&create_test_block(10)).unwrap();
+        assert_eq!(store.get_tip_height().unwrap().unwrap(), 10);
+
+        // Lower block doesn't decrease tip
+        store.store_block(&create_test_block(5)).unwrap();
+        assert_eq!(store.get_tip_height().unwrap().unwrap(), 10);
+    }
+
+    #[test]
+    fn test_delete_nonexistent_block() {
+        let dir = tempdir().unwrap();
+        let db = crate::storage::init_db(dir.path()).unwrap();
+        let store = BlockStore::new(Arc::new(db));
+
+        // Deleting non-existent block should be a no-op
+        store.delete_block(999).unwrap();
+    }
 }

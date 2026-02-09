@@ -9,6 +9,19 @@ RELATIONSHIP TO STALKS:
 - FiberBundle = the GEOMETRY of how fibers are connected
 - StalkSpec.dimension = FiberBundle.fiber_dim
 - Parallel transport moves Stalks along paths
+
+PARALLEL TRANSPORT (from the Grothendieck fibration):
+
+    The restriction maps R_{v→e}: F_v → F_e in the sheaf are parallel
+    transport in the fiber bundle (see geometry/fiber_bundle.py). These
+    are orthogonal matrices — they preserve norms and inner products.
+    The Laplacian Δ = δ*δ is built from these transport maps.
+
+    Knowing Δ = knowing the parallel transport structure = knowing the
+    fibration secret. This is why the lattice problem (which requires
+    knowing Δ) is only the shadow: the actual secret is the connection
+    on the Grothendieck fibration.
+
 """
 
 from dataclasses import dataclass, field

@@ -1,7 +1,14 @@
 """
-SheafState - Unified Chain State with HashChain Tracing
+SheafState - Three-Layer State Bus with HashChain Tracing
 
 Inspired by chloe_protocol's SystemState + HashChain pattern.
+
+SheafState is the bus connecting all three layers of the hardness hierarchy:
+- Layer 3 (homotopy): credential fibration, homotopy class membership
+- Layer 2 (lattice/CVP): cochain commitments, spectral invariants
+- Layer 1 (hash projection): block headers, key images, SHA256 audit trail
+
+See docs/ARCHITECTURE.md § Three-Layer Chain (Hardness Hierarchy).
 
 Design decisions:
 1. Topology IMPLICIT - computed from accounts on-demand
@@ -395,25 +402,32 @@ class SpectralCache:
 @dataclass
 class SheafState:
     """
-    Unified chain state with HashChain tracing.
+    Three-layer state bus with HashChain tracing.
     
-    Sections:
-    - accounts: identity/sovereignty (fingerprints)
-    - utxos: value layer (unspent outputs)
-    - connections: topology (computed implicitly from account connections)
-    - blocks: chain history
+    Layer 3 (homotopy — wallet):
+    - accounts: identity/sovereignty (fingerprints, homotopy class)
+    - compute_topology(): nerve from connections
+    - rotate_keys(): new fibration, same class
+    
+    Layer 2 (lattice/CVP — oracle):
+    - get_hash_commitments(): η₁ output (HashCommitment per account)
+    - verify_commitment(): CVP-bound verification
+    - to_oracle_request(): Python → Oracle bridge
+    - spectral_cache: cached spectral gap
+    
+    Layer 1 (hash projection — node):
+    - spent_key_images: accountability, double-spend prevention
+    - hash_chain: SHA256 audit trail (Layer 1)
+    - block_headers: chain structure
     - mempool: pending transactions
-    - hash_chain: cryptographic tracing
-    - spectral_cache: cached eigenvalues
+    
+    See docs/ARCHITECTURE.md § Three-Layer Chain
     """
     
-    # Identity layer
+    # Identity layer (Layer 3: homotopy)
     accounts: Dict[bytes, AccountState] = field(default_factory=dict)
     
-    # Value layer (UTXO set)
-    utxos: Dict[bytes, Any] = field(default_factory=dict)  # utxo_id → UTXO
-    
-    # Key images (spent tracking)
+    # Key images — Layer 1: accountability (spent tracking)
     spent_key_images: Set[bytes] = field(default_factory=set)
     
     # Block headers
@@ -704,11 +718,9 @@ class SheafState:
         """
         Create oracle request for a full stalk.
         
-        The oracle computes: η(F_full) → F_hash
-        Using:
-        - Hodge projection (harmonic component of credential)
-        - Spectral gap (from Laplacian eigenvalues)
-        - Betti numbers (from topology)
+        COMPUTATION BOUNDARY: Python computes ALL geometry locally, then
+        sends pre-computed results (commitment + spectral gap) to Oracle.
+        The Oracle only verifies bounds — it never sees the Laplacian.
         
         This is STRONGER than SHA256 because:
         1. Lattice hardness (post-quantum) - breaking requires CVP/SVP
@@ -725,13 +737,14 @@ class SheafState:
         SHA256 alone: ~2^128 (birthday attack)
         Our system: Lattice hardness (~2^256) + spectral + cohomology
         """
+        from ..oracle.client import FullStalkRequest
+        
         if fingerprint not in self.accounts:
             raise ValueError(f"Account {fingerprint.hex()} not found")
         
-        account = self.accounts[fingerprint]
         nerve = self.compute_topology()
         
-        # Build Laplacian from nerve
+        # Build Laplacian from nerve (computed locally, never sent to Oracle)
         n = len(nerve.get(0, []))
         laplacian = np.zeros((n, n))
         for edge in nerve.get(1, []):
@@ -745,18 +758,18 @@ class SheafState:
         fingerprints = list(self.accounts.keys())
         vertex_id = fingerprints.index(fingerprint)
         
-        return {
-            "method": "submit_stalk",
-            "params": {
-                "vertex_id": vertex_id,
-                "credential": credential.tolist(),
-                "eigenvalues": np.linalg.eigvalsh(laplacian).tolist(),
-                "betti_numbers": self.compute_betti_numbers(),
-                "nerve_vertices": [v[0] for v in nerve.get(0, [])],
-                "nerve_edges": nerve.get(1, []),
-                "laplacian": laplacian.tolist(),
-            }
-        }
+        # Python computes everything: eigenvalues, Hodge projection, commitment
+        # Oracle receives only pre-computed results (no Laplacian!)
+        stalk = FullStalkRequest.from_geometry(
+            vertex_id=vertex_id,
+            credential=credential,
+            laplacian=laplacian,
+            nerve_vertices=[v[0] for v in nerve.get(0, [])],
+            nerve_edges=nerve.get(1, []),
+            betti_numbers=self.compute_betti_numbers()
+        )
+        
+        return stalk.to_json()
     
     def submit_to_oracle(
         self,
@@ -767,43 +780,162 @@ class SheafState:
         """
         Submit full stalk to Oracle, receive hash commitment.
         
-        Flow:
-        1. SheafState creates FullStalk with credential + topology
-        2. Oracle computes η: F_full → F_hash (Hodge projection + spectral)
-        3. Oracle returns HashCommitment (fingerprint, gap, betti, topo_hash)
-        4. HashCommitment can go on-chain (compact, verifiable)
+        COMPUTATION BOUNDARY:
+        1. Python computes Hodge projection + spectral gap + commitment LOCALLY
+        2. Sends pre-computed commitment + spectral_gap to Oracle
+        3. Oracle verifies √2 bounds and stores commitment
+        4. Oracle returns HashStalk (fingerprint, gap, betti, topo_hash)
+        5. HashCommitment can go on-chain (compact, verifiable)
         
-        The Oracle adds:
-        - Geometric commitment (harmonic projection, not just SHA256)
-        - Naturality verification (consistency across edges)
-        - Gluing check (H^1 = 0 → section is coherent)
+        Oracle NEVER sees:
+        - The Laplacian (private geometry)
+        - The Hodge projector (private structure)  
+        - The raw credential data
         """
+        from ..oracle.client import OracleClient
+        
         try:
-            import requests
+            client = OracleClient(oracle_url)
             
-            request = self.to_oracle_request(fingerprint, credential)
+            # Build request (Python computes all geometry locally)
+            request_json = self.to_oracle_request(fingerprint, credential)
             
-            response = requests.post(
-                f"{oracle_url}/rpc",
-                json=request,
-                headers={"Content-Type": "application/json"},
-                timeout=30
+            # Construct FullStalkRequest from the JSON params
+            from ..oracle.client import FullStalkRequest
+            params = request_json["params"]
+            stalk = FullStalkRequest(
+                vertex_id=params["vertex_id"],
+                credential=params["credential"],
+                eigenvalues=params["eigenvalues"],
+                betti_numbers=tuple(params["betti_numbers"]),
+                nerve_vertices=params["nerve_vertices"],
+                nerve_edges=params["nerve_edges"],
+                spectral_gap=params["spectral_gap"],
+                commitment_bytes=bytes.fromhex(params["commitment"]),
             )
             
-            if response.ok:
-                data = response.json()
-                if data.get("success"):
-                    return HashCommitment(
-                        fingerprint=bytes.fromhex(data["fingerprint"]),
-                        spectral_gap=data["spectral_gap"],
-                        betti_numbers=tuple(data["betti_numbers"]),
-                        topology_hash=bytes.fromhex(data.get("topology_hash", "0" * 64))
-                    )
+            # Submit to Oracle (sends commitment + gap, NOT Laplacian)
+            response = client.submit_stalk(stalk)
+            
+            if response:
+                return HashCommitment(
+                    fingerprint=bytes.fromhex(response.fingerprint) if response.fingerprint else fingerprint,
+                    spectral_gap=response.spectral_gap,
+                    betti_numbers=response.betti_numbers,
+                    topology_hash=self.topology_hash()
+                )
             return None
             
         except Exception as e:
             print(f"Oracle submission failed: {e}")
             return None
+    
+    # =========================================================================
+    # BLOCK APPLICATION (balance + key image + tip updates)
+    # =========================================================================
+    
+    def apply_block(self, block) -> Tuple[bool, str]:
+        """
+        Apply a verified block to state.
+        
+        Updates all three layers:
+        - Layer 1: key images spent, block header stored, tip updated
+        - Layer 2: commitment balance verified (homomorphic)
+        - Layer 3: account balances updated (for transparent fees)
+        
+        Args:
+            block: Verified Block object (from chain/block.py)
+            
+        Returns:
+            (success, reason)
+        """
+        # 1. Mark key images as spent (Layer 1: accountability)
+        for tx in block.transactions:
+            for inp in tx.inputs:
+                if inp.key_image in self.spent_key_images:
+                    return (False, f"Double-spend: key image {inp.key_image.hex()[:16]}...")
+                self.spent_key_images.add(inp.key_image)
+        
+        # 2. Update account balances from transaction fees (public amount)
+        #    Full amount privacy uses homomorphic commitments (Layer 2),
+        #    but fee_amount is always public for chain economics.
+        for tx in block.transactions:
+            # Debit fee from sender (first input's fingerprint)
+            if tx.inputs and tx.fee_amount > 0:
+                sender_fp = tx.inputs[0].fingerprint
+                if sender_fp in self.accounts:
+                    self.accounts[sender_fp].balance -= tx.fee_amount
+                    self.accounts[sender_fp].nonce += 1
+        
+        # 3. Credit block producer (collects fees)
+        total_fees = sum(tx.fee_amount for tx in block.transactions)
+        producer_fp = block.header.producer_fingerprint
+        if producer_fp in self.accounts and total_fees > 0:
+            self.accounts[producer_fp].balance += total_fees
+        
+        # 4. Store block header (Layer 1: chain structure)
+        block_hash = block.block_hash()
+        self.block_headers[block_hash] = {
+            'height': block.header.height,
+            'prev_hash': block.header.prev_hash,
+            'spectral_gap': block.header.spectral_gap,
+            'tx_count': len(block.transactions),
+            'timestamp': block.header.timestamp,
+        }
+        
+        # 5. Update tip (Layer 1)
+        self.tip_hash = block_hash
+        self.tip_height = block.header.height
+        
+        # 6. Remove included transactions from mempool
+        for tx in block.transactions:
+            tx_hash = tx.tx_hash()
+            self.mempool.pop(tx_hash, None)
+            for inp in tx.inputs:
+                self.mempool_key_images.discard(inp.key_image)
+        
+        # 7. Trace in HashChain (Layer 1: audit trail)
+        self.hash_chain.add_block(
+            block_hash=block_hash,
+            height=block.header.height,
+            spectral_gap=block.header.spectral_gap,
+            tx_count=len(block.transactions),
+            timestamp=time.time()
+        )
+        
+        return (True, f"Block {block.header.height} applied ({len(block.transactions)} txs, fees={total_fees})")
+    
+    def get_balance(self, fingerprint: bytes) -> float:
+        """Get account balance."""
+        if fingerprint in self.accounts:
+            return self.accounts[fingerprint].balance
+        return 0.0
+    
+    def transfer(
+        self,
+        sender_fp: bytes,
+        recipient_fp: bytes,
+        amount: float,
+    ) -> Tuple[bool, str]:
+        """
+        Apply a transparent transfer between accounts.
+        
+        For private transfers, use HomotopyTransaction + apply_block().
+        This is for direct balance updates (e.g., genesis distribution,
+        sovereignty rewards).
+        """
+        if sender_fp not in self.accounts:
+            return (False, "Sender not found")
+        if recipient_fp not in self.accounts:
+            return (False, "Recipient not found")
+        if self.accounts[sender_fp].balance < amount:
+            return (False, f"Insufficient balance: {self.accounts[sender_fp].balance} < {amount}")
+        
+        self.accounts[sender_fp].balance -= amount
+        self.accounts[recipient_fp].balance += amount
+        self.accounts[sender_fp].nonce += 1
+        
+        return (True, f"Transferred {amount}")
     
     # =========================================================================
     # STATE OPERATIONS
@@ -821,7 +953,6 @@ class SheafState:
                 }
                 for fp, acc in self.accounts.items()
             },
-            'utxo_count': len(self.utxos),
             'spent_count': len(self.spent_key_images),
             'tip_height': self.tip_height,
             'mempool_size': len(self.mempool),
@@ -833,10 +964,9 @@ class SheafState:
     def summary(self) -> str:
         """Get state summary."""
         return (
-            f"SheafState:\n"
+            f"SheafState (three-layer bus):\n"
             f"  Accounts: {len(self.accounts)}\n"
-            f"  UTXOs: {len(self.utxos)}\n"
-            f"  Spent: {len(self.spent_key_images)}\n"
+            f"  Spent key images: {len(self.spent_key_images)}\n"
             f"  Tip height: {self.tip_height}\n"
             f"  Mempool: {len(self.mempool)}\n"
             f"  Hash chain: {self.hash_chain.height()} entries\n"

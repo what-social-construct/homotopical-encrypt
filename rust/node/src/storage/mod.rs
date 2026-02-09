@@ -7,5 +7,5 @@ pub mod keyimages;
 
 pub use blocks::BlockStore;
 pub use sheaf_store::{SheafStore, Stalk, StalkContext, init_sheaf_db, init_sheaf_db as init_db};
-pub use state::{StateStore, GlobalState, AccountState};
+pub use state::{StateStore, StateManager, GlobalState, AccountState};
 pub use keyimages::{KeyImageStore, KeyImage};

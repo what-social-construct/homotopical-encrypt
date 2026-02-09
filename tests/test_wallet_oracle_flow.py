@@ -356,33 +356,38 @@ def test_eta_oracle_stalk_request():
     """
     Test creating a FullStalkRequest that would be sent to the Oracle.
     
-    Verifies the Python-side hash matches what Oracle expects.
+    Verifies:
+    - Python computes commitment bytes (Hodge projection + quantize)
+    - Python computes spectral gap
+    - Oracle receives pre-computed results (not raw Laplacian)
     """
-    # Create stalk with known Laplacian
+    # Create stalk with known Laplacian — runs full Python geometry pipeline
     stalk = create_test_stalk(vertex_id=0, dimension=32, components=4)
     
     assert stalk.vertex_id == 0
     assert len(stalk.credential) == 32
     assert len(stalk.eigenvalues) == 32
-    assert len(stalk.laplacian) == 32
+    assert stalk.spectral_gap > 0, "Spectral gap must be positive"
+    assert len(stalk.commitment_bytes) == 32, "Commitment must be 32 bytes"
     
-    # Compute hash (Python side)
-    python_hash = stalk.compute_python_hash()
-    assert len(python_hash) == 64  # 32 bytes = 64 hex chars
+    # Commitment is deterministic
+    stalk2 = create_test_stalk(vertex_id=0, dimension=32, components=4)
+    assert stalk2.commitment_bytes == stalk.commitment_bytes, "Commitment not deterministic"
+    assert stalk2.spectral_gap == stalk.spectral_gap, "Spectral gap not deterministic"
     
-    # Hash is deterministic
-    python_hash2 = stalk.compute_python_hash()
-    assert python_hash == python_hash2
+    # Different vertex → different commitment
+    stalk3 = create_test_stalk(vertex_id=1, dimension=32, components=4)
+    assert stalk3.commitment_bytes != stalk.commitment_bytes, "Different vertices should differ"
     
-    # Different vertex → different hash
-    stalk2 = create_test_stalk(vertex_id=1, dimension=32, components=4)
-    assert stalk2.compute_python_hash() != python_hash
-    
-    # JSON serialization works
+    # JSON serialization uses new API (spectral_gap + commitment, not laplacian)
     json_req = stalk.to_json()
     assert json_req["method"] == "submit_stalk"
     assert json_req["params"]["vertex_id"] == 0
-    assert json_req["params"]["python_hash"] == python_hash
+    assert "commitment" in json_req["params"], "Must send pre-computed commitment"
+    assert "spectral_gap" in json_req["params"], "Must send pre-computed spectral gap"
+    assert json_req["params"]["commitment"] == stalk.commitment_bytes.hex()
+    # Oracle receives results, NOT raw Laplacian
+    assert "laplacian" not in json_req["params"], "Must NOT send raw Laplacian to Oracle"
 
 
 def test_eta_gluing_obstruction():

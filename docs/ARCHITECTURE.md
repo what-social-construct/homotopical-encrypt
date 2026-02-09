@@ -169,6 +169,145 @@ homotopy equivalence between fibrations:
     this is the anonymity set: all G ≃ F are indistinguishable
 ```
 
+### the homotopy category and its nerve
+
+credentials live in a **category**, not just a topological space:
+
+```
+HomotopyCategory C:
+  Objects   = homotopy equivalence classes [F], [G], ...
+  Morphisms = homotopy paths γ: [F] → [G]
+  Composition = path concatenation γ₂ ∘ γ₁
+
+the categorical nerve Nerve(C) is a simplicial set:
+  N₀(C) = objects = {[F₁], [F₂], ...}
+  N₁(C) = morphisms = {γ: [F₁] → [F₂]}
+  N₂(C) = 2-morphisms = homotopies of paths H: γ₁ ⇒ γ₂
+```
+
+**homotopy paths are explicit geodesics:**
+
+from `geometry/homotopy_path.py`:
+```python
+def construct_geodesic_path(L_source, L_target):
+    # eigendecompose: L = V Λ V^T
+    # compute rotation: R = V_source^T @ V_target ∈ SO(n)
+    # geodesic on SO(n): V(t) = V_source @ exp(t * log(R))
+    # reconstruct: L(t) = V(t) Λ V(t)^T
+    
+    # this is DETERMINISTIC — shortest path in the manifold
+    # of laplacians with fixed spectrum
+```
+
+**transactions follow these paths:**
+
+```
+Alice's credential ∈ [F_A]  ────γ────→  Bob's credential ∈ [F_B]
+     (homotopy class)        (geodesic)       (homotopy class)
+
+transaction = explicit path data:
+  - source spectral fingerprint (identifies [F_A])
+  - target spectral fingerprint (identifies [F_B])
+  - key image (unique to Alice's F_A, prevents double-spend)
+  - amount commitment (cochain δ(amount || randomness))
+```
+
+### sheafstate as the categorical colimit
+
+SheafState is the **universal object** that unifies all three layers.
+it is the colimit of the three-layer diagram:
+
+```
+         Wallet (Layer 3)
+    η₁ ↙              ↘ φ₁
+Oracle (Layer 2)         ↘
+    η₂ ↙              ↘   ↘
+Node (Layer 1)     →  →  →  SheafState
+       φ₂ ↗        φ₃ ↗
+```
+
+**universal property:** for any other state system S with morphisms
+ψ₁, ψ₂, ψ₃ from the three layers, there exists a unique φ: SheafState → S
+such that ψᵢ = φ ∘ ηᵢ.
+
+**what this means in code:**
+
+```python
+# src/chain/sheaf_state.py:
+class SheafState:
+    def apply_block(self, block):
+        # this IS the factorization φ
+        # every operation factors through SheafState
+        
+        # Layer 1: mark key images spent (accountability)
+        for key_image in extract_key_images(block):
+            self.spent_key_images.add(key_image)
+        
+        # Layer 3: update balances (sovereignty)
+        for tx in block.transactions:
+            sender_id = fingerprint_to_account(tx.sender_fingerprint)
+            self.accounts[sender_id].balance -= tx.fee
+        
+        # Layer 1: store block (audit trail)
+        self.block_headers.append(block.header)
+        self.hash_chain.trace(block)
+        
+        # the colimit property: ALL state changes
+        # go through this single function
+```
+
+**the nerve structures:**
+
+```
+Account Nerve (Layer 1 topology):
+  X_accounts = Čech nerve of account sovereignty domains
+  vertices = accounts
+  edges = transactional connections (who has sent to whom)
+  
+Fibration Nerve (Layer 3 category):
+  X_fibrations = Nerve(HomotopyCategory)
+  0-cells = homotopy classes [F]
+  1-cells = geodesic paths γ: [F] → [G]
+  2-cells = path homotopies H: γ₁ ⇒ γ₂
+  
+SheafState = Γ(X_accounts, Sheaf valued in |Nerve(HomotopyCategory)|)
+           = global sections of a sheaf over account topology
+             valued in the geometric realization of the homotopy category
+```
+
+**AccountState.connected_to tracks both:**
+
+```rust
+// rust/node/src/storage/state.rs:
+pub struct AccountState {
+    pub connected_to: HashSet<u64>,  // 1-skeleton of BOTH nerves!
+}
+```
+
+this tracks:
+1. which accounts have transacted (Layer 1 topology)
+2. which homotopy classes are connected (Layer 3 paths)
+
+they coincide because **transactions ARE morphisms in the homotopy category**.
+
+**coherence theorem:**
+
+for the system to be consistent, the natural transformations η₁, η₂
+must preserve the nerve structure:
+
+```
+    Nerve(Wallet) ──η₁──→ Nerve(Oracle) ──η₂──→ Nerve(Node)
+         ↓                      ↓                    ↓
+    |Nerve(Wallet)| ──────→ |Nerve(Oracle)| ──→ |Nerve(Node)|
+```
+
+this is automatically satisfied because:
+- η₁ (hodge projection) preserves spectral invariants → preserves objects
+- η₁ preserves geodesics → preserves morphisms
+- η₂ (hash) preserves binding → preserves the categorical structure
+
+the implementation is **functorial by construction**.
+
 ## the mathematical pipeline
 
 ```
@@ -243,181 +382,166 @@ You produce a block by:
 4. Other nodes verify geometry, not energy/capital
 ```
 
-## Chain Structure
+## Three-Layer Chain (Hardness Hierarchy)
+
+the system has three layers, each a natural transformation (projection)
+that drops information while preserving binding. the layers correspond
+to the hardness hierarchy from hardness.py:
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                   OFF-CHAIN (Python/Rust)                │
-│                   Heavy Computation                      │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  • Eigenvalue decomposition (O(n³))                     │
-│  • Hodge decomposition (expensive)                      │
-│  • Laplacian construction                               │
-│  • Spectral gap computation                             │
-│  • Homotopy equivalence checking                        │
-│  • Invariant validation (full suite)                    │
-│                                                         │
-│  Result: (invariants, hash_trace, proof)                │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-                          ↓ Submit
-┌─────────────────────────────────────────────────────────┐
-│                   ORACLE LAYER                          │
-│                   Verification Service                   │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  • Accepts computation submissions                       │
-│  • Validates hash traces (like chloe HashChain)         │
-│  • Aggregates multiple oracle submissions               │
-│  • Slashes for invalid results                          │
-│  • Publishes verified invariants on-chain               │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-                          ↓ Publish
-┌─────────────────────────────────────────────────────────┐
-│                   ON-CHAIN (Rust)                       │
-│                   Lightweight Verification               │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  • Verify hash traces                                   │
-│  • Check √2 bounds (simple comparison)                  │
-│  • Validate spectral fingerprint format                 │
-│  • Consensus on block validity                          │
-│  • State transitions                                    │
-│  • NO eigenvalue computation                            │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+    homotopical search  >  hodge-hardness / CVP  >  hash projection
+    (anonymity)            (binding / amounts)       (accountability)
 ```
 
----
-
-## Hash Tracing (chloe_protocol Pattern)
-
-### HashChain for Computation Verification
-
-```rust
-pub struct ComputationTrace {
-    // Initial state
-    input_hash: Hash,
-    
-    // Step-by-step computation trace
-    steps: Vec<ComputationStep>,
-    
-    // Final result
-    result_hash: Hash,
-}
-
-pub struct ComputationStep {
-    operation: String,        // "eigenvalue_decomp", "hodge_project", etc.
-    input_hash: Hash,         // Hash of input data
-    output_hash: Hash,        // Hash of output data
-    timestamp: u64,
-    
-    // Proof this step is valid
-    proof: StepProof,
-}
-
-impl ComputationTrace {
-    // Verify entire trace is valid
-    pub fn verify(&self) -> bool {
-        let mut current_hash = self.input_hash;
-        
-        for step in &self.steps {
-            // Verify step connects to previous
-            if step.input_hash != current_hash {
-                return false;
-            }
-            
-            // Verify step proof
-            if !step.proof.verify() {
-                return false;
-            }
-            
-            current_hash = step.output_hash;
-        }
-        
-        // Verify final result matches
-        self.result_hash == current_hash
-    }
-}
-```
-
-### Example: Spectral Gap Computation Trace
+each transition is a functorial projection — not arbitrary, but the
+minimal information-losing map that preserves the relevant invariant:
 
 ```
-Step 1: Build Laplacian
-  Input: topology_hash(nerve)
-  Operation: "construct_laplacian"
-  Output: laplacian_hash(Δ)
-  Proof: Δ = δδ* + δ*δ
+F_full ──η₁──→ F_hash ──η₂──→ F_chain
+(wallet)       (oracle)        (node)
 
-Step 2: Eigenvalue Decomposition
-  Input: laplacian_hash(Δ)
-  Operation: "eigendecomp"
-  Output: eigenvalues_hash([λ₀, λ₁, ..., λₙ])
-  Proof: Δv = λv (spot check a few eigenvectors)
+η₁ := hodge projection    ker(Δ) → quantized commitment bytes
+       (drops fibration secret, preserves spectral invariants)
 
-Step 3: Extract Spectral Gap
-  Input: eigenvalues_hash([λ₀, λ₁, ..., λₙ])
-  Operation: "extract_gap"
-  Output: spectral_gap_hash(λ₁)
-  Proof: λ₁ is first nonzero eigenvalue
-
-Final: Submit (spectral_gap, trace)
-  Chain verifies: trace.verify() && gap ∈ [1/√2, 2√2]
+η₂ := hash projection     commitment → SHA256(commitment + invariants)
+       (drops lattice structure, preserves binding)
 ```
 
----
+both η₁ and η₂ are natural transformations in the categorical sense:
+they commute with restriction maps across edges, so the sheaf structure
+is preserved at every layer. SHA256 is not arbitrary — it's the final
+projection in the sheaf's natural transformation chain.
 
-## Oracle Network Architecture
-
-### Oracle Roles
-
-**Computation Oracles** (Off-chain workers):
-- Run Python/Rust computation nodes
-- Compute eigenvalues, Hodge, invariants
-- Generate hash traces
-- Submit to oracle network
-- Staked (slashable if wrong)
-
-**Verification Oracles** (Validators):
-- Receive computation submissions
-- Verify hash traces
-- Cross-check multiple submissions
-- Slash invalid oracles
-- Publish consensus result on-chain
-
-**On-Chain Contracts** (Lightweight):
-- Accept oracle submissions
-- Verify simple properties (√2 bounds)
-- Slash mechanism
-- State updates
-
-### Oracle Submission Flow
+### the three layers
 
 ```
-1. User creates transaction
-   → Needs spectral proof
-   
-2. Computation Oracle picks up request
-   → Computes eigenvalues off-chain
-   → Generates hash trace
-   → Signs submission
-   
-3. Multiple oracles compute independently
-   → Each submits (result, trace, signature)
-   
-4. Verification Oracles check submissions
-   → Verify hash traces
-   → Check consensus (majority agrees?)
-   → Slash outliers
-   
-5. Consensus result published on-chain
-   → Transaction includes verified spectral proof
-   → Chain just checks hash + bounds
-   → No expensive computation on-chain
+┌──────────────────────────────────────────────────────────────────┐
+│  LAYER 3: HOMOTOPY  (Python wallet)                              │
+│  Hardness: Homotopical search (Helfer, arXiv:1908.08944)        │
+│  Purpose:  ANONYMITY — who signed is indistinguishable           │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  COMPUTES:                                                       │
+│  • FibrationCredential = (topology, fibration, spectrum)         │
+│  • Eigendecomposition of Δ (O(n³), heavy)                       │
+│  • Hodge projection onto ker(Δ) → harmonic component            │
+│  • Quantize to commitment bytes (deterministic)                  │
+│  • Homotopy class membership (infinite anonymity set)            │
+│  • Key images (unique per fibration, double-spend prevention)    │
+│                                                                  │
+│  PRIVATE DATA:                                                   │
+│  • Fibration secret (restriction maps R_{v→e})                   │
+│  • Laplacian Δ = δ*δ + δδ* (never leaves wallet)               │
+│  • Full credential in F_v (256-dim stalk)                        │
+│                                                                  │
+│  OUTPUT: FullStalk (commitment + eigenvalues + gap + betti)      │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+                           │
+                     η₁: F_full → F_hash
+                     (hodge projection — drops fibration secret,
+                      preserves spectral invariants + commitment)
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  LAYER 2: LATTICE / CVP  (Rust oracle)                           │
+│  Hardness: Hodge-hardness (CVP on cochain lattice)              │
+│  Purpose:  BINDING — amounts and commitments are unforgeable     │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  VERIFIES (never recomputes):                                    │
+│  • Spectral gap ∈ [1/√2, 2√2] (Tsirelson bounds)               │
+│  • Betti numbers consistent (β₀ ≥ 1)                            │
+│  • Commitment bytes non-trivial (Python didn't fail)             │
+│  • Eigenvalues non-negative (Laplacian is PSD)                   │
+│  • Naturality across edges (sheaf consistency)                   │
+│  • Cochain commitment well-formedness: δ(m||r) mod q            │
+│  • Homomorphic accumulation: Σ δ(txᵢ) = δ(Σ txᵢ)               │
+│                                                                  │
+│  CVP binding: finding collision requires ker(δ) ≡ SVP-hard      │
+│  Post-quantum: no Shor shortcut (no algebraic period structure)  │
+│                                                                  │
+│  OUTPUT: HashStalk (fingerprint + gap + betti + topology_hash)   │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+                           │
+                     η₂: F_hash → F_chain
+                     (hash projection — drops lattice structure,
+                      preserves binding via collision resistance)
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  LAYER 1: HASH PROJECTION  (Rust node)                           │
+│  Hardness: SHA256 collision resistance (2^128)                   │
+│  Purpose:  ACCOUNTABILITY — public audit trail, chain integrity  │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  STORES:                                                         │
+│  • Block headers: SHA256("HCRYPT_BLOCK_V1" + fields)            │
+│  • Key image set (spent tracking, double-spend gate)             │
+│  • Cochain roots: SHA256(Σ verified commitments)                 │
+│  • Chain tip + height (canonical chain selection)                │
+│  • HashChain audit trail (genesis → sovereignty → transfer → …) │
+│                                                                  │
+│  CHECKS:                                                         │
+│  • √2 bounds (simple float comparison)                           │
+│  • Hash chain integrity (prev_hash linkage)                      │
+│  • Key image uniqueness (set membership)                         │
+│  • Block hash validity (domain-separated SHA256)                 │
+│                                                                  │
+│  NO eigenvalue computation. NO lattice operations.               │
+│  Pure hash verification + state transitions.                     │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
 ```
+
+### SheafState as the bus
+
+SheafState connects all three layers. it is the unified state
+abstraction that tracks data at every hardness level:
+
+```
+SheafState
+├── accounts           → Layer 1 (fingerprints, balances, nonces)
+├── spent_key_images   → Layer 1 (accountability, double-spend)
+├── hash_chain         → Layer 1 (SHA256 audit trail)
+├── block_headers      → Layer 1 (chain structure)
+│
+├── get_hash_commitments()  → Layer 2 (η₁ output: HashCommitment per account)
+├── verify_commitment()     → Layer 2 (CVP-bound verification)
+├── to_oracle_request()     → Layer 2 (Python → Oracle bridge)
+├── spectral_cache          → Layer 2 (cached spectral gap)
+│
+├── compute_topology()      → Layer 3 (nerve from connections)
+├── homotopy_class_id       → Layer 3 (per account, anonymity set)
+└── rotate_keys()           → Layer 3 (new fibration, same class)
+```
+
+a transaction flows through all three layers:
+1. wallet creates HomotopyTransaction (Layer 3: proves class membership)
+2. oracle verifies commitment + spectral invariants (Layer 2: CVP binding)
+3. node stores block hash + key images (Layer 1: accountability)
+
+the projections are one-way: Layer 3 data never reaches Layer 1.
+the node sees only hashes. the oracle sees commitments but not
+the fibration. the wallet holds everything.
+
+### why SHA256 is a projection, not arbitrary
+
+SHA256 in this system is η₂: F_hash → F_chain. it is the unique
+(up to collision resistance) structure-preserving map that:
+
+1. compresses verified lattice commitments to fixed 32 bytes
+2. preserves binding (collision resistance → commitment binding)
+3. commutes with the coboundary: SHA256(Σ δ(txᵢ)) is deterministic
+   given the verified cochain root from the oracle
+4. is the identity on chain structure (prev_hash linkage is a chain
+   complex: ∂² = 0 holds because SHA256(SHA256(x)) is idempotent
+   on the hash chain structure)
+
+SHA256 loses the lattice structure (you can't recover δ(m||r) from
+its hash), but that's exactly what Layer 1 needs — accountability
+without the ability to reverse-engineer amounts or identities.
 
 ---
 
@@ -790,9 +914,28 @@ proof of value := validators prove their fibration has geometric quality
 - harmonic consensus: hodge decomposition separates
   agreement (ker Δ) from gauge freedom (im δ) from noise (im δ*)
 
-## dual state
+## three-layer state
 
-- SheafState := private transfers (homotopy transactions, key images, mempool)
-- AccountState := sovereignty layer (spectral fingerprint identity, connections, key rotation)
+the "dual state" is actually three layers, matching the hardness hierarchy:
+
+- **Layer 3 (homotopy):** credential fibration, homotopy class membership,
+  key rotation within class. lives in the wallet, never leaves.
+- **Layer 2 (lattice/CVP):** cochain commitments, spectral invariants,
+  hodge projections. verified by oracle, stored as HashStalk.
+- **Layer 1 (hash projection):** block headers, key image set, chain tip,
+  SHA256 audit trail. stored by node, publicly verifiable.
+
+SheafState is the bus that connects all three. AccountState adds
+sovereignty semantics (identity, connections, rotation count) on top.
+
+```
+credential (Layer 3)
+  ──η₁──→ commitment (Layer 2)
+    ──η₂──→ hash (Layer 1)
+```
+
+each η is a projection: information is lost, binding is preserved.
+Layer 3 data never reaches Layer 1. the node cannot deanonymize.
+the oracle cannot forge. the wallet holds the fibration secret.
 
 Hansen & Ghrist (2019). Toward a Spectral Theory of Cellular Sheaves

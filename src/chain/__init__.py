@@ -1,20 +1,24 @@
 """
 Homotopical Privacy Chain
 
-Core blockchain implementation with:
-- Homotopy transactions (spectral proofs, infinite anonymity set)
-- Blocks (PoV consensus via spectral gap)
-- Key images (homotopy-path-based double-spend prevention)
-- Chain state (harmonic-based, NOT traditional UTXO)
+Three-layer state model (see docs/ARCHITECTURE.md § Three-Layer Chain):
+- Layer 3 (homotopy/wallet): credential fibration, homotopy class, key rotation
+- Layer 2 (lattice-CVP/oracle): cochain commitments, spectral invariants
+- Layer 1 (hash projection/node): block headers, key images, SHA256 audit trail
 
-State model:
-- NOT UTXO: Traditional Bitcoin-style unspent outputs
-- YES: Harmonic component tracking (message lives in ker(Δ))
-- Balance = projection onto harmonic subspace
+SheafState is the bus connecting all three layers.
+AccountState adds sovereignty semantics (identity, connections).
+DualState wraps both into a single object.
+
+Core implementation:
+- Homotopy transactions (spectral proofs, infinite anonymity set)
+- Blocks (PoV consensus via spectral gap ∈ [1/√2, 2√2])
+- Key images (homotopy-path-based double-spend prevention)
+- Harmonic component tracking (message lives in ker(Δ))
 
 Transaction types:
 - HomotopyTransaction: Native homotopy-based (primary)
-- RingTransaction: Ring-signature style (for benchmarking only)
+- RingTransaction: Ring-signature style (benchmarking only, in tests/benchmarks/)
 """
 
 # Homotopy-native transactions (primary)

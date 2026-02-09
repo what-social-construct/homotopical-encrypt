@@ -1,8 +1,23 @@
 """
 Oracle Client - Python interface to Rust Oracle
 
-Sends FullStalks to Oracle for commitment computation.
-Receives HashStalks (geometric commitments) back.
+COMPUTATION BOUNDARY:
+  Python computes ALL heavy geometry:
+    - SheafLaplacian: eigendecomposition, harmonic projection, spectral gap
+    - HodgeDecomposition: project onto ker(Δ), quantize to commitment bytes
+    - FiberBundle: parallel transport, holonomy, connection matrices
+
+  Oracle (Rust) VERIFIES pre-computed results:
+    - Spectral gap in Tsirelson bounds [1/√2, 2√2]
+    - Betti numbers consistent (β₀ ≥ 1)
+    - Commitment bytes non-trivial
+    - Naturality conditions across edges
+
+  Python sends pre-computed commitment + invariants.
+  Oracle does NOT recompute eigendecomposition or Hodge projection.
+
+See: rust/oracle/src/stalk_bridge.rs (COMPUTATION BOUNDARY comment)
+     src/geometry/sheaf_laplacian.py, src/geometry/hodge.py
 """
 
 import json
@@ -15,59 +30,78 @@ import numpy as np
 
 @dataclass
 class FullStalkRequest:
-    """Request to submit a full stalk to Oracle."""
+    """Request to submit a full stalk to Oracle.
+    
+    Python computes ALL geometry and sends results.
+    Oracle verifies bounds only.
+    """
     vertex_id: int
     credential: List[float]
     eigenvalues: List[float]
     betti_numbers: Tuple[int, int, int]
     nerve_vertices: List[int]
     nerve_edges: List[Tuple[int, int]]
-    laplacian: List[List[float]]
+    spectral_gap: float          # Pre-computed by Python
+    commitment_bytes: bytes       # Pre-computed by Python (32 bytes)
     
-    def compute_python_hash(self) -> str:
-        """Compute geometric commitment hash (must match Oracle's computation).
+    @classmethod
+    def from_geometry(
+        cls,
+        vertex_id: int,
+        credential: np.ndarray,
+        laplacian: np.ndarray,
+        nerve_vertices: List[int],
+        nerve_edges: List[Tuple[int, int]],
+        betti_numbers: Tuple[int, int, int] = (1, 0, 0),
+    ) -> 'FullStalkRequest':
+        """Build request by computing geometry locally.
         
-        For now, we use a placeholder - real implementation requires
-        computing the Hodge projection locally.
+        This is the PRIMARY constructor — it runs the full geometry pipeline:
+        1. Eigendecomposition of Laplacian → eigenvalues, spectral gap
+        2. Hodge projection onto ker(Δ) → harmonic component
+        3. Quantize to 32 bytes → commitment
         
-        When laplacian is provided, the Oracle computes geometric commitment.
-        We need to match that computation.
+        All heavy computation happens HERE in Python.
+        Oracle receives the results and verifies bounds only.
         """
-        # For testing without Laplacian: use SHA256
-        if not hasattr(self, 'laplacian') or not self.laplacian:
-            hasher = hashlib.sha256()
-            for val in self.credential:
-                hasher.update(np.float64(val).tobytes())
-            return hasher.hexdigest()
+        from ..geometry.hodge import compute_hodge_projectors
         
-        # With Laplacian: compute Hodge projection commitment
-        # This is what the Oracle computes - we need to match it
-        from src.geometry.hodge import compute_hodge_projectors
-        laplacian = np.array(self.laplacian)
+        # 1. Eigendecomposition (heavy — numpy does this)
+        eigenvalues = np.linalg.eigvalsh(laplacian).tolist()
+        
+        # 2. Spectral gap (first nonzero eigenvalue)
+        sorted_eigs = sorted(eigenvalues)
+        spectral_gap = 0.0
+        for eig in sorted_eigs:
+            if eig > 1e-6:
+                spectral_gap = eig
+                break
+        
+        # 3. Hodge projection (heavy — numpy linear algebra)
         P_harmonic, _, _ = compute_hodge_projectors(laplacian)
+        credential_vec = np.array(credential, dtype=np.float64)
         
-        # Quantize to bytes (matching Oracle's quantize_to_bytes)
-        credential_vec = np.array(self.credential)
         if len(credential_vec) == P_harmonic.shape[0]:
             projected = P_harmonic @ credential_vec
         else:
-            projected = credential_vec  # No projection if dims don't match
+            projected = credential_vec
         
-        # Quantize: same as Rust
-        commitment = []
-        for val in projected[:32]:  # First 32 components
-            quantized = int((val + 1.0) / 2.0 * 255.0)
-            quantized = max(0, min(255, quantized))
-            commitment.append(quantized)
+        # 4. Quantize to 32 bytes (deterministic)
+        commitment_bytes = _quantize_to_bytes(projected, 32)
         
-        # Pad to 32 bytes
-        while len(commitment) < 32:
-            commitment.append(0)
-        
-        return bytes(commitment).hex()
+        return cls(
+            vertex_id=vertex_id,
+            credential=credential.tolist() if isinstance(credential, np.ndarray) else credential,
+            eigenvalues=eigenvalues,
+            betti_numbers=betti_numbers,
+            nerve_vertices=nerve_vertices,
+            nerve_edges=nerve_edges,
+            spectral_gap=spectral_gap,
+            commitment_bytes=commitment_bytes,
+        )
     
     def to_json(self) -> Dict[str, Any]:
-        """Convert to JSON-RPC request."""
+        """Convert to JSON-RPC request for Oracle."""
         return {
             "method": "submit_stalk",
             "params": {
@@ -77,15 +111,36 @@ class FullStalkRequest:
                 "betti_numbers": self.betti_numbers,
                 "nerve_vertices": self.nerve_vertices,
                 "nerve_edges": self.nerve_edges,
-                "laplacian": self.laplacian,
-                "python_hash": self.compute_python_hash()
+                "spectral_gap": self.spectral_gap,
+                "commitment": self.commitment_bytes.hex(),
             }
         }
 
 
+def _quantize_to_bytes(projected: np.ndarray, num_bytes: int) -> bytes:
+    """Quantize projected vector to fixed-size bytes.
+    
+    Must match Rust Oracle's quantize_to_bytes() exactly:
+    - Scale each component: (val + 1.0) / 2.0 * 255.0
+    - Clamp to [0, 255]
+    - Pad with zeros to num_bytes
+    """
+    result = []
+    for i in range(min(num_bytes, len(projected))):
+        val = projected[i]
+        normalized = int((val + 1.0) / 2.0 * 255.0)
+        normalized = max(0, min(255, normalized))
+        result.append(normalized)
+    
+    while len(result) < num_bytes:
+        result.append(0)
+    
+    return bytes(result)
+
+
 @dataclass
 class CommitmentResponse:
-    """Response from Oracle with computed commitment."""
+    """Response from Oracle with verified commitment."""
     success: bool
     vertex_id: int
     fingerprint: str  # Hex-encoded
@@ -104,7 +159,10 @@ class CommitmentResponse:
 
 
 class OracleClient:
-    """Client for communicating with Rust Oracle."""
+    """Client for communicating with Rust Oracle.
+    
+    Python computes geometry → sends to Oracle → Oracle verifies bounds → stores.
+    """
     
     def __init__(self, oracle_url: str = "http://127.0.0.1:9090"):
         self.oracle_url = oracle_url
@@ -127,7 +185,7 @@ class OracleClient:
             return {"error": str(e), "code": -1}
     
     def submit_stalk(self, stalk: FullStalkRequest) -> CommitmentResponse:
-        """Submit a full stalk and get commitment."""
+        """Submit a full stalk and get verified commitment."""
         response = self._post_rpc(stalk.to_json())
         
         if "error" in response:
@@ -180,44 +238,43 @@ class OracleClient:
 def create_test_stalk(vertex_id: int, dimension: int = 32, components: int = 4) -> FullStalkRequest:
     """Create a test stalk for development.
     
+    Runs the full Python geometry pipeline:
+    1. Build Laplacian with disconnected components
+    2. Eigendecomposition → eigenvalues, spectral gap
+    3. Hodge projection → commitment bytes
+    
     Args:
         vertex_id: Vertex identifier
         dimension: Credential dimension (must be divisible by components)
         components: Number of disconnected components (β₀)
     """
-    # Random credential - dimension must match Laplacian!
-    np.random.seed(vertex_id)  # Deterministic for testing
-    credential = np.random.randn(dimension).tolist()
+    np.random.seed(vertex_id)
+    credential = np.random.randn(dimension)
     
-    # Laplacian with disconnected components (β₀ = components)
-    # This gives richer harmonic fingerprints!
+    # Build Laplacian with disconnected components
     n = dimension
     group_size = n // components
     laplacian = np.zeros((n, n))
     
     for c in range(components):
         start = c * group_size
-        # Chain within each component
         for i in range(start, start + group_size):
             laplacian[i, i] = 2
             if i > start:
                 laplacian[i, i-1] = -1
                 laplacian[i-1, i] = -1
-        # Endpoints have degree 1
+        # Endpoints have degree 1 (valid graph Laplacian: rows sum to 0)
         laplacian[start, start] = 1
         laplacian[start + group_size - 1, start + group_size - 1] = 1
     
-    # Eigenvalues of Laplacian
-    eigenvalues = np.linalg.eigvalsh(laplacian).tolist()
-    
-    return FullStalkRequest(
+    # Use from_geometry to run full pipeline
+    return FullStalkRequest.from_geometry(
         vertex_id=vertex_id,
         credential=credential,
-        eigenvalues=eigenvalues,
-        betti_numbers=(1, 0, 0),  # Connected graph
+        laplacian=laplacian,
         nerve_vertices=[vertex_id],
         nerve_edges=[],
-        laplacian=laplacian.tolist()
+        betti_numbers=(components, 0, 0),
     )
 
 
@@ -247,7 +304,8 @@ if __name__ == "__main__":
         stalk = create_test_stalk(vertex_id=0)
         print(f"   Vertex: {stalk.vertex_id}")
         print(f"   Credential dim: {len(stalk.credential)}")
-        print(f"   Python hash: {stalk.compute_python_hash()[:16]}...")
+        print(f"   Spectral gap: {stalk.spectral_gap:.4f}")
+        print(f"   Commitment: {stalk.commitment_bytes.hex()[:32]}...")
         
         response = client.submit_stalk(stalk)
         print(f"\n📥 Response:")

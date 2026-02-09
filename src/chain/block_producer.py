@@ -43,6 +43,9 @@ from ..proofs.consensus import InvariantValidator
 
 from ..crypto.credential import FibrationCredential, generate_credential
 
+# SheafState is the three-layer bus (see docs/ARCHITECTURE.md)
+from .sheaf_state import SheafState
+
 
 # Re-export bounds for convenience
 LOWER_BOUND = POV_LOWER
@@ -131,7 +134,8 @@ class BlockProducer:
         self,
         topology: Dict[int, List[Tuple]],
         validators: List[Tuple[bytes, int]],  # (fingerprint, vertex_id)
-        initial_supply: float = 1_000_000.0
+        initial_supply: float = 1_000_000.0,
+        sheaf_state: Optional[SheafState] = None
     ):
         self.topology = topology
         self.validator_set = ValidatorSet(topology)
@@ -147,17 +151,21 @@ class BlockProducer:
         self.invariants = InvariantValidator()
         self.invariants.set_initial_supply(initial_supply)
         
-        # Chain state
+        # Three-layer state bus (see docs/ARCHITECTURE.md)
+        # SheafState tracks balances, key images, block headers, hash chain
+        self.state = sheaf_state or SheafState()
+        
+        # Chain state (block list for local reference)
         self.chain: List[Block] = []
         self.current_epoch = 0
         self.last_block_hash = b'\x00' * 32
-        
-        # Account balances (fingerprint → balance)
-        self.accounts: Dict[bytes, float] = {}
     
-    def register_account(self, fingerprint: bytes, balance: float = 0.0):
-        """Register an account with initial balance."""
-        self.accounts[fingerprint] = balance
+    def register_account(self, fingerprint: bytes, balance: float = 0.0,
+                         homotopy_class_id: Optional[bytes] = None):
+        """Register an account with initial balance via SheafState."""
+        if homotopy_class_id is None:
+            homotopy_class_id = hashlib.sha256(fingerprint).digest()
+        self.state.add_account(fingerprint, homotopy_class_id, balance)
     
     def submit_transaction(self, tx: HomotopyTransaction, priority: float = 1.0) -> bool:
         """Submit transaction to mempool."""
@@ -262,18 +270,30 @@ class BlockProducer:
             return 1.0  # Default within bounds
     
     def _commit_block(self, block: Block):
-        """Commit a verified block to chain state."""
-        # Add to chain
+        """
+        Commit a verified block to chain state.
+        
+        Delegates to SheafState.apply_block() which updates all three layers:
+        - Layer 1: key images spent, block header stored, tip updated, hash chain
+        - Layer 2: commitment tracking
+        - Layer 3: fee balances debited/credited
+        """
+        # Apply block to three-layer state bus
+        ok, reason = self.state.apply_block(block)
+        if not ok:
+            raise RuntimeError(f"Block application failed: {reason}")
+        
+        # Add to local chain list
         self.chain.append(block)
         
-        # Remove from mempool
+        # Remove from local mempool
         self.mempool.remove_transactions(block.transactions)
         
-        # Update chain state
+        # Update local chain pointers
         self.last_block_hash = block.block_hash()
         self.current_epoch += 1
         
-        # Update validator's last block (access directly via validators dict)
+        # Update validator's last block
         if block.header.producer_fingerprint in self.validator_set.validators:
             self.validator_set.validators[block.header.producer_fingerprint].last_block = self.current_epoch
     
@@ -293,8 +313,8 @@ class BlockProducer:
         return len(self.chain)
     
     def get_balance(self, fingerprint: bytes) -> float:
-        """Get account balance."""
-        return self.accounts.get(fingerprint, 0.0)
+        """Get account balance from SheafState."""
+        return self.state.get_balance(fingerprint)
 
 
 # =============================================================================
@@ -345,7 +365,7 @@ def test_block_production():
     for i, (fp, _) in enumerate(validators):
         producer.register_account(fp, 100000.0 + i * 10000)
     
-    print(f"   Accounts: {len(producer.accounts)}")
+    print(f"   Accounts: {len(producer.state.accounts)}")
     print(f"   Mempool size: {producer.mempool.size()}")
     
     # Get selection probabilities

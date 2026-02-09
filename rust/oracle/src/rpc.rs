@@ -7,10 +7,9 @@ use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use tracing::{info, debug, error};
+use tracing::info;
 
-use crate::geometry::{FiberBundle, HodgeProjector, Stalk, compute_geometric_commitment};
-use crate::stalk_bridge::{StalkBridge, FullStalk, HashStalk};
+use crate::stalk_bridge::{StalkBridge, FullStalk};
 
 /// RPC Request from Python
 #[derive(Debug, Deserialize)]
@@ -53,6 +52,10 @@ pub struct AddEdgeParams {
 }
 
 /// Full stalk submission from Python
+///
+/// Python computes ALL geometry (Hodge projection, eigendecomposition, etc.)
+/// and sends pre-computed results. Oracle verifies bounds only.
+/// See: stalk_bridge.rs COMPUTATION BOUNDARY comment.
 #[derive(Debug, Deserialize)]
 pub struct FullStalkRequest {
     pub vertex_id: u64,
@@ -61,8 +64,11 @@ pub struct FullStalkRequest {
     pub betti_numbers: (i32, i32, i32),
     pub nerve_vertices: Vec<u64>,
     pub nerve_edges: Vec<(u64, u64)>,
-    pub laplacian: Vec<Vec<f64>>,  // For Hodge projection
-    pub python_hash: String,  // Hex-encoded
+    /// Pre-computed spectral gap (Python: SheafLaplacian.spectral_gap())
+    pub spectral_gap: f64,
+    /// Pre-computed commitment bytes (Python: Hodge projection + quantization)
+    /// Hex-encoded 32 bytes
+    pub commitment: String,
 }
 
 /// RPC Response to Python
@@ -185,8 +191,8 @@ impl OracleRpc {
     async fn handle_submit_stalk(&self, req: FullStalkRequest) -> RpcResponse {
         info!("Received stalk submission for vertex {}", req.vertex_id);
         
-        // Parse python_hash from hex
-        let python_hash = match hex::decode(&req.python_hash) {
+        // Parse commitment from hex (Python pre-computed this)
+        let commitment = match hex::decode(&req.commitment) {
             Ok(bytes) if bytes.len() == 32 => {
                 let mut arr = [0u8; 32];
                 arr.copy_from_slice(&bytes);
@@ -194,13 +200,14 @@ impl OracleRpc {
             }
             _ => {
                 return RpcResponse::Error(ErrorResponse {
-                    error: "Invalid python_hash: must be 64 hex chars".to_string(),
+                    error: "Invalid commitment: must be 64 hex chars (32 bytes)".to_string(),
                     code: 400,
                 });
             }
         };
         
-        // Create FullStalk
+        // Create FullStalk from Python's pre-computed results
+        // Oracle verifies bounds only — does NOT recompute geometry
         let full_stalk = FullStalk {
             vertex_id: req.vertex_id,
             credential: req.credential,
@@ -208,13 +215,11 @@ impl OracleRpc {
             betti_numbers: req.betti_numbers,
             nerve_vertices: req.nerve_vertices,
             nerve_edges: req.nerve_edges,
-            laplacian: Some(req.laplacian),
-            connection: None,
-            transport_path: None,
-            python_hash,
+            spectral_gap: req.spectral_gap,
+            commitment,
         };
         
-        // Add to bridge and compute commitment
+        // Add to bridge, verify bounds, store commitment
         let mut bridge = self.bridge.lock().await;
         
         if let Err(e) = bridge.add_full_stalk(full_stalk) {
@@ -340,7 +345,7 @@ impl OracleRpc {
 pub async fn run_rpc_server(addr: &str) -> Result<()> {
     info!("Starting Oracle RPC server on {}", addr);
     
-    let rpc = Arc::new(OracleRpc::new());
+    let _rpc = Arc::new(OracleRpc::new());
     
     // TODO: Use axum or warp for proper HTTP server
     // For now, this is a placeholder
