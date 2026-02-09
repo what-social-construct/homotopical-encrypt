@@ -282,12 +282,9 @@ def create_homotopy_transaction(
 
 def verify_cochain_balance(tx: HomotopyTransaction) -> Tuple[bool, str]:
     """
-    Verify homomorphic balance: sum(inputs) = sum(outputs) + fee.
+    Verify homomorphic balance using proofs/anonymity.verify_balance.
     
-    Uses cochain commitment homomorphism:
-        δ(m₁||r₁) + δ(m₂||r₂) = δ((m₁+m₂)||(r₁+r₂))
-    
-    This prevents inflation — users can't mint money.
+    Delegates to the canonical balance verification function for consistency.
     
     Args:
         tx: Transaction to check
@@ -295,63 +292,37 @@ def verify_cochain_balance(tx: HomotopyTransaction) -> Tuple[bool, str]:
     Returns:
         (is_balanced, reason)
     """
+    from ..proofs.anonymity import verify_balance
+    
     try:
-        # Sum input commitments
-        input_sum = None
+        # Parse input commitments
+        input_commitments = []
         for i, inp in enumerate(tx.inputs):
             try:
                 commitment = CochainCommitment.from_bytes(inp.amount_commitment)
-                if input_sum is None:
-                    input_sum = commitment
-                else:
-                    input_sum = add_commitments(input_sum, commitment, q=input_sum.modulus)
+                input_commitments.append(commitment)
             except Exception as e:
                 return (False, f"Input {i}: Failed to parse commitment: {e}")
         
-        if input_sum is None:
-            return (False, "No input commitments")
-        
-        # Sum output commitments
-        output_sum = None
+        # Parse output commitments
+        output_commitments = []
         for i, out in enumerate(tx.outputs):
             try:
                 commitment = CochainCommitment.from_bytes(out.amount_commitment)
-                if output_sum is None:
-                    output_sum = commitment
-                else:
-                    output_sum = add_commitments(output_sum, commitment, q=output_sum.modulus)
+                output_commitments.append(commitment)
             except Exception as e:
                 return (False, f"Output {i}: Failed to parse commitment: {e}")
         
-        if output_sum is None:
-            return (False, "No output commitments")
-        
-        # Add fee to outputs
+        # Parse fee commitment
+        fee_commitment = None
         if tx.fee_commitment and len(tx.fee_commitment) > 0:
             try:
                 fee_commitment = CochainCommitment.from_bytes(tx.fee_commitment)
-                output_sum = add_commitments(output_sum, fee_commitment, q=output_sum.modulus)
             except Exception as e:
                 return (False, f"Failed to parse fee commitment: {e}")
         
-        # Check balance: inputs == outputs + fee
-        # Compare edge values (the actual commitment data)
-        if len(input_sum.edge_values) != len(output_sum.edge_values):
-            return (False, f"Commitment size mismatch: {len(input_sum.edge_values)} vs {len(output_sum.edge_values)}")
-        
-        # Must match exactly (mod q)
-        diff = (input_sum.edge_values - output_sum.edge_values) % input_sum.modulus
-        tolerance = 1e-10
-        
-        if not np.all(np.abs(diff) < tolerance):
-            max_diff = np.max(np.abs(diff))
-            return (False, f"Balance mismatch: max diff = {max_diff:.3e}")
-        
-        # Topology must match
-        if input_sum.topology_hash != output_sum.topology_hash:
-            return (False, "Topology mismatch between input and output commitments")
-        
-        return (True, "Homomorphic balance verified")
+        # Use canonical balance verification from proofs module
+        return verify_balance(input_commitments, output_commitments, fee_commitment)
         
     except Exception as e:
         return (False, f"Balance verification error: {e}")
