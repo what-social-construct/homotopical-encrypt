@@ -840,8 +840,15 @@ class SheafState:
         
         Updates all three layers:
         - Layer 1: key images spent, block header stored, tip updated
-        - Layer 2: commitment balance verified (homomorphic)
-        - Layer 3: account balances updated (for transparent fees)
+        - Layer 2: commitment balance verified (homomorphic), nerve committed
+        - Layer 3: account balances updated, nerve edges tracked
+        
+        NERVE EDGE TRACKING:
+        Transactions between accounts create edges in the Čech nerve.
+        apply_block() updates connected_to for each (sender, recipient) pair,
+        which invalidates the spectral cache and recomputes topology.
+        This is critical for local-to-global coherence:
+          connected_to → nerve → Laplacian → spectral gap → Layer 2 commitments
         
         Args:
             block: Verified Block object (from chain/block.py)
@@ -873,28 +880,78 @@ class SheafState:
         if producer_fp in self.accounts and total_fees > 0:
             self.accounts[producer_fp].balance += total_fees
         
-        # 4. Store block header (Layer 1: chain structure)
+        # 4. NERVE EDGE TRACKING (Layer 3: topology update)
+        #    Each transaction creates/reinforces edges in the Čech nerve.
+        #    connected_to tracks the 1-skeleton of BOTH nerves:
+        #      - Account nerve (who has transacted with whom)
+        #      - Fibration nerve (which homotopy classes are connected)
+        #    These coincide because transactions ARE morphisms in the
+        #    homotopy category (see docs/ARCHITECTURE.md).
+        new_edges = 0
+        for tx in block.transactions:
+            # Extract sender fingerprint(s) from inputs
+            sender_fps = set()
+            for inp in tx.inputs:
+                if inp.fingerprint in self.accounts:
+                    sender_fps.add(inp.fingerprint)
+            
+            # Extract recipient fingerprint(s) from outputs
+            recipient_fps = set()
+            for out in tx.outputs:
+                if out.recipient_fingerprint in self.accounts:
+                    recipient_fps.add(out.recipient_fingerprint)
+            
+            # Create edges between all (sender, recipient) pairs
+            for sender_fp in sender_fps:
+                for recipient_fp in recipient_fps:
+                    if sender_fp != recipient_fp:
+                        sender_acc = self.accounts[sender_fp]
+                        recipient_acc = self.accounts[recipient_fp]
+                        
+                        if recipient_fp not in sender_acc.connected_to:
+                            sender_acc.connected_to.add(recipient_fp)
+                            recipient_acc.connected_to.add(sender_fp)
+                            new_edges += 1
+                            
+                            # Trace connection in HashChain
+                            self.hash_chain.add_connection(
+                                party_a=sender_fp,
+                                party_b=recipient_fp,
+                                topology_hash=b'\x00' * 32,  # Recomputed below
+                                timestamp=time.time()
+                            )
+        
+        # 5. Invalidate spectral cache if topology changed
+        #    New edges → new nerve → new Laplacian → new spectral gap
+        if new_edges > 0:
+            self.spectral_cache.invalidate()
+        
+        # 6. Store block header with nerve commitment (Layer 1: chain structure)
+        #    The nerve_commitment links Layer 1 → nerve topology → Layer 2
         block_hash = block.block_hash()
+        nerve_commitment = self.topology_hash() if new_edges > 0 or not self.block_headers else self.topology_hash()
         self.block_headers[block_hash] = {
             'height': block.header.height,
             'prev_hash': block.header.prev_hash,
             'spectral_gap': block.header.spectral_gap,
             'tx_count': len(block.transactions),
             'timestamp': block.header.timestamp,
+            'nerve_commitment': nerve_commitment.hex(),
+            'new_edges': new_edges,
         }
         
-        # 5. Update tip (Layer 1)
+        # 7. Update tip (Layer 1)
         self.tip_hash = block_hash
         self.tip_height = block.header.height
         
-        # 6. Remove included transactions from mempool
+        # 8. Remove included transactions from mempool
         for tx in block.transactions:
             tx_hash = tx.tx_hash()
             self.mempool.pop(tx_hash, None)
             for inp in tx.inputs:
                 self.mempool_key_images.discard(inp.key_image)
         
-        # 7. Trace in HashChain (Layer 1: audit trail)
+        # 9. Trace block in HashChain (Layer 1: audit trail)
         self.hash_chain.add_block(
             block_hash=block_hash,
             height=block.header.height,
@@ -903,7 +960,7 @@ class SheafState:
             timestamp=time.time()
         )
         
-        return (True, f"Block {block.header.height} applied ({len(block.transactions)} txs, fees={total_fees})")
+        return (True, f"Block {block.header.height} applied ({len(block.transactions)} txs, fees={total_fees}, new_edges={new_edges})")
     
     def get_balance(self, fingerprint: bytes) -> float:
         """Get account balance."""
