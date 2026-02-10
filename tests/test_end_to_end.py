@@ -21,7 +21,7 @@ End-to-End Tests: Full Pipeline Integration
 
 import sys
 import hashlib
-import tempfile
+import tempfilet
 from pathlib import Path
 
 import numpy as np
