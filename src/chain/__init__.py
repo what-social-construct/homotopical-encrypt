@@ -67,6 +67,10 @@ from .wallet_store import (
     WalletStore,
     EncryptedCredential,
 )
+from .incentives import (
+    ReputationTracker,
+    ReputationEvent,
+)
 # Routing moved to network/ module
 # from ..network import TransactionRouter, RelayNode, RelayNetwork
 
@@ -98,5 +102,8 @@ __all__ = [
     "BlockStore",
     "WalletStore",
     "EncryptedCredential",
+    # Incentives
+    "ReputationTracker",
+    "ReputationEvent",
     # Routing moved to network/ module
 ]
