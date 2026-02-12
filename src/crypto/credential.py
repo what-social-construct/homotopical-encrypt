@@ -365,6 +365,73 @@ def generate_credential(
     )
 
 
+# =============================================================================
+# AUTO KEY ROTATION (linkability prevention)
+# =============================================================================
+
+# Rotation period: every N blocks, credential should be rotated
+ROTATION_PERIOD_BLOCKS: int = 1000  # ~16 minutes at 1 block/sec
+
+
+def rotate_credential(
+    old_credential: FibrationCredential,
+) -> FibrationCredential:
+    """
+    Rotate a credential: new fibration, same homotopy class.
+
+    WHAT ROTATES:
+    - fibration (new random restriction maps → new spectral fingerprint)
+    - spectrum (new eigenvalues → new fingerprint_hash)
+    - vertex_keys, edge_keys (new random lattice secrets)
+
+    WHAT STAYS:
+    - topology (same Čech nerve → same parties, same connections)
+    - Betti numbers (topological invariants → same homotopy class)
+    - parties, hilbert_dim, modulus (structural parameters)
+
+    WHY:
+    - Spectral fingerprint is your identity. If it never changes,
+      transactions over time become linkable (same fingerprint = same sender).
+    - After rotation, old fingerprint can't be linked to new one
+      (different eigenvalues, different fingerprint_hash) but both
+      belong to the same homotopy class (same Betti numbers, same topology).
+    - The oracle can verify both old and new credentials belong to
+      the same class without learning the link.
+
+    Returns:
+        New FibrationCredential with fresh fibration + spectrum.
+    """
+    return generate_credential(
+        parties=old_credential.parties,
+        connections=_extract_connections(old_credential),
+        security_parameter=old_credential.hilbert_dim,
+        modulus=old_credential.modulus,
+    )
+
+
+def should_rotate(
+    registration_height: int,
+    current_height: int,
+    period: int = ROTATION_PERIOD_BLOCKS,
+) -> bool:
+    """Check if credential should be rotated based on age."""
+    age = current_height - registration_height
+    return age >= period
+
+
+def _extract_connections(credential: FibrationCredential) -> list:
+    """Extract connection list from credential topology."""
+    edges = credential.topology.get(1, [])
+    parties = credential.parties
+    connections = []
+    for edge in edges:
+        if len(edge) >= 2:
+            i, j = edge[0], edge[1]
+            if i < len(parties) and j < len(parties):
+                connections.append((parties[i], parties[j]))
+    return connections
+
+
 def _compute_spectrum(
     fibration: QuantumSheafFibration,
     nerve: Dict[int, List[Tuple]]

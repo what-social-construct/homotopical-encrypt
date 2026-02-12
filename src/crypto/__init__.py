@@ -25,11 +25,17 @@ WHY COCHAINS (algebraic dual):
     fundamental decrypt operation ("evaluate the section at a point").
 
 Pipeline:
-  credential.py: Generate (topology, fibration, spectrum) triple
-  encrypt.py:    Message → harmonic embedding → coboundary + Hodge noise
-  decrypt.py:    Harmonic projection onto ker(Δ) → extract message
-  commitment.py: Commit(m, r) = δ(m || r) — hiding via coboundary
-  validation.py: Hard gates (dimension, modulus, spectral, topology)
+  credential.py:        Generate (topology, fibration, spectrum) triple
+  encrypt.py:           Message → harmonic embedding → coboundary + Hodge noise
+  decrypt.py:           Harmonic projection onto ker(Δ) → extract message
+  commitment.py:        CochainCommitment = δ(m || r) — SVP-hard VALUE BINDING
+  cohomological_mac.py: CohomologicalMAC = P_H · c(m) — Hodge-hard AUTHENTICATION
+  validation.py:        Hard gates (dimension, modulus, spectral, topology)
+
+Layer 2 crypto primitives (SVP/CVP + Hodge hardness):
+  CochainCommitment: binds to a VALUE via coboundary δ(m || r)
+  CohomologicalMAC:  authenticates via ker(Δ) membership (harmonic projection)
+  Together: commitment hides, MAC authenticates — both cochain-native.
 
 Invariant orchestration:
   invariants/unified.py provides validate_fibration() which runs all
@@ -76,6 +82,16 @@ from .commitment import (
     scalar_mult_commitment,
 )
 
+# CohomologicalMAC (ker(Δ) authentication — completes Layer 2)
+from .cohomological_mac import (
+    CohomologicalMACKey,
+    CohomologicalTag,
+    mac_tag,
+    mac_verify,
+    detect_forgery,
+    security_parameter,
+)
+
 # Unified invariant validation (re-export for convenience)
 from ..invariants.unified import validate_fibration, fingerprints_equivalent
 
@@ -111,6 +127,13 @@ __all__ = [
     "VectorCommitment",
     "add_commitments",
     "scalar_mult_commitment",
+    # CohomologicalMAC
+    "CohomologicalMACKey",
+    "CohomologicalTag",
+    "mac_tag",
+    "mac_verify",
+    "detect_forgery",
+    "security_parameter",
     # Unified invariant validation
     "validate_fibration",
     "fingerprints_equivalent",

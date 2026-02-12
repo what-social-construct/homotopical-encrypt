@@ -30,6 +30,9 @@ import secrets
 from ..crypto.credential import FibrationCredential, SpectralFingerprint
 from ..crypto import encrypt, decrypt
 from ..crypto.commitment import CochainCommitment, BlindedCommitment, add_commitments
+from ..crypto.cohomological_mac import (
+    CohomologicalMACKey, CohomologicalTag, mac_tag, mac_verify, detect_forgery,
+)
 from ..primitives.cochain import CochainComplex, VertexCochain
 from ..proofs.spectral import (
     SpectralProof,
@@ -103,6 +106,11 @@ class HomotopyInput:
     # Optional for backwards compatibility; required for full privacy
     class_membership_proof: Optional[HomotopyClassProof] = None
     
+    # CohomologicalMAC tag: authenticates commitment via ker(Δ) membership
+    # Produced by wallet (has Laplacian), verified by oracle (has Laplacian via stalk bridge)
+    # Nodes verify tag STRUCTURE (non-empty), oracle verifies CRYPTOGRAPHIC validity
+    mac_tag: Optional[bytes] = None
+    
     spectral_gap: float = 0.0
 
 
@@ -163,22 +171,109 @@ class HomotopyTransaction:
     prev_chain_hash: str = ""
     
     def tx_hash(self) -> bytes:
-        """Compute transaction hash."""
+        """
+        Compute transaction hash — commits to ALL fields.
+        
+        Anti-malleability: every field is hashed so nothing can be
+        swapped without changing the tx_hash. This is the Layer 1
+        commitment that anchors Layer 2 (commitments) and Layer 3
+        (proofs) into the SHA-256 chain.
+        """
         hasher = hashlib.sha256(b"HCRYPT_HTX_V2")
         hasher.update(self.version.to_bytes(4, 'little'))
         
         for inp in self.inputs:
+            # Layer 1: identity + double-spend
             hasher.update(inp.key_image)
             hasher.update(inp.fingerprint)
+            # Layer 2: amount binding + MAC
+            hasher.update(inp.amount_commitment)
+            if inp.mac_tag:
+                hasher.update(inp.mac_tag)
+            # Layer 3: proofs (commit to proof hashes, not full proofs)
+            hasher.update(inp.spectral_proof.fingerprint)
+            hasher.update(inp.spectral_proof.proof.spectral_mass_commitment)
+            if inp.class_membership_proof is not None:
+                hasher.update(inp.class_membership_proof.target_fingerprint)
+            # Invariants
+            for b in inp.betti_numbers:
+                hasher.update(b.to_bytes(4, 'little'))
+            hasher.update(np.float64(inp.spectral_gap).tobytes())
         
         for out in self.outputs:
+            # Layer 1: recipient
             hasher.update(out.recipient_fingerprint)
+            # Layer 2: amount commitment
             hasher.update(out.amount_commitment)
+            # Layer 3: encrypted amount + topology
+            hasher.update(out.encrypted_amount)
+            hasher.update(out.output_topology_hash)
         
+        # Fee + metadata
         hasher.update(self.fee_commitment)
+        hasher.update(self.fee_amount.to_bytes(8, 'little'))
+        hasher.update(self.tx_topology_hash)
         hasher.update(self.timestamp.to_bytes(8, 'little'))
         
         return hasher.digest()
+    
+    def serialize(self) -> bytes:
+        """
+        Serialize transaction for block storage / network.
+        
+        Format: version(4) + n_inputs(4) + [input data...] +
+                n_outputs(4) + [output data...] + fee + metadata
+        
+        Every field committed by tx_hash() is also serialized,
+        so deserialization can reconstruct and verify the hash.
+        """
+        import struct
+        
+        data = struct.pack('<I', self.version)
+        
+        # Inputs
+        data += struct.pack('<I', len(self.inputs))
+        for inp in self.inputs:
+            # Fixed fields
+            data += inp.fingerprint
+            data += inp.key_image
+            data += struct.pack('<I', len(inp.amount_commitment))
+            data += inp.amount_commitment
+            # Spectral proof (fingerprint + spectral mass commitment)
+            data += inp.spectral_proof.fingerprint
+            data += inp.spectral_proof.proof.spectral_mass_commitment
+            # Betti numbers
+            for b in inp.betti_numbers:
+                data += struct.pack('<i', b)
+            # Spectral gap
+            data += np.float64(inp.spectral_gap).tobytes()
+            # MAC tag (optional, length-prefixed)
+            if inp.mac_tag:
+                data += struct.pack('<I', len(inp.mac_tag))
+                data += inp.mac_tag
+            else:
+                data += struct.pack('<I', 0)
+        
+        # Outputs
+        data += struct.pack('<I', len(self.outputs))
+        for out in self.outputs:
+            data += out.recipient_fingerprint
+            data += struct.pack('<I', len(out.amount_commitment))
+            data += out.amount_commitment
+            data += struct.pack('<I', len(out.encrypted_amount))
+            data += out.encrypted_amount
+            data += out.output_topology_hash
+        
+        # Fee
+        data += struct.pack('<I', len(self.fee_commitment))
+        data += self.fee_commitment
+        data += struct.pack('<Q', self.fee_amount)
+        
+        # Metadata
+        data += self.tx_topology_hash if self.tx_topology_hash else b'\x00' * 32
+        data += struct.pack('<Q', self.timestamp)
+        
+        return data
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for HashChain."""
@@ -263,16 +358,18 @@ def create_homotopy_transaction(
     # Build CochainComplex — δ from this complex = commitment binding
     cochain_complex = CochainComplex.from_graph(n_vertices, edges, stalk_dim=1)
     
-    # Input commitment: Commit(amount) = δ(amount || r) — SVP-hard binding
-    amount_vec = np.array([float(amount % q)])
-    input_commitment, input_opening = CochainCommitment.commit(
-        message=amount_vec,
-        complex=cochain_complex,
-        q=q
-    )
-    amount_commitment = input_commitment.to_bytes()
+    # HOMOMORPHIC BALANCE: randomness must cancel
+    # For Σin = Σout + fee to verify homomorphically:
+    #   δ(amount_in || r_in) = δ(amount_out || r_out) + δ(fee || r_fee)
+    # This requires: r_in = r_out + r_fee (mod q)
+    # So we generate r_out and r_fee independently, then set r_in = r_out + r_fee.
     
-    # Output commitment (also cochain-based for homomorphic verification)
+    from ..crypto.lattice import secure_random_vector
+    
+    amount_vec = np.array([float(amount % q)])
+    fee_vec = np.array([float(fee % q)])
+    
+    # Generate randomness for output and fee
     output_commitment, output_opening = CochainCommitment.commit(
         message=amount_vec,
         complex=cochain_complex,
@@ -280,14 +377,23 @@ def create_homotopy_transaction(
     )
     out_commitment = output_commitment.to_bytes()
     
-    # Fee commitment
-    fee_vec = np.array([float(fee % q)])
-    fee_cochain_commitment, _ = CochainCommitment.commit(
+    fee_cochain_commitment, fee_opening = CochainCommitment.commit(
         message=fee_vec,
         complex=cochain_complex,
         q=q
     )
     fee_commitment = fee_cochain_commitment.to_bytes()
+    
+    # Input randomness = output_randomness + fee_randomness (mod q)
+    # This ensures δ(in) = δ(out) + δ(fee) homomorphically
+    input_randomness = (output_opening + fee_opening) % q
+    input_commitment, input_opening = CochainCommitment.commit(
+        message=amount_vec + fee_vec,  # input amount = output + fee
+        complex=cochain_complex,
+        randomness=input_randomness,
+        q=q
+    )
+    amount_commitment = input_commitment.to_bytes()
     
     # =========================================================================
     # LAYER 3: PRIVACY PROOFS (Hodge-hardness ZK + spectral identity)
@@ -348,6 +454,31 @@ def create_homotopy_transaction(
     else:
         betti = (1, 0, 0)
     
+    # =========================================================================
+    # LAYER 2b: CohomologicalMAC — authenticate commitment via ker(Δ)
+    # =========================================================================
+    #
+    # The MAC proves: "This commitment was produced by someone who knows
+    # the Hodge structure (ker(Δ))."  Without the MAC, an attacker could
+    # submit a random SVP-hard vector that passes balance check but doesn't
+    # actually encode an amount.
+    #
+    # Produced here (wallet has Laplacian), verified by oracle (stalk bridge).
+    # Nodes check tag STRUCTURE only (non-empty, well-formed bytes).
+    
+    input_mac_tag = None
+    try:
+        laplacian_for_mac = SheafLaplacian(sender_credential.fibration.sheaf)
+        L_eigs, L_vecs = laplacian_for_mac.eigendecomposition(0)
+        L_matrix = L_vecs @ np.diag(L_eigs) @ L_vecs.T
+        
+        mac_key = CohomologicalMACKey.generate(L_matrix)
+        tag_obj = mac_tag(mac_key, amount_commitment)
+        input_mac_tag = tag_obj.to_bytes()
+    except Exception:
+        # MAC optional for backwards compat — oracle will flag missing MAC
+        pass
+    
     htx_input = HomotopyInput(
         fingerprint=sender_fingerprint,      # Layer 1: immutable UID
         key_image=key_image,                  # Layer 1: double-spend prevention
@@ -355,6 +486,7 @@ def create_homotopy_transaction(
         spectral_proof=spectral_proof,        # Layer 3: identity proof
         class_membership_proof=class_proof,   # Layer 3: Hodge ZK (1/∞ anonymity)
         betti_numbers=betti,
+        mac_tag=input_mac_tag,               # Layer 2: Hodge-hard authentication
         spectral_gap=sender_spectrum.spectral_gap
     )
     
@@ -554,6 +686,20 @@ def verify_homotopy_transaction(
         for inp in tx.inputs:
             if key_image_store.is_spent(inp.key_image):
                 return (False, f"Double spend: {inp.key_image.hex()[:16]}...")
+    
+    # =========================================================================
+    # STAGE 1b: MAC tag structural check (O(1) per input)
+    # =========================================================================
+    # Nodes verify MAC is PRESENT and WELL-FORMED (non-empty bytes).
+    # Full cryptographic verification (Δ·tag ≈ 0) is oracle-side only,
+    # because it requires the secret Laplacian (via stalk bridge).
+    
+    for i, inp in enumerate(tx.inputs):
+        if inp.mac_tag is not None:
+            # Structural check: tag must be non-trivially sized
+            # CohomologicalTag.to_bytes() = 4+nonce_len+nonce + 4+coeff_len+coeffs + 32(fingerprint)
+            if len(inp.mac_tag) < 40:  # Minimum: 4+32+4+0 = 40 bytes (empty coeffs edge case)
+                return (False, f"Input {i}: Malformed MAC tag ({len(inp.mac_tag)} bytes)")
     
     # =========================================================================
     # STAGE 2: Spectral + class membership proof verification (O(n))

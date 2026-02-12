@@ -376,6 +376,96 @@ Given blocks B₁, B₂ at height h:
 
 **Severity: MEDIUM.** Same as every P2P network. Not unique to PoV.
 
+#### THREAT 6: Rogue Python Wallet (The Supply Chain Question)
+
+**The Python wallet computes ALL heavy geometry.** The Oracle trusts
+Python's pre-computed results. What if the Python code itself is malicious?
+
+There are two sub-cases:
+
+##### 6a. Adversarial Wallet Operator (attacker builds their own wallet)
+
+**Attack:** Attacker writes a modified Python wallet that sends crafted
+eigenvalues, fake commitments, or manipulated proofs.
+
+**What they can try:**
+
+| Fake Data | What Happens |
+|-----------|-------------|
+| Fake eigenvalues | Fingerprint derived from fake eigenvalues → creates a NEW identity. Cannot access existing accounts. Key image won't match any real fibration. |
+| Fake spectral gap | Oracle checks bounds → only passes if within [1/√2, 2√2]. Faking a "good" gap is trivial, but the spectral identity proof must be internally consistent. The proof binds eigenvalues to the fingerprint — you can't claim someone else's fingerprint with different eigenvalues. |
+| Fake commitment bytes | Gets into block, but homomorphic balance check fails. `Σin = Σout + fee` requires commitments that are algebraically consistent. Forging balanced fake commitments requires solving SVP (lattice-hard). |
+| Fake class membership proof | `verify_class_membership()` checks: (1) coboundary norm bounded, (2) response matches challenge, (3) fingerprint matches target spectrum. Forging this requires knowledge of a Laplacian with the target spectrum — the inverse spectral problem (computationally hard). |
+| Fake range proof | `verify_harmonic_range_proof()` checks each bit commitment. Forging requires finding bit decompositions that commit correctly — hash preimage resistance. |
+
+**Bottom line:** A rogue wallet can only hurt itself. It can create invalid
+transactions that get rejected, or create a new identity with valid geometry.
+It CANNOT:
+- Spend someone else's funds (requires their secret fibration)
+- Forge someone else's fingerprint (spectral identity proof binds it)
+- Inflate supply (SVP-hard balance check)
+- Create valid proofs for a class it doesn't belong to (Hodge-hard)
+
+**Severity: NONE** for the network. The attacker wastes their own time.
+
+##### 6b. Compromised Wallet (malware on legitimate user's machine)
+
+**Attack:** Malware modifies the user's Python wallet code to:
+- Exfiltrate the secret fibration
+- Sign transactions the user didn't authorize
+- Redirect funds to attacker's fingerprint
+
+**Impact:** User loses their funds (same as any wallet malware).
+
+**This is NOT a protocol-level threat — it's a client security issue.**
+Every blockchain has this: if your wallet is compromised, your funds are gone.
+
+**Mitigation (current):**
+- `WalletStore` encrypts the credential at rest (AES-256-GCM)
+- Secret fibration never leaves the wallet process
+- The wallet is the ONLY component that has the secret
+
+**Mitigation (needed for production):**
+- [ ] **Hardware wallet support**: Secret fibration stored in HSM/secure enclave. Python wallet sends signing requests to hardware; secret never in RAM.
+- [ ] **Reproducible builds**: Wallet binary built deterministically so users can verify it matches source code.
+- [ ] **Wallet integrity check**: On startup, wallet hashes its own source/binary and compares to published hash. Detects tampering.
+- [ ] **Transaction confirmation**: Wallet displays human-readable summary (recipient fingerprint, amount) before signing. Malware that changes the recipient would be visible.
+
+**Severity: HIGH** for the individual user, **NONE** for the network.
+Same threat model as Bitcoin/Ethereum wallet compromise.
+
+##### 6c. Why the Oracle Can't Be Fooled by Python
+
+The Oracle's verification is designed to catch protocol violations,
+not client-side malware. The key insight:
+
+```
+WHAT ORACLE CHECKS (catches protocol attacks):
+  ✓ Spectral gap in bounds (can't fake validator eligibility)
+  ✓ β₀ ≥ 1 (can't fake connectivity)
+  ✓ Eigenvalues non-negative (can't fake PSD Laplacian)
+  ✓ Commitment non-trivial (can't send empty data)
+  ✓ Naturality across edges (can't fake topology consistency)
+
+WHAT NODE CHECKS (catches forgery attacks):
+  ✓ ZK proofs valid (can't fake identity or class membership)
+  ✓ Homomorphic balance (can't inflate supply)
+  ✓ Range proofs (can't create negative amounts)
+  ✓ Key images unique (can't double-spend)
+  ✓ Merkle roots match (can't tamper with block structure)
+
+WHAT NEITHER CHECKS (client-side threats):
+  ✗ Whether the wallet operator authorized the transaction
+  ✗ Whether the wallet code has been tampered with
+  ✗ Whether the secret fibration has been exfiltrated
+  → These are wallet-level concerns, same as every blockchain
+```
+
+The computation boundary is clean: **Python computes, Oracle verifies bounds,
+Node verifies proofs.** A rogue Python can produce garbage that fails
+verification, or valid data for a new identity. It cannot forge proofs for
+identities it doesn't control.
+
 ### 5c. Summary: What's Unique About PoV Rogue Resistance
 
 ```
@@ -415,7 +505,218 @@ THE HONEST GAP:
 
 ---
 
-## 6. Summary: The Elevator Pitch
+## 6. Deeper Security Concerns
+
+Beyond rogue operators, these are structural/cryptographic concerns
+that affect the protocol itself.
+
+#### CONCERN 1: Numerical Precision Attacks (Float64 Boundary Gaming)
+
+**The threat:** Spectral gaps are computed with float64 arithmetic.
+An attacker could craft a topology where the gap is exactly at the
+boundary (e.g., `0.7071067811865475 ± 1e-15`) and exploit rounding
+to get different results on different machines.
+
+**Why it matters:** If Node A computes `gap = 0.70710678118654752`
+(just above 1/√2) and Node B computes `gap = 0.70710678118654748`
+(just below), they disagree on block validity. Deterministic consensus breaks.
+
+**Current mitigation:**
+- Bounds use `<=` not `<` (boundary values are valid)
+- `np.float64` used consistently throughout
+
+**Needed for production:**
+- [ ] **Fixed-point spectral gaps**: Quantize gap to integer representation (`gap_int = round(gap * 2^32)`). All comparisons on integers — no floating point ambiguity.
+- [ ] **Tolerance band**: Accept gaps in `[1/√2 - ε, 2√2 + ε]` where ε = 1e-10. Reject gaps in the tolerance band with a "recompute" flag.
+- [ ] **Canonical eigendecomposition**: Specify exact LAPACK routine + parameters so all implementations produce bit-identical results.
+
+**Severity: MEDIUM.** Theoretical until demonstrated. Mitigated by fixed-point.
+
+#### CONCERN 2: Topology Inference (Privacy Leak via Nerve Structure)
+
+**The threat:** Even with encrypted amounts and pseudonymous fingerprints,
+the Čech nerve (topology) is partially visible. If Alice connects to Bob
+and Charlie, the nerve has edges (Alice, Bob) and (Alice, Charlie).
+An observer who knows the topology can infer social relationships.
+
+**What's visible on-chain:**
+- `topology_hash` per block (but not the topology itself)
+- `nerve_commitment` in SheafState (hash of nerve structure)
+- Number of vertices and edges (from block header structure)
+
+**What's NOT visible:**
+- Which fingerprints correspond to which vertices
+- The actual restriction maps (secret fibration)
+- The actual eigenvalues (only the gap is committed)
+
+**Current mitigation:**
+- Topology hash is one-way (can't reconstruct nerve from hash)
+- Fingerprints are pseudonymous (not linked to real identity)
+- Onion routing hides which node submitted which transaction
+
+**Needed for production:**
+- [ ] **Private topology**: Don't publish vertex/edge counts in headers. Only publish topology_hash.
+- [ ] **Dummy edges**: Pad nerve with random edges to obscure true structure (but must not change spectral gap significantly — use edges with near-zero weight)
+- [ ] **Decoy vertices**: Add ephemeral vertices that don't participate in transactions
+
+**Severity: LOW-MEDIUM.** Topology hashes reveal structure EXISTS but not who's in it.
+
+#### CONCERN 3: Spectral Gap Grinding
+
+**The threat:** Attacker generates thousands of random credentials until
+one has a spectral gap that gives maximum block production probability
+(e.g., gap closest to the center of [1/√2, 2√2]).
+
+**Why it matters:** Block production probability is weighted by spectral
+centrality (Fiedler vector). An attacker who can grind for the optimal
+gap gains disproportionate block production power.
+
+**Analysis:**
+- Generating a credential requires `generate_credential()` which runs
+  `QuantumSheafFibration.random()` + eigendecomposition. This is ~100ms.
+- Grinding 10,000 credentials ≈ 1,000 seconds ≈ 17 minutes.
+- The spectral gap of a random 2-vertex graph is always `2 * ||A||²`
+  where A is the random restriction map. The distribution is concentrated
+  — grinding gives marginal advantage.
+
+**Current mitigation:**
+- Validator selection uses VRF randomness (prev_block_hash), not just gap
+- Spectral centrality depends on position in GLOBAL topology, not just local gap
+- Reputation system penalizes low-contribution nodes
+
+**Needed for production:**
+- [ ] **Credential age requirement**: Credentials must exist for N blocks before being eligible for block production. Prevents last-minute grinding.
+- [ ] **Gap-uniform selection**: Normalize all valid gaps to equal probability within [1/√2, 2√2]. Only use VRF for final selection. Eliminates gap advantage entirely.
+
+**Severity: LOW.** Marginal advantage, expensive to exploit, mitigated by VRF.
+
+#### CONCERN 4: Key Image Linkability
+
+**The threat:** Key images are deterministic from the eigenvectors:
+`K = hash(eigenvectors(F))`. If an attacker can observe multiple
+transactions from the same wallet (same fibration), they see the same
+key image pattern and can link transactions.
+
+**Analysis:**
+- Key images are DESIGNED to be linkable (that's how double-spend works)
+- But they should only link WITHIN the same fibration, not across rotations
+- Key rotation (`rotate_keys()`) creates a new fibration in the same class
+  → new eigenvectors → new key image → unlinkable
+
+**Current mitigation:**
+- Key rotation is supported (`SheafState.rotate_keys()`)
+- After rotation, new key image is used; old one is spent
+- Class membership proof still works (same homotopy class)
+
+**Needed for production:**
+- [ ] **Automatic rotation**: Wallet rotates key after every transaction. Each tx uses a fresh key image. Old key images only link to "this account existed" not "this account sent X."
+- [ ] **Stealth fingerprints**: Generate one-time fingerprints for each transaction using Diffie-Hellman on the spectral data. Receiver derives fingerprint from shared secret.
+
+**Severity: MEDIUM.** Real privacy concern. Auto-rotation solves it.
+
+#### CONCERN 5: Long-Range Attack
+
+**The threat:** Attacker who had a valid credential in the past produces
+blocks backdated to old heights. If they control the history, they can
+rewrite the chain.
+
+**Analysis:**
+- Blocks include timestamps (checked: not >2 hours in future)
+- But there's no "nothing at stake" protection — old credentials
+  with valid spectral gaps could theoretically produce old blocks
+
+**Current mitigation:**
+- Chain tip tracking (nodes reject blocks at heights below tip)
+- BlockHeader includes prev_hash (must chain correctly)
+- Once a block is committed, reversing requires an alternative chain from genesis
+
+**Needed for production:**
+- [ ] **Weak subjectivity checkpoints**: Nodes that have been online continuously know the correct chain. New nodes syncing from scratch must obtain a recent checkpoint from a trusted source (same as Ethereum PoS).
+- [ ] **Credential expiry**: Credentials have a validity window. Blocks produced with expired credentials are invalid. Forces regular re-registration.
+
+**Severity: LOW** for continuously online nodes. **MEDIUM** for new nodes syncing.
+
+#### CONCERN 6: Quantum Computing
+
+**The threat:** Quantum computers could break the cryptographic hardness
+assumptions.
+
+**Analysis of each layer:**
+
+| Layer | Hardness Assumption | Quantum Safety |
+|-------|-------------------|----------------|
+| Layer 1 (SHA256) | Hash preimage | **Safe** — Grover gives √ speedup but SHA256 still has 128-bit quantum security |
+| Layer 2 (SVP/CVP) | Lattice shortest vector | **Safe** — No known quantum algorithm breaks SVP/CVP efficiently. This is the basis of NIST PQC standards. |
+| Layer 3 (Hodge) | Inverse spectral problem | **Unknown** — The hardness of recovering a Laplacian from its spectrum under quantum computation is an open question. |
+| ZK proofs | Fiat-Shamir heuristic | **Safe** — Random oracle model survives quantum (with larger parameters) |
+
+**The honest concern:** Layer 3's security (Hodge-hardness) relies on the
+computational difficulty of the inverse spectral problem. While no quantum
+algorithm is known for this, it hasn't been formally proven quantum-hard either.
+
+**Mitigation:**
+- Layers 1 and 2 provide independent security even if Layer 3 breaks
+- If quantum computers can solve the inverse spectral problem, they get
+  the secret fibration — but the amounts are still SVP-hard (Layer 2)
+  and the block structure is still SHA256-committed (Layer 1)
+- The anonymity set degrades (from ∞ to whatever the SVP provides)
+  but funds aren't stolen
+
+**Severity: LOW** (post-quantum on 2/3 layers). **THEORETICAL** on Layer 3.
+
+#### CONCERN 7: State Bloat / Spam DoS
+
+**The threat:** Attacker creates many small valid transactions to bloat
+the chain and exhaust node storage/memory.
+
+**Analysis:**
+- Each transaction requires a valid credential (takes ~100ms to generate)
+- Each transaction requires valid ZK proofs (takes ~50ms to generate)
+- Each transaction has a public fee (minimum fee prevents zero-cost spam)
+
+**Current mitigation:**
+- Fee mechanism exists (`fee_amount` in HomotopyTransaction)
+- Reputation system rate-limits adversarial accounts (1 tx/epoch)
+- Block size is bounded by number of transactions fitting in mempool
+
+**Needed for production:**
+- [ ] **Minimum fee enforcement**: Block producers must reject txs below minimum fee
+- [ ] **State pruning**: Old spent key images can be archived after N blocks
+- [ ] **Credential deposit**: Creating an account requires a one-time deposit, refundable when account is closed. Prevents infinite Sybil account creation.
+
+**Severity: LOW-MEDIUM.** Standard DoS concern. Mitigated by fees + reputation.
+
+### 6-Summary: Security Maturity Matrix
+
+```
+CRYPTOGRAPHICALLY SOUND (proven or reduction to hard problem):
+  ✓ Supply integrity (SVP-hard)
+  ✓ Double-spend prevention (deterministic key images)
+  ✓ Identity binding (spectral fingerprint + ZK proof)
+  ✓ Post-quantum Layers 1-2 (SHA256 + lattice)
+
+ARCHITECTURALLY SOUND (defense in depth):
+  ✓ Three-layer independent verification
+  ✓ Oracle is verify-only (can't forge, can only reject)
+  ✓ Wallet secret never leaves client
+  ✓ Onion routing for transport privacy
+
+NEEDS PRODUCTION HARDENING:
+  ○ VRF slot assignment (fork prevention)
+  ○ Fixed-point spectral gaps (determinism)
+  ○ Auto key rotation (linkability)
+  ○ Credential age/expiry (grinding + long-range)
+  ○ Minimum fee enforcement (spam)
+
+OPEN RESEARCH QUESTIONS:
+  ? Quantum hardness of inverse spectral problem (Layer 3)
+  ? Optimal dummy topology for privacy
+  ? Formal security proof of PoV consensus
+```
+
+---
+
+## 7. Summary: The Elevator Pitch
 
 > **Traditional blockchains** use voting (BFT) or competition (PoW) to agree on state.
 > Both require trust assumptions (honest majority or energy cost).

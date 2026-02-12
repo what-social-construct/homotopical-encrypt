@@ -46,6 +46,23 @@ from .spectral import (
     SpectralIdentityProof,
 )
 
+# Spectral bounds (canonical source — all other files import from here)
+from .spectral_bounds import (
+    SQRT2 as SQRT2_CANONICAL,
+    POV_LOWER as POV_LOWER_CANONICAL,
+    POV_UPPER as POV_UPPER_CANONICAL,
+    GapStatus,
+    gap_in_bounds,
+    gap_in_bounds_strict,
+    gap_to_fixed,
+    fixed_to_gap,
+    serialize_gap,
+    deserialize_gap,
+    credential_age_valid,
+    CREDENTIAL_MIN_AGE_BLOCKS,
+    CREDENTIAL_MAX_AGE_BLOCKS,
+)
+
 # Anonymity proofs
 from .anonymity import (
     HomotopyClassProof,

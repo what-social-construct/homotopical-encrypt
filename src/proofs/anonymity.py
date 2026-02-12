@@ -521,16 +521,21 @@ def verify_balance(
     if fee_commitment is not None:
         output_sum += fee_commitment.edge_values
     
-    # Check balance (difference should be small if blindings cancel)
-    # In perfect case with matching blindings: input_sum = output_sum
-    diff = np.abs(input_sum - output_sum)
-    max_diff = float(np.max(diff))
+    # Check balance modulo q (commitments live in ℤ_q)
+    # With coordinated blindings: input_sum ≡ output_sum (mod q)
+    # Use the modulus from the first commitment
+    q = input_commitments[0].modulus if hasattr(input_commitments[0], 'modulus') else 12289
     
-    # For real implementation: blindings must be chosen to cancel
-    # Here we just check structure
+    raw_diff = input_sum - output_sum
+    # Reduce mod q — difference should be near 0 (mod q)
+    diff_mod = np.mod(raw_diff, q)
+    # Check if close to 0 or close to q (both mean "zero mod q")
+    diff_min = np.minimum(diff_mod, q - diff_mod)
+    max_diff = float(np.max(diff_min))
+    
     if max_diff > 100:  # Large difference = likely imbalance
         return (False, f"Possible imbalance: max diff = {max_diff}")
-    
+
     return (True, f"Balance verified (max diff = {max_diff:.4f})")
 
 

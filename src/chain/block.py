@@ -48,12 +48,19 @@ from ..proofs.spectral import (
     verify_spectral_gap_proof,
 )
 from .incentives import ReputationTracker, ReputationEvent
+from ..consensus.vrf_slots import (
+    VRFKey, VRFOutput, EquivocationTracker, EquivocationEvidence,
+    vrf_evaluate, verify_slot_assignment,
+)
 
 
-# √2 bounds (Bell/Tsirelson)
-SQRT2 = np.sqrt(2)
-POV_LOWER = 1 / SQRT2  # ~0.707
-POV_UPPER = 2 * SQRT2  # ~2.828
+# √2 bounds — canonical source in proofs/spectral_bounds.py
+from ..proofs.spectral_bounds import (
+    SQRT2, POV_LOWER, POV_UPPER,
+    gap_in_bounds, gap_in_bounds_strict, GapStatus,
+    serialize_gap, deserialize_gap,
+    credential_age_valid,
+)
 
 
 @dataclass
@@ -90,8 +97,13 @@ class BlockHeader:
     # Block producer identity (immutable fingerprint = permanent UID)
     producer_fingerprint: bytes = b''
     
+    # VRF slot assignment data (fork prevention)
+    # Serialized VRFOutput: 136 bytes (output + proof + epoch + key_commitment + fingerprint)
+    # Empty for genesis block; required for all subsequent blocks.
+    vrf_data: bytes = b''
+    
     def hash(self) -> bytes:
-        """Compute block header hash."""
+        """Compute block header hash — includes VRF data for fork prevention."""
         hasher = hashlib.sha256(b"HCRYPT_BLOCK_V2")
         hasher.update(self.version.to_bytes(4, 'little'))
         hasher.update(self.height.to_bytes(8, 'little'))
@@ -102,6 +114,9 @@ class BlockHeader:
         hasher.update(np.float64(self.spectral_gap).tobytes())
         hasher.update(self.spectral_commitment)
         hasher.update(self.producer_fingerprint)
+        # VRF data committed to block hash — changing VRF = different block
+        if self.vrf_data:
+            hasher.update(self.vrf_data)
         return hasher.digest()
 
 
@@ -197,11 +212,16 @@ def _compute_cochain_root(transactions: List[Transaction]) -> bytes:
     
     commitment_hashes = []
     for tx in transactions:
-        # Collect all cochain commitments from this transaction
+        # Collect all cochain commitments + MAC tags from this transaction
         for inp in tx.inputs:
             commitment_hashes.append(
                 hashlib.sha256(b"COCHAIN_INPUT" + inp.amount_commitment).digest()
             )
+            # Include MAC tag in cochain root — commits Layer 2 auth into hash chain
+            if inp.mac_tag:
+                commitment_hashes.append(
+                    hashlib.sha256(b"COCHAIN_MAC" + inp.mac_tag).digest()
+                )
         for out in tx.outputs:
             commitment_hashes.append(
                 hashlib.sha256(b"COCHAIN_OUTPUT" + out.amount_commitment).digest()

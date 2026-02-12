@@ -16,6 +16,7 @@ from typing import Optional, Dict, List, Any
 from dataclasses import dataclass, asdict
 
 from .block import Block, BlockHeader
+from .block_section import BlockSection, ChainSectionBundle
 from .sheaf_state import SheafState
 
 
@@ -189,8 +190,178 @@ class ChainStore:
         (self.data_dir / "keyimages").mkdir(parents=True, exist_ok=True)
     
     def store_block(self, block: Block) -> bool:
-        """Store a block."""
-        return self.block_store.store_block(block)
+        """Store a block (raw serialization + sheaf section)."""
+        # Raw block bytes (backward compat)
+        stored = self.block_store.store_block(block)
+
+        # Sheaf section: decompose block into C⁰ stalks + C¹ cochain data
+        section = BlockSection.from_block(block)
+        self._store_section(section)
+
+        # Add to in-memory section bundle
+        if not hasattr(self, '_section_bundle'):
+            self._section_bundle = ChainSectionBundle()
+        self._section_bundle.add_section(section)
+
+        return stored
+
+    # =========================================================================
+    # SHEAF SECTION STORAGE
+    # =========================================================================
+    #
+    # Mirrors Rust sheaf_store.rs column family layout:
+    #
+    #   stalks_public/    C⁰ public stalks   (dim=1, spectral gap)
+    #   stalks_private/   C⁰ private stalks  (dim=256, fiber bundle data)
+    #   cochain/          C¹ edge data        (variable-length δ(m||r))
+    #   fingerprints/     Producer identity   (32-byte sheaf linkage key)
+    #
+    # The producer FINGERPRINT links the three layers through the sheaf:
+    #   - stalk_bridge.rs: FullStalk.credential(256) → HashStalk.fingerprint(32)
+    #   - η₁: private stalk → cochain commitment (Oracle Hodge projection)
+    #   - η₂: cochain root → public hash chain (Node SHA256 compression)
+    #
+    # Given a fingerprint, you can:
+    #   1. Look up all blocks produced by that credential
+    #   2. Verify η₂∘η₁ coherence (private[0] == public[0])
+    #   3. Check the fingerprint belongs to a valid homotopy class
+    #
+    # This is the same structure Rust uses, but as filesystem dirs
+    # instead of RocksDB column families.
+
+    def _ensure_section_dirs(self):
+        """Create sheaf section directories (column families)."""
+        for cf in ("stalks_public", "stalks_private", "cochain", "fingerprints"):
+            (self.data_dir / "sections" / cf).mkdir(parents=True, exist_ok=True)
+
+    def _store_section(self, section: BlockSection):
+        """
+        Store a block section across sheaf column families.
+
+        Each layer stored separately, linked by height key + fingerprint.
+        Mirrors Rust sheaf_store.rs set_stalk() / set_edge_data().
+        """
+        self._ensure_section_dirs()
+        h = section.height
+        base = self.data_dir / "sections"
+
+        # C⁰ public stalk (dim=1): spectral gap
+        with open(base / "stalks_public" / f"{h:06d}.pub", 'wb') as f:
+            f.write(section.public_stalk.data.tobytes())
+
+        # C⁰ private stalk (dim=256): full geometric data
+        with open(base / "stalks_private" / f"{h:06d}.priv", 'wb') as f:
+            f.write(section.private_stalk.data.tobytes())
+
+        # C¹ cochain edge data (variable-length)
+        with open(base / "cochain" / f"{h:06d}.edges", 'wb') as f:
+            f.write(section.cochain_root)
+            if section.cochain_edge_values is not None:
+                f.write(section.cochain_edge_values.tobytes())
+
+        # Fingerprint linkage: ties all three layers to producer identity
+        # Matches Rust stalk_bridge.rs HashStalk.fingerprint
+        producer_fp = section.private_stalk.data[192:224]  # metadata field, first 32 floats
+        fp_bytes = producer_fp.tobytes()
+        with open(base / "fingerprints" / f"{h:06d}.fp", 'wb') as f:
+            f.write(section.block_hash[:32])   # block hash
+            f.write(section.prev_hash[:32])    # prev hash (chain edge)
+            f.write(fp_bytes[:256])            # producer fingerprint (32 floats)
+            import struct
+            f.write(struct.pack('<d', section._meta_timestamp))
+            f.write(struct.pack('<I', section._meta_tx_count))
+            f.write(struct.pack('<I', section._meta_key_image_count))
+
+    def load_section(self, height: int) -> Optional[BlockSection]:
+        """
+        Load a block section from sheaf column families.
+
+        Reassembles from stalks_public + stalks_private + cochain + fingerprints.
+        """
+        import numpy as np
+        import struct
+        from ..primitives.stalk import Stalk, PRIVATE_STALK, PUBLIC_STALK
+
+        base = self.data_dir / "sections"
+
+        # All layers must exist
+        pub_path = base / "stalks_public" / f"{height:06d}.pub"
+        priv_path = base / "stalks_private" / f"{height:06d}.priv"
+        cochain_path = base / "cochain" / f"{height:06d}.edges"
+        fp_path = base / "fingerprints" / f"{height:06d}.fp"
+
+        if not all(p.exists() for p in (pub_path, priv_path, cochain_path, fp_path)):
+            return None
+
+        # C⁰ public stalk (dim=1)
+        with open(pub_path, 'rb') as f:
+            pub_data = np.frombuffer(f.read(), dtype=np.float64).copy()
+
+        # C⁰ private stalk (dim=256)
+        with open(priv_path, 'rb') as f:
+            priv_data = np.frombuffer(f.read(), dtype=np.float64).copy()
+
+        # C¹ cochain data
+        cochain_edge_values = None
+        with open(cochain_path, 'rb') as f:
+            cochain_root = f.read(32)
+            remaining = f.read()
+            if remaining:
+                cochain_edge_values = np.frombuffer(remaining, dtype=np.float64).copy()
+
+        # Fingerprint + metadata
+        with open(fp_path, 'rb') as f:
+            block_hash = f.read(32)
+            prev_hash = f.read(32)
+            _fp_bytes = f.read(256)  # producer fingerprint (already in private stalk)
+            timestamp = struct.unpack('<d', f.read(8))[0]
+            tx_count = struct.unpack('<I', f.read(4))[0]
+            ki_count = struct.unpack('<I', f.read(4))[0]
+
+        return BlockSection(
+            height=height,
+            block_hash=block_hash,
+            public_stalk=Stalk(spec=PUBLIC_STALK, data=pub_data, vertex_id=height),
+            private_stalk=Stalk(spec=PRIVATE_STALK, data=priv_data, vertex_id=height),
+            cochain_root=cochain_root,
+            cochain_edge_values=cochain_edge_values,
+            prev_hash=prev_hash,
+            _meta_timestamp=timestamp,
+            _meta_tx_count=tx_count,
+            _meta_key_image_count=ki_count,
+        )
+
+    def get_section_bundle(self) -> ChainSectionBundle:
+        """Get or create the in-memory section bundle."""
+        if not hasattr(self, '_section_bundle'):
+            self._section_bundle = ChainSectionBundle()
+        return self._section_bundle
+
+    def get_blocks_by_fingerprint(self, fingerprint_prefix: bytes) -> List[int]:
+        """
+        Find all block heights produced by a given fingerprint.
+
+        Sheaf query: given a vertex (fingerprint) in the producer nerve,
+        return all sections at that vertex.
+        """
+        import numpy as np
+        results = []
+        fp_dir = self.data_dir / "sections" / "fingerprints"
+        if not fp_dir.exists():
+            return results
+
+        for fp_file in sorted(fp_dir.glob("*.fp")):
+            with open(fp_file, 'rb') as f:
+                _block_hash = f.read(32)
+                _prev_hash = f.read(32)
+                fp_data = f.read(256)
+
+            # Compare fingerprint prefix
+            if fp_data[:len(fingerprint_prefix)] == fingerprint_prefix:
+                height = int(fp_file.stem)
+                results.append(height)
+
+        return results
     
     def save_state(self, state: SheafState):
         """

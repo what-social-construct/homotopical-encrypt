@@ -55,6 +55,19 @@ from .validator_selection import (
     select_validator_for_block,
 )
 
+# VRF slot assignment (fork prevention)
+from .vrf_slots import (
+    VRFKey,
+    VRFOutput,
+    SlotAssignment,
+    EquivocationEvidence,
+    EquivocationTracker,
+    vrf_evaluate,
+    vrf_check_eligibility,
+    assign_slot,
+    verify_slot_assignment,
+)
+
 __all__ = [
     'ProofOfValue',
     'Transaction',
@@ -68,4 +81,14 @@ __all__ = [
     'Validator',
     'ValidatorSet',
     'select_validator_for_block',
+    # VRF slots
+    'VRFKey',
+    'VRFOutput',
+    'SlotAssignment',
+    'EquivocationEvidence',
+    'EquivocationTracker',
+    'vrf_evaluate',
+    'vrf_check_eligibility',
+    'assign_slot',
+    'verify_slot_assignment',
 ]

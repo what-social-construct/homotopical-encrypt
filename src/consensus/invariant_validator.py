@@ -80,10 +80,12 @@ import numpy as np
 import hashlib
 import time
 
-# √2 bounds for valid blocks (from PoV theory)
-SQRT2 = np.sqrt(2)
-POV_LOWER = 1 / SQRT2  # ~0.707
-POV_UPPER = 2 * SQRT2  # ~2.828
+# √2 bounds — canonical source in proofs/spectral_bounds.py
+from ..proofs.spectral_bounds import (
+    SQRT2, POV_LOWER, POV_UPPER,
+    gap_in_bounds_strict, GapStatus,
+    credential_age_valid,
+)
 
 
 @dataclass
