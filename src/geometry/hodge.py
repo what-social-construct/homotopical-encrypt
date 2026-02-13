@@ -185,7 +185,12 @@ def hodge_decomposition(
     eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
     
     # 1. HARMONIC projection: ker(Δ)
-    harmonic_mask = eigenvalues < tolerance
+    # Use RELATIVE threshold: sheaf eigenvalues can be ~1e12,
+    # so absolute 1e-6 misidentifies the kernel.
+    # (Matches framework_consolidation.lean: correct ker(Δ) is critical.)
+    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
+    effective_tol = max(max_eig * 1e-10, tolerance)
+    harmonic_mask = np.abs(eigenvalues) < effective_tol
     n_harmonic = np.sum(harmonic_mask)
     
     if n_harmonic > 0:
@@ -266,7 +271,11 @@ def compute_hodge_projectors(
     
     # Compute projectors
     eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
-    harmonic_mask = eigenvalues < tolerance
+    # Use RELATIVE threshold: sheaf eigenvalues can be ~1e12.
+    # (Matches framework_consolidation.lean: correct ker(Δ) is critical.)
+    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
+    effective_tol = max(max_eig * 1e-10, tolerance)
+    harmonic_mask = np.abs(eigenvalues) < effective_tol
     
     # Harmonic projector
     if np.any(harmonic_mask):

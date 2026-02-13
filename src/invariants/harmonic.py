@@ -399,20 +399,34 @@ def validate_harmonic_embedding(
     INVARIANT GATE: Validate that cochain is in ker(Δ).
     
     Use before adding noise to ensure message is properly embedded.
-    """
-    is_harm, residual = is_harmonic(cochain, laplacian, tolerance)
     
-    if is_harm:
+    Matches framework_consolidation.lean SheafLaplacian structure:
+    Δ is self-adjoint and PSD, so ker(Δ) is well-defined.
+    We check ||Δc|| / (||c|| · λ_max) < tolerance (RELATIVE),
+    because sheaf eigenvalues can be ~1e12 and absolute residuals
+    are meaningless at that scale.
+    """
+    delta_c = laplacian @ cochain
+    abs_residual = float(np.linalg.norm(delta_c))
+    
+    # Relative tolerance: normalize by ||c|| · λ_max
+    cochain_norm = np.linalg.norm(cochain)
+    eigs = np.linalg.eigvalsh(laplacian)
+    max_eig = np.max(np.abs(eigs)) if len(eigs) > 0 else 1.0
+    scale = cochain_norm * max_eig + 1e-16
+    relative_residual = abs_residual / scale
+    
+    if relative_residual < tolerance:
         return HarmonicInvariantResult(
             passed=True,
             message="✓ Cochain is in harmonic subspace",
-            residual=residual
+            residual=relative_residual
         )
     else:
         return HarmonicInvariantResult(
             passed=False,
-            message=f"✗ Cochain not harmonic: ||Δc|| = {residual:.2e} > {tolerance}",
-            residual=residual
+            message=f"✗ Cochain not harmonic: ||Δc||/(||c||·λ_max) = {relative_residual:.2e} > {tolerance}",
+            residual=relative_residual
         )
 
 

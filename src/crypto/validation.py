@@ -133,11 +133,14 @@ def validate_ciphertext(
             f"Expected {expected_edges} edge syndromes, got {actual_edges}"
         )
     
-    # Check version (v1 = discrete Gaussian, v2 = Hodge-structured noise)
-    if ciphertext.version not in (1, 2):
+    # Check version
+    # v2 = lattice path (fallback when dim(ker(Δ)) < message bits)
+    # v3 = Hodge path (message ∈ ker(Δ), matches framework_consolidation.lean)
+    # v1 = deprecated discrete Gaussian (no formal backing in Lean proof)
+    if ciphertext.version not in (2, 3):
         return ValidationResult(
             False, "VERSION_CHECK",
-            f"Unknown ciphertext version {ciphertext.version} (valid: 1=Gaussian, 2=Hodge)"
+            f"Unknown ciphertext version {ciphertext.version} (valid: 2=Lattice, 3=Hodge)"
         )
     
     return ValidationResult(True, "CIPHERTEXT_VALID", "All ciphertext checks passed")

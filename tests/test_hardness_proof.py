@@ -324,18 +324,21 @@ class TestHodgeAmbiguity:
         eigs, vecs = L_secret.eigendecomposition(0)
         L_matrix = vecs @ np.diag(eigs) @ vecs.T
         
-        kernel_dim = int(np.sum(np.abs(eigs) < 1e-6))
+        # Use relative threshold (matches production code & Lean proof)
+        max_eig = np.max(np.abs(eigs)) if len(eigs) > 0 else 1.0
+        rel_tol = max(max_eig * 1e-10, 1e-6)
+        kernel_dim = int(np.sum(np.abs(eigs) < rel_tol))
         if kernel_dim == 0:
             pytest.skip("No kernel for this credential")
-        
+
         # Embed a message in Alice's ker(Δ)
         msg = np.array([42.0])
         embedding, ok = embed_in_harmonic(msg, L_matrix)
         if not ok:
             pytest.skip("Embedding failed")
-        
-        # Add noise in complement
-        nonharm = vecs[:, np.abs(eigs) > 1e-6]
+
+        # Add noise in complement (use same relative threshold)
+        nonharm = vecs[:, np.abs(eigs) >= rel_tol]
         noise = nonharm @ np.random.randn(nonharm.shape[1]) * 5.0
         ciphertext = embedding + noise
         
