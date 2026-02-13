@@ -39,7 +39,7 @@ import numpy as np
 import hashlib
 
 from .credential import FibrationCredential
-from .encrypt import FibrationCiphertext
+from .encrypt import FibrationCiphertext, _decode_harmonic
 from .lattice import LatticeInstance, ornstein_uhlenbeck_noise
 from ..geometry.sheaf_laplacian import SheafLaplacian
 
@@ -214,39 +214,60 @@ def decrypt(
     
     msg_block = ciphertext.vertex_blocks[first_vid]
     
-    # ── PATH 1: Lattice threshold decode (local, fast) ──
-    decrypted = _decode_lattice(msg_block[:dim], modulus, ciphertext.message_length)
+    # ══════════════════════════════════════════════════════════════
+    # VERSION DISPATCH: v3 = Hodge path, v2 = lattice path
+    # ══════════════════════════════════════════════════════════════
     
-    # ── PATH 2: Hodge projection (global, geometric) ──
-    # Build sheaf Laplacian and project full cochain onto ker(Δ).
-    # This uses the restriction maps (the actual fibration structure)
-    # and validates that the lattice decode is consistent with the
-    # global harmonic structure.
-    try:
-        sheaf_lap = SheafLaplacian(credential.fibration.sheaf)
-        L_sheaf = sheaf_lap.get_laplacian_0()
+    if ciphertext.version == 3:
+        # ── HODGE PATH (primary for v3): π_H recovers message ──
+        # Message was embedded in ker(Δ) by _encode_harmonic.
+        # Decrypt = project full cochain onto ker(Δ), read coefficients.
+        try:
+            sheaf_lap = SheafLaplacian(credential.fibration.sheaf)
+            L_sheaf = sheaf_lap.get_laplacian_0()
+            
+            # Assemble full cochain from all vertex blocks
+            full_cochain = np.concatenate([
+                ciphertext.vertex_blocks.get(v[0], np.zeros(dim))
+                for v in sorted(vertices, key=lambda x: x[0])
+            ])
+            
+            # Adjust dimension to match Laplacian
+            lap_dim = L_sheaf.shape[0]
+            if len(full_cochain) > lap_dim:
+                full_cochain = full_cochain[:lap_dim]
+            elif len(full_cochain) < lap_dim:
+                full_cochain = np.pad(full_cochain, (0, lap_dim - len(full_cochain)))
+            
+            # Project onto ker(Δ) — this strips the noise
+            harmonic_component = project_to_harmonic(full_cochain, L_sheaf)
+            
+            # Extract harmonic coefficients
+            coeffs = extract_from_harmonic(
+                harmonic_component, L_sheaf,
+                message_length=ciphertext.message_length * 8  # bits
+            )
+            
+            # Decode coefficients → bytes
+            decrypted = _decode_harmonic(coeffs, ciphertext.message_length)
+        except Exception:
+            # Fallback to lattice if Hodge path fails
+            decrypted = _decode_lattice(msg_block[:dim], modulus, ciphertext.message_length)
+    else:
+        # ── LATTICE PATH (v2 and below): threshold decode ──
+        decrypted = _decode_lattice(msg_block[:dim], modulus, ciphertext.message_length)
         
-        # Assemble full cochain from all vertex blocks
-        full_cochain = np.concatenate([
-            ciphertext.vertex_blocks.get(v[0], np.zeros(dim))[:dim]
-            for v in sorted(vertices, key=lambda x: x[0])
-        ])
-        
-        # Project onto ker(Δ) using harmonic.py
-        harmonic_component = project_to_harmonic(full_cochain, L_sheaf)
-        
-        # The first dim entries of the harmonic component correspond
-        # to vertex 0's contribution to the global section.
-        # If ker(Δ_sheaf) has sufficient dimension, this recovers the
-        # message geometrically (independent of lattice threshold).
-        harmonic_v0 = harmonic_component[:dim]
-        
-        # Validate: harmonic projection should be consistent with
-        # lattice decode (both paths recover the same message).
-        # This is advisory — lattice path is primary until restriction
-        # maps are designed with controlled kernel dimension.
-    except Exception:
-        pass  # Hodge path is advisory; lattice path is primary
+        # Advisory Hodge check (non-blocking)
+        try:
+            sheaf_lap = SheafLaplacian(credential.fibration.sheaf)
+            L_sheaf = sheaf_lap.get_laplacian_0()
+            full_cochain = np.concatenate([
+                ciphertext.vertex_blocks.get(v[0], np.zeros(dim))[:dim]
+                for v in sorted(vertices, key=lambda x: x[0])
+            ])
+            harmonic_component = project_to_harmonic(full_cochain, L_sheaf)
+        except Exception:
+            pass
     
     # Hash verification
     decrypted_hash = hash_message(decrypted)
@@ -387,7 +408,11 @@ def projective_measurement(
     eigenvalues, eigenvectors = laplacian.eigendecomposition(0)
     
     # Find kernel (harmonic subspace)
-    kernel_mask = eigenvalues < 1e-6
+    # Use RELATIVE threshold: sheaf eigenvalues can be ~1e12.
+    # (Matches hardness_proof.lean: correct ker(Δ) is critical for CVP.)
+    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
+    rel_threshold = max(max_eig * 1e-10, 1e-6)
+    kernel_mask = np.abs(eigenvalues) < rel_threshold
     if np.any(kernel_mask):
         kernel_basis = eigenvectors[:, kernel_mask]
         # Ensure dimensions match

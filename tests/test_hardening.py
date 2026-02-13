@@ -484,21 +484,20 @@ def test_block_section_from_block():
 
     section = BlockSection.from_block(block)
 
-    # All three stalks populated
+    # C⁰ stalks populated (PRIVATE + PUBLIC)
     assert section.public_stalk is not None
-    assert section.zk_stalk is not None
     assert section.private_stalk is not None
 
     # Correct dimensions
-    assert len(section.public_stalk.data) == 5    # BLOCK_PUBLIC_SPEC
-    assert len(section.zk_stalk.data) == 32        # BLOCK_ZK_SPEC
-    assert len(section.private_stalk.data) == 256  # BLOCK_PRIVATE_SPEC
+    assert len(section.public_stalk.data) == 1      # PUBLIC_STALK dim=1
+    assert len(section.private_stalk.data) == 256    # PRIVATE_STALK dim=256
 
-    # Height embedded in public stalk
-    assert int(section.public_stalk.data[0]) == 0
+    # C¹ ZK layer = cochain_root (32 bytes hash)
+    assert section.cochain_root is not None
+    assert len(section.cochain_root) == 32
 
-    # Gap consistent across layers
-    assert abs(section.public_stalk.data[4] - 1.5) < 1e-6
+    # Gap consistent across layers (private[0] == public[0])
+    assert abs(section.public_stalk.data[0] - 1.5) < 1e-6
     assert abs(section.private_stalk.data[0] - 1.5) < 1e-6
 
 
@@ -589,7 +588,7 @@ def test_chain_section_bundle_coherence():
 
 
 def test_section_serialization_round_trip():
-    """Section layer serialize → deserialize preserves stalk data."""
+    """Section serialize → deserialize preserves stalk data."""
     from src.chain.block import create_block
     from src.chain.block_section import BlockSection
     import secrets
@@ -610,12 +609,14 @@ def test_section_serialization_round_trip():
 
     section = BlockSection.from_block(block)
 
-    for layer in ("public", "zk", "private"):
-        data = section.serialize_layer(layer)
-        h, bh, ph, stalk_data = BlockSection.deserialize_layer(data, layer)
-        assert h == 7
-        assert bh == section.block_hash
-        assert ph == section.prev_hash
+    # Full section round-trip
+    data = section.serialize()
+    restored = BlockSection.deserialize(data)
+    assert restored.height == 7
+    assert restored.block_hash == section.block_hash
+    assert restored.prev_hash == section.prev_hash
+    assert abs(restored.public_stalk.data[0] - 2.2) < 1e-6
+    assert abs(restored.private_stalk.data[0] - 2.2) < 1e-6
 
 
 def test_chain_store_section_persistence():
@@ -647,7 +648,7 @@ def test_chain_store_section_persistence():
         loaded = store.load_section(0)
         assert loaded is not None, "Must load section"
         assert loaded.height == 0
-        assert abs(loaded.public_stalk.data[4] - 1.5) < 1e-6
+        assert abs(loaded.public_stalk.data[0] - 1.5) < 1e-6
 
         # Coherence still holds after round-trip
         valid, reason = loaded.verify_coherence()

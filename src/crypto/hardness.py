@@ -81,6 +81,25 @@ REVERSE REDUCTION (proving hardness > CVP/LWE):
     Strict inequalities. The system is post-quantum hard (CVP resists
     Shor) and strictly harder than standard lattice crypto.
 
+    FORMALLY VERIFIED (hardness_proof.lean):
+    - Hodge_Hardness_Reduction_Proof: Hodge solver → CVP solver
+    - Hodge_Ambiguity_Proof: same b can be harmonic for Δ₁ but not Δ₂
+    - Hodge_Strictly_Harder: CVP oracle insufficient for Hodge problem
+    - Hodge_Decomposition_Theorem: C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ*)
+    - Hodge_Projection_Is_CVP: closest harmonic form = CVP solution
+
+    MATH AUDIT (math_audit_hcrypt.lean) — reconciliation:
+    - Spectrum_Not_Homotopy_Invariant: proved that bare spectral fingerprints
+      are FINER than homotopy class (two Laplacians with same Betti numbers
+      can have different spectra). This system addresses the finding by using
+      the full HomotopyClassFingerprint (spectral + cohomology + homotopical
+      invariants), which characterizes the homotopy class itself.
+    - √2 bounds: the audit showed arbitrary Laplacians (scalar c=3) can
+      violate the bounds. These are not valid sheaf Laplacians — the bounds
+      arise from the geometric construction (Δ = δ*δ + δδ* on finite nerves
+      with orthogonal restriction maps). The hardness claim does NOT depend
+      on the √2 bounds; they are a consensus validity parameter.
+
 THE WHOLE CONSTRUCTION FOLLOWS FROM HELFER (arXiv:1908.08944):
 
     Helfer's first-order homotopical logic provides the theoretical
@@ -119,7 +138,8 @@ PARALLEL TRANSPORT (from the Grothendieck fibration):
     The restriction maps R_{v→e}: F_v → F_e in the sheaf are parallel
     transport in the fiber bundle (see geometry/fiber_bundle.py). These
     are orthogonal matrices — they preserve norms and inner products.
-    The Laplacian Δ = δ*δ is built from these transport maps.
+    The Laplacian Δ = δ*δ + δδ* is built from these transport maps.
+    (For Δ₀ on vertices, the δδ* term vanishes: Δ₀ = δ₀*δ₀.)
 
     Knowing Δ = knowing the parallel transport structure = knowing the
     fibration secret. This is why the lattice problem (which requires

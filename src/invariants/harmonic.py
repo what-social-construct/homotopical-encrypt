@@ -164,9 +164,15 @@ def project_to_harmonic(
         Harmonic component of cochain
     """
     eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
-    
+
     # Find harmonic basis (eigenvalue ≈ 0)
-    harmonic_mask = np.abs(eigenvalues) < zero_threshold
+    # Use RELATIVE threshold for sheaf Laplacians with large eigenvalues (~1e12).
+    # Absolute 1e-10 fails when max eigenvalue >> 1.
+    # (Matches hardness_proof.lean: correct ker(Δ) identification is critical
+    # for the CVP reduction.)
+    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
+    effective_threshold = max(max_eig * 1e-10, zero_threshold)
+    harmonic_mask = np.abs(eigenvalues) < effective_threshold
     
     if not np.any(harmonic_mask):
         # No harmonic subspace
@@ -289,8 +295,10 @@ def embed_in_harmonic(
     """
     eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
     
-    # Find harmonic basis
-    harmonic_mask = np.abs(eigenvalues) < zero_threshold
+    # Find harmonic basis (relative threshold for sheaf Laplacians)
+    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
+    effective_threshold = max(max_eig * 1e-10, zero_threshold)
+    harmonic_mask = np.abs(eigenvalues) < effective_threshold
     harmonic_dim = np.sum(harmonic_mask)
     
     if harmonic_dim == 0:
@@ -310,11 +318,16 @@ def embed_in_harmonic(
     embedding = harmonic_basis @ padded_message
     
     # ── SELF-CHECK: verify embedding ∈ ker(Δ) ──
+    # Use relative tolerance: for sheaf Laplacians with eigenvalues ~1e12,
+    # the residual ||Δ·embedding|| can be large in absolute terms even
+    # when the embedding is numerically in ker(Δ).
     residual = np.linalg.norm(laplacian @ embedding)
-    if residual > 1e-8:
+    relative_residual = residual / (np.linalg.norm(embedding) * max_eig + 1e-16)
+    if relative_residual > 1e-8:
         raise RuntimeError(
             f"INVARIANT VIOLATION: embed_in_harmonic produced non-harmonic output: "
-            f"||Δ·embedding|| = {residual:.2e}. Aborting — possible corruption."
+            f"||Δ·embedding||/||embedding||·λ_max = {relative_residual:.2e}. "
+            f"Aborting — possible corruption."
         )
     
     return embedding, True
@@ -331,18 +344,28 @@ def extract_from_harmonic(
     
     Inverse of embed_in_harmonic.
     
+    The cochain is a 0-cochain in C⁰(nerve, F) = ⊕_v F(v).
+    Harmonic cochains (ker Δ_sheaf) correspond to global sections:
+    data consistent under all restriction maps R_{v→e}.
+    
+    We extract the message by projecting onto the harmonic basis
+    (eigenvectors of Δ_sheaf with eigenvalue ≈ 0) and reading
+    the coefficients — exactly inverting embed_in_harmonic.
+    
     Args:
-        cochain: Cochain containing embedded message
-        laplacian: Sheaf Laplacian
-        message_length: Length of original message
+        cochain: 0-cochain containing embedded message (in ⊕_v F(v))
+        laplacian: Sheaf Laplacian Δ_sheaf
+        message_length: Length of original message (in coefficients)
         
     Returns:
-        Extracted message
+        Extracted message coefficients
     """
     eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
     
-    # Find harmonic basis
-    harmonic_mask = np.abs(eigenvalues) < zero_threshold
+    # Find harmonic basis (relative threshold for sheaf Laplacians)
+    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
+    effective_threshold = max(max_eig * 1e-10, zero_threshold)
+    harmonic_mask = np.abs(eigenvalues) < effective_threshold
     harmonic_basis = eigenvectors[:, harmonic_mask]
     
     # Extract coefficients in harmonic basis
@@ -416,6 +439,94 @@ def validate_noise_structure(
             passed=False,
             message=f"✗ Noise has harmonic component: ||P_H(noise)|| = {harmonic_norm:.2e}",
             residual=harmonic_norm
+        )
+
+
+def validate_hodge_orthogonality(
+    harmonic: np.ndarray,
+    exact: np.ndarray,
+    coexact: np.ndarray,
+    tolerance: float = 1e-6
+) -> HarmonicInvariantResult:
+    """
+    INVARIANT GATE: Validate pairwise orthogonality of Hodge components.
+    
+    The Lean proof (Hodge_Decomposition_Theorem) proves:
+      ⟨h, e1⟩ = 0  (harmonic ⊥ exact)
+      ⟨h, e2⟩ = 0  (harmonic ⊥ coexact)
+      ⟨e1, e2⟩ = 0 (exact ⊥ coexact)
+    
+    If ANY pair is not orthogonal, the decomposition is invalid
+    and the hardness claim does not hold.
+    """
+    he = abs(float(np.dot(harmonic, exact)))
+    hc = abs(float(np.dot(harmonic, coexact)))
+    ec = abs(float(np.dot(exact, coexact)))
+    max_ip = max(he, hc, ec)
+    
+    if max_ip < tolerance:
+        return HarmonicInvariantResult(
+            passed=True,
+            message=f"✓ Hodge components pairwise orthogonal (max |⟨·,·⟩| = {max_ip:.2e})",
+            residual=max_ip
+        )
+    else:
+        parts = []
+        if he >= tolerance:
+            parts.append(f"⟨h,e⟩={he:.2e}")
+        if hc >= tolerance:
+            parts.append(f"⟨h,ce⟩={hc:.2e}")
+        if ec >= tolerance:
+            parts.append(f"⟨e,ce⟩={ec:.2e}")
+        return HarmonicInvariantResult(
+            passed=False,
+            message=f"✗ Hodge orthogonality violated: {', '.join(parts)}",
+            residual=max_ip
+        )
+
+
+def validate_laplacian_construction(
+    laplacian: np.ndarray,
+    delta: np.ndarray,
+    delta_prev: np.ndarray = None,
+    tolerance: float = 1e-6
+) -> HarmonicInvariantResult:
+    """
+    INVARIANT GATE: Validate Δ = δ*δ + δδ*.
+    
+    The Lean proof (Hodge_Decomposition_Theorem) requires:
+      Δ = d_prev · d_prev^T + d_next^T · d_next
+    
+    where d_prev = δ_{k-1} (from below) and d_next = δ_k (to above).
+    
+    If Δ is not constructed this way, the Hodge decomposition theorem
+    does not apply and the hardness reduction is invalid.
+    
+    Args:
+        laplacian: The Laplacian matrix Δ to validate
+        delta: δ_k (coboundary going up from this degree)
+        delta_prev: δ_{k-1} (coboundary from below), None for degree 0
+    """
+    n = laplacian.shape[0]
+    
+    # Reconstruct: Δ = δ^T·δ + δ_prev·δ_prev^T
+    reconstructed = delta.T @ delta
+    if delta_prev is not None:
+        reconstructed += delta_prev @ delta_prev.T
+    
+    error = float(np.linalg.norm(laplacian - reconstructed))
+    
+    if error < tolerance:
+        return HarmonicInvariantResult(
+            passed=True,
+            message=f"✓ Δ = δ*δ + δδ* verified (error = {error:.2e})",
+            residual=error
+        )
+    else:
+        return HarmonicInvariantResult(
+            passed=False,
+            message=f"✗ Laplacian construction mismatch: ||Δ - (δ*δ + δδ*)|| = {error:.2e}",
+            residual=error
         )
 
 

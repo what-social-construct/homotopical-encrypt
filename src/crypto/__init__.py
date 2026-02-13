@@ -44,7 +44,7 @@ Invariant orchestration:
 """
 
 # Core types
-from .credential import FibrationCredential, SpectralFingerprint, generate_credential
+from .credential import FibrationCredential, SpectralFingerprint, PublicIdentity, generate_credential
 from .encrypt import encrypt, FibrationCiphertext
 from .decrypt import (
     decrypt,
@@ -99,6 +99,7 @@ __all__ = [
     # Core types
     "FibrationCredential",
     "SpectralFingerprint",
+    "PublicIdentity",
     "generate_credential",
     "encrypt",
     "decrypt",

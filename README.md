@@ -17,7 +17,7 @@ Full blockchain node with Proof of Value consensus, sheaf-aware storage, and lib
 The encrypt/decrypt operation is Hodge-theoretic (embed in ker(Δ), noise in im(δ)⊕im(δ*), project via π_H). But the name describes the *security framework*, not the subroutine:
 
 - The **secret key** is a fibration (a system of restriction maps between stalk contexts)
-- The **public identity** is its homotopy class (spectral fingerprint)
+- The **public identity** is its homotopy class (unified fingerprint: spectral + cohomological + homotopical invariants)
 - **Key equivalence** := homotopy equivalence of fibrations
 - The **anonymity set** is the entire homotopy class [F] — infinite, by univalence
 - The **hardness assumption** (Hodge-hardness) is: find h ∈ ker(Δ) without knowing which fibration Δ came from — hard *because* Δ encodes the homotopy type
@@ -102,26 +102,28 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#the-homotopy-category-and-its-ne
 | Security | Spectral gap λ₁ | Error tolerance |
 | Verification | Homotopy invariants | ZK-friendly |
 
-### The Diagonal Pairing
+### The Diagonal and Equality
 
-The system is built on the **diagonal functor** Δ from Helfer's first-order homotopical logic. The diagonal Δ: Spec → Spec × Spec sends a spectral fingerprint *s* to the pair *(s, s)*. Equality of fibrations is interpreted as lying on this diagonal — a geometric condition, not a syntactic one.
+In Helfer's first-order homotopical logic, the **diagonal morphism** Δ: A → A×A interprets equality (Def 4.3(iv)). In the ordinary (set-theoretic) semantics, M(s = t) is the pullback of Δ — non-empty iff s = t. In the *homotopical* semantics, Δ is replaced by the path space map A^I → A×A, so "a = b" becomes *the space of paths from a to b* — a geometric condition, not a syntactic one (§2, p.6).
+
+We instantiate this with A = Fib (the type of fibrations). Two fibrations F, G are "equal" when there exists a homotopy path between them. We can't observe the path — only whether the unified fingerprint projections land on the diagonal of U × U, where U = `HomotopyClassFingerprint` = (λ₁, β₀, β₁, β₂, h-level, Σ-rank):
 
 ```
-         Spec × Spec
+           U × U    where U = (λ₁, β, h-level, Σ-rank)
               │
     (1,1) ●──────────● (1,0)
           │╲          │
           │  ╲  Δ     │         d(diagonal, corner) = 1/√2
           │    ╲      │
-          │      ╲    │         ON  diagonal ⟹ equivalent   (d = 0)
-          │        ╲  │         OFF diagonal ⟹ detectable   (d ≥ 1/√2)
+          │      ╲    │         ON  diagonal ⟹ may be equivalent (d = 0)
+          │        ╲  │         OFF diagonal ⟹ definitely distinct (d ≥ 1/√2)
     (0,0) ●──────────╲● (0,1)
-                  Δ(Spec)╲
-                          ╲
-                           ● Spec
+                    Δ(U)╲
+                         ╲
+                          ● U
 ```
 
-**The pullback construction** (Helfer §3.1–3.2) gives the ZK proof structure. The prover knows a path in Path(F,G); the verifier only sees the spectral projection:
+**The pullback construction** (Helfer §§6–7, Def 4.3(iv)) gives the ZK proof structure. The prover knows a path in Path(F,G); the verifier only sees the fingerprint projection:
 
 ```
               Path(F, G)                    ← SECRET (the homotopy)
@@ -130,13 +132,13 @@ The system is built on the **diagonal functor** Δ from Helfer's first-order hom
                   ▼
               Fib × Fib
                   │
-                  │  spec × spec            ← extract fingerprints
+                  │  U × U                  ← extract HomotopyClassFingerprints
                   ▼
-             Spec × Spec
+          U(F) × U(G)
                   │
                   │  lies on Δ ?            ← PUBLIC verification
                   ▼
-              s_F = s_G                     ← on diagonal ⟹ equivalent
+          U(F) = U(G)                       ← on diagonal ⟹ equivalent
 ```
 
 The √2 spectral bound follows directly from the diagonal geometry:
@@ -255,24 +257,26 @@ The system maps private geometric data (off-chain) to public commitments (on-cha
 
 Traditional privacy coins (Monero) use **ring signatures**: hide the real signer among N decoys. The anonymity set is finite (typically 11-16). Probability of identifying the signer: **1/16**.
 
-Homotopical Encrypt uses **homotopy class membership**: prove you know *some* fibration F with spectrum matching a public fingerprint, without revealing *which* one. The anonymity set is the entire homotopy class [F] — an **infinite** set of all fibrations with the same spectral invariants. Probability of identifying which F: **1/∞ = 0**.
+Homotopical Encrypt uses **homotopy class membership**: prove you know *some* fibration F whose unified invariants (spectral, cohomological, homotopical) match a public fingerprint, without revealing *which* one. The anonymity set is the entire homotopy class [F] — an **infinite** set of all fibrations with matching invariants. Probability of identifying which F: **1/∞ = 0**.
 
 ### Fibration Fingerprint
 
-A **spectral fingerprint** is a homotopy invariant. Two fibrations F, F' are in the same homotopy class [F] if and only if they have the same spectral fingerprint (eigenvalues of the sheaf Laplacian). The fingerprint is PUBLIC — anyone can verify it. But the fibration itself (the Laplacian Δ, the restriction maps, the Hodge decomposition) is SECRET.
+The **public identity** is a `HomotopyClassFingerprint` — a composite of spectral, cohomological, and homotopical invariants (see `invariants/unified.py`). Two fibrations are in the same homotopy class when *all* matched invariants agree. The fingerprint is PUBLIC — anyone can verify it. But the fibration itself (the Laplacian Δ, the restriction maps, the Hodge decomposition) is SECRET.
+
+> **Note:** Bare spectral fingerprints (eigenvalues alone) are *finer* than homotopy class — two fibrations can share Betti numbers but have different spectra (`Spectrum_Not_Homotopy_Invariant` in `math_audit_hcrypt.lean`). The system uses the full unified fingerprint to characterize the homotopy class itself, not just the isospectral set.
 
 ```
-                    ┌─────────────────────────────────┐
-  Fibration F₁ ──→ │                                 │
-  Fibration F₂ ──→ │  Same spectral fingerprint S    │ ← PUBLIC (verifiable)
-  Fibration F₃ ──→ │  spec(Δ_F₁) = spec(Δ_F₂) = …  │
-       ⋮           │                                 │
-  Fibration F_∞──→ │  |[F]| = ∞                      │ ← INFINITE class
-                    └─────────────────────────────────┘
+                    ┌──────────────────────────────────────────┐
+  Fibration F₁ ──→ │                                          │
+  Fibration F₂ ──→ │  Same unified fingerprint U              │ ← PUBLIC
+  Fibration F₃ ──→ │  (spectral + cohomological + homotopical │
+       ⋮           │   invariants all match)                  │
+  Fibration F_∞──→ │  |[F]| = ∞                               │ ← INFINITE
+                    └──────────────────────────────────────────┘
                               │
                               ▼
-                    Prover: "I know SOME F_i"
-                    Verifier learns: S (the fingerprint)
+                    Prover: "I know SOME F_i in [F]"
+                    Verifier learns: U (the unified fingerprint)
                     Verifier learns: NOTHING about which F_i
                     Adversary's advantage: 1/|[F]| = 1/∞ = 0
 ```
@@ -296,16 +300,16 @@ The mathematical foundation is Helfer's first-order homotopical logic ([arXiv:19
 
 | Helfer (2019) | What it is | Implementation | File |
 |---|---|---|---|
-| **h=-fibration** (Def 2.1.3) | Categorical structure interpreting logic over a base | `FibrationCredential` — the key triple (topology, fibration, spectrum) | `crypto/credential.py` |
-| **Diagonal Δ: A → A×A** (§3.2) | Equality interpreted as path space, not strict equality | Spectral fingerprint matching — fingerprints on the diagonal ⟹ equivalent | `proofs/homotopy.py` |
-| **Σ-type (∃x.P(x))** — dependent sum (§2.3) | Existential: "there exists a witness" | **Encryption** — "∃ message in ker(Δ)" (witness hidden in harmonic subspace) | `crypto/encrypt.py` |
-| **Π-type (∀x.P(x))** — dependent product (§2.3) | Universal: "for all fibers, a section exists" | **Decryption** — "∀ vertices, the cochain agrees" (global section recovery) | `crypto/decrypt.py` |
-| **Homotopy invariance** (Thm 3.4.1) | Homotopy-equivalent structures satisfy the same first-order sentences | **Anonymity** — all fibrations in [F] are indistinguishable → |[F]| = ∞ | `proofs/anonymity.py` |
-| **Path space Path(F,G)** (§3.1) | Space of homotopy equivalences between two fibrations | ZK witness — prover knows a path without revealing it | `proofs/homotopy.py` |
-| **Spectral invariants of Δ** | Eigenvalues of the Laplacian are homotopy invariants | Spectral fingerprint = public identity (same for all F ∈ [F]) | `crypto/credential.py` |
-| **Grothendieck fibration** (§2.1) | Functor with cartesian lifting of morphisms | Cellular sheaf over Čech nerve with restriction maps | `geometry/sheaf.py` |
-| **Free h=-fibration** (Thm A.2) | Universal syntactic object for the theory | Constraint that makes forgery require solving CVP on the lattice | `invariants/homotopical.py` |
-| **Fibration morphisms** (Def 2.1.4) | Structure-preserving maps between fibrations | Parallel transport along paths in the nerve | `geometry/fiber_bundle.py` |
+| **h=-fibration** (Def 4.3) | Fibration with fiberwise products, coproducts, exponentials, indexed Σ/Π, equality objects | `FibrationCredential` — the key triple (topology, fibration, spectrum) | `crypto/credential.py` |
+| **Diagonal Δ: A → A×A** (§2, Def 4.3(iv)) | Equality as path space — pullback of Δ gives "a = b iff joined by a path" | Unified fingerprint matching — fingerprints on the diagonal ⟹ equivalent | `proofs/homotopy.py` |
+| **Σ-type / indexed sum Σ_π** (Def 4.2–4.3) | Existential: "there exists a witness" | **Encryption** — "∃ message in ker(Δ)" (witness hidden in harmonic subspace) | `crypto/encrypt.py` |
+| **Π-type / indexed product Π_π** (Def 4.2–4.3) | Universal: "for all fibers, a section exists" | **Decryption** — "∀ vertices, the cochain agrees" (global section recovery) | `crypto/decrypt.py` |
+| **Homotopy invariance** (Thm 12.3) | Homotopy-equivalent structures satisfy the same first-order sentences | **Anonymity** — all fibrations in [F] are indistinguishable → |[F]| = ∞ | `proofs/anonymity.py` |
+| **Path space** (§§6–7) | Space of homotopy equivalences between two structures | ZK witness — prover knows a path without revealing it | `proofs/homotopy.py` |
+| **Spectral invariants of Δ** (Hansen-Ghrist) | Eigenvalues of the sheaf Laplacian are homotopy invariants | Unified fingerprint (spectral + Betti + cohomological) = public identity | `crypto/credential.py` |
+| **Grothendieck fibration** (§4, [Hel20]) | Fibration with cartesian lifting of morphisms | Cellular sheaf over Čech nerve with restriction maps | `geometry/sheaf.py` |
+| **Free h=-fibration** (Prop 15.3) | Universal syntactic object — morphisms out of it = interpretations | Constraint that makes forgery require solving CVP on the lattice | `invariants/homotopical.py` |
+| **Fibration morphisms** (Def 4.4) | Structure-preserving maps between fibrations | Parallel transport along paths in the nerve | `geometry/fiber_bundle.py` |
 | **Hodge decomposition** C^k = H^k ⊕ im(δ) ⊕ im(δ*) | Orthogonal splitting of cochains (Hansen-Ghrist) | Message in ker(Δ), noise in exact⊕coexact complement | `geometry/hodge.py` |
 
 ### Papers
@@ -321,7 +325,7 @@ PoV replaces Proof of Work (wasted energy) and Proof of Stake (plutocratic) with
 
 ### Why √2?
 
-The diagonal functor Δ: Spec → Spec × Spec maps a spectral fingerprint to the pair (s, s). The maximum distance from the diagonal to a corner of the unit square is 1/√2, and the diagonal itself has length √2. This gives natural bounds:
+The diagonal morphism Δ: U → U × U (Helfer Def 4.3(iv)) maps a unified fingerprint to the pair (u, u). The maximum distance from the diagonal to a corner of the unit square is 1/√2, and the diagonal itself has length √2. This gives natural bounds on the spectral gap:
 
 ```
 Valid spectral gap λ₁ must satisfy:
@@ -488,15 +492,77 @@ src/
 
 See [docs/LAYER1_ROADMAP.md](docs/LAYER1_ROADMAP.md) for detailed status.
 
-## vs Other L1s
+## How It Compares
 
-| Feature | Homotopical | Bitcoin | Ethereum | Monero |
-|---------|-------------|---------|----------|--------|
-| Privacy by default | ✅ | ❌ | ❌ | ✅ |
-| Post-quantum | ✅ | ❌ | ❌ | ❌ |
-| Smart contracts | ✅ (WASM) | ❌ | ✅ | ❌ |
-| Provable security | ✅ | ❌ | ❌ | ❌ |
-| Panopticon resilient | ✅ | ❌ | ❌ | ⚠️ |
+### vs Monero (Privacy)
+
+Monero hides the real signer among N decoys in a **ring signature** (currently N=16). The anonymity set is finite and chosen at transaction time. Chain analysis can sometimes narrow the set by eliminating known-spent outputs.
+
+hcrypt replaces ring signatures with **homotopy class membership**: you prove you know *some* fibration whose unified invariants match a public fingerprint, without revealing which one. The anonymity set is the entire homotopy class — infinite by construction, not chosen by a parameter. There are no decoys to analyze.
+
+| | Monero | hcrypt |
+|---|---|---|
+| Anonymity primitive | Ring signature (N=16 decoys) | Homotopy class membership (|[F]|=∞) |
+| Anonymity set size | Finite, chosen at tx time | Infinite, structural |
+| Quantum resistance | ❌ ECDLP (broken by Shor) | ✅ CVP on ker(Δ) (post-quantum) |
+| Metadata leakage | Decoy selection patterns | No decoys → no selection metadata |
+| Amounts hidden | RingCT (Pedersen commitments) | Cochain commitments (δ-homomorphic) |
+| Double-spend | Key images | Key images (same concept, geometric construction) |
+| Formal verification | None | `hardness_proof.lean` (Hodge → CVP, strictly harder) |
+
+### vs Cardano (Formal Methods)
+
+Cardano pioneered formal verification in blockchain (Haskell, Agda proofs). hcrypt takes a different approach: rather than verifying the *protocol*, it verifies the *hardness assumption* itself. `hardness_proof.lean` is a machine-checked proof that breaking the system requires solving a problem strictly harder than CVP.
+
+| | Cardano | hcrypt |
+|---|---|---|
+| Formal methods | Protocol specification (Ouroboros in Agda) | Hardness proof (Lean 4 + Mathlib) |
+| What's verified | "Protocol follows spec" | "Breaking this requires solving CVP+" |
+| Consensus | Ouroboros (PoS, slot lottery) | Proof of Value (spectral geometry) |
+| Privacy | Optional (Midnight sidechain) | Default (every transaction) |
+| Validator selection | Stake-weighted VRF | Spectral centrality + VRF |
+| Smart contracts | Plutus (Haskell) | WASM (planned) |
+
+### vs Holochain (Architecture)
+
+Holochain replaces global consensus with **agent-centric validation** — each agent maintains their own hash chain, validated by peers using application-specific rules. hcrypt does an analogous thing at the cryptographic layer: each credential is a *fiber* in a Grothendieck fibration, validated locally by geometric invariant checks rather than global state agreement.
+
+| | Holochain | hcrypt |
+|---|---|---|
+| Architecture | Agent-centric (each agent has own chain) | Fibration-centric (each credential is a fiber) |
+| Validation | Application rules (Wasm DNA) | Geometric invariants (Hodge + spectral) |
+| Global consensus | None (local validation only) | Proof of Value (minimal — spectral check) |
+| Scalability model | No global bottleneck | Sheaf-local validation |
+| Privacy | Application-level | Structural (homotopy class) |
+| Data model | DHT with validation rules | Cellular sheaves over nerve complex |
+
+The key difference: Holochain's validation is rule-based (application-specific); hcrypt's validation is *geometric* (Hodge decomposition, Betti numbers, spectral gaps) — provably sound from the mathematics, not just conventionally agreed upon.
+
+### vs Mixnets (Network Privacy)
+
+Classical mixnets (Nym, Loopix) provide network-layer anonymity through onion encryption + mixing delays. hcrypt's `OnionRouter` and `MixingNode` (in `geometry/fiber_bundle.py`) implement the same pattern, but with **parallel transport** along the fiber bundle instead of generic symmetric encryption.
+
+| | Nym / Loopix | hcrypt onion routing |
+|---|---|---|
+| Encryption per hop | AES/ChaCha (symmetric) | Orthogonal rotation (parallel transport) |
+| Mixing | Poisson delay at each node | `MixingNode` with configurable delay |
+| Key management | Sphinx packet headers | Fiber bundle connection matrices |
+| Anonymity guarantee | Computational (break one key = break one layer) | Geometric (invert holonomy = Hodge-hardness) |
+| Cover traffic | Explicit dummy packets | Hodge-structured noise in im(δ)⊕im(δ*) |
+
+The structural advantage: in a classical mixnet, each hop's anonymity is independent. In hcrypt's fiber bundle routing, the hops are connected by the holonomy of the Grothendieck fibration — breaking the route requires inverting the holonomy, which is the same hard problem as the core encryption.
+
+### Summary Table
+
+| Feature | Bitcoin | Ethereum | Monero | Cardano | Holochain | **hcrypt** |
+|---------|---------|----------|--------|---------|-----------|------------|
+| Privacy by default | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
+| Post-quantum | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Formal hardness proof | ❌ | ❌ | ❌ | ⚠️ protocol | ❌ | ✅ Lean 4 |
+| Infinite anonymity set | ❌ | ❌ | ❌ (N=16) | ❌ | ❌ | ✅ |
+| Agent-local validation | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| Geometric security | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Panopticon resilient | ❌ | ❌ | ⚠️ | ❌ | ❌ | ✅ |
 
 ## License
 

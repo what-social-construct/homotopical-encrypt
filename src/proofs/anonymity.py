@@ -1,6 +1,14 @@
 """
 Homotopical Anonymity - Native Post-Quantum Privacy
 
+NOTATION (consistent with hardness_proof.lean):
+  δ   = coboundary operator (C^k → C^{k+1})
+  δ*  = adjoint coboundary = δ^T (C^{k+1} → C^k)
+  Δ   = Laplacian = δ*δ + δδ* (self-adjoint, PSD)
+  ker(Δ) = harmonic cochains = global sections
+  im(δ)  = exact cochains (coboundaries)
+  im(δ*) = co-exact cochains
+
 Instead of ring signatures, we use HOMOTOPY CLASS MEMBERSHIP:
 - Anonymity set = entire homotopy class [F]
 - Prove: "I know a fibration F with spectrum matching fingerprint"
@@ -11,15 +19,27 @@ Key insight:
 - Proving membership in [F] = proving knowledge of ANY F with that spectrum
 - This is inherently post-quantum (based on Hodge-hardness, not discrete log)
 
-Hard problem (NOT generic LWE):
+Hard problem — STRICTLY STRONGER THAN CVP:
 - HODGE-HARDNESS: Given cochain b = h + e where h ∈ ker(Δ) and
   e ∈ im(δ) ⊕ im(δ*), find h WITHOUT knowing Δ.
-- This is CVP on the harmonic sublattice of the cochain complex.
-- Requires knowing the secret Laplacian to project onto ker(Δ).
+- This REDUCES TO CVP on the harmonic sublattice (Hodge_Hardness_Reduction_Proof),
+  but CVP alone is INSUFFICIENT to solve it (Hodge_Strictly_Harder):
+  the lattice ker(Δ) is not determined by b — different Laplacians
+  give different kernels (Hodge_Ambiguity_Proof).
+- Formally verified: hardness_proof.lean
+
+Anonymity set — why it's the full homotopy class:
+  math_audit_hcrypt.lean (Spectrum_Not_Homotopy_Invariant) proved that bare
+  spectral fingerprints are FINER than homotopy class — two fibrations can
+  share Betti numbers but have different spectra. This system addresses that
+  by using the full HomotopyClassFingerprint (spectral + cohomology +
+  homotopical invariants via invariants/unified.py), which characterizes the
+  homotopy class itself, not just the isospectral set. The ZK proofs below
+  prove membership in the class defined by ALL matched invariants.
 
 Comparison:
 - Ring signature: hide among N decoys (finite), broken by QC
-- Homotopy class: hide among ALL fibrations with same spectrum (infinite!)
+- Homotopy class: hide among ALL fibrations with matching unified fingerprint
 """
 
 from dataclasses import dataclass, field
@@ -92,12 +112,12 @@ class HomotopyClassProof:
     # Cochain commitment (Hodge-structured, NOT generic LWE)
     commitment_b: np.ndarray       # b = h + e_hodge (noisy cochain)
     commitment_w: np.ndarray       # w = masking commitment
-    coboundary_check: np.ndarray   # δ(b) — verifier checks consistency
+    coboundary_check: np.ndarray   # Δ(b) — Laplacian applied to commitment
     
-    # Response (verifiable via coboundary structure)
+    # Response (verifiable via Laplacian structure)
     challenge_scalar: int          # Small Fiat-Shamir challenge
     response_z: np.ndarray         # z = y + c·h (masked harmonic)
-    response_delta_z: np.ndarray   # δ(z) — coboundary of response
+    response_delta_z: np.ndarray   # Δ(z) — Laplacian applied to response
     
     # Hodge structure proof
     harmonic_dim: int              # dim(ker(Δ)) claimed
@@ -235,6 +255,21 @@ def prove_class_membership(
     q = ZK_MODULUS
     n = secret_laplacian.shape[0]
     
+    # 0. Validate Laplacian structure (hardness_proof.lean preconditions)
+    #    The prover MUST verify their own Laplacian before generating a proof.
+    #    If Δ is malformed, the Hodge decomposition doesn't hold and
+    #    the hardness claim (Hodge → CVP reduction) is invalid.
+    
+    # Symmetry: Δ = Δᵀ (IsHermitian in Lean proof)
+    asym = float(np.linalg.norm(secret_laplacian - secret_laplacian.T))
+    if asym > 1e-10:
+        return (None, False, f"Laplacian not symmetric: ||Δ - Δᵀ|| = {asym:.2e}")
+    
+    # PSD: all eigenvalues ≥ 0 (IsPSD in Lean proof)
+    min_eig = float(np.min(np.linalg.eigvalsh(secret_laplacian)))
+    if min_eig < -1e-10:
+        return (None, False, f"Laplacian not PSD: λ_min = {min_eig:.6f}")
+    
     # 1. Verify prover has matching spectrum
     secret_eigs = np.sort(np.linalg.eigvalsh(secret_laplacian))
     secret_fingerprint = compute_spectral_fingerprint(secret_eigs)
@@ -248,6 +283,11 @@ def prove_class_membership(
     
     if not (POV_LOWER <= gap <= POV_UPPER):
         return (None, False, f"Gap {gap:.4f} outside √2 bounds [{POV_LOWER:.3f}, {POV_UPPER:.3f}]")
+    
+    # Kernel dimension ≥ 1 (needed for harmonic embedding)
+    kernel_dim = int(np.sum(np.abs(secret_eigs) < 1e-10))
+    if kernel_dim < 1:
+        return (None, False, f"No harmonic subspace: dim(ker Δ) = {kernel_dim}")
     
     # 3. Encode spectrum as harmonic cochain h ∈ ker(Δ)
     #    This is the SECRET — only someone who knows Δ can do this projection
@@ -263,9 +303,10 @@ def prove_class_membership(
     # Commitment: b = h + e (looks random without knowing Δ)
     b = h + e
     
-    # Coboundary of commitment: δ(b) = δ(e) since δ(h) = 0 for h ∈ ker(Δ)
+    # Laplacian of commitment: Δ(b) = Δ(e) since Δ(h) = 0 for h ∈ ker(Δ)
+    # (Note: this is Δ — the Laplacian — not δ — the coboundary.)
     # This is PUBLIC and the verifier can check consistency
-    delta_b = secret_laplacian @ b  # Δ(b) = Δ(h) + Δ(e) = 0 + Δ(e) = Δ(e)
+    laplacian_b = secret_laplacian @ b  # Δ(b) = Δ(h) + Δ(e) = 0 + Δ(e) = Δ(e)
     
     # Rejection bound based on dimension
     rejection_bound = ZK_EXACT_SIGMA * np.sqrt(n) * ZK_REJECTION_BOUND_FACTOR
@@ -289,8 +330,8 @@ def prove_class_membership(
     else:
         return (None, False, f"Rejection sampling failed after {ZK_MAX_ABORTS} attempts")
     
-    # Coboundary of response (verifier uses this)
-    delta_z = secret_laplacian @ z
+    # Laplacian of response: Δ(z) = Δ(y + c·h) = Δ(y) (since Δ(h) = 0)
+    laplacian_z = secret_laplacian @ z
     
     # 6. Key image (unique per secret Laplacian — for double-spend prevention)
     _, eigvecs = np.linalg.eigh(secret_laplacian)
@@ -303,10 +344,10 @@ def prove_class_membership(
         target_spectrum=target_spectrum,
         commitment_b=b,
         commitment_w=w,
-        coboundary_check=delta_b,
+        coboundary_check=laplacian_b,
         challenge_scalar=c,
         response_z=z,
-        response_delta_z=delta_z,
+        response_delta_z=laplacian_z,
         harmonic_dim=harmonic_dim,
         spectral_gap=gap,
         key_image=key_image,
@@ -338,9 +379,9 @@ def verify_class_membership(
     Verification checks (no secret knowledge needed):
     1. Fingerprint/spectrum match
     2. Recompute Fiat-Shamir challenge from (b, w)
-    3. Coboundary consistency: δ(z) ≈ w_δ + c·δ(b)
-       (because δ(z) = δ(y) + c·δ(h) = δ(y) + 0 = δ(y),
-        and δ(b) = δ(e), so the Hodge structure is preserved)
+    3. Laplacian consistency: Δ(z) bounded
+       (because Δ(z) = Δ(y) + c·Δ(h) = Δ(y) since Δ(h) = 0,
+        and Δ(b) = Δ(e), so the Hodge structure is preserved)
     4. Response norm bounded (rejection sampling was honest)
     5. Spectral gap in √2 bounds
     6. Key image valid

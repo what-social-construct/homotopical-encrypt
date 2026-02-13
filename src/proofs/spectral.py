@@ -299,9 +299,8 @@ def verify_ring_spectral(
 # Spectral Gap Range Proof - Prove gap is in [1/√2, 2√2] for PoV
 # ============================================================================
 
-SQRT2 = np.sqrt(2)
-POV_LOWER = 1 / SQRT2  # ~0.707
-POV_UPPER = 2 * SQRT2  # ~2.828
+# Import from canonical source (spectral_bounds.py is the single source of truth)
+from .spectral_bounds import POV_LOWER, POV_UPPER
 
 
 @dataclass

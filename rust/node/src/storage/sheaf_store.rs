@@ -235,7 +235,17 @@ impl SheafStore {
     }
     
     /// Project from private to public (dim 256 → dim 1)
-    /// This is a natural transformation!
+    ///
+    /// This is η₂: F_zk → F_hash, implemented as COORDINATE EXTRACTION
+    /// (data[0] = spectral gap scalar), NOT as the Hodge projection π_H.
+    ///
+    /// The Hodge projection π_H: C^k → ker(Δ) is computed in Python
+    /// (geometry/hodge.py) and lives in the encryption/decryption path.
+    /// By the time data reaches Rust storage, the heavy geometry is done.
+    /// This η₂ just extracts the consensus-relevant scalar (spectral gap).
+    ///
+    /// See hardness_proof.lean: the Hodge→CVP reduction applies to π_H
+    /// (encryption), not to this storage projection.
     pub fn project_to_public(&self, vertex_id: u64) -> Result<Option<Stalk>> {
         if let Some(private_stalk) = self.get_stalk(StalkContext::Private, vertex_id)? {
             // Simple projection: take first component (or sum, or custom logic)

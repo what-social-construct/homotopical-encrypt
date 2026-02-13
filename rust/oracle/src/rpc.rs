@@ -95,9 +95,9 @@ pub enum RpcResponse {
 pub struct CommitmentResponse {
     pub success: bool,
     pub vertex_id: u64,
-    pub fingerprint: String,  // Hex-encoded (raw bytes)
+    pub identity_hash: String,  // Hex-encoded SHA256(betti + topology_hash)
     pub harmonic_components: Vec<HarmonicComponent>,  // Unique values with multiplicities
-    pub spectral_gap: f64,
+    pub spectral_gap_valid: bool,
     pub betti_numbers: (i32, i32, i32),
 }
 
@@ -117,9 +117,9 @@ pub struct QueryResponse {
 #[derive(Debug, Serialize)]
 pub struct HashStalkJson {
     pub vertex_id: u64,
-    pub fingerprint: String,  // Raw bytes hex
-    pub harmonic_components: Vec<HarmonicComponent>,  // Values with multiplicities
-    pub spectral_gap: f64,
+    pub identity_hash: String,  // SHA256(betti + topology_hash), hex
+    pub harmonic_components: Vec<HarmonicComponent>,  // Unique values with multiplicities
+    pub spectral_gap_valid: bool,
     pub betti_numbers: (i32, i32, i32),
     pub topology_hash: String,
     pub computed_at: u64,
@@ -234,9 +234,9 @@ impl OracleRpc {
                 RpcResponse::Commitment(CommitmentResponse {
                     success: true,
                     vertex_id: hash_stalk.vertex_id,
-                    fingerprint: hex::encode(hash_stalk.fingerprint),
-                    harmonic_components: extract_harmonic_components(&hash_stalk.fingerprint),
-                    spectral_gap: hash_stalk.spectral_gap,
+                    identity_hash: hex::encode(hash_stalk.identity_hash),
+                    harmonic_components: extract_harmonic_components(&hash_stalk.identity_hash),
+                    spectral_gap_valid: hash_stalk.spectral_gap_valid,
                     betti_numbers: hash_stalk.betti_numbers,
                 })
             }
@@ -258,9 +258,9 @@ impl OracleRpc {
                     found: true,
                     commitment: Some(HashStalkJson {
                         vertex_id: commitment.vertex_id,
-                        fingerprint: hex::encode(commitment.fingerprint),
-                        harmonic_components: extract_harmonic_components(&commitment.fingerprint),
-                        spectral_gap: commitment.spectral_gap,
+                        identity_hash: hex::encode(commitment.identity_hash),
+                        harmonic_components: extract_harmonic_components(&commitment.identity_hash),
+                        spectral_gap_valid: commitment.spectral_gap_valid,
                         betti_numbers: commitment.betti_numbers,
                         topology_hash: hex::encode(commitment.topology_hash),
                         computed_at: commitment.computed_at,

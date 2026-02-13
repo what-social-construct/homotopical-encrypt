@@ -2,12 +2,49 @@
 Stalk Primitive: The Fiber at a Point
 
 A stalk is the local state space at a vertex of the topology.
-Different contexts need different stalk structures:
+Different contexts need different stalk structures, corresponding
+to the THREE LEVELS of the hardness hierarchy (hardness_proof.lean):
 
-CONTEXTS:
-- ENCRYPTION: High-dim (256) for LWE security
-- CONSENSUS:  Low-dim (1) for public commitments  
-- ZK PROOFS:  Connects private→public via projection
+CONTEXTS (from hardness hierarchy):
+
+  NOTE ON DIMENSIONS: Each dim below is the per-vertex vector space
+  dimension (number of entries in the stalk's numpy array at ONE
+  vertex). The TOTAL credential size also includes restriction maps
+  (d×d matrix per edge) and metadata — see size estimates below.
+
+  PRIVATE (hcrypt level, per-vertex dim = λ = 256):
+    Full fibration secret. Recovering this requires solving
+    Hodge-hardness: find h ∈ ker(Δ) from b = h + e without
+    knowing Δ. Strictly harder than CVP (Hodge_Strictly_Harder).
+    Per-vertex stalk = λ entries (harmonic secret + Hodge noise margin + metadata).
+    Total credential size (typical 3-vertex, 3-edge topology):
+      stalks:          3 × 256        =       768  ℤ_q entries
+      restriction maps: 3 × 256 × 256 =   196,608  ℤ_q entries
+      at q = 2^15 (2 bytes/entry):    ≈     384 KB
+    The restriction maps (edge_keys) dominate storage. They are
+    the fibration secret — the connection on the Grothendieck fibration.
+    
+  ZK (CVP level, per-vertex dim = 32):
+    Lattice projection of the Hodge problem. The Hodge-hardness
+    problem projects onto CVP on the harmonic sublattice ker(Δ) ⊂ ℤ_q^n
+    via the forgetful functor that discards the topology. 32 entries
+    per vertex: commitment (16) + blinding factor (16). An attacker
+    at this level can solve CVP but cannot determine ker(Δ) without
+    the full fibration — the projection is not invertible.
+    
+  PUBLIC (SHA256 level, per-vertex dim = 32):
+    Hash commitments. SHA-256 output = 256 bits = 32 bytes.
+    On-chain identity = SHA256(Betti numbers ‖ topology hash).
+    The output of the natural transformation η: F_full → F_hash.
+    32 bytes per vertex on chain.
+
+The projection PRIVATE → PUBLIC is a NONLINEAR FUNCTOR:
+  π(credential) = (Betti_numbers, topology_hash)
+  This is NOT a matrix multiplication — it requires eigendecomposition
+  of Δ to count near-zero eigenvalues (Betti numbers), then hashing.
+  Implemented in credential.py:project_to_public().
+  The StalkProjection matrix is a LINEAR APPROXIMATION used for
+  fast stalk-level operations within a single context.
 
 ARCHITECTURE (local-to-global coherence):
 
@@ -48,10 +85,13 @@ import hashlib
 
 
 class StalkContext(Enum):
-    """The context in which a stalk is used."""
-    PRIVATE = "private"      # Full credential state (LWE encrypted)
-    PUBLIC = "public"        # Commitment/balance (transparent)
-    ZK = "zk"               # Zero-knowledge intermediate
+    """
+    Stalk context — reflects the hardness hierarchy:
+    PRIVATE (hcrypt) → ZK (CVP) → PUBLIC (SHA-256)
+    """
+    PRIVATE = "private"      # Full fibration secret (hcrypt level)
+    ZK = "zk"               # Lattice projection (CVP level)
+    PUBLIC = "public"        # Hash commitment (SHA-256 level)
     
 
 @dataclass
@@ -81,11 +121,11 @@ PRIVATE_STALK = StalkSpec(
     context=StalkContext.PRIVATE,
     dimension=256,
     name="PrivateStalk",
-    description="Full credential state for LWE encryption",
+    description="Full fibration secret (hcrypt level)",
     fields={
-        "lwe_secret": 128,    # LWE secret component
-        "noise_margin": 64,   # Error tolerance
-        "metadata": 64        # Additional state
+        "harmonic_secret": 128,  # Harmonic component h ∈ ker(Δ)
+        "hodge_noise": 64,       # Noise margin in im(δ)⊕im(δ*)
+        "metadata": 64           # Additional state
     }
 )
 
@@ -314,13 +354,13 @@ class StalkBundle:
 # =============================================================================
 
 def create_private_stalk(
-    lwe_secret: np.ndarray,
-    noise_margin: np.ndarray,
+    harmonic_secret: np.ndarray,
+    hodge_noise: np.ndarray,
     metadata: np.ndarray,
     vertex_id: Optional[int] = None
 ) -> Stalk:
     """Create a private stalk with explicit fields."""
-    data = np.concatenate([lwe_secret, noise_margin, metadata])
+    data = np.concatenate([harmonic_secret, hodge_noise, metadata])
     return Stalk(spec=PRIVATE_STALK, data=data, vertex_id=vertex_id)
 
 
@@ -351,8 +391,8 @@ if __name__ == "__main__":
     # Create private stalk
     print("\n1. Creating private stalk...")
     private = create_private_stalk(
-        lwe_secret=np.random.randn(128),
-        noise_margin=np.random.randn(64),
+        harmonic_secret=np.random.randn(128),
+        hodge_noise=np.random.randn(64),
         metadata=np.random.randn(64),
         vertex_id=0
     )

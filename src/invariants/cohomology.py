@@ -14,6 +14,12 @@ from dataclasses import dataclass
 from typing import Dict, List, Tuple, Optional
 import numpy as np
 
+from .harmonic import (
+    validate_laplacian_construction,
+    validate_hodge_orthogonality,
+    hodge_decompose,
+)
+
 
 # ============================================================================
 # COHOMOLOGY INVARIANT DATA STRUCTURES
@@ -487,21 +493,28 @@ class CohomologyInvariantValidator:
         ))
     
     def _check_hodge_sum(self):
-        """Hodge ratios should sum to ≤ 1."""
+        """
+        Hodge ratios must sum to 1 (Hodge decomposition theorem).
+        
+        C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ*) — orthogonal, spans full space.
+        Formally verified: Hodge_Decomposition_Theorem in hardness_proof.lean.
+        """
         total = (
             self.invariants.harmonic_ratio + 
             self.invariants.exact_ratio + 
             self.invariants.coexact_ratio
         )
-        # Note: Can be < 1 due to overlaps/numerical issues
-        passed = total <= 1.0 + 0.1  # Small tolerance
+        # Must equal 1 (Hodge theorem: three subspaces span C^k)
+        # Tolerance for numerical eigenvalue computation
+        # Lean proof is exact. Tolerance = float precision for integer dimensions.
+        passed = abs(total - 1.0) < 1e-6
         
         self.checkpoints.append(CohomologyCheckpoint(
             name="Hodge decomposition",
             passed=passed,
-            expected="H + E + C ≤ 1",
+            expected="H + E + C = 1 (Hodge theorem)",
             actual=f"{self.invariants.harmonic_ratio:.2f} + {self.invariants.exact_ratio:.2f} + {self.invariants.coexact_ratio:.2f} = {total:.2f}",
-            severity="warning"
+            severity="critical"
         ))
     
     def _check_h1_obstructions(self):

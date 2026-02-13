@@ -520,7 +520,28 @@ class SheafState:
         return gap
     
     def _compute_spectral_gap(self, nerve: Dict[int, List[Tuple]]) -> float:
-        """Compute spectral gap from nerve."""
+        """
+        Compute spectral gap from nerve using the GRAPH Laplacian.
+        
+        IMPORTANT DISTINCTION (two Laplacians in this system):
+        
+        1. GRAPH Laplacian (L = D - A, computed HERE):
+           - Measures NETWORK CONNECTIVITY between accounts
+           - Used for CONSENSUS: spectral gap = PoV eligibility
+           - Topology changes when accounts connect (add_connection)
+           - Cheap to compute: O(|V| + |E|)
+        
+        2. SHEAF Laplacian (Δ = δ*δ, computed in geometry/sheaf_laplacian.py):
+           - Measures FIBER COHERENCE of restriction maps
+           - Used for ENCRYPTION: ker(Δ) = message subspace
+           - Structure set at keygen (credential.fibration.sheaf)
+           - Expensive: O(n³) eigendecomposition
+        
+        These are DIFFERENT objects with different purposes.
+        The hardness_proof.lean Hodge→CVP reduction applies to the
+        sheaf Laplacian (encryption security). The graph Laplacian
+        here is purely for consensus weight / network health.
+        """
         n = len(nerve.get(0, []))
         if n < 2:
             return 0.0

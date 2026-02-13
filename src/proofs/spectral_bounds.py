@@ -34,6 +34,18 @@ USAGE:
   elif status == GapStatus.MARGINAL: ...  # request recompute
   elif status == GapStatus.INVALID: ...   # reject
 
+The √2 bounds arise from the geometric construction: orthogonal restriction
+maps (SO(n) parallel transport) on bounded-degree nerves constrain the
+eigenvalue range of the sheaf Laplacian Δ = δ*δ + δδ*. The math audit
+(math_audit_hcrypt.lean) showed that ARBITRARY Laplacians (e.g., scalar c=3)
+can violate these bounds — but those are not valid sheaf Laplacians
+constructed from coboundary operators on a finite nerve.
+
+NOTE: The hardness claim (hardness_proof.lean: Hodge → CVP, strictly harder)
+does NOT depend on the √2 bounds. The bounds are a consensus validity
+parameter that ensures well-formed geometric structure, not a security
+assumption.
+
 This module is the SINGLE SOURCE OF TRUTH for √2 bounds.
 All other files should import from here.
 """

@@ -63,6 +63,11 @@ from .cohomology import (
     CohomologyInvariantValidator,
     cohomology_match
 )
+from .harmonic import (
+    validate_laplacian_construction,
+    validate_hodge_orthogonality,
+    hodge_decompose,
+)
 
 
 # ============================================================================
@@ -226,26 +231,34 @@ class UnifiedInvariantValidator:
         """
         Run ALL invariant checkpoints.
         
+        Ordered cheap → expensive, fail-fast on critical.
+        
         Returns (overall_pass, list_of_checkpoints)
         """
         self.checkpoints = []
         
-        # ========== SPECTRAL INVARIANTS ==========
-        self._check_spectral_symmetry()
-        self._check_spectral_psd()
-        self._check_spectral_gap_bounds()
-        self._check_spectral_condition()
-        self._check_kernel_dimension()
-        
-        # ========== COHOMOLOGY INVARIANTS ==========
+        # ── TIER 1: O(1) structural checks (cheapest, fail first) ──
         self._check_finite_nerve()
         self._check_simplicial()
         self._check_connected()
-        self._check_cochain_complex()
         self._check_euler()
-        self._check_hodge()
         
-        # ========== HOMOTOPICAL LOGIC INVARIANTS ==========
+        # ── TIER 2: O(n²) operator checks ──
+        self._check_spectral_symmetry()
+        self._check_spectral_psd()
+        self._check_cochain_complex()          # δ²=0
+        self._check_laplacian_construction()    # Δ = δ*δ + δδ*
+        
+        # ── TIER 3: O(n²) spectral checks ──
+        self._check_spectral_gap_bounds()
+        self._check_kernel_dimension()
+        self._check_spectral_condition()
+        
+        # ── TIER 4: O(n³) Hodge structure (hardness_proof.lean) ──
+        self._check_hodge()                    # H + E + C = 1
+        self._check_hodge_orthogonality()      # ⟨h,e⟩=⟨h,ce⟩=⟨e,ce⟩=0
+        
+        # ── TIER 5: Homotopical logic ──
         self._check_h_level()
         self._check_path_space()
         self._check_sigma_rank()
@@ -264,12 +277,18 @@ class UnifiedInvariantValidator:
         """
         Validate only checkpoints relevant to a specific pipeline stage.
         
+        Every stage that touches the hardness claim MUST include:
+        - cochain complex (δ²=0)
+        - Laplacian construction (Δ = δ*δ + δδ*)
+        - Hodge sum (H + E + C = 1)
+        - Hodge orthogonality (⟨h,e⟩ = ⟨h,ce⟩ = ⟨e,ce⟩ = 0)
+        
         Stages:
-        - "keygen": All checkpoints (new fibration must be fully valid)
-        - "encrypt": Spectral + cohomology (need valid topology)
-        - "decrypt": Spectral (need valid Laplacian for projection)
-        - "zk_prove": All checkpoints (proving fingerprint validity)
-        - "transaction": Cohomology + homotopical (structural matching)
+        - "keygen":      ALL (new fibration must be fully valid)
+        - "encrypt":     Structural + Hodge (valid decomposition for encoding)
+        - "decrypt":     Spectral + Laplacian (valid projection)
+        - "zk_prove":    ALL (proving fingerprint validity)
+        - "transaction": Structural + Hodge + homotopical (hardness claim)
         """
         self.checkpoints = []
         
@@ -277,22 +296,38 @@ class UnifiedInvariantValidator:
             return self.validate_all()
         
         elif stage == "encrypt":
-            self._check_spectral_psd()
-            self._check_spectral_gap_bounds()
+            # Need valid Hodge decomposition for message encoding
             self._check_finite_nerve()
             self._check_connected()
+            self._check_spectral_psd()
+            self._check_spectral_gap_bounds()
             self._check_cochain_complex()
+            self._check_laplacian_construction()
+            self._check_hodge()
+            self._check_hodge_orthogonality()
         
         elif stage == "decrypt":
+            # Need valid Laplacian for harmonic projection
             self._check_spectral_symmetry()
             self._check_spectral_psd()
             self._check_kernel_dimension()
+            self._check_laplacian_construction()
         
         elif stage == "zk_prove":
             return self.validate_all()
         
         elif stage == "transaction":
+            # FULL hardness claim must hold for every transaction
+            # Cheap structural checks first
+            self._check_finite_nerve()
             self._check_connected()
+            self._check_cochain_complex()
+            # Hodge structure (the hardness proof depends on ALL of these)
+            self._check_laplacian_construction()
+            self._check_spectral_gap_bounds()
+            self._check_hodge()
+            self._check_hodge_orthogonality()
+            # Homotopical matching
             self._check_h_level()
             self._check_sigma_rank()
         
@@ -452,21 +487,85 @@ class UnifiedInvariantValidator:
         ))
     
     def _check_hodge(self):
-        """Hodge decomposition consistency."""
+        """
+        Hodge decomposition: H + E + C = 1.
+        
+        Formally verified: Hodge_Decomposition_Theorem in hardness_proof.lean.
+        The three orthogonal subspaces must span the full space.
+        """
         total = (
             self.cohomology.harmonic_ratio + 
             self.cohomology.exact_ratio + 
             self.cohomology.coexact_ratio
         )
-        passed = total <= 1.1  # Small tolerance
+        # Lean proof is exact. Only tolerance is float arithmetic (eigenvalue computation).
+        # Dimensions are integers → ratios are exact fractions → tolerance = float precision.
+        passed = abs(total - 1.0) < 1e-6
         
         self.checkpoints.append(InvariantCheckpoint(
             category="cohomology",
             name="Hodge sum",
             passed=passed,
-            expected="H + E + C ≤ 1",
+            expected="H + E + C = 1 (Hodge theorem)",
             actual=f"H + E + C = {total:.2f}",
-            severity=CheckpointSeverity.WARNING
+            severity=CheckpointSeverity.CRITICAL
+        ))
+    
+    def _check_laplacian_construction(self):
+        """
+        Validate Δ = δ*δ + δδ*.
+        
+        Formally required by Hodge_Decomposition_Theorem in hardness_proof.lean:
+          let Δ := d_prev * d_prev_adj + d_next_adj * d_next
+        
+        If Δ is not constructed this way, the Hodge decomposition theorem
+        does not apply and the hardness reduction (Hodge → CVP) is invalid.
+        """
+        result = validate_laplacian_construction(
+            self.laplacian,
+            delta=self.delta_0,
+            delta_prev=None  # degree 0: no δ from below
+        )
+        
+        self.checkpoints.append(InvariantCheckpoint(
+            category="spectral",
+            name="Laplacian = δ*δ + δδ*",
+            passed=result.passed,
+            expected="||Δ - (δ*δ + δδ*)|| = 0",
+            actual=result.message,
+            severity=CheckpointSeverity.CRITICAL
+        ))
+    
+    def _check_hodge_orthogonality(self):
+        """
+        Validate pairwise orthogonality of Hodge components.
+        
+        Formally proved in Hodge_Decomposition_Theorem (hardness_proof.lean):
+          dotProduct h e1 = 0 ∧ dotProduct h e2 = 0 ∧ dotProduct e1 e2 = 0
+        
+        If components are not orthogonal, harmonic projection won't
+        cleanly separate message from noise → decryption fails.
+        """
+        n = self.laplacian.shape[0]
+        # Use a random test vector to verify orthogonality structurally
+        rng = np.random.RandomState(42)  # deterministic for reproducibility
+        test_vec = rng.randn(n)
+        
+        harmonic, exact, coexact = hodge_decompose(
+            test_vec, self.laplacian,
+            coboundary_below=None,  # degree 0
+            coboundary_above=self.delta_0
+        )
+        
+        result = validate_hodge_orthogonality(harmonic, exact, coexact)
+        
+        self.checkpoints.append(InvariantCheckpoint(
+            category="cohomology",
+            name="Hodge orthogonality",
+            passed=result.passed,
+            expected="⟨h,e⟩ = ⟨h,ce⟩ = ⟨e,ce⟩ = 0",
+            actual=result.message,
+            severity=CheckpointSeverity.CRITICAL
         ))
     
     # ========== HOMOTOPICAL LOGIC CHECKPOINTS ==========

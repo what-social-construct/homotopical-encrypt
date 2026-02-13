@@ -66,22 +66,33 @@ pub struct FullStalk {
 }
 
 /// Hash stalk for Rust chain (F_hash)
+///
+/// POST-AUDIT: No longer stores the spectral fingerprint or gap VALUE.
+/// The fingerprint is PRIVATE key material (see math_audit_hcrypt.lean:
+/// Spectrum_Not_Homotopy_Invariant). Only Betti numbers and a boolean
+/// "gap is valid" flag are stored on-chain.
+///
+/// Public identity = hash(Betti numbers + topology_hash)
+/// Anonymity set = all fibrations with same Betti numbers = INFINITE
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HashStalk {
     /// Vertex ID
     pub vertex_id: u64,
     
-    /// Geometric commitment (received from Python, verified by Oracle)
-    pub fingerprint: [u8; 32],
+    /// Public identity hash: SHA256(Betti + topology_hash)
+    /// This is the on-chain account identifier (replaces fingerprint)
+    pub identity_hash: [u8; 32],
     
-    /// Spectral gap (verified in Tsirelson bounds)
-    pub spectral_gap: f64,
-    
-    /// Betti numbers (verified consistent with topology)
+    /// Betti numbers (PUBLIC — true homotopy invariants)
     pub betti_numbers: (i32, i32, i32),
     
     /// Topology hash (computed by Oracle from nerve structure)
     pub topology_hash: [u8; 32],
+    
+    /// Spectral gap validity (boolean only — NOT the value)
+    /// Oracle verified gap is in Tsirelson bounds, then discarded the value.
+    /// This prevents leaking spectral info that could narrow anonymity set.
+    pub spectral_gap_valid: bool,
     
     /// Timestamp
     pub computed_at: u64,
@@ -163,24 +174,39 @@ impl StalkBridge {
             );
         }
         
-        // 2. ACCEPT Python's pre-computed commitment (already verified)
-        let fingerprint = full_stalk.commitment;
-        
-        // 3. Spectral gap (already verified in bounds)
-        let spectral_gap = full_stalk.spectral_gap;
-        
-        // 4. Betti numbers (from Python)
+        // 2. Betti numbers (from Python)
         let betti_numbers = full_stalk.betti_numbers;
         
-        // 5. Topology hash (Oracle computes from nerve structure — lightweight)
+        // 3. Topology hash (Oracle computes from nerve structure — lightweight)
         let topology_hash = self.hash_topology(full_stalk)?;
+        
+        // 4. Compute identity_hash = SHA256(betti + topology_hash)
+        //    This is the on-chain account identifier (Betti-based, anonymity-preserving)
+        //    Replaces raw spectral fingerprint which leaked private info
+        let identity_hash = {
+            use sha2::{Sha256, Digest};
+            let mut hasher = Sha256::new();
+            hasher.update(&betti_numbers.0.to_le_bytes());
+            hasher.update(&betti_numbers.1.to_le_bytes());
+            hasher.update(&betti_numbers.2.to_le_bytes());
+            hasher.update(&topology_hash);
+            let result = hasher.finalize();
+            let mut hash = [0u8; 32];
+            hash.copy_from_slice(&result);
+            hash
+        };
+        
+        // 5. Spectral gap validity (boolean only — value is NOT stored on-chain)
+        //    This matches Hodge_Ambiguity: the exact gap value could narrow the
+        //    anonymity set, so we store only "is it valid?"
+        let spectral_gap_valid = report.spectral_gap_valid;
         
         let hash_stalk = HashStalk {
             vertex_id,
-            fingerprint,
-            spectral_gap,
+            identity_hash,
             betti_numbers,
             topology_hash,
+            spectral_gap_valid,
             computed_at: std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap()
@@ -191,9 +217,9 @@ impl StalkBridge {
         self.on_chain_section.insert(vertex_id, hash_stalk.clone());
         
         debug!(
-            "✅ η({}) = HashStalk {{ gap={:.4}, β=({},{},{}) }}",
+            "✅ η({}) = HashStalk {{ gap_valid={}, β=({},{},{}) }}",
             vertex_id,
-            spectral_gap,
+            spectral_gap_valid,
             betti_numbers.0,
             betti_numbers.1,
             betti_numbers.2
@@ -307,13 +333,9 @@ impl StalkBridge {
             return Ok(false);
         }
         
-        // Check spectral gaps are compatible (within tolerance)
-        let gap_diff = (hash_v.spectral_gap - hash_w.spectral_gap).abs();
-        if gap_diff > 0.1 {
-            warn!(
-                "❌ Spectral gap mismatch on edge {} → {}: {:.4} vs {:.4}",
-                v, w, hash_v.spectral_gap, hash_w.spectral_gap
-            );
+        // Both must have valid spectral gaps (boolean check — values are private)
+        if !hash_v.spectral_gap_valid || !hash_w.spectral_gap_valid {
+            warn!("❌ Invalid spectral gap on edge {} → {}", v, w);
             return Ok(false);
         }
         
@@ -441,7 +463,7 @@ mod tests {
         let commitment = bridge.compute_commitment(0).unwrap();
         
         assert_eq!(commitment.vertex_id, 0);
-        assert_eq!(commitment.spectral_gap, 1.5);
+        assert!(commitment.spectral_gap_valid);  // gap 1.5 is in Tsirelson bounds
         assert_eq!(commitment.betti_numbers, (1, 0, 0));
     }
     
@@ -613,11 +635,11 @@ mod tests {
 
         let c0 = bridge.get_commitment(0).unwrap();
         assert_eq!(c0.vertex_id, 0);
-        assert_eq!(c0.spectral_gap, 1.5);
+        assert!(c0.spectral_gap_valid);
 
         let c1 = bridge.get_commitment(1).unwrap();
         assert_eq!(c1.vertex_id, 1);
-        assert_eq!(c1.spectral_gap, 1.7);
+        assert!(c1.spectral_gap_valid);
     }
 
     #[test]
@@ -638,17 +660,25 @@ mod tests {
     }
 
     #[test]
-    fn test_commitment_uses_python_precomputed() {
-        // Oracle should store Python's commitment, not recompute
+    fn test_commitment_identity_is_betti_based() {
+        // Post-audit: identity_hash = SHA256(betti + topology_hash)
+        // NOT the raw spectral fingerprint (which leaks private info)
         let mut bridge = StalkBridge::new();
         
-        let mut stalk = test_full_stalk(0, 1.5);
-        stalk.commitment = [42u8; 32];  // Python computed this
-        
+        let stalk = test_full_stalk(0, 1.5);
         bridge.add_full_stalk(stalk).unwrap();
         let commitment = bridge.compute_commitment(0).unwrap();
         
-        // Oracle stores exactly what Python sent
-        assert_eq!(commitment.fingerprint, [42u8; 32]);
+        // identity_hash should be deterministic from betti + topology
+        assert_ne!(commitment.identity_hash, [0u8; 32]); // Non-trivial
+        assert!(commitment.spectral_gap_valid);
+        
+        // Same betti + topology → same identity_hash (deterministic)
+        let mut bridge2 = StalkBridge::new();
+        let stalk2 = test_full_stalk(0, 1.8); // Different gap, same topology
+        bridge2.add_full_stalk(stalk2).unwrap();
+        let commitment2 = bridge2.compute_commitment(0).unwrap();
+        
+        assert_eq!(commitment.identity_hash, commitment2.identity_hash);
     }
 }

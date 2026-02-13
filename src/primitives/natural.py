@@ -12,27 +12,62 @@ Operations:
 Key property: Natural transformations commute with coboundary δ.
 This ensures they preserve cohomology classes (homotopy invariants).
 
-FUTURE: PULLBACK FOR TOKENOMICS / INCENTIVE LAYER
+ADJUNCTION STATUS (f* ⊣ f_*):
 
-  Pullback f*: C^k(Y) → C^k(X) is the natural way to transfer value
-  between topologies. Key applications:
+  Pullback f* and pushforward f_* form an adjoint pair:
+    Hom(f*G, F) ≅ Hom(G, f_*F)
 
-  - Cross-topology transfers: Alice has topology X, Bob has topology Y.
-    A map f: X → Y lets you pull back Bob's commitments to Alice's
-    topology. Value moves contravariantly (cochains pull back).
+  Currently implemented:
+    ✅ pullback(f, stalks, restrictions) → pulled-back sheaf data
+    ✅ pushforward(f, stalks, restrictions) → pushed-forward sheaf data
+    ✅ compose_nat(η, μ) → vertical composition of natural transformations
 
-  - Incentive distribution: validators earn rewards on global topology Y.
-    Pullback distributes rewards to their local topology X. The functorial
-    property (f∘g)* = g* ∘ f* ensures composition of distribution steps
-    is consistent.
+  NOT YET implemented (needed for full adjunction):
+    ❌ unit: id → f_* ∘ f*  (the "inclusion" natural transformation)
+    ❌ counit: f* ∘ f_* → id  (the "evaluation" natural transformation)
+    ❌ Hom-set bijection (adjunction witness)
 
-  - Staking/restaking: staked value on topology Y can be pulled back to
-    local sheaf X for computation, preserving the cohomological structure
-    (pullback commutes with δ, so invariants transfer).
+  The unit/counit would enable:
+    - Proving that pullback+pushforward compose coherently
+    - Cross-topology value transfer with conservation guarantees
+    - Categorical proof that the incentive layer is functorial
 
-  Currently: pullback/pushforward are defined and tested but not yet
-  called from chain/ or consensus/. They will be wired when the
-  incentive/tokenomics layer is built.
+  For now, pullback and pushforward are used independently (no
+  round-trip composition), so the adjunction isn't exercised.
+  Wire them when incentive/tokenomics layer is built.
+
+FREE FIBRATION vs EPHEMERAL FIBER:
+
+  The credential (FibrationCredential) is currently a FIXED object
+  generated at keygen time and stored in the wallet. This is an
+  "ephemeral fiber" approach: each credential is a specific fibration
+  F with specific restriction maps.
+
+  The mathematically cleaner approach is the FREE h-fibration
+  (Helfer Proposition 15.3): model the credential as a morphism
+    F_T → Fib
+  from a test space F_T to the universal fibration Fib. This gives:
+
+  1. UNIVERSAL HARDNESS: breaking any credential requires inverting
+     the universal fibration, not just a specific instance.
+  2. KEY ROTATION AS HOMOTOPY: rotating keys = deforming the morphism
+     F_T → Fib within its homotopy class [F_T, Fib].
+  3. COMPOSITION: credentials compose via pullback along Fib.
+
+  Current status:
+    - credential.py: ephemeral fiber (specific fibration instance)
+    - key rotation: same homotopy class but ad-hoc verification
+    - no universal fibration object
+
+  Migration path:
+    1. Define UniversalFibration type (classifying space B_GL(n))
+    2. Credential = morphism into UniversalFibration (pullback bundle)
+    3. Key rotation = homotopy of morphisms (π₁(Map(X, B_GL(n))))
+    4. Hardness claim upgrades from "specific ker(Δ)" to "universal Fib"
+
+  This would strengthen the hardness_proof.lean reduction from
+  "Hodge on THIS Laplacian → CVP" to
+  "Hodge on ANY Laplacian in the universal family → CVP".
 """
 
 from dataclasses import dataclass

@@ -1,15 +1,29 @@
 """
 Fibration Credential: The cryptographic key structure.
 
-A credential is NOT a key pair - it's a triple:
-1. TOPOLOGY (public): The Čech nerve - who talks to whom
-2. FIBRATION (private): Quantum channels - how they talk  
-3. SPECTRUM (public): Spectral fingerprint - what you can verify
+A credential separates PUBLIC identity from PRIVATE key material:
 
-This structure provides:
-- Multi-party by default (topology encodes participants)
-- Homotopy equivalence classes (key agility)
-- ZK-friendly verification via spectral invariants
+  PUBLIC (revealed on-chain / to verifiers):
+    PublicIdentity := (betti_numbers, topology_hash)
+    - Betti numbers (β₀, β₁, β₂) — true homotopy invariants
+    - topology_hash — SHA256 of nerve structure (opaque)
+    
+  PRIVATE (never leaves wallet):
+    - spectral fingerprint (eigenvalues) — the actual private key
+    - fibration (restriction maps R_{v→e}) — the geometric secret
+    - Laplacian Δ = δ*δ + δδ* — derived from fibration
+    - topology (nerve vertices/edges) — the actual graph structure
+
+The anonymity set is the homotopy class π⁻¹(β) = all fibrations
+with the given Betti numbers. This set is INFINITE by Hodge theory.
+
+The diagonal pairing (from Helfer's homotopical logic):
+  Δ: Betti → Betti × Betti,  β ↦ (β, β)
+  Two credentials are "equal" iff their Betti numbers match.
+
+See: hardness_proof.lean for formal verification of Hodge-hardness.
+See: math_audit_hcrypt.lean for the audit motivating this design.
+See: docs/REFACTOR_PLAN.md for the full pivot rationale.
 
 Based on Helfer's homotopical logic (arXiv:1908.08944)
 """
@@ -68,15 +82,21 @@ def _count_connected_components(nerve: Dict[int, List[Tuple]]) -> int:
 @dataclass
 class SpectralFingerprint:
     """
-    Public spectral fingerprint for identity verification.
+    PRIVATE spectral fingerprint — part of the secret key material.
     
-    Contains homotopy invariants that can be used in ZK proofs:
-    - Eigenvalues of Laplacian (spectrum)
-    - Betti numbers (topological invariants)
-    - Spectral gap (security parameter)
+    POST-AUDIT: This is NO LONGER public. The math audit
+    (math_audit_hcrypt.lean, Spectrum_Not_Homotopy_Invariant) proved
+    that eigenvalues are a FINER invariant than the homotopy class.
+    Revealing them publicly reduces the anonymity set from the infinite
+    homotopy class to the potentially-singleton isospectral set.
     
-    Two fibrations with same fingerprint are homotopy equivalent
-    (can decrypt same messages).
+    Contains:
+    - eigenvalues: Laplacian spectrum (PRIVATE — the actual key)
+    - betti_numbers: topological invariants (PUBLIC via PublicIdentity)
+    - spectral_gap: security parameter (PRIVATE — only boolean on-chain)
+    
+    For PUBLIC identity, use PublicIdentity instead (Betti numbers only).
+    See: docs/REFACTOR_PLAN.md for full rationale.
     """
     eigenvalues: np.ndarray
     betti_numbers: List[int]
@@ -119,6 +139,53 @@ class SpectralFingerprint:
         data += bytes(str(self.betti_numbers), 'utf-8')
         data += self.topology_hash
         return hashlib.sha256(data).digest()
+
+
+@dataclass
+class PublicIdentity:
+    """
+    Public identifier — reveals only Betti numbers.
+    
+    This is a point in Betti space (ℕ³). The anonymity set is
+    π⁻¹(β) = {all fibrations with these Betti numbers} = INFINITE.
+    
+    The diagonal pairing:
+      on_diagonal(self, other) ⟺ self.betti_numbers == other.betti_numbers
+      ⟺ same homotopy class ⟺ indistinguishable
+    
+    PUBLIC fields only. No eigenvalues, no fibration structure.
+    """
+    betti_numbers: Tuple[int, ...]  # (β₀, β₁, ...) — true homotopy invariants
+    topology_hash: bytes             # SHA256 of nerve structure (opaque)
+    
+    def identity_hash(self) -> bytes:
+        """
+        Compute compact identity hash for on-chain storage.
+        
+        This is the η₂ projection: PublicIdentity → 32 bytes.
+        """
+        hasher = hashlib.sha256()
+        hasher.update(b"HCRYPT_PUBLIC_IDENTITY_V1")
+        hasher.update(str(self.betti_numbers).encode())
+        hasher.update(self.topology_hash)
+        return hasher.digest()
+    
+    def on_diagonal(self, other: 'PublicIdentity') -> bool:
+        """
+        Check if self and other are on the diagonal (same homotopy class).
+        
+        From Helfer's logic: equality = membership on the diagonal
+        Δ: Betti → Betti × Betti, β ↦ (β, β)
+        """
+        return self.betti_numbers == other.betti_numbers
+    
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, PublicIdentity):
+            return False
+        return self.betti_numbers == other.betti_numbers and self.topology_hash == other.topology_hash
+    
+    def __hash__(self) -> int:
+        return hash((self.betti_numbers, self.topology_hash))
 
 
 @dataclass
@@ -238,22 +305,49 @@ class FibrationCredential:
     """
     Complete cryptographic credential.
     
-    The triple (topology, fibration, spectrum) where:
-    - topology: PUBLIC - the Čech nerve (who talks to whom)
-    - fibration: PRIVATE - quantum channels (how they talk)
-    - spectrum: PUBLIC - spectral fingerprint (identity verification)
+    PUBLIC (on-chain):
+    - public_identity: PublicIdentity (Betti numbers + topology_hash)
+    
+    PRIVATE (wallet only):
+    - topology: the actual Čech nerve graph structure
+    - fibration: quantum channels (restriction maps)
+    - spectrum: spectral fingerprint (eigenvalues) — THE PRIVATE KEY
+    
+    The projection π: FibrationCredential → PublicIdentity
+    discards all spectral/fibration data, keeping only Betti numbers.
     """
-    topology: Dict[int, List[Tuple]]  # Čech nerve (public)
-    fibration: QuantumSheafFibration  # Quantum channels (private)
-    spectrum: SpectralFingerprint  # Fingerprint (public)
+    topology: Dict[int, List[Tuple]]  # Čech nerve (PRIVATE — structure)
+    fibration: QuantumSheafFibration  # Quantum channels (PRIVATE)
+    spectrum: SpectralFingerprint  # Fingerprint (PRIVATE — was public pre-audit)
+    public_identity: Optional[PublicIdentity] = None  # PUBLIC (new)
     
     # Metadata
     parties: List[str] = field(default_factory=list)
     hilbert_dim: int = 256
     modulus: int = 12289
     
+    def project_to_public(self) -> PublicIdentity:
+        """
+        The projection π: Spec → Betti.
+        
+        Discards eigenvalues and fibration structure,
+        keeping only Betti numbers and topology hash.
+        """
+        if self.public_identity is not None:
+            return self.public_identity
+        # Fallback: construct from spectrum
+        return PublicIdentity(
+            betti_numbers=tuple(self.spectrum.betti_numbers),
+            topology_hash=self.spectrum.topology_hash,
+        )
+    
     def get_public(self) -> Tuple[Dict[int, List[Tuple]], SpectralFingerprint]:
-        """Get public components (topology, spectrum)."""
+        """Get public components (topology, spectrum).
+        
+        DEPRECATED: Use project_to_public() instead.
+        This method exposes the spectral fingerprint which should be private.
+        Kept for backward compatibility during migration.
+        """
         return (self.topology, self.spectrum)
     
     def verify_identity(self, other_spectrum: SpectralFingerprint) -> bool:
@@ -263,6 +357,15 @@ class FibrationCredential:
         Returns True if same homotopy class (can communicate).
         """
         return self.spectrum.matches(other_spectrum)
+    
+    def on_diagonal(self, other: 'FibrationCredential') -> bool:
+        """
+        Check if two credentials are in the same homotopy class.
+        
+        Uses Betti numbers only (not eigenvalues).
+        This is the correct anonymity-preserving equality check.
+        """
+        return self.project_to_public().on_diagonal(other.project_to_public())
 
 
 def generate_credential(
@@ -355,10 +458,17 @@ def generate_credential(
         # own gates (β₀ ≥ 1, restriction map dims, PSD Laplacian) still hold.
         pass
 
+    # 5. Compute public identity (Betti numbers only — the π projection)
+    public_identity = PublicIdentity(
+        betti_numbers=tuple(spectrum.betti_numbers),
+        topology_hash=spectrum.topology_hash,
+    )
+
     return FibrationCredential(
         topology=nerve,
         fibration=fibration,
         spectrum=spectrum,
+        public_identity=public_identity,
         parties=parties,
         hilbert_dim=security_parameter,
         modulus=modulus

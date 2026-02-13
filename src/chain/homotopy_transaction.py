@@ -27,7 +27,7 @@ import hashlib
 import time
 import secrets
 
-from ..crypto.credential import FibrationCredential, SpectralFingerprint
+from ..crypto.credential import FibrationCredential, SpectralFingerprint, PublicIdentity
 from ..crypto import encrypt, decrypt
 from ..crypto.commitment import CochainCommitment, BlindedCommitment, add_commitments
 from ..crypto.cohomological_mac import (
@@ -76,16 +76,27 @@ class HomotopyInput:
     Transaction input using homotopy class anonymity.
     
     Instead of ring of N decoys, we prove:
-    "I know a fibration F with spectrum matching this fingerprint"
+    "I know a fibration F with Betti numbers matching this identity"
     
-    Anonymity set = ENTIRE homotopy class [F] (infinite!)
+    Anonymity set = ENTIRE homotopy class π⁻¹(β) (infinite!)
+    
+    PUBLIC on-chain data:
+    - sender_identity: hash of PublicIdentity (Betti + topology_hash)
+    - betti_numbers: (β₀, β₁, β₂) — true homotopy invariants
+    - key_image: unique per fibration, one-way
+    
+    PRIVATE (proven via ZK, never revealed):
+    - spectral fingerprint (eigenvalues)
+    - fibration structure (restriction maps)
     
     Two proof layers:
-    1. spectral_proof: "I own this fingerprint" (identity binding)
+    1. spectral_proof: "I own a valid fibration" (identity binding)
     2. class_membership_proof: "I know a fibration in [F] without revealing
        which one" (Hodge-hardness ZK — the actual 1/∞ anonymity guarantee)
     """
-    # Public fingerprint (identifies the homotopy class)
+    # Public fingerprint — DEPRECATED: use sender_identity instead.
+    # Kept for backward compatibility during migration.
+    # This is hash(eigenvalues) which leaks spectral info.
     fingerprint: bytes
     
     # Key image (unique per fibration, prevents double-spend)
@@ -112,6 +123,11 @@ class HomotopyInput:
     mac_tag: Optional[bytes] = None
     
     spectral_gap: float = 0.0
+    
+    # Public identity (Betti-based — anonymity-preserving)
+    # This is hash(PublicIdentity) = hash(betti_numbers, topology_hash)
+    # New in Betti-based model. Will replace fingerprint in future versions.
+    sender_identity: Optional[bytes] = None
 
 
 @dataclass
@@ -479,15 +495,20 @@ def create_homotopy_transaction(
         # MAC optional for backwards compat — oracle will flag missing MAC
         pass
     
+    # Compute Betti-based public identity (anonymity-preserving)
+    sender_public = sender_credential.project_to_public()
+    sender_identity_hash = sender_public.identity_hash()
+    
     htx_input = HomotopyInput(
-        fingerprint=sender_fingerprint,      # Layer 1: immutable UID
+        fingerprint=sender_fingerprint,      # DEPRECATED: spectral hash (kept for compat)
         key_image=key_image,                  # Layer 1: double-spend prevention
         amount_commitment=amount_commitment,  # Layer 2: SVP-hard binding
         spectral_proof=spectral_proof,        # Layer 3: identity proof
         class_membership_proof=class_proof,   # Layer 3: Hodge ZK (1/∞ anonymity)
         betti_numbers=betti,
         mac_tag=input_mac_tag,               # Layer 2: Hodge-hard authentication
-        spectral_gap=sender_spectrum.spectral_gap
+        spectral_gap=sender_spectrum.spectral_gap,
+        sender_identity=sender_identity_hash, # NEW: Betti-based identity
     )
     
     # Harmonic range proof: proves amount ∈ [0, 2^64 - 1] without revealing value

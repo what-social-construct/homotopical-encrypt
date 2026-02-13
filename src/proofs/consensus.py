@@ -361,6 +361,14 @@ class ProofOfValue:
         """
         Verify a block's Proof of Value.
         
+        Uses UnifiedInvariantValidator at "transaction" stage to enforce
+        ALL hardness-proof preconditions:
+        - δ²=0 (cochain complex)
+        - Δ = δ*δ + δδ* (Laplacian construction)
+        - H + E + C = 1 (Hodge sum)
+        - ⟨h,e⟩ = ⟨h,ce⟩ = ⟨e,ce⟩ = 0 (Hodge orthogonality)
+        - λ₁ ∈ [1/√2, 2√2] (spectral gap)
+        
         Returns:
             (is_valid, reason)
         """
@@ -377,7 +385,7 @@ class ProofOfValue:
         
         # 3. Rebuild sheaf and cochain
         sheaf = self._build_sheaf()
-        laplacian = SheafLaplacian(sheaf)
+        laplacian_obj = SheafLaplacian(sheaf)
         
         dim = self._get_dim()
         combined = np.zeros(len(self.topology.get(0, [])) * dim)
@@ -385,24 +393,40 @@ class ProofOfValue:
             combined += self._transaction_to_cochain(tx, dim)
         
         # 4. Recompute harmonic
-        harmonic, _ = laplacian.harmonic_projection(combined)
+        harmonic, _ = laplacian_obj.harmonic_projection(combined)
         
         # 5. Check harmonic matches (within tolerance)
         if len(harmonic) == len(block.harmonic_representative):
             if not np.allclose(harmonic, block.harmonic_representative, atol=1e-6):
                 return False, "Harmonic mismatch"
         
-        # 6. Verify spectral gap
-        eigenvalues = laplacian.eigendecomposition()[0]
+        # 6. Run unified invariant validation at "transaction" stage
+        #    This enforces ALL hardness-proof preconditions from hardness_proof.lean
+        L = laplacian_obj.laplacian_0()
+        delta_0 = laplacian_obj.coboundary_0()
+        delta_1 = getattr(laplacian_obj, 'coboundary_1', lambda: None)()
+        
+        validator = UnifiedInvariantValidator(
+            nerve=self.topology,
+            laplacian=L,
+            delta_0=delta_0,
+            delta_1=delta_1
+        )
+        passed, checkpoints = validator.validate_for_stage("transaction")
+        
+        if not passed:
+            failed = [cp for cp in checkpoints 
+                     if not cp.passed and cp.severity == CheckpointSeverity.CRITICAL]
+            reasons = "; ".join(f"{cp.name}: {cp.actual}" for cp in failed[:3])
+            return False, f"Invariant validation failed: {reasons}"
+        
+        # 7. Verify spectral gap matches claimed
+        eigenvalues = laplacian_obj.eigendecomposition()[0]
         nonzero = eigenvalues[eigenvalues > 1e-10]
         computed_gap = float(nonzero[0]) if len(nonzero) > 0 else 0.0
         
         if abs(computed_gap - block.spectral_gap) > 1e-4:
             return False, f"Spectral gap mismatch: {computed_gap} vs {block.spectral_gap}"
-        
-        # 7. Check √2 bounds (soft check for now)
-        if computed_gap > 0 and not (LOWER_BOUND * 0.5 < computed_gap < UPPER_BOUND * 2):
-            return False, f"Spectral gap {computed_gap} way outside bounds"
         
         # 8. Verify proof
         if not self._verify_proof(block.proof):

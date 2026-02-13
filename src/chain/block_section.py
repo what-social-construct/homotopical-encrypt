@@ -133,12 +133,12 @@ class BlockSection:
         # =====================================================================
         # C⁰ PRIVATE STALK (dim=256): full geometric block data
         # =====================================================================
-        # PRIVATE_STALK.fields = {lwe_secret: 128, noise_margin: 64, metadata: 64}
+        # PRIVATE_STALK.fields = {harmonic_secret: 128, hodge_noise: 64, metadata: 64}
         # Maps to: spectral+pov[128] + class_proofs[64] + producer[64]
         # fiber_dim=256 from fiber_bundle.py
         private_data = np.zeros(256)
 
-        # lwe_secret [0:128]: spectral gap + commitment + PoV proof
+        # harmonic_secret [0:128]: spectral gap + commitment + PoV proof
         private_data[0] = header.spectral_gap  # Must match public[0] for coherence
         if header.spectral_commitment:
             for i, b in enumerate(header.spectral_commitment[:63]):
@@ -147,7 +147,7 @@ class BlockSection:
             for i, b in enumerate(block.pov_proof[:64]):
                 private_data[64 + i] = float(b)
 
-        # noise_margin [128:192]: per-tx class proof commitments
+        # hodge_noise [128:192]: per-tx class proof commitments
         proof_offset = 128
         for tx in block.transactions[:8]:
             for inp in tx.inputs[:1]:
@@ -248,8 +248,8 @@ class BlockSection:
         """Restrict section to private layer — block producer view."""
         return {
             "spectral_gap": float(self.private_stalk.data[0]),
-            "lwe_secret": self.private_stalk.get_field("lwe_secret").tobytes(),
-            "noise_margin": self.private_stalk.get_field("noise_margin").tobytes(),
+            "harmonic_secret": self.private_stalk.get_field("harmonic_secret").tobytes(),
+            "hodge_noise": self.private_stalk.get_field("hodge_noise").tobytes(),
             "metadata": self.private_stalk.get_field("metadata").tobytes(),
         }
 
