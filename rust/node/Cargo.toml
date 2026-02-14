@@ -7,6 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
+rand = "0.8"
 # HTTP server for RPC
 axum = "0.7"
 tower = "0.5"

@@ -1302,6 +1302,7 @@ dependencies = [
  "hex",
  "libp2p",
  "proptest",
+ "rand 0.8.5",
  "reqwest",
  "rocksdb",
  "serde",

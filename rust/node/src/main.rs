@@ -12,6 +12,7 @@ mod consensus;
 mod network;
 mod storage;
 mod rpc;
+mod crypto;
 mod types;
 
 use consensus::pov::{PoVProducer, PoVVerifier, OracleCommitment};
