@@ -1,3 +1,4 @@
+#![allow(dead_code, unused_imports)]
 // Sheaf Onion Routing - Python Bridge
 //
 // Calls Python onion service at localhost:9934 for:

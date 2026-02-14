@@ -1,3 +1,4 @@
+#![allow(dead_code, unused_imports)]
 // P2P Transport Layer (libp2p)
 //
 // Handles actual network I/O:

@@ -1,3 +1,4 @@
+#![allow(dead_code, unused_imports)]
 // RPC Server - Axum-based JSON-RPC interface for the node
 //
 // Endpoints:
@@ -337,7 +338,7 @@ async fn handle_get_state(state: &RpcState) -> Result<serde_json::Value, RpcErro
 }
 
 async fn handle_submit_transaction(
-    state: &RpcState,
+    _state: &RpcState,
     params: &serde_json::Value,
 ) -> Result<serde_json::Value, RpcError> {
     // For now, just accept the transaction and return a stub response

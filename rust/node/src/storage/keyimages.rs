@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 // Key Image Storage
 //
 // Key images prevent double-spending in the homotopical encryption system

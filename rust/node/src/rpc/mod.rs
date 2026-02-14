@@ -1,3 +1,4 @@
+#![allow(unused_imports)]
 // JSON-RPC Server Module
 
 pub mod server;

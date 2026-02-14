@@ -53,6 +53,7 @@ struct Args {
 }
 
 /// Validated transaction awaiting block inclusion
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 struct MempoolEntry {
     tx: Transaction,
@@ -60,6 +61,7 @@ struct MempoolEntry {
 }
 
 /// Cached Oracle commitment for block production
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 struct CachedOracleProof {
     commitment: OracleCommitment,
@@ -319,7 +321,7 @@ impl Node {
     ///   - header.spectral_proof: Oracle-provided fingerprint + √2 bounds + trace
     ///   - header.cochain_root: homomorphic accumulation Σ δ(txᵢ) mod q
     ///   - transactions: each tx.data is CochainCommitment.to_bytes()
-    async fn handle_block(&self, height: u64, hash: Vec<u8>, block_data: Vec<u8>) {
+    async fn handle_block(&self, height: u64, _hash: Vec<u8>, block_data: Vec<u8>) {
         debug!("📦 Received block at height {} ({} bytes)", height, block_data.len());
         
         // 1. Deserialize block
@@ -342,7 +344,7 @@ impl Node {
         // 3. Verify parent hash linkage
         if block.header.height > 0 {
             match self.block_store.get_chain_tip() {
-                Ok(Some((tip_height, tip_hash))) => {
+                Ok(Some((tip_height, _tip_hash))) => {
                     if block.header.height != tip_height + 1 {
                         warn!("🚫 Block height mismatch: expected {}, got {}", 
                               tip_height + 1, block.header.height);

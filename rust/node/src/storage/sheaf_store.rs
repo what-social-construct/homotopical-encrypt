@@ -36,7 +36,7 @@
 
 
 use anyhow::Result;
-use rocksdb::{DB, Options, ColumnFamily};
+use rocksdb::{DB, Options};
 use std::sync::Arc;
 use serde::{Deserialize, Serialize};
 use tracing::{debug, info};

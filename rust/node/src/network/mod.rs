@@ -1,3 +1,4 @@
+#![allow(unused_imports)]
 // Sheaf Onion Network Layer
 // 
 // Uses geometry-based routing (NOT standard blockchain gossip!)

@@ -1,3 +1,4 @@
+#![allow(dead_code, unused_imports)]
 // SheafState Storage - Three-Layer State Bus
 
 // Stores the global state as a section of the PUBLIC_STALK bundle
