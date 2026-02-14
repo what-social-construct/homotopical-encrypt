@@ -119,7 +119,7 @@ pub struct BlockResponse {
     pub hash: String,
     pub parent_hash: String,
     pub timestamp: u64,
-    pub spectral_gap: f64,
+    pub spectral_gap_valid: bool,
     pub betti_numbers: (i32, i32, i32),
     pub transaction_count: usize,
 }
@@ -375,7 +375,7 @@ fn block_to_json(block: &Block) -> serde_json::Value {
         hash: block.hash().to_string(),
         parent_hash: block.header.parent_hash.to_string(),
         timestamp: block.header.timestamp,
-        spectral_gap: block.header.spectral_proof.fingerprint.spectral_gap,
+        spectral_gap_valid: block.header.spectral_proof.fingerprint.spectral_gap_valid,
         betti_numbers: block.header.spectral_proof.fingerprint.betti_numbers,
         transaction_count: block.transactions.len(),
     }).unwrap()

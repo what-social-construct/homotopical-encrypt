@@ -195,7 +195,7 @@ mod tests {
                 timestamp: 1234567890,
                 spectral_proof: SpectralProof {
                     fingerprint: SpectralFingerprint {
-                        spectral_gap: 1.5,
+                        spectral_gap_valid: true,
                         betti_numbers: (1, 0, 0),
                         hash: [0; 32],
                     },

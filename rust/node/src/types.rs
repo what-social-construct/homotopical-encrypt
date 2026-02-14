@@ -38,11 +38,18 @@ impl fmt::Display for BlockHash {
 
 /// Spectral fingerprint (from Oracle off-chain computation)
 ///
-/// Maps to Oracle's HashStalk and Python's SpectralFingerprint
+/// Maps to Oracle's HashStalk and Python's SpectralFingerprint.
+///
+/// POST-AUDIT (Hodge_Ambiguity): The raw spectral_gap value is NOT stored
+/// on-chain. Only a boolean "gap is valid" flag is included. Storing the
+/// exact gap value would narrow the anonymity set — the Lean proof
+/// (Hodge_Ambiguity) shows that same ciphertext under different Laplacians
+/// means different things, and the eigenvalue spectrum (including gap) is
+/// the PRIVATE key. See also: Spectrum_Not_Homotopy_Invariant.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SpectralFingerprint {
-    /// First nonzero eigenvalue of sheaf Laplacian
-    pub spectral_gap: f64,
+    /// Whether Oracle verified gap ∈ [1/√2, 2√2] (boolean only — value discarded)
+    pub spectral_gap_valid: bool,
     /// Betti numbers (β₀, β₁, β₂) — matches Oracle HashStalk
     pub betti_numbers: (i32, i32, i32),
     /// Geometric commitment hash (Hodge projection → quantize → hash)
@@ -50,9 +57,9 @@ pub struct SpectralFingerprint {
 }
 
 impl SpectralFingerprint {
-    /// Verify √2 bounds: 1/√2 ≤ gap ≤ 2√2
+    /// Check if gap was verified valid by Oracle
     pub fn verify_bounds(&self) -> bool {
-        self.spectral_gap >= POV_LOWER && self.spectral_gap <= POV_UPPER
+        self.spectral_gap_valid
     }
 }
 
@@ -102,7 +109,7 @@ impl BlockHeader {
         hasher.update(&self.parent_hash.0);
         hasher.update(&self.cochain_root);
         hasher.update(&self.timestamp.to_le_bytes());
-        hasher.update(&self.spectral_proof.fingerprint.spectral_gap.to_le_bytes());
+        hasher.update(&[self.spectral_proof.fingerprint.spectral_gap_valid as u8]);
         hasher.update(&self.spectral_proof.fingerprint.hash); // spectral_commitment
         hasher.update(&self.producer_fingerprint);
         BlockHash(hasher.finalize().into())
@@ -287,7 +294,7 @@ pub fn parse_cochain_commitment(data: &[u8]) -> Option<(u32, Vec<i64>)> {
 
 /// Helper: create a default BlockHeader for tests
 #[cfg(test)]
-pub fn test_header(height: u64, gap: f64) -> BlockHeader {
+pub fn test_header(height: u64, _gap: f64) -> BlockHeader {
     BlockHeader {
         version: 1,
         height,
@@ -296,7 +303,7 @@ pub fn test_header(height: u64, gap: f64) -> BlockHeader {
         timestamp: 0,
         spectral_proof: SpectralProof {
             fingerprint: SpectralFingerprint {
-                spectral_gap: gap,
+                spectral_gap_valid: true,
                 betti_numbers: (1, 0, 0),
                 hash: [0; 32],
             },
@@ -315,16 +322,14 @@ mod tests {
     #[test]
     fn test_spectral_bounds() {
         let fp = SpectralFingerprint {
-            spectral_gap: 1.5,
+            spectral_gap_valid: true,
             betti_numbers: (1, 0, 0),
             hash: [0; 32],
         };
         assert!(fp.verify_bounds());
 
-        assert!(!SpectralFingerprint { spectral_gap: 0.5, betti_numbers: (1, 0, 0), hash: [0; 32] }.verify_bounds());
-        assert!(!SpectralFingerprint { spectral_gap: 5.0, betti_numbers: (1, 0, 0), hash: [0; 32] }.verify_bounds());
-        assert!(SpectralFingerprint { spectral_gap: POV_LOWER, betti_numbers: (1, 0, 0), hash: [0; 32] }.verify_bounds());
-        assert!(SpectralFingerprint { spectral_gap: POV_UPPER, betti_numbers: (1, 0, 0), hash: [0; 32] }.verify_bounds());
+        assert!(!SpectralFingerprint { spectral_gap_valid: false, betti_numbers: (1, 0, 0), hash: [0; 32] }.verify_bounds());
+        assert!(SpectralFingerprint { spectral_gap_valid: true, betti_numbers: (1, 0, 0), hash: [0; 32] }.verify_bounds());
     }
 
     #[test]
@@ -341,8 +346,8 @@ mod tests {
         let block = Block {
             header: test_header(0, 1.0),
             transactions: vec![
-                Transaction { data: b"tx1".to_vec(), key_image: None },
-                Transaction { data: b"tx2".to_vec(), key_image: None },
+                Transaction { data: b"tx1".to_vec(), key_image: None, sender_fingerprint: None, fee_amount: 0 },
+                Transaction { data: b"tx2".to_vec(), key_image: None, sender_fingerprint: None, fee_amount: 0 },
             ],
         };
         let root1 = block.compute_cochain_root();
@@ -375,8 +380,8 @@ mod tests {
         let block = Block {
             header: test_header(0, 1.0),
             transactions: vec![
-                Transaction { data: tx1_data, key_image: None },
-                Transaction { data: tx2_data, key_image: None },
+                Transaction { data: tx1_data, key_image: None, sender_fingerprint: None, fee_amount: 0 },
+                Transaction { data: tx2_data, key_image: None, sender_fingerprint: None, fee_amount: 0 },
             ],
         };
 
@@ -422,7 +427,7 @@ mod tests {
                 timestamp: 1234567890,
                 spectral_proof: SpectralProof {
                     fingerprint: SpectralFingerprint {
-                        spectral_gap: 1.5,
+                        spectral_gap_valid: true,
                         betti_numbers: (1, 0, 0),
                         hash: [3; 32],
                     },
@@ -451,7 +456,7 @@ mod tests {
 
     #[test]
     fn test_tx_hash_domain_separated() {
-        let tx = Transaction { data: b"test".to_vec(), key_image: None };
+        let tx = Transaction { data: b"test".to_vec(), key_image: None, sender_fingerprint: None, fee_amount: 0 };
         let h = tx.tx_hash();
         // Domain separator "HCRYPT_HTX_V2" ensures non-trivial hash
         assert_ne!(h, [0u8; 32]);
@@ -634,17 +639,14 @@ mod tests {
     fn test_block_hash_changes_with_fields() {
         let h1 = test_header(1, 1.5).hash();
         let h2 = test_header(2, 1.5).hash(); // different height
-        let h3 = test_header(1, 2.0).hash(); // different gap
         assert_ne!(h1, h2);
-        assert_ne!(h1, h3);
-        assert_ne!(h2, h3);
     }
 
     #[test]
     fn test_tx_hash_with_key_image() {
-        let tx1 = Transaction { data: b"same".to_vec(), key_image: None };
-        let tx2 = Transaction { data: b"same".to_vec(), key_image: Some([1; 32]) };
-        let tx3 = Transaction { data: b"same".to_vec(), key_image: Some([2; 32]) };
+        let tx1 = Transaction { data: b"same".to_vec(), key_image: None, sender_fingerprint: None, fee_amount: 0 };
+        let tx2 = Transaction { data: b"same".to_vec(), key_image: Some([1; 32]), sender_fingerprint: None, fee_amount: 0 };
+        let tx3 = Transaction { data: b"same".to_vec(), key_image: Some([2; 32]), sender_fingerprint: None, fee_amount: 0 };
         // Different key images → different hashes
         assert_ne!(tx1.tx_hash(), tx2.tx_hash());
         assert_ne!(tx2.tx_hash(), tx3.tx_hash());

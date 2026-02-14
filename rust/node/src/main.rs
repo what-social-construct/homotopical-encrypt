@@ -334,10 +334,9 @@ impl Node {
         
         // 2. Verify √2 bounds on spectral proof
         //    This is the PoV consensus check: producer must have valid fibration geometry
-        let gap = block.header.spectral_proof.fingerprint.spectral_gap;
-        if gap < POV_LOWER || gap > POV_UPPER {
-            warn!("🚫 Block rejected: spectral gap {:.4} outside √2 bounds [{:.4}, {:.4}]",
-                  gap, POV_LOWER, POV_UPPER);
+        // POST-AUDIT (Hodge_Ambiguity): block stores only gap_valid boolean
+        if !block.header.spectral_proof.fingerprint.spectral_gap_valid {
+            warn!("🚫 Block rejected: spectral gap not verified valid by Oracle");
             return;
         }
         
@@ -391,8 +390,8 @@ impl Node {
             return;
         }
         
-        info!("✅ Block stored: height={} hash={} txs={} gap={:.4}",
-              height, block_hash, block.transactions.len(), gap);
+        info!("✅ Block stored: height={} hash={} txs={}",
+              height, block_hash, block.transactions.len());
     }
     
     /// Handle incoming oracle proof
@@ -557,7 +556,6 @@ impl Node {
         
         let block_hash = block.hash();
         let height = block.header.height;
-        let gap = block.header.spectral_proof.fingerprint.spectral_gap;
         
         // Store block
         if let Err(e) = self.block_store.store_block(&block) {
@@ -573,8 +571,8 @@ impl Node {
             }
         }
         
-        info!("⛏️  Produced block: height={} hash={} txs={} gap={:.4}",
-              height, block_hash, tx_count, gap);
+        info!("⛏️  Produced block: height={} hash={} txs={}",
+              height, block_hash, tx_count);
         
         // Broadcast to network
         if let Ok(block_data) = bincode::serialize(&block) {

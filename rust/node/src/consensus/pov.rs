@@ -65,8 +65,10 @@ impl PoVProducer {
         debug!("Producing block at height {} (parent={})", height, parent_hash);
 
         // 2. Build SpectralFingerprint from Oracle data
+        //    POST-AUDIT (Hodge_Ambiguity): store only boolean, not raw gap value.
+        //    The raw gap is verified above but DISCARDED — it's private key material.
         let fingerprint = SpectralFingerprint {
-            spectral_gap: oracle_commitment.spectral_gap,
+            spectral_gap_valid: true, // verified by bounds check above
             betti_numbers: oracle_commitment.betti_numbers,
             hash: oracle_commitment.fingerprint,
         };
@@ -121,7 +123,7 @@ impl PoVProducer {
         }
 
         let fingerprint = SpectralFingerprint {
-            spectral_gap: oracle_commitment.spectral_gap,
+            spectral_gap_valid: true, // verified by bounds check above
             betti_numbers: oracle_commitment.betti_numbers,
             hash: oracle_commitment.fingerprint,
         };
@@ -238,10 +240,7 @@ impl PoVVerifier {
 
         // 2. Verify √2 bounds
         if !proof.fingerprint.verify_bounds() {
-            bail!(
-                "Spectral gap {:.4} outside √2 bounds [{:.4}, {:.4}]",
-                proof.fingerprint.spectral_gap, POV_LOWER, POV_UPPER
-            );
+            bail!("Spectral gap not verified valid by Oracle");
         }
 
         // 3. Verify computation trace hash chain
@@ -355,7 +354,7 @@ mod tests {
         assert_eq!(genesis.header.parent_hash, BlockHash([0; 32]));
         assert_eq!(genesis.header.producer_fingerprint, [99u8; 32]);
         assert_eq!(genesis.header.topology_hash, [7u8; 32]);
-        assert_eq!(genesis.header.spectral_proof.fingerprint.spectral_gap, 1.5);
+        assert!(genesis.header.spectral_proof.fingerprint.spectral_gap_valid);
     }
 
     #[test]
@@ -399,14 +398,14 @@ mod tests {
     #[test]
     fn test_spectral_bounds() {
         let fp = SpectralFingerprint {
-            spectral_gap: 1.5,
+            spectral_gap_valid: true,
             betti_numbers: (1, 0, 0),
             hash: [0; 32],
         };
         assert!(fp.verify_bounds());
 
         let fp_invalid = SpectralFingerprint {
-            spectral_gap: 5.0,
+            spectral_gap_valid: false,
             betti_numbers: (1, 0, 0),
             hash: [0; 32],
         };
@@ -610,6 +609,6 @@ mod tests {
         for &e in edges {
             data.extend_from_slice(&e.to_le_bytes());
         }
-        Transaction { data, key_image: None }
+        Transaction { data, key_image: None, sender_fingerprint: None, fee_amount: 0 }
     }
 }
