@@ -4,6 +4,47 @@
 
 > *Quantum-resistant* (resists Shor's algorithm), not *quantum encryption* (no qubits required). Security derives from geometric lattice hardness (CVP on sheaf cochains).
 
+## The Hard Problem Is Not Binary
+
+The central cryptographic object is a **Grothendieck fibration** (Helfer's h=-fibration) — a system of fiber spaces connected by restriction maps (parallel transport). The secret key IS the fibration. Every computational operator in the system is derived from it, and **none of them are binary**.
+
+This is a fundamental departure from standard lattice cryptography, where the hard problem lives in a discrete, finite space.
+
+```
+Standard lattice (LWE):           Homotopical (Hodge-hardness):
+───────────────────────           ───────────────────────────────
+Secret: vector s ∈ ℤ_q^n         Secret: fibration F = (topology, restriction maps, spectrum)
+Public: matrix A ∈ {0,1}^{m×n}   Public: cochain b ∈ C^k(X, ℤ_q)
+Operator: A (binary/ternary)      Operator: Δ = δ*δ + δδ* (continuous, derived from F)
+Search space: finite field        Search space: manifold of fibrations
+Break: find s from As+e           Break: find ker(Δ) without knowing which F produced Δ
+```
+
+**The fibration determines everything.** The restriction maps R_{v→e} (parallel transport between fibers) are **orthogonal matrices** — continuous-valued, not binary. These build the coboundary operator δ, which builds the **sheaf Laplacian** Δ = δ\*δ + δδ\* — the primary mathematical operator of the system. Δ defines the harmonic subspace ker(Δ) where messages live, and the **Hodge projection** π_H onto ker(Δ) is the decryption operator. The entire derivation chain is non-binary:
+
+| Layer | Object | Entries | Why not binary |
+|-------|--------|---------|---------------|
+| Fibration secret | Restriction maps R_{v→e} | **Orthogonal matrices** ∈ O(d) | **Continuous** — parallel transport on fiber bundle |
+| Coboundary δ | Block incidence × restriction maps | **ℝ-valued blocks** | **Non-discrete** — encodes fibration geometry |
+| Laplacian Δ = δ\*δ + δδ\* | Sums of products of orthogonal blocks | **ℝ-valued** | **Derived** from fibration, not chosen independently |
+
+Even at the simplest level (scalar stalks, dim=1), the coboundary δ is a **signed incidence matrix** with entries in {−1, 0, +1} — ternary, not binary. Orientation matters.
+
+**Cryptographic implications:**
+
+1. **The fibration is the secret, not just a vector.** In LWE, the secret is a vector s and the public matrix A is known. Here, the *entire operator* Δ is secret — derived from the fibration's restriction maps. An attacker must identify which fibration (which system of parallel transport) generated the public cochain, searching a *continuous manifold* of possible fibrations.
+
+2. **Intuitionistic, not classical.** Helfer (Thm 12.3) proves the fibration's internal logic is **not binary**: ¬¬P → P fails for open formulas. Credential identity has three states — *equivalent*, *distinct*, or *undetermined*. A classical attacker must resolve every query to true/false, but the fibration admits genuinely undetermined states without the parallel transport secret. Privacy is structural, not computational.
+
+3. **Formally verified strict hierarchy.** The Lean proof (`hardness_proof.lean`, verified by Aristotle/Harmonic) establishes:
+   - `Hodge_Ambiguity`: same public cochain b is harmonic for Δ₁ but not Δ₂ — the fibration producing Δ is the secret
+   - `Hodge_Strictly_Harder`: a CVP oracle (which operates on a *fixed, known* lattice) is provably insufficient — the lattice itself is unknown because the fibration is unknown
+   - `Spectrum_Not_Homotopy_Invariant`: two fibrations with identical Betti numbers can produce completely different Laplacian spectra
+
+> **In short:** standard lattice crypto hides a vector in a known lattice. We hide a vector in an *unknown* lattice defined by an unknown fibration whose restriction maps are continuous-valued orthogonal matrices. The attacker doesn't know the lattice, doesn't know the operator, and can't determine either from the public data. The Lean proof shows this is strictly harder than CVP.
+
+---
+
 Full blockchain node with Proof of Value consensus, sheaf-aware storage, and libp2p networking.
 
 - ✅ **Post-quantum secure** — spectral + lattice hardness, not ECDSA
@@ -255,9 +296,21 @@ The system maps private geometric data (off-chain) to public commitments (on-cha
 
 ## Privacy Model: Fibrations, Not Ring Signatures
 
-Traditional privacy coins (Monero) use **ring signatures**: hide the real signer among N decoys. The anonymity set is finite (typically 11-16). Probability of identifying the signer: **1/16**.
+Traditional privacy coins (Monero) use **ring signatures**: hide the real signer among N decoys (currently N=16). The anonymity set is finite and chosen at transaction time. Chain analysis can sometimes narrow the set by eliminating known-spent outputs. Probability of identifying the signer: **1/16**.
 
 Homotopical Encrypt uses **homotopy class membership**: prove you know *some* fibration F whose unified invariants (spectral, cohomological, homotopical) match a public fingerprint, without revealing *which* one. The anonymity set is the entire homotopy class [F] — an **infinite** set of all fibrations with matching invariants. Probability of identifying which F: **1/∞ = 0**.
+
+| | Monero | hcrypt |
+|---|---|---|
+| Anonymity primitive | Ring signature (N=16 decoys) | Homotopy class membership (\|[F]\|=∞) |
+| Anonymity set size | Finite, chosen at tx time | Infinite, structural |
+| Pr[identify signer] | 1/16 | 1/∞ = 0 |
+| Quantum resistance | ❌ ECDLP (broken by Shor) | ✅ CVP on ker(Δ) (post-quantum) |
+| Metadata leakage | Decoy selection patterns | No decoys → no selection metadata |
+| Amounts hidden | RingCT (Pedersen commitments) | Cochain commitments (δ-homomorphic) |
+| Double-spend | Key images | Key images (same concept, geometric construction) |
+| Security parameter | Ring size N | Spectral gap λ₁ of sheaf Laplacian Δ |
+| Formal verification | None | `hardness_proof.lean` (Hodge → CVP, strictly harder) |
 
 ### Fibration Fingerprint
 
@@ -282,17 +335,6 @@ The **public identity** is a `HomotopyClassFingerprint` — a composite of spect
 ```
 
 This is a geometric fact, not a protocol parameter. The anonymity set isn't chosen (like picking 16 decoys) — it's the entire homotopy class, which is infinite by the structure of the fibration category.
-
-```
-Ring signatures (Monero):          Fibration anonymity (hcrypt):
-─────────────────────────          ──────────────────────────────
-  "I am one of these 16"           "I know some F ∈ [F]"
-  Finite anonymity set              |[F]| = ∞ (infinite)
-  Pr[identify] = 1/16              Pr[identify] = 1/∞ = 0
-  Based on ECDLP (broken by QC)    Based on CVP on ker(Δ) (post-quantum)
-  Decoy selection is metadata       No decoys — no metadata leakage
-  Security parameter: ring size     Security parameter: spectral gap λ₁
-```
 
 ## Helfer → Implementation
 
@@ -564,6 +606,23 @@ The structural advantage: in a classical mixnet, each hop's anonymity is indepen
 | Geometric security | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | Panopticon resilient | ❌ | ❌ | ⚠️ | ❌ | ❌ | ✅ |
 
+## Conclusion
+
+The hard problem is ternary, not binary.
+
+Standard lattice cryptography operates on known matrices over finite fields. The attacker knows the lattice, and they just need to find a short vector in it. Homotopical encryption defines the lattice as an unknown Grothendieck fibration whose restriction maps are continuous-valued orthogonal matrices, not binary entries in a public matrix.
+
+This is formally verified. The Lean proofs (`hardness_proof.lean`, `framework_consolidation.lean`, `math_audit_hcrypt.lean` — verified by Aristotle/Harmonic against Lean 4 + Mathlib) establish three things:
+
+1. **Hodge → CVP**: Any algorithm that breaks the Hodge-hardness assumption can be used to solve the Closest Vector Problem on q-ary lattices. The lattice problem is a *projection* of the harder geometric problem.
+
+2. **CVP ↛ Hodge**: A CVP oracle is provably *insufficient* to break the system, because it operates on a fixed known lattice, while the attacker must determine which sublattice of ℤ_q^n corresponds to ker(Δ) — without knowing Δ.
+
+3. **Spectral ≠ Homotopy**: Two fibrations can share all topological invariants (Betti numbers, kernel dimensions) but have completely different Laplacian spectra. The spectrum is *finer* than the homotopy type — it carries the secret.
+
+The fibration's internal logic is intuitionistic (Helfer, Thm 12.3), not classical. Identity has three states, not two. The sheaf Laplacian Δ — the primary mathematical operator — is ℝ-valued, derived from the fibration, and serves as the bridge between the categorical structure (Grothendieck fibrations, natural transformations, homotopy equivalence) and the computational hard problem (CVP on ker(Δ)). The Hodge projection π_H onto ker(Δ) is the decryption operator.
+
+Privacy, post-quantum security, and infinite anonymity sets follow from the geometry.
 ## License
 
 MIT
