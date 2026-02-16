@@ -35,6 +35,18 @@ import numpy as np
 from typing import Tuple, Dict, List, Optional
 from dataclasses import dataclass
 
+# Canonical kernel tolerance — single source of truth.
+# Avoids circular import: credential imports geometry, so we define
+# the raw formula here and credential.py re-exports it.
+def _kernel_tolerance(eigenvalues: np.ndarray) -> float:
+    """Compute kernel identification tolerance from eigenvalues."""
+    _KERNEL_RELATIVE_TOL = 1e-10
+    _KERNEL_ABSOLUTE_FLOOR = 1e-6
+    if len(eigenvalues) == 0:
+        return _KERNEL_ABSOLUTE_FLOOR
+    max_eig = np.max(np.abs(eigenvalues))
+    return max(max_eig * _KERNEL_RELATIVE_TOL, _KERNEL_ABSOLUTE_FLOOR)
+
 
 @dataclass
 class HodgeDecomposition:
@@ -185,11 +197,8 @@ def hodge_decomposition(
     eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
     
     # 1. HARMONIC projection: ker(Δ)
-    # Use RELATIVE threshold: sheaf eigenvalues can be ~1e12,
-    # so absolute 1e-6 misidentifies the kernel.
-    # (Matches framework_consolidation.lean: correct ker(Δ) is critical.)
-    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
-    effective_tol = max(max_eig * 1e-10, tolerance)
+    # Use canonical _kernel_tolerance — same formula as keygen, encrypt, decrypt.
+    effective_tol = _kernel_tolerance(eigenvalues)
     harmonic_mask = np.abs(eigenvalues) < effective_tol
     n_harmonic = np.sum(harmonic_mask)
     
@@ -271,10 +280,8 @@ def compute_hodge_projectors(
     
     # Compute projectors
     eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
-    # Use RELATIVE threshold: sheaf eigenvalues can be ~1e12.
-    # (Matches framework_consolidation.lean: correct ker(Δ) is critical.)
-    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
-    effective_tol = max(max_eig * 1e-10, tolerance)
+    # Use canonical _kernel_tolerance — same formula as keygen, encrypt, decrypt.
+    effective_tol = _kernel_tolerance(eigenvalues)
     harmonic_mask = np.abs(eigenvalues) < effective_tol
     
     # Harmonic projector

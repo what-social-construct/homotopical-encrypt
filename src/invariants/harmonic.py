@@ -23,6 +23,7 @@ from ..geometry.hodge import (
     hodge_decomposition,
     compute_hodge_projectors,
     HodgeDecomposition,
+    _kernel_tolerance,
 )
 
 
@@ -166,12 +167,10 @@ def project_to_harmonic(
     eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
 
     # Find harmonic basis (eigenvalue ≈ 0)
-    # Use RELATIVE threshold for sheaf Laplacians with large eigenvalues (~1e12).
-    # Absolute 1e-10 fails when max eigenvalue >> 1.
+    # Uses _kernel_tolerance() — same formula as keygen, encrypt, decrypt, hodge.py.
     # (Matches hardness_proof.lean: correct ker(Δ) identification is critical
     # for the CVP reduction.)
-    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
-    effective_threshold = max(max_eig * 1e-10, zero_threshold)
+    effective_threshold = _kernel_tolerance(eigenvalues)
     harmonic_mask = np.abs(eigenvalues) < effective_threshold
     
     if not np.any(harmonic_mask):
@@ -295,9 +294,8 @@ def embed_in_harmonic(
     """
     eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
     
-    # Find harmonic basis (relative threshold for sheaf Laplacians)
-    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
-    effective_threshold = max(max_eig * 1e-10, zero_threshold)
+    # Find harmonic basis — uses _kernel_tolerance() (single source of truth)
+    effective_threshold = _kernel_tolerance(eigenvalues)
     harmonic_mask = np.abs(eigenvalues) < effective_threshold
     harmonic_dim = np.sum(harmonic_mask)
     
@@ -321,6 +319,7 @@ def embed_in_harmonic(
     # Use relative tolerance: for sheaf Laplacians with eigenvalues ~1e12,
     # the residual ||Δ·embedding|| can be large in absolute terms even
     # when the embedding is numerically in ker(Δ).
+    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
     residual = np.linalg.norm(laplacian @ embedding)
     relative_residual = residual / (np.linalg.norm(embedding) * max_eig + 1e-16)
     if relative_residual > 1e-8:
@@ -362,9 +361,8 @@ def extract_from_harmonic(
     """
     eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
     
-    # Find harmonic basis (relative threshold for sheaf Laplacians)
-    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
-    effective_threshold = max(max_eig * 1e-10, zero_threshold)
+    # Find harmonic basis — uses _kernel_tolerance() (single source of truth)
+    effective_threshold = _kernel_tolerance(eigenvalues)
     harmonic_mask = np.abs(eigenvalues) < effective_threshold
     harmonic_basis = eigenvectors[:, harmonic_mask]
     

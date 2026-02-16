@@ -36,6 +36,35 @@ import hashlib
 from ..geometry.sheaf import CellularSheaf, build_cech_nerve
 from .lattice import secure_random_vector, secure_random_matrix
 
+# Minimum harmonic capacity: dim(ker(Δ₀)) must be at least this.
+# Ensures the Hodge path is ALWAYS available — no lattice fallback.
+# Set to 256 bits (32 bytes) — sufficient for any single message.
+# Credential keygen will construct restriction maps that guarantee this.
+MIN_HARMONIC_DIM: int = 256
+
+# Relative tolerance for kernel identification.
+# Used EVERYWHERE: keygen, encrypt, decrypt. Single source of truth.
+# Sheaf eigenvalues can be ~1e12 (lattice-scale maps), so absolute
+# thresholds fail. This is max_eig * KERNEL_RELATIVE_TOL.
+KERNEL_RELATIVE_TOL: float = 1e-10
+KERNEL_ABSOLUTE_FLOOR: float = 1e-6  # Floor for near-zero max_eig
+
+
+def kernel_tolerance(eigenvalues: np.ndarray) -> float:
+    """
+    Compute the kernel identification tolerance from eigenvalues.
+    
+    Single source of truth: used by keygen, encrypt, and decrypt.
+    Ensures the SAME vectors are identified as harmonic everywhere.
+    
+    Returns:
+        Tolerance threshold: eigenvalues below this are "in the kernel."
+    """
+    if len(eigenvalues) == 0:
+        return KERNEL_ABSOLUTE_FLOOR
+    max_eig = np.max(np.abs(eigenvalues))
+    return max(max_eig * KERNEL_RELATIVE_TOL, KERNEL_ABSOLUTE_FLOOR)
+
 
 def _count_connected_components(nerve: Dict[int, List[Tuple]]) -> int:
     """
@@ -214,49 +243,97 @@ class QuantumSheafFibration:
         cls,
         nerve: Dict[int, List[Tuple]],
         hilbert_dim: int = 256,
-        modulus: int = 12289  # Lattice modulus (prime)
+        modulus: int = 12289,  # Lattice modulus (prime)
+        harmonic_dim: int = 0,  # 0 = use MIN_HARMONIC_DIM
     ) -> 'QuantumSheafFibration':
         """
-        Generate random fibration (secure key generation).
+        Generate random fibration with guaranteed harmonic capacity.
+        
+        CONSTRUCTION (matches hardness_proof.lean Hodge decomposition):
+        
+        The restriction maps are constructed so that ALL edges AGREE
+        on a shared harmonic subspace H of dimension ≥ harmonic_dim.
+        This guarantees dim(ker(Δ₀)) ≥ harmonic_dim, so the Hodge
+        encrypt path ALWAYS has enough room for the message.
+        
+        Concretely, for each edge e = (i,j):
+          R_{i→e} = P_H + (I - P_H) · M_e^i · (I - P_H)
+          R_{j→e} = P_H + (I - P_H) · M_e^j · (I - P_H)
+        
+        where P_H is projector onto H (random basis, same for all edges),
+        and M_e^i, M_e^j are random per-edge-per-vertex.
+        
+        For v ∈ H: R_{i→e}v = v = R_{j→e}v → agreement → v ∈ ker(Δ₀). ✓
+        For v ∈ H⊥: R_{i→e}v ≠ R_{j→e}v generically → noise subspace. ✓
+        
+        The harmonic subspace H is hidden by the random basis U.
+        Finding H without U requires solving the Hodge problem
+        (hardness_proof.lean: Hodge_Strictly_Harder).
         
         Args:
             nerve: The Čech nerve topology
             hilbert_dim: Dimension of Hilbert spaces (security parameter)
             modulus: Lattice modulus for Hodge-hardness security
+            harmonic_dim: Guaranteed dim(ker(Δ₀)). 0 = MIN_HARMONIC_DIM.
             
         Returns:
-            Random fibration suitable for encryption
+            Random fibration with dim(ker(Δ₀)) ≥ harmonic_dim
         """
-        # Create cellular sheaf
+        h_dim = harmonic_dim if harmonic_dim > 0 else MIN_HARMONIC_DIM
+        d = hilbert_dim
+        
+        if h_dim > d:
+            raise ValueError(
+                f"harmonic_dim ({h_dim}) > hilbert_dim ({d}). "
+                f"Cannot embed harmonic subspace."
+            )
+        
+        # ── STEP 1: Random basis rotation (the fibration secret) ──
+        # U hides which subspace is harmonic. Without U, attacker
+        # doesn't know which dim-h_dim subspace of ℝ^d is ker(Δ).
+        # This is exactly the "ambiguity" in Hodge_Ambiguity_Proof.
+        U = _random_orthogonal(d)
+        
+        # Projector onto harmonic subspace H = span(U[:, :h_dim])
+        U_H = U[:, :h_dim]           # d × h_dim
+        P_H = U_H @ U_H.T            # d × d projector
+        P_perp = np.eye(d) - P_H     # complement projector
+        
+        # ── STEP 2: Build sheaf with harmonic-preserving restriction maps ──
         sheaf = CellularSheaf(nerve)
-        
-        # Generate random stalks (uniform in ℤ_q^d) - SECURE
         vertices = nerve.get(0, [])
+        edges = nerve.get(1, [])
         vertex_keys = {}
+        edge_keys = {}
         
+        # Generate random stalks
         for v in vertices:
-            # Random lattice secret key for this vertex (cryptographically secure)
-            key = secure_random_vector(hilbert_dim, modulus)
+            key = secure_random_vector(d, modulus)
             sheaf.set_stalk(v, key)
             vertex_keys[v[0]] = key
         
-        # Generate random restriction maps (lattice matrices)
-        edges = nerve.get(1, [])
-        edge_keys = {}
-        
+        # Generate restriction maps: agree on H, random on H⊥
         for edge in edges:
             i, j = edge
-            # Random matrix A ∈ ℤ_q^{d×d} (cryptographically secure)
-            A = secure_random_matrix(hilbert_dim, hilbert_dim, modulus)
-            edge_keys[edge] = A
             
-            # Set restriction maps
-            sheaf.set_restriction((i,), edge, A)
-            sheaf.set_restriction((j,), edge, A.T)  # Adjoint for other direction
+            # Random perturbation matrices for H⊥ (different per vertex)
+            M_i = secure_random_matrix(d, d, modulus).astype(np.float64) / modulus
+            M_j = secure_random_matrix(d, d, modulus).astype(np.float64) / modulus
+            
+            # R_{v→e} = P_H + P_perp · M_v · P_perp
+            # On H: R·v = v (identity) → all edges agree → ker(Δ₀) ⊇ H
+            # On H⊥: R·v = P_perp · M_v · v (random) → noise subspace
+            R_i = P_H + P_perp @ M_i @ P_perp
+            R_j = P_H + P_perp @ M_j @ P_perp
+            
+            edge_keys[edge] = R_i  # Store one for parallel transport
+            
+            sheaf.set_restriction((i,), edge, R_i)
+            sheaf.set_restriction((j,), edge, R_j)
         
         return cls(
             sheaf=sheaf,
-            hilbert_dim=hilbert_dim,
+            hilbert_dim=d,
             vertex_keys=vertex_keys,
             edge_keys=edge_keys
         )
@@ -529,6 +606,35 @@ def should_rotate(
     return age >= period
 
 
+def _random_orthogonal(d: int) -> np.ndarray:
+    """
+    Generate a random d×d orthogonal matrix (Haar measure on O(d)).
+    
+    This is the fibration secret: it determines which subspace of ℝ^d
+    is the harmonic subspace ker(Δ₀). An attacker who doesn't know U
+    doesn't know which subspace to project onto — exactly the ambiguity
+    in Hodge_Ambiguity_Proof (hardness_proof.lean).
+    
+    Uses QR decomposition of a random Gaussian matrix, which gives
+    a uniform sample from the orthogonal group.
+    """
+    # Random Gaussian matrix
+    from .random import secure_rng
+    rng = secure_rng()
+    G = rng.standard_normal((d, d))
+    
+    # QR decomposition → Q is orthogonal (Haar distributed)
+    Q, R = np.linalg.qr(G)
+    
+    # Ensure proper orthogonal (det = +1) by adjusting signs
+    # Q from QR can have det = -1; fix by flipping a column
+    signs = np.sign(np.diag(R))
+    signs[signs == 0] = 1
+    Q = Q * signs[np.newaxis, :]
+    
+    return Q
+
+
 def _extract_connections(credential: FibrationCredential) -> list:
     """Extract connection list from credential topology."""
     edges = credential.topology.get(1, [])
@@ -580,8 +686,13 @@ def _compute_spectrum(
     beta_1 = max(0, n_edges - n_vertices + beta_0)
     
     # Spectral gap (smallest nonzero eigenvalue)
-    nonzero = eigenvalues[eigenvalues > 1e-6]
+    # Use kernel_tolerance() — same threshold as encrypt/decrypt
+    tol = kernel_tolerance(eigenvalues)
+    nonzero = eigenvalues[eigenvalues > tol]
     spectral_gap = float(nonzero[0]) if len(nonzero) > 0 else 0.0
+    
+    # Harmonic dimension = eigenvalues below tolerance
+    harmonic_dim = int(np.sum(np.abs(eigenvalues) < tol))
     
     # Topology hash - MUST include spectral fingerprint for uniqueness
     # Otherwise credentials with same graph structure would collide
@@ -646,6 +757,26 @@ def _compute_spectrum(
                 f"relative = {relative_violation:.2e}. "
                 f"Hodge decomposition would be invalid. Aborting."
             )
+    
+    # Gate 5: Harmonic capacity — dim(ker(Δ₀)) ≥ MIN_HARMONIC_DIM
+    # This is the CRITICAL gate that guarantees the Hodge encrypt path
+    # ALWAYS works, eliminating the need for a lattice fallback.
+    #
+    # The restriction maps in QuantumSheafFibration.random() are
+    # constructed to guarantee this by design (P_H + P_perp M P_perp).
+    # This gate verifies the construction succeeded numerically.
+    #
+    # If this fails, something went wrong with the restriction map
+    # construction — hard fail, do not issue the credential.
+    if harmonic_dim < MIN_HARMONIC_DIM:
+        raise RuntimeError(
+            f"KEYGEN INVARIANT VIOLATION: dim(ker(Δ₀)) = {harmonic_dim} "
+            f"< MIN_HARMONIC_DIM = {MIN_HARMONIC_DIM}. "
+            f"Hodge encrypt path cannot hold message. "
+            f"Restriction map construction failed. Aborting.\n"
+            f"  (kernel_tolerance = {tol:.2e}, "
+            f"n_eigenvalues = {len(eigenvalues)})"
+        )
     
     return SpectralFingerprint(
         eigenvalues=eigenvalues,

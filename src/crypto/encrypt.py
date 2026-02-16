@@ -1,48 +1,35 @@
 """
-Encryption via Cochain Embedding (Dual-Path Architecture)
+Encryption via Hodge Embedding — Pure Harmonic Path
 
-Two encrypt/decrypt paths, selected by dim(ker(Δ_sheaf)):
+Architecture (matches hardness_proof.lean exactly):
 
-  HODGE PATH (v3 — matches hardness_proof.lean):
-    _encode_harmonic: message bits → ±1 coefficients in harmonic basis
-    embed_in_harmonic: coefficients → global section in ker(Δ)
-    noise in im(δ)⊕im(δ*) via (I - P_H) projection
-    ciphertext = harmonic_message + orthogonal_noise
-    decrypt = π_H(ciphertext) → _decode_harmonic → message
-    Security: CVP on harmonic sublattice (Hodge-hardness)
+  ENCRYPT:
+    1. Build sheaf Laplacian Δ from credential's restriction maps
+    2. Identify ker(Δ) via eigendecomposition (using kernel_tolerance())
+    3. Encode message as ±1 coefficients in harmonic eigenbasis
+    4. Embed in ker(Δ) → harmonic_message (a global section)
+    5. Add noise in im(δ)⊕im(δ*) via (I - P_H) projection
+    6. ciphertext = harmonic_message + orthogonal_noise
 
-  LATTICE PATH (v2 — fallback when dim(ker(Δ)) < message bits):
-    _encode_lattice: message bits → {0, q/2} at vertex 0
-    random shares at remaining vertices
-    decrypt = threshold decode at vertex 0 → _decode_lattice
-    Security: standard lattice threshold decoding
+  DECRYPT:
+    π_H(ciphertext) → harmonic coefficients → sign → bits → message
 
-Local-to-global coherence model:
+  SECURITY (from hardness_proof.lean):
+    Given b = h + e where h ∈ ker(Δ), e ∈ im(δ)⊕im(δ*),
+    recovering h without knowing Δ reduces to CVP on the
+    harmonic sublattice — but is STRICTLY harder because the
+    attacker must also identify ker(Δ) (Hodge_Strictly_Harder).
 
-  The restriction maps R_{v→e} are context projections between
-  stalk types (see primitives/stalk.py: StalkProjection := R_{v→e}).
+Layer separation (see ARCHITECTURE.md):
+  - Encrypt/decrypt: REAL arithmetic on eigenvectors of Δ_sheaf
+  - Commitment (commitment.py): DISCRETE arithmetic, cochains mod q
+  - Security reduction (hardness.py): lattice CVP is the shadow
+  - The modulus q does NOT appear in the encrypt path.
 
-  ker(Δ) = global sections = data consistent under all restrictions.
-  im(δ)⊕im(δ*) = disagreement subspace ⊥ ker(Δ).
-
-  The Hodge path embeds the message AS a global section, so
-  recovering it without the fibration requires solving CVP on ker(Δ)
-  — exactly the hardness claim in hardness_proof.lean.
-
-Post-quantum security (both paths):
-  - noise is Hodge-structured (not random Gaussian)
-  - large σ in im(δ)⊕im(δ*) → hides cochain structure
-  - small σ in ker(Δ) → preserves message
-  - recovering message without the fibration requires solving CVP
-    on the harmonic sublattice (Hodge-hardness)
-  - spectral gap λ₁ > 0 ensures clean separation between
-    message subspace ker(Δ) and noise subspace im(δ)⊕im(δ*)
-
-On-chain commitment (η : Credential → U):
-  Credential → unified fingerprint U = (λ₁, β, h-level, Σ-rank)
-  One-way, class-binding: U identifies the homotopy class [F], not
-  the specific fiber. |[F]| = ∞ → anonymity. Cannot recover fiber
-  from U — recipient already has private credential.
+No fallback path. Keygen (credential.py) guarantees
+dim(ker(Δ)) ≥ MIN_HARMONIC_DIM by construction (Gate 5).
+If this invariant somehow fails, encrypt hard-fails rather
+than silently downgrading to a weaker scheme.
 """
 
 from dataclasses import dataclass, field
@@ -51,17 +38,16 @@ import numpy as np
 import hashlib
 import time
 
-from .credential import FibrationCredential, SpectralFingerprint
+from .credential import (
+    FibrationCredential,
+    SpectralFingerprint,
+    kernel_tolerance,
+    MIN_HARMONIC_DIM,
+)
 from .lattice import (
     ornstein_uhlenbeck_noise,
-    secure_random_vector,
     secure_random_bytes,
 )
-from ..geometry.hodge import (
-    build_coboundary_operator,
-    compute_laplacian_from_coboundary
-)
-from ..geometry.noise import hodge_structured_noise as hodge_noise
 
 # Harmonic invariant gates
 from ..invariants.harmonic import (
@@ -202,33 +188,44 @@ def encrypt(
     use_hodge_noise: bool = True
 ) -> FibrationCiphertext:
     """
-    Encrypt message using fibration credential with Hodge-structured noise.
+    Encrypt message via pure Hodge embedding (matches hardness_proof.lean).
     
-    PRIMARY PATH (Hodge — matches hardness_proof.lean):
+    IDENTITY HIERARCHY (three levels):
+      U (on-chain):    PublicIdentity = homotopy class [F]
+                       Betti numbers only. |π⁻¹(β)| = ∞ → anonymity.
+      Fiber (wallet):  SpectralFingerprint = specific fibration
+                       Eigenvalues of Δ. NEVER leaves the wallet.
+      Ephemeral (tx):  Fresh noise per encrypt = per-transaction fiber
+                       Even same sender → different ciphertext each time.
+    
+    ENCRYPT PATH (no fallback — keygen guarantees harmonic capacity):
         1. Build sheaf Laplacian Δ from credential's restriction maps
-        2. Embed message in ker(Δ) via harmonic basis (message IS a global section)
-        3. Add noise in im(δ)⊕im(δ*) (orthogonal to message)
-        4. Decrypt = π_H(ciphertext) recovers message exactly
-        
-    FALLBACK PATH (Lattice — when dim(ker(Δ)) < message bits):
-        1. Message at vertex 0 as lattice element (bits → {0, q/2})
-        2. Random shares at other vertices
-        3. Threshold decode at vertex 0
-        
-    The Hodge path is preferred because it matches the hardness proof:
-    message ∈ ker(Δ), noise ∈ im(δ)⊕im(δ*), security = CVP on ker(Δ).
+        2. Identify ker(Δ) via eigendecomposition (kernel_tolerance())
+        3. Encode message as ±1 coefficients in harmonic eigenbasis
+        4. Embed in ker(Δ) → harmonic_message (global section)
+        5. Add noise in im(δ)⊕im(δ*) — orthogonal to message
+        6. ciphertext = harmonic_message + noise (ephemeral fiber)
+    
+    SECURITY: recovering h from b = h + e without knowing Δ
+    reduces to CVP on ker(Δ) but is strictly harder (Hodge_Strictly_Harder).
+    
+    ON-CHAIN: ciphertext carries U = public_identity (homotopy class),
+    NOT the spectral fingerprint (specific fiber). The fingerprint
+    stays in the wallet — consensus only sees the class.
     
     Args:
         message: Plaintext bytes to encrypt
         credential: FibrationCredential with fibration (private key)
         sigma_exact: Noise σ in exact⊕coexact (large = more hiding)
         sigma_harmonic: Noise σ in harmonic (small = preserves message)
-        use_hodge_noise: If True, use Hodge-structured noise; else discrete Gaussian
+        use_hodge_noise: If True, use Hodge-structured noise
         
     Returns:
         FibrationCiphertext ready for transmission
+        
+    Raises:
+        RuntimeError: If Hodge path fails (should never happen with valid credential)
     """
-    modulus = credential.modulus
     dim = credential.hilbert_dim
     
     # ── ENCRYPT INVARIANT GATE ──
@@ -237,128 +234,126 @@ def encrypt(
     vertices = credential.topology.get(0, [])
     edges = credential.topology.get(1, [])
     n_vertices = len(vertices)
+    message_bits = len(message) * 8
     
     # ══════════════════════════════════════════════════════════════
-    # TRY PRIMARY PATH: Hodge embedding (message ∈ ker(Δ))
-    # This is the path that matches hardness_proof.lean:
+    # HODGE PATH (only path — no fallback)
+    # Matches hardness_proof.lean:
     #   ciphertext = harmonic_message + noise
     #   where harmonic_message ∈ ker(Δ), noise ∈ im(δ)⊕im(δ*)
     #   decrypt = π_H(ciphertext) = harmonic_message (exact recovery)
     # ══════════════════════════════════════════════════════════════
-    hodge_path_used = False
-    try:
-        sheaf_lap = SheafLaplacian(credential.fibration.sheaf)
-        L_sheaf = sheaf_lap.get_laplacian_0()
-        
-        # How many message bits can ker(Δ) hold?
-        # Use RELATIVE threshold: sheaf eigenvalues can be ~1e12,
-        # so absolute 1e-10 misidentifies the kernel.
-        # (Matches hardness_proof.lean: ker(Δ) detection must be correct
-        # for the CVP reduction to hold.)
-        eigenvalues = np.linalg.eigvalsh(L_sheaf)
-        max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
-        rel_threshold = max(max_eig * 1e-10, 1e-6)
-        harmonic_dim = int(np.sum(np.abs(eigenvalues) < rel_threshold))
-        message_bits = len(message) * 8
-        
-        if harmonic_dim >= message_bits:
-            # ── HODGE PATH: message fits in ker(Δ) ──
-            # Encode message as real coefficients in harmonic basis
-            msg_coeffs = _encode_harmonic(message, harmonic_dim)
-            
-            # Embed in ker(Δ): result is a 0-cochain (one entry per stalk dim)
-            harmonic_msg, success = embed_in_harmonic(msg_coeffs, L_sheaf)
-            
-            if success:
-                # Validate embedding ∈ ker(Δ)
-                gate = validate_harmonic_embedding(harmonic_msg, L_sheaf)
-                if gate.passed:
-                    # Add noise in im(δ)⊕im(δ*) — orthogonal to message
-                    cochain_dim = L_sheaf.shape[0]
-                    from ..geometry.hodge import compute_hodge_projectors
-                    delta_0_sheaf, _ = build_coboundary_operator(
-                        credential.topology, stalk_dim=1
-                    )
-                    P_H, P_exact, P_coexact = compute_hodge_projectors(
-                        L_sheaf, delta_0_sheaf, None
-                    )
-                    
-                    # Noise purely in im(δ)⊕im(δ*): use (I - P_H) projection
-                    raw_noise = np.random.randn(cochain_dim) * sigma_exact
-                    noise = (np.eye(cochain_dim) - P_H) @ raw_noise
-                    
-                    # Validate noise ⊥ ker(Δ)
-                    noise_gate = validate_noise_structure(noise, L_sheaf, tolerance=1e-4)
-                    
-                    # ciphertext = message + noise (Hodge decomposition!)
-                    full_cochain = harmonic_msg + noise
-                    
-                    # Distribute across vertex blocks
-                    vertex_blocks = {}
-                    stalk_size = cochain_dim // n_vertices if n_vertices > 0 else dim
-                    for i, v in enumerate(vertices):
-                        start = i * stalk_size
-                        end = start + stalk_size
-                        if end <= len(full_cochain):
-                            vertex_blocks[v[0]] = full_cochain[start:end]
-                        else:
-                            vertex_blocks[v[0]] = np.zeros(stalk_size)
-                    
-                    hodge_path_used = True
-    except Exception:
-        pass  # Fall through to lattice path
     
-    # ══════════════════════════════════════════════════════════════
-    # FALLBACK PATH: Lattice encoding (vertex 0 + random shares)
-    # Used when dim(ker(Δ)) < message bits
-    # ══════════════════════════════════════════════════════════════
-    if not hodge_path_used:
-        msg_lattice = _encode_lattice(message, dim, modulus)
-        
-        delta_0, delta_1 = build_coboundary_operator(credential.topology, stalk_dim=1)
-        L_0 = delta_0.T @ delta_0
-        L_1 = compute_laplacian_from_coboundary(delta_1, delta_0)
-        
-        vertex_blocks = {}
-        for i, v in enumerate(vertices):
-            if i == 0:
-                vertex_blocks[v[0]] = msg_lattice.copy()
-            else:
-                vertex_blocks[v[0]] = secure_random_vector(dim, modulus).astype(np.float64)
-        
-        # Add noise to vertex blocks
-        vertices_list = [v[0] for v in vertices]
-        for vid in vertex_blocks:
-            if vid == vertices_list[0]:
-                noise = ornstein_uhlenbeck_noise(dim, volatility=sigma_harmonic)
-            else:
-                noise = ornstein_uhlenbeck_noise(dim, volatility=sigma_exact)
-            vertex_blocks[vid] = (vertex_blocks[vid] + noise) % modulus
+    # Step 1: Build sheaf Laplacian from restriction maps
+    sheaf_lap = SheafLaplacian(credential.fibration.sheaf)
+    L_sheaf = sheaf_lap.get_laplacian_0()
     
-    # ── EDGE SYNDROMES (both paths) ──
+    # Step 2: Identify ker(Δ) using canonical kernel_tolerance()
+    # Same tolerance as keygen and decrypt — single source of truth
+    eigenvalues = np.linalg.eigvalsh(L_sheaf)
+    tol = kernel_tolerance(eigenvalues)
+    harmonic_dim = int(np.sum(np.abs(eigenvalues) < tol))
+    
+    # Hard gate: keygen guaranteed dim(ker(Δ)) ≥ MIN_HARMONIC_DIM.
+    # If this fails, credential is corrupted — do NOT fall back.
+    if harmonic_dim < message_bits:
+        raise RuntimeError(
+            f"ENCRYPT INVARIANT VIOLATION: dim(ker(Δ)) = {harmonic_dim} "
+            f"< message_bits = {message_bits}. "
+            f"Credential's harmonic capacity is insufficient. "
+            f"This should never happen with a valid credential "
+            f"(keygen Gate 5 guarantees dim(ker(Δ)) ≥ {MIN_HARMONIC_DIM}). "
+            f"Credential may be corrupted. Aborting — no fallback."
+        )
+    
+    # Step 3: Encode message as ±1 coefficients in harmonic basis
+    msg_coeffs = _encode_harmonic(message, harmonic_dim)
+    
+    # Step 4: Embed in ker(Δ) → global section
+    harmonic_msg, success = embed_in_harmonic(msg_coeffs, L_sheaf)
+    
+    if not success:
+        raise RuntimeError(
+            "ENCRYPT INVARIANT VIOLATION: embed_in_harmonic failed. "
+            "Harmonic basis extraction from sheaf Laplacian failed. "
+            "Credential may be corrupted. Aborting."
+        )
+    
+    # Validate embedding ∈ ker(Δ)
+    gate = validate_harmonic_embedding(harmonic_msg, L_sheaf)
+    if not gate.passed:
+        raise RuntimeError(
+            f"ENCRYPT INVARIANT VIOLATION: harmonic embedding not in ker(Δ). "
+            f"Residual: {gate.residual:.2e}. "
+            f"Hodge decomposition would leak message into noise subspace. Aborting."
+        )
+    
+    # Step 5: Add noise in im(δ)⊕im(δ*) — orthogonal to message
+    # This is the EPHEMERAL FIBER: fresh per transaction
+    #
+    # From hardness_proof.lean (Hodge_Decomposition_Theorem):
+    #   C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ*)
+    # For encryption we only need noise ⊥ ker(Δ), i.e. noise ∈ im(δ)⊕im(δ*).
+    # The (I - P_H) projection guarantees this without needing the
+    # exact/coexact split (which requires the sheaf coboundary, not the
+    # bare graph coboundary). This matches Hodge_Strictly_Harder:
+    # the attacker sees b = h + e but can't determine which Δ produced h.
+    cochain_dim = L_sheaf.shape[0]
+    from ..geometry.hodge import compute_hodge_projectors
+    P_H, _, _ = compute_hodge_projectors(L_sheaf, None, None)
+    
+    # Noise purely in im(δ)⊕im(δ*): (I - P_H) kills harmonic component
+    from .random import secure_rng
+    rng = secure_rng()
+    raw_noise = rng.standard_normal(cochain_dim) * sigma_exact
+    noise = (np.eye(cochain_dim) - P_H) @ raw_noise
+    
+    # Validate noise ⊥ ker(Δ)
+    validate_noise_structure(noise, L_sheaf, tolerance=1e-4)
+    
+    # Step 6: ciphertext = message + noise (Hodge decomposition!)
+    full_cochain = harmonic_msg + noise
+    
+    # Distribute across vertex blocks
+    vertex_blocks = {}
+    stalk_size = cochain_dim // n_vertices if n_vertices > 0 else dim
+    for i, v in enumerate(vertices):
+        start = i * stalk_size
+        end = start + stalk_size
+        if end <= len(full_cochain):
+            vertex_blocks[v[0]] = full_cochain[start:end]
+        else:
+            vertex_blocks[v[0]] = np.zeros(stalk_size)
+    
+    # ── EDGE SYNDROMES ──
+    # Syndrome = R_e · v_j - v_i + noise (ephemeral per edge)
     edge_syndromes = {}
     for edge in edges:
         i, j = edge
-        vi_data = vertex_blocks.get(i, np.zeros(dim))
-        vj_data = vertex_blocks.get(j, np.zeros(dim))
-        A = credential.fibration.edge_keys.get(edge, np.eye(min(dim, len(vj_data))))
+        vi_data = vertex_blocks.get(i, np.zeros(stalk_size))
+        vj_data = vertex_blocks.get(j, np.zeros(stalk_size))
+        A = credential.fibration.edge_keys.get(edge, np.eye(stalk_size))
         
         if A.shape[1] == len(vj_data) and A.shape[0] == len(vi_data):
             syndrome = A @ vj_data - vi_data
         else:
             syndrome = np.zeros_like(vi_data)
         
-        noise = ornstein_uhlenbeck_noise(len(syndrome), volatility=sigma_exact)
-        edge_syndromes[edge] = syndrome + noise
+        syn_noise = ornstein_uhlenbeck_noise(len(syndrome), volatility=sigma_exact)
+        edge_syndromes[edge] = syndrome + syn_noise
     
     # ── BUILD CIPHERTEXT ──
+    # ON-CHAIN IDENTITY: homotopy class U (PublicIdentity), NOT specific fiber
+    # sender_fingerprint = public_identity.identity_hash() = class-level
+    # The spectral fingerprint (specific fiber) NEVER leaves the wallet.
     nonce = secure_random_bytes(24)
     message_hash = hashlib.sha256(message).digest()
+    public_id = credential.project_to_public()
     
     return FibrationCiphertext(
-        version=3 if hodge_path_used else 2,  # v3 = Hodge path, v2 = lattice
+        version=3,  # Always v3 (pure Hodge — no fallback)
         topology_hash=credential.spectrum.topology_hash,
-        sender_fingerprint=credential.spectrum.fingerprint_hash(),
+        sender_fingerprint=public_id.identity_hash(),  # CLASS, not fiber!
         vertex_blocks=vertex_blocks,
         edge_syndromes=edge_syndromes,
         nonce=nonce,
@@ -424,6 +419,10 @@ def _encode_harmonic(message: bytes, harmonic_dim: int) -> np.ndarray:
     Message lives in ker(Δ) as real coefficients in the harmonic basis.
     Decoded by _decode_harmonic() via sign(coeff) → bit.
     
+    EPHEMERAL FIBER: The padding (random ±1 for unused dimensions)
+    uses secure_rng() so message length doesn't leak through
+    statistical analysis. Each call produces an independent encoding.
+    
     Args:
         message: Plaintext bytes
         harmonic_dim: Dimension of ker(Δ) (must be ≥ message bits)
@@ -431,6 +430,9 @@ def _encode_harmonic(message: bytes, harmonic_dim: int) -> np.ndarray:
     Returns:
         Real-valued coefficient vector of length harmonic_dim
     """
+    from .random import secure_rng
+    rng = secure_rng()
+    
     msg_bits = []
     for byte in message:
         for i in range(8):
@@ -440,9 +442,13 @@ def _encode_harmonic(message: bytes, harmonic_dim: int) -> np.ndarray:
     for i, bit in enumerate(msg_bits[:harmonic_dim]):
         coeffs[i] = 1.0 if bit else -1.0
     
-    # Remaining dimensions: random ±1 (hides message length)
-    for i in range(len(msg_bits), harmonic_dim):
-        coeffs[i] = 1.0 if np.random.random() > 0.5 else -1.0
+    # Remaining dimensions: SECURE random ±1 (hides message length)
+    # Must use crypto RNG — np.random leaks message length via PRNG state
+    n_padding = harmonic_dim - len(msg_bits)
+    if n_padding > 0:
+        padding_bits = rng.integers(0, 2, size=n_padding)
+        for i, bit in enumerate(padding_bits):
+            coeffs[len(msg_bits) + i] = 1.0 if bit else -1.0
     
     return coeffs
 
@@ -478,37 +484,6 @@ def _decode_harmonic(coeffs: np.ndarray, message_length: int) -> bytes:
         msg_bytes.append(byte)
     
     return bytes(msg_bytes[:message_length])
-
-
-def _encode_lattice(message: bytes, dim: int, modulus: int) -> np.ndarray:
-    """
-    LATTICE PATH: Encode message bytes into lattice element.
-    
-    Uses simple bit encoding: each bit maps to 0 or q/2.
-    Padding uses cryptographically secure randomness.
-    Decoded by _decode_lattice() in decrypt.py via threshold.
-    """
-    # Pad message to fit dimension
-    msg_bits = []
-    for byte in message:
-        for i in range(8):
-            msg_bits.append((byte >> i) & 1)
-    
-    # Create lattice element
-    lattice = np.zeros(dim)
-    
-    for i, bit in enumerate(msg_bits[:dim]):
-        if bit:
-            lattice[i] = modulus // 2
-    
-    # Fill remaining with SECURE randomness
-    remaining = dim - len(msg_bits)
-    if remaining > 0:
-        padding = secure_random_vector(remaining, modulus)
-        for i, val in enumerate(padding):
-            lattice[len(msg_bits) + i] = val
-    
-    return lattice
 
 
 # ============================================================================

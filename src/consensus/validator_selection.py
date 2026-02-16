@@ -1,41 +1,35 @@
 """
-Validator Selection via Grassmann Centrality (Plücker)
+Validator Selection via Harmonic Projection Weight
 
-UPGRADE FROM FIEDLER TO PLÜCKER:
+THREE-LAYER SELECTION:
 
-  OLD (Fiedler):
-    centrality[v] = |fiedler_vector[v]|
-    → measures graph-theoretic position (Layer 1)
-    → two validators at same graph position get same centrality
-    → doesn't capture stalk geometry
+  1. Vault bond gate (binary):
+     eligible(v) = vault.bonded >= MINIMUM_VAULT_BOND
+     → Skin in the game. Not a weight — go/no-go.
 
-  NEW (Plücker):
-    consensus = karcher_mean(stalk_subspaces)
-    centrality[v] = 1 / (1 + d_Gr(stalk(v), consensus))
-    → measures geometric alignment with consensus subspace (Layer 3)
-    → two validators with same graph position but different stalks
-      get DIFFERENT centralities
-    → naturally rewards geometric coherence, not just connectivity
+  2. Plücker eligibility gate (binary):
+     eligible(v) = d_Gr(stalk(v), μ) < MAX_DIVERGENCE
+     → Close enough to consensus? Uses Grassmann distance.
 
-WHY PLÜCKER:
+  3. Harmonic projection weight (continuous):
+     weight(v) = ‖π_H(stalk(v))‖ / ‖stalk(v)‖
+     → How much of your stalk IS harmonic under the network's Δ_F?
+     → This IS your "value" — the part that survives projection.
+     → Determines selection probability AND reward share.
 
-  Plücker coordinates embed Gr(k,n) → P(∧ᵏℝⁿ). This gives us:
-  1. A CANONICAL representation of each validator's stalk subspace
-  2. DISTANCE = geometric disagreement (via grassmann_distance)
-  3. CONSENSUS = Karcher mean on Gr(k,n) (principled average subspace)
-  4. SYBIL RESISTANCE: can't fake aligned stalks without real data
-     (Fiedler only requires edges, Plücker requires geometric coherence)
+WHY HARMONIC WEIGHT OVER PLÜCKER CENTRALITY:
+
+  Plücker centrality measures DISTANCE to consensus.
+  Harmonic weight measures how much of your data IS CONSENSUS.
+  Two equidistant validators can have different harmonic content.
+  Value := what survives π_H. Selection should BE that value.
 
 FALLBACK:
 
-  If stalk data isn't available (e.g., genesis epoch or lightweight nodes),
-  falls back to Fiedler centrality. This ensures backwards compatibility.
+  If stalk data isn't available (genesis epoch, lightweight nodes),
+  falls back to Fiedler centrality. Backwards compatible.
 
-Mathematical basis:
-- Grassmann manifold Gr(k,n): space of k-dim subspaces of ℝⁿ
-- Plücker embedding: Gr(k,n) → P(∧ᵏℝⁿ) (projective coordinates)
-- Karcher mean: argmin_P Σᵢ d²(P, Pᵢ) on Gr(k,n)
-- Principal angles: θ₁ ≤ ... ≤ θₖ measure per-dimension agreement
+See docs/CONSENSUS.md for the full design.
 """
 
 from typing import List, Dict, Tuple, Optional
@@ -60,8 +54,13 @@ class Validator:
 
     Validators are identified by their spectral fingerprint,
     not by staked capital. Their selection probability comes
-    from their geometric alignment with the consensus subspace
-    (Plücker centrality), not from capital or graph position.
+    from harmonic projection weight — how much of their stalk
+    survives the network's Hodge projection π_H on Gr(k,n).
+
+    The Grassmann manifold is Hodge-native: the same geometry
+    that defines the onion routing (parallel transport on the
+    fiber bundle) also defines consensus (Karcher mean, sheaf
+    Laplacian, harmonic decomposition). One geometric substrate.
     """
     fingerprint: bytes          # Spectral fingerprint (identity)
     vertex_id: int              # Position in topology
@@ -75,9 +74,12 @@ class ValidatorSet:
     """
     Manages the validator set for PoV consensus.
 
-    Selection is based on Plücker centrality (Grassmann distance
-    to consensus subspace), falling back to Fiedler centrality
-    when stalk data is unavailable.
+    Grassmann is Hodge-native: Gr(k,n) is the shared geometric
+    substrate for onion routing (parallel transport), consensus
+    (Karcher mean + sheaf Laplacian), and selection (harmonic
+    projection weight). One manifold, three uses.
+
+    Selection: harmonic weight → Plücker gate → Fiedler fallback.
     """
 
     def __init__(self, topology: Dict[int, List[Tuple]]):
@@ -294,23 +296,66 @@ class ValidatorSet:
         return centralities
 
     # =========================================================================
-    # UNIFIED CENTRALITY (Plücker with Fiedler fallback)
+    # HARMONIC PROJECTION WEIGHT (primary — via CoherenceEngine)
+    # =========================================================================
+
+    def compute_harmonic_weights(self) -> Optional[Dict[bytes, float]]:
+        """
+        Compute harmonic projection weight for all validators.
+
+        weight(v) = ‖π_H(stalk(v))‖ / ‖stalk(v)‖
+
+        Delegates to CoherenceEngine which builds the Čech nerve,
+        computes the sheaf Laplacian Δ_F, and projects each stalk
+        onto ker(Δ_F).
+
+        Returns:
+            fingerprint → harmonic weight, or None if insufficient data.
+        """
+        if not self._has_stalk_data():
+            return None
+
+        stalks = {}
+        for fp, v in self.validators.items():
+            if v.is_active and v.stalk_data is not None:
+                stalks[fp] = v.stalk_data
+
+        if len(stalks) < 2:
+            return None
+
+        try:
+            from .coherence import CoherenceEngine
+            engine = CoherenceEngine(stalk_dim=self._stalk_dim)
+            return engine.compute_harmonic_weights(stalks)
+        except Exception:
+            return None
+
+    # =========================================================================
+    # UNIFIED SELECTION WEIGHTS (harmonic → Plücker → Fiedler fallback)
     # =========================================================================
 
     def compute_spectral_centrality(self) -> Dict[bytes, float]:
         """
-        Compute centrality for all validators.
+        Compute selection weights for all validators.
 
-        Uses Plücker centrality (Grassmann distance to Karcher mean)
-        when stalk data is available, falls back to Fiedler centrality
-        (Laplacian second eigenvector) otherwise.
+        Priority:
+          1. Harmonic projection weight (if stalk data + coherence engine)
+          2. Plücker centrality (if stalk data but coherence unavailable)
+          3. Fiedler centrality (fallback — no stalk data)
 
         This is the main entry point for validator selection.
         """
         if self._centralities is not None:
             return self._centralities
 
+        # Try harmonic weight first
         if self._has_stalk_data():
+            harmonic = self.compute_harmonic_weights()
+            if harmonic is not None:
+                self._centralities = harmonic
+                return self._centralities
+
+            # Fallback to Plücker
             plucker = self.compute_plucker_centrality()
             if plucker is not None:
                 self._centralities = plucker
@@ -321,20 +366,63 @@ class ValidatorSet:
         return self._centralities
 
     # =========================================================================
+    # VAULT + PLÜCKER ELIGIBILITY GATES
+    # =========================================================================
+
+    def filter_eligible(
+        self,
+        vault_registry: Optional['VaultRegistry'] = None,
+    ) -> Dict[bytes, float]:
+        """
+        Apply eligibility gates, then return weights for eligible validators.
+
+        Gate 1 (vault): vault.bonded >= MINIMUM_VAULT_BOND
+        Gate 2 (Plücker): d_Gr(stalk(v), μ) < MAX_DIVERGENCE
+
+        If no vault_registry provided, skips vault gate.
+        """
+        weights = self.compute_spectral_centrality()
+
+        eligible = {}
+        for fp, weight in weights.items():
+            # Gate 1: Vault bond
+            if vault_registry is not None:
+                if not vault_registry.is_eligible(fp):
+                    continue
+
+            # Gate 2: Plücker distance (already filtered by stalk alignment
+            # in compute_plucker_centrality — 0.01 minimum for no-stalk)
+            eligible[fp] = weight
+
+        # Re-normalize
+        total = sum(eligible.values())
+        if total > 0:
+            eligible = {k: v / total for k, v in eligible.items()}
+
+        return eligible
+
+    # =========================================================================
     # VALIDATOR SELECTION
     # =========================================================================
 
     def select_validator(
         self,
         epoch: int,
-        prev_block_hash: bytes
+        prev_block_hash: bytes,
+        vault_registry: Optional['VaultRegistry'] = None,
     ) -> Optional[bytes]:
         """
-        Select validator for next block using centrality + VRF.
+        Select validator for next block.
+
+        Pipeline:
+          1. Compute harmonic weights (or fallback)
+          2. Apply vault bond + Plücker eligibility gates
+          3. VRF-weighted selection among eligible validators
 
         Args:
             epoch: Current epoch number
-            prev_block_hash: Hash of previous block (source of randomness)
+            prev_block_hash: Hash of previous block (VRF seed)
+            vault_registry: Optional vault registry for bond gate
 
         Returns:
             Fingerprint of selected validator, or None if no validators
@@ -343,25 +431,27 @@ class ValidatorSet:
         if not active:
             return None
 
-        centralities = self.compute_spectral_centrality()
+        weights = self.filter_eligible(vault_registry)
+        if not weights:
+            return None
 
-        # VRF: deterministic randomness from prev_block
+        # VRF: deterministic randomness from prev_block + epoch
         vrf_input = prev_block_hash + epoch.to_bytes(8, 'little')
         vrf_output = hashlib.sha256(vrf_input).digest()
 
         # Convert to random float in [0, 1)
         random_value = int.from_bytes(vrf_output[:8], 'little') / (2**64)
 
-        # Weighted selection by centrality
+        # Weighted selection by harmonic weight
         cumulative = 0.0
-        for fingerprint in centralities:
-            cumulative += centralities[fingerprint]
+        for fingerprint in weights:
+            cumulative += weights[fingerprint]
             if random_value < cumulative:
                 self.validators[fingerprint].last_block = epoch
                 return fingerprint
 
         # Fallback
-        return list(centralities.keys())[-1] if centralities else None
+        return list(weights.keys())[-1] if weights else None
 
     def get_validator_info(self, fingerprint: bytes) -> Optional[Dict]:
         """Get info about a specific validator."""

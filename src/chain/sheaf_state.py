@@ -31,6 +31,11 @@ from ..primitives.stalk import (
 from ..primitives.homotopy import HomotopyInvariants, HomotopyClass
 from ..primitives.natural import NaturalTransformation, compose_nat
 
+# Consensus economics
+from .vault import VaultRegistry, Vault, SlashReason
+from .treasury import Treasury, HarmonicWeighted
+from .clmm import CLMMPool
+
 
 # =============================================================================
 # HASH CHAIN (from chloe_protocol pattern)
@@ -444,6 +449,11 @@ class SheafState:
     
     # Spectral cache
     spectral_cache: SpectralCache = field(default_factory=SpectralCache)
+    
+    # Consensus economics (PoV)
+    vault_registry: VaultRegistry = field(default_factory=VaultRegistry)
+    treasury: Treasury = field(default_factory=Treasury)
+    clmm_pool: CLMMPool = field(default_factory=CLMMPool)
     
     def __post_init__(self):
         # Ensure mutable defaults
@@ -895,11 +905,13 @@ class SheafState:
                     self.accounts[sender_fp].balance -= tx.fee_amount
                     self.accounts[sender_fp].nonce += 1
         
-        # 3. Credit block producer (collects fees)
+        # 3. Route fees through Treasury (not direct to producer)
+        #    Treasury splits: producer share, validator share, protocol, burn
+        #    See docs/CONSENSUS.md § Token Economics
         total_fees = sum(tx.fee_amount for tx in block.transactions)
         producer_fp = block.header.producer_fingerprint
-        if producer_fp in self.accounts and total_fees > 0:
-            self.accounts[producer_fp].balance += total_fees
+        if total_fees > 0:
+            self.treasury.collect_fee(total_fees)
         
         # 4. NERVE EDGE TRACKING (Layer 3: topology update)
         #    Each transaction creates/reinforces edges in the Čech nerve.
@@ -1039,8 +1051,36 @@ class SheafState:
             'spectral_gap': self.spectral_cache.spectral_gap
         }
     
+    def distribute_fees(
+        self,
+        producer_fp: bytes,
+        harmonic_weights: Dict[bytes, float],
+        epoch: int,
+    ) -> Dict[bytes, int]:
+        """
+        Trigger treasury distribution after block commit.
+        
+        Called by BlockProducer after successful block application.
+        Routes accumulated fees through the treasury's pluggable strategy.
+        
+        Args:
+            producer_fp: Block producer fingerprint (gets producer share)
+            harmonic_weights: Active validator harmonic weights
+            epoch: Current epoch
+            
+        Returns:
+            fingerprint → vHCRYPT allocated
+        """
+        return self.treasury.distribute(
+            producer_fingerprint=producer_fp,
+            harmonic_weights=harmonic_weights,
+            vault_registry=self.vault_registry,
+            epoch=epoch,
+        )
+    
     def summary(self) -> str:
         """Get state summary."""
+        active_vaults = len(self.vault_registry.get_active_vaults())
         return (
             f"SheafState (three-layer bus):\n"
             f"  Accounts: {len(self.accounts)}\n"
@@ -1048,7 +1088,10 @@ class SheafState:
             f"  Tip height: {self.tip_height}\n"
             f"  Mempool: {len(self.mempool)}\n"
             f"  Hash chain: {self.hash_chain.height()} entries\n"
-            f"  Spectral gap: {self.spectral_cache.spectral_gap or 'not computed'}"
+            f"  Spectral gap: {self.spectral_cache.spectral_gap or 'not computed'}\n"
+            f"  Active vaults: {active_vaults}\n"
+            f"  Treasury pending: {self.treasury.balance_hcrypt} HCRYPT\n"
+            f"  Treasury burned: {self.treasury.total_burned} HCRYPT"
         )
 
 

@@ -60,6 +60,9 @@ from .sheaf_state import SheafState
 # Reputation for equivocation slashing
 from .incentives import ReputationTracker, ReputationEvent
 
+# Consensus economics
+from .vault import VaultRegistry, Vault, SlashReason
+
 
 # Re-export bounds for convenience
 LOWER_BOUND = POV_LOWER
@@ -383,12 +386,16 @@ class BlockProducer:
         )
 
         if equivocation is not None:
-            # EQUIVOCATION DETECTED — slash the producer
+            # EQUIVOCATION DETECTED — slash vault + reputation
             self.reputation_tracker.record_event(
                 producer_fp,
                 ReputationEvent.EQUIVOCATION_DETECTED,
                 block_height=self.current_epoch,
                 details=f"Two blocks at epoch {self.current_epoch}"
+            )
+            # Vault slash: lose bonded vHCRYPT (economic penalty)
+            self.state.vault_registry.slash(
+                producer_fp, SlashReason.EQUIVOCATION
             )
             return BlockProductionResult(
                 success=False,
@@ -427,17 +434,29 @@ class BlockProducer:
         """
         Commit a verified block to chain state.
 
-        Delegates to SheafState.apply_block() which updates all three layers:
-        - Layer 1: key images spent, block header stored, tip updated, hash chain
-        - Layer 2: commitment tracking
-        - Layer 3: fee balances debited/credited
+        Pipeline:
+        1. SheafState.apply_block() — key images, balances, fees → treasury
+        2. Treasury distribution — producer share + harmonic-weighted validator share
+        3. Chain pointer updates
+        4. Reputation tracking
         """
-        # Apply block to three-layer state bus
+        producer_fp = block.header.producer_fingerprint
+
+        # 1. Apply block to three-layer state bus (fees go to treasury)
         ok, reason = self.state.apply_block(block)
         if not ok:
             raise RuntimeError(f"Block application failed: {reason}")
 
-        # Add to local chain list
+        # 2. Distribute accumulated fees via treasury
+        #    Uses harmonic weights from validator_set (or uniform fallback)
+        harmonic_weights = self.validator_set.compute_spectral_centrality()
+        self.state.distribute_fees(
+            producer_fp=producer_fp,
+            harmonic_weights=harmonic_weights,
+            epoch=self.current_epoch,
+        )
+
+        # 3. Add to local chain list
         self.chain.append(block)
 
         # Remove included txs from mempool
@@ -448,12 +467,12 @@ class BlockProducer:
         self.current_epoch += 1
 
         # Update validator's last block
-        if block.header.producer_fingerprint in self.validator_set.validators:
-            self.validator_set.validators[block.header.producer_fingerprint].last_block = self.current_epoch
+        if producer_fp in self.validator_set.validators:
+            self.validator_set.validators[producer_fp].last_block = self.current_epoch
 
-        # Record successful block production in reputation
+        # 4. Record successful block production in reputation
         self.reputation_tracker.record_event(
-            block.header.producer_fingerprint,
+            producer_fp,
             ReputationEvent.BLOCK_PRODUCED,
             block_height=self.current_epoch
         )

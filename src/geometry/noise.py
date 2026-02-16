@@ -72,7 +72,7 @@ def spectral_noise(
     else:
         noise = noise_spectral
     
-    return np.round(noise).astype(np.int64)
+    return noise  # Real-valued (geometry layer). Discretize in commitment layer.
 
 
 def heat_kernel_sample(
@@ -114,7 +114,7 @@ def heat_kernel_sample(
     # Transform to coordinate basis
     sample = eigenvectors @ z
     
-    return np.round(sample).astype(np.int64)
+    return sample  # Real-valued (geometry layer). Discretize in commitment layer.
 
 
 def exact_noise(
@@ -148,7 +148,7 @@ def exact_noise(
     # Apply coboundary → noise is exact
     noise = coboundary_matrix @ source
     
-    return np.round(noise).astype(np.int64)
+    return noise  # Real-valued (geometry layer). Discretize in commitment layer.
 
 
 def ornstein_uhlenbeck_sample(
@@ -195,7 +195,7 @@ def ornstein_uhlenbeck_sample(
         stationary_std = np.sqrt(stationary_var)
         noise = rng.normal(equilibrium, stationary_std)
     
-    return np.round(noise).astype(np.int64)
+    return noise  # Real-valued (geometry layer). Discretize in commitment layer.
 
 
 def hodge_structured_noise(
@@ -269,4 +269,4 @@ def hodge_structured_noise(
                 f"This would corrupt messages in the harmonic subspace."
             )
     
-    return np.round(noise).astype(np.int64)
+    return noise  # Real-valued (geometry layer). Discretize in commitment layer.

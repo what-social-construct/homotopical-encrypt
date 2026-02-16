@@ -381,17 +381,29 @@ Above 2√2:  topology too rigid (no room for harmonic messages)
 
 ### Validator Selection
 
-Validators are selected by **spectral centrality**, not stake weight. The Fiedler vector (second eigenvector of the graph Laplacian) measures each node's importance to information flow through the topology:
+Validators are selected by **harmonic projection weight** — how much of their stalk data survives the network's Hodge projection π_H — not stake weight.
 
 ```
-Selection probability ∝ |fiedler(v)|
+1. Consensus subspace:
+   μ = karcher_mean(stalk_subspaces)              ← Karcher mean on Gr(k,n)
 
-     0 ─── 1 ─── 2 ─── 3       Vertex 2 has highest Fiedler centrality
-                   │              (most connected to information flow)
-                   4              → selected most often as block producer
+2. Eligibility gate (Plücker — binary, not weighted):
+   eligible(v) = d_Gr(stalk(v), μ) < MAX_DIVERGENCE
+   → Are you close enough to consensus? (go/no-go)
+
+3. Selection weight (harmonic projection — continuous):
+   weight(v) = ‖π_H(stalk(v))‖ / ‖stalk(v)‖
+   → How much of your stalk IS harmonic under the network's Laplacian?
+   → This IS your "value" — the part that survives projection.
+
+4. VRF slot assignment:
+   output = HMAC-SHA256(eigenvectors, prev_hash ‖ epoch)
+   → Deterministic but unpredictable. One valid producer per epoch.
 ```
 
-This naturally rewards **network participation** (being well-connected, routing transactions) rather than **capital accumulation** (having the most tokens). Combined with VRF randomness from the previous block hash, selection is deterministic but unpredictable.
+**Why harmonic weight:** Value := what survives harmonic projection. A validator's influence should BE its harmonic content. Plücker centrality (distance to Karcher mean) is used as an eligibility gate, but the weight — what determines selection probability and reward share — is ‖π_H(stalk)‖. The whole system becomes: value is harmonic, selection is harmonic, rewards are harmonic. Sybil nodes with random stalks have near-zero harmonic content under the network's Laplacian.
+
+Equivocation (two blocks at same height) is detectable and slashable.
 
 ### PoV Verification Pipeline
 
@@ -552,18 +564,26 @@ hcrypt replaces ring signatures with **homotopy class membership**: you prove yo
 | Double-spend | Key images | Key images (same concept, geometric construction) |
 | Formal verification | None | `hardness_proof.lean` (Hodge → CVP, strictly harder) |
 
-### vs Cardano (Formal Methods)
+### vs Cardano / Ouroboros (Consensus)
 
-Cardano pioneered formal verification in blockchain (Haskell, Agda proofs). hcrypt takes a different approach: rather than verifying the *protocol*, it verifies the *hardness assumption* itself. `hardness_proof.lean` is a machine-checked proof that breaking the system requires solving a problem strictly harder than CVP.
+Cardano's **Ouroboros** is a provably-secure Proof of Stake protocol: time is divided into epochs and slots, a VRF lottery selects a slot leader proportional to stake, and the protocol's security is proven under the honest-majority assumption (>50% of stake is honest). The formal verification (Agda) proves the *protocol follows its specification*.
 
-| | Cardano | hcrypt |
+hcrypt's **Proof of Value** replaces the stake-weighted lottery with **harmonic projection weight**: block validity is determined by the Laplacian eigenstructure, and validators are selected by how much of their stalk survives the network's Hodge projection π_H — not capital weight. The formal verification (Lean 4) proves the *underlying hardness assumption* — that breaking the system requires solving a problem strictly harder than CVP.
+
+| | Ouroboros (Cardano) | Proof of Value (hcrypt) |
 |---|---|---|
-| Formal methods | Protocol specification (Ouroboros in Agda) | Hardness proof (Lean 4 + Mathlib) |
+| Block producer selection | Stake-weighted VRF lottery | Harmonic projection weight + VRF |
+| What determines influence | **How much you own** (ADA stake) | **How much of your stalk survives π_H** (harmonic content) |
+| Validity condition | Slot leader signed correctly | λ₁ ∈ [1/√2, 2√2] + β₀=1 + key image unique + sheaf coherence |
+| Security assumption | >50% honest stake | Hodge-hardness (CVP on unknown lattice) |
+| Formal verification | Protocol spec (Ouroboros in Agda) | Hardness proof (`hardness_proof.lean`, Lean 4 + Mathlib) |
 | What's verified | "Protocol follows spec" | "Breaking this requires solving CVP+" |
-| Consensus | Ouroboros (PoS, slot lottery) | Proof of Value (spectral geometry) |
+| Sybil resistance | Stake = cost of attack | Geometric coherence + vault bond threshold |
 | Privacy | Optional (Midnight sidechain) | Default (every transaction) |
-| Validator selection | Stake-weighted VRF | Spectral centrality + VRF |
-| Smart contracts | Plutus (Haskell) | WASM (planned) |
+| Plutocracy risk | Yes — more ADA = more power | No — bond is go/no-go gate, selection is harmonic |
+| Equivocation | Slashable (stake loss) | Slashable (detectable via VRF, evidence on-chain) |
+
+**The key difference is what gets rewarded.** Ouroboros rewards *capital accumulation* — the more ADA you hold, the more blocks you produce, the more ADA you earn. This is secure but plutocratic by design. PoV rewards *harmonic value* — the part of your contribution that survives the network's Hodge projection. A validator with high harmonic content and minimal bond has more influence than a disconnected whale. See [docs/CONSENSUS.md](docs/CONSENSUS.md) for the full design.
 
 ### vs Holochain (Architecture)
 

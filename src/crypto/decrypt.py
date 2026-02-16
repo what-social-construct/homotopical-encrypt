@@ -1,35 +1,33 @@
 """
-Decryption via Dual Decode (lattice + Hodge)
+Decryption via Hodge Projection — Pure Harmonic Path
 
-Local-to-global coherence model:
+Architecture (matches encrypt.py and hardness_proof.lean exactly):
 
-  The restriction maps R_{v→e} are context projections between stalk
-  types (see primitives/stalk.py: StalkProjection := R_{v→e}).
+  DECRYPT:
+    1. Validate credential/ciphertext binding (hard gate)
+    2. Validate credential spectral structure (PSD gate)
+    3. Build sheaf Laplacian Δ from credential's restriction maps
+    4. Assemble full cochain from vertex blocks (dimension from Δ)
+    5. Project onto ker(Δ) via π_H → recover harmonic message
+    6. Read ±1 coefficients → bits → bytes
 
-  ker(Δ) = global sections = data consistent under all restrictions.
-  im(δ)⊕im(δ*) = disagreement subspace ⊥ ker(Δ).
+  This is the EXACT INVERSE of encrypt.py:
+    encrypt:  b = embed(m, ker(Δ)) + noise(im(δ)⊕im(δ*))
+    decrypt:  m = extract(π_H(b), ker(Δ))
 
-  Decryption has two dual paths that must agree:
-  - lattice threshold decode at vertex 0 (local, fast)
-  - Hodge projection π_H onto ker(Δ) (global, geometric)
+  The projection π_H strips noise EXACTLY because:
+    π_H(h + e) = π_H(h) + π_H(e) = h + 0 = h
+  since h ∈ ker(Δ) and e ⊥ ker(Δ) (Hodge decomposition theorem).
 
-  The lattice path reads the message from the first vertex block
-  using threshold decoding (values near q/2 → 1, near 0 → 0).
-  The Hodge path projects the full cochain onto the harmonic
-  subspace, extracting the globally coherent component.
+  SECURITY (from hardness_proof.lean):
+    Without knowing Δ, the attacker cannot compute π_H.
+    Finding h from b = h + e reduces to CVP on ker(Δ),
+    but is STRICTLY harder because the attacker must also
+    identify which Δ (among exponentially many with same
+    Betti numbers) generated the ciphertext (Hodge_Ambiguity).
 
-  Currently the lattice path is primary and Hodge projection is
-  available for ZK proofs via projective_measurement(). When
-  restriction maps are designed with controlled kernel dimension
-  (dim ker(Δ_sheaf) ≥ message bits), the Hodge path becomes a
-  full geometric decrypt.
-
-Decryption process:
-1. Validate credential/ciphertext binding (hard gate)
-2. Validate credential spectral structure (PSD gate)
-3. Lattice threshold decode at vertex 0
-4. Hash verification (integrity check)
-5. Optional: projective measurement for ZK proofs
+  LEGACY: v2 lattice threshold decode is retained for backward
+  compatibility only. All new ciphertexts are v3 (pure Hodge).
 
 Hash-tracing inspired by chloe_protocol's HashChain pattern.
 """
@@ -38,7 +36,7 @@ from typing import Optional, Tuple
 import numpy as np
 import hashlib
 
-from .credential import FibrationCredential
+from .credential import FibrationCredential, kernel_tolerance
 from .encrypt import FibrationCiphertext, _decode_harmonic
 from .lattice import LatticeInstance, ornstein_uhlenbeck_noise
 from ..geometry.sheaf_laplacian import SheafLaplacian
@@ -170,9 +168,17 @@ def decrypt(
     with_chain: bool = False
 ) -> bytes:
     """
-    Decrypt ciphertext using credential.
+    Decrypt ciphertext via Hodge projection π_H onto ker(Δ).
     
-    Uses direct lattice decoding (harmonic projection onto ker(Δ)).
+    Exact inverse of encrypt():
+      encrypt:  b = embed(m, ker(Δ)) + noise(im(δ)⊕im(δ*))
+      decrypt:  m = extract(π_H(b), ker(Δ))
+    
+    All dimensions derived from L_sheaf (the Laplacian matrix),
+    matching the Lean proof where n comes from Δ : Matrix n n ℝ.
+    
+    v3 ciphertexts: pure Hodge path (no fallback).
+    v2 ciphertexts: legacy lattice threshold decode (backward compat only).
     
     Args:
         ciphertext: FibrationCiphertext to decrypt
@@ -184,7 +190,7 @@ def decrypt(
         Decrypted plaintext bytes (or tuple if with_chain=True)
         
     Raises:
-        ValueError: If validation fails
+        ValueError: If validation or dimension check fails
     """
     from .validation import validate_decryption_request
     
@@ -219,40 +225,46 @@ def decrypt(
     # ══════════════════════════════════════════════════════════════
     
     if ciphertext.version == 3:
-        # ── HODGE PATH (primary for v3): π_H recovers message ──
+        # ── HODGE PATH (v3 — matches hardness_proof.lean): π_H recovers message ──
         # Message was embedded in ker(Δ) by _encode_harmonic.
         # Decrypt = project full cochain onto ker(Δ), read coefficients.
-        try:
-            sheaf_lap = SheafLaplacian(credential.fibration.sheaf)
-            L_sheaf = sheaf_lap.get_laplacian_0()
-            
-            # Assemble full cochain from all vertex blocks
-            full_cochain = np.concatenate([
-                ciphertext.vertex_blocks.get(v[0], np.zeros(dim))
-                for v in sorted(vertices, key=lambda x: x[0])
-            ])
-            
-            # Adjust dimension to match Laplacian
-            lap_dim = L_sheaf.shape[0]
-            if len(full_cochain) > lap_dim:
-                full_cochain = full_cochain[:lap_dim]
-            elif len(full_cochain) < lap_dim:
-                full_cochain = np.pad(full_cochain, (0, lap_dim - len(full_cochain)))
-            
-            # Project onto ker(Δ) — this strips the noise
-            harmonic_component = project_to_harmonic(full_cochain, L_sheaf)
-            
-            # Extract harmonic coefficients
-            coeffs = extract_from_harmonic(
-                harmonic_component, L_sheaf,
-                message_length=ciphertext.message_length * 8  # bits
+        # NO FALLBACK: if Hodge path fails, credential is corrupt.
+        sheaf_lap = SheafLaplacian(credential.fibration.sheaf)
+        L_sheaf = sheaf_lap.get_laplacian_0()
+        
+        # DIMENSION: derive from L_sheaf (the math), not from stored hilbert_dim.
+        # In the Lean proof, n comes from the Laplacian's type: Δ : Matrix n n ℝ.
+        # cochain_dim = n_vertices × stalk_dim (same formula as encrypt.py).
+        cochain_dim = L_sheaf.shape[0]
+        n_v = len(vertices)
+        stalk_size = cochain_dim // n_v if n_v > 0 else dim
+        
+        # Assemble full cochain: each block must be stalk_size (= cochain_dim / n_vertices)
+        full_cochain = np.concatenate([
+            ciphertext.vertex_blocks.get(v[0], np.zeros(stalk_size))
+            for v in sorted(vertices, key=lambda x: x[0])
+        ])
+        
+        # Dimension sanity: full_cochain MUST equal cochain_dim.
+        # If not, the ciphertext was built with a different credential.
+        if len(full_cochain) != cochain_dim:
+            raise ValueError(
+                f"DIMENSION MISMATCH: assembled cochain has dim {len(full_cochain)} "
+                f"but L_sheaf has dim {cochain_dim}. "
+                f"Ciphertext may have been encrypted with a different credential."
             )
-            
-            # Decode coefficients → bytes
-            decrypted = _decode_harmonic(coeffs, ciphertext.message_length)
-        except Exception:
-            # Fallback to lattice if Hodge path fails
-            decrypted = _decode_lattice(msg_block[:dim], modulus, ciphertext.message_length)
+        
+        # Project onto ker(Δ) — this strips the noise
+        harmonic_component = project_to_harmonic(full_cochain, L_sheaf)
+        
+        # Extract harmonic coefficients
+        coeffs = extract_from_harmonic(
+            harmonic_component, L_sheaf,
+            message_length=ciphertext.message_length * 8  # bits
+        )
+        
+        # Decode coefficients → bytes
+        decrypted = _decode_harmonic(coeffs, ciphertext.message_length)
     else:
         # ── LATTICE PATH (v2 and below): threshold decode ──
         decrypted = _decode_lattice(msg_block[:dim], modulus, ciphertext.message_length)
@@ -387,42 +399,39 @@ def projective_measurement(
     if chain is None:
         chain = DecryptionChain()
     
-    modulus = credential.modulus
-    dim = credential.hilbert_dim
+    # DIMENSION: derive from L_sheaf (the math), same as decrypt() and encrypt().
+    # In the Lean proof: n comes from Δ : Matrix n n ℝ.
+    laplacian = SheafLaplacian(credential.fibration.sheaf)
+    L_sheaf = laplacian.get_laplacian_0()
+    cochain_dim = L_sheaf.shape[0]
     
-    # Reconstruct full cochain
     vertices = credential.topology.get(0, [])
-    cochain = np.zeros(len(vertices) * dim)
+    n_v = len(vertices)
+    stalk_size = cochain_dim // n_v if n_v > 0 else credential.hilbert_dim
     
-    for i, v in enumerate(vertices):
+    # Reconstruct full cochain (dimensions from Laplacian)
+    cochain = np.zeros(cochain_dim)
+    for i, v in enumerate(sorted(vertices, key=lambda x: x[0])):
         vid = v[0]
         if vid in ciphertext.vertex_blocks:
             block = ciphertext.vertex_blocks[vid]
-            cochain[i*dim:(i+1)*dim] = block[:dim]
+            end = min(stalk_size, len(block))
+            cochain[i*stalk_size:i*stalk_size+end] = block[:end]
     
     # Hash pre-projection state
     pre_hash = hash_array(cochain)
     
-    # Build Laplacian and project
-    laplacian = SheafLaplacian(credential.fibration.sheaf)
+    # Eigendecomposition and kernel projection
     eigenvalues, eigenvectors = laplacian.eigendecomposition(0)
     
     # Find kernel (harmonic subspace)
-    # Use RELATIVE threshold: sheaf eigenvalues can be ~1e12.
+    # Uses kernel_tolerance() — same threshold as keygen, encrypt, hodge.py.
     # (Matches hardness_proof.lean: correct ker(Δ) is critical for CVP.)
-    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 1.0
-    rel_threshold = max(max_eig * 1e-10, 1e-6)
-    kernel_mask = np.abs(eigenvalues) < rel_threshold
+    tol = kernel_tolerance(eigenvalues)
+    kernel_mask = np.abs(eigenvalues) < tol
     if np.any(kernel_mask):
         kernel_basis = eigenvectors[:, kernel_mask]
-        # Ensure dimensions match
-        if len(cochain) != kernel_basis.shape[0]:
-            n = kernel_basis.shape[0]
-            if len(cochain) > n:
-                cochain = cochain[:n]
-            else:
-                cochain = np.pad(cochain, (0, n - len(cochain)))
-        
+        # Dimensions MUST match (both derived from same Laplacian)
         coeffs = kernel_basis.T @ cochain
         harmonic = kernel_basis @ coeffs
     else:
@@ -455,8 +464,8 @@ def decrypt_with_verification(
     Full decryption with hash verification and projective measurement.
     
     Pipeline:
-    1. Direct lattice decryption (gets message)
-    2. Projective measurement (for ZK proofs)
+    1. Hodge projection decrypt (π_H recovers message)
+    2. Projective measurement (independent π_H for ZK proofs)
     3. Hash verification (confirms correctness)
     
     Args:
