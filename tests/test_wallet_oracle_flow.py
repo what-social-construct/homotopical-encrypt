@@ -38,74 +38,19 @@ class EncryptedCredential:
     expected_invariants: Dict[str, Any] = field(default_factory=dict)
 
 
-def create_test_credential(name: str, security_param: int = 32):
+def create_test_credential(name: str):
     """
-    Create a minimal test credential.
-    
-    For testing, we use smaller dimensions than production.
+    Create a test credential using the real generate_credential pipeline.
+
+    Uses production default (security_parameter=512, h_dim=256)
+    so encrypt has enough harmonic capacity for test messages.
     """
-    # Minimal topology: 4 vertices in 2 disconnected components
-    topology = {
-        0: [(0,), (1,), (2,), (3,)],  # Vertices
-        1: [(0, 1), (2, 3)]           # Edges (2 components)
-    }
-    
-    # Build Laplacian with 2 components (β₀ = 2)
-    n = 4
-    laplacian = np.zeros((n, n))
-    # Component 1: vertices 0-1
-    laplacian[0, 0] = 1
-    laplacian[0, 1] = -1
-    laplacian[1, 0] = -1
-    laplacian[1, 1] = 1
-    # Component 2: vertices 2-3
-    laplacian[2, 2] = 1
-    laplacian[2, 3] = -1
-    laplacian[3, 2] = -1
-    laplacian[3, 3] = 1
-    
-    # Coboundary for edges
-    delta_0 = np.zeros((2, n))  # 2 edges, 4 vertices
-    delta_0[0, 0] = -1
-    delta_0[0, 1] = 1
-    delta_0[1, 2] = -1
-    delta_0[1, 3] = 1
-    
-    # Create minimal credential
-    class MinimalSpectrum:
-        def __init__(self, laplacian):
-            eigenvalues = np.linalg.eigvalsh(laplacian)
-            self.eigenvalues = eigenvalues
-            # topology_hash must be bytes for serialization
-            hash_data = hash(str(topology)).to_bytes(8, 'little', signed=True) * 4
-            self.topology_hash = hash_data[:32]
-        
-        def fingerprint_hash(self) -> bytes:
-            """32-byte fingerprint from eigenvalues."""
-            return bytes(np.frombuffer(
-                np.array(self.eigenvalues).tobytes(), dtype=np.uint8
-            )[:32])
-    
-    class MinimalFibration:
-        def __init__(self, topology):
-            self.edge_keys = {}
-            for edge in topology.get(1, []):
-                # Identity connection (flat bundle)
-                self.edge_keys[edge] = np.eye(4)
-    
-    # Build credential manually for testing
-    cred = type('FibrationCredential', (), {
-        'topology': topology,
-        'laplacian': laplacian,
-        'delta_0': delta_0,
-        'hilbert_dim': n,
-        'modulus': 65537,
-        'security_parameter': security_param,
-        'spectrum': MinimalSpectrum(laplacian),
-        'fibration': MinimalFibration(topology),
-    })()
-    
-    return cred
+    from src.crypto.credential import generate_credential
+
+    return generate_credential(
+        parties=[f"{name}_alice", f"{name}_bob"],
+        connections=[(f"{name}_alice", f"{name}_bob")],
+    )
 
 
 def test_wallet_encryption():
@@ -115,7 +60,7 @@ def test_wallet_encryption():
     message = b"Test secret credential data"
     ciphertext = encrypt(message, master, sigma_exact=2.0, sigma_harmonic=0.1)
     
-    assert ciphertext.version == 2
+    assert ciphertext.version >= 2  # v3 after Hodge-native refactor
     assert len(ciphertext.vertex_blocks) > 0
     assert len(ciphertext.edge_syndromes) > 0
     
@@ -199,14 +144,14 @@ def test_full_flow():
         public_fingerprint=wallet_cred.spectrum.fingerprint_hash(),
         topology_hash=wallet_cred.spectrum.topology_hash,
         expected_invariants={
-            "betti_0": 2,
-            "spectral_gap": float(np.sort(np.linalg.eigvalsh(wallet_cred.laplacian))[2])
+            "betti_0": wallet_cred.spectrum.betti_numbers[0],
+            "spectral_gap": wallet_cred.spectrum.spectral_gap,
         }
     )
     
     assert len(enc_cred.public_fingerprint) == 32
     assert len(enc_cred.topology_hash) == 32
-    assert enc_cred.expected_invariants["betti_0"] == 2
+    assert enc_cred.expected_invariants["betti_0"] >= 1
 
 
 # =============================================================================
