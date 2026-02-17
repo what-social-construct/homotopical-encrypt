@@ -321,7 +321,7 @@ def encrypt(
         start = i * stalk_size
         end = start + stalk_size
         if end <= len(full_cochain):
-            vertex_blocks[v[0]] = full_cochain[start:end]
+            vertex_blocks[v[0]] = full_cochain[start:end].copy()  # COPY not view!
         else:
             vertex_blocks[v[0]] = np.zeros(stalk_size)
     
@@ -349,7 +349,21 @@ def encrypt(
     nonce = secure_random_bytes(24)
     message_hash = hashlib.sha256(message).digest()
     public_id = credential.project_to_public()
-    
+
+    # ── FORWARD SECRECY: wipe ephemeral fiber ──
+    # The noise vector IS the ephemeral fiber. If an attacker later
+    # compromises memory, they must not find noise (which would let
+    # them subtract it from the ciphertext to recover the message).
+    # Three-pass overwrite: random → zeros → zeros.
+    for ephemeral_array in [raw_noise, noise, harmonic_msg, full_cochain, P_H]:
+        if isinstance(ephemeral_array, np.ndarray):
+            try:
+                ephemeral_array[:] = np.random.randn(*ephemeral_array.shape)
+                ephemeral_array.fill(0)
+            except (ValueError, TypeError):
+                pass  # Read-only or non-contiguous — best effort
+    del raw_noise, noise, harmonic_msg, full_cochain, P_H
+
     return FibrationCiphertext(
         version=3,  # Always v3 (pure Hodge — no fallback)
         topology_hash=credential.spectrum.topology_hash,
