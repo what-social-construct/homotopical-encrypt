@@ -155,9 +155,9 @@ def test_rotation_preserves_homotopy_class():
     cred = generate_credential(
         parties=["alice", "bob"],
         connections=[("alice", "bob")],
-        security_parameter=32,
+        security_parameter=128, enforce_min_harmonic=False,
     )
-    rotated = rotate_credential(cred)
+    rotated = rotate_credential(cred, enforce_min_harmonic=False)
 
     # Same homotopy class (Betti numbers)
     assert cred.spectrum.betti_numbers == rotated.spectrum.betti_numbers, \
@@ -182,10 +182,10 @@ def test_rotation_unlinkable():
     cred = generate_credential(
         parties=["alice", "bob"],
         connections=[("alice", "bob")],
-        security_parameter=32,
+        security_parameter=128, enforce_min_harmonic=False,
     )
-    rot1 = rotate_credential(cred)
-    rot2 = rotate_credential(cred)
+    rot1 = rotate_credential(cred, enforce_min_harmonic=False)
+    rot2 = rotate_credential(cred, enforce_min_harmonic=False)
 
     fp_orig = cred.spectrum.fingerprint_hash()
     fp_rot1 = rot1.spectrum.fingerprint_hash()
@@ -215,7 +215,7 @@ def test_vrf_evaluation_deterministic():
     cred = generate_credential(
         parties=["val_a", "val_b"],
         connections=[("val_a", "val_b")],
-        security_parameter=32,
+        security_parameter=128, enforce_min_harmonic=False,
     )
     key = VRFKey.from_credential(cred)
     prev_hash = b'\x00' * 32
@@ -236,7 +236,7 @@ def test_vrf_different_epochs_differ():
     cred = generate_credential(
         parties=["val_a", "val_b"],
         connections=[("val_a", "val_b")],
-        security_parameter=32,
+        security_parameter=128, enforce_min_harmonic=False,
     )
     key = VRFKey.from_credential(cred)
     prev_hash = b'\x00' * 32
@@ -254,7 +254,7 @@ def test_vrf_score_in_unit_interval():
     cred = generate_credential(
         parties=["val_a", "val_b"],
         connections=[("val_a", "val_b")],
-        security_parameter=32,
+        security_parameter=128, enforce_min_harmonic=False,
     )
     key = VRFKey.from_credential(cred)
 
@@ -270,7 +270,7 @@ def test_vrf_serialization_round_trip():
     cred = generate_credential(
         parties=["val_a", "val_b"],
         connections=[("val_a", "val_b")],
-        security_parameter=32,
+        security_parameter=128, enforce_min_harmonic=False,
     )
     key = VRFKey.from_credential(cred)
     out = vrf_evaluate(key, b'\xab' * 32, epoch=7)

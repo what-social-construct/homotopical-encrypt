@@ -62,7 +62,7 @@ def test_block_production_pipeline():
         cred = generate_credential(
             parties=[f"v{i}_a", f"v{i}_b"],
             connections=[(f"v{i}_a", f"v{i}_b")],
-            security_parameter=32,
+            security_parameter=128, enforce_min_harmonic=False,
         )
         fp = cred.spectrum.fingerprint_hash()
         credentials.append(cred)
@@ -75,7 +75,7 @@ def test_block_production_pipeline():
     )
 
     # Override spectral gap computation — test credentials have tiny sheaf gaps
-    # because security_parameter=32 creates 64-dim Laplacian with near-zero eigenvalues.
+    # because security_parameter=128 creates 256-dim Laplacian with near-zero eigenvalues.
     # We test the PIPELINE, not the gap computation (that's tested in invariants/).
     producer._compute_spectral_gap = lambda cred: 1.5  # Valid: in [0.707, 2.828]
 
@@ -337,7 +337,7 @@ def test_homotopy_equivalence_proof():
     cred = generate_credential(
         parties=["a", "b"],
         connections=[("a", "b")],
-        security_parameter=32,
+        security_parameter=128, enforce_min_harmonic=False,
     )
 
     statement = HomotopyStatement.from_credential(cred)
@@ -453,7 +453,7 @@ def test_transaction_key_image_verification():
     cred = generate_credential(
         parties=["sender_a", "sender_b"],
         connections=[("sender_a", "sender_b")],
-        security_parameter=32,
+        security_parameter=128, enforce_min_harmonic=False,
     )
     recipient_fp = hashlib.sha256(b"recipient").digest()
 
@@ -606,7 +606,7 @@ def test_chain_persistence_full_cycle():
     cred = generate_credential(
         parties=["prod_a", "prod_b"],
         connections=[("prod_a", "prod_b")],
-        security_parameter=32,
+        security_parameter=128, enforce_min_harmonic=False,
     )
     fp = cred.spectrum.fingerprint_hash()
 

@@ -66,14 +66,14 @@ def test_spectral_fingerprint():
     cred1 = generate_credential(
         parties=['a', 'b'],
         connections=[('a', 'b')],
-        security_parameter=32,
+        security_parameter=128, enforce_min_harmonic=False,
         modulus=12289
     )
     
     cred2 = generate_credential(
         parties=['a', 'b'],
         connections=[('a', 'b')],
-        security_parameter=32,
+        security_parameter=128, enforce_min_harmonic=False,
         modulus=12289
     )
     

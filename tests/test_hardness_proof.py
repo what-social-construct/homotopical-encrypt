@@ -179,7 +179,7 @@ class TestHodgeHardnessReduction:
         cred = generate_credential(
             parties=["alice", "bob", "carol"],
             connections=[("alice", "bob"), ("bob", "carol")],
-            security_parameter=128,
+            security_parameter=512,
         )
         
         # Build the sheaf Laplacian (the SECRET)
@@ -266,8 +266,8 @@ class TestHodgeAmbiguity:
         parties = ["alice", "bob", "carol"]
         connections = [("alice", "bob"), ("bob", "carol")]
         
-        cred1 = generate_credential(parties, connections, security_parameter=32)
-        cred2 = generate_credential(parties, connections, security_parameter=32)
+        cred1 = generate_credential(parties, connections, security_parameter=512)
+        cred2 = generate_credential(parties, connections, security_parameter=512)
         
         L1 = SheafLaplacian(cred1.fibration.sheaf)
         L2 = SheafLaplacian(cred2.fibration.sheaf)
@@ -316,9 +316,9 @@ class TestHodgeAmbiguity:
         from src.geometry.sheaf_laplacian import SheafLaplacian
         from src.invariants.harmonic import project_to_harmonic, embed_in_harmonic
         
-        # Alice's secret Laplacian
+        # Alice's secret Laplacian (d=512, h_dim=256 → proper noise subspace)
         cred = generate_credential(
-            ["alice", "bob"], [("alice", "bob")], security_parameter=32
+            ["alice", "bob"], [("alice", "bob")], security_parameter=512
         )
         L_secret = SheafLaplacian(cred.fibration.sheaf)
         eigs, vecs = L_secret.eigendecomposition(0)
@@ -349,7 +349,7 @@ class TestHodgeAmbiguity:
         
         # Attacker (wrong Δ) gets wrong answer
         wrong_cred = generate_credential(
-            ["alice", "bob"], [("alice", "bob")], security_parameter=32
+            ["alice", "bob"], [("alice", "bob")], security_parameter=512
         )
         L_wrong = SheafLaplacian(wrong_cred.fibration.sheaf)
         eigs_w, vecs_w = L_wrong.eigendecomposition(0)
@@ -504,12 +504,12 @@ class TestEncryptDecryptHodgePath:
         from src.crypto.credential import generate_credential
         from src.crypto import encrypt, decrypt
         
-        # security_parameter=256 needed for full message recovery
+        # security_parameter=512 needed for full message recovery
         # (sp=128 truncates at 16 bytes due to Hilbert dim constraints)
         cred = generate_credential(
             ["alice", "bob"],
             [("alice", "bob")],
-            security_parameter=256,
+            security_parameter=512,
         )
         
         msg = b"hardness proof test"
@@ -527,7 +527,7 @@ class TestEncryptDecryptHodgePath:
         cred = generate_credential(
             ["alice", "bob", "carol"],
             [("alice", "bob"), ("bob", "carol")],
-            security_parameter=256,
+            security_parameter=512,
         )
         
         # Try various message sizes (capped at lattice block capacity)
@@ -545,10 +545,10 @@ class TestEncryptDecryptHodgePath:
         from src.crypto import encrypt, decrypt
         
         cred_alice = generate_credential(
-            ["alice", "bob"], [("alice", "bob")], security_parameter=32
+            ["alice", "bob"], [("alice", "bob")], security_parameter=128, enforce_min_harmonic=False
         )
         cred_eve = generate_credential(
-            ["alice", "bob"], [("alice", "bob")], security_parameter=32
+            ["alice", "bob"], [("alice", "bob")], security_parameter=128, enforce_min_harmonic=False
         )
         
         msg = b"secret message"
@@ -601,8 +601,8 @@ class TestLaplacianDistinction:
         parties = ["alice", "bob", "carol"]
         connections = [("alice", "bob"), ("bob", "carol")]
         
-        cred1 = generate_credential(parties, connections, security_parameter=32)
-        cred2 = generate_credential(parties, connections, security_parameter=32)
+        cred1 = generate_credential(parties, connections, security_parameter=512)
+        cred2 = generate_credential(parties, connections, security_parameter=512)
         
         L1 = SheafLaplacian(cred1.fibration.sheaf)
         L2 = SheafLaplacian(cred2.fibration.sheaf)

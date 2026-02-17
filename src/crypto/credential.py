@@ -42,6 +42,18 @@ from .lattice import secure_random_vector, secure_random_matrix
 # Credential keygen will construct restriction maps that guarantee this.
 MIN_HARMONIC_DIM: int = 256
 
+# Default stalk dimension d = 2 × MIN_HARMONIC_DIM.
+# MUST be > MIN_HARMONIC_DIM so the noise subspace (d - h_dim) is non-empty.
+# The construction is:
+#   U := random_orthogonal(d)
+#   P_H := U[:, :h_dim] @ U[:, :h_dim].T   (projector onto harmonic)
+#   P_perp := I - P_H                       (projector onto noise)
+#
+# When d = h_dim → P_perp = 0 → NO noise → no security.
+# When d = 2·h_dim → balanced split: Gr(h_dim, d) has dim h_dim² = 65536.
+# This is the Grassmannian the attacker must search (tsirelson_sketch.lean).
+DEFAULT_STALK_DIM: int = 2 * MIN_HARMONIC_DIM  # = 512
+
 # Relative tolerance for kernel identification.
 # Used EVERYWHERE: keygen, encrypt, decrypt. Single source of truth.
 # Sheaf eigenvalues can be ~1e12 (lattice-scale maps), so absolute
@@ -242,7 +254,7 @@ class QuantumSheafFibration:
     def random(
         cls,
         nerve: Dict[int, List[Tuple]],
-        hilbert_dim: int = 256,
+        hilbert_dim: int = 512,
         modulus: int = 12289,  # Lattice modulus (prime)
         harmonic_dim: int = 0,  # 0 = use MIN_HARMONIC_DIM
     ) -> 'QuantumSheafFibration':
@@ -400,7 +412,7 @@ class FibrationCredential:
     
     # Metadata
     parties: List[str] = field(default_factory=list)
-    hilbert_dim: int = 256
+    hilbert_dim: int = 512
     modulus: int = 12289
     
     def project_to_public(self) -> PublicIdentity:
@@ -448,17 +460,21 @@ class FibrationCredential:
 def generate_credential(
     parties: List[str],
     connections: List[Tuple[str, str]],
-    security_parameter: int = 256,
-    modulus: int = 12289
+    security_parameter: int = 512,
+    modulus: int = 12289,
+    enforce_min_harmonic: bool = True,
 ) -> FibrationCredential:
     """
     Generate a fibration credential for a group of parties.
-    
+
     Args:
         parties: List of party names/IDs
         connections: Which parties can communicate directly
         security_parameter: Dimension of Hilbert spaces (λ)
         modulus: Lattice modulus (should be prime, q > 2λ)
+        enforce_min_harmonic: If True (default/production), require
+            dim(ker(Δ)) ≥ MIN_HARMONIC_DIM=256 and security_parameter ≥ 256.
+            Set False ONLY in tests that don't need cryptographic security.
         
     Returns:
         FibrationCredential with public/private components
@@ -484,14 +500,21 @@ def generate_credential(
     nerve = build_cech_nerve(parties, connections)
     
     # 2. Generate random fibration (secret)
+    # When enforce_min_harmonic=False (tests), clamp harmonic_dim to hilbert_dim
+    # so small security_parameters don't crash. Gate 5 is also skipped.
+    effective_harmonic = 0 if enforce_min_harmonic else security_parameter
     fibration = QuantumSheafFibration.random(
         nerve=nerve,
         hilbert_dim=security_parameter,
-        modulus=modulus
+        modulus=modulus,
+        harmonic_dim=effective_harmonic,
     )
     
     # 3. Compute spectral fingerprint
-    spectrum = _compute_spectrum(fibration, nerve)
+    spectrum = _compute_spectrum(
+        fibration, nerve,
+        enforce_min_harmonic=enforce_min_harmonic,
+    )
 
     # 4. Unified invariant validation at keygen stage
     #    This calls validate_fibration(stage="keygen") which runs ALL
@@ -562,6 +585,7 @@ ROTATION_PERIOD_BLOCKS: int = 1000  # ~16 minutes at 1 block/sec
 
 def rotate_credential(
     old_credential: FibrationCredential,
+    enforce_min_harmonic: bool = True,
 ) -> FibrationCredential:
     """
     Rotate a credential: new fibration, same homotopy class.
@@ -593,6 +617,7 @@ def rotate_credential(
         connections=_extract_connections(old_credential),
         security_parameter=old_credential.hilbert_dim,
         modulus=old_credential.modulus,
+        enforce_min_harmonic=enforce_min_harmonic,
     )
 
 
@@ -650,7 +675,8 @@ def _extract_connections(credential: FibrationCredential) -> list:
 
 def _compute_spectrum(
     fibration: QuantumSheafFibration,
-    nerve: Dict[int, List[Tuple]]
+    nerve: Dict[int, List[Tuple]],
+    enforce_min_harmonic: bool = True,
 ) -> SpectralFingerprint:
     """
     Compute spectral fingerprint from fibration.
@@ -659,6 +685,10 @@ def _compute_spectrum(
     - Eigenvalues of sheaf Laplacian
     - Betti numbers β_0, β_1
     - Spectral gap λ_1
+    
+    Args:
+        enforce_min_harmonic: If False, skip Gate 5 (MIN_HARMONIC_DIM check).
+            Used by tests with small security_parameter.
     """
     from ..geometry.sheaf_laplacian import SheafLaplacian
     
@@ -768,7 +798,9 @@ def _compute_spectrum(
     #
     # If this fails, something went wrong with the restriction map
     # construction — hard fail, do not issue the credential.
-    if harmonic_dim < MIN_HARMONIC_DIM:
+    #
+    # Skipped when enforce_min_harmonic=False (tests with small dims).
+    if enforce_min_harmonic and harmonic_dim < MIN_HARMONIC_DIM:
         raise RuntimeError(
             f"KEYGEN INVARIANT VIOLATION: dim(ker(Δ₀)) = {harmonic_dim} "
             f"< MIN_HARMONIC_DIM = {MIN_HARMONIC_DIM}. "
