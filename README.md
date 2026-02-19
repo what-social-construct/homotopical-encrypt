@@ -43,6 +43,8 @@ Even at the simplest level (scalar stalks, dim=1), the coboundary δ is a **sign
 
 > **In short:** standard lattice crypto hides a vector in a known lattice. We hide a vector in an *unknown* lattice defined by an unknown fibration whose restriction maps are continuous-valued orthogonal matrices. The attacker doesn't know the lattice, doesn't know the operator, and can't determine either from the public data. The Lean proof shows this is strictly harder than CVP.
 
+**Security note (SHA‑256 vs Hodge‑hardness):** SHA‑256 is only used for *public commitments and indexing* (topology hashes, identity hashes). It never protects the ciphertext itself. The encryption hardness comes from the hidden orthogonal basis **U** that defines `ker(Δ)`: an attacker sees `b = h + e` but does not know which subspace is harmonic. Recovering `h` without `U` is the Hodge problem, which the Lean proofs show is **strictly harder than CVP**. Even if SHA‑256 were weakened, the core encryption hardness still rests on the unknown fibration / Grassmannian ambiguity.
+
 ---
 
 Full blockchain node with Proof of Value consensus, sheaf-aware storage, and libp2p networking.
