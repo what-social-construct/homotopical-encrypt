@@ -94,8 +94,8 @@ class BlockHeader:
     spectral_gap: float = 0.0
     spectral_commitment: bytes = b''  # Layer 3: Commitment to full spectrum
     
-    # Block producer identity (immutable fingerprint = permanent UID)
-    producer_fingerprint: bytes = b''
+    # Block producer identity (public homotopy-class hash)
+    producer_identity: bytes = b''
     
     # VRF slot assignment data (fork prevention)
     # Serialized VRFOutput: 136 bytes (output + proof + epoch + key_commitment + fingerprint)
@@ -113,7 +113,7 @@ class BlockHeader:
         hasher.update(self.timestamp.to_bytes(8, 'little'))
         hasher.update(np.float64(self.spectral_gap).tobytes())
         hasher.update(self.spectral_commitment)
-        hasher.update(self.producer_fingerprint)
+        hasher.update(self.producer_identity)
         # VRF data committed to block hash — changing VRF = different block
         if self.vrf_data:
             hasher.update(self.vrf_data)
@@ -175,8 +175,8 @@ class Block:
         data += np.float64(self.header.spectral_gap).tobytes()
         data += struct.pack('<I', len(self.header.spectral_commitment))
         data += self.header.spectral_commitment
-        data += struct.pack('<I', len(self.header.producer_fingerprint))
-        data += self.header.producer_fingerprint
+        data += struct.pack('<I', len(self.header.producer_identity))
+        data += self.header.producer_identity
         
         # Transactions
         data += struct.pack('<I', len(self.transactions))
@@ -294,11 +294,16 @@ def create_block(
     # LAYER 1: SHA256 CHAIN (accountability)
     # =========================================================================
     
-    producer_fp = (
-        producer_credential.spectrum.fingerprint_hash()
-        if hasattr(producer_credential, 'spectrum')
-        else secrets.token_bytes(32)
-    )
+    producer_identity = None
+    if hasattr(producer_credential, 'project_to_public'):
+        try:
+            producer_identity = producer_credential.project_to_public().identity_hash()
+        except Exception:
+            producer_identity = None
+    if producer_identity is None and hasattr(producer_credential, 'spectrum'):
+        producer_identity = producer_credential.spectrum.fingerprint_hash()
+    if producer_identity is None:
+        producer_identity = secrets.token_bytes(32)
     
     header = BlockHeader(
         version=1,
@@ -306,10 +311,19 @@ def create_block(
         prev_hash=prev_hash,
         timestamp=int(time.time()),
         spectral_gap=spectral_gap,
-        producer_fingerprint=producer_fp,
+        producer_identity=producer_identity,
     )
     
-    block = Block(header=header, transactions=transactions)
+    producer_fingerprint_private = (
+        producer_credential.spectrum.fingerprint_hash()
+        if hasattr(producer_credential, 'spectrum')
+        else b''
+    )
+    block = Block(
+        header=header,
+        transactions=transactions,
+        producer_fingerprint_private=producer_fingerprint_private,
+    )
     
     # Layer 1: Merkle root of transaction hashes
     block.header.tx_merkle_root = block.compute_merkle_root()
@@ -522,7 +536,7 @@ def verify_block(
         
         # Record block production
         reputation_tracker.record_event(
-            block.header.producer_fingerprint,
+            block.header.producer_identity,
             ReputationEvent.BLOCK_PRODUCED,
             block_height=block.header.height
         )

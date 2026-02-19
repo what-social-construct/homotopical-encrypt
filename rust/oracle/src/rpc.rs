@@ -59,7 +59,6 @@ pub struct AddEdgeParams {
 #[derive(Debug, Deserialize)]
 pub struct FullStalkRequest {
     pub vertex_id: u64,
-    pub credential: Vec<f64>,
     pub eigenvalues: Vec<f64>,
     pub betti_numbers: (i32, i32, i32),
     pub nerve_vertices: Vec<u64>,
@@ -210,7 +209,6 @@ impl OracleRpc {
         // Oracle verifies bounds only — does NOT recompute geometry
         let full_stalk = FullStalk {
             vertex_id: req.vertex_id,
-            credential: req.credential,
             eigenvalues: req.eigenvalues,
             betti_numbers: req.betti_numbers,
             nerve_vertices: req.nerve_vertices,

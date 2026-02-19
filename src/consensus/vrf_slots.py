@@ -83,20 +83,20 @@ class VRFKey:
     the spectral fingerprint (one-way hash).
     """
     key_bytes: bytes          # 32-byte VRF secret
-    fingerprint: bytes        # Public spectral fingerprint (identity)
+    identity_hash: bytes      # Public homotopy-class identity hash
     key_commitment: bytes     # SHA256(key_bytes) — public commitment
 
     @staticmethod
     def from_eigenvectors(
         eigenvectors: np.ndarray,
-        fingerprint: bytes,
+        identity_hash: bytes,
     ) -> 'VRFKey':
         """
         Derive VRF key from secret eigenvectors.
 
         Args:
             eigenvectors: Secret eigenvectors of Laplacian.
-            fingerprint: Public spectral fingerprint.
+            identity_hash: Public homotopy-class identity.
 
         Returns:
             VRFKey.
@@ -111,7 +111,7 @@ class VRFKey:
 
         return VRFKey(
             key_bytes=key_bytes,
-            fingerprint=fingerprint,
+            identity_hash=identity_hash,
             key_commitment=key_commitment,
         )
 
@@ -119,8 +119,8 @@ class VRFKey:
     def from_credential(credential) -> 'VRFKey':
         """Derive VRF key from FibrationCredential."""
         eigenvectors = np.diag(credential.spectrum.eigenvalues)
-        fingerprint = credential.spectrum.fingerprint_hash()
-        return VRFKey.from_eigenvectors(eigenvectors, fingerprint)
+        identity_hash = credential.project_to_public().identity_hash()
+        return VRFKey.from_eigenvectors(eigenvectors, identity_hash)
 
 
 # =============================================================================
@@ -140,7 +140,7 @@ class VRFOutput:
     proof: bytes              # 32-byte VRF proof
     epoch: int                # Epoch number
     key_commitment: bytes     # Public commitment to VRF key
-    fingerprint: bytes        # Producer's fingerprint
+    identity_hash: bytes      # Producer's public identity
 
     @property
     def score(self) -> float:
@@ -154,7 +154,7 @@ class VRFOutput:
             + self.proof
             + self.epoch.to_bytes(8, 'little')
             + self.key_commitment
-            + self.fingerprint
+            + self.identity_hash
         )
 
     @classmethod
@@ -165,7 +165,7 @@ class VRFOutput:
             proof=data[32:64],
             epoch=int.from_bytes(data[64:72], 'little'),
             key_commitment=data[72:104],
-            fingerprint=data[104:136],
+            identity_hash=data[104:136],
         )
 
     @property
@@ -212,7 +212,7 @@ def vrf_evaluate(
         proof=proof,
         epoch=epoch,
         key_commitment=key.key_commitment,
-        fingerprint=key.fingerprint,
+        identity_hash=key.identity_hash,
     )
 
 
@@ -267,7 +267,7 @@ class SlotAssignment:
     """
     epoch: int
     prev_block_hash: bytes
-    selected_fingerprint: bytes
+    selected_identity: bytes
     vrf_output: VRFOutput
     centrality: float
     eligible_count: int       # How many validators were eligible
@@ -345,7 +345,7 @@ def assign_slot(
     return SlotAssignment(
         epoch=epoch,
         prev_block_hash=prev_block_hash,
-        selected_fingerprint=best_fingerprint,
+    selected_identity=best_fingerprint,
         vrf_output=best_output,
         centrality=centralities.get(best_fingerprint, 0.0),
         eligible_count=eligible_count,
@@ -358,10 +358,10 @@ def assign_slot(
 
 def verify_slot_assignment(
     block_height: int,
-    block_producer_fingerprint: bytes,
+    block_producer_identity: bytes,
     vrf_data: bytes,
     prev_block_hash: bytes,
-    registered_fingerprints: Set[bytes],
+    registered_identities: Set[bytes],
 ) -> Tuple[bool, str]:
     """
     Verify that a block's VRF slot assignment is valid.
@@ -396,14 +396,14 @@ def verify_slot_assignment(
         return False, f"VRF epoch {vrf_output.epoch} != block height {block_height}"
 
     # Check 3: Fingerprint matches
-    if vrf_output.fingerprint != block_producer_fingerprint:
+    if vrf_output.identity_hash != block_producer_identity:
         return False, (
-            f"VRF fingerprint {vrf_output.fingerprint.hex()[:16]}... "
-            f"!= producer {block_producer_fingerprint.hex()[:16]}..."
+            f"VRF identity {vrf_output.identity_hash.hex()[:16]}... "
+            f"!= producer {block_producer_identity.hex()[:16]}..."
         )
 
     # Check 4: Producer is registered
-    if block_producer_fingerprint not in registered_fingerprints:
+    if block_producer_identity not in registered_identities:
         return False, f"Producer not in registered validator set"
 
     # Check 5: VRF output and proof are non-trivial
@@ -427,7 +427,7 @@ class EquivocationEvidence:
 
     This is a slashable offense: the validator tried to fork the chain.
     """
-    fingerprint: bytes
+    identity_hash: bytes
     epoch: int
     block_hash_1: bytes
     block_hash_2: bytes
@@ -453,13 +453,13 @@ class EquivocationTracker:
     """
 
     def __init__(self):
-        # (fingerprint, epoch) → (block_hash, vrf_data)
+        # (identity_hash, epoch) → (block_hash, vrf_data)
         self._seen: Dict[Tuple[bytes, int], Tuple[bytes, bytes]] = {}
         self._evidence: List[EquivocationEvidence] = []
 
     def record_block(
         self,
-        fingerprint: bytes,
+        identity_hash: bytes,
         epoch: int,
         block_hash: bytes,
         vrf_data: bytes,
@@ -470,13 +470,13 @@ class EquivocationTracker:
         Returns EquivocationEvidence if this is a duplicate slot,
         None otherwise.
         """
-        key = (fingerprint, epoch)
+        key = (identity_hash, epoch)
 
         if key in self._seen:
             prev_hash, prev_vrf = self._seen[key]
             if prev_hash != block_hash:
                 evidence = EquivocationEvidence(
-                    fingerprint=fingerprint,
+                    identity_hash=identity_hash,
                     epoch=epoch,
                     block_hash_1=prev_hash,
                     block_hash_2=block_hash,
@@ -496,9 +496,9 @@ class EquivocationTracker:
         """All equivocation evidence collected."""
         return list(self._evidence)
 
-    def has_equivocated(self, fingerprint: bytes) -> bool:
-        """Check if a fingerprint has any equivocation evidence."""
-        return any(e.fingerprint == fingerprint for e in self._evidence)
+    def has_equivocated(self, identity_hash: bytes) -> bool:
+        """Check if an identity has any equivocation evidence."""
+        return any(e.identity_hash == identity_hash for e in self._evidence)
 
 
 # =============================================================================
@@ -518,12 +518,12 @@ if __name__ == "__main__":
 
     for i in range(n_validators):
         eigvecs = np.eye(4) * (i + 1)  # Different per validator
-        fp = hashlib.sha256(f"validator_{i}".encode()).digest()
-        key = VRFKey.from_eigenvectors(eigvecs, fp)
-        vrf_keys[fp] = key
+        identity = hashlib.sha256(f"validator_{i}".encode()).digest()
+        key = VRFKey.from_eigenvectors(eigvecs, identity)
+        vrf_keys[identity] = key
         # Centrality: middle validator most central
-        centralities[fp] = [0.1, 0.2, 0.4, 0.2, 0.1][i]
-        fingerprints.append(fp)
+        centralities[identity] = [0.1, 0.2, 0.4, 0.2, 0.1][i]
+        fingerprints.append(identity)
 
     print(f"\n1. {n_validators} validators registered")
     for i, fp in enumerate(fingerprints):
@@ -545,21 +545,21 @@ if __name__ == "__main__":
     vrf_data = slot.to_header_bytes()
     valid, reason = verify_slot_assignment(
         block_height=0,
-        block_producer_fingerprint=slot.selected_fingerprint,
+        block_producer_identity=slot.selected_identity,
         vrf_data=vrf_data,
         prev_block_hash=prev_hash,
-        registered_fingerprints=set(fingerprints),
+        registered_identities=set(fingerprints),
     )
     print(f"   Valid: {valid} ({reason})")
 
     # Wrong producer
-    wrong_fp = fingerprints[(fingerprints.index(slot.selected_fingerprint) + 1) % n_validators]
+    wrong_fp = fingerprints[(fingerprints.index(slot.selected_identity) + 1) % n_validators]
     valid2, reason2 = verify_slot_assignment(
         block_height=0,
-        block_producer_fingerprint=wrong_fp,
+        block_producer_identity=wrong_fp,
         vrf_data=vrf_data,
         prev_block_hash=prev_hash,
-        registered_fingerprints=set(fingerprints),
+        registered_identities=set(fingerprints),
     )
     print(f"   Wrong producer: {valid2} ({reason2})")
 
@@ -570,7 +570,7 @@ if __name__ == "__main__":
     for epoch in range(100):
         s = assign_slot(epoch, h, vrf_keys, centralities)
         if s:
-            counts[s.selected_fingerprint] += 1
+            counts[s.selected_identity] += 1
             h = hashlib.sha256(h + s.vrf_output.output).digest()
 
     for i, fp in enumerate(fingerprints):
@@ -584,7 +584,7 @@ if __name__ == "__main__":
 
     # First block — no equivocation
     ev1 = tracker.record_block(
-        slot0.selected_fingerprint, 0,
+        slot0.selected_identity, 0,
         hashlib.sha256(b"block_1").digest(),
         slot0.to_header_bytes(),
     )
@@ -592,7 +592,7 @@ if __name__ == "__main__":
 
     # Second block at same height — EQUIVOCATION
     ev2 = tracker.record_block(
-        slot0.selected_fingerprint, 0,
+        slot0.selected_identity, 0,
         hashlib.sha256(b"block_2").digest(),  # Different block hash!
         slot0.to_header_bytes(),
     )
@@ -601,7 +601,7 @@ if __name__ == "__main__":
         print(f"   Evidence valid: {ev2.is_valid()}")
         print(f"   Epoch: {ev2.epoch}")
 
-    print(f"   Has equivocated: {tracker.has_equivocated(slot0.selected_fingerprint)}")
+    print(f"   Has equivocated: {tracker.has_equivocated(slot0.selected_identity)}")
 
     print("\n" + "=" * 60)
     print("✅ VRF SLOT ASSIGNMENT READY")

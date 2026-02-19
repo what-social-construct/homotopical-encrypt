@@ -36,7 +36,6 @@ class FullStalkRequest:
     Oracle verifies bounds only.
     """
     vertex_id: int
-    credential: List[float]
     eigenvalues: List[float]
     betti_numbers: Tuple[int, int, int]
     nerve_vertices: List[int]
@@ -79,8 +78,10 @@ class FullStalkRequest:
         
         # 3. Hodge projection (heavy — numpy linear algebra)
         P_harmonic, _, _ = compute_hodge_projectors(laplacian)
+        # Project the harmonic component; no raw credential leaves the wallet.
+        # The oracle only receives the commitment bytes derived from this.
         credential_vec = np.array(credential, dtype=np.float64)
-        
+
         if len(credential_vec) == P_harmonic.shape[0]:
             projected = P_harmonic @ credential_vec
         else:
@@ -91,7 +92,6 @@ class FullStalkRequest:
         
         return cls(
             vertex_id=vertex_id,
-            credential=credential.tolist() if isinstance(credential, np.ndarray) else credential,
             eigenvalues=eigenvalues,
             betti_numbers=betti_numbers,
             nerve_vertices=nerve_vertices,
@@ -106,7 +106,6 @@ class FullStalkRequest:
             "method": "submit_stalk",
             "params": {
                 "vertex_id": self.vertex_id,
-                "credential": self.credential,
                 "eigenvalues": self.eigenvalues,
                 "betti_numbers": self.betti_numbers,
                 "nerve_vertices": self.nerve_vertices,
@@ -143,8 +142,8 @@ class CommitmentResponse:
     """Response from Oracle with verified commitment."""
     success: bool
     vertex_id: int
-    fingerprint: str  # Hex-encoded
-    spectral_gap: float
+    identity_hash: str  # Hex-encoded
+    spectral_gap_valid: bool
     betti_numbers: Tuple[int, int, int]
     
     @classmethod
@@ -152,8 +151,8 @@ class CommitmentResponse:
         return cls(
             success=data.get("success", False),
             vertex_id=data.get("vertex_id", 0),
-            fingerprint=data.get("fingerprint", ""),
-            spectral_gap=data.get("spectral_gap", 0.0),
+            identity_hash=data.get("identity_hash", ""),
+            spectral_gap_valid=data.get("spectral_gap_valid", False),
             betti_numbers=tuple(data.get("betti_numbers", (0, 0, 0)))
         )
 
@@ -192,8 +191,8 @@ class OracleClient:
             return CommitmentResponse(
                 success=False,
                 vertex_id=stalk.vertex_id,
-                fingerprint="",
-                spectral_gap=0.0,
+                identity_hash="",
+                spectral_gap_valid=False,
                 betti_numbers=(0, 0, 0)
             )
         
@@ -249,8 +248,6 @@ def create_test_stalk(vertex_id: int, dimension: int = 32, components: int = 4) 
         components: Number of disconnected components (β₀)
     """
     np.random.seed(vertex_id)
-    credential = np.random.randn(dimension)
-    
     # Build Laplacian with disconnected components
     n = dimension
     group_size = n // components
@@ -270,7 +267,7 @@ def create_test_stalk(vertex_id: int, dimension: int = 32, components: int = 4) 
     # Use from_geometry to run full pipeline
     return FullStalkRequest.from_geometry(
         vertex_id=vertex_id,
-        credential=credential,
+        credential=np.random.randn(n),
         laplacian=laplacian,
         nerve_vertices=[vertex_id],
         nerve_edges=[],
@@ -303,15 +300,14 @@ if __name__ == "__main__":
         print("\n📤 Submitting test stalk...")
         stalk = create_test_stalk(vertex_id=0)
         print(f"   Vertex: {stalk.vertex_id}")
-        print(f"   Credential dim: {len(stalk.credential)}")
         print(f"   Spectral gap: {stalk.spectral_gap:.4f}")
         print(f"   Commitment: {stalk.commitment_bytes.hex()[:32]}...")
         
         response = client.submit_stalk(stalk)
         print(f"\n📥 Response:")
         print(f"   Success: {response.success}")
-        print(f"   Fingerprint: {response.fingerprint[:16]}..." if response.fingerprint else "   Fingerprint: (none)")
-        print(f"   Spectral gap: {response.spectral_gap}")
+        print(f"   Identity hash: {response.identity_hash[:16]}..." if response.identity_hash else "   Identity hash: (none)")
+        print(f"   Gap valid: {response.spectral_gap_valid}")
         print(f"   Betti: {response.betti_numbers}")
     else:
         # Just health check

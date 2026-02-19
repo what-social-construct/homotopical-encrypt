@@ -751,7 +751,7 @@ class SheafState:
         
         COMPUTATION BOUNDARY: Python computes ALL geometry locally, then
         sends pre-computed results (commitment + spectral gap) to Oracle.
-        The Oracle only verifies bounds — it never sees the Laplacian.
+        The Oracle only verifies bounds — it never sees the Laplacian or raw credential.
         
         This is STRONGER than SHA256 because:
         1. Lattice hardness (post-quantum) - breaking requires CVP/SVP
@@ -836,7 +836,6 @@ class SheafState:
             params = request_json["params"]
             stalk = FullStalkRequest(
                 vertex_id=params["vertex_id"],
-                credential=params["credential"],
                 eigenvalues=params["eigenvalues"],
                 betti_numbers=tuple(params["betti_numbers"]),
                 nerve_vertices=params["nerve_vertices"],
@@ -850,8 +849,8 @@ class SheafState:
             
             if response:
                 return HashCommitment(
-                    fingerprint=bytes.fromhex(response.fingerprint) if response.fingerprint else fingerprint,
-                    spectral_gap=response.spectral_gap,
+                    fingerprint=bytes.fromhex(response.identity_hash) if response.identity_hash else fingerprint,
+                    spectral_gap=self.get_spectral_gap(),
                     betti_numbers=response.betti_numbers,
                     topology_hash=self.topology_hash()
                 )

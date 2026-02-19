@@ -32,18 +32,17 @@ const TSIRELSON_UPPER: f64 = 2.828;  // 2√2 ≈ 2.828
 /// Full stalk from Python (F_full)
 ///
 /// Python computes everything here:
-/// - credential: raw 512-dim vector (Python Stalk.data, DEFAULT_STALK_DIM)
 /// - eigenvalues: from SheafLaplacian.eigendecomposition()
 /// - betti_numbers: from SheafLaplacian.betti_0() + topology.compute_betti_numbers()
 /// - commitment: geometric commitment bytes from HodgeDecomposition + quantization
 /// - spectral_gap: from SheafLaplacian.spectral_gap()
+///
+/// NOTE: Raw credential vectors are NOT sent to the Oracle.
+/// Python computes the commitment locally and only sends the results.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FullStalk {
     /// Vertex ID in nerve
     pub vertex_id: u64,
-    
-    /// Full 512-dim homotopy credential (Python: Stalk.data, DEFAULT_STALK_DIM)
-    pub credential: Vec<f64>,
     
     /// Laplacian eigenvalues (Python: SheafLaplacian.eigendecomposition())
     pub eigenvalues: Vec<f64>,
@@ -143,9 +142,8 @@ impl StalkBridge {
     /// Receive full stalk from Python
     pub fn add_full_stalk(&mut self, stalk: FullStalk) -> Result<()> {
         info!(
-            "Receiving full stalk for vertex {}: credential_dim={}, eigenvalues={}, spectral_gap={:.4}",
+            "Receiving full stalk for vertex {}: eigenvalues={}, spectral_gap={:.4}",
             stalk.vertex_id,
-            stalk.credential.len(),
             stalk.eigenvalues.len(),
             stalk.spectral_gap
         );
@@ -433,8 +431,6 @@ mod tests {
         // Python does HodgeDecomposition + quantization → commitment bytes
         // Oracle receives the results and verifies bounds only
         
-        let credential: Vec<f64> = vec![1.0; 512];
-        
         // Simulate Python's geometric commitment (different per vertex)
         let mut commitment = [0u8; 32];
         for i in 0..32 {
@@ -443,7 +439,6 @@ mod tests {
         
         FullStalk {
             vertex_id,
-            credential,
             eigenvalues: vec![0.0, gap, 2.0 * gap],
             betti_numbers: (1, 0, 0),
             nerve_vertices: vec![vertex_id],

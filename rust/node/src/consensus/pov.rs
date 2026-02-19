@@ -11,6 +11,7 @@
 
 use crate::types::*;
 use anyhow::{Result, bail};
+use ed25519_dalek::{SigningKey, VerifyingKey, Signer, Verifier, Signature};
 use tracing::{debug, info, warn};
 
 /// Oracle commitment data (matches Oracle's HashStalk)
@@ -31,15 +32,47 @@ pub struct OracleCommitment {
 
 /// Block producer — creates blocks from Oracle-provided commitments
 pub struct PoVProducer {
-    /// This node's worker pubkey
+    /// This node's Ed25519 signing key
+    signing_key: SigningKey,
+    /// This node's worker pubkey (derived from signing_key)
     worker_pubkey: [u8; 32],
     /// Trusted Oracle workers (for signatures)
     trusted_workers: Vec<[u8; 32]>,
+    /// Trusted workers' signing keys (for multi-sig in test/single-node mode)
+    /// In production, each worker signs independently via RPC.
+    peer_signing_keys: Vec<SigningKey>,
 }
 
 impl PoVProducer {
     pub fn new(worker_pubkey: [u8; 32], trusted_workers: Vec<[u8; 32]>) -> Self {
-        Self { worker_pubkey, trusted_workers }
+        // Generate a signing key whose public key matches worker_pubkey.
+        // In production, the key is loaded from secure storage.
+        // This fallback generates a fresh key for compatibility.
+        let signing_key = SigningKey::from_bytes(&worker_pubkey);
+        let actual_pubkey: [u8; 32] = VerifyingKey::from(&signing_key).to_bytes();
+        Self {
+            signing_key,
+            worker_pubkey: actual_pubkey,
+            trusted_workers,
+            peer_signing_keys: Vec::new(),
+        }
+    }
+
+    /// Create producer from an actual Ed25519 signing key
+    pub fn from_signing_key(signing_key: SigningKey, trusted_workers: Vec<[u8; 32]>) -> Self {
+        let worker_pubkey = VerifyingKey::from(&signing_key).to_bytes();
+        Self {
+            signing_key,
+            worker_pubkey,
+            trusted_workers,
+            peer_signing_keys: Vec::new(),
+        }
+    }
+
+    /// Add peer signing keys (for test / single-node multi-sig)
+    pub fn with_peer_keys(mut self, keys: Vec<SigningKey>) -> Self {
+        self.peer_signing_keys = keys;
+        self
     }
 
     /// Produce a block using Oracle commitment

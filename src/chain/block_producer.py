@@ -193,7 +193,7 @@ class BlockProducer:
     def __init__(
         self,
         topology: Dict[int, List[Tuple]],
-        validators: List[Tuple[bytes, int]],  # (fingerprint, vertex_id)
+        validators: List[Tuple[bytes, int]],  # (identity_hash, vertex_id)
         initial_supply: float = 1_000_000.0,
         sheaf_state: Optional[SheafState] = None,
         minimum_fee: int = 0,
@@ -205,7 +205,7 @@ class BlockProducer:
         for fingerprint, vertex_id in validators:
             self.validator_set.register_validator(fingerprint, vertex_id)
 
-        # VRF keys: fingerprint → VRFKey (registered via register_vrf_key)
+        # VRF keys: identity_hash → VRFKey (registered via register_vrf_key)
         self.vrf_keys: Dict[bytes, VRFKey] = {}
 
         # Equivocation tracker (fork prevention)
@@ -230,12 +230,12 @@ class BlockProducer:
         self.current_epoch = 0
         self.last_block_hash = b'\x00' * 32
 
-    def register_account(self, fingerprint: bytes, balance: float = 0.0,
+    def register_account(self, identity_hash: bytes, balance: float = 0.0,
                          homotopy_class_id: Optional[bytes] = None):
         """Register an account with initial balance via SheafState."""
         if homotopy_class_id is None:
-            homotopy_class_id = hashlib.sha256(fingerprint).digest()
-        self.state.add_account(fingerprint, homotopy_class_id, balance)
+            homotopy_class_id = hashlib.sha256(identity_hash).digest()
+        self.state.add_account(identity_hash, homotopy_class_id, balance)
 
     def register_vrf_key(self, credential: FibrationCredential):
         """
@@ -244,8 +244,8 @@ class BlockProducer:
         Must be called before the validator can produce blocks.
         The VRF key is derived from the secret fibration (eigenvectors).
         """
-        fp = credential.spectrum.fingerprint_hash()
-        self.vrf_keys[fp] = VRFKey.from_credential(credential)
+        identity_hash = credential.project_to_public().identity_hash()
+        self.vrf_keys[identity_hash] = VRFKey.from_credential(credential)
 
     def submit_transaction(
         self,
@@ -291,7 +291,7 @@ class BlockProducer:
         Returns:
             BlockProductionResult with success/failure info
         """
-        producer_fp = producer_credential.spectrum.fingerprint_hash()
+        producer_identity = producer_credential.project_to_public().identity_hash()
         spectral_gap = self._compute_spectral_gap(producer_credential)
 
         # =====================================================================
@@ -299,10 +299,10 @@ class BlockProducer:
         # =====================================================================
 
         # Ensure VRF key is registered
-        if producer_fp not in self.vrf_keys:
+        if producer_identity not in self.vrf_keys:
             self.register_vrf_key(producer_credential)
 
-        vrf_key = self.vrf_keys[producer_fp]
+        vrf_key = self.vrf_keys[producer_identity]
         vrf_output = vrf_evaluate(vrf_key, self.last_block_hash, self.current_epoch)
 
         # =====================================================================
@@ -314,11 +314,11 @@ class BlockProducer:
             self.last_block_hash
         )
 
-        if selected != producer_fp:
+        if selected != producer_identity:
             return BlockProductionResult(
                 success=False,
                 block=None,
-                validator=producer_fp,
+                validator=producer_identity,
                 spectral_gap=spectral_gap,
                 vrf_score=vrf_output.score,
                 reason=f"Not selected validator. Selected: {selected.hex()[:16] if selected else 'none'}..."
@@ -346,7 +346,7 @@ class BlockProducer:
             return BlockProductionResult(
                 success=False,
                 block=None,
-                validator=producer_fp,
+                validator=producer_identity,
                 spectral_gap=spectral_gap,
                 vrf_score=vrf_output.score,
                 reason=f"Block creation failed: {e}"
@@ -367,7 +367,7 @@ class BlockProducer:
             return BlockProductionResult(
                 success=False,
                 block=block,
-                validator=producer_fp,
+                validator=producer_identity,
                 spectral_gap=block.header.spectral_gap,
                 vrf_score=vrf_output.score,
                 reason=f"Block verification failed: {reason}"
@@ -379,7 +379,7 @@ class BlockProducer:
 
         block_hash = block.block_hash()
         equivocation = self.equivocation_tracker.record_block(
-            fingerprint=producer_fp,
+            identity_hash=producer_identity,
             epoch=self.current_epoch,
             block_hash=block_hash,
             vrf_data=block.header.vrf_data,
@@ -388,19 +388,19 @@ class BlockProducer:
         if equivocation is not None:
             # EQUIVOCATION DETECTED — slash vault + reputation
             self.reputation_tracker.record_event(
-                producer_fp,
+                producer_identity,
                 ReputationEvent.EQUIVOCATION_DETECTED,
                 block_height=self.current_epoch,
                 details=f"Two blocks at epoch {self.current_epoch}"
             )
             # Vault slash: lose bonded vHCRYPT (economic penalty)
             self.state.vault_registry.slash(
-                producer_fp, SlashReason.EQUIVOCATION
+                producer_identity, SlashReason.EQUIVOCATION
             )
             return BlockProductionResult(
                 success=False,
                 block=block,
-                validator=producer_fp,
+                validator=producer_identity,
                 spectral_gap=block.header.spectral_gap,
                 vrf_score=vrf_output.score,
                 reason=f"EQUIVOCATION: producer already produced block at epoch {self.current_epoch}"
@@ -412,7 +412,7 @@ class BlockProducer:
         return BlockProductionResult(
             success=True,
             block=block,
-            validator=producer_fp,
+            validator=producer_identity,
             spectral_gap=block.header.spectral_gap,
             vrf_score=vrf_output.score,
             reason="Block produced successfully"
@@ -440,7 +440,7 @@ class BlockProducer:
         3. Chain pointer updates
         4. Reputation tracking
         """
-        producer_fp = block.header.producer_fingerprint
+        producer_identity = block.header.producer_identity
 
         # 1. Apply block to three-layer state bus (fees go to treasury)
         ok, reason = self.state.apply_block(block)
@@ -451,7 +451,7 @@ class BlockProducer:
         #    Uses harmonic weights from validator_set (or uniform fallback)
         harmonic_weights = self.validator_set.compute_spectral_centrality()
         self.state.distribute_fees(
-            producer_fp=producer_fp,
+            producer_fp=producer_identity,
             harmonic_weights=harmonic_weights,
             epoch=self.current_epoch,
         )
@@ -467,12 +467,12 @@ class BlockProducer:
         self.current_epoch += 1
 
         # Update validator's last block
-        if producer_fp in self.validator_set.validators:
-            self.validator_set.validators[producer_fp].last_block = self.current_epoch
+        if producer_identity in self.validator_set.validators:
+            self.validator_set.validators[producer_identity].last_block = self.current_epoch
 
         # 4. Record successful block production in reputation
         self.reputation_tracker.record_event(
-            producer_fp,
+            producer_identity,
             ReputationEvent.BLOCK_PRODUCED,
             block_height=self.current_epoch
         )
@@ -492,9 +492,9 @@ class BlockProducer:
         """Get current chain height."""
         return len(self.chain)
 
-    def get_balance(self, fingerprint: bytes) -> float:
+    def get_balance(self, identity_hash: bytes) -> float:
         """Get account balance from SheafState."""
-        return self.state.get_balance(fingerprint)
+        return self.state.get_balance(identity_hash)
 
     def get_equivocation_evidence(self) -> list:
         """Get all equivocation evidence (for governance/slashing)."""
@@ -527,10 +527,10 @@ def test_block_production():
             connections=[],
             security_parameter=32
         )
-        fp = cred.spectrum.fingerprint_hash()
-        validators.append((fp, i))
+        identity = cred.project_to_public().identity_hash()
+        validators.append((identity, i))
         credentials.append(cred)
-        print(f"   Validator {i}: {fp.hex()[:16]}...")
+        print(f"   Validator {i}: {identity.hex()[:16]}...")
 
     print("\n2. Initializing block producer...")
     producer = BlockProducer(
@@ -541,7 +541,7 @@ def test_block_production():
 
     # Register accounts + VRF keys
     for i, (fp, _) in enumerate(validators):
-        producer.register_account(fp, 100000.0 + i * 10000)
+        producer.register_account(identity, 100000.0 + i * 10000)
         producer.register_vrf_key(credentials[i])
 
     print(f"   Accounts: {len(producer.state.accounts)}")
