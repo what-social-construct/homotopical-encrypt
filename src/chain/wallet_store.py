@@ -387,7 +387,7 @@ class WalletStore:
         """Hash the topology structure."""
         import hashlib
         topology_str = str(sorted(topology.items()))
-        return hashlib.sha256(topology_str.encode()).digest()[:16]
+        return hashlib.sha256(topology_str.encode()).digest()
 
 
 # =============================================================================

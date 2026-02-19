@@ -218,7 +218,7 @@ class UnifiedInvariantValidator:
         
         # Hash the nerve structure
         nerve_str = str(sorted(self.nerve.items()))
-        topology_hash = hashlib.sha256(nerve_str.encode()).digest()[:16]
+        topology_hash = hashlib.sha256(nerve_str.encode()).digest()
         
         return HomotopyClassFingerprint(
             spectral=self.spectral,
