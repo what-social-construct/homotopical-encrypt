@@ -456,6 +456,234 @@ class FibrationCredential:
         """
         return self.project_to_public().on_diagonal(other.project_to_public())
 
+    # =========================================================================
+    # BINARY SERIALIZATION (replaces pickle — deterministic, safe, portable)
+    # =========================================================================
+
+    _MAGIC = b"HCRYPT_CRED_V1"
+
+    def serialize(self) -> bytes:
+        """
+        Serialize credential to binary format for encrypted wallet storage.
+
+        Format:
+          MAGIC(14) | version(u32) | hilbert_dim(u32) | modulus(u32)
+          | num_parties(u32) | parties(len-prefixed utf8)…
+          | topology(nerve)
+          | stalks(vertex_id → int16[d])…
+          | restrictions((from,to) → float64[d×d])…
+          | eigenvalues(float64[n])
+          | betti_numbers(i32[])
+          | spectral_gap(f64)
+          | topology_hash(32 bytes)
+
+        No pickle. All numpy arrays stored as raw bytes with shape headers.
+        """
+        import struct
+        buf = bytearray()
+
+        # ── Header ──
+        buf += self._MAGIC
+        buf += struct.pack("<III", 1, self.hilbert_dim, self.modulus)
+
+        # ── Parties ──
+        buf += struct.pack("<I", len(self.parties))
+        for p in self.parties:
+            encoded = p.encode("utf-8")
+            buf += struct.pack("<H", len(encoded))
+            buf += encoded
+
+        # ── Topology (nerve) ──
+        dims = sorted(self.topology.keys())
+        buf += struct.pack("<I", len(dims))
+        for dim in dims:
+            simplices = self.topology[dim]
+            buf += struct.pack("<iI", dim, len(simplices))
+            for simplex in simplices:
+                t = tuple(simplex)
+                buf += struct.pack("<I", len(t))
+                for v in t:
+                    buf += struct.pack("<q", int(v))
+
+        # ── Fibration: stalks ──
+        sheaf = self.fibration.sheaf
+        stalks = sheaf.stalks
+        buf += struct.pack("<I", len(stalks))
+        for simplex_key in sorted(stalks.keys(), key=str):
+            arr = stalks[simplex_key]
+            key_tuple = tuple(simplex_key)
+            buf += struct.pack("<I", len(key_tuple))
+            for v in key_tuple:
+                buf += struct.pack("<q", int(v))
+            flat = arr.astype(np.int16).tobytes()
+            buf += struct.pack("<I", len(flat))
+            buf += flat
+
+        # ── Fibration: restriction maps ──
+        restrictions = sheaf.restrictions
+        buf += struct.pack("<I", len(restrictions))
+        for (from_s, to_s), mat in restrictions.items():
+            from_t = tuple(from_s)
+            to_t = tuple(to_s)
+            buf += struct.pack("<I", len(from_t))
+            for v in from_t:
+                buf += struct.pack("<q", int(v))
+            buf += struct.pack("<I", len(to_t))
+            for v in to_t:
+                buf += struct.pack("<q", int(v))
+            flat = mat.astype(np.float64).tobytes()
+            buf += struct.pack("<I", len(flat))
+            buf += flat
+
+        # ── Spectrum ──
+        eig_bytes = self.spectrum.eigenvalues.astype(np.float64).tobytes()
+        buf += struct.pack("<I", len(eig_bytes))
+        buf += eig_bytes
+        buf += struct.pack("<I", len(self.spectrum.betti_numbers))
+        for b in self.spectrum.betti_numbers:
+            buf += struct.pack("<i", int(b))
+        buf += struct.pack("<d", self.spectrum.spectral_gap)
+        buf += self.spectrum.topology_hash[:32].ljust(32, b'\x00')
+
+        # ── Public identity ──
+        pub = self.project_to_public()
+        buf += struct.pack("<I", len(pub.betti_numbers))
+        for b in pub.betti_numbers:
+            buf += struct.pack("<i", int(b))
+        buf += pub.topology_hash[:32].ljust(32, b'\x00')
+
+        return bytes(buf)
+
+    @classmethod
+    def deserialize(cls, data: bytes) -> 'FibrationCredential':
+        """
+        Deserialize credential from binary format.
+
+        Inverse of serialize(). No pickle — all struct + numpy.
+        """
+        import struct
+        off = 0
+
+        def read(fmt):
+            nonlocal off
+            size = struct.calcsize(fmt)
+            vals = struct.unpack_from(fmt, data, off)
+            off += size
+            return vals if len(vals) > 1 else vals[0]
+
+        def read_bytes(n):
+            nonlocal off
+            chunk = data[off:off + n]
+            off += n
+            return chunk
+
+        # ── Header ──
+        magic = read_bytes(14)
+        if magic != cls._MAGIC:
+            raise ValueError(f"Bad magic: {magic!r}")
+        version, hilbert_dim, modulus = read("<III")
+
+        # ── Parties ──
+        num_parties = read("<I")
+        parties = []
+        for _ in range(num_parties):
+            plen = read("<H")
+            parties.append(read_bytes(plen).decode("utf-8"))
+
+        # ── Topology ──
+        num_dims = read("<I")
+        topology = {}
+        for _ in range(num_dims):
+            dim, num_simplices = read("<iI")
+            simplices = []
+            for _ in range(num_simplices):
+                slen = read("<I")
+                simplex = tuple(read("<q") for _ in range(slen))
+                simplices.append(simplex)
+            topology[dim] = simplices
+
+        # ── Stalks ──
+        num_stalks = read("<I")
+        stalks_dict = {}
+        for _ in range(num_stalks):
+            klen = read("<I")
+            key = tuple(read("<q") for _ in range(klen))
+            blen = read("<I")
+            arr = np.frombuffer(read_bytes(blen), dtype=np.int16).copy()
+            stalks_dict[key] = arr
+
+        # ── Restrictions ──
+        num_restrictions = read("<I")
+        restrictions_dict = {}
+        for _ in range(num_restrictions):
+            flen = read("<I")
+            from_s = tuple(read("<q") for _ in range(flen))
+            tlen = read("<I")
+            to_s = tuple(read("<q") for _ in range(tlen))
+            blen = read("<I")
+            mat = np.frombuffer(read_bytes(blen), dtype=np.float64).copy()
+            mat = mat.reshape((hilbert_dim, hilbert_dim))
+            restrictions_dict[(from_s, to_s)] = mat
+
+        # Reconstruct CellularSheaf
+        sheaf = CellularSheaf(topology)
+        for k, v in stalks_dict.items():
+            sheaf.stalks[k] = v
+        for (f, t), m in restrictions_dict.items():
+            sheaf.restrictions[(f, t)] = m
+
+        # Reconstruct vertex_keys / edge_keys
+        vertex_keys = {}
+        for k, v in stalks_dict.items():
+            if len(k) == 1:
+                vertex_keys[k[0]] = v
+        edge_keys = {}
+        for (f, t), m in restrictions_dict.items():
+            if len(f) == 1 and len(t) == 2:
+                edge_keys[t] = m
+
+        fibration = QuantumSheafFibration(
+            sheaf=sheaf,
+            hilbert_dim=hilbert_dim,
+            vertex_keys=vertex_keys,
+            edge_keys=edge_keys,
+        )
+
+        # ── Spectrum ──
+        eig_blen = read("<I")
+        eigenvalues = np.frombuffer(read_bytes(eig_blen), dtype=np.float64).copy()
+        num_betti = read("<I")
+        betti_numbers = [read("<i") for _ in range(num_betti)]
+        spectral_gap = read("<d")
+        topology_hash = read_bytes(32)
+
+        spectrum = SpectralFingerprint(
+            eigenvalues=eigenvalues,
+            betti_numbers=betti_numbers,
+            spectral_gap=spectral_gap,
+            topology_hash=topology_hash,
+        )
+
+        # ── Public identity ──
+        num_pub_betti = read("<I")
+        pub_betti = tuple(read("<i") for _ in range(num_pub_betti))
+        pub_topo_hash = read_bytes(32)
+
+        public_identity = PublicIdentity(
+            betti_numbers=pub_betti,
+            topology_hash=pub_topo_hash,
+        )
+
+        return cls(
+            topology=topology,
+            fibration=fibration,
+            spectrum=spectrum,
+            public_identity=public_identity,
+            parties=parties,
+            hilbert_dim=hilbert_dim,
+            modulus=modulus,
+        )
+
 
 def generate_credential(
     parties: List[str],

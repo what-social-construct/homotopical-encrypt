@@ -114,9 +114,7 @@ class WalletStore:
         # Extract master key from spectral fingerprint
         master_key = master_credential.spectrum.fingerprint_hash()
         
-        # Serialize credential to bytes
-        # TODO: Implement FibrationCredential.serialize()
-        # For now, we'll use a simple JSON representation
+        # Serialize credential to bytes (struct-based binary, no pickle)
         cred_data = self._serialize_credential(credential)
         
         # Encrypt using master credential's Hodge system
@@ -200,8 +198,6 @@ class WalletStore:
         print(f"   Fingerprint: {enc_cred.public_fingerprint.hex()[:16]}...")
         
         # Decrypt using master credential
-        # TODO: Implement Ciphertext.deserialize()
-        # For now, use a placeholder
         ciphertext_bytes = enc_cred.ciphertext_blob
         
         # Decrypt via harmonic projection
@@ -340,39 +336,19 @@ class WalletStore:
     
     def _serialize_credential(self, credential: FibrationCredential) -> bytes:
         """
-        Serialize credential to bytes for encryption.
-        
-        TODO: Implement proper serialization in FibrationCredential
+        Serialize credential to binary format for encrypted wallet storage.
+
+        Uses FibrationCredential.serialize() — struct-based, no pickle.
         """
-        # Placeholder: serialize essential data
-        import pickle
-        data = {
-            "topology": credential.topology,
-            "laplacian": credential.laplacian,
-            "delta_0": credential.delta_0,
-            "security_parameter": credential.security_parameter
-        }
-        return pickle.dumps(data)
-    
+        return credential.serialize()
+
     def _deserialize_credential(self, data: bytes) -> FibrationCredential:
         """
-        Deserialize credential from bytes.
-        
-        TODO: Implement proper deserialization in FibrationCredential
+        Deserialize credential from binary format.
+
+        Uses FibrationCredential.deserialize() — struct-based, no pickle.
         """
-        import pickle
-        cred_dict = pickle.loads(data)
-        
-        # Reconstruct credential (placeholder)
-        from ..crypto.credential import generate_credential
-        
-        # This is a simplified reconstruction - needs proper implementation
-        return FibrationCredential(
-            topology=cred_dict["topology"],
-            laplacian=cred_dict["laplacian"],
-            delta_0=cred_dict["delta_0"],
-            security_parameter=cred_dict.get("security_parameter", 256)
-        )
+        return FibrationCredential.deserialize(data)
     
     def _encrypt_credential(
         self,
