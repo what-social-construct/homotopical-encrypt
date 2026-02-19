@@ -345,7 +345,6 @@ if __name__ == "__main__":
         cred = generate_credential(
             parties=[f'relay_{i}'],
             connections=[],
-            security_parameter=256
         )
         relay = RelayNode(
             credential=cred,

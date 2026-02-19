@@ -275,7 +275,6 @@ class OnionServiceHandler(BaseHTTPRequestHandler):
         cred = generate_credential(
             parties=[party_a, party_b],
             connections=[(party_a, party_b)],  # Need edge for random walk
-            security_parameter=256
         )
         
         relay = RelayNode(credential=cred, address=address)

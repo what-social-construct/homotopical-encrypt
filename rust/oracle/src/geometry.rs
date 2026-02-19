@@ -19,7 +19,7 @@ pub struct FiberBundle {
     /// Nerve structure: dimension → simplices
     pub nerve: HashMap<i32, Vec<Vec<u64>>>,
     
-    /// Fiber dimension (e.g., 256 for PRIVATE_STALK)
+    /// Fiber dimension (e.g., 512 = DEFAULT_STALK_DIM from credential.py)
     pub fiber_dim: usize,
     
     /// Connection matrices along edges

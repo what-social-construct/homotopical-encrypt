@@ -32,7 +32,7 @@ const TSIRELSON_UPPER: f64 = 2.828;  // 2√2 ≈ 2.828
 /// Full stalk from Python (F_full)
 ///
 /// Python computes everything here:
-/// - credential: raw 256-dim vector (Python Stalk.data)
+/// - credential: raw 512-dim vector (Python Stalk.data, DEFAULT_STALK_DIM)
 /// - eigenvalues: from SheafLaplacian.eigendecomposition()
 /// - betti_numbers: from SheafLaplacian.betti_0() + topology.compute_betti_numbers()
 /// - commitment: geometric commitment bytes from HodgeDecomposition + quantization
@@ -42,7 +42,7 @@ pub struct FullStalk {
     /// Vertex ID in nerve
     pub vertex_id: u64,
     
-    /// Full 256-dim homotopy credential (Python: Stalk.data)
+    /// Full 512-dim homotopy credential (Python: Stalk.data, DEFAULT_STALK_DIM)
     pub credential: Vec<f64>,
     
     /// Laplacian eigenvalues (Python: SheafLaplacian.eigendecomposition())
@@ -433,7 +433,7 @@ mod tests {
         // Python does HodgeDecomposition + quantization → commitment bytes
         // Oracle receives the results and verifies bounds only
         
-        let credential: Vec<f64> = vec![1.0; 256];
+        let credential: Vec<f64> = vec![1.0; 512];
         
         // Simulate Python's geometric commitment (different per vertex)
         let mut commitment = [0u8; 32];
