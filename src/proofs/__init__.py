@@ -63,6 +63,21 @@ from .spectral_bounds import (
     CREDENTIAL_MAX_AGE_BLOCKS,
 )
 
+# Tsirelson bounds (classical & quantum hardness)
+from .tsirelson import (
+    grassmannian_laplacian,
+    sample_grassmannian,
+    grassmannian_laplacians,
+    validate_laplacian_space,
+    relative_spectral_gap,
+    likelihood,
+    classical_bound,
+    quantum_bound,
+    grassmannian_dimension,
+    analyze_tsirelson,
+    TsirelsonAnalysis,
+)
+
 # Anonymity proofs
 from .anonymity import (
     HomotopyClassProof,
