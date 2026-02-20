@@ -310,7 +310,6 @@ def test_eta_oracle_stalk_request():
     stalk = create_test_stalk(vertex_id=0, dimension=32, components=4)
     
     assert stalk.vertex_id == 0
-    assert len(stalk.credential) == 32
     assert len(stalk.eigenvalues) == 32
     assert stalk.spectral_gap > 0, "Spectral gap must be positive"
     assert len(stalk.commitment_bytes) == 32, "Commitment must be 32 bytes"

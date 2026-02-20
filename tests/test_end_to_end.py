@@ -64,9 +64,9 @@ def test_block_production_pipeline():
             connections=[(f"v{i}_a", f"v{i}_b")],
             security_parameter=128, enforce_min_harmonic=False,
         )
-        fp = cred.spectrum.fingerprint_hash()
+        identity = cred.project_to_public().identity_hash()
         credentials.append(cred)
-        validators.append((fp, i))
+        validators.append((identity, i))
 
     producer = BlockProducer(
         topology=topology,
@@ -495,11 +495,16 @@ def test_chain_persistence_blocks():
         store = ChainStore(tmpdir)
 
         # Mock credential for block creation
+        class MockPublic:
+            def identity_hash(self):
+                return hashlib.sha256(b"producer_identity").digest()
         class MockCred:
             class MockSpectrum:
                 def fingerprint_hash(self):
                     return hashlib.sha256(b"producer").digest()
             spectrum = MockSpectrum()
+            def project_to_public(self):
+                return MockPublic()
 
         # Create 3 blocks
         prev_hash = b"\x00" * 32
@@ -608,7 +613,7 @@ def test_chain_persistence_full_cycle():
         connections=[("prod_a", "prod_b")],
         security_parameter=128, enforce_min_harmonic=False,
     )
-    fp = cred.spectrum.fingerprint_hash()
+    fp = cred.project_to_public().identity_hash()
 
     producer = BlockProducer(
         topology=topology,

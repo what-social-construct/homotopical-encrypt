@@ -296,7 +296,7 @@ def test_equivocation_first_block_ok():
     fp = hashlib.sha256(b"validator").digest()
 
     evidence = tracker.record_block(
-        fingerprint=fp,
+        identity_hash=fp,
         epoch=0,
         block_hash=hashlib.sha256(b"block_0").digest(),
         vrf_data=b'\x00' * 32,
@@ -313,7 +313,7 @@ def test_equivocation_second_block_detected():
 
     # First block
     evidence1 = tracker.record_block(
-        fingerprint=fp,
+        identity_hash=fp,
         epoch=5,
         block_hash=hashlib.sha256(b"block_A").digest(),
         vrf_data=b'\xaa' * 32,
@@ -322,13 +322,13 @@ def test_equivocation_second_block_detected():
 
     # Second DIFFERENT block at same epoch
     evidence2 = tracker.record_block(
-        fingerprint=fp,
+        identity_hash=fp,
         epoch=5,
         block_hash=hashlib.sha256(b"block_B").digest(),
         vrf_data=b'\xbb' * 32,
     )
     assert evidence2 is not None, "Must detect equivocation"
-    assert evidence2.fingerprint == fp
+    assert evidence2.identity_hash == fp
     assert evidence2.epoch == 5
     assert evidence2.block_hash_1 != evidence2.block_hash_2
 

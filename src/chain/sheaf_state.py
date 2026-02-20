@@ -908,7 +908,7 @@ class SheafState:
         #    Treasury splits: producer share, validator share, protocol, burn
         #    See docs/CONSENSUS.md § Token Economics
         total_fees = sum(tx.fee_amount for tx in block.transactions)
-        producer_fp = block.header.producer_fingerprint
+        producer_fp = block.header.producer_identity
         if total_fees > 0:
             self.treasury.collect_fee(total_fees)
         

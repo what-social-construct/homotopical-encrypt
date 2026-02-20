@@ -138,6 +138,9 @@ class Block:
     # Block-level proof
     pov_proof: bytes = b''  # Proof that spectral gap is valid
     
+    # Private producer fingerprint (NEVER goes on-chain — only in BlockSection private stalk)
+    producer_fingerprint_private: bytes = b''
+    
     def block_hash(self) -> bytes:
         """Get block hash (from header)."""
         return self.header.hash()

@@ -25,7 +25,7 @@ sheaf_store.rs, stalk_bridge.rs, types.rs):
     LAYER 1 — PUBLIC (PUBLIC_STALK, dim=1)
       Block data: spectral gap scalar (consensus-critical PoV value)
       AccountState: balance scalar
-      Rust HashStalk: spectral_gap f64
+      Rust HashStalk: spectral_gap_valid boolean + identity_hash
       Storage: stalks_public column family (vertex data, C⁰)
 
     SECTION STRUCTURE:
@@ -158,9 +158,9 @@ class BlockSection:
                             private_data[proof_offset + j] = float(b)
                     proof_offset += 8
 
-        # metadata [192:256]: producer fingerprint
-        if header.producer_fingerprint:
-            for i, b in enumerate(header.producer_fingerprint[:64]):
+        # metadata [192:256]: producer fingerprint (PRIVATE only)
+        if block.producer_fingerprint_private:
+            for i, b in enumerate(block.producer_fingerprint_private[:64]):
                 private_data[192 + i] = float(b)
 
         private_stalk = Stalk(
