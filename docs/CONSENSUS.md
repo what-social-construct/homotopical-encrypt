@@ -1,362 +1,225 @@
-# Proof of Value — Consensus Design
+# Consensus Architecture
 
-## Value := What Survives Harmonic Projection
+## Three-Layer Sheaf-Petri Architecture
 
-The Hodge decomposition splits every cochain into three orthogonal components:
-
-```
-C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ*)
-       ↑          ↑         ↑
-    harmonic    exact    coexact
-    (signal)   (noise)   (noise)
-```
-
-**Value is the harmonic component.** The part that survives π_H — the Hodge projection onto ker(Δ). Everything in im(δ)⊕im(δ*) is transient noise; everything in ker(Δ) is globally coherent data that persists under all projections.
-
-This gives "Proof of Value" its literal meaning:
+Our consensus follows the three-layer pattern from Cushing et al. (2023)
+but replaces discrete Petri net tokens with continuous sheaf stalks on a
+simplicial complex (Čech nerve). This gives us the same workflow
+coordination power as Petri nets PLUS the geometric reasoning that makes
+PoV work.
 
 ```
-Transaction value:   amount that survives π_H (harmonic embedding of transfer)
-Validator value:     stalk data that survives Grassmann consensus (Karcher projection)
-Block value:         cochain root that survives sheaf coherence check (δ ≈ 0)
-Network value:       spectral gap that survives √2 bounds (Tsirelson range)
+┌─────────────────────────────────────────────────────────────────┐
+│                  LAYER 3: OFF-CHAIN (Python)                     │
+│                                                                   │
+│  Credential Generation    Hodge Projection    Geodesic ZK Proof  │
+│  ─────────────────────    ────────────────    ─────────────────  │
+│  simplicial complex K     ker Δ_F extraction  γ(t) = V·exp(tΩ)  │
+│  sheaf Laplacian Δ_F      harmonic stalks     Fiat-Shamir Σ     │
+│  Betti numbers β₀,β₁     quantize → fixed    commitment chain   │
+│                                                                   │
+│  credential.py  sheaf_laplacian.py  homotopical_zkp.py           │
+│                           │                                       │
+│                    Oracle Bridge                                  │
+│                    (stalk_bridge.rs)                              │
+│                           ↓                                       │
+├───────────────────────────────────────────────────────────────────┤
+│                LAYER 2: COORDINATION (Rust + Python)              │
+│                                                                   │
+│  VRF Slot Assignment     Coalition Formation    Topos Judgment   │
+│  ────────────────────    ───────────────────    ──────────────   │
+│  HMAC-SHA256(key,epoch)  Čech nerve N(V)        Heyting Ω        │
+│  score < centrality      Grassmann d_Gr         VALID/UNDET/INV  │
+│  equivocation detect     joint subspace test    estimate safety  │
+│                                                                   │
+│  vrf.rs / vrf_slots.py   coalitions.py          topos.rs/py      │
+│  validator_selection.py   coherence.py                            │
+│                           │                                       │
+│                    Block Production                               │
+│                    (pov.rs → main.rs)                             │
+│                           ↓                                       │
+├───────────────────────────────────────────────────────────────────┤
+│                  LAYER 1: ON-CHAIN (Rust)                         │
+│                                                                   │
+│  Block Storage           Sheaf State            Key Images       │
+│  ─────────────           ───────────            ──────────       │
+│  blocks.rs (RocksDB)     sheaf_store.rs         keyimages.rs     │
+│  BlockSection (3-tier)   C⁰ public stalks       double-spend     │
+│  ChainSectionBundle      C¹ ZK cochains         prevention       │
+│                          C² commitments                           │
+│                                                                   │
+│  block.py/block_section  sheaf_state.py         key_image.py     │
+│  chain_store.py          state.rs                                │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-A transaction with no harmonic component is pure noise — it carries no coherent information. A validator whose stalk diverges from the consensus subspace contributes no harmonic value. **Proof of Value = prove your contribution has nonzero harmonic component.**
+## Petri Net → Sheaf Correspondence
 
-This framing comes directly from `proofs/consensus.py`:
-> "ker(Δ) = harmonic cochains = what persists under projection"  
-> "Value := the part that survives harmonic measurement"
+The paper (Swan et al. 2025, Table 2) describes blockchain Petri nets
+with places, transitions, tokens, and markings. Our implementation
+maps each concept to a sheaf-theoretic equivalent:
 
-## Consensus = Measurement
-
-From [ORACLE_SECURITY.md](ORACLE_SECURITY.md):
-
-> **Traditional blockchains** use voting (BFT) or competition (PoW) to agree on state. Both require trust assumptions (honest majority or energy cost).
->
-> **Homotopical-encrypt** uses geometry. The spectral gap of the sheaf Laplacian determines block validity — not votes, not energy. The geometry IS the agreement.
-
-This means:
-- No honest majority assumption (math is honest)
-- No N² communication (O(1) verification per block)
-- No voting rounds (validity is a geometric fact)
-- Finality in 1 block (deterministic spectral check)
-
-## Architecture
-
-### Sheaf Descent Pattern
-
-The consensus mechanism is a **sheaf descent engine** — the same local-to-global coherence pattern that the cryptographic layer uses, applied to validator agreement:
-
-```
-Validators propose blocks
-  ↓
-Build Čech nerve from stalk overlaps
-  ↓
-Hodge decomposition (coherent / harmonic / noise)
-  ↓
-Grassmann consensus via Karcher mean
-  ↓
-Accept block when geometry valid
-```
-
-**H^1 is information, not failure.** Persistent disagreement between validators (β₁ > 0) is a signal that the network is partitioned or under attack — not something to suppress, but something to investigate. The exact component (im(δ)) is correctable by local updates; the coexact component (im(δ*)) is noise to discard; the harmonic component (ker(Δ)) is the consensus signal.
-
-### Slim Oracle
-
-The Oracle stays as a **Rust middleware** — a bridge between Python computation and the Rust node. Per [ORACLE_SECURITY.md](ORACLE_SECURITY.md), the oracle is a **verifier, not a computer**:
-
-```
-Python wallet computes:              Oracle (Rust) only checks:
-───────────────────────              ────────────────────────
-Eigendecomposition                   Spectral gap ∈ [1/√2, 2√2]
-Hodge projection → commitment        β₀ ≥ 1 (connected)
-ZK spectral identity proof           Commitment bytes non-trivial
-ZK class membership proof            Eigenvalues non-negative
-                                     Topology hash match
-```
-
-The Oracle has **no secret state**. A lying Oracle produces blocks that fail `verify_block()` at the node level. The node re-verifies everything. Each validator runs their own slim oracle.
-
-```
-Oracle role:
-  ✓ Serialize/deserialize stalks (Python numpy ↔ Rust bytes)
-  ✓ Forward spectral proofs from local computation to node
-  ✓ Expose HTTP/RPC for wallet interaction
-  ✗ NO independent computation authority
-  ✗ NO trusted worker consensus
-```
-
-## Grassmann Consensus
-
-Validator selection is **Grassmann-native**: consensus lives on the Grassmann manifold Gr(k,n), using the infrastructure already implemented in `primitives/grassmann.py` and `consensus/validator_selection.py`.
-
-### The Čech Nerve as Consensus Topology
-
-The **Čech nerve** of the validator set defines the consensus topology. Two validators share an edge when their stalks overlap (nonzero principal angle intersection):
-
-```
-Čech nerve N(V):
-  vertices = validators (identified by spectral fingerprint)
-  edges    = {(v_i, v_j) : d_Gr(stalk(v_i), stalk(v_j)) < ε}
-  
-  β₀(N(V)) = 1  →  ALL validators form one coherent cluster
-  β₀(N(V)) > 1  →  network is PARTITIONED
-  β₁(N(V)) > 0  →  persistent disagreement cycle (investigate, don't suppress)
-```
-
-### Cellular Sheaf Over the Nerve
-
-Each validator vertex gets its **stalk subspace** (k-dim subspace of ℝⁿ from their credential). Restriction maps are **principal angle projections** between neighboring stalks:
-
-```
-Cellular sheaf F over N(V):
-  F(v_i)     = stalk(v_i) ∈ Gr(k,n)           (subspace)
-  F(v_i,v_j) = projection P_{i→j}             (principal angle map)
-  
-Sheaf Laplacian Δ_F measures validator disagreement:
-  ker(Δ_F) = validators in perfect agreement (global section)
-  ‖Δ_F‖   = total geometric disagreement across network
-```
-
-### Selection: Harmonic Projection Weight
-
-If value IS the harmonic component, then a validator's influence should BE its harmonic content — how much of their stalk survives the network's Hodge projection.
-
-```
-1. Consensus subspace (Karcher mean on Gr(k,n)):
-   μ = karcher_mean({stalk(v) : v active})     [grassmann_karcher_mean()]
-
-2. Eligibility gate (Plücker — binary, not weighted):
-   eligible(v) = d_Gr(stalk(v), μ) < MAX_DIVERGENCE
-   → Are you close enough to consensus to participate? (go/no-go)
-
-3. Selection weight (harmonic projection — continuous):
-   weight(v) = ‖π_H(stalk(v))‖ / ‖stalk(v)‖
-   → How much of your stalk IS harmonic under the network's Laplacian Δ_F?
-   → This IS your "value" — the part that survives projection.
-
-4. VRF slot assignment:
-   output = HMAC-SHA256(eigenvectors, prev_hash ‖ epoch)
-   threshold = weight(v) × n_validators
-   eligible = (score < threshold)
-   winner = eligible validator with lowest score
-```
-
-**Why harmonic weight over Plücker centrality:**
-
-| | Plücker centrality | Harmonic projection weight |
+| Petri Net Concept | Our Sheaf Equivalent | Why It's Better |
 |---|---|---|
-| Measures | Distance to Karcher mean | How much stalk survives π_H |
-| What it rewards | Being close to consensus | Having globally coherent stalk data |
-| Discriminating power | Two equidistant validators = same weight | Equidistant validators can have different harmonic content |
-| Consistency with "PoV" | Indirect (proximity ≠ value) | **Direct** — value IS what survives π_H |
-| Connects to Lean proof | — | `Hodge_Ambiguity`: same cochain is harmonic for Δ₁ but not Δ₂ |
+| **Places** (vertices) | Validators (0-simplices in N(V)) | Same |
+| **Transitions** | Block production + consensus actions | Same |
+| **Tokens** (discrete) | **Stalks** (continuous subspaces on Gr(k,n)) | Continuous ⇒ can measure distance, project, decompose |
+| **Markings** (token config) | **Sheaf section** (global assignment of stalks) | Coherence condition: restriction maps must agree on overlaps |
+| **Firing** (token transfer) | **VRF slot + PoV proof** | Firing = producing a block with geometric proof |
+| **Pre-arcs** (input places) | Parent block + Oracle commitment | What you need to produce |
+| **Post-arcs** (output places) | New block + updated sheaf state | What production creates |
+| **Colored tokens** | **Stalk contexts** (Public, Private, ZK) | Our 3-layer stalk typing |
+| **Token balances** | **Spectral gap** λ₁(Δ_F) ∈ [1/√2, 2√2] | Continuous "balance" that must stay in bounds |
 
-The Plücker gate still matters (eligibility), but the **weight** — what determines selection probability and reward share — is the harmonic projection magnitude. The whole system becomes: value is harmonic, selection is harmonic, rewards are harmonic.
+### Key Advantage: Sheaf Laplacian as "Token Balance"
 
-### Sybil Resistance (Geometric)
+In Petri nets, the marking M(p) = number of tokens at place p.
+In our system, the "marking" is the spectral gap λ₁(Δ_F) of the
+sheaf Laplacian — a continuous invariant that measures how coherent
+the network is. This is strictly richer:
 
-From [ORACLE_SECURITY.md](ORACLE_SECURITY.md):
+- **Zero tokens ↔ disconnected (β₀ > 1)**: no coherent section exists
+- **Sufficient tokens ↔ spectral gap in bounds**: consensus possible
+- **Token transfer ↔ parallel transport**: stalks move along edges
+  via restriction maps, preserving geometric structure
 
-```
-In PoV: Sybil creates fake nodes → changes topology → spectral gap drops → blocks invalid.
-
-Sybil adds 100 disconnected nodes:
-  β₀ = 101 (101 connected components) → REJECTED: β₀ must equal 1
-```
-
-The Čech nerve + cellular sheaf add a second geometric barrier:
-
-```
-Attack: Spin up 100 fake validators with random stalks.
-
-Defense:
-  1. Random stalks are NOT aligned with consensus μ
-  2. d_Gr(random, μ) is large → centrality ≈ 0 → near-zero selection
-  3. Karcher mean μ is dominated by honest validators
-  4. Forging coherent stalks → inverse spectral problem → Hodge-hard
-```
-
-## Token Economics
-
-### Two-Token Design
-
-**Native token** (HCRYPT): Transactions, fees, transfers — the medium of exchange.
-
-**Vault token** (vHCRYPT): Validator participation — the consensus commitment.
+## Consensus Flow (per epoch)
 
 ```
-Why separate:
-  - Native token = medium of exchange (high velocity, liquid)
-  - Vault token = validator commitment signal (low velocity, locked)
-  - Separating avoids conflating "using the network" with "securing the network"
-  - Vault token has its own supply dynamics (validator incentives)
+                    ┌──────────────┐
+                    │  Epoch Start  │
+                    └──────┬───────┘
+                           │
+                    ┌──────▼───────┐
+                    │  VRF Evaluate │  vrf.rs: HMAC-SHA256(key, prev_hash || epoch)
+                    │  score < thr? │
+                    └──────┬───────┘
+                      NO   │   YES
+                    ┌──────┘   └──────────────┐
+                    │                          │
+              (sleep until                ┌────▼──────────┐
+               next epoch)               │ Drain Mempool  │
+                                         │ Load Oracle    │
+                                         └────┬──────────┘
+                                              │
+                                         ┌────▼──────────┐
+                                         │ PoV Produce    │  pov.rs
+                                         │ spectral gap   │  √2 bounds
+                                         │ cochain root   │  Σ δ(txᵢ) mod q
+                                         └────┬──────────┘
+                                              │
+                                         ┌────▼──────────┐
+                                         │ Self-Verify    │  PoVVerifier
+                                         │ Topos Judge    │  Heyting Ω
+                                         └────┬──────────┘
+                                              │
+                                         ┌────▼──────────┐
+                                         │ Store Block    │  blocks.rs
+                                         │ Mark KeyImages │  keyimages.rs
+                                         │ Update Sheaf   │  sheaf_store.rs
+                                         └────┬──────────┘
+                                              │
+                                         ┌────▼──────────┐
+                                         │ Broadcast P2P  │  transport.rs
+                                         └───────────────┘
 ```
 
-### CLMM Pool
-
-A **Concentrated Liquidity Market Maker** connects the two tokens:
+## Block Validation (receivers)
 
 ```
-CLMM Pool: HCRYPT ↔ vHCRYPT
-
-  Validators acquire vHCRYPT by providing liquidity or earning rewards
-  Users acquire HCRYPT for transactions
-  Price discovery between the two
-  
-  vHCRYPT/HCRYPT ratio = validator demand signal
-    High → validators in demand → network healthy
-    Low  → validator oversupply or low activity
+Receive Block
+  │
+  ├─ Gate 0: Deserialize block
+  ├─ Gate 1: Spectral gap valid (Oracle-attested √2 bounds)
+  ├─ Gate 2: Parent hash linkage (chain coherence)
+  ├─ Gate 3: Cochain root recomputation (Σ δ(txᵢ) matches)
+  ├─ Gate 4: VRF slot verification (epoch, identity, non-trivial)
+  ├─ Gate 5: Equivocation check (no double-production)
+  ├─ Gate 6: Key image double-spend check (O(1) per tx)
+  │
+  └─ All pass → Store + relay
 ```
 
-### Treasury Pool
+## Coalition Consensus (multi-validator)
 
-A **secondary pool** collects fees and distributes rewards:
-
-```
-Treasury Pool:
-  INPUTS:
-    Transaction fees (HCRYPT)
-    Slashing proceeds
-    Protocol inflation (configurable)
-  
-  OUTPUTS (modular — distribution logic is pluggable):
-    Block producer reward → producer's vault (vHCRYPT)
-    Epoch participation reward → active vaults (by centrality)
-    Protocol fund (configurable %)
-    Burn (configurable %)
-```
-
-### Modular Rewards Distribution
-
-The treasury exposes a pluggable interface. Concrete strategy is tunable without changing consensus:
-
-```python
-class RewardsStrategy(Protocol):
-    def distribute(
-        self,
-        epoch: int,
-        validators: List[Validator],
-        centralities: Dict[bytes, float],
-        treasury_balance: int,
-    ) -> Dict[bytes, int]:
-        """Returns fingerprint → allocation mapping."""
-        ...
-
-# Strategies:
-#   ProportionalByCentrality (default)
-#   EqualShare
-#   HarmonicWeighted (weight by |π_H(stalk)|)
-#   Custom
-```
-
-This lets us figure out the right reward distribution over time without protocol changes.
-
-### Vault Structure
+For networks with >1 validator, the coalition structure determines
+which subsets can jointly propose state updates:
 
 ```
-Vault(fingerprint):
-  bonded_v: uint           # vHCRYPT locked (slashing collateral)
-  earned_v: uint           # vHCRYPT earned (withdrawable)
-  reputation: float        # Geometric reputation (from incentives.py)
-  last_active: height      # Last block produced or attested
-  stalk_commitment: hash   # Commitment to stalk data
+Čech Nerve N(V):
+  vertices = validators
+  edge (i,j) iff d_Gr(stalk_i, stalk_j) < threshold
+
+Semitopology T:
+  T = { S ⊆ V : joint_coherence(S) > 0.5 }
+  NOTE: S₁ ∈ T and S₂ ∈ T does NOT imply S₁ ∩ S₂ ∈ T
+  (validators can cooperate pairwise but not jointly)
+
+Consensus requirement:
+  The producing coalition must cover β₀ = 1 connected component
+  → ensures agreement across the whole network
 ```
 
-Bond is a **flat threshold** — not a selection weight:
+## Paper Mapping (Swan et al. 2025, Tables 1-3)
+
+### Table 1 Categorical Primitives → Our Implementation
+
+| # | Paper Primitive | Our Module | Status |
+|---|---|---|---|
+| 1 | Topos consensus (Lambert) | `topos.py`, `topos.rs` | ✅ |
+| 2 | Proofchains as Sheaves (Murfet) | `coherence.py` (CechNerve) | ✅ |
+| 3 | Blockchain cohomology (Meldman) | `spectral_bounds.py`, Betti | ✅ |
+| 4 | Semitopology coalitions (Gabbay) | `coalitions.py` | ✅ NEW |
+| 5 | UTxO blockchain algebra (Gabbay) | `homotopy_transaction.py` | ⚠️ Partial |
+| 6 | Resource convertibility (Nester) | `block_section.py` | ⚠️ Partial |
+| 10 | Mining group theory (Zhao) | VRF + validator selection | ✅ |
+| 11 | Escrows as optics (Genovese) | — | ❌ Future |
+| 12 | Persistent homology (Abay) | `persistence.py` | ✅ |
+
+### Table 3 Higher Categorical → Our Implementation
+
+| # | Paper Advance | Our Module | Status |
+|---|---|---|---|
+| 1 | HoTT Blockchains | Sheaf Laplacian + type system | ✅ Core |
+| 2 | Computad Petri net Ledgers | 3-layer sheaf-Petri architecture | ✅ |
+| 3 | Coregulator DAOs | `coregulator.py` | ⚠️ Stub |
+| 4 | Galois cohomology ZKPs | `geodesic_zkp.rs` + `homotopical_zkp.py` | ✅ |
+
+## Economic Token Layer
+
+Following Cushing et al.'s "economy tokens" (e-tokens), our system
+modulates incentives through three mechanisms:
+
+1. **Spectral stake**: Your credential's spectral gap IS your stake.
+   Better geometry → higher centrality → more block production slots.
+
+2. **Treasury rewards**: `treasury.py` distributes block rewards
+   proportional to harmonic weight (contribution to consensus).
+
+3. **Slashing**: Equivocation evidence (`EquivocationTracker`) triggers
+   stake loss — your credential gets blacklisted via key images.
+
+These map to the Petri net token dynamics:
+- **Accumulation**: Oracle proofs add "tokens" (spectral quality)
+- **Firing**: Block production consumes a VRF slot
+- **Transfer**: Transaction fees flow through the treasury
+- **Burning**: Slashing destroys the credential (key image spent)
+
+## File Map
 
 ```
-eligible(v) = vault.bonded_v >= MINIMUM_VAULT_BOND
-              AND v.is_active
-              AND d_Gr(stalk(v), μ) < MAX_DIVERGENCE
+src/consensus/
+  ├── coalitions.py        Semitopological coalitions (Gabbay)
+  ├── coherence.py         Čech nerve + β₀ check
+  ├── coregulator.py       Memory evolutive system (stub)
+  ├── invariant_validator.py  Pre-consensus invariant checks
+  ├── topos.py             Heyting 3-valued logic
+  ├── validator_selection.py  Plücker centrality (Grassmann)
+  └── vrf_slots.py         VRF slot assignment (Python)
 
-selection_weight(v) = ‖π_H(stalk(v))‖ / ‖stalk(v)‖  # harmonic weight, NOT bond size
+rust/node/src/consensus/
+  ├── mod.rs               Module exports
+  ├── pov.rs               Proof of Value producer + verifier
+  ├── topos.rs             Heyting algebra (Rust)
+  └── vrf.rs               VRF slot assignment (Rust)
 ```
-
-### Rewards Flow
-
-```
-Transaction fee (HCRYPT)
-    │
-    ▼
-Treasury Pool
-    │
-    ├──▶ Block producer (vHCRYPT)
-    ├──▶ Active validators (vHCRYPT, by harmonic weight)
-    ├──▶ Protocol fund (HCRYPT, configurable %)
-    └──▶ Burn (configurable %)
-
-Validator cash out:
-    vHCRYPT → CLMM Pool → HCRYPT
-```
-
-## Verification Pipeline
-
-```
-Transaction arrives
-    │
-    ├─ Stage 0: Structural checks (O(1))
-    ├─ Stage 1: Key image double-spend check (O(1))
-    ├─ Stage 2: Spectral proof verification (O(n))
-    │     ├─ λ₁ ∈ [1/√2, 2√2] (√2 / Tsirelson bounds)
-    │     ├─ β₀ = 1 (connected topology)
-    │     └─ Eigenvalue commitments match fingerprint
-    ├─ Stage 3: Sheaf coherence (local-to-global)
-    │     ├─ δ(commitments) ≈ 0 across Čech nerve neighbors
-    │     ├─ Stalk alignment with Karcher mean μ
-    │     └─ β₁ check (persistent disagreement = flag, not reject)
-    ├─ Stage 4: Amount balance (cochain homomorphic, SVP-hard)
-    └─ Stage 5: VRF slot validity + equivocation check
-
-Block accepted → Treasury receives fees → Distribution triggered
-```
-
-## Comparison: Ouroboros vs PoV
-
-| | Ouroboros (Cardano) | Proof of Value (hcrypt) |
-|---|---|---|
-| Block producer selection | Stake-weighted VRF lottery | Harmonic projection weight + VRF |
-| What determines influence | **How much you own** (ADA stake) | **How much of your stalk survives π_H** (harmonic content) |
-| Validity condition | Slot leader signed correctly | λ₁ ∈ [1/√2, 2√2] + β₀=1 + key image unique + sheaf coherence |
-| Security assumption | >50% honest stake | Hodge-hardness (geometry is honest) |
-| Formal verification | Protocol spec (Ouroboros in Agda) | Hardness proof (`hardness_proof.lean`, Lean 4 + Mathlib) |
-| Sybil resistance | Stake = cost of attack | Geometric coherence + vault bond threshold |
-| Messages per block | O(N²) (BFT voting) | O(N) (gossip only) |
-| Privacy | Optional (Midnight sidechain) | Default (every transaction) |
-| Plutocracy risk | Yes — more ADA = more power | No — bond is binary go/no-go, selection is geometric |
-| Finality | Probabilistic (k confirmations) | 1 block (deterministic spectral check) |
-
-## Implementation Plan
-
-1. **Vault token** (`chain/vault.py`) — NEW
-   - Vault struct per spectral fingerprint
-   - Bond/unbond/withdraw/slash
-   - Separate from native HCRYPT balance
-
-2. **Treasury pool** (`chain/treasury.py`) — NEW
-   - Fee collection, pluggable distribution strategies
-   - Modular `RewardsStrategy` interface
-
-3. **CLMM pool** (`chain/clmm.py`) — NEW (stub first)
-   - HCRYPT ↔ vHCRYPT liquidity
-   - Start as constant-product AMM, upgrade to concentrated later
-
-4. **Čech nerve coherence** (`consensus/coherence.py`) — NEW
-   - Build Čech nerve from validator stalks
-   - Sheaf Laplacian over nerve
-   - δ(commitments) ≈ 0 check
-   - β₁ monitoring (information, not failure)
-
-5. **Slim oracle** (`rust/oracle/`) — MODIFY
-   - Remove trusted worker authority
-   - Keep as Python↔Rust serialization bridge
-
-6. **Rewards distribution** (`chain/rewards.py`) — NEW
-   - `distribute(epoch, validators, centralities) → allocations`
-   - Default: ProportionalByCentrality
-   - Interface for pluggable alternatives
-
-7. **Update validator_selection.py** — MODIFY
-   - Add vault bond eligibility gate
-   - Integrate Čech nerve topology

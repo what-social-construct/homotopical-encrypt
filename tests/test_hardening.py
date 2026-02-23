@@ -404,8 +404,8 @@ def test_plucker_centrality_with_stalks():
     assert abs(total - 1.0) < 1e-6, f"Must sum to 1, got {total}"
 
 
-def test_plucker_fallback_to_fiedler():
-    """Without stalk data, falls back to Fiedler centrality."""
+def test_uniform_weights_without_stalks():
+    """Without stalk data, gets uniform weights (no Fiedler — geometric coherence required)."""
     from src.consensus.validator_selection import ValidatorSet
 
     topology = {
@@ -693,7 +693,7 @@ if __name__ == "__main__":
         test_equivocation_different_validators_ok,
         # 6. Plücker centrality
         test_plucker_centrality_with_stalks,
-        test_plucker_fallback_to_fiedler,
+        test_uniform_weights_without_stalks,
         test_plucker_consensus_subspace,
     ]
 

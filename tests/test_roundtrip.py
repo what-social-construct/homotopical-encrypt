@@ -136,6 +136,7 @@ def test_lattice_roundtrip():
     assert all(0 <= x < q for x in rv)
     
     print("\n   ✅ Lattice primitives working!")
+    return True
 
 
 if __name__ == "__main__":

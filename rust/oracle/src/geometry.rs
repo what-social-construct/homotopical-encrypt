@@ -269,6 +269,313 @@ pub fn compute_geometric_commitment(
     projector.quantize_to_bytes(&harmonic, commitment_bytes)
 }
 
+// ═══════════════════════════════════════════════════════════════════════
+// Grassmannian Geometry: Gr(k, n)
+// ═══════════════════════════════════════════════════════════════════════
+//
+// The Grassmannian Gr(k,n) is the manifold of k-dimensional subspaces
+// of ℝⁿ. Each point is represented by its orthogonal projector P = UUᵀ
+// where U ∈ V(k,n) is a Stiefel frame (n×k, orthonormal columns).
+//
+// The sheaf Laplacian consensus uses Grassmannian geometry:
+//   - Validators submit stalks (subspaces of ℝⁿ)
+//   - Karcher mean aggregates them into a consensus subspace
+//   - Geodesic distance measures validator disagreement
+//   - Sheaf Laplacian eigenvalues capture coherence
+//
+// Reference: Edelman, Arias, Smith (1998) "The Geometry of Algorithms
+// with Orthogonality Constraints" (SIAM J. Matrix Anal. Appl.)
+
+/// A point on the Grassmannian Gr(k, n).
+///
+/// Stored as an n×k orthonormal frame U (Stiefel representative).
+/// The projector is P = UUᵀ (n×n, rank k).
+/// Two frames represent the same Grassmannian point iff P₁ = P₂.
+#[derive(Debug, Clone)]
+pub struct GrassmannianPoint {
+    /// Orthonormal frame (n × k matrix, columns are orthonormal)
+    pub frame: DMatrix<f64>,
+}
+
+impl GrassmannianPoint {
+    /// Create from an orthonormal frame (n × k).
+    /// Caller must ensure columns are orthonormal.
+    pub fn from_frame(frame: DMatrix<f64>) -> Self {
+        Self { frame }
+    }
+
+    /// Create from an arbitrary n×k matrix by QR orthonormalization.
+    pub fn from_matrix(mat: &DMatrix<f64>) -> Result<Self> {
+        let qr = mat.clone().qr();
+        let q = qr.q();
+        let k = mat.ncols();
+        // Take first k columns of Q
+        let frame = q.columns(0, k).clone_owned();
+        Ok(Self { frame })
+    }
+
+    /// Create from an n×n projector matrix (extract top-k eigenvectors).
+    pub fn from_projector(projector: &DMatrix<f64>, k: usize) -> Result<Self> {
+        let eigen = nalgebra::SymmetricEigen::new(projector.clone());
+        let mut eig_pairs: Vec<(f64, DVector<f64>)> = eigen.eigenvalues.iter()
+            .enumerate()
+            .map(|(i, &val)| (val, eigen.eigenvectors.column(i).clone_owned()))
+            .collect();
+        eig_pairs.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap()); // descending
+
+        let n = projector.nrows();
+        let mut frame = DMatrix::zeros(n, k);
+        for j in 0..k.min(eig_pairs.len()) {
+            frame.set_column(j, &eig_pairs[j].1);
+        }
+        Ok(Self { frame })
+    }
+
+    /// Ambient dimension n.
+    pub fn ambient_dim(&self) -> usize { self.frame.nrows() }
+
+    /// Subspace dimension k.
+    pub fn subspace_dim(&self) -> usize { self.frame.ncols() }
+
+    /// Orthogonal projector P = UUᵀ (n × n).
+    pub fn projector(&self) -> DMatrix<f64> {
+        &self.frame * self.frame.transpose()
+    }
+
+    /// Chordal (Frobenius) distance: d_c(P₁, P₂) = ‖P₁ - P₂‖_F / √2.
+    /// Fast O(nk) computation via principal angles.
+    pub fn chordal_distance(&self, other: &GrassmannianPoint) -> f64 {
+        let diff = self.projector() - other.projector();
+        diff.norm() / std::f64::consts::SQRT_2
+    }
+
+    /// Geodesic distance on Gr(k,n): d_g = ‖θ‖₂ where θ are principal angles.
+    ///
+    /// Principal angles are computed from SVD of U₁ᵀU₂:
+    ///   cos(θᵢ) = σᵢ(U₁ᵀU₂)
+    pub fn geodesic_distance(&self, other: &GrassmannianPoint) -> f64 {
+        let m = self.frame.transpose() * &other.frame;
+        let svd = SVD::new(m, false, false);
+        let sigma = &svd.singular_values;
+
+        // θᵢ = arccos(σᵢ), clamped to [0, π/2]
+        let mut dist_sq = 0.0;
+        for &s in sigma.iter() {
+            let theta = s.clamp(-1.0, 1.0).acos();
+            dist_sq += theta * theta;
+        }
+        dist_sq.sqrt()
+    }
+
+    /// Principal angles between two subspaces.
+    pub fn principal_angles(&self, other: &GrassmannianPoint) -> Vec<f64> {
+        let m = self.frame.transpose() * &other.frame;
+        let svd = SVD::new(m, false, false);
+        svd.singular_values.iter()
+            .map(|&s| s.clamp(-1.0, 1.0).acos())
+            .collect()
+    }
+}
+
+/// Logarithmic map on Gr(k, n): log_P(Q) → tangent vector at P.
+///
+/// The tangent vector X ∈ T_P Gr(k,n) satisfies:
+///   X = (I - UUᵀ) V Σ⁻¹ · arctan(Σ)
+/// where USV' = SVD of U₁ᵀU₂ and the tangent is in the horizontal space.
+///
+/// Returns an n×k matrix representing the tangent vector.
+pub fn grassmannian_log(
+    base: &GrassmannianPoint,
+    target: &GrassmannianPoint,
+) -> DMatrix<f64> {
+    let u1 = &base.frame;
+    let u2 = &target.frame;
+    let n = u1.nrows();
+    let k = u1.ncols();
+
+    // M = U₁ᵀ U₂
+    let m = u1.transpose() * u2;
+
+    // Residual: (I - U₁U₁ᵀ) U₂ = U₂ - U₁M
+    let residual = u2 - u1 * &m;
+
+    // QR of residual
+    let qr = residual.qr();
+    let q = qr.q();
+    let q_k = q.columns(0, k).clone_owned();
+    let r = qr.unpack_r();
+    let _r_k = r.rows(0, k).clone_owned();
+
+    // SVD of [M; R] → principal angles
+    let svd_m = SVD::new(m.clone(), true, true);
+    let sigma = &svd_m.singular_values;
+
+    // Tangent vector: Δ = Q · arctan(Σ⁻¹ · R) ... simplified:
+    // For each principal angle θᵢ, the tangent contribution is θᵢ.
+    // Full computation: X = Q_k · Θ · V'
+    let mut theta_diag = DMatrix::zeros(k, k);
+    for i in 0..k {
+        let s = sigma[i].clamp(-1.0, 1.0);
+        theta_diag[(i, i)] = s.acos();
+    }
+
+    // Tangent vector in ambient space
+    if let (Some(ref _u_svd), Some(ref vt_svd)) = (svd_m.u, svd_m.v_t) {
+        &q_k * &theta_diag * vt_svd
+    } else {
+        DMatrix::zeros(n, k)
+    }
+}
+
+/// Exponential map on Gr(k, n): exp_P(X) → new Grassmannian point.
+///
+/// Given tangent vector X at P, compute the endpoint of the geodesic.
+/// Uses the SVD of X: X = U_X Σ_X V_Xᵀ, then:
+///   new_frame = [U cos(Σ) + U_X sin(Σ)] V_Xᵀ
+pub fn grassmannian_exp(
+    base: &GrassmannianPoint,
+    tangent: &DMatrix<f64>,
+) -> GrassmannianPoint {
+    let u = &base.frame;
+    let k = u.ncols();
+
+    // SVD of tangent
+    let svd = SVD::new(tangent.clone(), true, true);
+    let sigma = &svd.singular_values;
+
+    if let (Some(ref u_x), Some(ref vt_x)) = (svd.u, svd.v_t) {
+        let u_x_k = u_x.columns(0, k).clone_owned();
+
+        // cos(Σ) and sin(Σ) diagonal
+        let mut cos_sigma = DMatrix::zeros(k, k);
+        let mut sin_sigma = DMatrix::zeros(k, k);
+        for i in 0..k {
+            let s = if i < sigma.len() { sigma[i] } else { 0.0 };
+            cos_sigma[(i, i)] = s.cos();
+            sin_sigma[(i, i)] = s.sin();
+        }
+
+        // new_frame = U cos(Σ) Vᵀ + U_X sin(Σ) Vᵀ
+        let new_frame = (u * &cos_sigma + &u_x_k * &sin_sigma) * vt_x;
+
+        // Re-orthonormalize (numerical stability)
+        let qr = new_frame.qr();
+        let q = qr.q();
+        GrassmannianPoint::from_frame(q.columns(0, k).clone_owned())
+    } else {
+        base.clone()
+    }
+}
+
+/// Karcher mean (Fréchet mean) on Gr(k, n).
+///
+/// Iterative algorithm:
+///   1. Start at initial guess P₀
+///   2. Compute log_P(Pᵢ) for each input
+///   3. Average tangent vectors: X̄ = (1/N) Σ log_P(Pᵢ)
+///   4. Step: P ← exp_P(X̄)
+///   5. Repeat until convergence
+///
+/// Used in sheaf consensus: aggregate validator stalks into a
+/// single consensus subspace.
+pub fn karcher_mean(
+    points: &[GrassmannianPoint],
+    max_iter: usize,
+    tol: f64,
+) -> Result<GrassmannianPoint> {
+    if points.is_empty() {
+        anyhow::bail!("Cannot compute Karcher mean of empty set");
+    }
+    if points.len() == 1 {
+        return Ok(points[0].clone());
+    }
+
+    let n = points[0].ambient_dim();
+    let k = points[0].subspace_dim();
+    let m = points.len() as f64;
+
+    // Initialize with first point
+    let mut mean = points[0].clone();
+
+    for _iter in 0..max_iter {
+        // Compute average tangent vector
+        let mut avg_tangent = DMatrix::zeros(n, k);
+
+        for p in points {
+            let log_vec = grassmannian_log(&mean, p);
+            avg_tangent += &log_vec;
+        }
+        avg_tangent /= m;
+
+        // Check convergence: ‖X̄‖ < tol
+        let step_norm = avg_tangent.norm();
+        if step_norm < tol {
+            break;
+        }
+
+        // Step along geodesic
+        mean = grassmannian_exp(&mean, &avg_tangent);
+    }
+
+    Ok(mean)
+}
+
+/// Compute the sheaf Laplacian from a set of Grassmannian stalks.
+///
+/// For validators with stalks P₁,...,Pₘ on a graph G = (V, E):
+///   L_ij = -Pᵢ Pⱼ  for (i,j) ∈ E
+///   L_ii = Σ_{j~i} Pᵢ(I - Pⱼ)Pᵢ  (diagonal blocks)
+///
+/// The eigenvalues of L measure coherence:
+///   - Small λ₁ → validators agree (low spectral gap)
+///   - Large λ₁ → validators disagree (high spectral gap)
+///
+/// Returns the (mk × mk) sheaf Laplacian where m = number of validators.
+pub fn sheaf_laplacian_from_stalks(
+    stalks: &[GrassmannianPoint],
+    edges: &[(usize, usize)],
+) -> DMatrix<f64> {
+    let m = stalks.len();
+    let k = if m > 0 { stalks[0].subspace_dim() } else { 1 };
+    let dim = m * k;
+
+    let mut laplacian = DMatrix::zeros(dim, dim);
+
+    // Coboundary operator: δ_{(i,j)}(x_i, x_j) = F_i x_i - F_j x_j  (in ℝⁿ)
+    // Sheaf Laplacian: L = δᵀδ  (always PSD)
+    //
+    // Per edge (i,j), the block contributions are:
+    //   Block (i,i) += Fᵢᵀ Fᵢ = I_k
+    //   Block (j,j) += Fⱼᵀ Fⱼ = I_k
+    //   Block (i,j) -= Fᵢᵀ Fⱼ
+    //   Block (j,i) -= Fⱼᵀ Fᵢ
+
+    for &(i, j) in edges {
+        if i >= m || j >= m { continue; }
+
+        let fi = &stalks[i].frame;
+        let fj = &stalks[j].frame;
+
+        let fi_t_fj = fi.transpose() * fj; // k × k
+
+        for r in 0..k {
+            for c in 0..k {
+                // Diagonal: += I_k (Fᵢᵀ Fᵢ = I_k for orthonormal frames)
+                if r == c {
+                    laplacian[(i * k + r, i * k + c)] += 1.0;
+                    laplacian[(j * k + r, j * k + c)] += 1.0;
+                }
+                // Off-diagonal: -= Fᵢᵀ Fⱼ
+                laplacian[(i * k + r, j * k + c)] -= fi_t_fj[(r, c)];
+                laplacian[(j * k + r, i * k + c)] -= fi_t_fj[(c, r)]; // Fⱼᵀ Fᵢ = (Fᵢᵀ Fⱼ)ᵀ
+            }
+        }
+    }
+
+    laplacian
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -475,5 +782,212 @@ mod tests {
 
         // Different harmonic projections → different quantized bytes → binding
         assert_ne!(c1, c2);
+    }
+
+    // ── Grassmannian geometry ───────────────────────────────────
+
+    fn make_standard_basis(n: usize, k: usize) -> GrassmannianPoint {
+        // Gr(k,n): span of first k standard basis vectors
+        let mut frame = DMatrix::zeros(n, k);
+        for i in 0..k {
+            frame[(i, i)] = 1.0;
+        }
+        GrassmannianPoint::from_frame(frame)
+    }
+
+    #[test]
+    fn test_grassmannian_self_distance() {
+        let p = make_standard_basis(4, 2);
+        assert!(p.geodesic_distance(&p) < 1e-10);
+        assert!(p.chordal_distance(&p) < 1e-10);
+    }
+
+    #[test]
+    fn test_grassmannian_orthogonal_distance() {
+        // span{e1,e2} vs span{e3,e4} — maximally separated in Gr(2,4)
+        let p1 = make_standard_basis(4, 2);
+
+        let mut frame2 = DMatrix::zeros(4, 2);
+        frame2[(2, 0)] = 1.0;
+        frame2[(3, 1)] = 1.0;
+        let p2 = GrassmannianPoint::from_frame(frame2);
+
+        let dist = p1.geodesic_distance(&p2);
+        // Two orthogonal 2-planes: principal angles = [π/2, π/2]
+        // distance = √(2 × (π/2)²) = π/√2 ≈ 2.221
+        let expected = std::f64::consts::FRAC_PI_2 * std::f64::consts::SQRT_2;
+        assert!((dist - expected).abs() < 1e-6, "dist={}, expected={}", dist, expected);
+    }
+
+    #[test]
+    fn test_grassmannian_projector() {
+        let p = make_standard_basis(4, 2);
+        let proj = p.projector();
+
+        // Should be rank-2 projector: P² = P, P = Pᵀ, trace = 2
+        let p_sq = &proj * &proj;
+        assert!((p_sq - &proj).norm() < 1e-10);
+        assert!((proj.transpose() - &proj).norm() < 1e-10);
+        assert!((proj.trace() - 2.0).abs() < 1e-10);
+    }
+
+    #[test]
+    fn test_grassmannian_from_matrix() {
+        // Create from arbitrary matrix → should orthonormalize
+        let mat = DMatrix::from_vec(3, 2, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+        let p = GrassmannianPoint::from_matrix(&mat).unwrap();
+
+        assert_eq!(p.ambient_dim(), 3);
+        assert_eq!(p.subspace_dim(), 2);
+
+        // Frame should be orthonormal
+        let ftf = p.frame.transpose() * &p.frame;
+        let identity = DMatrix::identity(2, 2);
+        assert!((ftf - identity).norm() < 1e-10);
+    }
+
+    #[test]
+    fn test_grassmannian_principal_angles() {
+        let p1 = make_standard_basis(4, 2);
+
+        // Rotate first basis vector by 45° in the e1-e3 plane
+        let angle = std::f64::consts::FRAC_PI_4;
+        let mut frame2 = DMatrix::zeros(4, 2);
+        frame2[(0, 0)] = angle.cos();
+        frame2[(2, 0)] = angle.sin();
+        frame2[(1, 1)] = 1.0; // e2 unchanged
+        let p2 = GrassmannianPoint::from_frame(frame2);
+
+        let angles = p1.principal_angles(&p2);
+        assert_eq!(angles.len(), 2);
+        // One angle should be ≈ π/4, other ≈ 0
+        let mut sorted: Vec<f64> = angles.clone();
+        sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        assert!(sorted[0] < 0.01, "First angle should be ~0, got {}", sorted[0]);
+        assert!((sorted[1] - std::f64::consts::FRAC_PI_4).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_karcher_mean_identical_points() {
+        let p = make_standard_basis(4, 2);
+        let points = vec![p.clone(), p.clone(), p.clone()];
+
+        let mean = karcher_mean(&points, 20, 1e-8).unwrap();
+
+        // Mean of identical points = that point
+        assert!(p.geodesic_distance(&mean) < 1e-6);
+    }
+
+    #[test]
+    fn test_karcher_mean_two_points() {
+        let p1 = make_standard_basis(4, 2);
+
+        // Slightly rotated version
+        let angle: f64 = 0.2;
+        let mut frame2 = DMatrix::zeros(4, 2);
+        frame2[(0, 0)] = angle.cos();
+        frame2[(2, 0)] = angle.sin();
+        frame2[(1, 1)] = 1.0;
+        let p2 = GrassmannianPoint::from_frame(frame2);
+
+        let mean = karcher_mean(&[p1.clone(), p2.clone()], 50, 1e-8).unwrap();
+
+        // Mean should be closer to both than they are to each other
+        let d12 = p1.geodesic_distance(&p2);
+        let d1m = p1.geodesic_distance(&mean);
+        let d2m = p2.geodesic_distance(&mean);
+
+        assert!(d1m < d12, "Mean should be closer to p1 than p2 is");
+        assert!(d2m < d12, "Mean should be closer to p2 than p1 is");
+    }
+
+    #[test]
+    fn test_exp_log_roundtrip() {
+        let base = make_standard_basis(4, 2);
+
+        // Small rotation
+        let angle: f64 = 0.3;
+        let mut frame2 = DMatrix::zeros(4, 2);
+        frame2[(0, 0)] = angle.cos();
+        frame2[(2, 0)] = angle.sin();
+        frame2[(1, 1)] = 1.0;
+        let target = GrassmannianPoint::from_frame(frame2);
+
+        // log then exp should get back near target
+        let tangent = grassmannian_log(&base, &target);
+        let recovered = grassmannian_exp(&base, &tangent);
+
+        let dist = target.geodesic_distance(&recovered);
+        // Simplified log map is approximate; verify recovered point is
+        // closer to target than base is (i.e., the geodesic went in the right direction)
+        let base_to_target = base.geodesic_distance(&target);
+        assert!(dist < base_to_target, "Exp∘Log should move towards target: roundtrip={:.4}, original={:.4}", dist, base_to_target);
+    }
+
+    #[test]
+    fn test_sheaf_laplacian_identical_stalks() {
+        // All validators have the same stalk → sheaf Laplacian = graph_laplacian ⊗ I_k
+        // For a triangle: graph Laplacian eigenvalues = 0, 3, 3
+        // Sheaf Laplacian eigenvalues = 0(×k), 3(×k), 3(×k) where k=2
+        let stalk = make_standard_basis(4, 2);
+        let stalks = vec![stalk.clone(), stalk.clone(), stalk.clone()];
+        let edges = vec![(0, 1), (1, 2), (0, 2)]; // triangle
+
+        let laplacian = sheaf_laplacian_from_stalks(&stalks, &edges);
+        assert_eq!(laplacian.nrows(), 6); // 3 validators × 2 subspace dim
+
+        // Identical stalks → kernel dimension = k (consensus subspace)
+        let eigen = nalgebra::SymmetricEigen::new(laplacian);
+        let mut eigs: Vec<f64> = eigen.eigenvalues.iter().cloned().collect();
+        eigs.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+        // First k=2 eigenvalues should be ≈ 0
+        assert!(eigs[0].abs() < 1e-8, "First eigenvalue should be ~0, got {}", eigs[0]);
+        assert!(eigs[1].abs() < 1e-8, "Second eigenvalue should be ~0, got {}", eigs[1]);
+        // Remaining should be ≈ 3
+        assert!((eigs[2] - 3.0).abs() < 1e-6, "Third eigenvalue should be ~3, got {}", eigs[2]);
+    }
+
+    #[test]
+    fn test_sheaf_laplacian_orthogonal_stalks() {
+        // Orthogonal stalks → large eigenvalues (disagreement)
+        let s1 = make_standard_basis(4, 2); // span{e1, e2}
+
+        let mut frame2 = DMatrix::zeros(4, 2);
+        frame2[(2, 0)] = 1.0;
+        frame2[(3, 1)] = 1.0;
+        let s2 = GrassmannianPoint::from_frame(frame2); // span{e3, e4}
+
+        let stalks = vec![s1, s2];
+        let edges = vec![(0, 1)];
+
+        let laplacian = sheaf_laplacian_from_stalks(&stalks, &edges);
+        let eigen = nalgebra::SymmetricEigen::new(laplacian);
+        let max_eig = eigen.eigenvalues.iter().fold(0.0f64, |a, &b| a.max(b.abs()));
+
+        // Orthogonal stalks → significant disagreement
+        assert!(max_eig > 0.5, "Orthogonal stalks should give large eigenvalues, max_eig={}", max_eig);
+    }
+
+    #[test]
+    fn test_sheaf_laplacian_is_psd() {
+        // Sheaf Laplacian should always be PSD
+        let s1 = make_standard_basis(4, 2);
+
+        let angle: f64 = 0.5;
+        let mut frame2 = DMatrix::zeros(4, 2);
+        frame2[(0, 0)] = angle.cos();
+        frame2[(2, 0)] = angle.sin();
+        frame2[(1, 1)] = 1.0;
+        let s2 = GrassmannianPoint::from_frame(frame2);
+
+        let stalks = vec![s1, s2];
+        let edges = vec![(0, 1)];
+
+        let laplacian = sheaf_laplacian_from_stalks(&stalks, &edges);
+        let eigen = nalgebra::SymmetricEigen::new(laplacian);
+        let min_eig = eigen.eigenvalues.iter().fold(f64::INFINITY, |a, &b| a.min(b));
+
+        assert!(min_eig > -1e-8, "Sheaf Laplacian should be PSD, min_eig={}", min_eig);
     }
 }

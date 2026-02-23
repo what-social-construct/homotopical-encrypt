@@ -78,6 +78,16 @@ from .tsirelson import (
     TsirelsonAnalysis,
 )
 
+# Homotopical ZKP (geodesic witness protocol)
+from .homotopical_zkp import (
+    GeodesicZKProof,
+    GeodesicCommitment,
+    prove_geodesic_equivalence,
+    verify_geodesic_proof,
+    batch_verify_geodesic_proofs,
+    prove_from_credential,
+)
+
 # Anonymity proofs
 from .anonymity import (
     HomotopyClassProof,
@@ -133,4 +143,12 @@ __all__ = [
     "HarmonicRangeProof",
     "create_harmonic_range_proof",
     "verify_harmonic_range_proof",
+    
+    # Homotopical ZKP
+    "GeodesicZKProof",
+    "GeodesicCommitment",
+    "prove_geodesic_equivalence",
+    "verify_geodesic_proof",
+    "batch_verify_geodesic_proofs",
+    "prove_from_credential",
 ]

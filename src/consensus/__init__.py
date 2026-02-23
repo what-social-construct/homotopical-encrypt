@@ -55,6 +55,27 @@ from .validator_selection import (
     select_validator_for_block,
 )
 
+# Čech nerve coherence (Grassmann consensus)
+from .coherence import (
+    CoherenceEngine,
+    CechNerve,
+)
+
+# Coregulator DAO (predictive consensus with memory)
+from .coregulator import (
+    CoregulatorDAO,
+    CoregulatorMemory,
+    PredictionRecord,
+)
+
+# Topos consensus (Heyting-valued three-logic)
+from .topos import (
+    ToposConsensus,
+    ToposJudgment,
+    HeytingValue,
+    ConsensusEvidence,
+)
+
 # VRF slot assignment (fork prevention)
 from .vrf_slots import (
     VRFKey,
@@ -91,4 +112,16 @@ __all__ = [
     'vrf_check_eligibility',
     'assign_slot',
     'verify_slot_assignment',
+    # Coherence
+    'CoherenceEngine',
+    'CechNerve',
+    # Coregulator DAO
+    'CoregulatorDAO',
+    'CoregulatorMemory',
+    'PredictionRecord',
+    # Topos consensus
+    'ToposConsensus',
+    'ToposJudgment',
+    'HeytingValue',
+    'ConsensusEvidence',
 ]

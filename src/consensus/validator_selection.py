@@ -24,10 +24,12 @@ WHY HARMONIC WEIGHT OVER PLÜCKER CENTRALITY:
   Two equidistant validators can have different harmonic content.
   Value := what survives π_H. Selection should BE that value.
 
-FALLBACK:
+NO FIEDLER FALLBACK:
 
-  If stalk data isn't available (genesis epoch, lightweight nodes),
-  falls back to Fiedler centrality. Backwards compatible.
+  Stalk data is REQUIRED for validator registration.
+  No stalk → no geometric identity → no block production.
+  Fiedler centrality measures graph position, not geometric value.
+  In this framework, value := what survives π_H. Period.
 
 See docs/CONSENSUS.md for the full design.
 """
@@ -79,7 +81,8 @@ class ValidatorSet:
     (Karcher mean + sheaf Laplacian), and selection (harmonic
     projection weight). One manifold, three uses.
 
-    Selection: harmonic weight → Plücker gate → Fiedler fallback.
+    Selection: harmonic weight → Plücker centrality. No Fiedler fallback.
+    Stalk data required — geometric coherence IS the value.
     """
 
     def __init__(self, topology: Dict[int, List[Tuple]]):
@@ -100,12 +103,17 @@ class ValidatorSet:
         """
         Register a new validator.
 
+        Stalk data is REQUIRED for geometric consensus participation.
+        Validators without stalk data are registered but get minimum
+        weight (0.01) — they can observe but won't produce blocks
+        until they provide stalk data via update_stalk_data().
+
         Args:
             fingerprint: Spectral fingerprint (identity)
             vertex_id: Position in topology
             stake: Optional stake for slashing
-            stalk_data: Stalk vectors (m, n) for Plücker centrality.
-                        If None, falls back to Fiedler.
+            stalk_data: Stalk vectors (m, n) for Grassmannian centrality.
+                        STRONGLY recommended — without it, weight ≈ 0.
         """
         if fingerprint in self.validators:
             return False
@@ -239,63 +247,6 @@ class ValidatorSet:
         return centralities
 
     # =========================================================================
-    # FIEDLER CENTRALITY (fallback)
-    # =========================================================================
-
-    def compute_fiedler_centrality(self) -> Dict[bytes, float]:
-        """
-        Fiedler centrality (fallback when stalk data unavailable).
-
-        Uses the Fiedler vector (second eigenvector of Laplacian).
-        |fiedler[v]| measures how central vertex v is to the network.
-        """
-        vertices = self.topology.get(0, [])
-        edges = self.topology.get(1, [])
-        n = len(vertices)
-
-        if n == 0:
-            return {}
-
-        # Build Laplacian
-        degree = np.zeros(n)
-        adjacency = np.zeros((n, n))
-
-        for edge in edges:
-            if len(edge) >= 2:
-                i, j = edge[0], edge[1]
-                if i < n and j < n:
-                    adjacency[i, j] = 1
-                    adjacency[j, i] = 1
-                    degree[i] += 1
-                    degree[j] += 1
-
-        laplacian = np.diag(degree) - adjacency
-        self._laplacian = laplacian
-
-        eigenvalues, eigenvectors = np.linalg.eigh(laplacian)
-
-        if n > 1:
-            fiedler_vector = eigenvectors[:, 1]
-        else:
-            fiedler_vector = np.ones(1)
-
-        centralities = {}
-        for fingerprint, validator in self.validators.items():
-            if validator.is_active:
-                idx = validator.vertex_id
-                if idx < n:
-                    centralities[fingerprint] = abs(fiedler_vector[idx])
-                else:
-                    centralities[fingerprint] = 0.0
-
-        # Normalize
-        total = sum(centralities.values())
-        if total > 0:
-            centralities = {k: v / total for k, v in centralities.items()}
-
-        return centralities
-
-    # =========================================================================
     # HARMONIC PROJECTION WEIGHT (primary — via CoherenceEngine)
     # =========================================================================
 
@@ -331,7 +282,7 @@ class ValidatorSet:
             return None
 
     # =========================================================================
-    # UNIFIED SELECTION WEIGHTS (harmonic → Plücker → Fiedler fallback)
+    # UNIFIED SELECTION WEIGHTS (harmonic → Plücker)
     # =========================================================================
 
     def compute_spectral_centrality(self) -> Dict[bytes, float]:
@@ -341,7 +292,9 @@ class ValidatorSet:
         Priority:
           1. Harmonic projection weight (if stalk data + coherence engine)
           2. Plücker centrality (if stalk data but coherence unavailable)
-          3. Fiedler centrality (fallback — no stalk data)
+
+        No Fiedler fallback — geometric coherence IS the value.
+        Validators without stalk data get uniform minimum weight.
 
         This is the main entry point for validator selection.
         """
@@ -355,14 +308,21 @@ class ValidatorSet:
                 self._centralities = harmonic
                 return self._centralities
 
-            # Fallback to Plücker
+            # Fallback to Plücker (still geometric — uses Grassmann distance)
             plucker = self.compute_plucker_centrality()
             if plucker is not None:
                 self._centralities = plucker
                 return self._centralities
 
-        # Fallback to Fiedler
-        self._centralities = self.compute_fiedler_centrality()
+        # No stalk data available — uniform weights (all equal, all minimal)
+        # Validators should provide stalk data ASAP to get real weight
+        active = self.get_active_validators()
+        if not active:
+            self._centralities = {}
+            return self._centralities
+
+        uniform = 1.0 / len(active)
+        self._centralities = {v.fingerprint: uniform for v in active}
         return self._centralities
 
     # =========================================================================
@@ -469,7 +429,7 @@ class ValidatorSet:
             "centrality": centralities.get(fingerprint, 0.0),
             "last_block": v.last_block,
             "has_stalk_data": v.stalk_data is not None,
-            "centrality_type": "plucker" if self._has_stalk_data() else "fiedler",
+            "centrality_type": "harmonic" if self._has_stalk_data() else "uniform",
         }
         return info
 
@@ -509,7 +469,7 @@ def select_validator_for_block(
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("VALIDATOR SELECTION TEST (Plücker + Fiedler)")
+    print("VALIDATOR SELECTION TEST (Harmonic → Plücker)")
     print("=" * 60)
 
     # Topology: path graph P₅: 0—1—2—3—4
@@ -520,9 +480,9 @@ if __name__ == "__main__":
     }
 
     # =========================================================================
-    # Test 1: Fiedler fallback (no stalk data)
+    # Test 1: Uniform weights (no stalk data — geometric identity required)
     # =========================================================================
-    print("\n1. Fiedler fallback (no stalk data):")
+    print("\n1. Uniform weights (no stalk data):")
     validator_set = ValidatorSet(topology)
     validators = []
     for i in range(5):
@@ -533,7 +493,7 @@ if __name__ == "__main__":
     centralities = validator_set.compute_spectral_centrality()
     for i, (fp, _) in enumerate(validators):
         c = centralities.get(fp, 0)
-        print(f"   V{i}: {c:.4f} (Fiedler)")
+        print(f"   V{i}: {c:.4f} (uniform — no stalk data)")
 
     # =========================================================================
     # Test 2: Plücker centrality (with stalk data)
@@ -559,8 +519,7 @@ if __name__ == "__main__":
     centralities2 = validator_set2.compute_spectral_centrality()
     for i, (fp, _) in enumerate(validators2):
         c = centralities2.get(fp, 0)
-        ct = "Plücker" if validator_set2._has_stalk_data() else "Fiedler"
-        print(f"   V{i}: {c:.4f} ({ct})")
+        print(f"   V{i}: {c:.4f} (Plücker)")
 
     # =========================================================================
     # Test 3: Selection simulation
@@ -581,5 +540,5 @@ if __name__ == "__main__":
         print(f"   V{i}: {count} blocks (expected ~{expected:.1f})")
 
     print("\n" + "=" * 60)
-    print("✅ VALIDATOR SELECTION WORKING (Plücker + Fiedler fallback)")
+    print("✅ VALIDATOR SELECTION: Harmonic → Plücker (no Fiedler)")
     print("=" * 60)

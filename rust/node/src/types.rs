@@ -26,6 +26,94 @@ pub const SQRT2: f64 = 1.41421356237;
 pub const POV_LOWER: f64 = 1.0 / SQRT2;   // ~0.707
 pub const POV_UPPER: f64 = 2.0 * SQRT2;   // ~2.828
 
+/// Boundary margin for UNDETERMINED zone (matches Python topos.py)
+pub const BOUNDARY_MARGIN: f64 = 0.15;
+
+// ─── Heyting Algebra ────────────────────────────────────────────────────
+//
+// Three-valued truth for topos consensus (Lambert 2021).
+// The subobject classifier Ω of Sh(N(V)) is a Heyting algebra:
+//   ⊤ = VALID, ⊥ = INVALID, ½ = UNDETERMINED
+//
+// Key difference from Boolean: ¬UNDETERMINED = UNDETERMINED (not VALID).
+// Double negation does NOT collapse the middle.
+
+/// Three-valued Heyting truth value for topos consensus.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum HeytingValue {
+    Valid = 1,
+    Undetermined = 0,
+    Invalid = -1,
+}
+
+impl HeytingValue {
+    /// ∧ (meet = min)
+    pub fn meet(self, other: Self) -> Self {
+        match (self, other) {
+            (Self::Invalid, _) | (_, Self::Invalid) => Self::Invalid,
+            (Self::Undetermined, _) | (_, Self::Undetermined) => Self::Undetermined,
+            _ => Self::Valid,
+        }
+    }
+
+    /// ∨ (join = max)
+    pub fn join(self, other: Self) -> Self {
+        match (self, other) {
+            (Self::Valid, _) | (_, Self::Valid) => Self::Valid,
+            (Self::Undetermined, _) | (_, Self::Undetermined) => Self::Undetermined,
+            _ => Self::Invalid,
+        }
+    }
+
+    /// → (Heyting implication)
+    ///
+    /// a → b = max{c : a ∧ c ≤ b}
+    ///
+    /// Truth table:
+    ///   V → V = V,  V → U = U,  V → I = I
+    ///   U → V = V,  U → U = V,  U → I = U  ← NOT Boolean!
+    ///   I → V = V,  I → U = V,  I → I = V
+    pub fn implies(self, other: Self) -> Self {
+        if (self as i8) <= (other as i8) {
+            return Self::Valid;
+        }
+        if self == Self::Valid {
+            return other;
+        }
+        // Undetermined → Invalid = Undetermined (not Invalid)
+        Self::Undetermined
+    }
+
+    /// ¬a = a → ⊥
+    ///
+    /// ¬VALID = INVALID
+    /// ¬INVALID = VALID
+    /// ¬UNDETERMINED = UNDETERMINED  ← the key non-Boolean feature
+    pub fn negate(self) -> Self {
+        self.implies(Self::Invalid)
+    }
+
+    /// ¬¬a ≥ a (Heyting: double negation is inflation, not identity)
+    pub fn double_negate(self) -> Self {
+        self.negate().negate()
+    }
+
+    /// Is this a definite (non-UNDETERMINED) judgment?
+    pub fn is_decided(self) -> bool {
+        self != Self::Undetermined
+    }
+}
+
+impl fmt::Display for HeytingValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Self::Valid => write!(f, "VALID"),
+            Self::Undetermined => write!(f, "UNDETERMINED"),
+            Self::Invalid => write!(f, "INVALID"),
+        }
+    }
+}
+
 /// Block hash (SHA-256, domain-separated)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct BlockHash(pub [u8; 32]);

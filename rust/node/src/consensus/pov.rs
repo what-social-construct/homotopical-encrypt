@@ -10,9 +10,34 @@
 // The PoV verifier checks √2 bounds and trace consistency.
 
 use crate::types::*;
+use crate::consensus::topos::ToposVerifier;
+use crate::crypto::geodesic_zkp::{verify_geodesic_proof, GeodesicZKProof};
+// HeytingValue imported via crate::types::*
 use anyhow::{Result, bail};
 use ed25519_dalek::{SigningKey, VerifyingKey, Signer, Verifier, Signature};
+use sha2::{Sha256, Digest};
 use tracing::{debug, info, warn};
+
+/// Domain separator for spectral proof signatures.
+/// Prevents cross-protocol signature reuse.
+const PROOF_SIG_DOMAIN: &[u8] = b"HCRYPT_SPECTRAL_PROOF_V1";
+
+/// Build the canonical message that workers sign for a spectral proof.
+///
+/// message = DOMAIN_SEP || fingerprint_hash || gap_valid || β₀ || β₁ || β₂
+///
+/// This binds the signature to the specific geometric commitment.
+/// Signing the hash (not raw data) prevents length-extension attacks.
+fn proof_signing_message(fingerprint: &SpectralFingerprint) -> Vec<u8> {
+    let mut msg = Vec::with_capacity(PROOF_SIG_DOMAIN.len() + 32 + 1 + 12);
+    msg.extend_from_slice(PROOF_SIG_DOMAIN);
+    msg.extend_from_slice(&fingerprint.hash);
+    msg.push(fingerprint.spectral_gap_valid as u8);
+    msg.extend_from_slice(&fingerprint.betti_numbers.0.to_le_bytes());
+    msg.extend_from_slice(&fingerprint.betti_numbers.1.to_le_bytes());
+    msg.extend_from_slice(&fingerprint.betti_numbers.2.to_le_bytes());
+    msg
+}
 
 /// Oracle commitment data (matches Oracle's HashStalk)
 /// This is what the Oracle sends to the Node after computing η
@@ -228,39 +253,48 @@ impl PoVProducer {
         ]
     }
 
-    /// Sign proof with worker keys
-    fn sign_proof(&self, _fingerprint: &SpectralFingerprint) -> Vec<WorkerSignature> {
-        // Our own signature
+    /// Sign proof with Ed25519 over the canonical signing message.
+    ///
+    /// Each worker signs: DOMAIN_SEP || fingerprint_hash || gap_valid || β₀ || β₁ || β₂
+    /// This binds the signature to the exact geometric commitment.
+    fn sign_proof(&self, fingerprint: &SpectralFingerprint) -> Vec<WorkerSignature> {
+        let msg = proof_signing_message(fingerprint);
+
+        // Our own signature (always present)
+        let our_sig = self.signing_key.sign(&msg);
         let mut sigs = vec![WorkerSignature {
             worker_pubkey: self.worker_pubkey,
-            signature: vec![0u8; 64], // TODO: real Ed25519
+            signature: our_sig.to_bytes().to_vec(),
         }];
 
-        // Other trusted workers
-        for &worker in &self.trusted_workers {
-            if worker != self.worker_pubkey {
-                sigs.push(WorkerSignature {
-                    worker_pubkey: worker,
-                    signature: vec![0u8; 64],
-                });
-            }
+        // Peer worker signatures (single-node / test mode: we have their keys)
+        for peer_key in &self.peer_signing_keys {
+            let peer_pubkey = VerifyingKey::from(peer_key).to_bytes();
+            let peer_sig = peer_key.sign(&msg);
+            sigs.push(WorkerSignature {
+                worker_pubkey: peer_pubkey,
+                signature: peer_sig.to_bytes().to_vec(),
+            });
         }
 
         sigs
     }
 }
 
-/// PoV Verifier — validates blocks
+/// PoV Verifier — validates blocks using Topos consensus and Geodesic ZKPs
 pub struct PoVVerifier {
     trusted_workers: Vec<[u8; 32]>,
+    /// Topos-theoretic verifier (Heyting lattice consensus)
+    topos: ToposVerifier,
 }
 
 impl PoVVerifier {
     pub fn new(trusted_workers: Vec<[u8; 32]>) -> Self {
-        Self { trusted_workers }
+        let topos = ToposVerifier::new(trusted_workers.clone());
+        Self { trusted_workers, topos }
     }
 
-    /// Verify a block's spectral proof
+    /// Verify a block's spectral proof (full pipeline: PoV + Topos + ZKP)
     pub fn verify_block(&self, block: &Block) -> Result<()> {
         let proof = &block.header.spectral_proof;
 
@@ -276,21 +310,41 @@ impl PoVVerifier {
             bail!("Spectral gap not verified valid by Oracle");
         }
 
-        // 3. Verify computation trace hash chain
+        // 3. Topos-theoretic consensus check (Heyting lattice judgment)
+        //    Runs copresheaf/Heyting verification from topos.rs
+        let judgment = self.topos.verify_block_topos(block);
+        match judgment.value {
+            HeytingValue::Invalid => {
+                bail!("Topos consensus: INVALID — {}", judgment.evidence.forcing_condition);
+            }
+            HeytingValue::Undetermined => {
+                // Log warning but allow — matches Heyting semantics where
+                // ¬¬p does not imply p (excluded middle doesn't hold)
+                warn!("Topos consensus: UNDETERMINED — {}", judgment.resolve_valid_if);
+            }
+            HeytingValue::Valid => {
+                debug!("Topos consensus: VALID");
+            }
+        }
+
+        // 4. Verify computation trace hash chain
         if !self.verify_computation_trace(proof) {
             bail!("Invalid computation trace");
         }
 
-        // 4. Verify worker consensus (2/3 required)
+        // 5. Verify worker consensus (2/3 required)
         if !self.verify_worker_consensus(proof) {
             bail!("Insufficient worker consensus");
         }
 
-        // 5. Verify Merkle root
+        // 6. Verify Merkle root
         let computed_root = block.compute_cochain_root();
         if computed_root != block.header.cochain_root {
             bail!("Merkle root mismatch");
         }
+
+        // 7. Verify geodesic ZKPs on transactions (if present)
+        self.verify_transaction_zkps(block)?;
 
         debug!("✅ Block verified at height {}", block.header.height);
         Ok(())
@@ -341,18 +395,95 @@ impl PoVVerifier {
         true
     }
 
+    /// Verify worker consensus: 2/3 of signatures must be valid Ed25519
+    /// over the canonical signing message, from trusted worker pubkeys.
     fn verify_worker_consensus(&self, proof: &SpectralProof) -> bool {
         if proof.worker_signatures.len() < 3 {
             return false;
         }
 
+        let msg = proof_signing_message(&proof.fingerprint);
         let threshold = (proof.worker_signatures.len() * 2) / 3;
+
         let valid_count = proof.worker_signatures.iter()
-            .filter(|sig| self.trusted_workers.contains(&sig.worker_pubkey))
+            .filter(|sig| {
+                // Must be a trusted worker
+                if !self.trusted_workers.contains(&sig.worker_pubkey) {
+                    return false;
+                }
+                // Must have correct signature length
+                if sig.signature.len() != 64 {
+                    return false;
+                }
+                // Verify Ed25519 signature
+                let Ok(verifying_key) = VerifyingKey::from_bytes(&sig.worker_pubkey) else {
+                    return false;
+                };
+                let Ok(signature) = Signature::from_slice(&sig.signature) else {
+                    return false;
+                };
+                verifying_key.verify(&msg, &signature).is_ok()
+            })
             .count();
+
+        if valid_count < threshold {
+            warn!(
+                "Worker consensus: {}/{} valid sigs (need {})",
+                valid_count, proof.worker_signatures.len(), threshold
+            );
+        }
 
         valid_count >= threshold
     }
+
+    /// Verify geodesic ZKPs embedded in transactions
+    ///
+    /// Transactions may optionally carry a geodesic ZK proof (proving the
+    /// sender knows a path on the Grassmannian connecting two stalks).
+    /// If present, the proof must pass the 7-gate verification pipeline.
+    fn verify_transaction_zkps(&self, block: &Block) -> Result<()> {
+        for (idx, tx) in block.transactions.iter().enumerate() {
+            // ZKP-bearing transactions have sender_fingerprint set
+            // and data length > standard cochain commitment size
+            if tx.sender_fingerprint.is_some() && tx.data.len() > 128 {
+                // Try to parse as geodesic ZK proof (last portion of tx.data)
+                // The cochain commitment occupies the first part; ZKP appended after
+                if let Some(cc_end) = parse_cochain_commitment_end(&tx.data) {
+                    if cc_end < tx.data.len() {
+                        let zkp_bytes = &tx.data[cc_end..];
+                        if let Ok(zkp) = GeodesicZKProof::from_bytes(zkp_bytes) {
+                            // Use block's topology hash for verification context
+                            let topo_hash = &block.header.topology_hash;
+                            let result = verify_geodesic_proof(
+                                &zkp,
+                                &[], // target spectrum validated at Oracle level
+                                topo_hash,
+                                false, // non-strict: allow Oracle-validated gaps
+                            );
+                            if !result.valid {
+                                bail!(
+                                    "Transaction {} geodesic ZKP failed gate {}/{}: {}",
+                                    idx, result.gates_passed, result.total_gates, result.reason
+                                );
+                            }
+                            debug!("Transaction {} geodesic ZKP passed ({}/{})",
+                                   idx, result.gates_passed, result.total_gates);
+                        }
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+}
+
+/// Parse cochain commitment from tx.data and return the byte offset where it ends.
+/// Wire format: modulus(4) + n_edges(4) + edges(n×8) + topo_hash(16)
+fn parse_cochain_commitment_end(data: &[u8]) -> Option<usize> {
+    if data.len() < 8 { return None; }
+    let n_edges = u32::from_le_bytes(data[4..8].try_into().ok()?) as usize;
+    let end = 4 + 4 + n_edges * 8 + 16;
+    if end <= data.len() { Some(end) } else { None }
 }
 
 #[cfg(test)]
@@ -369,16 +500,38 @@ mod tests {
         }
     }
 
+    /// Generate 4 Ed25519 keypairs for testing.
+    /// Returns (pubkeys, signing_keys) where pubkeys are the trusted worker list
+    /// and signing_keys[0] is the "our" key.
+    fn test_keypairs() -> (Vec<[u8; 32]>, Vec<SigningKey>) {
+        let signing_keys: Vec<SigningKey> = (0u8..4)
+            .map(|i| SigningKey::from_bytes(&[i; 32]))
+            .collect();
+        let pubkeys: Vec<[u8; 32]> = signing_keys.iter()
+            .map(|sk| VerifyingKey::from(sk).to_bytes())
+            .collect();
+        (pubkeys, signing_keys)
+    }
+
+    /// Build a PoVProducer with real Ed25519 keys and all 4 workers signing.
+    fn test_producer(pubkeys: &[[u8; 32]], signing_keys: &[SigningKey]) -> PoVProducer {
+        PoVProducer::from_signing_key(signing_keys[0].clone(), pubkeys.to_vec())
+            .with_peer_keys(signing_keys[1..].to_vec())
+    }
+
+    /// Backward-compatible helper: returns (pubkeys, my_signing_key_seed).
+    /// The pubkeys are REAL Ed25519 pubkeys (derived from seeds [0;32]..[3;32]).
+    /// Use with PoVProducer::new() which treats the input as a seed.
     fn test_workers() -> (Vec<[u8; 32]>, [u8; 32]) {
-        let workers: Vec<[u8; 32]> = (0..4).map(|i| [i as u8; 32]).collect();
-        let my_key = workers[0];
-        (workers, my_key)
+        let (pubkeys, _signing_keys) = test_keypairs();
+        // my_key seed = [0; 32] which is signing_keys[0]'s seed
+        (pubkeys, [0u8; 32])
     }
 
     #[test]
     fn test_produce_genesis() {
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers.clone());
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
 
         let commitment = test_oracle_commitment(1.5);
         let genesis = producer.produce_genesis(&commitment).unwrap();
@@ -388,19 +541,25 @@ mod tests {
         assert_eq!(genesis.header.producer_fingerprint, [99u8; 32]);
         assert_eq!(genesis.header.topology_hash, [7u8; 32]);
         assert!(genesis.header.spectral_proof.fingerprint.spectral_gap_valid);
+
+        // Signatures are real (64 bytes, not zeros)
+        for sig in &genesis.header.spectral_proof.worker_signatures {
+            assert_eq!(sig.signature.len(), 64);
+            assert_ne!(sig.signature, vec![0u8; 64], "Signature must not be all zeros");
+        }
     }
 
     #[test]
     fn test_produce_and_verify() {
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers.clone());
-        let verifier = PoVVerifier::new(workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
+        let verifier = PoVVerifier::new(pubkeys.clone());
 
         // Genesis
         let commitment = test_oracle_commitment(1.5);
         let genesis = producer.produce_genesis(&commitment).unwrap();
 
-        // Verify genesis
+        // Verify genesis (now with real Ed25519 verification!)
         verifier.verify_block(&genesis).unwrap();
 
         // Block 1
@@ -416,8 +575,8 @@ mod tests {
 
     #[test]
     fn test_reject_invalid_gap() {
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
 
         // Too low
         let bad = test_oracle_commitment(0.3);
@@ -451,8 +610,8 @@ mod tests {
     fn test_boundary_exact_lower() {
         // Exactly at 1/√2 ≈ 0.70710678... → should be accepted
         let commitment = test_oracle_commitment(POV_LOWER);
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
         assert!(producer.produce_genesis(&commitment).is_ok());
     }
 
@@ -460,8 +619,8 @@ mod tests {
     fn test_boundary_exact_upper() {
         // Exactly at 2√2 ≈ 2.82842712... → should be accepted
         let commitment = test_oracle_commitment(POV_UPPER);
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
         assert!(producer.produce_genesis(&commitment).is_ok());
     }
 
@@ -469,8 +628,8 @@ mod tests {
     fn test_boundary_just_below_lower() {
         // Just below 1/√2 → rejected
         let commitment = test_oracle_commitment(POV_LOWER - 1e-10);
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
         assert!(producer.produce_genesis(&commitment).is_err());
     }
 
@@ -478,8 +637,8 @@ mod tests {
     fn test_boundary_just_above_upper() {
         // Just above 2√2 → rejected
         let commitment = test_oracle_commitment(POV_UPPER + 1e-10);
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
         assert!(producer.produce_genesis(&commitment).is_err());
     }
 
@@ -487,9 +646,9 @@ mod tests {
 
     #[test]
     fn test_verify_rejects_tampered_cochain_root() {
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers.clone());
-        let verifier = PoVVerifier::new(workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
+        let verifier = PoVVerifier::new(pubkeys.clone());
 
         let commitment = test_oracle_commitment(1.5);
         let mut block = producer.produce_genesis(&commitment).unwrap();
@@ -504,9 +663,9 @@ mod tests {
 
     #[test]
     fn test_verify_rejects_bad_version() {
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers.clone());
-        let verifier = PoVVerifier::new(workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
+        let verifier = PoVVerifier::new(pubkeys.clone());
 
         let commitment = test_oracle_commitment(1.5);
         let mut block = producer.produce_genesis(&commitment).unwrap();
@@ -520,9 +679,9 @@ mod tests {
 
     #[test]
     fn test_verify_block_with_transactions() {
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers.clone());
-        let verifier = PoVVerifier::new(workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
+        let verifier = PoVVerifier::new(pubkeys.clone());
 
         let commitment = test_oracle_commitment(1.5);
         let genesis = producer.produce_genesis(&commitment).unwrap();
@@ -546,9 +705,9 @@ mod tests {
 
     #[test]
     fn test_verify_chain_wrong_parent() {
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers.clone());
-        let verifier = PoVVerifier::new(workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
+        let verifier = PoVVerifier::new(pubkeys.clone());
 
         let c1 = test_oracle_commitment(1.5);
         let genesis = producer.produce_genesis(&c1).unwrap();
@@ -563,9 +722,9 @@ mod tests {
 
     #[test]
     fn test_verify_chain_wrong_height() {
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers.clone());
-        let verifier = PoVVerifier::new(workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
+        let verifier = PoVVerifier::new(pubkeys.clone());
 
         let c1 = test_oracle_commitment(1.5);
         let genesis = producer.produce_genesis(&c1).unwrap();
@@ -585,9 +744,9 @@ mod tests {
 
     #[test]
     fn test_three_block_chain() {
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers.clone());
-        let verifier = PoVVerifier::new(workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
+        let verifier = PoVVerifier::new(pubkeys.clone());
 
         let c1 = test_oracle_commitment(1.0);
         let genesis = producer.produce_genesis(&c1).unwrap();
@@ -613,8 +772,8 @@ mod tests {
 
     #[test]
     fn test_cochain_root_set_correctly_on_produced_block() {
-        let (workers, my_key) = test_workers();
-        let producer = PoVProducer::new(my_key, workers);
+        let (pubkeys, signing_keys) = test_keypairs();
+        let producer = test_producer(&pubkeys, &signing_keys);
 
         let c = test_oracle_commitment(1.5);
         let genesis = producer.produce_genesis(&c).unwrap();

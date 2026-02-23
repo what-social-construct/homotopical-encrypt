@@ -359,9 +359,13 @@ The mathematical foundation is Helfer's first-order homotopical logic ([arXiv:19
 ### Papers
 
 1. Helfer (2019): *First-order homotopical logic* [arXiv:1908.08944](https://arxiv.org/abs/1908.08944)
-2. Meiburg et al. (2025): *Formalization of Quantum Stein's Lemma in Lean* [arXiv:2510.08672](https://arxiv.org/abs/2510.08672)
-3. Hansen & Ghrist (2019): *Toward a Spectral Theory of Cellular Sheaves* [arXiv:1808.01513](https://arxiv.org/abs/1808.01513)
-4. Wei & Wei (2021): *Persistent sheaf Laplacians* [arXiv:2112.10906](https://arxiv.org/abs/2112.10906)
+2. Swan, Kido & dos Santos (2025): *Higher Categorical Cryptoeconomics: HoTT Blockchains, Petri Net Computad Ledgers, Coregulator DAOs, and Cohomology ZKPs* — source for topos consensus, coregulator DAOs, and cohomology ZKP primitives implemented in `src/consensus/` and `src/proofs/`
+3. Meiburg et al. (2025): *Formalization of Quantum Stein's Lemma in Lean* [arXiv:2510.08672](https://arxiv.org/abs/2510.08672)
+4. Hansen & Ghrist (2019): *Toward a Spectral Theory of Cellular Sheaves* [arXiv:1808.01513](https://arxiv.org/abs/1808.01513)
+5. Wei & Wei (2021): *Persistent sheaf Laplacians* [arXiv:2112.10906](https://arxiv.org/abs/2112.10906)
+6. Lambert (2021): *A Topos View of Blockchain Consensus Protocols* [arXiv:2111.07461](https://arxiv.org/abs/2111.07461) — copresheaf toposes, Heyting algebras for consensus
+7. Ehresmann & Vanbremeersch (2007): *Memory Evolutive Systems* — coregulator architecture for DAOs
+8. Edelman, Arias & Smith (1998): *The Geometry of Algorithms with Orthogonality Constraints* (SIAM J. Matrix Anal. Appl.) — Grassmannian geometry for sheaf Laplacian consensus
 
 ## Proof of Value (PoV) Consensus
 
@@ -466,11 +470,15 @@ rust/
 │   │   ├── state.rs        # Account state
 │   │   └── keyimages.rs    # Double-spend prevention
 │   ├── consensus/
-│   │   └── pov.rs          # Proof of Value verification
+│   │   ├── pov.rs          # Proof of Value verification
+│   │   └── topos.rs        # Topos-based consensus (HeytingValue, ToposVerifier)
+│   ├── crypto/
+│   │   ├── commitment.rs   # Cochain commitments
+│   │   └── geodesic_zkp.rs # Geodesic ZKP verifier (7-gate Fiat-Shamir Σ-protocol)
 │   ├── rpc/              # JSON-RPC server
-│   └── types.rs          # Core types
+│   └── types.rs          # Core types (√2 constants, PoV bounds)
 ├── oracle/           # Spectral computation oracle
-│   ├── geometry.rs       # Spectral gap computation
+│   ├── geometry.rs       # Fiber bundles, Hodge projection, Grassmannian Gr(k,n)
 │   ├── stalk_bridge.rs   # Python↔Rust stalk FFI
 │   ├── http.rs           # HTTP server
 │   └── rpc.rs            # RPC handlers
@@ -541,10 +549,19 @@ src/
 | Component | Status | Notes |
 |-----------|--------|-------|
 | Python Crypto | ✅ Complete | Encrypt/decrypt working |
-| Rust Node | 🔄 70% | Storage, P2P working |
+| Python Categorical Consensus | ✅ Complete | Topos (Heyting/copresheaf), Coregulator DAO, Geodesic ZKP |
+| Rust Node | 🔄 80% | Storage, P2P, consensus, ZKP verifier |
+| Rust Topos Consensus | ✅ Complete | HeytingValue lattice, ToposVerifier (108 tests) |
+| Rust Geodesic ZKP Verifier | ✅ Complete | 7-gate verification pipeline (9 tests) |
+| Rust Grassmannian Geometry | ✅ Complete | Gr(k,n) exp/log, Karcher mean, sheaf Laplacian (21 tests) |
 | Oracle | ✅ Complete | HTTP server on port 9090 |
+| Lean Proofs | ✅ Complete | Consolidated lakefile with Mathlib |
+| Cross-language Constants | ✅ Complete | √2 bounds verified across Python/Rust/Lean |
+| CI Pipeline | ✅ Complete | GitHub Actions: Rust + Python + Lean + Integration |
 | Consensus | 🔄 In Progress | PoV verification stubs |
 | Testnet | ❌ Not Started | Need genesis block |
+
+**Test counts:** Rust workspace 148 (node: 108, oracle: 34, wallet: 6) · Python modules: 3 self-testing
 
 See [docs/LAYER1_ROADMAP.md](docs/LAYER1_ROADMAP.md) for detailed status.
 
