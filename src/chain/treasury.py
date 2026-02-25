@@ -1,14 +1,28 @@
 """
-Treasury Pool — Fee Collection & Reward Distribution
+Treasury Pool — Petri Net Fee Distribution
 
-Collects transaction fees (HCRYPT), converts to vHCRYPT rewards,
-and distributes via pluggable strategies.
+PETRI NET MODEL (Swan Table 2, Pinna/Zaitsev):
+  Places (L1):  Node accounts with token balances
+  Transitions:  Fee collection → distribution (firing event)
+  Firing rule:  Tokens flow to places proportional to harmonic weight
+  Colored tokens: HCRYPT (native) vs vHCRYPT (vault) — two token colors
+  Pre-arcs:     Transaction fees → Treasury (collect)
+  Post-arcs:    Treasury → holder accounts (harmonic-weighted distribute)
 
-Inputs:  Transaction fees, slashing proceeds, protocol inflation
-Outputs: Block producer reward, active validator share, protocol fund, burn
+NO producer/validator distinction. All nodes are automated.
+The VRF slot winner assembles the block but gets no special bonus —
+value IS the harmonic projection weight ‖π_H(stalk)‖, period.
 
-Distribution strategy is modular — default is HarmonicWeighted
-(by ‖π_H(stalk)‖), switchable without consensus changes.
+Fee flow (Petri net firing):
+  Transaction fee (HCRYPT) → Treasury
+    ├── 50% → All holders (harmonic-weighted by ‖π_H(stalk)‖)
+    ├── 25% → Stabilization fund (ProtocolOrchestrator agents)
+    ├── 15% → Protocol fund (LP growth, development)
+    └── 10% → Burn (deflationary pressure)
+
+Distribution strategy is modular — default is HarmonicWeighted.
+Topology tag switching (Zaitsev colored Petri nets) allows dynamic
+reconfiguration of token flow based on network state.
 
 See docs/CONSENSUS.md § Token Economics.
 """
@@ -19,26 +33,25 @@ from abc import abstractmethod
 
 
 # =============================================================================
-# CONSTANTS
+# CONSTANTS (Petri net firing weights)
 # =============================================================================
 
-PRODUCER_SHARE: float = 0.40       # 40% to block producer
-VALIDATOR_SHARE: float = 0.40      # 40% split among active validators
-PROTOCOL_SHARE: float = 0.15       # 15% to protocol fund
-BURN_SHARE: float = 0.05           # 5% burned
+HOLDER_SHARE: float = 0.50         # 50% to all holders (harmonic-weighted)
+STABILIZATION_SHARE: float = 0.25  # 25% to stabilization fund (agent-managed)
+PROTOCOL_SHARE: float = 0.15      # 15% to protocol fund
+BURN_SHARE: float = 0.10           # 10% burned
 
 
 # =============================================================================
-# REWARDS STRATEGY (pluggable interface)
+# REWARDS STRATEGY (pluggable — Petri net transition function)
 # =============================================================================
 
 class RewardsStrategy:
     """
-    Interface for reward distribution strategies.
+    Petri net transition function: decides token flow to places.
 
-    Concrete implementations decide HOW the validator share
-    gets split among active validators. The treasury decides
-    HOW MUCH goes to validators; the strategy decides WHO.
+    The treasury decides HOW MUCH flows; the strategy decides WHERE.
+    Default is harmonic-weighted (value IS the projection weight).
     """
 
     def distribute(
@@ -47,14 +60,14 @@ class RewardsStrategy:
         harmonic_weights: Dict[bytes, float],
     ) -> Dict[bytes, int]:
         """
-        Distribute amount among validators by their weights.
+        Fire tokens to holder accounts by harmonic weight.
 
         Args:
-            amount: Total vHCRYPT to distribute
-            harmonic_weights: fingerprint → weight mapping
+            amount: Total tokens to distribute (Petri net token count)
+            harmonic_weights: account → weight (Petri net place markings)
 
         Returns:
-            fingerprint → allocation mapping
+            account → allocation (post-arc token flow)
         """
         raise NotImplementedError
 
@@ -66,7 +79,10 @@ class HarmonicWeighted(RewardsStrategy):
     weight(v) = ‖π_H(stalk(v))‖ / ‖stalk(v)‖
     allocation(v) = amount × weight(v) / Σ weights
 
-    This IS the "value is harmonic" principle applied to rewards.
+    This IS the "value is harmonic" principle:
+    - Nodes whose stalks survive Hodge projection earn more
+    - No special roles — geometry determines everything
+    - The Petri net firing is deterministic given the Laplacian
     """
 
     def distribute(
@@ -88,7 +104,7 @@ class HarmonicWeighted(RewardsStrategy):
             allocations[fp] = alloc
             distributed += alloc
 
-        # Last validator gets remainder (avoids rounding loss)
+        # Last account gets remainder (avoids rounding loss)
         if sorted_fps:
             allocations[sorted_fps[-1]] = amount - distributed
 
@@ -96,7 +112,7 @@ class HarmonicWeighted(RewardsStrategy):
 
 
 class EqualShare(RewardsStrategy):
-    """Split equally among all active validators."""
+    """Split equally (uniform Petri net firing)."""
 
     def distribute(
         self,
@@ -107,73 +123,85 @@ class EqualShare(RewardsStrategy):
         if n == 0 or amount <= 0:
             return {}
 
-        per_validator = amount // n
-        remainder = amount - per_validator * n
+        per_account = amount // n
+        remainder = amount - per_account * n
 
         allocations = {}
         for i, fp in enumerate(sorted(harmonic_weights.keys())):
-            allocations[fp] = per_validator + (1 if i < remainder else 0)
+            allocations[fp] = per_account + (1 if i < remainder else 0)
 
         return allocations
 
 
 # =============================================================================
-# TREASURY
+# TREASURY (Petri net accumulator place)
 # =============================================================================
 
 @dataclass
 class Treasury:
     """
-    Fee collection pool with pluggable reward distribution.
+    Fee accumulator with Petri net-style distribution.
 
-    Flow:
-      Transaction fee (HCRYPT) → Treasury
-        ├── 40% → Block producer vault (vHCRYPT)
-        ├── 40% → Active validators (vHCRYPT, by strategy)
-        ├── 15% → Protocol fund (HCRYPT)
-        └──  5% → Burn
+    The Treasury is a Petri net PLACE that accumulates tokens (pre-arcs)
+    and fires them to holder accounts (post-arcs) each epoch.
+
+    No producer/validator distinction — all automated nodes.
+    Value IS harmonic projection weight.
+
+    Stabilization fund is managed by ProtocolOrchestrator
+    (agents/treasury_agent.py) which uses HedgeAgent + StabilizerAgent
+    to decide buyback/sell/burn actions on the CLMMPool.
+
+    Flow (Petri net firing):
+      Transaction fees → Treasury
+        ├── 50% → All holders (harmonic-weighted)
+        ├── 25% → Stabilization fund (agent-managed)
+        ├── 15% → Protocol fund
+        └── 10% → Burn
     """
 
-    # Accumulated balances
-    balance_hcrypt: int = 0        # Undistributed HCRYPT fees
-    protocol_fund: int = 0         # Protocol fund accumulation
-    total_burned: int = 0          # Total HCRYPT burned
-    total_distributed: int = 0     # Total vHCRYPT distributed
+    # Petri net place markings (token balances)
+    balance_hcrypt: int = 0           # Undistributed fees (pre-firing)
+    stabilization_fund: int = 0       # Agent-managed stabilization budget
+    protocol_fund: int = 0            # Long-term protocol fund
+    total_burned: int = 0             # Cumulative burn (removed from supply)
+    total_distributed: int = 0        # Cumulative distributed to holders
 
-    # Distribution strategy
+    # Petri net transition function (pluggable)
     strategy: RewardsStrategy = field(default_factory=HarmonicWeighted)
 
-    # History
+    # Firing history (Petri net trace)
     distributions: List[Dict] = field(default_factory=list)
 
     def collect_fee(self, amount: int) -> None:
-        """Collect a transaction fee into the treasury."""
+        """Pre-arc: transaction fee flows into treasury place."""
         if amount > 0:
             self.balance_hcrypt += amount
 
     def collect_slash(self, amount: int) -> None:
-        """Collect slashing proceeds (goes to protocol fund)."""
+        """Pre-arc: slashing proceeds flow to stabilization."""
         if amount > 0:
-            self.protocol_fund += amount
+            self.stabilization_fund += amount
 
     def distribute(
         self,
-        producer_fingerprint: bytes,
         harmonic_weights: Dict[bytes, float],
         vault_registry: 'VaultRegistry',
         epoch: int,
     ) -> Dict[bytes, int]:
         """
-        Distribute accumulated fees.
+        Fire: distribute accumulated tokens to holder accounts.
+
+        Post-arcs: tokens flow from treasury to places (accounts)
+        proportional to harmonic weight ‖π_H(stalk)‖.
 
         Args:
-            producer_fingerprint: Block producer gets producer share
-            harmonic_weights: Active validator weights for distribution
+            harmonic_weights: All holder harmonic weights
             vault_registry: Where to deposit vHCRYPT
-            epoch: Current epoch
+            epoch: Current epoch (Petri net clock)
 
         Returns:
-            fingerprint → amount distributed
+            account → amount distributed
         """
         if self.balance_hcrypt <= 0:
             return {}
@@ -181,49 +209,59 @@ class Treasury:
         pool = self.balance_hcrypt
         self.balance_hcrypt = 0
 
-        # Split
-        producer_amount = int(pool * PRODUCER_SHARE)
-        validator_pool = int(pool * VALIDATOR_SHARE)
+        # Split into buckets (Petri net branching post-arcs)
+        holder_pool = int(pool * HOLDER_SHARE)
+        stabilization_amount = int(pool * STABILIZATION_SHARE)
         protocol_amount = int(pool * PROTOCOL_SHARE)
-        burn_amount = pool - producer_amount - validator_pool - protocol_amount
+        burn_amount = pool - holder_pool - stabilization_amount - protocol_amount
 
-        # Producer reward
+        # Holder distribution (harmonic-weighted post-arcs)
         all_allocations: Dict[bytes, int] = {}
-        if producer_fingerprint:
-            vault_registry.earn(producer_fingerprint, producer_amount)
-            all_allocations[producer_fingerprint] = producer_amount
-
-        # Validator distribution (via strategy)
-        if harmonic_weights and validator_pool > 0:
-            validator_allocations = self.strategy.distribute(
-                validator_pool, harmonic_weights
+        if harmonic_weights and holder_pool > 0:
+            holder_allocations = self.strategy.distribute(
+                holder_pool, harmonic_weights
             )
-            for fp, amount in validator_allocations.items():
+            for fp, amount in holder_allocations.items():
                 vault_registry.earn(fp, amount)
                 all_allocations[fp] = all_allocations.get(fp, 0) + amount
+
+        # Stabilization fund (ProtocolOrchestrator manages spending)
+        self.stabilization_fund += stabilization_amount
 
         # Protocol fund + burn
         self.protocol_fund += protocol_amount
         self.total_burned += burn_amount
-        self.total_distributed += producer_amount + validator_pool
+        self.total_distributed += holder_pool
 
         self.distributions.append({
             'epoch': epoch,
             'pool': pool,
-            'producer': producer_amount,
-            'validators': validator_pool,
+            'holders': holder_pool,
+            'stabilization': stabilization_amount,
             'protocol': protocol_amount,
             'burned': burn_amount,
         })
 
         return all_allocations
 
+    def spend_stabilization(self, amount: int) -> bool:
+        """
+        Spend from stabilization fund (called by ProtocolOrchestrator).
+
+        Returns True if funds available and spent.
+        """
+        if amount <= 0 or amount > self.stabilization_fund:
+            return False
+        self.stabilization_fund -= amount
+        return True
+
     def summary(self) -> str:
         return (
-            f"Treasury:\n"
+            f"Treasury (Petri net accumulator):\n"
             f"  Pending fees: {self.balance_hcrypt} HCRYPT\n"
+            f"  Stabilization fund: {self.stabilization_fund} HCRYPT\n"
             f"  Protocol fund: {self.protocol_fund} HCRYPT\n"
             f"  Total distributed: {self.total_distributed} vHCRYPT\n"
             f"  Total burned: {self.total_burned} HCRYPT\n"
-            f"  Distributions: {len(self.distributions)}"
+            f"  Firings: {len(self.distributions)}"
         )

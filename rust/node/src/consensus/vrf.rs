@@ -21,7 +21,6 @@ use anyhow::{Result, bail};
 use hmac::{Hmac, Mac};
 use sha2::{Sha256, Digest};
 use std::collections::HashMap;
-use tracing::debug;
 
 type HmacSha256 = Hmac<Sha256>;
 

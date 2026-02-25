@@ -726,7 +726,21 @@ def generate_credential(
     """
     # 1. Build Čech nerve from topology
     nerve = build_cech_nerve(parties, connections)
-    
+
+    # GAP 5 FIX: Enforce minimum 1 edge at keygen.
+    # Without edges, the coboundary δ₀ is empty — encrypt(), commitment,
+    # and transaction creation all require at least one edge.
+    # Single-party credentials pass keygen but break at every downstream use.
+    edges = nerve.get(1, [])
+    if len(edges) == 0:
+        raise ValueError(
+            f"Credential requires at least 1 connection (edge) between parties. "
+            f"Got {len(parties)} parties with 0 connections. "
+            f"The coboundary δ₀ requires edges to function — without them, "
+            f"encrypt(), commitment, and transactions all fail. "
+            f"Add at least one connection, e.g.: connections=[('{parties[0]}', '{parties[-1] if len(parties) > 1 else '???'}')]"
+        )
+
     # 2. Generate random fibration (secret)
     # When enforce_min_harmonic=False (tests), clamp harmonic_dim to hilbert_dim
     # so small security_parameters don't crash. Gate 5 is also skipped.
@@ -754,17 +768,13 @@ def generate_credential(
         from ..invariants.unified import validate_fibration
         from ..geometry.sheaf_laplacian import SheafLaplacian
 
-        # Build Laplacian from the fibration's sheaf
+        # Build Laplacian and sheaf coboundary from the fibration's sheaf
         laplacian_obj = SheafLaplacian(fibration.sheaf)
         L_eigenvalues, L_eigenvectors = laplacian_obj.eigendecomposition(0)
         L_matrix = L_eigenvectors @ np.diag(L_eigenvalues) @ L_eigenvectors.T
 
-        # Get coboundary δ₀ from the cochain complex
-        from ..primitives.cochain import CochainComplex
-        n_vertices = len(nerve.get(0, []))
-        edges = nerve.get(1, [])
-        cochain = CochainComplex.from_graph(n_vertices, edges, stalk_dim=security_parameter)
-        delta_0 = cochain.coboundary(0)
+        # Get sheaf coboundary δ₀ (with restriction maps, NOT graph ±1)
+        delta_0 = laplacian_obj.get_coboundary_0()
 
         valid, fingerprint, report = validate_fibration(
             nerve=nerve,
@@ -804,6 +814,111 @@ def generate_credential(
 
 
 # =============================================================================
+# HOMOTOPY CLASS = ANONYMITY SET
+# =============================================================================
+
+class HomotopyClass:
+    """
+    The anonymity set: all fibrations with the same Betti signature.
+    
+    Mathematically, this is π⁻¹(β) where:
+      π: Gr(h_dim, d) → ℕ³   (fibration ↦ Betti numbers)
+    
+    The Grassmannian Gr(h_dim, d) is the manifold of h_dim-dimensional
+    subspaces of ℝ^d. Each point is a choice of harmonic subspace —
+    the secret that defines the fibration.
+    
+    |π⁻¹(β)| = ∞  (the Grassmannian is a continuous manifold)
+    
+    Sampling a random element = choosing a random point on Gr(h_dim, d)
+    = choosing a random U ∈ O(d) (Haar measure) = _random_orthogonal(d).
+    
+    This is the formal anonymity guarantee:
+      Pr[identify specific fibration] = 1/|Gr(h_dim, d)| = 0
+    
+    Connections to the codebase:
+      - Python: src/primitives/grassmann.py (Grassmannian geometry)
+      - Rust: rust/oracle/src/geometry.rs (GrassmannianPoint, Karcher mean)
+      - Lean: tsirelson_sketch.lean (Grassmannian search hardness)
+    """
+    
+    def __init__(
+        self,
+        parties: list,
+        connections: list,
+        betti_signature: tuple,
+        security_parameter: int = DEFAULT_STALK_DIM,
+        modulus: int = 12289,
+    ):
+        self.parties = parties
+        self.connections = connections
+        self.betti_signature = betti_signature  # (β₀, β₁, ...)
+        self.security_parameter = security_parameter
+        self.modulus = modulus
+        
+        # The anonymity set lives on Gr(h_dim, d)
+        self.stalk_dim = security_parameter
+        self.harmonic_dim = min(MIN_HARMONIC_DIM, security_parameter)
+        # dim Gr(k, n) = k(n-k) — the degrees of freedom the attacker faces
+        self.grassmannian_dim = self.harmonic_dim * (self.stalk_dim - self.harmonic_dim)
+    
+    @classmethod
+    def from_credential(cls, credential: 'FibrationCredential') -> 'HomotopyClass':
+        """Extract the homotopy class (anonymity set) from an existing credential."""
+        pub = credential.project_to_public()
+        return cls(
+            parties=credential.parties,
+            connections=_extract_connections(credential),
+            betti_signature=pub.betti_numbers,
+            security_parameter=credential.hilbert_dim,
+            modulus=credential.modulus,
+        )
+    
+    def sample(self, enforce_min_harmonic: bool = True) -> 'FibrationCredential':
+        """
+        Sample a uniformly random element from the anonymity set.
+        
+        This is the core privacy operation:
+          new_cred = class.sample()
+        
+        The new credential has:
+          - SAME Betti numbers (same homotopy class)
+          - DIFFERENT eigenvalues (unlinkable)
+          - DIFFERENT restriction maps (different fibration)
+        
+        Sampling is Haar-uniform on O(d), which induces uniform
+        measure on Gr(h_dim, d) via the quotient O(d) → Gr(h_dim, d).
+        
+        Returns:
+            Fresh FibrationCredential, uniformly random in [F].
+        """
+        return generate_credential(
+            parties=self.parties,
+            connections=self.connections,
+            security_parameter=self.security_parameter,
+            modulus=self.modulus,
+            enforce_min_harmonic=enforce_min_harmonic,
+        )
+    
+    def contains(self, credential: 'FibrationCredential') -> bool:
+        """
+        Check if a credential belongs to this homotopy class.
+        
+        Uses Betti numbers only (the true homotopy invariant).
+        Does NOT compare eigenvalues (which are finer than homotopy class).
+        """
+        pub = credential.project_to_public()
+        return pub.betti_numbers == self.betti_signature
+    
+    def __repr__(self) -> str:
+        return (
+            f"HomotopyClass(β={self.betti_signature}, "
+            f"Gr({self.harmonic_dim}, {self.stalk_dim}), "
+            f"dim={self.grassmannian_dim})"
+        )
+
+
+# =============================================================================
 # AUTO KEY ROTATION (linkability prevention)
 # =============================================================================
 
@@ -816,10 +931,15 @@ def rotate_credential(
     enforce_min_harmonic: bool = True,
 ) -> FibrationCredential:
     """
-    Rotate a credential: new fibration, same homotopy class.
+    Rotate a credential: sample a new random element from the same
+    homotopy class (anonymity set).
+
+    Equivalent to:
+      cls = HomotopyClass.from_credential(old)
+      new = cls.sample()
 
     WHAT ROTATES:
-    - fibration (new random restriction maps → new spectral fingerprint)
+    - fibration (new random U ∈ O(d) → new point on Gr(h_dim, d))
     - spectrum (new eigenvalues → new fingerprint_hash)
     - vertex_keys, edge_keys (new random lattice secrets)
 
@@ -838,14 +958,10 @@ def rotate_credential(
       the same class without learning the link.
 
     Returns:
-        New FibrationCredential with fresh fibration + spectrum.
+        New FibrationCredential, uniformly random in the homotopy class.
     """
-    return generate_credential(
-        parties=old_credential.parties,
-        connections=_extract_connections(old_credential),
-        security_parameter=old_credential.hilbert_dim,
-        modulus=old_credential.modulus,
-        enforce_min_harmonic=enforce_min_harmonic,
+    return HomotopyClass.from_credential(old_credential).sample(
+        enforce_min_harmonic=enforce_min_harmonic
     )
 
 

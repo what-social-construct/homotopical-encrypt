@@ -50,10 +50,9 @@ def test_basic_roundtrip():
     print(f"\n4. Verification:")
     if decrypted == message:
         print("   ✅ SUCCESS: Roundtrip complete!")
-        return True
     else:
         print(f"   ❌ FAILED: Got {decrypted} instead of {message}")
-        return False
+    assert decrypted == message
 
 
 def test_spectral_fingerprint():
@@ -91,7 +90,8 @@ def test_spectral_fingerprint():
     print(f"4. Self-match: {self_match}")
     print("   (Expected: True)")
     
-    return self_match and not match
+    assert self_match, "Self-match should be True"
+    assert not match, "Different credentials should not match"
 
 
 def test_lattice_roundtrip():
@@ -136,31 +136,14 @@ def test_lattice_roundtrip():
     assert all(0 <= x < q for x in rv)
     
     print("\n   ✅ Lattice primitives working!")
-    return True
 
 
 if __name__ == "__main__":
     print("\n🔐 HOMOTOPICAL ENCRYPT - TEST SUITE")
     print("=" * 60)
-    
-    results = []
-    
-    # Test lattice primitives
-    results.append(("Lattice Primitives", test_lattice_roundtrip()))
-    
-    # Test spectral fingerprint
-    results.append(("Spectral Fingerprint", test_spectral_fingerprint()))
-    
-    # Test full roundtrip
-    results.append(("Basic Roundtrip", test_basic_roundtrip()))
-    
-    # Summary
-    print("\n" + "=" * 60)
-    print("SUMMARY")
-    print("=" * 60)
-    for name, passed in results:
-        status = "✅ PASS" if passed else "❌ FAIL"
-        print(f"  {name}: {status}")
-    
-    all_passed = all(r[1] for r in results)
-    print("\n" + ("🎉 All tests passed!" if all_passed else "⚠️ Some tests failed"))
+
+    test_lattice_roundtrip()
+    test_spectral_fingerprint()
+    test_basic_roundtrip()
+
+    print("\n🎉 All tests passed!")

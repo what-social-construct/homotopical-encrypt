@@ -234,22 +234,29 @@ def compute_cohomology_invariants(
     
     # Coboundary ranks
     ranks = compute_coboundary_ranks(delta_0, delta_1, tol)
-    
-    # Betti numbers from rank-nullity
-    # β₀ = n₀ - rank(δ₀)
-    beta_0 = n0 - ranks["rank_0"]
-    
-    # β₁ = nullity(δ₁) - rank(δ₀) = (n₁ - rank(δ₁)) - rank(δ₀)
+
+    # Betti numbers from rank-nullity on the ACTUAL cochain spaces.
+    # For sheaf coboundaries, dim(Cᵏ) = δ_k.shape[1] (columns),
+    # NOT the number of graph simplices. When δ₀ is the graph coboundary
+    # (stalk_dim=1), δ₀.shape[1] = n₀. When δ₀ is the sheaf coboundary,
+    # δ₀.shape[1] = n₀ × stalk_dim. Using shape ensures correctness for both.
+    dim_C0 = delta_0.shape[1] if delta_0.shape[1] > 0 else n0
+    dim_C1 = delta_0.shape[0] if delta_0.shape[0] > 0 else n1
+
+    # β₀ = dim(C⁰) - rank(δ₀) = nullity(δ₀)
+    beta_0 = dim_C0 - ranks["rank_0"]
+
+    # β₁ = nullity(δ₁) - rank(δ₀)
     if delta_1 is not None:
-        beta_1 = n1 - ranks["rank_0"] - ranks.get("rank_1", 0)
+        dim_C1_from_d1 = delta_1.shape[1] if delta_1.shape[1] > 0 else n1
+        beta_1 = dim_C1_from_d1 - ranks["rank_0"] - ranks.get("rank_1", 0)
     else:
-        beta_1 = n1 - ranks["rank_0"]
-    
+        beta_1 = dim_C1 - ranks["rank_0"]
+
     # β₂ from rank-nullity theorem
-    # For finite complex: β₂ = n₂ - rank(δ₁)
-    # (assumes δ₂ = 0 for top dimension)
     if delta_1 is not None and n2 > 0:
-        beta_2 = n2 - ranks.get("rank_1", 0)
+        dim_C2 = delta_1.shape[0] if delta_1.shape[0] > 0 else n2
+        beta_2 = dim_C2 - ranks.get("rank_1", 0)
     else:
         beta_2 = 0
     

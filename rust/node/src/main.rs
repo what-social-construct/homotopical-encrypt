@@ -8,12 +8,11 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 use tracing::{debug, info, warn, error};
 
-mod consensus;
-mod network;
-mod storage;
-mod rpc;
-mod crypto;
-mod types;
+use hcrypt_node::consensus;
+use hcrypt_node::network;
+use hcrypt_node::storage;
+use hcrypt_node::rpc;
+use hcrypt_node::types;
 
 use consensus::pov::{PoVProducer, PoVVerifier, OracleCommitment};
 use consensus::vrf::{VRFKey, EquivocationTracker, vrf_evaluate};

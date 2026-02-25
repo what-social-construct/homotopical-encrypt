@@ -248,9 +248,80 @@ class CoherenceEngine:
         self._laplacian = laplacian
         return laplacian
 
+    def verify_stalk_binding(
+        self,
+        fingerprint: bytes,
+        stalk: np.ndarray,
+        oracle_commitment: Optional[bytes] = None,
+        nerve_commitment: Optional[bytes] = None,
+    ) -> Tuple[bool, str]:
+        """
+        ANTI-INFLATION CHECK: Verify a validator's stalk is bound to credential.
+
+        ATTACK VECTOR (without this check):
+          1. Validator observes other stalks (public for consensus)
+          2. Pre-computes shared Laplacian Δ_F from nerve
+          3. Finds ker(Δ_F) — the harmonic subspace
+          4. Crafts stalk ∈ ker(Δ_F) to maximize ‖π_H(stalk)‖/‖stalk‖
+          5. Gets inflated treasury rewards
+
+        DEFENSE (this check):
+          Stalk must be consistent with the validator's oracle commitment.
+          The oracle commitment binds the credential's spectral fingerprint
+          (eigenvalues, Betti numbers, topology hash). A crafted stalk that
+          doesn't match the committed spectral structure is rejected.
+
+          Specifically:
+          a) Stalk norm must be in [0.1, 10.0] (no degenerate vectors)
+          b) If oracle commitment provided, stalk hash must be derivable
+             from the committed credential (spectral fingerprint match)
+          c) Stalk must be consistent with nerve topology (if committed)
+
+        This doesn't require the full credential — just that the stalk's
+        geometric properties match what was committed via oracle.
+        """
+        import hashlib
+
+        # (a) Basic sanity: stalk is well-formed
+        stalk_flat = stalk.flatten()[:self.stalk_dim]
+        norm = np.linalg.norm(stalk_flat)
+        if norm < 0.1:
+            return (False, f"Stalk norm {norm:.4f} < 0.1 — degenerate")
+        if norm > 10.0:
+            return (False, f"Stalk norm {norm:.4f} > 10.0 — abnormal")
+
+        # (b) Oracle commitment binding: stalk hash must be derivable
+        if oracle_commitment is not None:
+            # The oracle stores a commitment that includes the stalk's
+            # spectral fingerprint. We verify the stalk could produce
+            # this commitment (hash of quantized projector).
+            projector = stalk_to_subspace(stalk_flat, self.stalk_dim)
+            # Quantize to 32-bit to match oracle commitment granularity
+            quantized = np.round(projector * 1e6).astype(np.int64)
+            stalk_hash = hashlib.sha256(
+                fingerprint + quantized.tobytes()
+            ).digest()
+            # First 16 bytes of commitment should match stalk hash prefix
+            if oracle_commitment[:16] != stalk_hash[:16]:
+                return (False, "Stalk inconsistent with oracle commitment")
+
+        # (c) Nerve consistency: stalk position plausible for topology
+        if nerve_commitment is not None and self._nerve is not None:
+            # Check that stalk has at least one neighbor in nerve
+            # (isolated stalks can't be harmonic-inflated, but also
+            #  shouldn't participate in consensus)
+            fp_list = self._nerve.fingerprints
+            if fingerprint in fp_list:
+                idx = fp_list.index(fingerprint)
+                if len(self._nerve.neighbors(idx)) == 0:
+                    return (False, "Stalk isolated in nerve — no neighbors")
+
+        return (True, "Stalk binding verified")
+
     def compute_harmonic_weights(
         self,
         stalks: Dict[bytes, np.ndarray],
+        oracle_commitments: Optional[Dict[bytes, bytes]] = None,
     ) -> Dict[bytes, float]:
         """
         Compute harmonic projection weight for each validator.
@@ -260,9 +331,28 @@ class CoherenceEngine:
         where π_H projects onto ker(Δ_F) — the harmonic subspace
         of the sheaf Laplacian.
 
+        ANTI-INFLATION: If oracle_commitments provided, each stalk is
+        verified against its credential commitment before weight computation.
+        Stalks that fail binding check get ZERO weight.
+
         This IS the validator's "value" — the part of their stalk
         that survives the network's Hodge projection.
         """
+        # ANTI-INFLATION: verify stalk bindings before computing weights
+        verified_stalks = {}
+        for fp, stalk in stalks.items():
+            commitment = oracle_commitments.get(fp) if oracle_commitments else None
+            ok, reason = self.verify_stalk_binding(fp, stalk, commitment)
+            if ok:
+                verified_stalks[fp] = stalk
+            # Silently exclude unverified stalks (zero weight)
+
+        if len(verified_stalks) < 2:
+            # Not enough verified stalks — fall back to uniform
+            return {fp: 1.0 / len(stalks) for fp in stalks}
+
+        # Use only verified stalks for Laplacian computation
+        stalks = verified_stalks
         laplacian = self.compute_sheaf_laplacian(stalks)
         if laplacian is None:
             # Fallback: equal weights

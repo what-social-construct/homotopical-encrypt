@@ -132,7 +132,71 @@ class SheafLaplacian:
         
         self._L0 = L
         return L
-    
+
+    def get_coboundary_0(self) -> np.ndarray:
+        """
+        Compute sheaf coboundary matrix δ₀: C⁰(F) → C¹(F).
+
+        For edge e = (i,j):
+          (δ₀ f)(e) = R_{j→e} f(j) - R_{i→e} f(i)
+
+        Block matrix: (n_edges × d) rows × (n_vertices × d) columns.
+        Restriction maps R_{v→e} are the sheaf's actual maps, NOT ±1.
+
+        Satisfies: Δ₀ = δ₀ᵀ δ₀  (the Hodge Laplacian identity).
+        """
+        vertices = self.sheaf.nerve.get(0, [])
+        edges = self.sheaf.nerve.get(1, [])
+
+        if not vertices or not edges:
+            return np.zeros((0, 0))
+
+        # Compute stalk dimensions and offsets (same as get_laplacian_0)
+        stalk_dims = {}
+        total_v_dim = 0
+        v_offsets = {}
+        for v in vertices:
+            stalk = self.sheaf.get_stalk(v)
+            dim = len(stalk) if stalk is not None and stalk.ndim == 1 else 1
+            stalk_dims[v] = dim
+            v_offsets[v] = total_v_dim
+            total_v_dim += dim
+
+        # Edge offsets: each edge has d_edge = d (same stalk dim)
+        total_e_dim = 0
+        e_offsets = {}
+        for edge in edges:
+            vi, vj = (edge[0],), (edge[1],)
+            d_e = stalk_dims.get(vi, 1)  # Use source vertex dim
+            e_offsets[edge] = total_e_dim
+            total_e_dim += d_e
+
+        # Build block coboundary
+        delta = np.zeros((total_e_dim, total_v_dim))
+
+        for edge in edges:
+            i, j = edge
+            vi, vj = (i,), (j,)
+
+            di = stalk_dims.get(vi, 1)
+            dj = stalk_dims.get(vj, 1)
+            oi = v_offsets.get(vi, 0)
+            oj = v_offsets.get(vj, 0)
+            oe = e_offsets[edge]
+
+            Ri = self.sheaf.get_restriction(vi, edge)
+            Rj = self.sheaf.get_restriction(vj, edge)
+            if Ri is None:
+                Ri = np.eye(di)
+            if Rj is None:
+                Rj = np.eye(dj)
+
+            # (δ₀ f)(e) = Rⱼ f(j) - Rᵢ f(i)
+            delta[oe:oe+di, oi:oi+di] = -Ri
+            delta[oe:oe+dj, oj:oj+dj] = Rj
+
+        return delta
+
     def get_laplacian_1(self) -> np.ndarray:
         """
         Compute 1-Laplacian Δ₁ = δ₁*δ₁ + δ₀ δ₀*.

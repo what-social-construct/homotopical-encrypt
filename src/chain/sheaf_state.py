@@ -893,16 +893,42 @@ class SheafState:
                     return (False, f"Double-spend: key image {inp.key_image.hex()[:16]}...")
                 self.spent_key_images.add(inp.key_image)
         
-        # 2. Update account balances from transaction fees (public amount)
-        #    Full amount privacy uses homomorphic commitments (Layer 2),
-        #    but fee_amount is always public for chain economics.
+        # 2. Update account balances: transfer amounts + fees
+        #
+        #    The account model tracks plaintext balances. Each output carries
+        #    transfer_amount (verified against commitment by oracle).
+        #    Fee is always public. Balance sufficiency is checked here.
+        #
+        #    Flow per tx:
+        #      sender.balance  -= (Σ output.transfer_amount + fee)
+        #      recipient.balance += output.transfer_amount  (per output)
+        #      treasury collects fee
+        #
         for tx in block.transactions:
-            # Debit fee from sender (first input's fingerprint)
-            if tx.inputs and tx.fee_amount > 0:
-                sender_fp = tx.inputs[0].fingerprint
-                if sender_fp in self.accounts:
-                    self.accounts[sender_fp].balance -= tx.fee_amount
-                    self.accounts[sender_fp].nonce += 1
+            if not tx.inputs:
+                continue
+
+            sender_fp = tx.inputs[0].fingerprint
+
+            # Compute total outflow = Σ transfer_amounts + fee
+            total_transfer = sum(out.transfer_amount for out in tx.outputs)
+            total_outflow = total_transfer + tx.fee_amount
+
+            # GAP 3 FIX: Balance sufficiency check
+            if sender_fp in self.accounts:
+                if self.accounts[sender_fp].balance < total_outflow:
+                    return (False,
+                        f"Insufficient balance: {self.accounts[sender_fp].balance} "
+                        f"< {total_outflow} (transfer={total_transfer}, fee={tx.fee_amount})")
+
+                # Debit sender
+                self.accounts[sender_fp].balance -= total_outflow
+                self.accounts[sender_fp].nonce += 1
+
+            # GAP 1 FIX: Credit recipients
+            for out in tx.outputs:
+                if out.transfer_amount > 0 and out.recipient_fingerprint in self.accounts:
+                    self.accounts[out.recipient_fingerprint].balance += out.transfer_amount
         
         # 3. Route fees through Treasury (not direct to producer)
         #    Treasury splits: producer share, validator share, protocol, burn
@@ -1052,26 +1078,27 @@ class SheafState:
     
     def distribute_fees(
         self,
-        producer_fp: bytes,
         harmonic_weights: Dict[bytes, float],
         epoch: int,
     ) -> Dict[bytes, int]:
         """
-        Trigger treasury distribution after block commit.
+        Trigger treasury Petri net firing after block commit.
         
         Called by BlockProducer after successful block application.
-        Routes accumulated fees through the treasury's pluggable strategy.
+        Routes accumulated fees through the treasury's harmonic-weighted
+        distribution (Petri net post-arcs to holder accounts).
+        
+        No producer/validator distinction — all nodes are automated.
+        Value IS the harmonic projection weight ‖π_H(stalk)‖.
         
         Args:
-            producer_fp: Block producer fingerprint (gets producer share)
-            harmonic_weights: Active validator harmonic weights
-            epoch: Current epoch
+            harmonic_weights: All holder harmonic weights
+            epoch: Current epoch (Petri net clock)
             
         Returns:
-            fingerprint → vHCRYPT allocated
+            account → vHCRYPT allocated
         """
         return self.treasury.distribute(
-            producer_fingerprint=producer_fp,
             harmonic_weights=harmonic_weights,
             vault_registry=self.vault_registry,
             epoch=epoch,

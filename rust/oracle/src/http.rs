@@ -15,7 +15,7 @@ use axum::{
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use tracing::{info, error};
+use tracing::info;
 
 use crate::rpc::{OracleRpc, RpcRequest, RpcResponse};
 

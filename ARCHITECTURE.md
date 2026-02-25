@@ -74,17 +74,43 @@ Exceeding 2√2 would violate causality (superluminal signaling).
 - PoS: proves you risked capital  
 - PoV: proves your geometry has valid spectrum
 
-## Identity = Spectral Fingerprint
+## Identity = Homotopy Class (Anonymity Set)
 
 ```
-Traditional: address = hash(public_key)
-Homotopical: address = spectral_fingerprint(fibration)
+Traditional:  address = hash(public_key)     → linkable
+Homotopical:  identity = Betti numbers β     → unlinkable
 
-Your identity IS the eigenvalues of your secret geometry.
-- Self-generated (no issuer)
-- Quantum-resistant (LWE foundation)
-- Key agility (rotate keys, same identity if same spectrum)
+Your PUBLIC identity is the Betti signature (β₀, β₁).
+Your PRIVATE key is the spectral fingerprint (eigenvalues).
+
+The anonymity set is the homotopy class π⁻¹(β):
+  all fibrations on Gr(h_dim, d) with the same Betti numbers.
+  |π⁻¹(β)| = ∞  (continuous manifold — no exhaustive search)
+
+HomotopyClass API:
+  cls = HomotopyClass.from_credential(cred)   # extract class
+  new = cls.sample()                           # random element (Haar on O(d))
+  cls.contains(other)                          # Betti membership
+  rotate_credential(old)                       # = cls.sample()
+
+Rotation = sample new point on Gr(h_dim, d):
+  Same Betti numbers → same class → indistinguishable
+  Different eigenvalues → different fingerprint → unlinkable
 ```
+
+### Flat-Spectrum Anonymity Design
+
+The restriction maps R = P_H + P_perp·(M/q)·P_perp produce a FLAT
+spectrum on H⊥ by construction. This is the anonymity feature:
+  - Attacker can't distinguish harmonic (message) from near-harmonic (noise)
+  - Finding the harmonic subspace requires knowing U ∈ O(d)
+  - Search space: Gr(h_dim, d), dim = h_dim × (d - h_dim) = 65,536
+
+Connections:
+  - Python: src/primitives/grassmann.py (Grassmannian geometry)
+  - Python: src/crypto/credential.py (HomotopyClass, rotate_credential)
+  - Rust:   rust/oracle/src/geometry.rs (GrassmannianPoint, Karcher mean)
+  - Lean:   lean/Tsirelson.lean (Grassmannian search hardness)
 
 ## Data Flow
 
@@ -131,9 +157,29 @@ homotopical-encrypt/
 │   └── zkp/
 │       ├── homotopy_proof.py
 │       └── spectral_proof.py
+├── rust/
+│   ├── node/
+│   │   ├── src/lib.rs         # Public API (consensus, crypto, network, storage, types)
+│   │   ├── src/main.rs        # Binary: P2P node, RPC, block production
+│   │   ├── src/consensus/     # PoV producer/verifier, Topos, VRF
+│   │   ├── src/crypto/        # Geodesic ZKP, commitments, onion
+│   │   ├── src/network/       # libp2p transport, relay
+│   │   ├── src/storage/       # RocksDB: blocks, key images, sheaf stalks
+│   │   └── src/types.rs       # Block, Transaction, SpectralProof
+│   ├── oracle/
+│   │   ├── src/lib.rs         # Public API (geometry, HTTP, RPC, stalk bridge)
+│   │   ├── src/main.rs        # Binary: Oracle HTTP server
+│   │   └── src/geometry.rs    # Grassmannian, Karcher mean, sheaf Laplacian
+│   └── wallet/
+│       └── src/               # Wallet key store
+├── lean/
+│   ├── Chain.lean             # Block/transaction formalization
+│   ├── Hardness.lean          # Hodge-hardness reduction
+│   ├── Laplacian.lean         # Hodge Laplacian properties
+│   └── Tsirelson.lean         # √2 bounds + Grassmannian hardness
 ├── docs/                      # Detailed documentation
 ├── examples/                  # Usage examples
-└── tests/
+└── tests/                     # 155 Python tests passing
 ```
 
 ## Documentation Index
@@ -333,15 +379,35 @@ The √2 factor appears universally in:
 
 Reference: Tsirelson, B.S. (1980). "Quantum generalizations of Bell's inequality"
 
+### Stage-Gated √2 Enforcement
+
+The √2 bounds are a **consensus** constraint, not a crypto constraint.
+They are enforced at **transaction/block validation** stage only:
+
+| Stage | √2 Bounds? | Why |
+|-------|-----------|-----|
+| **keygen** | ❌ Skip | Flat spectrum by design (anonymity feature) |
+| **encrypt** | ❌ Skip | Noise structure is internal, not consensus-facing |
+| **decrypt** | ❌ Skip | Harmonic projection works regardless of gap |
+| **transaction** | ✅ Enforce | Validators must verify geometric validity |
+| **block** | ✅ Enforce | Oracle-attested, nodes verify via PoV |
+
 ### In Code
 
 ```python
-SQRT2 = np.sqrt(2)
-LOWER_BOUND = 1 / SQRT2  # ~0.707
-UPPER_BOUND = 2 * SQRT2  # ~2.828
+# Python: invariants/unified.py
+validate_fibration(nerve, laplacian, delta_0, stage="transaction")
+# → checks √2 bounds
 
-# Block is valid if:
-assert LOWER_BOUND < spectral_gap < UPPER_BOUND
+validate_fibration(nerve, laplacian, delta_0, stage="keygen")
+# → skips √2 bounds (flat spectrum is the anonymity feature)
+```
+
+```rust
+// Rust: consensus/pov.rs
+if spectral_gap < POV_LOWER || spectral_gap > POV_UPPER {
+    bail!("Spectral gap outside √2 bounds");
+}
 ```
 
 ## Security Model (Kerckhoffs's Principle)

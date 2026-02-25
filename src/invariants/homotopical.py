@@ -124,12 +124,16 @@ def compute_h_level(betti: Dict[int, int]) -> HLevel:
 def compute_path_space_dim(laplacian: np.ndarray, tol: float = 1e-6) -> int:
     """
     Compute dim(Path(F, F)) = dim(ker Δ).
-    
+
     The kernel of the Laplacian is the harmonic subspace,
     which corresponds to the automorphism space of the fibration.
+
+    Uses RELATIVE tolerance: max_eig * 1e-10 (matching credential.py).
     """
     eigs = np.linalg.eigvalsh(laplacian)
-    return int(np.sum(np.abs(eigs) < tol))
+    max_eig = np.max(np.abs(eigs)) if len(eigs) > 0 else 0.0
+    kernel_tol = max(max_eig * 1e-10, tol)
+    return int(np.sum(np.abs(eigs) < kernel_tol))
 
 
 def compute_sigma_rank(nerve: Dict[int, List[Tuple]]) -> int:

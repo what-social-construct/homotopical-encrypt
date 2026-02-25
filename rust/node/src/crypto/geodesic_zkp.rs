@@ -27,7 +27,7 @@
 
 use crate::types::{POV_LOWER, POV_UPPER};
 use anyhow::{Result, bail};
-use nalgebra::{DMatrix, DVector, SymmetricEigen};
+use nalgebra::{DMatrix, SymmetricEigen};
 use sha2::{Sha256, Digest};
 use tracing::debug;
 

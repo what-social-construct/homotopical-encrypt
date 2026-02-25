@@ -10,10 +10,3 @@ pub mod topos;
 pub mod vrf;
 pub mod validator_set;
 
-pub use pov::{PoVProducer, PoVVerifier, OracleCommitment};
-pub use topos::ToposVerifier;
-pub use validator_set::{ValidatorSet, Validator};
-pub use vrf::{
-    VRFKey, VRFOutput, SlotAssignment, EquivocationTracker, EquivocationEvidence,
-    vrf_evaluate, assign_slot, verify_slot_assignment,
-};

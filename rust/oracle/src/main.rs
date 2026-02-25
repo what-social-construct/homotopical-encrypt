@@ -6,10 +6,7 @@
 // - Computes geometric commitment (harmonic projection)
 // - Forwards commitments to Rust chain
 
-mod geometry;
-mod http;
-mod rpc;
-mod stalk_bridge;
+use hcrypt_oracle::http;
 
 use anyhow::Result;
 use clap::Parser;

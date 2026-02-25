@@ -42,11 +42,12 @@ Reference:
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Tuple, Optional, Set
+from typing import Dict, List, Tuple, Optional, Set, FrozenSet
 import numpy as np
 
 from .coherence import CoherenceEngine, CechNerve, SQRT2, INV_SQRT2
 from ..primitives.grassmann import grassmann_distance, stalk_to_subspace
+from ..primitives.cochain import CochainComplex
 
 
 # =============================================================================
@@ -55,16 +56,30 @@ from ..primitives.grassmann import grassmann_distance, stalk_to_subspace
 
 class HeytingValue(Enum):
     """
-    Three-valued Heyting truth value.
+    Three-valued Heyting truth value — the COLLAPSE of the full
+    subobject classifier Ω(N(V)) to a computationally tractable form.
 
-    The subobject classifier Ω of the topos Sh(N(V)) is a
-    Heyting algebra with:
-      ⊤ = VALID       (block accepted)
-      ⊥ = INVALID     (block rejected)
-      ½ = UNDETERMINED (insufficient evidence)
+    The full Heyting algebra is the lattice of actionable coalitions
+    from coalitions.py (= open sets of the semitopology on N(V)):
 
-    Key difference from Boolean: ¬(UNDETERMINED) = UNDETERMINED,
-    not VALID. Double negation does NOT collapse the middle.
+        Ω(N(V)) = {U ⊆ V : U is an actionable coalition}
+
+    This collapses to three values for block-level decisions:
+      ⊤ = VALID       → supported by coalition covering β₀=1 component
+      ⊥ = INVALID     → no actionable coalition supports (∅)
+      ½ = UNDETERMINED → supported by SOME but not ALL (proper open U ⊊ V)
+
+    The full coalition-valued truth is preserved in ToposJudgment.supporting_coalition
+    so the richer structure is available for:
+      - Coregulator: target corrections to non-supporting validators
+      - Coalition witness: block carries proof of which coalition supports it
+      - Resolution: UNDETERMINED resolves when pending validators join
+
+    Key Heyting property: ¬(UNDETERMINED) = UNDETERMINED, not VALID.
+    This is NOT a design choice — it's forced by the sheaf topos:
+      - Helfer (1908.08944): intuitionistic logic, ¬¬P ≠ P
+      - Lambert (2021): forcing in copresheaf topos
+      - Subobject classifier of Sh(N(V)) is Heyting, not Boolean
     """
     VALID = 1
     UNDETERMINED = 0
@@ -73,19 +88,23 @@ class HeytingValue(Enum):
     def __repr__(self) -> str:
         return self.name
 
-    # Heyting operations
+    # Heyting operations (on the collapsed 3-element lattice)
     def meet(self, other: 'HeytingValue') -> 'HeytingValue':
-        """∧ (meet = min)"""
+        """∧ (meet = min) — corresponds to coalition intersection"""
         return HeytingValue(min(self.value, other.value))
 
     def join(self, other: 'HeytingValue') -> 'HeytingValue':
-        """∨ (join = max)"""
+        """∨ (join = max) — corresponds to coalition union"""
         return HeytingValue(max(self.value, other.value))
 
     def implies(self, other: 'HeytingValue') -> 'HeytingValue':
         """
         → (Heyting implication):
           a → b = max{c : a ∧ c ≤ b}
+
+        In terms of coalitions: U → W = largest V s.t. U ∩ V ⊆ W
+        In the semitopology, this is NOT just set complement because
+        intersections of actionable coalitions may not be actionable.
 
         Truth table:
           V → V = V,  V → U = U,  V → I = I
@@ -97,21 +116,47 @@ class HeytingValue(Enum):
         if self == HeytingValue.VALID:
             return other
         # UNDETERMINED → INVALID = UNDETERMINED (not INVALID)
+        # This IS the semitopological property: we can't conclude ⊥
+        # from partial support because intersection may break actionability.
         return HeytingValue.UNDETERMINED
 
     def negate(self) -> 'HeytingValue':
         """
         ¬a = a → ⊥
 
-        ¬VALID = INVALID
-        ¬INVALID = VALID
-        ¬UNDETERMINED = UNDETERMINED   ← the key non-Boolean feature
+        ¬VALID = INVALID    (full support → no complement)
+        ¬INVALID = VALID    (empty support → everything is complement)
+        ¬UNDETERMINED = UNDETERMINED  ← the key non-Boolean feature
+
+        In coalition terms: ¬U = largest W s.t. U ∩ W = ∅.
+        For a proper open U, this is UNDETERMINED because the
+        semitopology doesn't guarantee complements are actionable.
         """
         return self.implies(HeytingValue.INVALID)
 
     def double_negate(self) -> 'HeytingValue':
         """¬¬a ≥ a (Heyting: double negation is inflation, not identity)"""
         return self.negate().negate()
+
+    @staticmethod
+    def from_coalition_coverage(
+        supporting: int,
+        total: int,
+        covers_component: bool,
+    ) -> 'HeytingValue':
+        """
+        Collapse coalition-valued truth to 3-element Heyting value.
+
+        This is the projection Ω(N(V)) → {⊤, ½, ⊥}:
+          - Coalition covers β₀=1 component → VALID
+          - Coalition non-empty but partial  → UNDETERMINED
+          - No actionable coalition supports → INVALID
+        """
+        if supporting == 0:
+            return HeytingValue.INVALID
+        if covers_component and supporting >= total * 0.67:
+            return HeytingValue.VALID
+        return HeytingValue.UNDETERMINED
 
 
 # =============================================================================
@@ -162,6 +207,15 @@ class ToposJudgment:
     """
     Complete judgment: truth value + evidence + resolution conditions.
 
+    The value is the COLLAPSED Heyting truth (3 elements).
+    The supporting_coalition is the FULL open set from Ω(N(V)) —
+    the set of validators whose stalks jointly support this judgment.
+
+    This preserves the richer structure:
+      VALID with coalition {A,B,C,D,E} → all validators agree
+      UNDETERMINED with coalition {A,B,C} → partial support, {D,E} pending
+      INVALID with coalition ∅ → no support
+
     If UNDETERMINED, includes conditions under which the judgment
     would resolve to VALID or INVALID.
     """
@@ -169,12 +223,21 @@ class ToposJudgment:
     evidence: ConsensusEvidence
     epoch: int = 0
 
+    # The open set U ∈ Ω(N(V)) supporting this judgment
+    # = frozenset of validator identity hashes in the supporting coalition
+    supporting_coalition: Optional[frozenset] = None
+
     # Resolution conditions (only for UNDETERMINED)
     resolve_valid_if: str = ''          # What would make this VALID
     resolve_invalid_if: str = ''        # What would make this INVALID
 
     def __repr__(self) -> str:
-        return f"ToposJudgment({self.value.name}, {self.evidence.summary()})"
+        coal_size = len(self.supporting_coalition) if self.supporting_coalition else 0
+        return (
+            f"ToposJudgment({self.value.name}, "
+            f"coalition={coal_size}/{self.evidence.n_validators}, "
+            f"{self.evidence.summary()})"
+        )
 
 
 # =============================================================================
@@ -270,13 +333,41 @@ class ToposConsensus:
         # Gate 2: Compute sheaf Laplacian and spectral gap
         # =====================================================================
 
-        laplacian = self.coherence.compute_sheaf_laplacian(stalks)
+        # Spectral gap via Helfer's coboundary operator δ₀.
+        #
+        # From arXiv:1908.08944 (Helfer):
+        #   "Homotopy equivalent fibrations have isomorphic path categories"
+        #
+        # The Hodge Laplacian Δ₀ = δ₀ᵀδ₀ on the Čech nerve C⁰ measures
+        # algebraic connectivity of the validator graph. This is the SAME
+        # operator used throughout the repo (cochain.py, hodge.py, encrypt.py)
+        # — NOT the sheaf Laplacian Δ_F (which measures stalk coherence,
+        # where small gap = good, the opposite of what PoV validates).
+        #
+        # λ₁(Δ₀) = Fiedler value = algebraic connectivity.
+        # Normalized into PoV range [1/√2, 2√2] for threshold comparison.
         spectral_gap = 0.0
-        if laplacian is not None:
-            eigs = np.linalg.eigvalsh(laplacian)
+        if nerve.n_vertices > 1:
+            # Extract edges from nerve adjacency
+            edges = []
+            for i in range(nerve.n_vertices):
+                for j in range(i + 1, nerve.n_vertices):
+                    if nerve.adjacency[i, j]:
+                        edges.append((i, j))
+
+            # Build cochain complex from nerve (Helfer's formalism)
+            cc = CochainComplex.from_graph(nerve.n_vertices, edges, stalk_dim=1)
+            delta_0 = cc.coboundary_matrix_0()       # δ₀: C⁰ → C¹
+            hodge_lap = delta_0.T @ delta_0           # Δ₀ = δ₀ᵀδ₀
+            eigs = np.linalg.eigvalsh(hodge_lap)
             positive_eigs = eigs[eigs > 1e-8]
             if len(positive_eigs) > 0:
-                spectral_gap = float(positive_eigs[0])
+                fiedler = float(positive_eigs[0])
+                # Normalize: complete K_n has λ₁ = n, so fiedler/n ∈ (0,1]
+                # Scale into PoV range [1/√2, 2√2]
+                max_fiedler = float(nerve.n_vertices)
+                normalized = fiedler / max_fiedler
+                spectral_gap = INV_SQRT2 + normalized * (2 * SQRT2 - INV_SQRT2)
 
         # =====================================================================
         # Gate 3: Eligibility analysis
@@ -284,13 +375,18 @@ class ToposConsensus:
 
         consensus = self.coherence.compute_consensus(stalks)
         n_eligible = 0
+        eligible_fps: Set[bytes] = set()
         distances = []
 
         for fp in stalks:
             eligible, dist = self.coherence.check_eligibility(fp, stalks)
             if eligible:
                 n_eligible += 1
+                eligible_fps.add(fp)
             distances.append(dist)
+
+        # The supporting coalition = eligible validators (the open set U ∈ Ω(N(V)))
+        supporting = frozenset(eligible_fps) if eligible_fps else frozenset()
 
         mean_dist = float(np.mean(distances)) if distances else 0.0
         max_dist = float(np.max(distances)) if distances else 0.0
@@ -323,7 +419,7 @@ class ToposConsensus:
         # JUDGMENT: Apply Heyting logic
         # =====================================================================
 
-        # Hard INVALID: disconnected network
+        # Hard INVALID: disconnected network — supporting coalition is ∅
         if beta_0 > 1:
             evidence.forcing_open_set = f"β₀={beta_0} > 1 (partitioned)"
             evidence.confidence = 1.0
@@ -331,6 +427,7 @@ class ToposConsensus:
                 value=HeytingValue.INVALID,
                 evidence=evidence,
                 epoch=epoch,
+                supporting_coalition=frozenset(),  # ⊥ = empty open set
             )
 
         # Hard INVALID: spectral gap clearly out of bounds
@@ -341,6 +438,7 @@ class ToposConsensus:
                 value=HeytingValue.INVALID,
                 evidence=evidence,
                 epoch=epoch,
+                supporting_coalition=frozenset(),
             )
 
         if spectral_gap > gap_upper + self.boundary_margin:
@@ -350,9 +448,10 @@ class ToposConsensus:
                 value=HeytingValue.INVALID,
                 evidence=evidence,
                 epoch=epoch,
+                supporting_coalition=frozenset(),
             )
 
-        # UNDETERMINED: too few eligible validators
+        # UNDETERMINED: too few eligible — coalition is partial open set U ⊊ V
         if eligible_fraction < min_eligible_fraction:
             evidence.forcing_open_set = f"eligible={n_eligible}/{n_validators} < {min_eligible_fraction:.0%}"
             evidence.confidence = eligible_fraction
@@ -360,6 +459,7 @@ class ToposConsensus:
                 value=HeytingValue.UNDETERMINED,
                 evidence=evidence,
                 epoch=epoch,
+                supporting_coalition=supporting,  # partial open set
                 resolve_valid_if="more validators come within divergence bound",
                 resolve_invalid_if="eligible fraction drops below threshold at epoch end",
             )
@@ -372,6 +472,7 @@ class ToposConsensus:
                 value=HeytingValue.UNDETERMINED,
                 evidence=evidence,
                 epoch=epoch,
+                supporting_coalition=supporting,
                 resolve_valid_if="gap moves clearly inside bounds on next observation",
                 resolve_invalid_if="gap moves clearly outside bounds",
             )
@@ -384,12 +485,13 @@ class ToposConsensus:
                 value=HeytingValue.UNDETERMINED,
                 evidence=evidence,
                 epoch=epoch,
+                supporting_coalition=supporting,
                 resolve_valid_if="disagreement cycles resolve (β₁ decreases)",
                 resolve_invalid_if="cycles persist across multiple epochs",
             )
 
         # =====================================================================
-        # VALID: all checks passed with clear evidence
+        # VALID: all checks passed — coalition = full validator set (⊤)
         # =====================================================================
 
         evidence.forcing_open_set = "all gates clear"
@@ -398,6 +500,7 @@ class ToposConsensus:
             value=HeytingValue.VALID,
             evidence=evidence,
             epoch=epoch,
+            supporting_coalition=supporting,  # ⊤ = full open set
         )
 
     # =========================================================================

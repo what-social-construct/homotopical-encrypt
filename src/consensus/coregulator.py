@@ -45,6 +45,7 @@ from ..primitives.grassmann import (
     stalk_to_subspace,
     random_grassmann_point,
 )
+from ..primitives.cochain import CochainComplex
 from .coherence import CoherenceEngine, CechNerve, SQRT2, INV_SQRT2
 
 
@@ -340,40 +341,95 @@ class CoregulatorDAO:
         stalks: Dict[bytes, np.ndarray],
     ) -> None:
         """
-        Hebbian update: what fires together wires together.
+        Hebbian update via coboundary disagreement (not raw Grassmann distance).
 
-        Validators whose stalks align with the consensus direction
-        (low Grassmann distance to predicted consensus) get boosted.
-        Those that diverge get dampened.
+        From Helfer (arXiv:1908.08944): homotopy equivalent fibrations have
+        isomorphic path categories. The coboundary δ₀ measures LOCAL
+        disagreement between neighboring validators in the Čech nerve —
+        this is the sheaf-theoretic measure used throughout the repo
+        (encrypt.py, commitment.py, anonymity.py).
 
-        This is NOT stake-based — it's geometry-based. A small validator
-        with consistently good geometric alignment earns more weight
-        than a large validator that keeps diverging.
+        For each validator v, we compute:
+          disagreement(v) = Σ_{e=(v,w)} ‖δ₀(stalk)_e‖²  / degree(v)
+
+        This is the average coboundary energy at v's edges — how much v
+        disagrees with its neighbors. Low disagreement → boost (Hebbian
+        "fires together, wires together"). High → dampen.
+
+        This replaces raw Grassmann distance to the Karcher mean, which
+        measures GLOBAL deviation rather than LOCAL sheaf coherence.
         """
         if self._current_consensus is None:
             return
 
+        # Build cochain complex from nerve to get δ₀
+        nerve = self.coherence.build_nerve(stalks)
+        if nerve.n_vertices < 2:
+            return
+
+        edges = []
+        for i in range(nerve.n_vertices):
+            for j in range(i + 1, nerve.n_vertices):
+                if nerve.adjacency[i, j]:
+                    edges.append((i, j))
+
+        if not edges:
+            return
+
+        # Build cochain complex (Helfer's formalism)
+        cc = CochainComplex.from_graph(nerve.n_vertices, edges, stalk_dim=1)
+        delta_0 = cc.coboundary_matrix_0()  # δ₀: C⁰ → C¹
+
+        # Map fingerprints to vertex indices
+        fps = list(stalks.keys())
+        fp_to_idx = {fp: i for i, fp in enumerate(fps)}
+
+        # Compute per-vertex coboundary energy
+        # Use Grassmann distance as the 0-cochain value at each vertex
+        # (distance to consensus = how "off" this validator is)
+        vertex_values = np.zeros(nerve.n_vertices)
         for fp, stalk_data in stalks.items():
             try:
                 P = stalk_to_subspace(stalk_data, self.stalk_dim)
-                dist = grassmann_distance(P, self._current_consensus)
-
-                # Current Hebbian weight
-                current = self.memory.hebbian_weights.get(fp, 1.0)
-
-                # Close to consensus → boost, far → dampen
-                if dist < 0.5:
-                    updated = min(current * BOOST_FACTOR, 3.0)  # Cap at 3x
-                elif dist > 1.0:
-                    updated = max(current * DAMPEN_FACTOR, 0.1)  # Floor at 0.1x
-                else:
-                    # Neutral zone — decay toward 1.0
-                    updated = current * 0.95 + 0.05
-
-                self.memory.hebbian_weights[fp] = updated
-
+                vertex_values[fp_to_idx[fp]] = grassmann_distance(
+                    P, self._current_consensus
+                )
             except Exception:
-                continue
+                vertex_values[fp_to_idx[fp]] = 1.0  # default high
+
+        # Apply coboundary: δ₀(c) measures disagreement on edges
+        edge_disagreement = delta_0 @ vertex_values  # (n_edges,)
+
+        # Accumulate per-vertex: sum of squared edge disagreements
+        vertex_energy = np.zeros(nerve.n_vertices)
+        vertex_degree = np.zeros(nerve.n_vertices)
+        for e_idx, (i, j) in enumerate(edges):
+            energy = edge_disagreement[e_idx] ** 2
+            vertex_energy[i] += energy
+            vertex_energy[j] += energy
+            vertex_degree[i] += 1
+            vertex_degree[j] += 1
+
+        # Normalize by degree
+        vertex_degree = np.maximum(vertex_degree, 1)
+        normalized_energy = vertex_energy / vertex_degree
+
+        # Update Hebbian weights based on coboundary energy
+        for fp in stalks:
+            idx = fp_to_idx[fp]
+            energy = normalized_energy[idx]
+            current = self.memory.hebbian_weights.get(fp, 1.0)
+
+            # Low coboundary energy → boost (locally coherent with neighbors)
+            # High coboundary energy → dampen (disagrees with neighbors)
+            if energy < 0.1:
+                updated = min(current * BOOST_FACTOR, 3.0)
+            elif energy > 0.5:
+                updated = max(current * DAMPEN_FACTOR, 0.1)
+            else:
+                updated = current * 0.95 + 0.05
+
+            self.memory.hebbian_weights[fp] = updated
 
     # =========================================================================
     # DIAGNOSTICS

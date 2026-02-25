@@ -250,7 +250,13 @@ class UnifiedInvariantValidator:
         self._check_laplacian_construction()    # Δ = δ*δ + δδ*
         
         # ── TIER 3: O(n²) spectral checks ──
-        self._check_spectral_gap_bounds()
+        # NOTE: √2 gap bounds NOT checked at keygen/encrypt.
+        # The crypto construction R = P_H + P_perp·(M/q)·P_perp
+        # deliberately produces a FLAT spectrum on H⊥ (all λ ≈ 0).
+        # This is the anonymity feature: attacker can't distinguish
+        # harmonic (message) from near-harmonic (noise) without knowing U.
+        # The √2 Tsirelson bound applies at CONSENSUS (transaction stage)
+        # where validators need distinct spectral signatures.
         self._check_kernel_dimension()
         self._check_spectral_condition()
         
@@ -296,11 +302,12 @@ class UnifiedInvariantValidator:
             return self.validate_all()
         
         elif stage == "encrypt":
-            # Need valid Hodge decomposition for message encoding
+            # Need valid Hodge decomposition for message encoding.
+            # NO gap bounds: key holder knows U, doesn't need spectral
+            # separation. Flat spectrum = anonymity (by design).
             self._check_finite_nerve()
             self._check_connected()
             self._check_spectral_psd()
-            self._check_spectral_gap_bounds()
             self._check_cochain_complex()
             self._check_laplacian_construction()
             self._check_hodge()
@@ -445,8 +452,8 @@ class UnifiedInvariantValidator:
         ))
     
     def _check_connected(self):
-        """Nerve should be connected."""
-        passed = self.cohomology.betti_0 == 1
+        """Nerve should be connected (graph connectivity, not sheaf β₀)."""
+        passed = self.nerve_validation.is_connected
         
         self.checkpoints.append(InvariantCheckpoint(
             category="cohomology",

@@ -24,6 +24,10 @@ axum = "0.7"
 tower = "0.5"
 tower-http = { version = "0.6", features = ["cors"] }
 
+[lib]
+name = "hcrypt_oracle"
+path = "src/lib.rs"
+
 [[bin]]
 name = "hcrypt-oracle"
 path = "src/main.rs"

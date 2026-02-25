@@ -414,11 +414,16 @@ def verify_class_membership(
     # Check: ||Δ(z) - Δ(w)|| should be proportional to c (not exploding)
     delta_z = proof.response_delta_z
     delta_w = proof.coboundary_check  # This is Δ(b) = Δ(e)
-    
-    # The response Δ(z) should be bounded
+
+    # The response Δ(z) should be bounded RELATIVE TO THE LAPLACIAN SCALE.
+    # With lattice-scale restriction maps (q ≈ 12289), eigenvalues can be O(10⁸).
+    # ||Δ(z)|| ≈ λ_max · ||z||, so the bound must include the spectral norm.
+    # λ_max = max(|target_spectrum|) is available from the proof.
     delta_z_norm = float(np.linalg.norm(delta_z))
     n = len(proof.response_z)
-    delta_bound = ZK_EXACT_SIGMA * np.sqrt(n) * ZK_REJECTION_BOUND_FACTOR * 10
+    z_bound = ZK_EXACT_SIGMA * np.sqrt(n) * ZK_REJECTION_BOUND_FACTOR
+    lambda_max = float(np.max(np.abs(target_spectrum))) if len(target_spectrum) > 0 else 1.0
+    delta_bound = max(lambda_max, 1.0) * z_bound * 10
     if delta_z_norm > delta_bound:
         return (False, f"Coboundary check failed: ||Δ(z)|| = {delta_z_norm:.1f} > {delta_bound:.1f}")
     

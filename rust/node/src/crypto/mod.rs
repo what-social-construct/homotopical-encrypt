@@ -5,6 +5,5 @@
 
 pub mod commitment;
 pub mod geodesic_zkp;
+pub mod onion;
 
-pub use commitment::{CochainCommitment, CochainComplex};
-pub use geodesic_zkp::{GeodesicZKProof, ZKPVerification, verify_geodesic_proof};

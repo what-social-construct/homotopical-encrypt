@@ -122,15 +122,22 @@ def compute_spectral_invariants(
     """
     # Eigendecomposition
     eigenvalues = np.sort(np.linalg.eigvalsh(laplacian))
-    
+
+    # Use RELATIVE tolerance for kernel identification.
+    # Sheaf eigenvalues can reach ~10⁸ (lattice-scale restriction maps),
+    # so fixed tol=1e-10 misidentifies eigenvalues ~0.001 as nonzero
+    # when they are numerical kernel. Match credential.py kernel_tolerance.
+    max_eig = np.max(np.abs(eigenvalues)) if len(eigenvalues) > 0 else 0.0
+    kernel_tol = max(max_eig * 1e-10, tol)
+
     # Clean up numerical noise
-    eigenvalues = np.where(np.abs(eigenvalues) < tol, 0.0, eigenvalues)
-    
+    eigenvalues = np.where(np.abs(eigenvalues) < kernel_tol, 0.0, eigenvalues)
+
     # Kernel dimension
-    kernel_dim = int(np.sum(np.abs(eigenvalues) < tol))
-    
+    kernel_dim = int(np.sum(np.abs(eigenvalues) < kernel_tol))
+
     # Nonzero eigenvalues
-    nonzero = eigenvalues[eigenvalues > tol]
+    nonzero = eigenvalues[eigenvalues > kernel_tol]
     
     if len(nonzero) == 0:
         # Degenerate case: all zero eigenvalues

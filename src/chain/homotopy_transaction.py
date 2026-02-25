@@ -140,6 +140,13 @@ class HomotopyOutput:
     - Layer 2: amount_commitment (SVP-hard via coboundary δ)
     - Layer 2: range_proof (amount ∈ [0, 2^64-1] via harmonic decomposition)
     - Layer 3: encrypted_amount (Hodge-structured encryption)
+    
+    TRANSFER AMOUNT:
+    The plaintext transfer_amount is included for account-model state updates.
+    The commitment proves this amount matches without revealing it to observers
+    who don't have the full commitment opening. In the UTXO model, this field
+    would be removed entirely and replaced by commitment-only tracking.
+    For the current account-model design, it's needed by apply_block().
     """
     # Recipient fingerprint (homotopy class identifier)
     recipient_fingerprint: bytes
@@ -152,6 +159,11 @@ class HomotopyOutput:
     
     # Homotopy invariants for verification
     output_topology_hash: bytes
+    
+    # Plaintext transfer amount for account-model state updates.
+    # Verified against amount_commitment by the oracle (stalk bridge).
+    # In a UTXO model this would be removed — commitments only.
+    transfer_amount: int = 0
     
     # Harmonic range proof: amount ∈ [0, 2^64 - 1]
     # Proves amount is non-negative without revealing value.
@@ -447,13 +459,35 @@ def create_homotopy_transaction(
         
         if proof_ok:
             class_proof = proof_result
-    except Exception:
-        # If proof generation fails (e.g., spectral gap out of bounds),
-        # transaction still valid structurally but without full ZK anonymity.
-        # In production, this should be a hard failure for privacy txs.
-        pass
+        else:
+            import warnings
+            warnings.warn(
+                f"ZK class membership proof generation failed: {proof_msg}. "
+                f"Transaction will lack full privacy (anonymity set reduced)."
+            )
+    except Exception as _proof_err:
+        # GAP 4 FIX: Log proof failures instead of silently swallowing.
+        # In production, privacy-critical transactions MUST have proofs.
+        import warnings
+        warnings.warn(
+            f"ZK class membership proof exception: {_proof_err}. "
+            f"Transaction created without Hodge-hardness ZK proof."
+        )
     
     # Encrypt amount using Hodge-structured encryption
+    #
+    # GAP 2 KNOWN LIMITATION: This encrypts under the SENDER's fibration.
+    # The recipient cannot decrypt because they have a different Hodge structure.
+    # For the account-model (with plaintext transfer_amount), this is cosmetic.
+    # For full UTXO privacy, this needs one of:
+    #   (a) Grassmannian Diffie-Hellman: shared secret on Gr(k,n) from
+    #       sender's fibration + recipient's public Betti/topology
+    #   (b) Re-encryption proxy: oracle re-encrypts under recipient's ker(Δ)
+    #   (c) Recipient-keyed encryption: derive a shared key from
+    #       sender_secret ⊕ hash(recipient_fingerprint)
+    # Currently: encrypted_amount is a COMMITMENT (proves sender knew amount)
+    # rather than a message the recipient decrypts. The transfer_amount field
+    # on HomotopyOutput carries the plaintext for the account model.
     amount_bytes = amount.to_bytes(8, 'little')
     encrypted_ciphertext = encrypt(amount_bytes, sender_credential, 
                                     sigma_exact=2.0, sigma_harmonic=0.1)
@@ -524,6 +558,7 @@ def create_homotopy_transaction(
         amount_commitment=out_commitment,              # Layer 2: SVP-hard binding
         encrypted_amount=encrypted_amount,             # Layer 3: Hodge encryption
         output_topology_hash=topology_hash,
+        transfer_amount=amount,                        # Account-model: plaintext for state update
         range_proof=output_range_proof,                # Layer 2: amount range proof
     )
     

@@ -15,7 +15,6 @@ use crate::crypto::geodesic_zkp::{verify_geodesic_proof, GeodesicZKProof};
 // HeytingValue imported via crate::types::*
 use anyhow::{Result, bail};
 use ed25519_dalek::{SigningKey, VerifyingKey, Signer, Verifier, Signature};
-use sha2::{Sha256, Digest};
 use tracing::{debug, info, warn};
 
 /// Domain separator for spectral proof signatures.
