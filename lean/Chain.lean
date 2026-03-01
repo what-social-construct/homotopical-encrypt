@@ -65,15 +65,33 @@ structure Validator where
   spectral_gap : ℝ       -- λ₁ of sheaf Laplacian
   betti_0 : ℕ            -- β₀ = connected components
   betti_1 : ℕ            -- β₁ = independent cycles
-  deriving Repr
 
-/-- A transaction with cochain commitment structure. -/
+/--
+  A transaction with cochain commitment structure.
+
+  The commitment is a VECTOR of edge values δ(m ∥ r) ∈ C¹,
+  not a scalar. This matches:
+    Python: CochainCommitment.edge_values (np.ndarray)
+    Rust:   CochainCommitment.edge_values (Vec<i64>)
+
+  Wire format: modulus(4 LE) + n_edges(4 LE) + edge_values(n × 8 i64 LE) + topology_hash(16)
+
+  For proofs (e.g., balance_preserved, tx_compose_assoc), we use
+  `commitment_sum` as the ℤ-valued summary: Σᵢ edge_values[i].
+  This is sound because δ is linear and balance = Σ commitments = 0.
+-/
 structure Transaction where
   sender : ℕ
   recipient : ℕ
-  key_image : ℕ           -- unique per fibration, prevents double-spend
-  commitment_value : ℝ     -- δ(amount || blinding)
-  deriving Repr
+  key_image : ℕ              -- unique per fibration, prevents double-spend
+  commitment_edge_values : List ℤ  -- δ(amount ∥ blinding) edge values in C¹
+  commitment_modulus : ℕ      -- lattice modulus q (default 12289)
+  topology_hash : ℕ          -- hash of simplicial complex topology
+
+/-- Summary scalar for balance proofs: Σᵢ edge_values[i].
+    Balance preservation: Σ_tx Σ_edge commitment_edge_values = 0 (mod q). -/
+def Transaction.commitment_sum (t : Transaction) : ℤ :=
+  t.commitment_edge_values.foldl (· + ·) 0
 
 /-- A block in the PoV chain. -/
 structure Block where
@@ -83,7 +101,6 @@ structure Block where
   transactions : List Transaction
   vrf_score : ℝ            -- VRF output for leader election
   timestamp : ℕ
-  deriving Repr
 
 /-- A chain is a list of blocks (genesis at head). -/
 def Chain := List Block
@@ -93,14 +110,7 @@ def Chain := List Block
 -- AXIOM 1: BLOCK VALIDITY (PoV)
 -- ═══════════════════════════════════════════════════════════════════════
 
-/--
-  The Tsirelson bound for Proof-of-Value consensus.
-  Spectral gap must be in [1/√2, 2√2] for block production eligibility.
-
-  Lower bound 1/√2: connected topology with non-trivial structure
-  Upper bound 2√2:  Tsirelson bound on quantum correlations
-                    (from lean/Tsirelson.lean)
--/
+/-- Tsirelson bounds for PoV consensus. -/
 def pov_lower_bound : ℝ := 1 / Real.sqrt 2
 def pov_upper_bound : ℝ := 2 * Real.sqrt 2
 
@@ -117,24 +127,12 @@ def key_images_fresh (txs : List Transaction) : Prop :=
   ∀ (i j : Fin txs.length), i ≠ j →
     (txs.get i).key_image ≠ (txs.get j).key_image
 
-/-- Transaction balance is preserved: Σ inputs = Σ outputs + fee. -/
+/-- Transaction balance is preserved: Σ commitment sums = 0.
+    Uses commitment_sum (Σ edge values) because δ is linear. -/
 def balance_preserved (txs : List Transaction) : Prop :=
-  -- Cochain commitments are homomorphic: δ is linear.
-  -- Σ commitment_value = 0 (inputs cancel outputs + fee).
-  (txs.map (·.commitment_value)).sum = 0
+  (txs.map (·.commitment_sum)).sum = 0
 
-/--
-  AXIOM 1: Block Validity Predicate.
-
-  A block is valid iff:
-  (a) Producer's spectral gap is in PoV bounds [1/√2, 2√2]
-  (b) Producer's topology is connected (β₀ = 1)
-  (c) All key images are fresh (no double-spend)
-  (d) Transaction balance is preserved (homomorphic)
-
-  This is the PoV analogue of Goncharov's "valid block" axiom,
-  replacing proof-of-work with proof-of-spectral-quality.
--/
+/-- AXIOM 1: Block Validity Predicate. -/
 def block_valid (b : Block) : Prop :=
   spectral_gap_in_bounds b.producer
   ∧ topology_connected b.producer
@@ -146,27 +144,15 @@ def block_valid (b : Block) : Prop :=
 -- AXIOM 2: CHAIN EXTENSION
 -- ═══════════════════════════════════════════════════════════════════════
 
-/-- The tip (latest block) of a chain. -/
 def chain_tip : Chain → Option Block
   | [] => none
   | (b :: _) => some b
 
-/-- Height of a chain. -/
 def chain_height : Chain → ℕ
   | [] => 0
   | (b :: _) => b.height
 
-/--
-  AXIOM 2: Chain Extension Rule.
-
-  A block B extends chain C iff:
-  (a) B is valid
-  (b) B.prev_hash = hash of tip(C)
-  (c) B.height = height(tip(C)) + 1
-
-  Note: We use prev_hash as a proxy for the full hash-link.
-  In practice this is SHA-256 of the serialized tip block.
--/
+/-- AXIOM 2: Chain Extension Rule. -/
 def block_extends (b : Block) (c : Chain) (tip_hash : ℕ) : Prop :=
   block_valid b
   ∧ b.prev_hash = tip_hash
@@ -174,28 +160,13 @@ def block_extends (b : Block) (c : Chain) (tip_hash : ℕ) : Prop :=
 
 
 -- ═══════════════════════════════════════════════════════════════════════
--- AXIOM 3: PoV SELECTION (replaces longest-chain mining)
+-- AXIOM 3: PoV SELECTION
 -- ═══════════════════════════════════════════════════════════════════════
 
-/-- A validator is eligible for block production. -/
 def eligible (v : Validator) : Prop :=
   spectral_gap_in_bounds v ∧ topology_connected v
 
-/--
-  AXIOM 3: PoV Leader Selection.
-
-  At each epoch, the selected validator is the eligible validator
-  with the highest VRF score. The VRF score depends on:
-  - the validator's secret fibration (unpredictable)
-  - the epoch randomness (public, from previous block)
-
-  This replaces Goncharov's "mining" axiom. Instead of hash-rate
-  determining block production, SPECTRAL QUALITY determines eligibility
-  and VRF determines which eligible validator produces.
-
-  Key property: eligible(v) requires spectral_gap ∈ [1/√2, 2√2],
-  which requires a genuine geometric contribution (non-trivial fibration).
--/
+/-- AXIOM 3: PoV Leader Selection via VRF. -/
 def is_selected (v : Validator) (validators : List Validator) (epoch : ℕ)
     (vrf : Validator → ℕ → ℝ) : Prop :=
   eligible v
@@ -203,27 +174,14 @@ def is_selected (v : Validator) (validators : List Validator) (epoch : ℕ)
 
 
 -- ═══════════════════════════════════════════════════════════════════════
--- AXIOM 4: FORK RESOLUTION (heaviest spectral weight)
+-- AXIOM 4: FORK RESOLUTION
 -- ═══════════════════════════════════════════════════════════════════════
 
-/-- Cumulative spectral weight of a chain. -/
 def cumulative_gap : Chain → ℝ
   | [] => 0
   | (b :: rest) => b.producer.spectral_gap + cumulative_gap rest
 
-/--
-  AXIOM 4: Fork Resolution Rule.
-
-  When two valid chains fork, prefer the one with higher
-  cumulative spectral gap weight (analogous to "heaviest chain"
-  in proof-of-stake, but weighted by geometric quality).
-
-  This replaces "select longest chain" (Goncharov's axiom).
-  The insight: spectral gap is a GEOMETRIC INVARIANT that
-  cannot be faked (Hodge-hardness from lean/Hardness.lean).
-  Accumulating genuine spectral weight requires genuine
-  geometric contributions over time.
--/
+/-- AXIOM 4: Prefer chain with higher cumulative spectral weight. -/
 def preferred (c1 c2 : Chain) : Prop :=
   cumulative_gap c1 > cumulative_gap c2
 
@@ -232,128 +190,138 @@ def preferred (c1 c2 : Chain) : Prop :=
 -- AXIOM 5: TRANSACTION COMPOSITION ASSOCIATIVITY
 -- ═══════════════════════════════════════════════════════════════════════
 
-/--
-  Transaction composition via cochain commitment addition.
-
-  compose(tx₁, tx₂) aggregates their commitments:
-    commitment(compose(tx₁, tx₂)) = commitment(tx₁) + commitment(tx₂)
-
-  This is well-defined because the coboundary δ is LINEAR:
-    δ(a + b) = δ(a) + δ(b)
-
-  And addition in ℝ (or ℤ/qℤ) is associative.
--/
+/-- Transaction composition via cochain commitment addition.
+    Uses zipWith (+) for element-wise edge value addition. -/
 def tx_compose (t1 t2 : Transaction) : Transaction :=
   { sender := t1.sender
   , recipient := t2.recipient
-  , key_image := t1.key_image + t2.key_image  -- XOR in practice
-  , commitment_value := t1.commitment_value + t2.commitment_value }
+  , key_image := t1.key_image + t2.key_image
+  , commitment_edge_values := List.zipWith (· + ·) t1.commitment_edge_values t2.commitment_edge_values
+  , commitment_modulus := t1.commitment_modulus
+  , topology_hash := t1.topology_hash }
 
-/--
-  AXIOM 5: Transaction Composition is Associative.
+-- ── Helper lemmas for foldl / zipWith on ℤ ─────────────────────────
 
-  This follows from:
-  1. Cochain addition is associative (abelian group)
-  2. Homotopy path composition is associative up to equivalence
-  3. The coboundary δ is linear (preserves addition)
+/-- foldl (+) extracts accumulator: foldl (+) a l = a + foldl (+) 0 l. -/
+private theorem foldl_add_extract (a : ℤ) (l : List ℤ) :
+    l.foldl (· + ·) a = a + l.foldl (· + ·) 0 := by
+  induction l generalizing a with
+  | nil => simp [List.foldl]
+  | cons h t ih =>
+    simp only [List.foldl]
+    rw [ih (a + h), ih (0 + h)]
+    ring
 
-  Proof: commitment_value uses ℝ addition, which is associative.
--/
-theorem tx_compose_assoc (t1 t2 t3 : Transaction) :
-    (tx_compose (tx_compose t1 t2) t3).commitment_value =
-    (tx_compose t1 (tx_compose t2 t3)).commitment_value := by
-  simp [tx_compose]
-  ring
+/-- Associativity of zipWith (+) under foldl (+) 0. -/
+private theorem zipWith_add_foldl_assoc (a b c : List ℤ) :
+    (List.zipWith (· + ·) (List.zipWith (· + ·) a b) c).foldl (· + ·) 0 =
+    (List.zipWith (· + ·) a (List.zipWith (· + ·) b c)).foldl (· + ·) 0 := by
+  induction a generalizing b c with
+  | nil => simp [List.zipWith]
+  | cons ha ta ih =>
+    cases b with
+    | nil => simp [List.zipWith]
+    | cons hb tb =>
+      cases c with
+      | nil => simp [List.zipWith]
+      | cons hc tc =>
+        simp only [List.zipWith, List.foldl]
+        rw [foldl_add_extract (0 + (ha + hb + hc)),
+            foldl_add_extract (0 + (ha + (hb + hc)))]
+        have : (0 : ℤ) + (ha + hb + hc) = 0 + (ha + (hb + hc)) := by ring
+        rw [this]
+        congr 1
+        exact ih tb tc
+
+/-- zipWith (+) l (replicate l.length 0) = l. -/
+private theorem zipWith_add_replicate_zero_right (l : List ℤ) :
+    List.zipWith (· + ·) l (List.replicate l.length 0) = l := by
+  induction l with
+  | nil => rfl
+  | cons h t ih => simp [List.zipWith, List.replicate, ih]
+
+/-- zipWith (+) (replicate l.length 0) l = l. -/
+private theorem zipWith_add_replicate_zero_left (l : List ℤ) :
+    List.zipWith (· + ·) (List.replicate l.length 0) l = l := by
+  induction l with
+  | nil => rfl
+  | cons h t ih => simp [List.zipWith, List.replicate, ih]
+
+-- ── Axiom 5 theorems ───────────────────────────────────────────────
+
+/-- AXIOM 5: Transaction Composition is Associative (on commitment sums). -/
+theorem tx_compose_assoc_sum (t1 t2 t3 : Transaction) :
+    (tx_compose (tx_compose t1 t2) t3).commitment_sum =
+    (tx_compose t1 (tx_compose t2 t3)).commitment_sum := by
+  simp only [tx_compose, Transaction.commitment_sum]
+  exact zipWith_add_foldl_assoc _ _ _
+
+/-- Zero transaction with n zero-valued edges (identity element). -/
+def zero_tx_n (n : ℕ) : Transaction :=
+  { sender := 0
+  , recipient := 0
+  , key_image := 0
+  , commitment_edge_values := List.replicate n 0
+  , commitment_modulus := 12289
+  , topology_hash := 0 }
+
+/-- Right identity: composing t with zero_tx_n preserves commitment sum. -/
+theorem tx_compose_identity_right_sum (t : Transaction) :
+    (tx_compose t (zero_tx_n t.commitment_edge_values.length)).commitment_sum
+    = t.commitment_sum := by
+  simp only [tx_compose, zero_tx_n, Transaction.commitment_sum]
+  rw [zipWith_add_replicate_zero_right]
+
+/-- Left identity: composing zero_tx_n with t preserves commitment sum. -/
+theorem tx_compose_identity_left_sum (t : Transaction) :
+    (tx_compose (zero_tx_n t.commitment_edge_values.length) t).commitment_sum
+    = t.commitment_sum := by
+  simp only [tx_compose, zero_tx_n, Transaction.commitment_sum]
+  rw [zipWith_add_replicate_zero_left]
 
 
 -- ═══════════════════════════════════════════════════════════════════════
--- AXIOM 6: SYBIL RESISTANCE (from symmetry group analysis)
+-- AXIOM 6: SYBIL RESISTANCE
 -- ═══════════════════════════════════════════════════════════════════════
 
-/--
-  Quadratic weight function: w(v) = gap(v)².
-
-  Quadratic weighting is Sybil-resistant because splitting
-  a validator with gap λ into N copies each with gap λ/N gives:
-    total_after = N × (λ/N)² = λ²/N < λ² = weight_before
-
-  The inequality is strict for N > 1.
--/
 def quadratic_weight (gap : ℝ) : ℝ := gap ^ 2
 
-/--
-  AXIOM 6: Sybil Resistance under Quadratic Weighting.
-
-  Splitting a validator into N > 1 copies, each with gap λ/N,
-  gives strictly less total weight than the original.
-
-  This is the algebraic foundation of Sybil resistance in PoV:
-  you can't game the system by creating multiple weak validators
-  instead of one strong one.
--/
+/-- AXIOM 6: Sybil Resistance — splitting reduces total weight. -/
 theorem sybil_resistance (gap : ℝ) (N : ℕ) (hgap : 0 < gap) (hN : 1 < N) :
     (N : ℝ) * quadratic_weight (gap / N) < quadratic_weight gap := by
   simp [quadratic_weight]
-  rw [div_pow]
-  rw [mul_div_assoc']
-  have hN_pos : (0 : ℝ) < (N : ℝ) := by exact Nat.cast_pos'.mpr (by omega)
+  rw [div_pow, mul_div_assoc']
+  have hN_pos : (0 : ℝ) < (N : ℝ) := Nat.cast_pos'.mpr (by omega)
   have hN_sq_pos : (0 : ℝ) < (N : ℝ) ^ 2 := by positivity
-  rw [div_lt_iff hN_sq_pos]
-  calc (N : ℝ) * gap ^ 2 = (N : ℝ) * gap ^ 2 := rfl
-    _ < (N : ℝ) ^ 2 * gap ^ 2 := by
-        have : (N : ℝ) < (N : ℝ) ^ 2 := by
-          rw [sq]
-          have hN_gt_one : (1 : ℝ) < (N : ℝ) := by exact Nat.one_lt_cast.mpr hN
-          nlinarith
-        nlinarith [sq_nonneg gap]
+  have hN_gt_one : (1 : ℝ) < (N : ℝ) := Nat.one_lt_cast.mpr hN
+  have hgap_sq_pos : (0 : ℝ) < gap ^ 2 := by positivity
+  rw [div_lt_iff₀ hN_sq_pos]
+  -- Goal: ↑N * gap ^ 2 < gap ^ 2 * ↑N ^ 2
+  have hN_lt_sq : (N : ℝ) < (N : ℝ) ^ 2 := by
+    rw [sq]; exact lt_mul_of_one_lt_left hN_pos hN_gt_one
+  calc ↑N * gap ^ 2
+      < ↑N ^ 2 * gap ^ 2 := mul_lt_mul_of_pos_right hN_lt_sq hgap_sq_pos
+    _ = gap ^ 2 * ↑N ^ 2 := by ring
 
 
 -- ═══════════════════════════════════════════════════════════════════════
 -- DERIVED PROPERTIES
 -- ═══════════════════════════════════════════════════════════════════════
 
-/--
-  Valid chains have strictly increasing height.
-  Each block extends the chain by exactly 1.
--/
 theorem valid_chain_increasing (b : Block) (c : Chain) (h : ℕ)
     (hext : block_extends b c h) :
     b.height = chain_height c + 1 :=
   hext.2.2
 
-/--
-  Fork resolution is transitive: if C₁ > C₂ and C₂ > C₃, then C₁ > C₃.
-  This ensures a total ordering on valid chains (no cyclic preferences).
--/
 theorem fork_resolution_transitive (c1 c2 c3 : Chain)
     (h12 : preferred c1 c2) (h23 : preferred c2 c3) :
     preferred c1 c3 := by
   simp [preferred] at *
   linarith
 
-/--
-  Eligible validators must have connected topology.
-  Disconnected validators (β₀ > 1) cannot produce blocks.
-  This is a TOPOLOGICAL constraint, not just an economic one.
--/
 theorem eligible_implies_connected (v : Validator) (h : eligible v) :
     v.betti_0 = 1 :=
   h.2
-
-/--
-  Composition identity: composing with a zero-value transaction
-  preserves commitment value (identity element of the group).
--/
-def zero_tx : Transaction :=
-  { sender := 0, recipient := 0, key_image := 0, commitment_value := 0 }
-
-theorem tx_compose_identity_right (t : Transaction) :
-    (tx_compose t zero_tx).commitment_value = t.commitment_value := by
-  simp [tx_compose, zero_tx]
-
-theorem tx_compose_identity_left (t : Transaction) :
-    (tx_compose zero_tx t).commitment_value = t.commitment_value := by
-  simp [tx_compose, zero_tx]
 
 
 -- ═══════════════════════════════════════════════════════════════════════

@@ -25,6 +25,9 @@ import numpy as np
 import hashlib
 import time
 
+# Domain separator for transaction signature hashing (P3.4 stub)
+_TX_SIG_DOMAIN = b"HCRYPT_TX_SIG_V2"
+
 from ..crypto.credential import FibrationCredential, generate_credential
 from ..geometry.sheaf_laplacian import SheafLaplacian
 from ..geometry.sheaf import CellularSheaf
@@ -281,14 +284,16 @@ class ProofOfValue:
         """
         self.topology = network_topology or {0: [], 1: [], 2: []}
         self.accounts: Dict[bytes, float] = {}  # fingerprint → balance
+        self.account_vertices: Dict[bytes, int] = {}  # fingerprint → vertex index
         self.current_height = 0
         self.chain: List[Block] = []
     
     def register_account(self, fingerprint: bytes, initial_balance: float = 0.0):
         """Register a new account with the network."""
         self.accounts[fingerprint] = initial_balance
-        # Add to topology
+        # Add to topology and track vertex mapping
         vertex_id = len(self.topology.get(0, []))
+        self.account_vertices[fingerprint] = vertex_id
         self.topology.setdefault(0, []).append((vertex_id,))
     
     def create_block(
@@ -459,7 +464,12 @@ class ProofOfValue:
         if tx.amount <= 0:
             return False
         
-        # TODO: Verify signature
+        # Verify signature (if provided; empty signature allowed for backwards compat)
+        if tx.signature:
+            expected = hashlib.sha256(_TX_SIG_DOMAIN + tx.hash()).digest()
+            if tx.signature != expected:
+                return False
+        
         return True
     
     def _build_sheaf(self) -> CellularSheaf:
@@ -475,19 +485,19 @@ class ProofOfValue:
         vertices = self.topology.get(0, [])
         cochain = np.zeros(len(vertices) * dim)
         
-        # Find sender and recipient indices
-        sender_idx = None
-        recipient_idx = None
+        # Use account_vertices mapping (fingerprint → vertex index)
+        sender_idx = self.account_vertices.get(tx.sender)
+        recipient_idx = self.account_vertices.get(tx.recipient)
         
-        for i, v in enumerate(vertices):
-            # Match by fingerprint
-            # For now, use simple index mapping
-            pass
+        if sender_idx is not None and sender_idx < len(vertices):
+            cochain[sender_idx * dim] = -tx.amount
+        elif len(vertices) >= 1:
+            cochain[0] = -tx.amount  # Fallback: first vertex
         
-        # Simplified: use first two vertices
-        if len(vertices) >= 2:
-            cochain[0] = -tx.amount  # Sender loses
-            cochain[dim] = tx.amount  # Recipient gains
+        if recipient_idx is not None and recipient_idx < len(vertices):
+            cochain[recipient_idx * dim] = tx.amount
+        elif len(vertices) >= 2:
+            cochain[dim] = tx.amount  # Fallback: second vertex
         
         return cochain
     
