@@ -3,6 +3,7 @@ import Axioms.Consensus
 import Axioms.CochainCommitment
 import Axioms.Coregulator
 import Axioms.Grassmannian
+import Axioms.SheafCoherence
 import Axioms.Ledger
 import Axioms.ZKP
 import Axioms.HelferFOL

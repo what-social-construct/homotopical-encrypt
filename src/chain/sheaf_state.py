@@ -400,6 +400,25 @@ class SpectralCache:
         self.topology_hash = None
 
 
+@dataclass
+class NerveStateSnapshot:
+    """
+    Canonical Layer-1 statebus snapshot for topology commitments.
+
+    This is the SHA256-layer unifier for all topology consumers:
+    - chain headers (`nerve_commitment`)
+    - oracle-bound requests (`topology_hash` consistency)
+    - cross-module verification (consensus / storage / proofs)
+    """
+    nerve: Dict[int, List[Tuple]]
+    canonical_payload: Dict[str, List[List[int]]]
+    topology_hash: bytes
+
+    @property
+    def topology_hash_hex(self) -> str:
+        return self.topology_hash.hex()
+
+
 # =============================================================================
 # UNIFIED SHEAF STATE
 # =============================================================================
@@ -473,8 +492,8 @@ class SheafState:
         Vertices = accounts
         Edges = connections between accounts
         """
-        # Build vertex list
-        fingerprints = list(self.accounts.keys())
+        # Build vertex list (canonical order for deterministic SHA256 commitment)
+        fingerprints = sorted(self.accounts.keys())
         fp_to_idx = {fp: i for i, fp in enumerate(fingerprints)}
         
         vertices = [(i,) for i in range(len(fingerprints))]
@@ -484,26 +503,85 @@ class SheafState:
         seen_edges = set()
         
         for fp, account in self.accounts.items():
-            for connected_fp in account.connected_to:
+            # Sort neighbor traversal so edge insertion order is deterministic
+            for connected_fp in sorted(account.connected_to):
                 if connected_fp in fp_to_idx:
                     i, j = fp_to_idx[fp], fp_to_idx[connected_fp]
                     edge = tuple(sorted([i, j]))
                     if edge not in seen_edges:
                         edges.append(edge)
                         seen_edges.add(edge)
+
+        edges.sort()
         
         return {
             0: vertices,
             1: edges,
             2: []  # No 2-cells for now
         }
+
+    @staticmethod
+    def _canonical_nerve_payload(nerve: Dict[int, List[Tuple]]) -> Dict[str, List[List[int]]]:
+        """
+        Canonical JSON-safe nerve payload for Layer-1 SHA256 commitment.
+
+        Why this exists:
+        - Layer 1 (hash projection) should be the statebus unifier.
+        - `topology_hash` must be byte-for-byte deterministic across nodes.
+        - Python container iteration order must not affect commitments.
+
+        Output format is canonicalized by:
+        1) string dimension keys sorted lexicographically,
+        2) simplex vertex IDs sorted within each simplex,
+        3) duplicate simplices removed,
+        4) simplex list sorted globally.
+        """
+        canonical: Dict[str, List[List[int]]] = {}
+        for dim in sorted(nerve.keys()):
+            simplices = []
+            for simplex in nerve.get(dim, []):
+                vals = tuple(int(v) for v in simplex)
+                if len(vals) > 1:
+                    vals = tuple(sorted(vals))
+                simplices.append(vals)
+
+            unique_sorted = sorted(set(simplices))
+            canonical[str(int(dim))] = [list(s) for s in unique_sorted]
+
+        return canonical
+
+    @classmethod
+    def topology_hash_from_nerve(cls, nerve: Dict[int, List[Tuple]]) -> bytes:
+        """Compute canonical Layer-1 SHA256 commitment for a given nerve."""
+        canonical = cls._canonical_nerve_payload(nerve)
+        encoded = json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()
+        return hashlib.sha256(encoded).digest()
+
+    @classmethod
+    def verify_topology_hash(cls, nerve: Dict[int, List[Tuple]], expected_hash: bytes) -> bool:
+        """Verify a nerve against an expected Layer-1 topology hash."""
+        return cls.topology_hash_from_nerve(nerve) == expected_hash
+
+    def get_nerve_state_snapshot(self) -> NerveStateSnapshot:
+        """
+        Export canonical statebus snapshot for topology.
+
+        This is the unifying payload for SHA256-layer commitments used by
+        storage, oracle-bound requests, and cross-module verification.
+        """
+        nerve = self.compute_topology()
+        canonical = self._canonical_nerve_payload(nerve)
+        topo_hash = self.topology_hash_from_nerve(nerve)
+        return NerveStateSnapshot(
+            nerve=nerve,
+            canonical_payload=canonical,
+            topology_hash=topo_hash,
+        )
     
     def topology_hash(self) -> bytes:
         """Hash of current topology (for cache invalidation)."""
         nerve = self.compute_topology()
-        return hashlib.sha256(
-            json.dumps(nerve, sort_keys=True).encode()
-        ).digest()
+        return self.topology_hash_from_nerve(nerve)
     
     # =========================================================================
     # SPECTRAL OPERATIONS
@@ -661,7 +739,7 @@ class SheafState:
         bundle = StalkBundle(PUBLIC_STALK)
         
         # Map fingerprints to vertex IDs for stalks
-        fingerprints = list(self.accounts.keys())
+        fingerprints = sorted(self.accounts.keys())
         
         for i, fp in enumerate(fingerprints):
             account = self.accounts[fp]
@@ -786,7 +864,7 @@ class SheafState:
             laplacian[j, i] -= 1
         
         # Get vertex ID for this account
-        fingerprints = list(self.accounts.keys())
+        fingerprints = sorted(self.accounts.keys())
         vertex_id = fingerprints.index(fingerprint)
         
         # Python computes everything: eigenvalues, Hodge projection, commitment
@@ -987,7 +1065,8 @@ class SheafState:
         # 6. Store block header with nerve commitment (Layer 1: chain structure)
         #    The nerve_commitment links Layer 1 → nerve topology → Layer 2
         block_hash = block.block_hash()
-        nerve_commitment = self.topology_hash() if new_edges > 0 or not self.block_headers else self.topology_hash()
+        snapshot = self.get_nerve_state_snapshot()
+        nerve_commitment = snapshot.topology_hash
         self.block_headers[block_hash] = {
             'height': block.header.height,
             'prev_hash': block.header.prev_hash,

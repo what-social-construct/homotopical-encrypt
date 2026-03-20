@@ -251,6 +251,51 @@ def test_sheaf_state_hash_commitments():
     assert state.verify_commitment(fp, c)
 
 
+def test_sheaf_state_statebus_snapshot_sha256_unifier():
+    """
+    Layer-1 statebus unifier: canonical nerve snapshot + deterministic hash.
+
+    Verifies:
+    - snapshot exports raw nerve + canonical payload + topology hash
+    - topology hash is stable/deterministic
+    - verify_topology_hash round-trips
+    - insertion order of accounts/connections does not change hash
+    """
+    from src.chain.sheaf_state import SheafState
+
+    fp_a = hashlib.sha256(b"A").digest()
+    fp_b = hashlib.sha256(b"B").digest()
+    fp_c = hashlib.sha256(b"C").digest()
+    hclass = hashlib.sha256(b"class").digest()
+
+    # Build state in one insertion order
+    s1 = SheafState()
+    s1.add_account(fp_b, hclass, 10.0)
+    s1.add_account(fp_a, hclass, 10.0)
+    s1.add_account(fp_c, hclass, 10.0)
+    s1.add_connection(fp_a, fp_b)
+    s1.add_connection(fp_c, fp_b)
+
+    snap1 = s1.get_nerve_state_snapshot()
+    assert isinstance(snap1.canonical_payload, dict)
+    assert len(snap1.topology_hash) == 32
+    assert s1.verify_topology_hash(snap1.nerve, snap1.topology_hash)
+
+    # Build semantically identical state in different insertion order
+    s2 = SheafState()
+    s2.add_account(fp_c, hclass, 10.0)
+    s2.add_account(fp_a, hclass, 10.0)
+    s2.add_account(fp_b, hclass, 10.0)
+    s2.add_connection(fp_b, fp_c)
+    s2.add_connection(fp_b, fp_a)
+
+    snap2 = s2.get_nerve_state_snapshot()
+
+    assert snap1.canonical_payload == snap2.canonical_payload
+    assert snap1.topology_hash == snap2.topology_hash
+    assert s2.topology_hash() == snap2.topology_hash
+
+
 # =============================================================================
 # 3. ANONYMITY PROOF ROUND-TRIP
 # =============================================================================

@@ -220,7 +220,7 @@ theorem foundation_implies_binding_preconditions (F : Foundation) :
     FoundationWellFormed F →
     F.CochainComplex ∧ F.LaplacianFromCoboundary := by
   intro h
-  exact ⟨h.1, h.2.1⟩
+  exact ⟨h.1, h.2.2.1⟩
 
 /--
   Homomorphic addition implies balance preservation.
@@ -233,7 +233,7 @@ theorem homomorphic_implies_balance_law
     (C : CochainCommitmentAxioms)
     (hC : CochainCommitmentWellFormed C) :
     C.HomomorphicAddition := by
-  exact hC.2.1
+  exact hC.2.2.1
 
 /--
   Canonical CochainCommitmentAxioms instance derived from Foundation
@@ -243,7 +243,7 @@ theorem homomorphic_implies_balance_law
   axioms to the Hodge-CVP reduction in Hardness.lean.
 -/
 def CochainCommitmentFromFoundation
-    (F : Foundation) (hF : FoundationWellFormed F)
+    (F : Foundation) (_hF : FoundationWellFormed F)
     (hBinding : Prop) (hHiding : Prop) (hPartial : Prop) :
     CochainCommitmentAxioms where
   Binding := hBinding

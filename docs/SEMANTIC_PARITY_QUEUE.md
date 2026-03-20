@@ -180,6 +180,26 @@ that fails on legacy filenames.
     and `mul_lt_mul_of_pos_right` (replacing failed `nlinarith`).
   - 0 `sorry`, 0 Lean errors. All 6 chain axioms + derived properties proved.
 
+### R14. Dedicated Lean sheaf coherence module (separation of concerns)
+- **Was:** Sheaf-coherence assumptions (restriction compatibility, triangle
+  commutativity, cochain/Laplacian coherence) were spread conceptually across
+  `Foundation.lean` and `Grassmannian.lean` without a dedicated contract file.
+- **Fix:** Added `lean/Axioms/SheafCoherence.lean` and imported it in
+  `lean/Axioms.lean`.
+  - Introduces dedicated contracts:
+    - `RestrictionShapeCompatibility`
+    - `EdgeNaturality`
+    - `TriangleFaceCommutativity`
+    - `SheafCochainComplex` (δ₁ ∘ δ₀ = 0)
+    - `HodgeCoherence` (Δ from coboundary + orthogonality)
+    - `FiniteSimplicialNerve`
+    - bundled `SheafCoherence` + `SheafCoherenceWellFormed`
+  - Adds bridge theorem:
+    `coherence_implies_structural_preconditions`.
+  - Runtime mapping called out to:
+    `src/invariants/cohomology.py` and `src/invariants/unified.py`.
+  - Keeps `Grassmannian.lean` focused on manifold/metric geometry only.
+
 ---
 
 ## Priority 1 — Consensus Semantics
