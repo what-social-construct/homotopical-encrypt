@@ -160,6 +160,137 @@ def block_extends (b : Block) (c : Chain) (tip_hash : ℕ) : Prop :=
 
 
 -- ═══════════════════════════════════════════════════════════════════════
+-- VALIDATION BOUNDARY: ABSTRACT LEDGER / RUNTIME SPEC
+-- ═══════════════════════════════════════════════════════════════════════
+
+/--
+Abstract transaction shape expected by the consensus path.
+
+Lean specifies the invariant; Rust owns byte parsing, canonical encodings, size
+limits, and signature/proof verification before presenting a transaction at
+this level.
+-/
+def TransactionWellFormed (tx : Transaction) : Prop :=
+  tx.commitment_modulus > 1 ∧ tx.commitment_edge_values.length > 0
+
+/-- A transaction is fresh relative to the already-spent key-image set. -/
+def TransactionFresh (spent_key_images : Set ℕ) (tx : Transaction) : Prop :=
+  tx.key_image ∉ spent_key_images
+
+/--
+Consensus-level transaction acceptance.
+
+This is intentionally abstract: runtime details such as byte decoding,
+signature checks, proof transcript validation, and allocation bounds live in
+Rust. Lean records the mathematical/state facts Rust must enforce.
+-/
+def TransactionAccepted (spent_key_images : Set ℕ) (tx : Transaction) : Prop :=
+  TransactionWellFormed tx ∧ TransactionFresh spent_key_images tx
+
+/-- Every transaction in the block has the abstract well-formed shape. -/
+def BlockWellFormed (b : Block) : Prop :=
+  ∀ tx ∈ b.transactions, TransactionWellFormed tx
+
+/-- No transaction in the block spends a previously-spent key image. -/
+def BlockFreshAgainst (spent_key_images : Set ℕ) (b : Block) : Prop :=
+  ∀ tx ∈ b.transactions, TransactionFresh spent_key_images tx
+
+/--
+Consensus-level block acceptance.
+
+`block_valid` captures the existing PoV/geometric block predicate. The extra
+fields isolate the runtime/state boundary: every transaction has acceptable
+shape and every key image is fresh relative to prior ledger state.
+-/
+def BlockAccepted (spent_key_images : Set ℕ) (b : Block) : Prop :=
+  block_valid b ∧ BlockWellFormed b ∧ BlockFreshAgainst spent_key_images b
+
+/--
+Abstract ledger state used by preservation theorems.
+
+The deployed Rust state contains storage indexes, account balances, roots, and
+database metadata. Lean keeps only the parts needed for mathematical
+state-transition invariants.
+-/
+structure LedgerState where
+  spent_key_images : Set ℕ
+  blocks : List Block
+
+/-- The set of key images spent by a block. -/
+def Block.keyImageSet (b : Block) : Set ℕ :=
+  {ki | ∃ tx ∈ b.transactions, tx.key_image = ki}
+
+/-- Apply one accepted transaction at the abstract ledger level. -/
+def LedgerState.applyTransaction (s : LedgerState) (tx : Transaction) : LedgerState :=
+  { s with spent_key_images := Set.insert tx.key_image s.spent_key_images }
+
+/-- Apply one accepted block at the abstract ledger level. -/
+def LedgerState.applyBlock (s : LedgerState) (b : Block) : LedgerState :=
+  { spent_key_images := s.spent_key_images ∪ b.keyImageSet
+  , blocks := b :: s.blocks }
+
+/-- Applying a transaction records its key image as spent. -/
+theorem applyTransaction_marks_key_image (s : LedgerState) (tx : Transaction) :
+    tx.key_image ∈ (s.applyTransaction tx).spent_key_images := by
+  change tx.key_image ∈ Set.insert tx.key_image s.spent_key_images
+  exact Set.mem_insert tx.key_image s.spent_key_images
+
+/-- Applying a transaction preserves all previously-spent key images. -/
+theorem applyTransaction_preserves_spent
+    (s : LedgerState) (tx : Transaction) {ki : ℕ}
+    (hki : ki ∈ s.spent_key_images) :
+    ki ∈ (s.applyTransaction tx).spent_key_images := by
+  change ki ∈ Set.insert tx.key_image s.spent_key_images
+  exact Set.mem_insert_of_mem tx.key_image hki
+
+/-- Accepted transactions are fresh relative to the previous ledger state. -/
+theorem acceptedTransaction_key_image_fresh
+    {s : LedgerState} {tx : Transaction}
+    (hacc : TransactionAccepted s.spent_key_images tx) :
+    tx.key_image ∉ s.spent_key_images := by
+  exact hacc.2
+
+/-- Accepted blocks satisfy the original PoV/geometric validity predicate. -/
+theorem blockAccepted_valid
+    {spent_key_images : Set ℕ} {b : Block}
+    (hacc : BlockAccepted spent_key_images b) :
+    block_valid b := by
+  exact hacc.1
+
+/-- Accepted blocks have pairwise-fresh key images internally. -/
+theorem blockAccepted_key_images_fresh
+    {spent_key_images : Set ℕ} {b : Block}
+    (hacc : BlockAccepted spent_key_images b) :
+    key_images_fresh b.transactions := by
+  rcases hacc.1 with ⟨_, _, hfresh, _⟩
+  exact hfresh
+
+/-- Accepted blocks spend no key image that was already present in ledger state. -/
+theorem blockAccepted_tx_not_previously_spent
+    {s : LedgerState} {b : Block} {tx : Transaction}
+    (hacc : BlockAccepted s.spent_key_images b)
+    (htx : tx ∈ b.transactions) :
+    tx.key_image ∉ s.spent_key_images := by
+  exact hacc.2.2 tx htx
+
+/-- Applying a block records every transaction key image in that block. -/
+theorem applyBlock_marks_tx_key_image
+    (s : LedgerState) (b : Block) {tx : Transaction}
+    (htx : tx ∈ b.transactions) :
+    tx.key_image ∈ (s.applyBlock b).spent_key_images := by
+  simp [LedgerState.applyBlock, Block.keyImageSet]
+  exact Or.inr ⟨tx, htx, rfl⟩
+
+/-- Applying a block preserves all previously-spent key images. -/
+theorem applyBlock_preserves_spent
+    (s : LedgerState) (b : Block) {ki : ℕ}
+    (hki : ki ∈ s.spent_key_images) :
+    ki ∈ (s.applyBlock b).spent_key_images := by
+  simp [LedgerState.applyBlock]
+  exact Or.inl hki
+
+
+-- ═══════════════════════════════════════════════════════════════════════
 -- AXIOM 3: PoV SELECTION
 -- ═══════════════════════════════════════════════════════════════════════
 
@@ -333,7 +464,9 @@ theorem eligible_implies_connected (v : Validator) (h : eligible v) :
 
   Axiom 1 (block validity):
     spectral_gap is unforgeable because computing it requires
-    the secret Laplacian (Hodge_Strictly_Harder in Hardness.lean).
+    the secret Laplacian / hidden kernel
+    (KernelAmbiguous and CVP_Oracle_Insufficient_For_Public_Hodge_Solving
+    in Hardness.lean).
 
   Axiom 3 (PoV selection):
     VRF unpredictability + spectral gap unforgeable →

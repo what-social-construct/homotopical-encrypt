@@ -204,8 +204,10 @@ def compute_dynamic_fee(
     # Gap stress: how far from healthy (1.0)
     gap_stress = abs(spectral_gap - 1.0)
     # Near bounds = much higher stress
-    if spectral_gap < POV_LOWER * 1.2 or spectral_gap > POV_UPPER * 0.8:
-        gap_stress *= 2.0  # Double penalty near bounds
+    from ...proofs.spectral_bounds import gap_in_bounds, GapStatus
+    gap_status = gap_in_bounds(spectral_gap)
+    if gap_status in (GapStatus.MARGINAL, GapStatus.INVALID):
+        gap_stress *= 2.0  # Double penalty near/outside bounds
 
     # Pool imbalance: abs(ratio - 0.5) / 0.5
     total = reserve_hcrypt + reserve_vhcrypt

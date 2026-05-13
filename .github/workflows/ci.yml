@@ -99,12 +99,12 @@ jobs:
       - name: Build Lean proofs
         working-directory: lean
         run: lake build
-        continue-on-error: true  # Lean proofs may need Mathlib — allow soft failure for now
+        # HARD GATE: Lean proofs must build. If Mathlib is missing, fix lakefile.lean.
 
   # ─── Integration ─────────────────────────────────────────────
   integration:
     name: Integration check
-    needs: [rust, python]
+    needs: [rust, python, lean]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -127,5 +127,5 @@ jobs:
           echo "║                                      ║"
           echo "║  Rust:   cargo test (workspace)      ║"
           echo "║  Python: 3 modules + constants       ║"
-          echo "║  Lean:   lake build (soft)            ║"
+          echo "║  Lean:   lake build (HARD gate)       ║"
           echo "╚══════════════════════════════════════╝"

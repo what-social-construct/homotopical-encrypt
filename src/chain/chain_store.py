@@ -86,9 +86,7 @@ class BlockStore:
         with open(path, 'rb') as f:
             block_bytes = f.read()
         
-        # TODO: Deserialize block (need Block.deserialize())
-        # For now, return None - deserialization TBD
-        return None
+        return Block.deserialize(block_bytes)
     
     def get_block_hash(self, height: int) -> Optional[bytes]:
         """Get block hash by height from index."""

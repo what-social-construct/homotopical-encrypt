@@ -126,7 +126,12 @@ impl ToposVerifier {
         }
 
         // ─── Gate 2: Cochain root ──────────────────────────────────
-        let computed_root = block.compute_cochain_root();
+        let computed_root = match block.try_compute_cochain_root() {
+            Ok(root) => root,
+            Err(err) => {
+                return self.invalid(betti, format!("Invalid cochain commitment: {err}"));
+            }
+        };
         let cochain_root_valid = computed_root == block.header.cochain_root;
         if !cochain_root_valid {
             return self.invalid(betti, "Cochain root mismatch".into());

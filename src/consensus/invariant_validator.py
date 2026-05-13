@@ -147,10 +147,10 @@ class InvariantValidator:
         
         # 1. SPECTRAL_BOUND
         if spectral_gap > 0:
-            if spectral_gap < POV_LOWER:
-                violations.append(f"SPECTRAL_BOUND: gap {spectral_gap:.4f} < {POV_LOWER:.4f}")
-            if spectral_gap > POV_UPPER:
-                violations.append(f"SPECTRAL_BOUND: gap {spectral_gap:.4f} > {POV_UPPER:.4f}")
+            from ..proofs.spectral_bounds import gap_in_bounds, GapStatus
+            gap_status = gap_in_bounds(spectral_gap)
+            if gap_status == GapStatus.INVALID:
+                violations.append(f"SPECTRAL_BOUND: gap {spectral_gap:.4f} out of bounds (pre-flight)")
         
         # 2. CONSERVATION (after transactions)
         total_after = sum(accounts.values())
@@ -199,8 +199,9 @@ class InvariantValidator:
         
         # 1. SPECTRAL_BOUND
         if spectral_gap > 0:
-            if not (POV_LOWER <= spectral_gap <= POV_UPPER):
-                violations.append(f"SPECTRAL_BOUND: {spectral_gap:.4f} out of bounds")
+            from ..proofs.spectral_bounds import gap_in_bounds
+            if gap_in_bounds(spectral_gap) == GapStatus.INVALID:
+                violations.append(f"SPECTRAL_BOUND: {spectral_gap:.4f} out of bounds (pre-flight)")
         
         # 2. CONSERVATION
         total = sum(accounts.values())

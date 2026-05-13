@@ -179,3 +179,7 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Lean/Lake local build artifacts and dependency cache
+lean/.lake/build/
+lean/.lake/packages/

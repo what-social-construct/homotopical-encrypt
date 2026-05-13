@@ -281,8 +281,9 @@ def prove_class_membership(
     nonzero_eigs = secret_eigs[secret_eigs > 1e-10]
     gap = float(nonzero_eigs[0]) if len(nonzero_eigs) > 0 else 0.0
     
-    if not (POV_LOWER <= gap <= POV_UPPER):
-        return (None, False, f"Gap {gap:.4f} outside √2 bounds [{POV_LOWER:.3f}, {POV_UPPER:.3f}]")
+    from .spectral_bounds import gap_in_bounds_strict
+    if not gap_in_bounds_strict(gap):
+        return (None, False, f"Gap {gap:.4f} outside √2 bounds (pre-flight rejected)")
     
     # Kernel dimension ≥ 1 (needed for harmonic embedding)
     kernel_dim = int(np.sum(np.abs(secret_eigs) < 1e-10))
@@ -433,9 +434,10 @@ def verify_class_membership(
     if z_norm >= rejection_bound:
         return (False, f"Response too large: ||z|| = {z_norm:.1f} >= {rejection_bound:.1f}")
     
-    # 6. Check spectral gap in √2 bounds
-    if not (POV_LOWER <= proof.spectral_gap <= POV_UPPER):
-        return (False, f"Gap {proof.spectral_gap:.4f} outside √2 bounds")
+    # 6. Check spectral gap in √2 bounds (canonical pre-flight)
+    from .spectral_bounds import gap_in_bounds_strict
+    if not gap_in_bounds_strict(proof.spectral_gap):
+        return (False, f"Gap {proof.spectral_gap:.4f} outside √2 bounds (pre-flight rejected)")
     
     # 7. Check harmonic dimension is positive
     if proof.harmonic_dim < 1:

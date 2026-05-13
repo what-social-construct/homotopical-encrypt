@@ -59,9 +59,11 @@ theorem transaction_bundle_of_wellformed
   ConsensusWellFormed C →
   TransactionCriticalInvariantBundle F C := by
   intro hF hC
-  rcases hF with ⟨h₁, h₂, h₃, h₄⟩
-  rcases hC with ⟨h₅, h₆, h₇, h₈, h₉⟩
-  exact ⟨h₁, h₂, h₃, h₄, h₅, h₆, h₇, h₈, h₉⟩
+  rcases hF with ⟨hCochain, _hLinear, hLaplacian, hHodge, hOrtho,
+    _hBinding, _hHiding, _hHomomorphic⟩
+  rcases hC with ⟨hSpectral, hConnected, hFresh, hBalance, hTopos⟩
+  exact ⟨hCochain, hLaplacian, hHodge, hOrtho,
+    hSpectral, hConnected, hFresh, hBalance, hTopos⟩
 
 /-- Canonical stage admissibility record induced by the current assumption layer. -/
 def StageAdmissibilityFromAxioms (F : Foundation) (C : Consensus) : StageAdmissibility :=

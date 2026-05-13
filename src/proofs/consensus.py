@@ -118,10 +118,10 @@ class InvariantValidator:
         
         # 1. SPECTRAL_BOUND
         if spectral_gap > 0:
-            if spectral_gap < LOWER_BOUND:
-                violations.append(f"SPECTRAL_BOUND: gap {spectral_gap:.4f} < {LOWER_BOUND:.4f}")
-            if spectral_gap > UPPER_BOUND:
-                violations.append(f"SPECTRAL_BOUND: gap {spectral_gap:.4f} > {UPPER_BOUND:.4f}")
+            from .spectral_bounds import gap_in_bounds, GapStatus
+            gap_status = gap_in_bounds(spectral_gap)
+            if gap_status == GapStatus.INVALID:
+                violations.append(f"SPECTRAL_BOUND: gap {spectral_gap:.4f} out of bounds (pre-flight)")
         
         # 2. CONSERVATION (after transactions)
         total_after = sum(accounts.values())
@@ -157,8 +157,9 @@ class InvariantValidator:
         
         # 1. SPECTRAL_BOUND
         if block.spectral_gap > 0:
-            if not (LOWER_BOUND <= block.spectral_gap <= UPPER_BOUND):
-                violations.append(f"SPECTRAL_BOUND: {block.spectral_gap:.4f} out of bounds")
+            from .spectral_bounds import gap_in_bounds, GapStatus
+            if gap_in_bounds(block.spectral_gap) == GapStatus.INVALID:
+                violations.append(f"SPECTRAL_BOUND: {block.spectral_gap:.4f} out of bounds (pre-flight)")
         
         # 2. CONSERVATION
         total = sum(accounts.values())
@@ -336,11 +337,12 @@ class ProofOfValue:
         nonzero = eigenvalues[eigenvalues > 1e-10]
         spectral_gap = float(nonzero[0]) if len(nonzero) > 0 else 0.0
         
-        # 6. Check √2 bounds
-        if spectral_gap > 0 and not (LOWER_BOUND < spectral_gap < UPPER_BOUND):
+        # 6. Check √2 bounds (canonical pre-flight)
+        from .spectral_bounds import gap_in_bounds, GapStatus
+        if spectral_gap > 0 and gap_in_bounds(spectral_gap) == GapStatus.INVALID:
             # Spectral gap outside bounds - try to adjust topology
             # For now, just warn
-            print(f"Warning: Spectral gap {spectral_gap} outside bounds [{LOWER_BOUND}, {UPPER_BOUND}]")
+            print(f"Warning: Spectral gap {spectral_gap} outside √2 bounds (pre-flight INVALID)")
         
         # 7. Create proof
         proof = self._create_proof(harmonic, eigenvalues, producer_credential)

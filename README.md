@@ -2,6 +2,9 @@
 
 **Layer 1 Privacy Blockchain with Post-Quantum Geometric Encryption**
 
+This root README is the project landing page. For the documentation index, see
+[docs/README.md](docs/README.md).
+
 > *Quantum-resistant* (resists Shor's algorithm), not *quantum encryption* (no qubits required). Security derives from geometric lattice hardness (CVP on sheaf cochains).
 
 ## The Hard Problem Is Not Binary
@@ -36,14 +39,15 @@ Even at the simplest level (scalar stalks, dim=1), the coboundary δ is a **sign
 
 2. **Intuitionistic, not classical.** Helfer (Thm 12.3) proves the fibration's internal logic is **not binary**: ¬¬P → P fails for open formulas. Credential identity has three states — *equivalent*, *distinct*, or *undetermined*. A classical attacker must resolve every query to true/false, but the fibration admits genuinely undetermined states without the parallel transport secret. Privacy is structural, not computational.
 
-3. **Formally verified strict hierarchy.** The Lean proof (`hardness_proof.lean`, verified by Aristotle/Harmonic) establishes:
+3. **Machine-checked hidden-operator hierarchy.** The current Lean workspace (`lean/CVP.lean`, `lean/Hardness.lean`, with support from `lean/Laplacian.lean` and `lean/Axioms/HomotopyClass.lean`) establishes:
    - `Hodge_Ambiguity`: same public cochain b is harmonic for Δ₁ but not Δ₂ — the fibration producing Δ is the secret
-   - `Hodge_Strictly_Harder`: a CVP oracle (which operates on a *fixed, known* lattice) is provably insufficient — the lattice itself is unknown because the fibration is unknown
-   - `Spectrum_Not_Homotopy_Invariant`: two fibrations with identical Betti numbers can produce completely different Laplacian spectra
+   - `PublicCompatibleHodgeAmbiguity` and `KernelAmbiguous`: the same public fingerprint/class can contain hidden operators with different harmonic kernels, so the public data does not present one canonical lattice
+   - `CVP_Oracle_Insufficient_For_Public_Hodge_Solving`: a CVP oracle on a *fixed, known* lattice is insufficient in the hidden-operator model — the operative lattice is unknown because the fibration is unknown
+   - `Spectrum_Not_Homotopy_Invariant` (`lean/Laplacian.lean`): two fibrations with identical Betti numbers can produce completely different Laplacian spectra
 
-> **In short:** standard lattice crypto hides a vector in a known lattice. We hide a vector in an *unknown* lattice defined by an unknown fibration whose restriction maps are continuous-valued orthogonal matrices. The attacker doesn't know the lattice, doesn't know the operator, and can't determine either from the public data. The Lean proof shows this is strictly harder than CVP.
+> **In short:** standard lattice crypto hides a vector in a known lattice. We hide a vector in an *unknown* lattice defined by an unknown fibration whose restriction maps are continuous-valued orthogonal matrices. The attacker doesn't know the lattice, doesn't know the operator, and can't determine either from the public data. In the Lean hidden-operator model, this is the formal strictness claim: known-lattice CVP is only the projected problem; it does not solve the representative-identification step or recover the hidden Hodge kernel.
 
-**Security note (SHA‑256 vs Hodge‑hardness):** SHA‑256 is only used for *public commitments and indexing* (topology hashes, identity hashes). It never protects the ciphertext itself. The encryption hardness comes from the hidden orthogonal basis **U** that defines `ker(Δ)`: an attacker sees `b = h + e` but does not know which subspace is harmonic. Recovering `h` without `U` is the Hodge problem, which the Lean proofs show is **strictly harder than CVP**. Even if SHA‑256 were weakened, the core encryption hardness still rests on the unknown fibration / Grassmannian ambiguity.
+**Security note (SHA‑256 vs Hodge‑hardness):** SHA‑256 is only used for *public commitments and indexing* (topology hashes, identity hashes). It never protects the ciphertext itself. The encryption hardness comes from the hidden orthogonal basis **U** that defines `ker(Δ)`: an attacker sees `b = h + e` but does not know which subspace is harmonic. Recovering `h` without `U` is the Hodge problem; in the Lean hidden-operator model, a known-lattice CVP oracle is insufficient because the operative lattice is not public. Even if SHA‑256 were weakened, the core encryption hardness still rests on the unknown fibration / Grassmannian ambiguity.
 
 ---
 
@@ -312,13 +316,13 @@ Homotopical Encrypt uses **homotopy class membership**: prove you know *some* fi
 | Amounts hidden | RingCT (Pedersen commitments) | Cochain commitments (δ-homomorphic) |
 | Double-spend | Key images | Key images (same concept, geometric construction) |
 | Security parameter | Ring size N | Spectral gap λ₁ of sheaf Laplacian Δ |
-| Formal verification | None | `hardness_proof.lean` (Hodge → CVP, strictly harder) |
+| Formal verification | None | `lean/Hardness.lean` + `lean/Laplacian.lean` (Hodge/CVP relation, hidden-operator insufficiency) |
 
 ### Fibration Fingerprint
 
 The **public identity** is a `HomotopyClassFingerprint` — a composite of spectral, cohomological, and homotopical invariants (see `invariants/unified.py`). Two fibrations are in the same homotopy class when *all* matched invariants agree. The fingerprint is PUBLIC — anyone can verify it. But the fibration itself (the Laplacian Δ, the restriction maps, the Hodge decomposition) is SECRET.
 
-> **Note:** Bare spectral fingerprints (eigenvalues alone) are *finer* than homotopy class — two fibrations can share Betti numbers but have different spectra (`Spectrum_Not_Homotopy_Invariant` in `math_audit_hcrypt.lean`). The system uses the full unified fingerprint to characterize the homotopy class itself, not just the isospectral set.
+> **Note:** Bare spectral fingerprints (eigenvalues alone) are *finer* than homotopy class — two fibrations can share Betti numbers but have different spectra (`Spectrum_Not_Homotopy_Invariant` in `lean/Laplacian.lean`). The system uses the full unified fingerprint to characterize the homotopy class itself, not just the isospectral set.
 
 ```
                     ┌──────────────────────────────────────────┐
@@ -581,13 +585,13 @@ hcrypt replaces ring signatures with **homotopy class membership**: you prove yo
 | Metadata leakage | Decoy selection patterns | No decoys → no selection metadata |
 | Amounts hidden | RingCT (Pedersen commitments) | Cochain commitments (δ-homomorphic) |
 | Double-spend | Key images | Key images (same concept, geometric construction) |
-| Formal verification | None | `hardness_proof.lean` (Hodge → CVP, strictly harder) |
+| Formal verification | None | `lean/Hardness.lean` + `lean/Laplacian.lean` (Hodge/CVP relation, hidden-operator insufficiency) |
 
 ### vs Cardano / Ouroboros (Consensus)
 
 Cardano's **Ouroboros** is a provably-secure Proof of Stake protocol: time is divided into epochs and slots, a VRF lottery selects a slot leader proportional to stake, and the protocol's security is proven under the honest-majority assumption (>50% of stake is honest). The formal verification (Agda) proves the *protocol follows its specification*.
 
-hcrypt's **Proof of Value** replaces the stake-weighted lottery with **harmonic projection weight**: block validity is determined by the Laplacian eigenstructure, and validators are selected by how much of their stalk survives the network's Hodge projection π_H — not capital weight. The formal verification (Lean 4) proves the *underlying hardness assumption* — that breaking the system requires solving a problem strictly harder than CVP.
+hcrypt's **Proof of Value** replaces the stake-weighted lottery with **harmonic projection weight**: block validity is determined by the Laplacian eigenstructure, and validators are selected by how much of their stalk survives the network's Hodge projection π_H — not capital weight. The formal verification (Lean 4) proves the *underlying hardness model*: known-lattice CVP is a projection of the Hodge problem, and a CVP oracle is insufficient when the operative fibration/Laplacian is hidden.
 
 | | Ouroboros (Cardano) | Proof of Value (hcrypt) |
 |---|---|---|
@@ -595,7 +599,7 @@ hcrypt's **Proof of Value** replaces the stake-weighted lottery with **harmonic 
 | What determines influence | **How much you own** (ADA stake) | **How much of your stalk survives π_H** (harmonic content) |
 | Validity condition | Slot leader signed correctly | λ₁ ∈ [1/√2, 2√2] + β₀=1 + key image unique + sheaf coherence |
 | Security assumption | >50% honest stake | Hodge-hardness (CVP on unknown lattice) |
-| Formal verification | Protocol spec (Ouroboros in Agda) | Hardness proof (`hardness_proof.lean`, Lean 4 + Mathlib) |
+| Formal verification | Protocol spec (Ouroboros in Agda) | Hardness model (`lean/Hardness.lean`, Lean 4 + Mathlib) |
 | What's verified | "Protocol follows spec" | "Breaking this requires solving CVP+" |
 | Sybil resistance | Stake = cost of attack | Geometric coherence + vault bond threshold |
 | Privacy | Optional (Midnight sidechain) | Default (every transaction) |
@@ -619,6 +623,95 @@ Holochain replaces global consensus with **agent-centric validation** — each a
 
 The key difference: Holochain's validation is rule-based (application-specific); hcrypt's validation is *geometric* (Hodge decomposition, Betti numbers, spectral gaps) — provably sound from the mathematics, not just conventionally agreed upon.
 
+### vs Poseidon Hash (ZK-Friendly Hashing)
+
+Poseidon is an algebraic hash function designed for ZK-SNARK/STARK circuits (used by Zcash, Polygon zkEVM, StarkNet, Filecoin). It operates over prime fields (typically BN254 or BLS12-381) with a low multiplicative depth — ~250–300 R1CS constraints per hash vs SHA-256's ~25,000 (roughly 80–100× cheaper in Groth16/Plonk R1CS circuits; the advantage is smaller in STARKs, ~8–10×). It's the current state of the art for ZK-friendly hashing in the Ethereum ecosystem.
+
+hcrypt doesn't use a hash function as its core commitment primitive. Commitments are **cochain coboundary maps** δ(m ‖ r) mod q — algebraic objects on the sheaf's cochain complex. The "binding" comes from the coboundary structure (δ-hardness), not collision resistance. SHA-256 is only used at Layer 1 for public indexing/audit trail, not for cryptographic binding.
+
+**Both are algebraic — but the geometry is fundamentally different.** Poseidon and the coboundary δ both operate over finite fields/rings — Poseidon over 𝔽_p, δ over ℤ_q. Both are designed for algebraic compatibility with proof systems. The divergence is in what the algebra *does* and what geometry underlies it.
+
+**Poseidon's geometry (or lack thereof):** Poseidon operates on a **flat** vector space 𝔽_p^t (the state width t, typically 3–12). There is no topology, no manifold structure, no curvature. The S-box x → x^α is an algebraic automorphism of the finite field — a power map, not a geometric operation. The MDS (Maximum Distance Separable) mixing matrix is chosen for maximal branch number (diffusion), not for any geometric property. The round structure (full rounds → partial rounds → full rounds) is designed to resist *algebraic* attacks: Gröbner basis methods, interpolation attacks, differential/linear cryptanalysis. Security analysis lives entirely in the algebraic world — no spectral invariants, no Betti numbers, no Hodge theory.
+
+**hcrypt's geometry:** The coboundary δ lives on a **simplicial complex X** — a topological space with vertices, edges, and faces. The Laplacian Δ = δ\*δ + δδ\* has genuine **spectral geometry**: its eigenvalues encode the topology (Betti numbers from zero eigenvalues, spectral gap from the first nonzero eigenvalue, curvature from the spectral distribution). The Hodge decomposition C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ\*) is a geometric fact about the complex — an orthogonal splitting determined by the topology and the restriction maps. Security comes from **geometric ambiguity**: which k-plane in ℝ^n is the harmonic subspace? This is a question about the Grassmannian Gr(k,n) — the manifold of all k-dimensional subspaces. The restriction maps R_{v→e} are parallel transport on a fiber bundle — genuine differential geometry with holonomy.
+
+```
+Poseidon:                              hcrypt:
+─────────────────────                  ─────────────────────────────
+Space: flat 𝔽_p^t                      Space: simplicial complex X with topology
+       (no curvature)                         (Betti numbers, spectral gap, curvature)
+
+Operation: S-box x → x^α              Operation: coboundary δ(c)_e = R_j·c_j - R_i·c_i
+           (nonlinear field auto.)                (linear, measures disagreement along edges)
+
+Security from: algebraic one-wayness   Security from: geometric ambiguity
+               (can't invert S-box)                  (which subspace is ker(Δ)?)
+               attacks: Gröbner, interp.             attacks: CVP on unknown lattice
+
+Invariants used: none                  Invariants used: eigenvalues, Betti numbers,
+                 (it's a hash — no                    spectral gap, Euler characteristic,
+                  structure to preserve)              holonomy of fiber bundle
+
+Geometry: none (flat field arithmetic) Geometry: Grassmannian Gr(k,n), SO(n) geodesics,
+                                                Hodge star, sheaf cohomology
+```
+
+Poseidon's S-box (x → x^α) is a **nonlinear** permutation designed to destroy input structure — that's what makes it one-way. The coboundary δ is a **linear** map that preserves the sheaf structure of the cochain complex. This linearity is the source of native homomorphism: δ(a+b) = δ(a) + δ(b), which Poseidon cannot provide because its security *requires* nonlinearity. But δ's linearity is not a weakness — its security doesn't come from being hard to invert (δ is easy to invert if you know the topology). Security comes from the *unknown lattice*: the attacker doesn't know which fibration produced Δ, so they don't know which subspace is ker(Δ).
+
+| | Poseidon | hcrypt commitments |
+|---|---|---|
+| Core operation | Algebraic S-box (x → x^α) over 𝔽_p | Coboundary δ on cochain complex over ℤ_q |
+| Underlying geometry | **Flat** — no topology, no curvature | **Curved** — simplicial complex with spectral geometry |
+| Algebraic character | **Nonlinear** permutation (security requires it) | **Linear** map (security comes from unknown lattice, not nonlinearity) |
+| What the algebra does | Destroy structure (one-wayness) | Preserve structure (sheaf coherence, naturality) |
+| Security source | Can't invert S-box (algebraic one-wayness) | Can't find ker(Δ) without knowing fibration (Grassmannian ambiguity) |
+| Spectral invariants | None | Eigenvalues, Betti numbers, spectral gap, Euler characteristic |
+| Gröbner basis resistance | High-degree polynomial system (many S-box rounds) | **Unknown system** — can't formulate the ideal without knowing the fibration |
+| Hardness assumption | Algebraic attack resistance (Gröbner, interpolation) | Hodge-hardness (CVP on cochain lattice — the lattice is unknown) |
+| ZK cost | ~300 R1CS constraints per hash | Spectral fingerprint matching (O(1)) |
+| Quantum resistance | ❌ Grover reduces to ~2^64 for 128-bit | ✅ CVP on ker(Δ) is post-quantum hard |
+| Homomorphic? | ❌ Nonlinearity prevents it | ✅ δ is linear: δ(a+b) = δ(a) + δ(b) |
+| Multi-party native | ❌ Single input → single output | ✅ Coboundary spans multi-vertex nerve |
+| Formal verification | ❌ None | ✅ Lean 4 hardness proofs (math verified; implementation tested, not extracted) |
+| Maturity | ✅ Deployed in production (Zcash Orchard, Filecoin) | ❌ New (not yet audited) |
+
+**The key difference is algebraic one-wayness vs geometric ambiguity.** Poseidon and δ are both algebraic, both operate over finite structures, both are proof-system-friendly. But they get security from opposite sources. Poseidon needs nonlinearity to be one-way — you can't invert the S-box without knowing the full internal state. δ can afford to be linear because its security comes from a different dimension entirely: the unknown geometry of the sheaf. The attacker doesn't need to invert δ; they need to identify *which harmonic subspace* (which point on the Grassmannian Gr(k,n)) corresponds to ker(Δ) of an unknown fibration. This is Hodge-hardness, not algebraic one-wayness — it's a geometric problem, not an algebraic one.
+
+**Both resist Gröbner basis methods — but for different reasons.** Poseidon resists Gröbner attacks by construction: many rounds of the S-box x → x^α create a polynomial system whose degree grows with the number of rounds. The Poseidon designers carefully choose the number of rounds so that computing a Gröbner basis for the resulting ideal is infeasible (~2^128 work). This is a quantitative defense — enough rounds make the algebra too hard. hcrypt resists Gröbner methods for a *qualitative* reason: the attacker can't even formulate the polynomial ideal. Gröbner basis computation requires a known system of polynomial equations over a known ring. In hcrypt, the ring is ℤ_q but the *lattice structure* (which subspace is ker(Δ)) depends on the unknown fibration — the secret restriction maps R_{v→e} ∈ O(d) are continuous-valued orthogonal matrices, not elements of 𝔽_p. To set up the ideal, you'd need to know the fibration. But the fibration IS the secret. So Gröbner attacks don't apply — not because the degree is too high, but because the system is undefined without the key.
+
+The linearity of δ is a *feature*: it gives native homomorphism (verify Σ inputs = Σ outputs + fee without decrypting) that Poseidon-based commitments require additional circuit gadgets to achieve. And the geometric structure gives spectral invariants (eigenvalues, Betti numbers) that Poseidon doesn't have — because Poseidon's job is to *destroy* structure, while δ's job is to *measure* structure.
+
+**Where Poseidon wins:** Inside ZK circuits. If you're building a Merkle tree in a SNARK and need to hash millions of leaves, Poseidon is the right tool (~250 R1CS constraints vs SHA-256's ~25,000). hcrypt doesn't compete at this layer — it doesn't use Merkle trees for identity, and its proofs are spectral fingerprint matches (O(1)), not circuit evaluations. The comparison is orthogonal: Poseidon optimizes a subroutine (hashing inside arithmetic circuits) while hcrypt replaces the need for that subroutine entirely with geometric proofs. They could even coexist: Poseidon for efficient Merkle proofs *within* a future hcrypt contract layer.
+
+**Design philosophy note:** hcrypt is not optimized for raw circuit throughput or nanosecond finality. It's optimized for *provable privacy with post-quantum security* — a private store of value and sovereign identity layer, not a high-frequency trading DEX. The spectral computation is heavier than ECDSA, but that's the cost of geometric security. Bitcoin does ~7 TPS and is a $1T store of value; Monero does ~30 TPS. The market for "provably private, quantum-resistant money" doesn't need to outrun Poseidon in R1CS constraints. What it needs is what hcrypt provides: the strongest possible privacy guarantees, mathematically proven, with a complete privacy stack from encryption through network routing (see [vs Mixnets](#vs-mixnets-network-privacy) — the onion routing is holonomy-based, meaning network privacy is as hard to break as the core encryption itself, not an afterthought bolted on like Dandelion++).
+
+### vs Homomorphic Encryption (FHE/PHE)
+
+Fully Homomorphic Encryption (FHE) — BFV, BGV, CKKS, TFHE — allows computation on encrypted data without decryption. The ciphertext is a noisy lattice encoding, and homomorphic operations accumulate noise until bootstrapping resets it. FHE is general-purpose: any function can (in principle) be evaluated on ciphertexts.
+
+hcrypt's Hodge-based encryption is **not** general-purpose FHE. It's a *structured* encryption where the message lives in ker(Δ) (the harmonic subspace) and noise lives in the orthogonal complement im(δ) ⊕ im(δ*). Decryption is Hodge projection π_H, not bootstrapping. The structure is specialized for privacy-preserving transactions, not arbitrary computation.
+
+| | FHE (BFV/BGV/CKKS) | hcrypt (Hodge encryption) |
+|---|---|---|
+| Goal | Arbitrary computation on encrypted data | Privacy-preserving transactions + identity |
+| Plaintext space | ℤ_t^n (BFV), ℂ^{n/2} (CKKS) | ker(Δ) ⊂ ℤ_q^n (harmonic subspace of sheaf) |
+| Noise model | Gaussian on full lattice, accumulates with operations | Hodge-structured: noise ∈ im(δ) ⊕ im(δ*) ⊥ ker(Δ) |
+| Decryption | Secret key dot product + rounding | Hodge projection π_H onto ker(Δ) |
+| Noise management | Bootstrapping (expensive: ~seconds per op) | No bootstrapping — π_H is exact (noise is orthogonal) |
+| Homomorphic addition | ✅ (native, cheap) | ✅ (native — δ is linear) |
+| Homomorphic multiply | ✅ (with relinearization + noise growth) | ❌ Not general multiplication |
+| Arbitrary computation | ✅ (Turing-complete via bootstrapping) | ❌ Specialized for transaction verification |
+| Ciphertext size | ~32KB–1MB (parameter dependent) | ~1.7KB (2-party, λ=256) |
+| Quantum resistance | ✅ (Ring-LWE based) | ✅ (hidden-operator Hodge/CVP model over cochain lattices) |
+| Multi-party | Requires MPC protocols on top | Native — topology IS the access structure |
+| Identity/anonymity | None (encryption only) | Built-in — homotopy class = infinite anonymity set |
+| Key agility | ❌ Fixed key | ✅ Rotate within homotopy class |
+| Formal hardness proof | LWE → Ring-LWE reductions | Hodge/CVP relation and hidden-operator insufficiency (Lean 4) |
+
+**The key difference is specialization vs generality.** FHE lets you compute *anything* on encrypted data — but at enormous cost (bootstrapping, huge ciphertexts, specialized compilers). hcrypt doesn't try to be general-purpose. Instead, it exploits the specific geometric structure of transactions: amounts are additive (δ is linear → homomorphic for free), identities are homotopy classes (anonymity for free), and the Hodge decomposition gives exact decryption without bootstrapping. The noise is *structurally orthogonal* to the message, not just statistically small. This is why hcrypt ciphertexts are ~1.7KB vs FHE's ~32KB+, and decryption is a projection, not a multi-second bootstrapping operation.
+
+**Where FHE wins:** If you need to run arbitrary programs on encrypted data (private ML inference, encrypted database queries, secure outsourced computation), FHE is the right tool. hcrypt's Hodge encryption can't do that — it's built for a blockchain's specific needs: transfer, verify, prove identity, preserve privacy.
+
 ### vs Mixnets (Network Privacy)
 
 Classical mixnets (Nym, Loopix) provide network-layer anonymity through onion encryption + mixing delays. hcrypt's `OnionRouter` and `MixingNode` (in `geometry/fiber_bundle.py`) implement the same pattern, but with **parallel transport** along the fiber bundle instead of generic symmetric encryption.
@@ -633,17 +726,96 @@ Classical mixnets (Nym, Loopix) provide network-layer anonymity through onion en
 
 The structural advantage: in a classical mixnet, each hop's anonymity is independent. In hcrypt's fiber bundle routing, the hops are connected by the holonomy of the Grothendieck fibration — breaking the route requires inverting the holonomy, which is the same hard problem as the core encryption.
 
+### vs Zcash (Privacy + ZK Proofs)
+
+Zcash pioneered shielded transactions using **zk-SNARKs** (Groth16 proofs over BLS12-381, with Poseidon hashing in Orchard). The shielded pool provides strong privacy: amounts, sender, and receiver are hidden. But the anonymity set is the shielded pool (users who opt in), not all users — and the trusted setup (for Groth16) is a ceremony-dependent assumption.
+
+hcrypt's privacy is structural, not opt-in: every transaction uses the full geometric machinery. There's no "transparent vs shielded" split.
+
+| | Zcash (Orchard) | hcrypt |
+|---|---|---|
+| ZK proof system | Groth16 / Halo 2 (circuit-based) | Spectral fingerprint + Fiat-Shamir Σ-protocol |
+| Hashing | Poseidon (circuit-optimized) | Coboundary δ (geometry-native) |
+| Privacy model | Opt-in shielded pool | Default — every transaction |
+| Anonymity set | Shielded pool participants | Infinite homotopy class |
+| Trusted setup | Ceremony required (Groth16) / eliminated (Halo 2) | None — hardness is geometric (see below) |
+| Post-quantum | ❌ BLS12-381 broken by Shor | ✅ CVP on ker(Δ) |
+| Formal verification | None | Lean 4 hardness proofs |
+| Amounts hidden | Yes (value commitments in circuit) | Yes (δ-homomorphic cochain commitments) |
+| Proof size | ~192 bytes (Groth16) | ~1.7KB (spectral fingerprint + Σ-protocol) |
+
+**On trusted setup:** Zcash's Groth16 requires a **multi-party computation ceremony** to generate a structured reference string (SRS). During the ceremony, participants generate secret randomness ("toxic waste") — if *any single participant* retains their secret, they could forge proofs (create coins from nothing). Zcash mitigated this with the Sapling Powers of Tau ceremony (~80 participants) and later eliminated the per-circuit trusted setup with Halo 2 (which uses inner product arguments instead of pairings). But the original Sprout pool still depends on its ceremony, and Halo 2 trades the trusted setup for larger proofs and slower verification. **hcrypt has no trusted setup at all** — the proof system is a Fiat-Shamir Σ-protocol over spectral fingerprints. Soundness comes from the hash function (random oracle model) and the geometric hardness of the spectral gap, not from any ceremony. There's no toxic waste, no ceremony participants to trust, and no risk of silent inflation from a compromised setup.
+
+**Where Zcash wins:** Proof size and verification speed. Groth16 proofs are ~192 bytes and verify in ~3ms — the most compact ZK proofs in production. hcrypt's proofs are larger (~1.7KB) because they carry spectral data. For raw ZK efficiency, Zcash's circuit-based approach is more mature. **Where hcrypt wins:** No trusted setup, post-quantum security, infinite anonymity (not limited to shielded pool participants), and network-layer privacy built in (not just transaction privacy).
+
+### vs NIST Post-Quantum Standards (ML-KEM / ML-DSA)
+
+NIST's post-quantum standards — **ML-KEM** (Kyber, key encapsulation) and **ML-DSA** (Dilithium, digital signatures) — are lattice-based schemes built on Module-LWE. They're designed as drop-in replacements for RSA/ECDH/ECDSA: same API, same key-exchange and signature patterns, quantum-resistant internals. They're the practical answer to "make existing protocols post-quantum."
+
+hcrypt is post-quantum for a different reason and in a different way. ML-KEM/ML-DSA operate on *known* structured lattices (module lattices over polynomial rings). hcrypt operates on *unknown* lattices defined by the secret fibration. In the Lean hidden-operator model, known-lattice CVP is a projection, while Hodge-hardness adds the representative-identification problem. The system is specialized for privacy-preserving transactions, not general-purpose key exchange or signatures.
+
+| | ML-KEM / ML-DSA (NIST PQC) | hcrypt |
+|---|---|---|
+| Designed for | Drop-in PQ replacement (KEM, signatures) | Privacy-preserving blockchain (transactions, identity) |
+| Hard problem | Module-LWE on **known** structured lattice | Hodge-hardness: hidden representative plus CVP on the induced unknown lattice |
+| Lattice structure | Public — polynomial ring R_q = ℤ_q[x]/(x^n+1) | Secret — defined by unknown fibration |
+| Key sizes | ~1.5KB public key (ML-KEM-768) | ~32 bytes public fingerprint (spectral invariants) |
+| Standardization | ✅ NIST FIPS 203/204 (August 2024) | ❌ Not standardized |
+| Maturity | ✅ Production-ready, widely implemented | ❌ New, not yet audited |
+| Privacy | None (encryption/signatures only) | Built-in (infinite anonymity set) |
+| Formal verification | Reduction proofs (paper, not machine-checked) | Lean 4 machine-checked hardness proofs |
+| Interoperability | Drop-in for TLS, SSH, etc. | Specialized protocol |
+
+**The relationship is complementary, not competitive.** ML-KEM/ML-DSA are what you use to make TLS post-quantum. hcrypt is what you use to make *private money* post-quantum. hcrypt could use ML-KEM for key exchange in its libp2p transport layer (replacing X25519) while using Hodge encryption for the transaction layer. The NIST standards solve "make existing protocols survive quantum computers." hcrypt solves "build a privacy system where the hardness is provably stronger than the lattice problems those standards rely on."
+
+### Verification Status
+
+**Honest assessment of what is and isn't formally verified:**
+
+| Layer | Status | What it covers |
+|-------|--------|---------------|
+| **Mathematical hardness** | ✅ Lean 4 + Mathlib (machine-checked) | Hodge/CVP relation, CVP-oracle insufficiency in the hidden-operator model, spectral ≠ homotopy |
+| **Python E2E tests** | ✅ 16 tests in `test_end_to_end.py` | Block production, SheafState lifecycle, anonymity proofs, key images, persistence |
+| **Rust tests** | ✅ 148 tests (node: 108, oracle: 34, wallet: 6) | Topos consensus, Geodesic ZKP, Grassmannian geometry, storage |
+| **Cross-language invariants** | ✅ `check_constants.py` in CI | √2 bounds match across Python/Rust/Lean |
+| **Lean↔code link** | ❌ **Not verified** | No extraction or verified compilation — Lean proves math, tests check code, but no formal bridge |
+| **Protocol correctness** | ❌ **Not verified** | No Agda/Lean proof that the protocol follows a formal spec (unlike Cardano's Ouroboros) |
+| **Lean CI gate** | ✅ Hard (blocks merge) | `lake build` must pass; integration job requires `[rust, python, lean]` |
+
+**The gap and the plan to close it.** The gap between "the math is proven correct" and "the code implements the math correctly" is currently bridged by testing, not formal verification. The [three-tier gate architecture](docs/GATE_ARCHITECTURE.md) is designed to close this systematically:
+
+**Tier 1 — Exact Gates (Python, classical boolean).** These are structural identities that are either true or false — no boundary zone. δ²=0 (cochain complex law), Δ = δ\*δ + δδ\* (Laplacian construction), P²=P (Hodge projection idempotent), H⊕im(δ)⊕im(δ\*)=C (Hodge decomposition completeness). Lean axioms: `Foundation.lean`. Python: `invariants/unified.py`. These are already enforced — they fail fast if violated.
+
+**Tier 2 — Consensus Gates (Rust Oracle, Heyting tri-valued).** Spectral gap classification, Betti consistency, naturality checks. These have genuine boundary zones — the oracle returns `SpectralJudgment` ∈ {InBounds, Boundary, OutOfBounds} mapped to Heyting three-valued logic (Valid/Undetermined/Invalid). Lean axioms: `OracleModality.lean`. Rust: `classify_spectral_gap()` in oracle. **Known issue:** 12 Python sites currently bypass the oracle and classify locally — these need to be replaced with oracle judgments (or pre-flight `gap_in_bounds()` for offline use).
+
+**Tier 3 — Stage Gates (Python+Lean, which gates apply when).** Not all gates apply at all stages: keygen/encrypt/decrypt skip spectral consensus gates (by design — flat spectrum at keygen, internal noise at encrypt). Transaction and block stages enforce all gates. Lean axioms: `StageAdmissibility.lean`.
+
+**Plan to make Lean a hard CI gate:**
+
+| Step | What | Status |
+|------|------|--------|
+| Remove `continue-on-error: true` from Lean CI | Lean build failure blocks merge | ✅ Done |
+| Fix 12 Python oracle bypass sites | Route all consensus judgments through oracle or pre-flight | 🔜 Next |
+| Close `sorry` holes in `Chain.lean` | Eliminate remaining proof obligations | In progress |
+| Lean property tests | Run Lean decidable checks against Python/Rust test vectors | Planned |
+| Verified extraction (long-term) | Lean → Rust extraction for critical paths | Future |
+
+See [docs/GATE_ARCHITECTURE.md](docs/GATE_ARCHITECTURE.md) for the full gate specification and [docs/PROOF_MAP.md](docs/PROOF_MAP.md) for the complete Lean theorem → Python implementation mapping.
+
 ### Summary Table
 
-| Feature | Bitcoin | Ethereum | Monero | Cardano | Holochain | **hcrypt** |
-|---------|---------|----------|--------|---------|-----------|------------|
-| Privacy by default | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
-| Post-quantum | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Formal hardness proof | ❌ | ❌ | ❌ | ⚠️ protocol | ❌ | ✅ Lean 4 |
-| Infinite anonymity set | ❌ | ❌ | ❌ (N=16) | ❌ | ❌ | ✅ |
-| Agent-local validation | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Geometric security | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Panopticon resilient | ❌ | ❌ | ⚠️ | ❌ | ❌ | ✅ |
+| Feature | Bitcoin | Ethereum | Monero | Zcash | Cardano | Holochain | **hcrypt** |
+|---------|---------|----------|--------|-------|---------|-----------|------------|
+| Privacy by default | ❌ | ❌ | ✅ | ⚠️ opt-in | ❌ | ❌ | ✅ |
+| Post-quantum | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| No trusted setup | ✅ | ✅ | ✅ | ⚠️ Halo 2 only | ✅ | ✅ | ✅ |
+| Formal hardness proof | ❌ | ❌ | ❌ | ❌ | ⚠️ protocol | ❌ | ✅ Lean 4 |
+| Infinite anonymity set | ❌ | ❌ | ❌ (N=16) | ❌ (shielded pool) | ❌ | ❌ | ✅ |
+| Homomorphic commitments | ❌ | ❌ | ⚠️ Pedersen | ⚠️ Pedersen | ❌ | ❌ | ✅ native (δ linear) |
+| Network-layer privacy | ❌ | ❌ | ⚠️ Dandelion++ | ❌ | ❌ | ❌ | ✅ holonomy routing |
+| Agent-local validation | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| Geometric security | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Panopticon resilient | ❌ | ❌ | ⚠️ | ⚠️ | ❌ | ❌ | ✅ |
 
 ## Conclusion
 
@@ -651,11 +823,11 @@ The hard problem is ternary, not binary.
 
 Standard lattice cryptography operates on known matrices over finite fields. The attacker knows the lattice, and they just need to find a short vector in it. Homotopical encryption defines the lattice as an unknown Grothendieck fibration whose restriction maps are continuous-valued orthogonal matrices, not binary entries in a public matrix.
 
-This is formally verified. The Lean proofs (`hardness_proof.lean`, `framework_consolidation.lean`, `math_audit_hcrypt.lean` — verified by Aristotle/Harmonic against Lean 4 + Mathlib) establish three things:
+This is machine-checked in the current Lean workspace (`lean/CVP.lean`, `lean/Hardness.lean`, `lean/Laplacian.lean`, and supporting files under `lean/Axioms/`). The formalization establishes three things:
 
 1. **Hodge → CVP**: Any algorithm that breaks the Hodge-hardness assumption can be used to solve the Closest Vector Problem on q-ary lattices. The lattice problem is a *projection* of the harder geometric problem.
 
-2. **CVP ↛ Hodge**: A CVP oracle is provably *insufficient* to break the system, because it operates on a fixed known lattice, while the attacker must determine which sublattice of ℤ_q^n corresponds to ker(Δ) — without knowing Δ.
+2. **Known-lattice CVP is insufficient in the hidden-operator model**: A CVP oracle operates on a fixed known lattice, while the attacker must determine which sublattice of ℤ_q^n corresponds to ker(Δ) — without knowing Δ.
 
 3. **Spectral ≠ Homotopy**: Two fibrations can share all topological invariants (Betti numbers, kernel dimensions) but have completely different Laplacian spectra. The spectrum is *finer* than the homotopy type — it carries the secret.
 

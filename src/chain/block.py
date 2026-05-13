@@ -166,20 +166,39 @@ class Block:
         return tx_hashes[0]
     
     def serialize(self) -> bytes:
-        """Serialize block for network/storage."""
+        """
+        Serialize block for network/storage.
+        
+        Format (v2 — includes cochain_root + vrf_data):
+            MAGIC(4) "BLK2"
+            version(u32) height(u64) prev_hash(32) tx_merkle_root(32)
+            cochain_root(32) timestamp(u64) spectral_gap(f64)
+            len(spectral_commitment)(u32) spectral_commitment
+            len(producer_identity)(u32) producer_identity
+            len(vrf_data)(u32) vrf_data
+            n_transactions(u32) [len(tx)(u32) tx_bytes]...
+            len(pov_proof)(u32) pov_proof
+        """
         import struct
         
+        # Magic bytes for format detection
+        data = b'BLK2'
+        
         # Header
-        data = struct.pack('<I', self.header.version)
+        data += struct.pack('<I', self.header.version)
         data += struct.pack('<Q', self.header.height)
         data += self.header.prev_hash
         data += self.header.tx_merkle_root
+        data += self.header.cochain_root  # Was missing in v1 serialize
         data += struct.pack('<Q', self.header.timestamp)
         data += np.float64(self.header.spectral_gap).tobytes()
         data += struct.pack('<I', len(self.header.spectral_commitment))
         data += self.header.spectral_commitment
         data += struct.pack('<I', len(self.header.producer_identity))
         data += self.header.producer_identity
+        # VRF data (was missing in v1 serialize)
+        data += struct.pack('<I', len(self.header.vrf_data))
+        data += self.header.vrf_data
         
         # Transactions
         data += struct.pack('<I', len(self.transactions))
@@ -193,6 +212,108 @@ class Block:
         data += self.pov_proof
         
         return data
+    
+    @classmethod
+    def deserialize(cls, data: bytes) -> 'Block':
+        """
+        Deserialize block from bytes.
+        
+        Supports both v1 (no magic) and v2 (BLK2 magic) formats.
+        """
+        import struct
+        
+        offset = 0
+        
+        def read_bytes(n):
+            nonlocal offset
+            result = data[offset:offset + n]
+            offset += n
+            return result
+        
+        def read_u32():
+            nonlocal offset
+            val = struct.unpack_from('<I', data, offset)[0]
+            offset += 4
+            return val
+        
+        def read_u64():
+            nonlocal offset
+            val = struct.unpack_from('<Q', data, offset)[0]
+            offset += 8
+            return val
+        
+        def read_f64():
+            nonlocal offset
+            val = struct.unpack_from('<d', data, offset)[0]
+            offset += 8
+            return val
+        
+        # Check magic
+        magic = data[:4]
+        if magic == b'BLK2':
+            offset = 4  # Skip magic
+            has_cochain_and_vrf = True
+        else:
+            offset = 0  # v1 format — no magic, starts with version
+            has_cochain_and_vrf = False
+        
+        # Header
+        version = read_u32()
+        height = read_u64()
+        prev_hash = read_bytes(32)
+        tx_merkle_root = read_bytes(32)
+        
+        if has_cochain_and_vrf:
+            cochain_root = read_bytes(32)
+        else:
+            cochain_root = b'\x00' * 32
+        
+        timestamp = read_u64()
+        spectral_gap = read_f64()
+        
+        sc_len = read_u32()
+        spectral_commitment = read_bytes(sc_len)
+        
+        pi_len = read_u32()
+        producer_identity = read_bytes(pi_len)
+        
+        if has_cochain_and_vrf:
+            vrf_len = read_u32()
+            vrf_data = read_bytes(vrf_len)
+        else:
+            vrf_data = b''
+        
+        header = BlockHeader(
+            version=version,
+            height=height,
+            prev_hash=prev_hash,
+            tx_merkle_root=tx_merkle_root,
+            cochain_root=cochain_root,
+            timestamp=timestamp,
+            spectral_gap=spectral_gap,
+            spectral_commitment=spectral_commitment,
+            producer_identity=producer_identity,
+            vrf_data=vrf_data,
+        )
+        
+        # Transactions
+        n_txs = read_u32()
+        transactions = []
+        for _ in range(n_txs):
+            tx_len = read_u32()
+            tx_bytes = read_bytes(tx_len)
+            tx = HomotopyTransaction.deserialize(tx_bytes)
+            transactions.append(tx)
+        
+        # PoV proof
+        pov_len = read_u32()
+        pov_proof = read_bytes(pov_len)
+        
+        return cls(
+            header=header,
+            transactions=transactions,
+            pov_proof=pov_proof,
+        )
 
 
 def _compute_cochain_root(transactions: List[Transaction]) -> bytes:
@@ -378,7 +499,8 @@ def _create_pov_proof_hash(spectral_gap: float) -> bytes:
     Used when full eigenvalues aren't available (e.g., genesis block).
     Weaker than the real ZK range proof from proofs/spectral.py.
     """
-    if not (POV_LOWER <= spectral_gap <= POV_UPPER):
+    from ..proofs.spectral_bounds import gap_in_bounds_strict
+    if not gap_in_bounds_strict(spectral_gap):
         return b''
     
     normalized = (spectral_gap - POV_LOWER) / (POV_UPPER - POV_LOWER)

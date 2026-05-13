@@ -8,8 +8,19 @@ import Mathlib
   - defines meet/join/implication,
   - proves residuation (hence valid Heyting implication on the chain).
 
-  It also defines an abstract interface for collapsing a richer Heyting algebra
-  Ω (e.g. coalition/open-set semantics) into this 3-valued image.
+  Semantic scope:
+  - `Heyting3` is not the full internal logic of the hidden fibration/topos.
+  - It is the runtime/public collapse used by consensus and oracle gates.
+  - The richer Ω may carry provenance, open-set, sheaf, or path-space semantics.
+  - The collapse Ω → `Heyting3` is intentionally lossy: many hidden witnesses
+    may have the same public truth value.
+
+  This matches the project architecture:
+  - Helfer-style first-order homotopical logic supplies path-based equality and
+    homotopy-invariant hidden semantics.
+  - Profinite/completion viewpoints for Heyting algebras justify treating finite
+    public judgments as shadows of richer intuitionistic semantic objects.
+  - Runtime consensus only consumes the quotient/collapse, not the hidden object.
 -/
 
 namespace Hcrypt
@@ -104,6 +115,23 @@ theorem doubleNegate_undetermined :
   decide
 
 /--
+The finite runtime chain is still non-classical: double-negation elimination
+fails at the public boundary value `Undetermined`.
+-/
+theorem doubleNegation_elimination_fails_at_undetermined :
+    ¬ doubleNegate .Undetermined ≤ .Undetermined := by
+  decide
+
+/--
+Consequently, the runtime collapse should not be read as validating classical
+Boolean reasoning globally.
+-/
+theorem not_doubleNegationEliminates_Heyting3 :
+    ¬ (∀ a : Heyting3, doubleNegate a ≤ a) := by
+  intro h
+  exact doubleNegation_elimination_fails_at_undetermined (h .Undetermined)
+
+/--
 Abstract Heyting carrier used for Ω-like semantics.
 `residuation` is the key law required for implication.
 -/
@@ -127,6 +155,45 @@ structure HeytingCollapse {Ω : Type u} (H : AbstractHeyting Ω) where
   mapInf : ∀ x y, π (H.inf x y) = meet (π x) (π y)
   mapSup : ∀ x y, π (H.sup x y) = join (π x) (π y)
   mapImp : ∀ x y, π (H.imp x y) = himp (π x) (π y)
+
+/--
+The public equivalence induced by a runtime Heyting collapse.
+
+Two richer Ω-witnesses may be distinct while becoming indistinguishable to the
+runtime consensus layer.
+-/
+def SamePublicTruth {Ω : Type u} {H : AbstractHeyting Ω}
+    (C : HeytingCollapse H) (x y : Ω) : Prop :=
+  C.π x = C.π y
+
+/-- Public truth equivalence is reflexive. -/
+theorem samePublicTruth_refl {Ω : Type u} {H : AbstractHeyting Ω}
+    (C : HeytingCollapse H) (x : Ω) :
+    SamePublicTruth C x x := by
+  rfl
+
+/-- Public truth equivalence is symmetric. -/
+theorem samePublicTruth_symm {Ω : Type u} {H : AbstractHeyting Ω}
+    {C : HeytingCollapse H} {x y : Ω} :
+    SamePublicTruth C x y → SamePublicTruth C y x := by
+  intro h
+  exact h.symm
+
+/-- Public truth equivalence is transitive. -/
+theorem samePublicTruth_trans {Ω : Type u} {H : AbstractHeyting Ω}
+    {C : HeytingCollapse H} {x y z : Ω} :
+    SamePublicTruth C x y → SamePublicTruth C y z → SamePublicTruth C x z := by
+  intro hxy hyz
+  exact hxy.trans hyz
+
+/--
+A collapse is non-faithful when distinct hidden witnesses share a public truth
+value. This is the Heyting-side analogue of the hidden-representative ambiguity
+used in the Hodge hardness file.
+-/
+def CollapseNonFaithful {Ω : Type u} {H : AbstractHeyting Ω}
+    (C : HeytingCollapse H) : Prop :=
+  ∃ x y : Ω, x ≠ y ∧ SamePublicTruth C x y
 
 /--
 The collapsed image satisfies residuation in `Heyting3`.

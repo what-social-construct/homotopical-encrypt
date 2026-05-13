@@ -1,8 +1,13 @@
-# docs
+# docs index
+
+This is an index for the documentation folder, not the project landing page.
+For the project overview, start with [../README.md](../README.md).
 
 | document | contents |
 |----------|----------|
-| [ARCHITECTURE](ARCHITECTURE.md) | full module map, mathematical pipeline, privacy model, consensus |
+| [ARCHITECTURE](ARCHITECTURE.md) | canonical mathematical and system architecture |
+| [CATEGORICAL_ARCHITECTURE](CATEGORICAL_ARCHITECTURE.md) | categorical/topos structure and semantic ownership |
+| [GATE_ARCHITECTURE](GATE_ARCHITECTURE.md) | validation gates, boundary handling, runtime policy |
 | [GEOMETRY](GEOMETRY.md) | homotopy equivalence, diagonal construction, orthogonality, Tsirelson bound, Hodge-hardness |
 | [PRIMITIVES](PRIMITIVES.md) | helfer's logic → crypto: the cochain/fibration/homotopy foundations |
 | [SECURITY](SECURITY.md) | security proofs, hodge-hardness, √2 bounds, ring spectral proofs |
@@ -10,6 +15,7 @@
 | [STORAGE](STORAGE.md) | sheaf-native storage, on/off-chain separation, routing |
 | [ROADMAP](ROADMAP.md) | layer 1 implementation roadmap |
 | [WIRE_FORMAT](WIRE_FORMAT.md) | binary wire format for network messages |
+| [TRUST_BOUNDARIES](TRUST_BOUNDARIES.md) | Lean/Rust/Python ownership split for proofs, runtime validation, and research code |
 
 ## quick reference
 

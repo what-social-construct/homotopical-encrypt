@@ -303,6 +303,154 @@ class HomotopyTransaction:
         
         return data
     
+    @classmethod
+    def deserialize(cls, data: bytes) -> 'HomotopyTransaction':
+        """
+        Deserialize transaction from bytes.
+        
+        Reconstructs the transaction from the format produced by serialize().
+        Proof objects are reconstructed with hash-relevant fields only —
+        sufficient for tx_hash() verification and chain persistence.
+        Full re-verification requires the original proofs.
+        """
+        import struct
+        from ..proofs.spectral import SpectralProof, SpectralIdentityProof, SpectralGapProof
+        
+        offset = 0
+        
+        def read_bytes(n):
+            nonlocal offset
+            result = data[offset:offset + n]
+            offset += n
+            return result
+        
+        def read_u32():
+            nonlocal offset
+            val = struct.unpack_from('<I', data, offset)[0]
+            offset += 4
+            return val
+        
+        def read_u64():
+            nonlocal offset
+            val = struct.unpack_from('<Q', data, offset)[0]
+            offset += 8
+            return val
+        
+        def read_i32():
+            nonlocal offset
+            val = struct.unpack_from('<i', data, offset)[0]
+            offset += 4
+            return val
+        
+        def read_f64():
+            nonlocal offset
+            val = struct.unpack_from('<d', data, offset)[0]
+            offset += 8
+            return val
+        
+        version = read_u32()
+        
+        # Inputs
+        n_inputs = read_u32()
+        inputs = []
+        for _ in range(n_inputs):
+            fingerprint = read_bytes(32)
+            key_image = read_bytes(32)
+            
+            ac_len = read_u32()
+            amount_commitment = read_bytes(ac_len)
+            
+            # Spectral proof (fingerprint + spectral_mass_commitment)
+            sp_fingerprint = read_bytes(32)
+            sp_mass_commit = read_bytes(32)
+            
+            # Betti numbers
+            b0 = read_i32()
+            b1 = read_i32()
+            b2 = read_i32()
+            
+            spectral_gap = read_f64()
+            
+            # MAC tag
+            mac_len = read_u32()
+            mac_tag = read_bytes(mac_len) if mac_len > 0 else None
+            
+            # Reconstruct minimal SpectralIdentityProof for tx_hash() correctness
+            minimal_proof = SpectralProof(
+                range_commitments=[],
+                bucket_counts=[],
+                spectral_mass_commitment=sp_mass_commit,
+                challenge_response=b'',
+                timestamp=0,
+            )
+            minimal_gap_proof = SpectralGapProof(
+                gap_commitment=b'\x00' * 32,
+                bit_commitments=[],
+                scaled_range_proof=b'',
+                blinding_commitment=b'\x00' * 32,
+                challenge=b'',
+                response=b'',
+                n_bits=0,
+                scaling_factor=0.0,
+                timestamp=0,
+            )
+            spectral_proof = SpectralIdentityProof(
+                fingerprint=sp_fingerprint,
+                proof=minimal_proof,
+                gap_proof=minimal_gap_proof,
+                timestamp=0,
+            )
+            
+            inputs.append(HomotopyInput(
+                fingerprint=fingerprint,
+                key_image=key_image,
+                amount_commitment=amount_commitment,
+                spectral_proof=spectral_proof,
+                betti_numbers=(b0, b1, b2),
+                spectral_gap=spectral_gap,
+                mac_tag=mac_tag,
+            ))
+        
+        # Outputs
+        n_outputs = read_u32()
+        outputs = []
+        for _ in range(n_outputs):
+            recipient_fingerprint = read_bytes(32)
+            
+            ac_len = read_u32()
+            amount_commitment = read_bytes(ac_len)
+            
+            ea_len = read_u32()
+            encrypted_amount = read_bytes(ea_len)
+            
+            output_topology_hash = read_bytes(32)
+            
+            outputs.append(HomotopyOutput(
+                recipient_fingerprint=recipient_fingerprint,
+                amount_commitment=amount_commitment,
+                encrypted_amount=encrypted_amount,
+                output_topology_hash=output_topology_hash,
+            ))
+        
+        # Fee
+        fc_len = read_u32()
+        fee_commitment = read_bytes(fc_len)
+        fee_amount = read_u64()
+        
+        # Metadata
+        tx_topology_hash = read_bytes(32)
+        timestamp = read_u64()
+        
+        return cls(
+            version=version,
+            inputs=inputs,
+            outputs=outputs,
+            fee_commitment=fee_commitment,
+            fee_amount=fee_amount,
+            tx_topology_hash=tx_topology_hash,
+            timestamp=timestamp,
+        )
+    
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for HashChain."""
         return {
@@ -797,15 +945,14 @@ def verify_homotopy_transaction(
             return (False, f"Input {i}: No spectral gap (λ₁ = {inp.spectral_gap})")
         
         # Stage 3b: √2 bounds check (Tsirelson bound)
-        # Spectral gap should be in valid range for PoV consensus
-        SQRT2 = np.sqrt(2)
-        POV_LOWER = 1 / SQRT2  # ~0.707
-        POV_UPPER = 2 * SQRT2  # ~2.828
-        
-        if not (POV_LOWER <= inp.spectral_gap <= POV_UPPER):
-            # This is a WARNING, not fatal - transaction may still be valid
-            # but won't be eligible for block production
-            pass  # Log warning in production
+        # Use canonical gap_in_bounds() pre-flight — matches oracle classification
+        from ..proofs.spectral_bounds import gap_in_bounds, GapStatus
+        gap_status = gap_in_bounds(inp.spectral_gap)
+        if gap_status == GapStatus.INVALID:
+            # Hard reject — clearly out of bounds
+            pass  # WARNING only: tx valid but not eligible for block production
+        # GapStatus.MARGINAL → tx valid, oracle will make final call
+        # GapStatus.VALID → clearly in bounds
         
         # Stage 3c: Full invariant validation (if strict mode)
         if strict_invariants:

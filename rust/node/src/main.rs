@@ -454,7 +454,13 @@ impl Node {
         }
         
         // ─── Gate 5: Cochain root ──────────────────────────────────
-        let computed_root = block.compute_cochain_root();
+        let computed_root = match block.try_compute_cochain_root() {
+            Ok(root) => root,
+            Err(err) => {
+                warn!("🚫 Gate 5 FAIL: invalid cochain commitment at height {}: {}", height, err);
+                return;
+            }
+        };
         if computed_root != block.header.cochain_root {
             warn!("🚫 Gate 5 FAIL: cochain root mismatch at height {}", height);
             return;
@@ -678,7 +684,7 @@ impl Node {
                 match producer.produce_genesis(&proof.commitment) {
                     Ok(mut b) => {
                         b.transactions = txs;
-                        b.header.cochain_root = b.compute_cochain_root();
+                        b.header.cochain_root = b.try_compute_cochain_root()?;
                         b
                     }
                     Err(e) => {

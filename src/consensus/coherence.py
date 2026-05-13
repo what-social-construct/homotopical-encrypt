@@ -453,9 +453,11 @@ class CoherenceEngine:
                 spectral_gap = float(positive_eigs[0])
 
         # Validity: β₀ = 1 (connected) and spectral gap in bounds
+        # Use canonical gap_in_bounds_strict() — matches oracle classification
+        from ..proofs.spectral_bounds import gap_in_bounds_strict
         is_valid = (
             beta_0 == 1
-            and INV_SQRT2 <= spectral_gap <= 2 * SQRT2
+            and gap_in_bounds_strict(spectral_gap)
         )
 
         return {

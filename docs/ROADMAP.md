@@ -74,10 +74,14 @@
 │            COMPUTATION WORKERS (Python)              │
 │  • Eigenvalue decomposition                          │
 │  • Hodge projections                                 │
-│  • Invariant validation                              │
-│  • Sign results, submit to oracle                    │
+│  • Reference/test-vector generation                  │
+│  • Submit raw values to Rust oracle                  │
 └──────────────────────────────────────────────────────┘
 ```
+
+Consensus-path transaction/block validation is a Rust runtime boundary, with
+Lean specifying the invariants and Python acting as research/reference code.
+See [TRUST_BOUNDARIES.md](TRUST_BOUNDARIES.md).
 
 ---
 

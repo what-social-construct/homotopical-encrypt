@@ -20,6 +20,7 @@
 use serde::{Deserialize, Serialize};
 use sha2::{Sha256, Digest};
 use std::fmt;
+use thiserror::Error;
 
 // √2 bounds (Tsirelson / Bell)
 pub const SQRT2: f64 = 1.41421356237;
@@ -153,6 +154,27 @@ impl SpectralFingerprint {
 
 /// Lattice modulus matching Python commitment.py (CochainCommitment default q)
 pub const COCHAIN_MODULUS: i64 = 12289;
+
+/// Maximum number of cochain edges accepted in one consensus commitment.
+pub const MAX_COCHAIN_EDGES: usize = 8_192;
+
+#[derive(Debug, Error, PartialEq, Eq)]
+pub enum CochainCommitmentError {
+    #[error("cochain commitment is too short: {actual} bytes")]
+    TooShort { actual: usize },
+    #[error("unsupported cochain modulus {0}")]
+    InvalidModulus(u32),
+    #[error("cochain commitment has zero edges")]
+    EmptyEdges,
+    #[error("cochain commitment has {actual} edges, maximum is {max}")]
+    TooManyEdges { actual: usize, max: usize },
+    #[error("cochain commitment length overflow")]
+    LengthOverflow,
+    #[error("non-canonical cochain commitment length: expected {expected}, got {actual}")]
+    NonCanonicalLength { expected: usize, actual: usize },
+    #[error("inconsistent cochain edge count: expected {expected}, got {actual}")]
+    InconsistentEdgeCount { expected: usize, actual: usize },
+}
 
 /// Block header
 ///
@@ -290,47 +312,36 @@ impl Block {
     /// security comes from the lattice structure: forging a second preimage
     /// requires finding a ker(δ) element (SVP-hard on the cochain lattice,
     /// post-quantum). SHA256 collision resistance is a secondary guarantee.
-    pub fn compute_cochain_root(&self) -> [u8; 32] {
+    pub fn try_compute_cochain_root(&self) -> Result<[u8; 32], CochainCommitmentError> {
         if self.transactions.is_empty() {
-            return [0u8; 32];
+            return Ok([0u8; 32]);
         }
 
         let mut accumulated: Vec<i64> = Vec::new();
         let mut q: i64 = COCHAIN_MODULUS;
+        let mut expected_edges: Option<usize> = None;
 
         for tx in &self.transactions {
-            if let Some((modulus, edges)) = parse_cochain_commitment(&tx.data) {
-                q = modulus as i64;
-                if accumulated.is_empty() {
-                    accumulated = edges;
-                } else {
-                    // Homomorphic addition: δ(m₁||r₁) + δ(m₂||r₂) = δ((m₁+m₂)||(r₁+r₂))
-                    let len = accumulated.len().min(edges.len());
-                    for i in 0..len {
-                        accumulated[i] = (accumulated[i] + edges[i]).rem_euclid(q);
-                    }
-                    // Extend if new tx has more edges
-                    for i in accumulated.len()..edges.len() {
-                        accumulated.push(edges[i].rem_euclid(q));
-                    }
+            let (modulus, edges) = try_parse_cochain_commitment(&tx.data)?;
+            q = modulus as i64;
+
+            match expected_edges {
+                Some(n) if n != edges.len() => {
+                    return Err(CochainCommitmentError::InconsistentEdgeCount {
+                        expected: n,
+                        actual: edges.len(),
+                    });
                 }
+                None => expected_edges = Some(edges.len()),
+                _ => {}
+            }
+
+            if accumulated.is_empty() {
+                accumulated = edges.into_iter().map(|edge| edge.rem_euclid(q)).collect();
             } else {
-                // Fallback: tx data is raw — hash it into the accumulation
-                // This handles non-cochain transactions gracefully
-                let h = tx.tx_hash();
-                if accumulated.is_empty() {
-                    // Interpret hash as 4 × i64 edge values
-                    accumulated = h.chunks(8)
-                        .map(|c| i64::from_le_bytes(c.try_into().unwrap_or([0; 8])).rem_euclid(q))
-                        .collect();
-                } else {
-                    let hash_vals: Vec<i64> = h.chunks(8)
-                        .map(|c| i64::from_le_bytes(c.try_into().unwrap_or([0; 8])).rem_euclid(q))
-                        .collect();
-                    let len = accumulated.len().min(hash_vals.len());
-                    for i in 0..len {
-                        accumulated[i] = (accumulated[i] + hash_vals[i]).rem_euclid(q);
-                    }
+                // Homomorphic addition: δ(m₁||r₁) + δ(m₂||r₂) = δ((m₁+m₂)||(r₁+r₂))
+                for (acc, edge) in accumulated.iter_mut().zip(edges) {
+                    *acc = (*acc + edge).rem_euclid(q);
                 }
             }
         }
@@ -341,7 +352,17 @@ impl Block {
         for val in &accumulated {
             hasher.update(&val.to_le_bytes());
         }
-        hasher.finalize().into()
+        Ok(hasher.finalize().into())
+    }
+
+    /// Compute the cochain root for already-validated transaction data.
+    ///
+    /// Consensus code should prefer `try_compute_cochain_root` and surface the
+    /// validation error. This helper intentionally panics on malformed data
+    /// rather than falling back to hashing raw bytes.
+    pub fn compute_cochain_root(&self) -> [u8; 32] {
+        self.try_compute_cochain_root()
+            .expect("block contains canonical cochain commitments")
     }
 }
 
@@ -350,34 +371,67 @@ impl Block {
 /// Wire format (matching Python CochainCommitment.to_bytes()):
 ///   modulus(4 LE) + n_edges(4 LE) + edge_values(n × 8 as i64 LE) + topology_hash(16)
 ///
-/// Returns (modulus, edge_values) or None if data doesn't match format.
-pub fn parse_cochain_commitment(data: &[u8]) -> Option<(u32, Vec<i64>)> {
-    if data.len() < 8 {
-        return None;
+/// Returns `(modulus, edge_values)` or an error if data doesn't match the
+/// canonical consensus format.
+pub fn try_parse_cochain_commitment(
+    data: &[u8],
+) -> Result<(u32, Vec<i64>), CochainCommitmentError> {
+    if data.len() < 24 {
+        return Err(CochainCommitmentError::TooShort { actual: data.len() });
     }
 
-    let modulus = u32::from_le_bytes(data[0..4].try_into().ok()?);
-    let n_edges = u32::from_le_bytes(data[4..8].try_into().ok()?) as usize;
+    let modulus = u32::from_le_bytes(
+        data[0..4]
+            .try_into()
+            .map_err(|_| CochainCommitmentError::TooShort { actual: data.len() })?,
+    );
+    let n_edges = u32::from_le_bytes(
+        data[4..8]
+            .try_into()
+            .map_err(|_| CochainCommitmentError::TooShort { actual: data.len() })?,
+    ) as usize;
 
-    // Validate: modulus should be reasonable (prime, > 0)
-    if modulus == 0 || modulus > 100_000 {
-        return None;
+    if modulus as i64 != COCHAIN_MODULUS {
+        return Err(CochainCommitmentError::InvalidModulus(modulus));
+    }
+    if n_edges == 0 {
+        return Err(CochainCommitmentError::EmptyEdges);
+    }
+    if n_edges > MAX_COCHAIN_EDGES {
+        return Err(CochainCommitmentError::TooManyEdges {
+            actual: n_edges,
+            max: MAX_COCHAIN_EDGES,
+        });
+    }
+
+    let edge_bytes = n_edges
+        .checked_mul(8)
+        .ok_or(CochainCommitmentError::LengthOverflow)?;
+    let expected_len = 8usize
+        .checked_add(edge_bytes)
+        .and_then(|n| n.checked_add(16))
+        .ok_or(CochainCommitmentError::LengthOverflow)?;
+
+    if data.len() != expected_len {
+        return Err(CochainCommitmentError::NonCanonicalLength {
+            expected: expected_len,
+            actual: data.len(),
+        });
     }
 
     let edge_start = 8;
-    let edge_end = edge_start + n_edges * 8;
-
-    // Must have enough bytes for all edges (+ optional 16-byte topology hash)
-    if data.len() < edge_end {
-        return None;
-    }
-
+    let edge_end = edge_start + edge_bytes;
     let edges: Vec<i64> = data[edge_start..edge_end]
         .chunks_exact(8)
         .map(|c| i64::from_le_bytes(c.try_into().unwrap()))
         .collect();
 
-    Some((modulus, edges))
+    Ok((modulus, edges))
+}
+
+/// Backward-compatible parser wrapper for call sites that only need yes/no.
+pub fn parse_cochain_commitment(data: &[u8]) -> Option<(u32, Vec<i64>)> {
+    try_parse_cochain_commitment(data).ok()
 }
 
 /// Helper: create a default BlockHeader for tests

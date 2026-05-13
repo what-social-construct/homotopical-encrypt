@@ -15,8 +15,13 @@ Lean modules define predicates, contracts, and theorem obligations.
    - Current anchors:
      - `lean/Axioms/HelferFOL.lean` (`DiagonalPathSemantics`,
        `HomotopyInvarianceFO`, `ClassWitnessSound`)
-     - `lean/Axioms/PythonHomotopyRefinement.lean` (`Equivalent`,
-       `equivalent_refl/symm/trans`, `Refines`)
+     - `lean/Axioms/HomotopyClass.lean` (`SameHomotopyClass`,
+       `sameHomotopyClass_refl/symm/trans`, `HomotopyClassWitness`,
+       `HiddenRepresentativeAmbiguity`)
+
+   Runtime refinement note: `lean/Axioms/PythonHomotopyRefinement.lean` is a
+   future parity shim only. It is intentionally not the owner of the homotopy
+   class theory because Python/Rust orchestration may change.
 
 2. **Invariant implication contracts**
    - Scope: implications like
@@ -44,10 +49,12 @@ Lean modules define predicates, contracts, and theorem obligations.
      - `lean/Axioms/Foundation.lean`
      - `lean/Axioms/HelferFOL.lean`
 
-### Python owns geometry computation (candidate witnesses/invariants)
+### Python provides geometry reference computations (candidate witnesses/invariants)
 
 - Numeric eigendecompositions, decomposition/projection computation,
   witness construction, and non-consensus-critical orchestration.
+- Consensus-path acceptance still belongs to Rust validation/oracle code; see
+  `docs/TRUST_BOUNDARIES.md`.
 - Main surfaces:
   - `src/invariants/*`
   - `src/proofs/*`

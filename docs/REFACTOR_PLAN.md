@@ -1,8 +1,8 @@
 # Refactor Plan: Betti-Based Anonymity
 
-## Motivation: Math Audit Findings
+## Motivation: Historical Anonymity-Gap Findings
 
-### Hardness Proof (`hardness_proof.lean`) — SOUND ✅
+### Hardness Proof (`lean/CVP.lean`, `lean/Hardness.lean`) — SOUND ✅
 
 The Lean hardness proof formalizes the core cryptographic claim and is consistent
 with the implementation:
@@ -12,14 +12,15 @@ with the implementation:
 | `Hodge_Decomposition_Theorem` | C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ*) | ✅ Matches `geometry/hodge.py` |
 | `Hodge_Hardness_Reduction_Proof` | Hodge solver → CVP solver | ✅ Matches `crypto/hardness.py` |
 | `Hodge_Ambiguity_Proof` | Harmonic depends on Laplacian choice | ✅ Matches ambiguity argument |
-| `Hodge_Strictly_Harder` | CVP oracle insufficient for Hodge | ✅ Matches strict inequality claim |
+| `PublicCompatibleHodgeAmbiguity` / `KernelAmbiguous` | Public class need not determine one hidden kernel | ✅ Matches hidden-operator claim |
+| `CVP_Oracle_Insufficient_For_Public_Hodge_Solving` | Known-lattice CVP oracle insufficient by itself | ✅ Matches strictness claim in the hidden-operator model |
 | `Hodge_Projection_Is_CVP` | Closest harmonic form = CVP solution | ✅ Matches `invariants/harmonic.py` |
 
-**Encryption security (Hodge-hardness > CVP) is unaffected by the audit.**
+**Encryption security is modeled as hidden-operator Hodge-hardness: known-lattice CVP is the projected problem, while the public data does not determine the operative hidden kernel.**
 
-### Math Audit (`math_audit_hcrypt.lean`) — ANONYMITY GAP 🚨
+### Spectral Fingerprint (`lean/Laplacian.lean`) — ANONYMITY GAP 🚨
 
-The audit proved `Spectrum_Not_Homotopy_Invariant`:
+The current Lean workspace includes `Spectrum_Not_Homotopy_Invariant`:
 
 > Two Laplacians can have the same Betti numbers (same kernel dimension = 
 > "homotopy equivalent") but different spectral fingerprints.

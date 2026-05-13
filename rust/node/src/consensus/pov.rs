@@ -160,8 +160,8 @@ impl PoVProducer {
             transactions,
         };
 
-        // Compute and set Merkle root
-        block.header.cochain_root = block.compute_cochain_root();
+        // Compute and set cochain root from canonical cochain commitments.
+        block.header.cochain_root = block.try_compute_cochain_root()?;
 
         info!(
             "✅ Produced block at height {} with {} txs (gap={:.4})",
@@ -337,7 +337,7 @@ impl PoVVerifier {
         }
 
         // 6. Verify Merkle root
-        let computed_root = block.compute_cochain_root();
+        let computed_root = block.try_compute_cochain_root()?;
         if computed_root != block.header.cochain_root {
             bail!("Merkle root mismatch");
         }

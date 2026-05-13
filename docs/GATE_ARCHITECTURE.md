@@ -5,9 +5,13 @@ where nodes are simplicial sets/fibrations, paths are higher homotopies.
 
 The categorical structure dictates where each validation gate lives.
 
+For the production ownership boundary between Lean specifications, Rust
+validation, and Python reference code, see
+[TRUST_BOUNDARIES.md](TRUST_BOUNDARIES.md).
+
 ## Three Gate Categories
 
-### 1. EXACT GATES (Python — no tolerance, structural)
+### 1. EXACT GATES (current Python reference; target Rust consensus)
 
 These are mathematical identities. They're either true or false.
 No boundary zone, no Heyting semantics — classical logic.
@@ -23,8 +27,12 @@ No boundary zone, no Heyting semantics — classical logic.
 | dim ∈ {128,256,512,1024} | Dimension | `crypto/validation.py` | NONE (integer) |
 | β₀ ≥ 1 | Connected topology | `geometry/topology.py` | NONE (integer) |
 
-**Python owns these.** They're part of the geometry computation.
-The oracle doesn't need to re-check them — they're structural.
+**Current implementation:** Python computes/reference-checks many of these as
+part of geometry construction.
+
+**Target consensus boundary:** Rust enforces exact gates on transaction/block
+acceptance, or verifies bounded signed attestations from workers. The oracle
+doesn't need Heyting boundary logic for these because they are structural.
 
 ### 2. CONSENSUS GATES (Rust Oracle — Heyting tri-valued)
 

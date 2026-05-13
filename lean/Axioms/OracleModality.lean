@@ -2,6 +2,7 @@ import Mathlib
 import Axioms.Foundation
 import Axioms.Heyting
 import Axioms.ZKP
+import Axioms.SpectralBounds
 import Axioms.StageAdmissibility
 
 /-
@@ -36,13 +37,38 @@ import Axioms.StageAdmissibility
   induced by the Tsirelson predicate. Block acceptance is the subobject classifier
   morphism j : Ω → Ω applied to the spectral-gap judgment.
 
+  PoV construction scope:
+    The query/answer/gate objects in this file are protocol construction
+    vocabulary for the proof-of-validation pipeline. They describe which
+    mathematical obligations an oracle answer must witness and how public
+    judgments collapse into consensus actions. They should not be read as a
+    claim that Lean has verified the deployed oracle endpoint or all numerical
+    linear algebra. Concrete byte validation, attestation, timeouts, malformed
+    requests, and endpoint hardening are Rust/oracle TCB responsibilities.
+
+  Semantic scope:
+    The oracle answer is a public/runtime quotient of richer hidden semantics.
+    It should be read as the protocol-facing Heyting shadow of a path/fibration
+    semantic object, not as the full hidden object itself. This is the same
+    distinction used in `Hardness.lean`: public cochains/fingerprints/judgments
+    do not canonically select the operative fibration, Laplacian, or kernel.
+
+    `SpectralJudgment.Boundary` is an operational verdict: the node holds or
+    re-evaluates rather than finalizing. Its image in `Heyting3` is
+    `Undetermined`, but the hold/retry policy is not the Heyting implication
+    operation. Heyting implication remains the residuated connective proved in
+    `Axioms.Heyting` and in the concrete Ω-collapse model below.
+
   ───────────────────────────────────────────────────────────────────────────────
   CONNECTIONS TO OTHER AXIOM MODULES:
 
     Foundation.lean     : CochainComplex/Hodge supply the witness type for queries
     ZKP.lean            : ZKPWellFormed is the soundness/completeness of Answer
     StageAdmissibility  : StageAdmissibilityWellFormed is the gate implication
-    HelferFOL.lean      : CartesianLiftingPrinciple underlies η₁ transport
+    HelferFOL.lean      : path equality / CartesianLiftingPrinciple underlie η₁
+                          transport and hidden representative semantics
+    Heyting.lean        : runtime quotient/collapse to `Heyting3`
+    SpectralBounds.lean : canonical PoV/Tsirelson spectral window predicate
   ───────────────────────────────────────────────────────────────────────────────
 -/
 
@@ -56,8 +82,11 @@ universe u
 -- ============================================================================
 
 /--
-  A spectral gap judgment: the three-valued Heyting output of the Oracle gate.
-  Corresponds to ToposConsensus boundary semantics in Python/Rust.
+  Protocol-level spectral verdict returned by the Oracle gate.
+
+  This is not itself the full Heyting algebra. It is an operational classifier
+  that later maps into `OmegaNV`/`Heyting3` for public truth semantics and into
+  `ConsensusAction` for node policy.
 -/
 inductive SpectralJudgment
   | InBounds    -- gap ∈ [1/√2, 2√2]: valid block producer
@@ -65,19 +94,30 @@ inductive SpectralJudgment
   | OutOfBounds -- gap outside Tsirelson range: reject
   deriving DecidableEq, Repr
 
-/-- The Tsirelson predicate: spectral gap is within the valid range. -/
-def TsirelsonPredicate (gap : ℝ) : Prop :=
-  Real.sqrt 2 / 2 ≤ gap ∧ gap ≤ 2 * Real.sqrt 2
+/-- Node-side operational action induced by an oracle spectral verdict. -/
+inductive ConsensusAction
+  | Accept
+  | Hold
+  | Reject
+  deriving DecidableEq, Repr
 
-/-- Lower Tsirelson bound (1/√2). -/
-noncomputable def tsirelsonLower : ℝ := Real.sqrt 2 / 2
+/-- Operational policy: accept valid, hold boundary, reject out-of-bounds. -/
+def judgmentToAction : SpectralJudgment → ConsensusAction
+  | SpectralJudgment.InBounds => ConsensusAction.Accept
+  | SpectralJudgment.Boundary => ConsensusAction.Hold
+  | SpectralJudgment.OutOfBounds => ConsensusAction.Reject
 
-/-- Upper Tsirelson bound (2√2). -/
-noncomputable def tsirelsonUpper : ℝ := 2 * Real.sqrt 2
+/-- Final acceptance action: only `Accept` finalizes. -/
+def actionFinalAccepted : ConsensusAction → Bool
+  | ConsensusAction.Accept => true
+  | ConsensusAction.Hold => false
+  | ConsensusAction.Reject => false
 
-/-- Boundary proximity predicate used by deterministic node/oracle policy. -/
-def NearTsirelsonBoundary (gap eps : ℝ) : Prop :=
-  |gap - tsirelsonLower| ≤ eps ∨ |gap - tsirelsonUpper| ≤ eps
+/-- Gate admissibility action: `Accept` or `Hold` may continue, `Reject` may not. -/
+def actionGateAdmissible : ConsensusAction → Bool
+  | ConsensusAction.Accept => true
+  | ConsensusAction.Hold => true
+  | ConsensusAction.Reject => false
 
 /--
   Query type: what Python sends to the Oracle.
@@ -386,6 +426,69 @@ def judgmentToOmega : SpectralJudgment → OmegaNV
 def judgmentToHeyting3 (j : SpectralJudgment) : Heyting3 :=
   omegaCollapse (judgmentToOmega j)
 
+/-- In-bounds oracle verdicts collapse to public valid truth. -/
+theorem inBounds_truth_valid :
+    judgmentToHeyting3 SpectralJudgment.InBounds = Heyting3.Valid := by
+  rfl
+
+/-- Boundary oracle verdicts collapse to public undetermined truth. -/
+theorem boundary_truth_undetermined :
+    judgmentToHeyting3 SpectralJudgment.Boundary = Heyting3.Undetermined := by
+  rfl
+
+/-- Out-of-bounds oracle verdicts collapse to public invalid truth. -/
+theorem outOfBounds_truth_invalid :
+    judgmentToHeyting3 SpectralJudgment.OutOfBounds = Heyting3.Invalid := by
+  rfl
+
+/-- Boundary is operationally held for more evidence. -/
+theorem boundary_action_hold :
+    judgmentToAction SpectralJudgment.Boundary = ConsensusAction.Hold := by
+  rfl
+
+/-- Boundary is not a final accept action. -/
+theorem boundary_not_final_accepted :
+    actionFinalAccepted (judgmentToAction SpectralJudgment.Boundary) = false := by
+  rfl
+
+/-- Boundary remains gate-admissible: it is held/retried rather than rejected. -/
+theorem boundary_gate_admissible :
+    actionGateAdmissible (judgmentToAction SpectralJudgment.Boundary) = true := by
+  rfl
+
+/--
+The formal Heyting implication is residuated: boundary/undetermined truth
+implying invalid truth collapses to invalid in the 3-chain.
+-/
+theorem boundary_truth_implies_invalid_truth :
+    himp (judgmentToHeyting3 SpectralJudgment.Boundary)
+      (judgmentToHeyting3 SpectralJudgment.OutOfBounds) = Heyting3.Invalid := by
+  rfl
+
+/--
+The core split used for runtime parity: `Boundary` is held by consensus policy,
+while Heyting implication remains the formal residuated connective.
+-/
+theorem boundary_policy_is_not_heyting_implication :
+    judgmentToAction SpectralJudgment.Boundary = ConsensusAction.Hold
+      ∧ himp (judgmentToHeyting3 SpectralJudgment.Boundary)
+          (judgmentToHeyting3 SpectralJudgment.OutOfBounds) = Heyting3.Invalid := by
+  exact ⟨rfl, rfl⟩
+
+/-- Final acceptance corresponds exactly to public valid truth. -/
+theorem actionFinalAccepted_iff_valid_truth (j : SpectralJudgment) :
+    actionFinalAccepted (judgmentToAction j) = true
+      ↔ judgmentToHeyting3 j = Heyting3.Valid := by
+  cases j <;> simp [actionFinalAccepted, judgmentToAction, judgmentToHeyting3,
+    judgmentToOmega, omegaCollapse]
+
+/-- Gate admissibility corresponds exactly to non-invalid public truth. -/
+theorem actionGateAdmissible_iff_not_invalid_truth (j : SpectralJudgment) :
+    actionGateAdmissible (judgmentToAction j) = true
+      ↔ judgmentToHeyting3 j ≠ Heyting3.Invalid := by
+  cases j <;> simp [actionGateAdmissible, judgmentToAction, judgmentToHeyting3,
+    judgmentToOmega, omegaCollapse]
+
 -- ============================================================================
 -- §1.5  CONSTRUCTIVE FINITE SHEAF SETUP (runtime-facing)
 -- ============================================================================
@@ -535,8 +638,12 @@ theorem lt_preserves_truth :
     lawvere_tierney SpectralJudgment.InBounds = SpectralJudgment.InBounds := rfl
 
 /--
-  Block acceptance is the characteristic morphism of the dense subobject
-  {InBounds, Boundary} ↪ SpectralJudgment under the Lawvere-Tierney topology.
+  Gate admissibility is the characteristic morphism of the dense subobject
+  `{InBounds, Boundary} ↪ SpectralJudgment` under the Lawvere-Tierney topology.
+
+  Historical name note: `blockAccepted` means "not rejected by this consensus
+  gate". It does not mean finalization: `Boundary` is admissible but maps to the
+  operational action `Hold`.
 -/
 def blockAccepted (j : SpectralJudgment) : Bool :=
   match j with
@@ -548,6 +655,11 @@ theorem accepted_iff_not_out :
     ∀ x : SpectralJudgment,
     blockAccepted x = true ↔ x ≠ SpectralJudgment.OutOfBounds := by
   intro x; cases x <;> simp [blockAccepted]
+
+/-- The legacy gate predicate is the same as action-level admissibility. -/
+theorem blockAccepted_eq_actionGateAdmissible (j : SpectralJudgment) :
+    blockAccepted j = actionGateAdmissible (judgmentToAction j) := by
+  cases j <;> rfl
 
 /-- Sheafified truth is `Valid` exactly on `InBounds`. -/
 theorem judgmentToHeyting3_valid_iff_inBounds (j : SpectralJudgment) :

@@ -1,8 +1,8 @@
 # Lean Proof ↔ Python Implementation Map
 
-This document maps every definition and theorem in `framework_consolidation.lean`
-to its Python implementation, confirming the codebase is consistent with the
-formally verified mathematical claims.
+This document maps the Lean proof workspace to the current Python implementation.
+It is a parity guide, not a verified extraction pipeline: Lean owns the
+mathematical claims, while Python currently provides runtime checks and tests.
 
 ## Core Structures
 
@@ -12,7 +12,8 @@ formally verified mathematical claims.
 | `SpectralFingerprint L` (multiset of eigenvalues) | `src/crypto/credential.py::SpectralFingerprint` | ✅ `.eigenvalues` field = Laplacian spectrum |
 | `SpectrallyEquivalent L1 L2` | `SpectralFingerprint.matches()` | ✅ Compares eigenvalue arrays |
 | `is_harmonic Δ h := Δ·h = 0` | `src/invariants/harmonic.py::is_harmonic()` | ✅ Checks `‖Δc‖ < tol` |
-| `CVP_Instance` / `Hodge_Instance` | `src/crypto/hardness.py::LatticeInstance` | ✅ Encodes lattice+target |
+| `CVP_Instance` / `ExplicitLattice` / `CVPOracleCorrect` (`lean/CVP.lean`) | `src/crypto/hardness.py::LatticeInstance` | ✅ Encodes known-lattice problem objects; hardness remains an external assumption |
+| `Hodge_Instance` (`lean/Hardness.lean`) | `src/crypto/hardness.py` Hodge-facing helpers | ✅ Encodes hidden-operator Hodge side |
 | `GrothendieckFibration p` | `src/geometry/fiber_bundle.py::FiberBundle` | ✅ Parallel transport = Cartesian lift |
 | `Fibration B` (bundled fibration) | `src/crypto/credential.py::QuantumSheafFibration` | ✅ Contains sheaf + edge_keys + nerve |
 | `FibrationCopy F n` | `src/crypto/credential.py::rotate_credential()` | ✅ Creates homotopy-equivalent copy |
@@ -53,7 +54,7 @@ then solver(t) gives a lattice vector.
 - Security claim: without the fibration (restriction maps), recovering the
   message requires solving CVP on ker(Δ_sheaf).
 
-### 3. Hodge Ambiguity (`Hodge_Ambiguity_Proof`, line 150)
+### 3. Hodge Ambiguity (`Hodge_Ambiguity_Proof`)
 
 **Lean**: ∃ Δ₁, Δ₂, b such that b ∈ ker(Δ₁) but b ∉ ker(Δ₂).
 Same ciphertext, different Laplacians → different meanings.
@@ -62,18 +63,19 @@ Same ciphertext, different Laplacians → different meanings.
 - `src/proofs/anonymity.py::prove_class_membership()` — ZK proof that credential
   is in a homotopy class without revealing which specific fibration
 - `src/crypto/credential.py::rotate_credential()` — creates distinct fibrations
-  in the same class (each has different Δ)
+  in the same public class (each may have different Δ)
 
-### 4. Hodge Strictly Harder (`Hodge_Strictly_Harder`, line 316)
+### 4. Hidden-Operator Strictness (`PublicCompatibleHodgeAmbiguity`, `KernelAmbiguous`, `CVP_Oracle_Insufficient_For_Public_Hodge_Solving`)
 
-**Lean**: No universal solver can find harmonic projections for ALL Laplacians
-given only a CVP oracle. (Because ambiguity: the oracle doesn't know which Δ.)
+**Lean**: A public fingerprint/class can contain multiple hidden Laplacians with
+different harmonic kernels. A CVP oracle solves only CVP on a fixed, presented
+lattice; it does not identify which hidden representative determines ker(Δ).
 
 **Python**: This is the core security argument — the adversary sees the ciphertext
 but doesn't know the fibration (restriction maps). Without the fibration, they
 can't construct Δ_sheaf, so they can't do harmonic projection.
 
-### 5. Hodge Projection = CVP (`Hodge_Projection_Is_CVP`, line 341)
+### 5. Hodge Projection = CVP (`Hodge_Projection_Is_CVP`)
 
 **Lean**: The closest harmonic vector to b is the CVP solution.
 If h is the closest vector in ker(Δ) to b, then for any other h' ∈ ker(Δ),
@@ -84,7 +86,7 @@ dist(b, h) ≤ dist(b, h').
   onto ker(Δ), which IS the closest point (by Hilbert space theory)
 - `src/crypto/decrypt.py::projective_measurement()` — the ZK-compatible version
 
-### 6. Spectrum Not Homotopy Invariant (`Spectrum_Not_Homotopy_Invariant`, line 548)
+### 6. Spectrum Not Homotopy Invariant (`Spectrum_Not_Homotopy_Invariant`)
 
 **Lean**: ∃ L1, L2 with same kernel dimension but different spectral fingerprints.
 (ScalarLaplacian(1) and ScalarLaplacian(2): both have ker dim 0, but spectra {1} ≠ {2}.)
@@ -106,6 +108,26 @@ dist(b, h) ≤ dist(b, h').
 - `src/proofs/homotopy.py::prove_homotopy_equivalence()` — proves two credentials
   are in the same homotopy class
 
+### 8. Transaction/Block Validation Boundary (`lean/Chain.lean`)
+
+**Lean**: `TransactionWellFormed`, `TransactionAccepted`, `BlockAccepted`, and
+`LedgerState` specify the abstract consensus-state facts used by no-double-spend
+and block-acceptance reasoning. The preservation lemmas
+`acceptedTransaction_key_image_fresh`, `blockAccepted_tx_not_previously_spent`,
+`applyTransaction_marks_key_image`, and `applyBlock_marks_tx_key_image` make the
+key-image state boundary explicit.
+
+**Rust**:
+- `rust/node/src/types.rs` — runtime transaction/block structures and cochain
+  root computation
+- `rust/node/src/consensus/pov.rs` — production block verification path
+- `rust/node/src/storage/keyimages.rs` — key-image persistence boundary
+- `rust/node/src/storage/state.rs` — block application and state transition
+
+Lean does not own byte parsing, canonical encodings, allocation bounds, storage,
+or endpoint behavior. Those remain Rust runtime concerns; see
+`docs/TRUST_BOUNDARIES.md`.
+
 ## Encryption/Decryption Pipeline (matches Lean Hodge path)
 
 ```
@@ -126,16 +148,17 @@ DECRYPT (v3 — Hodge path):
 SECURITY:
   Without the fibration, recovering the message requires
   solving CVP on ker(Δ_sheaf)                               [Hodge_Hardness_Reduction]
-  No universal solver exists                                 [Hodge_Strictly_Harder]
-  Same ciphertext could mean different things under
-  different Laplacians                                       [Hodge_Ambiguity]
+  Public data does not determine a unique hidden kernel       [KernelAmbiguous]
+  A known-lattice CVP oracle is insufficient by itself        [CVP_Oracle_Insufficient_For_Public_Hodge_Solving]
+  Same public cochain could mean different things under
+  different hidden Laplacians                                [Hodge_Ambiguity]
 ```
 
 ## Version History
 
 - **v1** (deprecated): Discrete Gaussian noise — no formal backing in Lean proof
 - **v2**: Lattice path (fallback when dim(ker(Δ)) < message bits)
-- **v3**: Hodge path (message ∈ ker(Δ), matches framework_consolidation.lean)
+- **v3**: Hodge path (message ∈ ker(Δ), aligned with the Lean proof workspace)
 
 ## Key Implementation Notes
 
