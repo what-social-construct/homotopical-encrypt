@@ -1,0 +1,34 @@
+import Proximity.Projection
+import Proximity.ListDecoding
+import Proximity.CorrelatedAgreement
+import Proximity.ReedSolomon
+import Proximity.ReedSolomonTarget
+import Proximity.Problem
+import Proximity.Grassmannian
+import Proximity.PluckerShadow
+import Proximity.GrassmannianPlucker
+import Proximity.CochainBridge
+import Proximity.PluckerCochain
+import Proximity.CochainPlane
+import Proximity.CochainReedSolomon
+import Proximity.ProjectionChain
+
+/-
+  Proximity bridge for the homotopical-encrypt Lean workspace.
+
+  This file names the hcrypt-native projection/proximity interface:
+  cochains are the finite cellular shadow of a sheaf/fibration, disagreement is
+  the local obstruction to gluing, and a code/evaluation shadow is a further
+  projection of that cochain data.
+
+  Scope:
+    * It is the internal bridge needed to compare sheaf/Grassmannian proximity
+      with code-style proximity questions later.
+    * List decoding, correlated agreement, and mutual correlated agreement are
+      formalized as finite combinatorial targets, with no RS/ERA theorem
+      assumed by this import surface.
+    * Concrete Grassmannian/Laplacian families live in `Tsirelson.lean` and
+      `Laplacian/Grassmannian.lean`.
+    * Plucker coordinates and RS targets live here as stages of the proximity
+      projection pipeline.
+-/

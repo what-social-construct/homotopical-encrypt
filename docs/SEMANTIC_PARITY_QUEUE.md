@@ -26,12 +26,14 @@ that fails on legacy filenames.
 
 ## ✅ Resolved
 
-### R1. Cochain commitment structure: scalar → vector (Lean ↔ Py ↔ Rust)
+### R1. Cochain commitment structure: scalar → canonical payload (Lean ↔ Py ↔ Rust)
 - **Was:** Lean `Chain.lean` used `commitment_value : ℝ` (scalar).
   Python and Rust used `edge_values: List[int]` / `Vec<i64>` (vector).
-- **Fix:** `Chain.lean` Transaction now has `commitment_edge_values : List ℤ`,
-  `commitment_modulus : ℕ`, `topology_hash : ℕ`. All three languages agree on
-  vector edge commitment model.
+- **Fix:** Lean now uses the canonical `CochainCommitmentData` payload:
+  `modulus`, declared edge count, vector `edge_values : List ℤ`, and 16-byte
+  topology hash. `Chain.lean` transactions carry this payload directly as
+  `cochain_commitment`, so chain proofs, proximity bridges, and Rust wire
+  validation refer to one cochain commitment shape.
 
 ### R2. BlindedCommitment / VectorCommitment missing from Rust
 - **Was:** Python had `BlindedCommitment` and `VectorCommitment` in
@@ -167,9 +169,9 @@ that fails on legacy filenames.
     for proper fingerprint→vertex index mapping with fallback.
   - Tests: 171 passed, 0 failures.
 
-### R13. Chain.lean sorry holes closed (vector commitment proofs)
-- **Was:** `Chain.lean` R1 resolution introduced vector `commitment_edge_values :
-  List ℤ` but left 3 `sorry` holes: `tx_compose_assoc_sum`,
+### R13. Chain.lean sorry holes closed (canonical cochain commitment proofs)
+- **Was:** `Chain.lean` R1 resolution introduced vector cochain commitments
+  but left 3 `sorry` holes: `tx_compose_assoc_sum`,
   `tx_compose_identity_right_sum`, `tx_compose_identity_left_sum` required
   `List.zipWith` associativity/identity lemmas that don't exist in Mathlib.
 - **Fix:** Proved all three via custom helper lemmas:

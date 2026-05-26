@@ -66,7 +66,8 @@ Not all gates apply at all stages. This is `StageAdmissibility`:
 | **transaction** | ✅ All | ✅ All | Validators verify geometry |
 | **block** | ✅ All | ✅ All (from oracle) | Oracle-attested |
 
-Lean: `lean/Axioms/StageAdmissibility.lean`
+Lean: `lean/Axioms/StageAdmissibility.lean`, surfaced through
+`lean/Gates/Stage.lean` for gate-facing imports.
 
 ## Data Flow
 
@@ -121,7 +122,7 @@ the consensus gates where genuine measurement uncertainty exists
 | Python | ✅ `invariants/unified.py` | ⚠️ 12 sites bypass oracle | ✅ `StageAdmissibility` |
 | Rust Oracle | — | ✅ `classify_spectral_gap` | — |
 | Rust Node | — | ✅ `ToposVerifier` | ✅ `pov.rs` |
-| Lean | ✅ `Foundation.lean` | ✅ `OracleModality.lean` | ✅ `StageAdmissibility.lean` |
+| Lean | ✅ `Axioms/Foundation.lean` + `Gates/Exact.lean` | ✅ `Axioms/OracleModality.lean` + `Gates/Oracle.lean` / `Gates/Spectral.lean` | ✅ `Axioms/StageAdmissibility.lean` + `Gates/Stage.lean`; PoV composition in `Consensus/ProofOfValue.lean` |
 
 **Next:** Replace the 12 Python bypass sites with either:
 - Pre-flight `gap_in_bounds().accepted()` (for offline/batch)

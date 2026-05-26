@@ -1,12 +1,8 @@
-# Categorical Architecture: Why the Code is Organized This Way
+# Categorical Architecture
 
-## The Question
+## Dependency Order
 
-Is `primitives/ → geometry/ → crypto/ → proofs/ → consensus/ → chain/`
-the right dependency order for a homotopical cryptographic blockchain?
-
-**Yes.** The module hierarchy IS the categorical structure, and the
-categorical structure IS the security argument.
+primitives/ → geometry/ → crypto/ → proofs/ → consensus/ → chain/`
 
 ## The Topos View
 
@@ -239,7 +235,87 @@ the coboundary commutes with η:
 - This is what `natural.py:is_natural()` checks
 - And what `rust/oracle/src/stalk_bridge.rs` verifies via `verify_all_naturality()`
 
-### Diagram 4: The Helfer Transport Triangle
+### Diagram 4: The Plucker, Cochain, and Proximity Projection
+
+The middle layer of the privacy exact sequence is not merely "a hashable blob."
+It has a geometric coordinate stage and a local-test stage. The current Lean
+shape is:
+
+```
+    private fibration / credential representative
+                  │
+                  │  Hodge/Laplacian projection
+                  ▼
+    Grassmannian point / operative Hodge submodule
+                  │
+                  │  private frame witness, exterior product
+                  ▼
+    Plucker / exterior-algebra public shadow
+                  │
+                  │  cellular restriction and coboundary
+                  ▼
+          cochain / syndrome local test
+                  │
+                  │  distance and gap comparison
+                  ▼
+          RS / finite proximity target
+                  │
+                  │  commitment or hash projection
+                  ▼
+          public hash / chain shadow
+```
+
+In this sense:
+
+- a cochain is a sheaf-theoretic received word;
+- `δ(c)` is its local inconsistency syndrome;
+- `ker(δ)` / `ker(Δ)` is the valid global-section space;
+- `π_H(c)` is decoding/projection to the globally coherent part;
+- a Plucker coordinate is the exterior-algebra shadow of the Grassmannian/Hodge
+  submodule;
+- the hash is only a compressed handle to this shadow, not the shadow itself.
+
+`lean/Proximity/Projection.lean` names the abstract projection vocabulary, and
+`lean/Proximity/CochainBridge.lean` connects it to the existing committed-cochain
+and sheaf-coherence contracts:
+
+```
+SheafProximityInstance ── EvaluationProjection ──▶ CodeShadow
+```
+
+The intended contract is deliberately modest: global sections project to
+codewords/shadow-valid words, and projected distance is controlled by
+sheaf-side disagreement. This keeps proximity comparisons internal to hcrypt
+first. RS/code-proximity targets live under `lean/Proximity/` and become useful
+when the projection and distance bounds are explicit.
+
+This also separates three roles that should not be conflated:
+
+| Layer | Role |
+|-------|------|
+| Witness | private fibration, restriction maps, paths, openings |
+| Shadow | cochain/proximity/evaluation data derived from the witness |
+| Hash | public commitment or pointer to the shadow |
+| SNARK/certificate | proof that the witness produced the shadow and satisfies the required invariants |
+
+For the current Plucker layer:
+
+| Role | Lean object |
+|------|-------------|
+| Private frame witness | `GrassmannianPlucker.FrameWitness` |
+| Exterior coordinate | `GrassmannianPlucker.ExteriorCoordinate` |
+| Public Plucker shadow | `GrassmannianPlucker.FramedSystem.publicShadow` |
+| Frame-change invariance obligation | `GrassmannianPlucker.FramedSystem.Sound.projective_frame_invariance` |
+| RS target | `Proximity.ReedSolomonTarget.Target` |
+
+Current Lean build status for this projection stack:
+
+```text
+lake build
+Build completed successfully (7418 jobs)
+```
+
+### Diagram 5: The Helfer Transport Triangle
 
 ```
     FibrationCredential_old
@@ -372,13 +448,12 @@ That's what cross-language consistency means categorically.
 
 ## Summary
 
-The module hierarchy IS the categorical structure:
+Module hierarchy:
 ```
 primitives (site) → geometry (sheaves) → crypto (functor) →
 proofs (nat. trans.) → consensus (Ω) → chain (colimit) → network (realization)
 ```
 
-This isn't organizational preference — it's the only order that
-makes the security argument compositional. Each layer's guarantees
+This ordering makes the security argument compositional. Each layer's guarantees
 depend only on layers below, and Lean verifies the foundational
 properties that all three implementations must satisfy.

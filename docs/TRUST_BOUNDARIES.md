@@ -61,6 +61,41 @@ Python
     - temporary orchestration while APIs are changing
 ```
 
+## Python Role In The TCB
+
+Python is allowed to produce candidate evidence, not consensus truth.
+
+This distinction matters for the current geometry stack. The Python code can
+compute heavy objects such as Hodge decompositions, Grassmannian projections,
+spectral estimates, cochain witnesses, stalk data, and experimental proximity
+shadows. Those outputs are useful as:
+
+- witness material for a proof or SNARK;
+- inputs to a Rust oracle verifier;
+- golden/adversarial test vectors for Rust;
+- research references while the mathematical interface is still moving.
+
+They are not, by themselves, validation results. A Python-computed value becomes
+consensus-facing only after it is converted into one of the bounded public
+artifacts recognized by the TCB:
+
+```
+Python candidate computation
+  -> canonical payload / public shadow
+  -> hash, proof, SNARK, or oracle attestation
+  -> Rust verification result
+  -> consensus state transition
+```
+
+Equivalently: Python may search, approximate, construct, and propose. Rust must
+parse, bound, authenticate, verify, and commit. Lean specifies the predicates and
+soundness contracts that make those runtime checks meaningful.
+
+This is the intended reading of `NoPythonConsensusAuthority` in
+`lean/TCB/Runtime.lean`: Python can be in the prover/witness-generation path, but
+it cannot be the final accept/reject boundary for transactions, blocks, oracle
+answers, or state transitions.
+
 ## Transaction Validation Boundary
 
 Transaction validation is the most important place to keep the split clean.
@@ -104,6 +139,117 @@ preservation.
 
 The block validator should be boring: parse, bound, verify, apply. The geometry
 can be deep; the endpoint should not be.
+
+## Core Objects, Hashes, And Proof-Carrying Artifacts
+
+Core mathematical/runtime objects should not be redefined as hashes or SNARKs.
+Use a layered representation:
+
+```
+core object
+  → public shadow / compressed projection
+  → hash/commitment artifact
+  → proof-carrying artifact
+  → Rust verifier result
+```
+
+For cochains, the canonical Lean object is `CochainCommitmentData`: modulus,
+declared edge count, edge values in C¹, and topology hash. Public hashes and
+proofs wrap this object; they do not replace it.
+
+Production privacy adds one more discipline: full cochains are witness or
+intermediate objects by default. A consensus-facing cochain datum should be a
+commitment, root, public shadow, or proof input unless a protocol path
+explicitly marks the full edge data public.
+
+## Abstract Witness Setup
+
+The production validation path should follow a witness/verifier pattern:
+
+```
+full private object
+  -> witness
+  -> public inputs / public shadow
+  -> proof or attestation
+  -> small Rust verifier
+  -> state-root update
+```
+
+For hcrypt this specializes to:
+
+```
+encrypted SheafState / private stalk / fibration representative
+  -> cochain or homotopy witness
+  -> public shadow: hash, topology hash, root, key image, commitment
+  -> proof object: "this witness induces this valid transition"
+  -> Rust accepts an observed public statement
+  -> ledger updates roots, nullifiers, balances, and storage indexes
+```
+
+The public ledger stores commitments, roots, nullifiers, public shadows,
+oracle attestations, and proof-carrying artifacts. The verified encrypted data
+layer stores full state objects and witness payloads. Rust should not need to
+decrypt private objects for consensus; it verifies that the public artifact is
+bound to a valid witness statement.
+
+| Layer | Meaning | Lean surface | Runtime owner |
+|---|---|---|---|
+| Core object | Semantic payload or mathematical datum | `CochainCommitmentData`, sheaf/coherence predicates | Rust validates bytes into this shape |
+| Compressed shadow | Bounded public projection of a larger witness/object | `CompressionContract`, proximity/code shadows | Rust owns canonical shadow bytes and size bounds |
+| Hash artifact | Public binding/pointer to a core object | `HashedCommittedCochain` | Rust owns serialization, hash function, domain separation |
+| Proof artifact | Certificate that hidden witness satisfies a statement | `ProofCarryingCommittedCochain`, `ZKP` | Rust verifies proof bytes/transcript |
+| State decision | Consensus acceptance/rejection | theorem/spec interfaces | Rust applies state transition atomically |
+
+Lean currently separates the proof surface by abstraction level:
+
+| Lean area | Role |
+|---|---|
+| `lean/Axioms/*` | Assumptions and specification contracts: what must be true. |
+| `lean/TCB/*` | Proof-carrying artifacts, compression contracts, runtime acceptance predicates, and witness/verifier envelopes. |
+| `lean/Gates/*` | Validation-facing façades: what gets checked or exposed at gate boundaries. |
+| `lean/Consensus/*` | Protocol composition: how gate facts become reliability discounts and Proof-of-Value scores. |
+| `lean/Proximity/*` | Projection/list-decoding/proximity math; imported by gates or consensus when a protocol needs those facts. |
+| `lean/Hardness.lean` | Hidden-operator abstraction and reduction statements. |
+| `lean/Laplacian/*` | Structured projection/Hodge objects used to instantiate the abstract hardness layer. |
+
+This keeps the TCB split small:
+
+- Lean specifies objects, predicates, and soundness contracts.
+- Compression maps full/private objects to bounded public shadows.
+- Rust owns canonical encoding, hash binding, proof verification, and state.
+- SNARKs prove private/large witness claims about core objects.
+- Hashes provide identity and integrity, not validity by themselves.
+
+## Attacker Observation Boundary
+
+The witness/verifier boundary also induces an attacker-observation site: public
+views such as transcripts, roots, topology hashes, key images, commitments, and
+oracle attestations are the only objects exposed to consensus observers. The TCB
+rule is operational:
+
+- Rust owns the canonical bytes, size bounds, domain separation, and replay
+  checks for those public views.
+- Lean specifies the predicates those views must satisfy.
+- Security claims about simulatable local views, zero knowledge, and failure to
+  recover private global sections live in `docs/SECURITY.md`.
+
+This keeps the boundary document focused on authority and implementation
+ownership, while the security document explains the attacker-observation sheaf
+model inspired by Inoué's `arXiv:2602.17301`.
+
+Current Lean names:
+
+| Purpose | Module |
+|---|---|
+| Canonical cochain payload | `lean/Axioms/CochainCommitment.lean` |
+| Generic proximity projection vocabulary | `lean/Proximity/Projection.lean` |
+| Cochain/sheaf proximity bridge | `lean/Proximity/CochainBridge.lean` |
+| Hash/proof public artifact boundary | `lean/TCB/ProofCarrying.lean` |
+| Generic compression contract | `lean/TCB/CompressionBoundary.lean` |
+| SNARK specialization of proof-carrying artifacts | `lean/TCB/SNARK.lean` |
+| Lean/Rust TCB contract scaffold | `lean/TCB/Runtime.lean` |
+| Runtime-observed public statements and proximity decisions | `lean/TCB/ObservationBoundary.lean` |
+| End-to-end witness/verifier envelope | `lean/TCB/WitnessVerifier.lean` |
 
 ## Lean Invariants To Prioritize
 

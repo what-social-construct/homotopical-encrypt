@@ -2,8 +2,8 @@
 
 **Layer 1 Privacy Blockchain with Post-Quantum Geometric Encryption**
 
-This root README is the project landing page. For the documentation index, see
-[docs/README.md](docs/README.md).
+This is the single project README. Focused architecture, proof, storage, and
+security notes live under [docs/](docs/); the map below links to the main ones.
 
 > *Quantum-resistant* (resists Shor's algorithm), not *quantum encryption* (no qubits required). Security derives from geometric lattice hardness (CVP on sheaf cochains).
 
@@ -58,6 +58,49 @@ Full blockchain node with Proof of Value consensus, sheaf-aware storage, and lib
 - ✅ **1/∞ anonymity** — replaces ring signatures (1/16) with homotopy equivalence proofs (1/∞)
 - ✅ **Sheaf onion routing** — geometry-based transaction mixing via fiber bundles
 - ✅ **Panopticon resilient** — constant-size ciphertexts, cover traffic, timing obfuscation
+
+## State, Proof, Ledger, Transport
+
+The production architecture separates four jobs:
+
+```
+SheafState / encrypted DB:
+  stores private objects and witness material
+
+Proof objects:
+  make hidden state updates verifiable
+
+Ledger:
+  commits public roots, nullifiers, commitments, and shadows
+
+Sheaf onion:
+  moves private objects and proofs without leaking route, requester, timing,
+  or access pattern
+```
+
+So sheaf onion is not the consensus validity layer. It is the
+transport/network privacy layer. The verified encrypted data layer hides what
+the object is; proof objects show that the hidden object induces a valid state
+transition; the ledger commits the public consequences; sheaf onion hides who
+moved or requested the object and through which path.
+
+## Documentation Map
+
+| Document | Contents |
+|----------|----------|
+| [ARCHITECTURE](docs/ARCHITECTURE.md) | canonical mathematical and system architecture |
+| [CATCOLAB_MAP](docs/CATCOLAB_MAP.md) | markdown-only map from hcrypt concepts to a future CatColab-style categorical model |
+| [CATEGORICAL_ARCHITECTURE](docs/CATEGORICAL_ARCHITECTURE.md) | categorical/topos structure and semantic ownership |
+| [PROXIMITY](docs/PROXIMITY.md) | canonical proximity proof outline: Plucker/cochain/plane/RS projection chain |
+| [GATE_ARCHITECTURE](docs/GATE_ARCHITECTURE.md) | validation gates, boundary handling, runtime policy |
+| [GEOMETRY](docs/GEOMETRY.md) | homotopy equivalence, diagonal construction, orthogonality, Tsirelson bound, Hodge-hardness |
+| [PRIMITIVES](docs/PRIMITIVES.md) | Helfer's logic to crypto: the cochain/fibration/homotopy foundations |
+| [SECURITY](docs/SECURITY.md) | security proofs, Hodge-hardness, sqrt-2 bounds, ring spectral proofs |
+| [CONSENSUS](docs/CONSENSUS.md) | proof of value mechanics, spectral gap validation |
+| [STORAGE](docs/STORAGE.md) | sheaf-native storage, verified encrypted data layer, routing |
+| [ROADMAP](docs/ROADMAP.md) | layer 1 implementation roadmap |
+| [WIRE_FORMAT](docs/WIRE_FORMAT.md) | binary wire format for network messages |
+| [TRUST_BOUNDARIES](docs/TRUST_BOUNDARIES.md) | Lean/Rust/Python ownership split for proofs, runtime validation, and research code |
 
 ## Why "Homotopical"?
 

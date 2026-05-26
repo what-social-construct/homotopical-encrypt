@@ -1,11 +1,9 @@
 # Categorical Comparison: HCRYPT vs Privacy Chains
 
-## Why This Comparison is Categorical (Not Just Feature Bullets)
+## Why This Comparison is Categorical 
 
 Every privacy chain makes the same promise: "transactions are private."
-The difference is WHERE the privacy comes from mathematically.
-This document compares at the level of **mathematical structure**,
-not marketing features.
+This document compares the mathematical objects of hcrypt and other privacy chains. 
 
 ---
 
@@ -279,6 +277,96 @@ HCRYPT stays IN the geometry and proves geometric facts directly.
 generic hashes are expensive in circuits. HCRYPT doesn't need any
 special hash because the "hash" IS the spectral fingerprint (eigenvalues
 of the Laplacian) — this is a topological invariant, not a hash function.
+
+---
+
+## vs Octra: Encrypted Circles vs Sheaf State
+
+Octra is the closest external comparison for the **confidential state**
+shape, rather than for the exact math.
+
+Octra's docs describe a chain/network built around encrypted balance
+state, stealth transactions, HFHE, and isolated execution environments
+called Circles. In that model, the privacy boundary is an encrypted
+execution/storage context: private data stays inside an encrypted
+environment, while transactions and proofs update the encrypted state.
+
+Important scope note: Octra's public HFHE docs do not present HFHE as a
+standard LWE/RLWE/MLWE construction. They describe hypergraph-based FHE,
+gate evaluation by hyperedge operations, redefined lattice/noise-basis
+tables, hashed key-sharding, and a security story involving hidden
+subgraphs and homological properties. The comparison below therefore treats
+HFHE as Octra's own hypergraph construction, not as ordinary LWE-based FHE.
+
+HCRYPT's analogous object is `SheafState`, but the boundary is different:
+
+```
+Octra:
+    Circle / encrypted balance context
+      → encrypted state update
+      → proof-heavy spend/decrypt/stealth path
+      → node validates encrypted-state transition
+
+HCRYPT:
+    SheafState / typed state sheaf
+      → private stalk or fibration representative
+      → public stalk, cochain commitment, or homotopy shadow
+      → hash/proof/oracle artifact
+      → Rust verifies and commits state transition
+```
+
+The common abstract pattern is:
+
+```
+private/confidential state
+  → bounded public artifact
+  → proof or verifier boundary
+  → accepted state transition
+```
+
+There is also a useful monoidal analogy. Both systems organize private work
+into composable public updates: encrypted state updates in Octra, and
+cochain/sheaf-state transitions in HCRYPT. In HCRYPT this is explicit in the
+cochain layer: commitments compose by addition, state transitions compose as
+HashChain/sheaf morphisms, and public artifacts compress larger private
+witnesses into reusable named objects. This is close in spirit to the
+compression-monoid viewpoint of "Compression is all you need": useful structure
+comes from short composable handles whose expansion carries much richer
+semantics. The analogy is structural; it is not a claim that Octra's HFHE
+updates and HCRYPT's cochains are the same algebraic construction.
+
+The difference is the semantics of the private state:
+
+| Layer | Octra | HCRYPT |
+|---|---|---|
+| Confidential state container | Circle / encrypted balance state | `SheafState` with private/public/ZK stalk contexts |
+| Privacy mechanism | FHE/HFHE encrypted computation and encrypted balance updates | lossy sheaf projection, Hodge/cochain hardness, homotopy-class ambiguity |
+| Public handle | encrypted ciphertext/state blob, stealth metadata, proof material | public stalk, topology hash, cochain root, spectral/hash commitment |
+| Heavy proof path | encrypted spend/decrypt/stealth update proofs | spectral/cochain/proximity/oracle/SNARK artifact when needed |
+| Runtime boundary | node validates encrypted-state transition | Rust validates canonical bytes, commitments, oracle attestations, and proof artifacts |
+
+So `SheafState` is not an encrypted container in the Octra sense. It is a
+typed state sheaf whose private stalks, public stalks, cochains, and proof
+artifacts expose only the projections needed for consensus.
+
+This is why HCRYPT does not need the same encrypted boundary Octra uses.
+Encryption is still useful for transport, wallet state, onion routing, and
+optional private execution, but the consensus-visible privacy boundary is
+geometric:
+
+```
+private stalk / fibration representative
+  → cochain or homotopy shadow
+  → hash, proof, or oracle artifact
+  → public chain state
+```
+
+Useful reference points:
+- Octra overview: https://docs.octra.org/
+- Octra encrypted balances: https://docs.octra.org/user-docs/encrypting-the-balance
+- Octra stealth transactions: https://docs.octra.org/user-docs/stealth-transactions
+- HCRYPT implementation hooks: `src/chain/sheaf_state.py`, `src/chain/homotopy_transaction.py`,
+  `src/geometry/fiber_bundle.py`, `src/network/onion_service.py`
 
 ---
 

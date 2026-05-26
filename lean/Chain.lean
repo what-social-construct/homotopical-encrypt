@@ -39,6 +39,7 @@ References:
 -/
 
 import Mathlib
+import Axioms.CochainCommitment.Payload
 
 set_option linter.mathlibStandardSet false
 
@@ -67,31 +68,23 @@ structure Validator where
   betti_1 : ℕ            -- β₁ = independent cycles
 
 /--
-  A transaction with cochain commitment structure.
+  A transaction carrying the canonical cochain commitment payload.
 
-  The commitment is a VECTOR of edge values δ(m ∥ r) ∈ C¹,
-  not a scalar. This matches:
-    Python: CochainCommitment.edge_values (np.ndarray)
-    Rust:   CochainCommitment.edge_values (Vec<i64>)
-
-  Wire format: modulus(4 LE) + n_edges(4 LE) + edge_values(n × 8 i64 LE) + topology_hash(16)
-
-  For proofs (e.g., balance_preserved, tx_compose_assoc), we use
-  `commitment_sum` as the ℤ-valued summary: Σᵢ edge_values[i].
-  This is sound because δ is linear and balance = Σ commitments = 0.
+  `cochain_commitment` is the tested wire-facing object from
+  `Axioms.CochainCommitment`: modulus, declared edge count, edge values in C¹,
+  and topology hash. Chain-level proofs use `commitment_sum` as the ℤ-valued
+  summary `Σᵢ edge_values[i]`; this is sound at the abstract level because δ is
+  linear and balance is checked on accumulated commitments.
 -/
 structure Transaction where
   sender : ℕ
   recipient : ℕ
   key_image : ℕ              -- unique per fibration, prevents double-spend
-  commitment_edge_values : List ℤ  -- δ(amount ∥ blinding) edge values in C¹
-  commitment_modulus : ℕ      -- lattice modulus q (default 12289)
-  topology_hash : ℕ          -- hash of simplicial complex topology
+  cochain_commitment : Hcrypt.Axioms.CochainCommitmentData
 
-/-- Summary scalar for balance proofs: Σᵢ edge_values[i].
-    Balance preservation: Σ_tx Σ_edge commitment_edge_values = 0 (mod q). -/
+/-- Summary scalar for balance proofs: Σᵢ edge_values[i]. -/
 def Transaction.commitment_sum (t : Transaction) : ℤ :=
-  t.commitment_edge_values.foldl (· + ·) 0
+  t.cochain_commitment.commitment_sum
 
 /-- A block in the PoV chain. -/
 structure Block where
@@ -171,7 +164,7 @@ limits, and signature/proof verification before presenting a transaction at
 this level.
 -/
 def TransactionWellFormed (tx : Transaction) : Prop :=
-  tx.commitment_modulus > 1 ∧ tx.commitment_edge_values.length > 0
+  tx.cochain_commitment.WellFormed
 
 /-- A transaction is fresh relative to the already-spent key-image set. -/
 def TransactionFresh (spent_key_images : Set ℕ) (tx : Transaction) : Prop :=
@@ -321,15 +314,12 @@ def preferred (c1 c2 : Chain) : Prop :=
 -- AXIOM 5: TRANSACTION COMPOSITION ASSOCIATIVITY
 -- ═══════════════════════════════════════════════════════════════════════
 
-/-- Transaction composition via cochain commitment addition.
-    Uses zipWith (+) for element-wise edge value addition. -/
+/-- Transaction composition via canonical cochain commitment addition. -/
 def tx_compose (t1 t2 : Transaction) : Transaction :=
   { sender := t1.sender
   , recipient := t2.recipient
   , key_image := t1.key_image + t2.key_image
-  , commitment_edge_values := List.zipWith (· + ·) t1.commitment_edge_values t2.commitment_edge_values
-  , commitment_modulus := t1.commitment_modulus
-  , topology_hash := t1.topology_hash }
+  , cochain_commitment := t1.cochain_commitment.add t2.cochain_commitment }
 
 -- ── Helper lemmas for foldl / zipWith on ℤ ─────────────────────────
 
@@ -369,14 +359,14 @@ private theorem zipWith_add_replicate_zero_right (l : List ℤ) :
     List.zipWith (· + ·) l (List.replicate l.length 0) = l := by
   induction l with
   | nil => rfl
-  | cons h t ih => simp [List.zipWith, List.replicate, ih]
+  | cons h t ih => simp [List.replicate, ih]
 
 /-- zipWith (+) (replicate l.length 0) l = l. -/
 private theorem zipWith_add_replicate_zero_left (l : List ℤ) :
     List.zipWith (· + ·) (List.replicate l.length 0) l = l := by
   induction l with
   | nil => rfl
-  | cons h t ih => simp [List.zipWith, List.replicate, ih]
+  | cons h t ih => simp [List.replicate, ih]
 
 -- ── Axiom 5 theorems ───────────────────────────────────────────────
 
@@ -392,22 +382,26 @@ def zero_tx_n (n : ℕ) : Transaction :=
   { sender := 0
   , recipient := 0
   , key_image := 0
-  , commitment_edge_values := List.replicate n 0
-  , commitment_modulus := 12289
-  , topology_hash := 0 }
+  , cochain_commitment := Hcrypt.Axioms.CochainCommitmentData.zero n }
 
 /-- Right identity: composing t with zero_tx_n preserves commitment sum. -/
 theorem tx_compose_identity_right_sum (t : Transaction) :
-    (tx_compose t (zero_tx_n t.commitment_edge_values.length)).commitment_sum
+    (tx_compose t (zero_tx_n t.cochain_commitment.edge_values.length)).commitment_sum
     = t.commitment_sum := by
-  simp only [tx_compose, zero_tx_n, Transaction.commitment_sum]
+  simp only [tx_compose, zero_tx_n, Transaction.commitment_sum,
+    Hcrypt.Axioms.CochainCommitmentData.add,
+    Hcrypt.Axioms.CochainCommitmentData.zero,
+    Hcrypt.Axioms.CochainCommitmentData.commitment_sum]
   rw [zipWith_add_replicate_zero_right]
 
 /-- Left identity: composing zero_tx_n with t preserves commitment sum. -/
 theorem tx_compose_identity_left_sum (t : Transaction) :
-    (tx_compose (zero_tx_n t.commitment_edge_values.length) t).commitment_sum
+    (tx_compose (zero_tx_n t.cochain_commitment.edge_values.length) t).commitment_sum
     = t.commitment_sum := by
-  simp only [tx_compose, zero_tx_n, Transaction.commitment_sum]
+  simp only [tx_compose, zero_tx_n, Transaction.commitment_sum,
+    Hcrypt.Axioms.CochainCommitmentData.add,
+    Hcrypt.Axioms.CochainCommitmentData.zero,
+    Hcrypt.Axioms.CochainCommitmentData.commitment_sum]
   rw [zipWith_add_replicate_zero_left]
 
 

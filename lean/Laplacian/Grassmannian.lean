@@ -1,158 +1,20 @@
-import Laplacian.Basic
+/-
+  Public import surface for the Grassmannian Laplacian proof stack.
 
-set_option linter.mathlibStandardSet false
+  The implementation is split by concern:
 
-open scoped BigOperators Real Nat Classical Pointwise
+    Laplacian.Grassmannian.SearchSpace
+      Ω_k, Ω_1, subspace existence, nonemptiness
 
-set_option maxHeartbeats 0
-set_option maxRecDepth 4000
-set_option synthInstance.maxHeartbeats 20000
-set_option synthInstance.maxSize 128
-set_option relaxedAutoImplicit false
-set_option autoImplicit false
+    Laplacian.Grassmannian.ParametricFamily
+      t ↦ span{u + t v} ⊕ W₀ and its injectivity
 
-noncomputable section
+    Laplacian.Grassmannian.Injectivity
+      injectivity of W ↦ Δ_W
 
-open Matrix Real InnerProductSpace MeasureTheory
+  Downstream files can continue to `import Laplacian.Grassmannian`.
+-/
 
-variable {n : Type*} [Fintype n] [DecidableEq n]
-
-/-- The set of Laplacians for k-dimensional subspaces.
-    This is the search space Ω_k ≅ Gr(k,n) the adversary must search over. -/
-def Ω (k : ℕ) : Set (Matrix n n ℝ) :=
-  { A | ∃ W : Submodule ℝ (EuclideanSpace ℝ n), Module.finrank ℝ W = k ∧
-        ∃ h : W.HasOrthogonalProjection, A = @laplacian n _ _ W h }
-
-/-- The set of Laplacians for 1-dimensional subspaces (projective space). -/
-def Ω_1 : Set (Matrix n n ℝ) := Ω 1
-
-/-- Ω k is a subset of the set of all Laplacians. -/
-theorem Ω_subset_LaplacianSpace (k : ℕ) :
-  Ω k ⊆ { A | ∃ W : Submodule ℝ (EuclideanSpace ℝ n), ∃ h : W.HasOrthogonalProjection, A = @laplacian n _ _ W h } := by
-    intro A hA;
-    cases hA ; aesop
-
-/-- There exists a subspace of dimension k if k ≤ n. -/
-lemma exists_subspace_dim_k (k : ℕ) (hk : k ≤ Fintype.card n) :
-  ∃ W : Submodule ℝ (EuclideanSpace ℝ n), Module.finrank ℝ W = k := by
-    obtain ⟨s, hs⟩ : ∃ s : Finset n, s.card = k := by
-      have := Finset.exists_subset_card_eq hk; tauto;
-    refine' ⟨ Submodule.span ℝ ( Set.range ( fun i : s => EuclideanSpace.single ( i : n ) ( 1 : ℝ ) ) ), _ ⟩;
-    rw [ finrank_span_eq_card ] ; aesop;
-    refine' Fintype.linearIndependent_iff.2 _;
-    intro g hg i; replace hg := congr_fun hg i; simp_all +decide;
-    rw [ Finset.sum_apply, Finset.sum_eq_single i ] at hg <;> aesop
-
-/-- Ω k is nonempty if k ≤ n.
-    Python: grassmannian_laplacians(d, k) always returns results when k ≤ d. -/
-theorem Ω_k_nonempty (k : ℕ) (hk : k ≤ Fintype.card n) : (@Ω n _ _ k).Nonempty := by
-  obtain ⟨ W, hW ⟩ := exists_subspace_dim_k k hk;
-  refine' ⟨ _, W, hW, inferInstance, rfl ⟩
-
-/-- Existence of linearly independent u, v and a (k-1)-dimensional subspace W
-    disjoint from span{u, v}. Used to construct the parameterized family W(t). -/
-lemma exists_vectors_and_subspace (k : ℕ) (h1 : 1 ≤ k) (h2 : k < Fintype.card n) :
-  ∃ u v : EuclideanSpace ℝ n, ∃ W : Submodule ℝ (EuclideanSpace ℝ n),
-    LinearIndependent ℝ ![u, v] ∧
-    Module.finrank ℝ W = k - 1 ∧
-    Disjoint (Submodule.span ℝ (Set.range ![u, v])) W := by
-      obtain ⟨W, hW⟩ : ∃ W : Submodule ℝ (EuclideanSpace ℝ n), Module.finrank ℝ W = k - 1 ∧ W ≠ ⊤ := by
-        obtain ⟨W, hW⟩ : ∃ W : Submodule ℝ (EuclideanSpace ℝ n), Module.finrank ℝ W = k - 1 := by
-          apply exists_subspace_dim_k; exact Nat.sub_le_of_le_add (by linarith);
-        refine' ⟨ W, hW, _ ⟩;
-        contrapose! h2; aesop;
-      obtain ⟨u, hu⟩ : ∃ u : EuclideanSpace ℝ n, u ∉ W := by
-        exact not_forall.mp fun h => hW.2 <| eq_top_iff.mpr fun x _ => h x;
-      obtain ⟨v, hv⟩ : ∃ v : EuclideanSpace ℝ n, v ∉ W ⊔ Submodule.span ℝ {u} := by
-        by_cases h_top : W ⊔ Submodule.span ℝ {u} = ⊤;
-        · have := Submodule.finrank_sup_add_finrank_inf_eq W ( Submodule.span ℝ { u } );
-          rw [ h_top, finrank_top ] at this;
-          rw [ finrank_span_singleton ] at this <;> aesop;
-        · exact not_forall.mp fun h => h_top <| eq_top_iff.mpr fun x _ => h x;
-      refine' ⟨ u, v, W, _, _, _ ⟩ <;> simp_all +decide [ Submodule.disjoint_def ];
-      · rw [ linearIndependent_fin2 ];
-        refine' ⟨ _, _ ⟩ <;> contrapose! hv <;> simp_all +decide [ Submodule.mem_sup, Submodule.mem_span_singleton ];
-        rcases hv with ⟨ a, rfl ⟩ ; exact ⟨ 0, W.zero_mem, a⁻¹, by simp +decide [ show a ≠ 0 by aesop ] ⟩ ;
-      · intro x hx hxW; contrapose! hv; simp_all +decide [ Submodule.mem_sup, Submodule.mem_span_pair ] ;
-        obtain ⟨ a, b, rfl ⟩ := hx;
-        by_cases ha : a = 0;
-        · simp_all +decide [ Submodule.mem_span_singleton ];
-          exact False.elim ( hu ( by simpa [ hv.1 ] using W.smul_mem ( b⁻¹ ) hxW ) );
-        · refine' ⟨ a⁻¹ • ( a • v + b • u ), _, -a⁻¹ • b • u, _, _ ⟩ <;> simp_all +decide [ Submodule.smul_mem ];
-          convert W.smul_mem ( a⁻¹ ) hxW using 1 ; simp +decide [ ha, smul_smul ]
-
-/-- Construction of a family of k-dimensional subspaces parameterized by t ∈ ℝ:
-    W(t) = span{u + t·v} ⊕ W₀
-    This gives an injection ℝ ↪ Gr(k,n), proving Ω_k is uncountably infinite. -/
-def subspace_construction (u v : EuclideanSpace ℝ n) (W : Submodule ℝ (EuclideanSpace ℝ n)) (t : ℝ) : Submodule ℝ (EuclideanSpace ℝ n) :=
-  Submodule.span ℝ {u + t • v} ⊔ W
-
-/-- The constructed subspace W(t) has dimension k. -/
-omit [DecidableEq n] in
-lemma subspace_construction_dim (k : ℕ) (h1 : 1 ≤ k) (u v : EuclideanSpace ℝ n) (W : Submodule ℝ (EuclideanSpace ℝ n))
-  (h_indep : LinearIndependent ℝ ![u, v])
-  (h_dim_W : Module.finrank ℝ W = k - 1)
-  (h_disj : Disjoint (Submodule.span ℝ (Set.range ![u, v])) W)
-  (t : ℝ) :
-  Module.finrank ℝ (subspace_construction u v W t) = k := by
-    have h_dim_sum : Module.finrank ℝ (↥(Submodule.span ℝ {u + t • v} ⊔ W)) = Module.finrank ℝ (↥(Submodule.span ℝ {u + t • v})) + Module.finrank ℝ (↥W) := by
-      rw [ ← Submodule.finrank_sup_add_finrank_inf_eq ];
-      simp +zetaDelta at *;
-      refine' eq_bot_iff.mpr fun x hx => _;
-      simp_all +decide [ Submodule.disjoint_def, Submodule.mem_span_singleton ];
-      rcases hx with ⟨ ⟨ a, rfl ⟩, hx ⟩;
-      convert h_disj _ _ hx using 1;
-      exact Submodule.mem_span_pair.mpr ⟨ a * t, a, by ext; simp +decide ; ring ⟩;
-    by_cases hu : u + t • v = 0 <;> simp_all +decide;
-    · have := Fintype.linearIndependent_iff.mp h_indep;
-      specialize this ( fun i => if i = 0 then 1 else t ) ; simp_all +decide [ Fin.forall_fin_two ];
-    · convert h_dim_sum using 1;
-      rw [ finrank_span_singleton ] <;> aesop
-
-/-- The subspace construction t ↦ W(t) is injective.
-    CONSEQUENCE: Ω_k contains uncountably many distinct Laplacians.
-    This is the key hardness lemma — the adversary's search space is not enumerable. -/
-omit [DecidableEq n] in
-lemma subspace_construction_injective (u v : EuclideanSpace ℝ n) (W : Submodule ℝ (EuclideanSpace ℝ n))
-  (h_indep : LinearIndependent ℝ ![u, v])
-  (h_disj : Disjoint (Submodule.span ℝ (Set.range ![u, v])) W) :
-  Function.Injective (subspace_construction u v W) := by
-    intro t1 t2 h_eq;
-    have h_t_eq : u + t1 • v ∈ Submodule.span ℝ {u + t2 • v} ⊔ W := by
-      unfold subspace_construction at h_eq;
-      exact h_eq ▸ Submodule.mem_sup_left ( Submodule.subset_span ( Set.mem_singleton _ ) );
-    rw [ Submodule.mem_sup ] at h_t_eq;
-    obtain ⟨y, hy, z, hz, h_eq⟩ := h_t_eq
-    have hz_zero : z = 0 := by
-      have hz_zero : z ∈ Submodule.span ℝ (Set.range ![u, v]) := by
-        rw [ Submodule.mem_span_singleton ] at hy;
-        obtain ⟨ a, rfl ⟩ := hy;
-        rw [ show z = ( 1 - a ) • u + ( t1 - a * t2 ) • v by ext x; have := congr_fun h_eq x; norm_num at *; linarith ];
-        exact Submodule.add_mem _ ( Submodule.smul_mem _ _ ( Submodule.subset_span ( Set.mem_range_self 0 ) ) ) ( Submodule.smul_mem _ _ ( Submodule.subset_span ( Set.mem_range_self 1 ) ) );
-      exact h_disj.le_bot ⟨ hz_zero, hz ⟩;
-    rw [ Submodule.mem_span_singleton ] at hy;
-    rw [ Fintype.linearIndependent_iff ] at h_indep;
-    specialize h_indep ( fun i => if i = 0 then hy.choose - 1 else hy.choose * t2 - t1 ) ; simp_all +decide [ Fin.forall_fin_two, sub_eq_iff_eq_add ];
-    have := hy.choose_spec; simp_all +decide [ ← eq_sub_iff_add_eq', smul_smul ] ;
-    have := h_indep ( by ext x; have := congr_fun this x; norm_num at *; linarith ) ; aesop;
-
-/-- The Laplacian map W ↦ Δ_W is injective on subspaces.
-    Combined with subspace_construction_injective, this gives:
-    ℝ ↪ Gr(k,n) ↪ Ω_k  (uncountably many distinct Laplacians). -/
-theorem laplacian_injective (W1 W2 : Submodule ℝ (EuclideanSpace ℝ n))
-  [h1 : W1.HasOrthogonalProjection] [h2 : W2.HasOrthogonalProjection] :
-  laplacian W1 = laplacian W2 → W1 = W2 := by
-    intro h_eq;
-    unfold _root_.laplacian at h_eq;
-    simp +zetaDelta at *;
-    refine' le_antisymm _ _ <;> intro x hx <;> replace h_eq := LinearMap.congr_fun h_eq x <;> simp_all +decide;
-    · have h_proj_W1 : W1.starProjection x = x := by
-        exact Submodule.starProjection_eq_self_iff.mpr hx
-      have h_proj_W2 : W2.starProjection x ∈ W2 := by
-        exact Submodule.starProjection_apply_mem W2 x
-      grind;
-    · have h_star_proj : W1.starProjection x = x := by
-        rw [ h_eq, W2.starProjection_eq_self_iff.mpr hx ];
-      exact Submodule.starProjection_eq_self_iff.mp h_star_proj
-
-end
+import Laplacian.Grassmannian.SearchSpace
+import Laplacian.Grassmannian.ParametricFamily
+import Laplacian.Grassmannian.Injectivity

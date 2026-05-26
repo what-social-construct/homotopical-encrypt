@@ -1,6 +1,7 @@
-import Laplacian.Basic
+import Laplacian.Projection
 
 set_option linter.mathlibStandardSet false
+set_option linter.unusedSectionVars false
 
 open scoped BigOperators Real Nat Classical Pointwise
 
@@ -117,7 +118,6 @@ lemma optimal_adversary_likelihood_one (b : EuclideanSpace ℝ n) (hb : b ≠ 0)
 /-- Gaussian integrand factors over coordinates:
     exp(-‖x‖²/2) = ∏ᵢ exp(-xᵢ²/2).
     This enables product-form integration bounds for success probability. -/
-omit [DecidableEq n] in
 lemma gaussian_integrand_factorization (x : EuclideanSpace ℝ n) :
   Real.exp (-‖x‖^2 / 2) = ∏ i : n, Real.exp (-(x i)^2 / 2) := by
     rw [ ← Real.exp_sum, EuclideanSpace.norm_eq ];

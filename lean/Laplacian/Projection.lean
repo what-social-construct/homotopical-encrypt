@@ -1,5 +1,12 @@
 import Mathlib
 
+/-
+  Projection-model Laplacian.
+
+  This file defines the concrete Grassmannian projection model
+  `Δ_W = I - P_W` and the identity `Δ_W b = P_{Wᗮ} b`.
+-/
+
 set_option linter.mathlibStandardSet false
 
 open scoped BigOperators Real Nat Classical Pointwise

@@ -40,6 +40,7 @@ Important scope note:
 
 import Mathlib
 import CVP
+import Laplacian.Hodge
 
 set_option linter.mathlibStandardSet false
 
@@ -62,7 +63,15 @@ noncomputable section
 def Hodge_Instance (N : Type) [Fintype N] (R : Type) [CommRing R] :=
   Matrix N N R × (N → R)
 
-def is_harmonic {N : Type} [Fintype N] {R : Type} [CommRing R]
+/--
+Matrix-level harmonicity for an abstract hidden operator.
+
+This is the generic predicate used by hidden-operator hardness theorems. The
+structured projection-model predicate is `Hcrypt.Laplacian.IsHarmonic`; the two
+are connected below by `matrix_harmonic_iff_projection_isHarmonic` when
+`Δ = Δ_W`.
+-/
+def MatrixIsHarmonic {N : Type} [Fintype N] {R : Type} [CommRing R]
   (Δ : Matrix N N R) (h : N → R) : Prop :=
   Matrix.mulVec Δ h = 0
 
@@ -104,7 +113,7 @@ def LossyPublicProjection
 def SameKernel
   {N : Type} [Fintype N] {R : Type} [CommRing R]
   (Δ₁ Δ₂ : Matrix N N R) : Prop :=
-  ∀ v : N → R, is_harmonic Δ₁ v ↔ is_harmonic Δ₂ v
+  ∀ v : N → R, MatrixIsHarmonic Δ₁ v ↔ MatrixIsHarmonic Δ₂ v
 
 /--
 Kernel ambiguity strengthens public lossiness: publicly equivalent hidden
@@ -127,8 +136,8 @@ def PublicCompatibleHodgeAmbiguity
   (pub : PublicProjection N R P) : Prop :=
   ∃ (Δ₁ Δ₂ : Matrix N N R) (b : N → R),
     PubliclyEquivalent pub Δ₁ Δ₂ ∧
-    (∃ h₁, is_harmonic Δ₁ h₁ ∧ h₁ = b) ∧
-    (¬ ∃ h₂, is_harmonic Δ₂ h₂ ∧ h₂ = b)
+    (∃ h₁, MatrixIsHarmonic Δ₁ h₁ ∧ h₁ = b) ∧
+    (¬ ∃ h₂, MatrixIsHarmonic Δ₂ h₂ ∧ h₂ = b)
 
 /-- Every hidden operator lies in its own public class. -/
 theorem mem_hiddenOperatorClass_self
@@ -174,9 +183,9 @@ theorem kernelAmbiguous_of_publicCompatibleHodgeAmbiguity
   refine ⟨Δ₁, Δ₂, hpub, ?_⟩
   intro hsame
   rcases hb₁ with ⟨h₁, hh₁_harm, hh₁_eq⟩
-  have hb_harm₁ : is_harmonic Δ₁ b := by
+  have hb_harm₁ : MatrixIsHarmonic Δ₁ b := by
     simpa [hh₁_eq] using hh₁_harm
-  have hb_harm₂ : is_harmonic Δ₂ b := (hsame b).1 hb_harm₁
+  have hb_harm₂ : MatrixIsHarmonic Δ₂ b := (hsame b).1 hb_harm₁
   exact hb₂ ⟨b, hb_harm₂, rfl⟩
 
 -- We define a solver as a function that takes the "public" part of the instance.
@@ -186,10 +195,10 @@ theorem kernelAmbiguous_of_publicCompatibleHodgeAmbiguity
 
 def Hodge_Solver_Correct {N : Type} [Fintype N] {R : Type} [CommRing R]
   (solver : (N → R) → (N → R)) (Δ : Matrix N N R) (b : N → R) : Prop :=
-  is_harmonic Δ (solver b) ∧ (solver b = b) -- Ideally, h is close to b.
+  MatrixIsHarmonic Δ (solver b) ∧ (solver b = b) -- Ideally, h is close to b.
   -- For the reduction, we just need h to be in the kernel and "related" to b.
   -- If we assume the solver performs "projection", then solver(b) is the projection of b onto ker(Δ).
-  -- We'll weaken the condition to just "is_harmonic" for the basic hardness claim,
+  -- We'll weaken the condition to just "MatrixIsHarmonic" for the basic hardness claim,
   -- but for CVP we need the "closest" property.
   -- Let's assume the solver returns the *unique* closest harmonic cochain.
 
@@ -203,7 +212,7 @@ theorem Hodge_Hardness_Reduction
   (solver : (n → R) → (n → R))
   -- Assumption: The solver works for any valid Hodge instance constructed from the system
   (h_solver : ∀ (Δ : Matrix n n R) (b : n → R),
-    is_harmonic Δ (solver b) ∧
+    MatrixIsHarmonic Δ (solver b) ∧
     -- We need a condition that solver(b) is "close" to b.
     -- Let's say it minimizes the distance in some metric, or just that it's the projection.
     -- For the reduction to work, we need: if b = t (target), solver(b) = closest lattice point.
@@ -239,7 +248,7 @@ theorem Hodge_Hardness_Reduction
           choose P hP₁ hP₂ using h_proj;
           refine' ⟨ { toFun := P, map_add' := _, map_smul' := _ }, _, _ ⟩;
           all_goals norm_num at *;
-          · intro x y; specialize hP₂ ( x + y ) ( P x + P y ) ; simp_all +decide [ Submodule.add_mem_iff_right, Submodule.add_mem_iff_left ] ;
+          · intro x y; specialize hP₂ ( x + y ) ( P x + P y ) ; simp_all +decide [ Submodule.add_mem_iff_right ] ;
             exact Eq.symm ( hP₂ ( by simpa [ add_sub_add_comm ] using Submodule.add_mem _ ( hP₁ x |>.2 ) ( hP₁ y |>.2 ) ) );
           · intro m x; specialize hP₂ ( m • x ) ( m • P x ) ; simp_all +decide [ Submodule.smul_mem ] ;
             exact Eq.symm ( hP₂ ( by simpa only [ smul_sub ] using Submodule.smul_mem _ _ ( hP₁ x |>.2 ) ) );
@@ -249,7 +258,7 @@ theorem Hodge_Hardness_Reduction
         obtain ⟨Δ, hΔ⟩ : ∃ Δ : Matrix n n R, P = Matrix.mulVecLin Δ := by
           use LinearMap.toMatrix' P;
           ext; simp +decide [ LinearMap.toMatrix' ];
-        refine' ⟨ Δ, le_antisymm _ _ ⟩ <;> intro v hv <;> simp_all +decide [ Submodule.mem_sup ];
+        refine' ⟨ Δ, le_antisymm _ _ ⟩ <;> intro v hv <;> simp_all +decide;
         -- Since $v \in \ker(\Delta)$, we can write $v = v_1 + v_2$ where $v_1 \in V$ and $v_2 \in W$.
         obtain ⟨v1, v2, hv1, hv2, hv_eq⟩ : ∃ v1 ∈ V, ∃ v2 ∈ W, v = v1 + v2 := by
           have := hW.sup_eq_top;
@@ -258,7 +267,7 @@ theorem Hodge_Hardness_Reduction
       exact h_ker_range _;
     obtain ⟨ Δ, hΔ ⟩ := h_ker_range;
     simp_all +decide [ SetLike.ext_iff ];
-    exact ⟨ ⟨ Δ, hΔ ⟩, by simpa [ is_harmonic ] using hΔ ( solver t ) |>.1 ( h_solver Δ t ) ⟩
+    exact ⟨ ⟨ Δ, hΔ ⟩, by simpa [ MatrixIsHarmonic ] using hΔ ( solver t ) |>.1 ( h_solver Δ t ) ⟩
 
 /-
 Theorem showing that the harmonic property depends on the Laplacian (Ambiguity).
@@ -268,11 +277,11 @@ theorem Hodge_Ambiguity
   {R : Type} [Field R] [DecidableEq R]
   (h_dim : Fintype.card n ≥ 2) :
   ∃ (Δ₁ Δ₂ : Matrix n n R) (b : n → R),
-    (∃ h₁, is_harmonic Δ₁ h₁ ∧ h₁ = b) ∧ -- b is harmonic for Δ₁ (so projection is b)
-    (¬ ∃ h₂, is_harmonic Δ₂ h₂ ∧ h₂ = b) -- b is NOT harmonic for Δ₂
+    (∃ h₁, MatrixIsHarmonic Δ₁ h₁ ∧ h₁ = b) ∧ -- b is harmonic for Δ₁ (so projection is b)
+    (¬ ∃ h₂, MatrixIsHarmonic Δ₂ h₂ ∧ h₂ = b) -- b is NOT harmonic for Δ₂
     :=
   by
-    norm_num [ is_harmonic ] at *;
+    norm_num [ MatrixIsHarmonic ] at *;
     -- Let's choose any two distinct elements $i, j \in n$.
     obtain ⟨i, j, hij⟩ : ∃ i j : n, i ≠ j := by
       exact Fintype.one_lt_card_iff.mp h_dim;
@@ -286,8 +295,8 @@ theorem Hodge_Ambiguity_Proof
   {R : Type} [Field R] [DecidableEq R]
   (h_dim : Fintype.card n ≥ 2) :
   ∃ (Δ₁ Δ₂ : Matrix n n R) (b : n → R),
-    (∃ h₁, is_harmonic Δ₁ h₁ ∧ h₁ = b) ∧
-    (¬ ∃ h₂, is_harmonic Δ₂ h₂ ∧ h₂ = b) := by
+    (∃ h₁, MatrixIsHarmonic Δ₁ h₁ ∧ h₁ = b) ∧
+    (¬ ∃ h₂, MatrixIsHarmonic Δ₂ h₂ ∧ h₂ = b) := by
   exact Hodge_Ambiguity h_dim
 
 /--
@@ -355,7 +364,7 @@ lemma exists_matrix_ker_eq_range {n : Type} [Fintype n] [DecidableEq n] {R : Typ
           simp_all +decide [ Submodule.eq_bot_iff ];
           exact sub_eq_zero.mp ( hW.2 _ h_eq.1 h_eq.2 );
         choose f hf₁ hf₂ using h_decomp;
-        refine' ⟨ { toFun := f, map_add' := _, map_smul' := _ }, hf₁ ⟩ <;> intros <;> simp_all +decide [ Submodule.mem_sup ];
+        refine' ⟨ { toFun := f, map_add' := _, map_smul' := _ }, hf₁ ⟩ <;> intros <;> simp_all +decide;
         · rw [ ← hf₂ ];
           · exact Submodule.add_mem _ ( hf₁ _ |>.1 ) ( hf₁ _ |>.1 );
           · simpa only [ add_sub_add_comm ] using V.add_mem ( hf₁ _ |>.2 ) ( hf₁ _ |>.2 );
@@ -368,7 +377,7 @@ lemma exists_matrix_ker_eq_range {n : Type} [Fintype n] [DecidableEq n] {R : Typ
     exact h_basis _;
   -- Let Δ be the matrix representation of f.
   obtain ⟨Δ, hΔ⟩ : ∃ Δ : Matrix n n R, ∀ v : n → R, f v = Δ.mulVec v := by
-    exact ⟨ f.toMatrix', fun v => by simp +decide [ Matrix.mulVec, dotProduct ] ⟩;
+    exact ⟨ f.toMatrix', fun v => by simp +decide ⟩;
   simp_all +decide [ SetLike.ext_iff, LinearMap.mem_ker ];
   use Δ
 
@@ -380,7 +389,7 @@ theorem Hodge_Hardness_Reduction_Proof
   {R : Type} [Field R] [DecidableEq R]
   (solver : (n → R) → (n → R))
   (h_solver : ∀ (Δ : Matrix n n R) (b : n → R),
-    is_harmonic Δ (solver b) ∧ True) :
+    MatrixIsHarmonic Δ (solver b) ∧ True) :
   ∀ (B : Matrix n n R) (t : n → R),
     ∃ (Δ : Matrix n n R),
       (∀ v, Matrix.mulVec Δ v = 0 ↔ ∃ x, Matrix.mulVec B x = v) ∧
@@ -391,7 +400,7 @@ theorem Hodge_Hardness_Reduction_Proof
   constructor
   · exact hΔ
   · have h_harm := (h_solver Δ t).1
-    rw [is_harmonic] at h_harm
+    rw [MatrixIsHarmonic] at h_harm
     rw [hΔ] at h_harm
     exact h_harm
 
@@ -410,7 +419,7 @@ theorem Hodge_Decomposition_Theorem
   ∀ (b : m → Real),
     ∃ (h : m → Real) (e1 : m → Real) (e2 : m → Real),
       b = h + e1 + e2 ∧
-      is_harmonic Δ h ∧
+      MatrixIsHarmonic Δ h ∧
       (∃ x, e1 = Matrix.mulVec d_prev x) ∧
       (∃ y, e2 = Matrix.mulVec d_next_adj y) ∧
       -- Orthogonality
@@ -438,12 +447,12 @@ theorem Hodge_Decomposition_Theorem
             by_cases hi : h_self_adjoint.eigenvalues i = 0;
             · have h_eigenvalue_zero : Δ.mulVec (h_self_adjoint.eigenvectorBasis i) = 0 := by
                 have := h_self_adjoint.mulVec_eigenvectorBasis i; simp +decide [ hi ] at this; exact this;
-              exact Submodule.mem_sup_left ( by simpa [ h_eigenvalue_zero ] );
+              exact Submodule.mem_sup_left (by simp [h_eigenvalue_zero]);
             · have h_eigenvalue : Δ.mulVec (h_self_adjoint.eigenvectorBasis i) = h_self_adjoint.eigenvalues i • h_self_adjoint.eigenvectorBasis i := by
                 convert h_self_adjoint.mulVec_eigenvectorBasis i using 1;
               have h_eigenvalue : h_self_adjoint.eigenvectorBasis i ∈ LinearMap.range (Matrix.mulVecLin Δ) := by
                 use (1 / h_self_adjoint.eigenvalues i) • h_self_adjoint.eigenvectorBasis i;
-                simp +decide [ hi, h_eigenvalue, Matrix.mulVec_smul ];
+                simp +decide [ hi, h_eigenvalue ];
               exact Submodule.mem_sup_right ( Submodule.smul_mem _ _ h_eigenvalue );
           exact eq_top_iff.mpr fun x hx => h_decomp x;
         aesop;
@@ -456,31 +465,31 @@ theorem Hodge_Decomposition_Theorem
       exact Submodule.mem_sup.mpr ⟨ _, ⟨ Matrix.vecMul w d_prev, rfl ⟩, _, ⟨ Matrix.vecMul ( Matrix.mulVec d_next w ) 1, by aesop ⟩, by aesop ⟩;
     simp_all +decide [ Submodule.eq_top_iff', Submodule.mem_sup ];
     obtain ⟨ y, hy, a, b, rfl ⟩ := h_kernel b; exact ⟨ y, d_prev.mulVec a, d_next_adj.mulVec b, by ring, ⟨ a, rfl ⟩, ⟨ b, rfl ⟩, hy ⟩ ;
-  refine' ⟨ h, e1, e2, he1, _, _, _, _ ⟩ <;> simp_all +decide [ is_harmonic ];
+  refine' ⟨ h, e1, e2, he1, _, _, _, _ ⟩ <;> simp_all +decide [ MatrixIsHarmonic ];
   · tauto;
   · grind;
   · -- Since $h$ is in the kernel of $\Delta$, we have $\Delta h = 0$, which implies $d_{\text{prev}}^* h = 0$ and $d_{\text{next}} h = 0$.
     have h_kernel : d_prev_adj.mulVec h = 0 ∧ d_next.mulVec h = 0 := by
       have h_kernel : (d_prev_adj.mulVec h) ⬝ᵥ (d_prev_adj.mulVec h) + (d_next.mulVec h) ⬝ᵥ (d_next.mulVec h) = 0 := by
         have h_kernel : (d_prev * d_prev_adj + d_next_adj * d_next).mulVec h = d_prev.mulVec (d_prev_adj.mulVec h) + d_next_adj.mulVec (d_next.mulVec h) := by
-          simp +decide [ Matrix.add_mulVec, Matrix.mulVec_add ];
+          simp +decide [ Matrix.add_mulVec ];
         have h_kernel : (d_prev_adj.mulVec h) ⬝ᵥ (d_prev_adj.mulVec h) + (d_next.mulVec h) ⬝ᵥ (d_next.mulVec h) = (d_prev.mulVec (d_prev_adj.mulVec h)) ⬝ᵥ h + (d_next_adj.mulVec (d_next.mulVec h)) ⬝ᵥ h := by
           simp +zetaDelta at *;
           simp +decide [ Matrix.vecMul_mulVec, Matrix.dotProduct_mulVec, dotProduct_comm ];
         have h_kernel : (d_prev.mulVec (d_prev_adj.mulVec h) + d_next_adj.mulVec (d_next.mulVec h)) ⬝ᵥ h = 0 := by
-          rw [ ← ‹ ( d_prev * d_prev_adj + d_next_adj * d_next ).mulVec h = d_prev.mulVec ( d_prev_adj.mulVec h ) + d_next_adj.mulVec ( d_next.mulVec h ) ›, hh.2, zero_dotProduct ];
-        simp_all +decide [ add_mul, mul_add, Finset.sum_add_distrib, dotProduct_add ];
+          rw [ ← ‹ ( d_prev * d_prev_adj + d_next_adj * d_next ).mulVec h = d_prev.mulVec ( d_prev_adj.mulVec h ) + d_next_adj.mulVec ( d_next.mulVec h ) ›, hh.2, zero_dotProduct ]
+        simp_all +decide;
       have h_kernel : (d_prev_adj.mulVec h) ⬝ᵥ (d_prev_adj.mulVec h) = 0 ∧ (d_next.mulVec h) ⬝ᵥ (d_next.mulVec h) = 0 := by
         exact ⟨ by nlinarith only [ h_kernel, show 0 ≤ d_prev_adj.mulVec h ⬝ᵥ d_prev_adj.mulVec h from Finset.sum_nonneg fun _ _ => mul_self_nonneg _, show 0 ≤ d_next.mulVec h ⬝ᵥ d_next.mulVec h from Finset.sum_nonneg fun _ _ => mul_self_nonneg _ ], by nlinarith only [ h_kernel, show 0 ≤ d_prev_adj.mulVec h ⬝ᵥ d_prev_adj.mulVec h from Finset.sum_nonneg fun _ _ => mul_self_nonneg _, show 0 ≤ d_next.mulVec h ⬝ᵥ d_next.mulVec h from Finset.sum_nonneg fun _ _ => mul_self_nonneg _ ] ⟩;
-      simp_all +decide [ dotProduct_eq_zero_iff ];
+      simp_all +decide;
     -- Since $e1 \in \text{im}(d_{\text{prev}})$, we have $e1 = d_{\text{prev}} x$ for some $x$.
     obtain ⟨x, hx⟩ : ∃ x : n → ℝ, e1 = d_prev.mulVec x := by
       tauto;
     -- Since $e2 \in \text{im}(d_{\text{next}}^*)$, we have $e2 = d_{\text{next}}^* y$ for some $y$.
     obtain ⟨y, hy⟩ : ∃ y : k → ℝ, e2 = d_next_adj.mulVec y := by
       grind +ring
-    simp_all +decide [ Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, Matrix.vecMul_mulVec ];
-    simp_all +decide [ ← Matrix.mulVec_transpose, Matrix.vecMul_mulVec ];
+    simp_all +decide [ Matrix.dotProduct_mulVec, Matrix.vecMul_mulVec ];
+    simp_all +decide [ ← Matrix.mulVec_transpose ];
     aesop
 
 /--
@@ -499,7 +508,7 @@ def PublicHodgeSolver (n : Type) [Fintype n] (R : Type) [CommRing R] :=
 def PublicHodgeSolverSound {n : Type} [Fintype n] {R : Type} [CommRing R]
   (solver : PublicHodgeSolver n R) (O : CVP_Oracle n R) : Prop :=
   ∀ (Δ : Matrix n n R) (b : PublicHodgeInstance n R),
-    is_harmonic Δ (solver O b)
+    MatrixIsHarmonic Δ (solver O b)
 
 /--
 Exactness requirement on already-harmonic inputs.
@@ -510,7 +519,7 @@ should recover it unchanged.
 def PublicHodgeSolverExactOnHarmonic {n : Type} [Fintype n] {R : Type} [CommRing R]
   (solver : PublicHodgeSolver n R) (O : CVP_Oracle n R) : Prop :=
   ∀ (Δ : Matrix n n R) (b : PublicHodgeInstance n R),
-    is_harmonic Δ b → solver O b = b
+    MatrixIsHarmonic Δ b → solver O b = b
 
 /--
 If a public cochain `b` is already harmonic for `Δ`, exactness forces a public
@@ -521,7 +530,7 @@ lemma public_solver_eq_input_of_harmonic
   {solver : PublicHodgeSolver n R} {O : CVP_Oracle n R}
   (hexact : PublicHodgeSolverExactOnHarmonic solver O)
   {Δ : Matrix n n R} {b : PublicHodgeInstance n R}
-  (hb : is_harmonic Δ b) :
+  (hb : MatrixIsHarmonic Δ b) :
   solver O b = b := by
   exact hexact Δ b hb
 
@@ -537,13 +546,13 @@ lemma no_public_solver_on_ambiguous_input
   (hsound : PublicHodgeSolverSound solver O)
   (hexact : PublicHodgeSolverExactOnHarmonic solver O)
   {Δ₁ Δ₂ : Matrix n n R} {b : PublicHodgeInstance n R}
-  (hb₁ : ∃ h₁, is_harmonic Δ₁ h₁ ∧ h₁ = b)
-  (hb₂ : ¬ ∃ h₂, is_harmonic Δ₂ h₂ ∧ h₂ = b) :
+  (hb₁ : ∃ h₁, MatrixIsHarmonic Δ₁ h₁ ∧ h₁ = b)
+  (hb₂ : ¬ ∃ h₂, MatrixIsHarmonic Δ₂ h₂ ∧ h₂ = b) :
   False := by
   rcases hb₁ with ⟨h₁, hh₁_harm, hh₁_eq⟩
-  have hb_harm₁ : is_harmonic Δ₁ b := by simpa [hh₁_eq] using hh₁_harm
+  have hb_harm₁ : MatrixIsHarmonic Δ₁ b := by simpa [hh₁_eq] using hh₁_harm
   have h_eq : solver O b = b := public_solver_eq_input_of_harmonic hexact hb_harm₁
-  have h_harm₂ : is_harmonic Δ₂ (solver O b) := hsound Δ₂ b
+  have h_harm₂ : MatrixIsHarmonic Δ₂ (solver O b) := hsound Δ₂ b
   exact hb₂ ⟨solver O b, h_harm₂, h_eq⟩
 
 theorem Hodge_Strictly_Harder
@@ -560,11 +569,11 @@ theorem Hodge_Strictly_Harder
       -- The solver must work for ANY valid oracle.
       -- And for ANY instance (Δ, b).
       -- But the solver only sees b.
-      is_harmonic Δ (solver O b) ∧ (solver O b = b) := by
+      MatrixIsHarmonic Δ (solver O b) ∧ (solver O b = b) := by
   by_contra h;
   obtain ⟨ solver, hsolver ⟩ := h;
   -- By Hodge_Ambiguity, there exist Δ₁, Δ₂, and b such that b is harmonic for Δ₁ but not Δ₂.
-  obtain ⟨Δ₁, Δ₂, b, hb₁, hb₂⟩ : ∃ (Δ₁ Δ₂ : Matrix n n R) (b : n → R), (∃ h₁, is_harmonic Δ₁ h₁ ∧ h₁ = b) ∧ (¬∃ h₂, is_harmonic Δ₂ h₂ ∧ h₂ = b) := by
+  obtain ⟨Δ₁, Δ₂, b, hb₁, hb₂⟩ : ∃ (Δ₁ Δ₂ : Matrix n n R) (b : n → R), (∃ h₁, MatrixIsHarmonic Δ₁ h₁ ∧ h₁ = b) ∧ (¬∃ h₂, MatrixIsHarmonic Δ₂ h₂ ∧ h₂ = b) := by
     apply Hodge_Ambiguity h_dim;
   obtain ⟨O, hO⟩ : ∃ O : CVP_Oracle n R, (∀ B : Matrix n n R, ∀ t : n → R, Δ₁.mulVec (O B t) = 0) ∧ (∀ B : Matrix n n R, ∀ t : n → R, Δ₂.mulVec (O B t) = 0) := by
     use fun B t => 0;
@@ -601,16 +610,64 @@ theorem CVP_Oracle_Insufficient_For_Public_Hodge_Solving
 /-
 Verification that the Hodge projection (closest harmonic form) is the solution to CVP on the kernel lattice.
 -/
+/-- A Hodge-side CVP solution: harmonic and closest among harmonic sections. -/
+def HodgeCVPSolution
+  {n : Type} [Fintype n]
+  (Δ : Matrix n n Real)
+  (b h : n → Real) : Prop :=
+  MatrixIsHarmonic Δ h ∧
+    ∀ v, MatrixIsHarmonic Δ v → dist b h ≤ dist b v
+
+/--
+Projection-model Hodge/CVP solution using the canonical `Laplacian.Hodge`
+harmonic-section predicate.
+-/
+def ProjectionHodgeCVPSolution
+  {n : Type} [Fintype n] [DecidableEq n]
+  (W : Submodule ℝ (EuclideanSpace ℝ n))
+  [W.HasOrthogonalProjection]
+  (b h : EuclideanSpace ℝ n) : Prop :=
+  Hcrypt.Laplacian.IsHarmonic W h ∧
+    ∀ v, Hcrypt.Laplacian.IsHarmonic W v → dist b h ≤ dist b v
+
+/--
+The matrix-level harmonic predicate agrees with the canonical projection-model
+predicate for `Δ_W = I - P_W`.
+-/
+theorem matrix_harmonic_iff_projection_isHarmonic
+  {n : Type} [Fintype n] [DecidableEq n]
+  (W : Submodule ℝ (EuclideanSpace ℝ n))
+  [W.HasOrthogonalProjection]
+  (h : EuclideanSpace ℝ n) :
+  MatrixIsHarmonic (_root_.laplacian W) h ↔
+    Hcrypt.Laplacian.IsHarmonic W h := by
+  rfl
+
 theorem Hodge_Projection_Is_CVP
   {n : Type} [Fintype n] [DecidableEq n]
   (Δ : Matrix n n Real)
   (b : n → Real)
   (h : n → Real)
-  (h_harmonic : is_harmonic Δ h)
-  (h_closest : ∀ h', is_harmonic Δ h' → dist b h ≤ dist b h') :
-  ∀ v, is_harmonic Δ v → dist b h ≤ dist b v := by
-  intro v hv
-  exact h_closest v hv
+  (h_harmonic : MatrixIsHarmonic Δ h)
+  (h_closest : ∀ h', MatrixIsHarmonic Δ h' → dist b h ≤ dist b h') :
+  HodgeCVPSolution Δ b h := by
+  exact ⟨h_harmonic, fun v hv => h_closest v hv⟩
+
+/--
+The actual Hodge harmonic projection is a Hodge/CVP solution once the closest
+harmonic-section property has been supplied.
+-/
+theorem harmonicProjection_Is_ProjectionHodgeCVPSolution
+  {n : Type} [Fintype n] [DecidableEq n]
+  (W : Submodule ℝ (EuclideanSpace ℝ n))
+  [W.HasOrthogonalProjection]
+  (b : EuclideanSpace ℝ n)
+  (h_closest :
+    ∀ v,
+      Hcrypt.Laplacian.IsHarmonic W v →
+        dist b (Hcrypt.Laplacian.harmonicProjection W b) ≤ dist b v) :
+  ProjectionHodgeCVPSolution W b (Hcrypt.Laplacian.harmonicProjection W b) := by
+  exact ⟨Hcrypt.Laplacian.harmonicProjection_isHarmonic W b, h_closest⟩
 
 -- ═══════════════════════════════════════════════════════════════════════
 -- Fibration & Homotopy Equivalence

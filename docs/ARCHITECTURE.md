@@ -526,6 +526,27 @@ the projections are one-way: Layer 3 data never reaches Layer 1.
 the node sees only hashes. the oracle sees commitments but not
 the fibration. the wallet holds everything.
 
+### witness-style state updates
+
+The production chain should use a witness/verifier split. Full cochains,
+private stalks, homotopy paths, and fibration representatives are witness
+material. The public chain sees only the compressed consequences needed for
+verification:
+
+```
+encrypted SheafState / private fibration data
+  → cochain or homotopy witness
+  → public inputs: key image, topology hash, cochain root, public shadow
+  → proof object or oracle attestation
+  → Rust verifier result
+  → state-root update
+```
+
+This is why cochains should be treated as intermediate state by default, not
+as raw public transaction bodies. A full cochain may be public in a transparent
+or test path, but private flows expose a commitment/root and a proof that the
+hidden cochain induces the claimed state transition.
+
 ### why SHA256 is a projection, not arbitrary
 
 SHA256 in this system is η₂: F_hash → F_chain. it is the unique
@@ -561,14 +582,14 @@ without the ability to reverse-engineer amounts or identities.
 │   producer_fingerprint: spectral fingerprint of miner  │
 │                                                         │
 │ harmonic_representative:                                │
-│   projection of all transactions to ker(Δ)             │
+│   public projection/shadow of accepted witnesses        │
 │                                                         │
 │ transactions:                                           │
-│   [cochain₁, cochain₂, ..., cochainₙ]                  │
+│   [proof-carrying transaction envelopes]                │
 │                                                         │
 │ proof:                                                  │
 │   eigenvalue_commitment: hash(eigenvalues)             │
-│   projection_witness: data to verify projection        │
+│   projection_witness/proof: verifies hidden cochains   │
 └─────────────────────────────────────────────────────────┘
 ```
 

@@ -8,6 +8,58 @@ The security of homotopical encryption rests on THREE pillars:
 2. **Computational Hardness** - LWE assumption for the restriction maps
 3. **Spectral Characterization** - Invariants determine the homotopy class
 
+For trusted-computing-base ownership, see
+[`TRUST_BOUNDARIES.md`](TRUST_BOUNDARIES.md). This document explains the security
+interpretation and proof obligations behind those boundaries.
+
+---
+
+## Public Views And The Attacker Observation Site
+
+The proof-carrying/witness boundary should be read through an
+attacker-observation site. Following the viewpoint of Inoué's "Grothendieck
+Topologies and Sheaf-Theoretic Foundations of Cryptographic Security"
+(`arXiv:2602.17301`), the attacker does not observe the private sheaf object
+directly. The attacker observes a category of public views:
+
+```
+private witness / SheafState
+  -> public views: transcript, root, topology hash, key image, commitment
+  -> attacker observation site
+  -> restrictions/forgetful maps between views
+  -> simulatable covers
+```
+
+This is the security reading for hcrypt's public-shadow pattern:
+
+- public shadows and proof transcripts are local views;
+- a zero-knowledge proof means those local views are simulatable without the
+  private witness;
+- soundness means an accepted transcript cannot manufacture a valid public
+  transition unless a witness satisfying the statement exists;
+- topology binding means views are attached to the correct sheaf/cochain
+  context and cannot be replayed across incompatible sites.
+
+There are two different sheaf notions here, and security arguments must keep
+them separate:
+
+| Sheaf | Desired property |
+|---|---|
+| Storage/state sheaf | Honest valid state should glue to coherent global sections. |
+| Attacker-observation sheaf | Public views should not determine a private global section. |
+
+Equivalently: hcrypt uses global sections for validity, but prevents public
+observer data from selecting the private representative.
+
+```
+validity:  witness induces a coherent public transition
+privacy:   public views are locally simulatable and do not reveal the witness
+```
+
+This section does not replace the concrete cryptographic assumptions below. It
+is the categorical security model that tells us what a public proof transcript
+is allowed to expose.
+
 ---
 
 ## Part I: The Geometric Invariants

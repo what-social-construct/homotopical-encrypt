@@ -66,18 +66,53 @@ a section of hash commitments.
 
 On-chain (F_hash, public, verified by all nodes):
 - key images (double-spend prevention)
-- δ-commitments (amount balance proofs)
+- cochain commitments, roots, or public shadows (amount balance proofs)
 - spectral proofs (validity of fibration structure)
 - topology nerve (public connection graph)
 
 Off-chain (ker(η), private, held by parties):
 - fibration secrets (restriction maps, stalks)
+- full cochains and witness payloads unless explicitly marked public
 - full ciphertexts (relayed via onion network)
 - decryption keys (wallet-local)
 
 The boundary between on-chain and off-chain is exactly the kernel
 of η, which is determined by the fibration credential structure:
 credential := (topology [public], fibration [private], spectrum [public]).
+
+## verified encrypted data layer
+
+The storage model should behave like a verified encrypted database with a
+public proof ledger.
+
+Full `SheafState` objects, private stalks, fibration representatives, homotopy
+paths, openings, and raw cochain witnesses are stored encrypted by default.
+Consensus stores only bounded handles and verification artifacts:
+
+```
+encrypted object / private witness blob
+  → content hash or authenticated storage root
+  → public shadow / cochain commitment / topology hash
+  → proof-carrying artifact or oracle attestation
+  → ledger state transition
+```
+
+This means a node should not have to decrypt full state to validate consensus.
+It checks canonical bytes, roots, inclusion proofs, nullifiers, commitments,
+oracle attestations, and proof statements against public inputs. Decryption is
+for data owners or explicitly modeled threshold/deferred contexts, not for the
+ordinary consensus path.
+
+Public by default:
+- hashes, roots, key images/nullifiers, topology hashes
+- public stalks/shadows and bounded summaries
+- proof bytes, oracle attestations, verification results
+
+Encrypted by default:
+- private stalks and fibration representatives
+- full `SheafState` payloads
+- full cochains/openings/witness data
+- homotopy path material and private transaction bodies
 
 ## rust storage (rust/node/src/storage/)
 
@@ -126,7 +161,10 @@ messages (forward secrecy by construction).
 
 ## chain storage (src/chain/chain_store.py)
 
-Chain data is public by design (transparent consensus). No encryption.
+The public ledger data is public by design: transparent consensus needs stable
+bytes, roots, and proofs. Private state is not stored there in plaintext; the
+ledger stores encrypted-object pointers, commitments, roots, nullifiers, and
+proof-carrying artifacts.
 
 ```
 data_dir/
