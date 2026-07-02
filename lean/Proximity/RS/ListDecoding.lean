@@ -1,13 +1,14 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
 /-
   List-decoding vocabulary for finite block-code shadows.
 
-  This module is intentionally combinatorial. It records the finite-field/code
-  side needed by proximity-prize-style statements without claiming any
-  Reed-Solomon, ERA, or capacity theorem.
+  This module owns the generic Hamming-distance vocabulary. The raw Hamming
+  count is kept as finite combinatorial plumbing; the paper-facing proximity
+  surface is relative/fractional Hamming distance.
 -/
 
 namespace Hcrypt
@@ -33,17 +34,37 @@ variable {ι α : Type*} [Fintype ι] [DecidableEq α]
 def hammingDistance (u v : Word ι α) : ℕ :=
   (Finset.univ.filter fun i => u i ≠ v i).card
 
+/-- Relative Hamming radius for a count radius over the coordinate domain. -/
+noncomputable def relativeRadius (r : ℕ) : ℝ :=
+  (r : ℝ) / (Fintype.card ι : ℝ)
+
+/-- Relative Hamming distance between two finite words. -/
+noncomputable def relativeHammingDistance (u v : Word ι α) : ℝ :=
+  (hammingDistance u v : ℝ) / (Fintype.card ι : ℝ)
+
 /-- A word is within Hamming radius `r` of a codeword. -/
 def Close (C : BlockCode ι α) (r : ℕ) (w : Word ι α) : Prop :=
   ∃ c : Word ι α, C.Codeword c ∧ hammingDistance c w ≤ r
+
+/-- A word is within relative Hamming radius `δ` of a codeword. -/
+def CloseAt (C : BlockCode ι α) (δ : ℝ) (w : Word ι α) : Prop :=
+  ∃ c : Word ι α, C.Codeword c ∧ relativeHammingDistance c w ≤ δ
 
 /-- The list-decoding ball around a received word. -/
 def Ball (C : BlockCode ι α) (r : ℕ) (w : Word ι α) : Set (Word ι α) :=
   {c | C.Codeword c ∧ hammingDistance c w ≤ r}
 
+/-- The relative list-decoding ball around a received word. -/
+def BallAt (C : BlockCode ι α) (δ : ℝ) (w : Word ι α) : Set (Word ι α) :=
+  {c | C.Codeword c ∧ relativeHammingDistance c w ≤ δ}
+
 /-- Cardinality of the list-decoding ball. -/
 noncomputable def ballCard (C : BlockCode ι α) (r : ℕ) (w : Word ι α) : ℕ :=
   Nat.card {c : Word ι α // c ∈ C.Ball r w}
+
+/-- Cardinality of the relative list-decoding ball. -/
+noncomputable def ballCardAt (C : BlockCode ι α) (δ : ℝ) (w : Word ι α) : ℕ :=
+  Nat.card {c : Word ι α // c ∈ C.BallAt δ w}
 
 /--
 Combinatorial list-size bound.
@@ -54,6 +75,37 @@ interleaved-code bounds can later be plugged in.
 -/
 def ListSizeBound (C : BlockCode ι α) (r L : ℕ) : Prop :=
   ∀ w : Word ι α, C.ballCard r w ≤ L
+
+/-- Fractional list-size bound at relative Hamming radius `δ`. -/
+def ListSizeBoundAt (C : BlockCode ι α) (δ : ℝ) (L : ℕ) : Prop :=
+  ∀ w : Word ι α, C.ballCardAt δ w ≤ L
+
+/-!
+The next few lemmas connect the finite count API to the relative API. They let
+concrete RS theorems stay count-based internally while exposing fractional
+distance to the projection chain.
+-/
+
+/-- Count closeness implies relative closeness at the normalized count radius. -/
+theorem closeAt_of_close
+    (C : BlockCode ι α) {r : ℕ} {w : Word ι α}
+    (hw : C.Close r w) :
+    C.CloseAt (relativeRadius (ι := ι) r) w := by
+  rcases hw with ⟨c, hc, hd⟩
+  exact ⟨c, hc, by
+    unfold relativeHammingDistance relativeRadius
+    exact div_le_div_of_nonneg_right (by exact_mod_cast hd) (Nat.cast_nonneg _)⟩
+
+/-- Relative radius sends zero to zero. -/
+theorem relativeRadius_zero :
+    relativeRadius (ι := ι) 0 = 0 := by
+  simp [relativeRadius]
+
+/-- Relative radius is monotone in the underlying Hamming-count radius. -/
+theorem relativeRadius_mono {r s : ℕ} (hrs : r ≤ s) :
+    relativeRadius (ι := ι) r ≤ relativeRadius (ι := ι) s := by
+  unfold relativeRadius
+  exact div_le_div_of_nonneg_right (by exact_mod_cast hrs) (Nat.cast_nonneg _)
 
 /-- Codewords lie in their own radius-zero list ball. -/
 theorem codeword_mem_ball_zero

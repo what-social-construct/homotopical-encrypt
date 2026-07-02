@@ -1,17 +1,20 @@
 import Proximity.Projection
-import Proximity.ListDecoding
-import Proximity.CorrelatedAgreement
-import Proximity.ReedSolomon
-import Proximity.ReedSolomonTarget
+import Proximity.RS
 import Proximity.Problem
+import Proximity.RS.Target
 import Proximity.Grassmannian
 import Proximity.PluckerShadow
 import Proximity.GrassmannianPlucker
+import Proximity.GrassmannianPlucker.Concrete
 import Proximity.CochainBridge
 import Proximity.PluckerCochain
+import Proximity.PluckerCochain.Concrete
 import Proximity.CochainPlane
 import Proximity.CochainReedSolomon
 import Proximity.ProjectionChain
+import Proximity.CanonicalRS
+import Proximity.Gates
+import Proximity.Public
 
 /-
   Proximity bridge for the homotopical-encrypt Lean workspace.

@@ -1,4 +1,4 @@
-import Proximity.CorrelatedAgreement
+import Proximity.RS.CorrelatedAgreement
 import Mathlib.Algebra.Polynomial.Basic
 
 /-
@@ -64,6 +64,10 @@ variable [DecidableEq F]
 def ListDecodingBound (P : Parameters F ι) (r L : ℕ) : Prop :=
   P.toBlockCode.ListSizeBound r L
 
+/-- RS list-decoding bound slot at relative Hamming radius `δ`. -/
+def ListDecodingBoundAt (P : Parameters F ι) (δ : ℝ) (L : ℕ) : Prop :=
+  P.toBlockCode.ListSizeBoundAt δ L
+
 end ListDecoding
 
 section CorrelatedAgreement
@@ -77,12 +81,46 @@ def CorrelatedAgreementBound
   P.toBlockCode.CorrelatedAgreementBound
     (F := F) pointRadius lineRadius threshold
 
+/-- RS correlated-agreement error bound slot in fractional paper notation. -/
+def CorrelatedAgreementErrorBound
+    (P : Parameters F ι)
+    (δpoint δline ε : ℝ) : Prop :=
+  P.toBlockCode.CorrelatedAgreementErrorBound
+    (F := F) δpoint δline ε
+
 /-- RS mutual-correlated-agreement bound slot. -/
 def MutualCorrelatedAgreementBound
     (P : Parameters F ι)
     (pointRadius lineRadius threshold : ℕ) : Prop :=
   P.toBlockCode.MutualCorrelatedAgreementBound
     (F := F) pointRadius lineRadius threshold
+
+/-- RS mutual-correlated-agreement error bound slot in fractional paper notation. -/
+def MutualCorrelatedAgreementErrorBound
+    (P : Parameters F ι)
+    (δpoint δline ε : ℝ) : Prop :=
+  P.toBlockCode.MutualCorrelatedAgreementErrorBound
+    (F := F) δpoint δline ε
+
+section PaperErrorBounds
+
+variable [DecidableEq F]
+
+/-- RS Definition 4.1 CA error slot, including proximity loss. -/
+def PaperCorrelatedAgreementErrorBound
+    (P : Parameters F ι)
+    (δfld δint ε : ℝ) : Prop :=
+  P.toBlockCode.PaperCorrelatedAgreementErrorBound
+    (F := F) δfld δint ε
+
+/-- RS Definition 4.3 MCA error slot. -/
+def PaperMutualCorrelatedAgreementErrorBound
+    (P : Parameters F ι)
+    (δ ε : ℝ) : Prop :=
+  P.toBlockCode.PaperMutualCorrelatedAgreementErrorBound
+    (F := F) δ ε
+
+end PaperErrorBounds
 
 /-- MCA bounds imply CA bounds for RS because the implication is code-generic. -/
 theorem correlatedAgreement_of_mutualCorrelatedAgreement

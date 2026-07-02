@@ -8,6 +8,14 @@ The current Lean tree has the projection stages and orchestration surface needed
 to state the final proximity comparison cleanly. The remaining mathematical work
 is the calibrated end-to-end far/non-collapse theorem.
 
+For a careful status table of what is proved, what is an explicit construction
+input, and what remains a theorem/runtime slot, see
+[`PROXIMITY_ASSUMPTIONS.md`](PROXIMITY_ASSUMPTIONS.md).
+
+For the submission-oriented proof outline that this implementation is being
+checked against, see
+[`PROXIMITY_PAPER_OUTLINE.md`](PROXIMITY_PAPER_OUTLINE.md).
+
 ## Thesis
 
 The hcrypt sheaf/Hodge proximity problem is projected into a finite
@@ -55,14 +63,31 @@ Also:
 | Role | Lean file | Main objects |
 |------|-----------|--------------|
 | Generic projection vocabulary | `lean/Proximity/Projection.lean` | `SheafProximityInstance`, `CodeShadow`, `EvaluationProjection` |
-| Promised gap problem | `lean/Proximity/Problem.lean` | `GapProximityProblem`, `GapReduction`, `EndToEndGapProjection` |
+| Promised gap problem | `lean/Proximity/Problem.lean` | `GapProximityProblem`, `GapReduction`, `EndToEndGapProjection`, `CalibratedEndToEndGapProjection` |
 | Plucker coordinate shadow | `lean/Proximity/PluckerShadow.lean` | `CoordinateSystem`, `InvariantChecklist` |
 | Grassmannian/Plucker witness | `lean/Proximity/GrassmannianPlucker.lean` | `FrameWitness`, `ExteriorCoordinate`, `FramedSystem` |
 | Plucker to cochain | `lean/Proximity/PluckerCochain.lean` | `LocalSyndromeTarget`, `Projection`, `InvariantChecklist` |
+| Concrete Plucker payload bridge | `lean/Proximity/PluckerCochain/Concrete.lean` | `PayloadEncoder`, `CommitmentSumSyndromeInputs`, `commitmentSumLocalSyndromeTarget`, `ProjectionInputs` |
+| Public Plucker/cochain binding | `lean/Proximity/PluckerCochain/PublicBinding.lean` | `HashedPluckerShadow`, `PayloadRealization`, `ObservedFrameBinding` |
 | Cochain to plane | `lean/Proximity/CochainPlane.lean` | `PlaneShadow`, `PlaneExtractionContext`, `Projection`, `InvariantChecklist` |
-| Plane to RS | `lean/Proximity/CochainReedSolomon.lean` | `PlaneEncoding`, `Interpretation`, `InvariantChecklist` |
-| Projection orchestrator | `lean/Proximity/ProjectionChain.lean` | `Chain`, `StageChecklists`, `EndToEndReady` |
-| RS target | `lean/Proximity/ReedSolomonTarget.lean` | `Target`, `ReceivedWordMetric`, `BridgeObligations`, `HcryptToRSBridge` |
+| Plane to RS | `lean/Proximity/CochainReedSolomon.lean` | `PlaneEncoding`, `CanonicalField`, `Interpretation`, `InvariantChecklist` |
+| Projection-chain aggregate | `lean/Proximity/ProjectionChain.lean` | Re-exports the map orchestration surface |
+| Projection core orchestrator | `lean/Proximity/ProjectionChain/Core.lean` | `Chain`, `committedCochain`, `planeShadow`, `receivedWord`, `toEvaluationProjection` |
+| Projection stage gates | `lean/Proximity/Gates/Stage.lean` | `StageChecklists`, `PluckerCochainGateCertificate`, `CochainPlaneGateCertificate`, `PlaneRSGateCertificate`, `ProjectionStageGateCertificate`, `ProjectionStageCertificate` |
+| Projection final checks | `lean/Proximity/Gates/Final.lean` | `RadiusCalibration`, `FarNonCollapseWitness`, `CalibratedFinalGateCertificate`, `CalibratedFinalCheck`, `CalibratedEndToEndReady` |
+| Proximity invariant gates | `lean/Proximity/Gates.lean` | `SourceMetricGate`, `PluckerMetricGate`, `PublicShadowRespectGate`, `SemanticAlignmentGate`, `SyndromeAdequacyGate`, `PluckerToCochainNonCollapseGate`, `CochainToRSFarGate`, `FarGatePipeline`, `StructuralBundle`, `Bundle`, `HardGateCertificate`, `CalibratedFinalCertificate` |
+| Proximity gate evidence | `lean/Proximity/GateEvidence.lean` | `EvidenceSlot`, `HardGateSlot`, `EvidenceDatabase`, `HardGateEvidenceRecord`, `CalibratedFinalEvidenceRecord` |
+| Public/storage aggregate | `lean/Proximity/Public.lean` | `CochainPlane.PublicBinding.PlaneView`, public bindings, and evidence records |
+| Canonical RS parameters | `lean/Proximity/CanonicalRS/Parameters.lean` | `RSField`, `length`, `degreeBound`, `johnsonBelowRadius` |
+| Canonical RS power domain | `lean/Proximity/CanonicalRS/PowerDomain.lean` | `FullGenerator`, `PowerRoot`, `PowerRoot.domain`, `candidateGenerator`, `candidateRoot` |
+| Canonical RS encoding | `lean/Proximity/CanonicalRS/Encoding.lean` | `canonicalMix`, `integerPlaneEncoding` |
+| Canonical RS target | `lean/Proximity/CanonicalRS/Target.lean` | `Bounds`, `target` |
+| Canonical RS metric | `lean/Proximity/CanonicalRS/Metric.lean` | `hammingDistanceToCode`, `absoluteHammingMetric`, `absoluteRadiusNormalization` |
+| Canonical RS bridge data | `lean/Proximity/CanonicalRS/BridgeData.lean` | `BridgeData`, `BridgeTheoremSlots`, `BridgeCertificate`, `RSMetricCertificate`, `RSMetricCertificate.calibratedFinalGateCertificate`, `RSMetricCertificate.toCalibratedHcryptToRSBridge` |
+| Canonical RS far separation | `lean/Proximity/CanonicalRS/FarSeparation.lean` | `JohnsonRSFarSeparation`, `JohnsonRSFarSeparation.toRSMetricCertificate`, `JohnsonRSFarSeparation.finalGate`, `JohnsonRSFarSeparation.toBridge` |
+| Canonical RS aggregate | `lean/Proximity/CanonicalRS.lean` | Re-exports the canonical RS modules |
+| RS/code aggregate | `lean/Proximity/RS.lean` | Re-exports list-decoding, correlated-agreement, and RS core modules |
+| RS target | `lean/Proximity/RS/Target.lean` | `Target`, `ReceivedWordMetric`, `RadiusNormalization`, `BridgeObligations`, `HcryptToRSBridge`, `CalibratedHcryptToRSBridge` |
 
 The formal split is:
 
@@ -71,10 +96,16 @@ stage-local invariants
   checked in the concrete stage files
 
 projection-chain orchestration
-  checked in ProjectionChain.lean
+  checked in ProjectionChain/Core.lean
+
+projection-chain stage gates
+  checked in Gates/Stage.lean
+
+final metric/radius comparison
+  checked in Gates/Final.lean
 
 final promised proximity comparison
-  expressed by EndToEndGapProjection / HcryptToRSBridge
+  expressed by CalibratedEndToEndGapProjection / CalibratedHcryptToRSBridge
 ```
 
 ## Projection Stages
@@ -101,16 +132,40 @@ Local invariants:
 This stage explains which private directions are allowed to collapse: frame
 choice and projective representative are not verifier-facing information.
 
+When the Plucker shadow crosses into the public/storage layer, it may be
+hash-bound as a public artifact. The hash is a handle for canonical bytes,
+proof transcripts, and authenticated storage; it does not replace the
+mathematical shadow.
+
 ### 2. Plucker to Committed Cochain
 
 The Plucker public shadow is encoded as the committed cochain object already
-used by storage and transaction layers.
+used by storage and transaction layers. The carrier is not a new proof-only
+cochain type: it is
+`CochainBridge.CommittedCochain := Axioms.CochainCommitmentData`, the same
+payload shape used by chain/runtime commitment logic.
+
+There are two valid readings of this boundary:
+
+- deterministic construction, where a `PayloadEncoder` maps a public Plucker
+  shadow to a payload;
+- public-layer realization, where an observed proof-carrying chain commitment
+  realizes a hash-bound Plucker shadow.
+
+The second reading is the storage-native one: the chain already constructs and
+accepts `CochainCommitmentData`, and proximity supplies the proof relation
+between the accepted payload and the Plucker public shadow.
 
 Lean surface:
 
 ```text
 PluckerCochain.Projection
 PluckerCochain.InvariantChecklist
+PluckerCochain.Concrete.PayloadEncoder
+PluckerCochain.Concrete.ProjectionInputs
+PluckerCochain.PublicBinding.HashedPluckerShadow
+PluckerCochain.PublicBinding.PayloadRealization
+PluckerCochain.PublicBinding.ObservedFrameBinding
 ```
 
 Local invariants:
@@ -118,6 +173,16 @@ Local invariants:
 - valid Plucker frames map to global-section candidates;
 - global-section candidates are accepted by the local syndrome test;
 - local syndrome distance is bounded by the Plucker-stage disagreement.
+
+The concrete bridge now records the actual payload boundary:
+
+- `PayloadEncoder` maps public Plucker shadows into `CochainCommitmentData`;
+- valid frames must encode to well-formed chain commitments with the expected
+  edge count;
+- the encoder is quotient-respecting because it consumes the public Plucker
+  shadow rather than a private frame witness;
+- `ProjectionInputs.toProjection` turns the concrete payload encoder into the
+  generic `PluckerCochain.Projection`.
 
 This stage does not prove the final gap. It only proves local compatibility with
 the cochain/syndrome surface.
@@ -178,7 +243,17 @@ Local invariants:
 - RS distance is bounded by local syndrome distance.
 
 Concrete fields such as `ZMod 12289` should be instantiated here, not upstream
-in the semantic cochain/plane layers.
+in the semantic cochain/plane layers. The current Lean boundary names:
+
+```text
+CochainReedSolomon.CanonicalField := ZMod 12289
+PlaneEncoding.integerCanonical
+```
+
+`integerCanonical mix` folds two integer plane coordinates into one canonical
+field symbol. The choice of `mix` is still part of the concrete parameter
+regime; the definition is the encoding boundary, not the final non-collapse
+theorem.
 
 ## Projection-Chain Orchestration
 
@@ -204,48 +279,136 @@ Chain.toEvaluationProjection
 
 which maps the Plucker-stage source instance directly to the RS code shadow.
 
-The local invariant packages are collected by:
+The gate certificates are accumulated by:
 
 ```text
-Chain.StageChecklists
+Chain.PluckerCochainGateCertificate
+Chain.CochainPlaneGateCertificate
+Chain.PlaneRSGateCertificate
+Chain.ProjectionStageGateCertificate
+Chain.CalibratedFinalGateCertificate
 ```
 
-The orchestrator does not invent new mathematical invariants. It only composes
-checked stage-local objects.
+Each gate consumes the certificate from the previous gate and appends only its
+own local certificate. The calibrated final gate consumes `ProjectionStageGateCertificate`,
+records the selected `RadiusCalibration`, and appends only the
+`FarNonCollapseWitness`. `StageChecklists` remains available as an explicit view
+of the accumulated pre-final certificate, but downstream bridge code should
+consume the gate certificates.
+
+The cross-cutting proximity gates are named separately:
+
+```text
+Proximity.Gates.Projection.PluckerMetricGate
+Proximity.Gates.Projection.SourceMetricGate
+Proximity.Gates.Projection.PublicShadowRespectGate
+Proximity.Gates.Projection.SemanticAlignmentGate
+Proximity.Gates.Projection.SyndromeAdequacyGate
+Proximity.Gates.Projection.PluckerToCochainNonCollapseGate
+Proximity.Gates.Projection.CochainToRSFarGate
+Proximity.Gates.Projection.FarGatePipeline
+Proximity.Gates.Projection.StructuralBundle
+Proximity.Gates.Projection.Bundle
+Proximity.Gates.Projection.HardGateCertificate
+Proximity.GateEvidence.Projection.HardGateEvidenceRecord
+```
+
+The gate layer is split by role.
+
+Hard invariant gates:
+
+```text
+SourceMetricGate
+PluckerMetricGate
+PublicShadowRespectGate
+SemanticAlignmentGate
+SyndromeAdequacyGate
+StructuralBundle
+HardGateCertificate
+```
+
+Metric/proof gates:
+
+```text
+PluckerToCochainNonCollapseGate
+CochainToRSFarGate
+FarGatePipeline
+Bundle
+```
+
+The quotient gate is placed after the Plucker shadow: it identifies allowed
+public-shadow collapse before the cochain/plane/RS projection is interpreted.
+The local non-collapse gate is the Plucker-to-cochain fidelity check. The RS
+side is metric: `CochainToRSFarGate` and `FarGatePipeline` prove that the
+received-word distance reaches the calibrated radius.
 
 ## Final Gap Comparison
 
-The final comparison is expressed by:
+The final comparison is expressed by the calibrated surface:
 
 ```text
-ProjectionChain.Chain.EndToEndReady
+Gates.Projection.CalibratedEndToEndReady
 ```
 
 It contains:
 
-- `stageChecklists`: all local invariants have been accounted for;
+- `gateCertificate`: the accumulated certificate already built gate-by-gate;
+- `nearRadiusCompatible`: the source near radius fits inside the target near
+  radius after metric normalization;
 - `farNonCollapse`: the composed map preserves the far side of the selected
   proximity promise.
+
+When the gate certificate is already carried by a state bus, the final proof
+surface is the final gate:
+
+```text
+Gates.Projection.RadiusCalibration
+Gates.Projection.FarNonCollapseWitness
+Gates.Projection.CalibratedFinalGateCertificate
+Gates.Projection.CalibratedFinalCheck
+```
+
+`RadiusCalibration` owns the source/target radii and gap inequalities.
+`FarNonCollapseWitness` is the actual last theorem. The final gate combines
+those with the accumulated `ProjectionStageGateCertificate`; `CalibratedFinalCheck` is the
+compact view consumed by the reduction surface.
+
+This is quotient-aware. The theorem is not global injectivity and not full
+distance preservation: some pairs should collapse along intended quotient/kernel
+directions. The final gate only rules out far-region collapse into the target
+near region. Lean exposes that reading as:
+
+```text
+Gates.Projection.FarRegionSeparation
+FarRegionSeparation.collapsed_pair_target_far
+```
+
+For the first concrete RS regime, Lean now names the canonical same-radius
+Johnson calibration:
+
+```text
+CanonicalRS.BridgeData.johnsonRadiusReal
+CanonicalRS.BridgeData.johnsonRadiusCalibration
+```
+
+This sets source and target near/far radii to the absolute Hamming radius
+associated to `johnsonBelowRadius = 2047`. The remaining theorem at that
+calibration is:
+
+```text
+Gates.Projection.FarNonCollapseWitness
+  Gamma beta.johnsonRadiusReal beta.johnsonRadiusReal
+```
 
 From this, Lean constructs:
 
 ```text
-EndToEndReady.toEndToEndGapProjection
-EndToEndReady.toHcryptToRSBridge
+CalibratedEndToEndReady.toCalibratedEndToEndGapProjection
+CalibratedEndToEndReady.toCalibratedHcryptToRSBridge
 ```
 
-This is the formal entry point for the paper's final theorem.
-
-The mathematical theorem still to prove is the calibrated far/non-collapse
-statement:
-
-```text
-farRadius <= pluckerDisagreement W
-  ->
-farRadius <= D.distanceToRS (Gamma.receivedWord W)
-```
-
-The more flexible publication-level version is likely:
+The mathematical theorem still to prove is the concrete calibrated
+far/non-collapse statement:
 
 ```text
 sourceFarRadius <= sourceDisagreement W
@@ -258,18 +421,147 @@ projection chain is not expected to be isometric.
 
 ## RS Target Obligations
 
-The RS target layer records the remaining parameter and metric work:
+The first concrete parameter regime is now fixed in Lean:
 
-- choose the exact RS parameter regime and smooth evaluation domain;
+```text
+field        := ZMod 12289
+length       := 4096
+degreeBound  := 1024
+rate         := 1/4
+listRadius   := 2047
+pointRadius  := 2047
+lineRadius   := 2047
+```
+
+The length is chosen because `4096 | 12289 - 1`, matching the intended
+smooth-domain/subgroup shape. The radius `2047` is strictly below the
+Johnson-style `1/2` radius for rate `1/4`. The stricter capacity-below radius
+`3071` is also named in Lean, but it is not used as the initial proved target.
+
+The smooth evaluation-domain API is now concrete and certificate-driven:
+
+```text
+CanonicalRS.FullGenerator.generator : RSField*
+CanonicalRS.FullGenerator.order_eq_fullGeneratorOrder : orderOf generator = 12288
+CanonicalRS.FullGenerator.toPowerRoot
+
+CanonicalRS.PowerRoot.root : RSField*
+CanonicalRS.PowerRoot.order_eq_length : orderOf root = 4096
+CanonicalRS.PowerRoot.point i := root^i
+CanonicalRS.PowerRoot.domain
+
+CanonicalRS.candidateGeneratorUnit_order :
+  orderOf candidateGeneratorUnit = 12288
+CanonicalRS.candidateFullGenerator : FullGenerator
+CanonicalRS.canonicalPowerRoot : PowerRoot
+CanonicalRS.canonicalSmoothDomain : SmoothDomain
+```
+
+This means the RS evaluation points are genuine subgroup/power-domain points
+for the concrete canonical candidate. The current concrete candidate is
+algebraic:
+
+```text
+CanonicalRS.candidateGenerator := 11 : ZMod 12289
+CanonicalRS.candidateGeneratorUnit : (ZMod 12289)*
+CanonicalRS.candidateRoot := candidateGenerator^3
+CanonicalRS.canonicalMix := candidateRoot
+CanonicalRS.integerPlaneEncoding :=
+  PlaneEncoding.integerCanonical canonicalMix
+```
+
+The full-generator certificate is algebraic: Lean proves
+`orderOf candidateGeneratorUnit = 12288` using
+`orderOf_eq_of_pow_and_pow_div_prime`, then `FullGenerator.toPowerRoot` gives
+the order-`4096` root by the `orderOf (g^3)` theorem. No exhaustive
+point-injectivity check belongs in the library.
+
+The canonical RS metric is now the geometric distance to the RS code: the
+infimum of absolute Hamming distances from the received word to RS codewords.
+Lean exposes it as:
+
+```text
+CanonicalRS.hammingDistanceToCode
+CanonicalRS.absoluteHammingMetric
+CanonicalRS.absoluteRadiusNormalization
+```
+
+The metric proves exact codewords have zero distance and Hamming-close words are
+bounded by the corresponding absolute real radius. The real-valued radius
+interface is named by:
+
+```text
+ReedSolomonTarget.Target.RadiusNormalization
+```
+
+It converts natural-number Hamming radii into the real-valued proximity score
+used by `GapProximityProblem`, and records that Hamming-close words are close in
+the selected received-word metric.
+
+The canonical bridge-data layer now bundles the constructed endpoint:
+
+```text
+CanonicalRS.BridgeData
+  bounds : Bounds canonicalSmoothDomain
+
+BridgeData.rsTarget
+BridgeData.metric
+BridgeData.radiusNormalization
+BridgeData.planeEncoding
+BridgeData.codeShadow
+BridgeData.bridgeObligations
+BridgeData.johnsonRadiusReal
+BridgeData.johnsonRadiusCalibration
+BridgeTheoremSlots
+BridgeCertificate.complete
+RSMetricCertificate
+RSMetricCertificate.of_rsFarSeparation
+RSMetricCertificate.of_johnsonRSFarSeparation
+RSMetricCertificate.toBridgeCertificate
+RSMetricCertificate.calibratedFinalGateCertificate
+RSMetricCertificate.toCalibratedHcryptToRSBridge
+JohnsonRSFarSeparation.of_farSeparation
+JohnsonRSFarSeparation.of_distanceLowerBound
+JohnsonRSFarSeparation.of_distanceEquality
+JohnsonRSFarSeparation.toRSMetricCertificate
+JohnsonRSFarSeparation.finalGate
+JohnsonRSFarSeparation.toBridge
+```
+
+`BridgeData` keeps the external RS bounds explicit, while the domain,
+evaluation-point, metric, radius, and encoding choices are fixed. The remaining
+projection-chain obligations are named by `BridgeTheoremSlots`, proved by
+`BridgeCertificate`, and assembled as an ordered certificate chain:
+
+- hard invariant evidence: `Gates.Projection.HardGateCertificate`;
+- quantitative RS proof state: `RSMetricCertificate`.
+
+`RSMetricCertificate` extends the hard-gate certificate. It carries:
+
+- `previous : Gates.Projection.HardGateCertificate`;
+- `Gates.Projection.RadiusCalibration` for selected source/target radii
+  and gap inequalities;
+- `Gates.Projection.FarRegionSeparation` as `rsFarSeparation`, a theorem
+  over the canonical RS received-word metric;
+- the composed projection facts exposed by `ProjectionChain.Chain`.
+
+`CanonicalRS.FarSeparation` then names the canonical Johnson RS theorem object:
+
+```text
+JohnsonRSFarSeparation
+```
+
+It can be built directly from the threshold far-separation theorem, or from
+stronger distance-lower-bound/equality statements. Together with a
+`HardGateCertificate`, it determines the ordered `RSMetricCertificate` consumed
+by bridge completion.
+
+Remaining obligations:
+
 - supply or cite the RS list-decoding bound;
 - supply or cite the RS mutual-correlated-agreement bound;
-- choose the received-word distance/normalization;
-- prove domain cardinality, smooth-domain, and evaluation-point compatibility;
-- prove restriction/transport and coboundary/syndrome naturality;
-- prove global-section compatibility;
-- prove the composed projection matches the RS received-word view;
-- prove near-distance compatibility;
-- prove far instances do not collapse under the composed projection chain.
+- instantiate the production hard-gate certificate;
+- prove `JohnsonRSFarSeparation` for that production projection chain.
 
 ## Paper Section Outline
 
@@ -340,14 +632,8 @@ The RS target layer records the remaining parameter and metric work:
 
 ## Immediate Next Proof Tasks
 
-1. Decide whether the final theorem uses same-radius or calibrated-radius
-   far/non-collapse.
-2. Fix the RS received-word metric and radius normalization.
-3. Instantiate the intended finite field at the plane-to-RS boundary.
-4. Strengthen `EndToEndReady` if calibrated radii require separate source and
-   target radii.
-5. Prove or cite the concrete RS list-decoding/MCA bounds used by the target.
-6. Prove the composed far/non-collapse theorem for the selected parameter
+1. Prove or cite the concrete RS list-decoding/MCA bounds used by the target.
+2. Prove the composed far/non-collapse theorem for the selected parameter
    regime.
 
 ## Build Check
@@ -355,6 +641,6 @@ The RS target layer records the remaining parameter and metric work:
 Current targeted check for the orchestrator:
 
 ```text
-lake build Proximity.ProjectionChain Proximity
-Build completed successfully (7372 jobs).
+lake build Proximity.CanonicalRS Proximity
+Build completed successfully (7379 jobs).
 ```

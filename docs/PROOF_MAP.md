@@ -24,7 +24,9 @@ mathematical claims, while Python currently provides runtime checks and tests.
 ## Proximity Projection Proof
 
 The proximity proof path is documented in the canonical
-[`PROXIMITY.md`](PROXIMITY.md). The current Lean shape is:
+[`PROXIMITY.md`](PROXIMITY.md), with the paper-facing outline in
+[`PROXIMITY_PAPER_OUTLINE.md`](PROXIMITY_PAPER_OUTLINE.md). The current Lean
+shape is:
 
 ```text
 Plucker frame witness
@@ -40,14 +42,51 @@ Key Lean entry points:
 |------|------|--------|
 | `Proximity/PluckerCochain.lean` | Plucker shadow to committed cochain/local syndrome | Stage-local invariants named |
 | `Proximity/CochainPlane.lean` | Committed cochain to semantic plane shadow | Stage-local alignment and extraction invariants named |
-| `Proximity/CochainReedSolomon.lean` | Plane shadow to RS received word | Field boundary and RS codeword compatibility named |
-| `Proximity/ProjectionChain.lean` | Orchestrates the composed projection chain | Built and imported by `Proximity.lean` |
-| `Proximity/Problem.lean` | Final promised gap comparison | Uses `EndToEndGapProjection` |
+| `Proximity/Public.lean` | Public/storage boundary aggregate | Owns storage-root-linked `CochainPlane.PublicBinding.PlaneView` and re-exports public Plücker/cochain bindings and gate evidence records |
+| `Proximity/CochainReedSolomon.lean` | Plane shadow to RS received word | Canonical `ZMod 12289` boundary, integer plane encoding, and RS codeword compatibility named |
+| `Proximity/ProjectionChain.lean` | Projection-chain import surface | Re-exports the map orchestration surface |
+| `Proximity/ProjectionChain/Core.lean` | Orchestrates the composed projection chain | Defines only `Chain`, composed stage maps, and the induced evaluation projection |
+| `Proximity/Gates/Stage.lean` | Stage-gate certificate accumulation | Defines stage checklists and accumulated stage certificates without recomputation |
+| `Proximity/Gates/Final.lean` | Final radius/metric checks for an orchestrated chain | Calibrated readiness, far/non-collapse, final gap and RS bridge handoff |
+| `Proximity/Gates.lean` | Cross-cutting proximity invariant gates | Names Plücker metric/chart, public-shadow respect, semantic alignment, syndrome adequacy, hard-gate certificates, the Plücker/cochain/RS far-gate pipeline, and the calibrated final certificate |
+| `Proximity/CanonicalRS/Parameters.lean` | Concrete RS parameter regime | Fixes `ZMod 12289`, length `4096`, degree bound `1024`, rate `1/4`, Johnson-below radius `2047` |
+| `Proximity/CanonicalRS/PowerDomain.lean` | Smooth power-domain construction | Defines `FullGenerator`, `PowerRoot`, the algebraic `FullGenerator.toPowerRoot` path, and the root candidate |
+| `Proximity/CanonicalRS/Encoding.lean` | Canonical plane encoding | Defines `canonicalMix` and `integerPlaneEncoding` |
+| `Proximity/CanonicalRS/Target.lean` | Canonical RS target wrapper | Packages list-decoding/MCA theorem slots around the fixed parameter regime |
+| `Proximity/CanonicalRS/Metric.lean` | Canonical received-word metric | Defines geometric Hamming distance-to-code, absolute Hamming metric, and radius normalization |
+| `Proximity/CanonicalRS/BridgeData.lean` | Canonical bridge endpoint and RS metric certificate | Bundles canonical domain, target, metric, normalization, encoding, code shadow, theorem slots, terminal bridge certificate, and ordered `RSMetricCertificate` |
+| `Proximity/CanonicalRS/FarSeparation.lean` | Canonical Johnson RS far-separation proof | Names `JohnsonRSFarSeparation` and packages it with hard gates into the final gate and bridge |
+| `Proximity/Problem.lean` / `Proximity/RS/Target.lean` | Final promised gap comparison | Uses `CalibratedEndToEndGapProjection`, `RadiusNormalization`, and calibrated RS bridge |
 
-The remaining paper-level theorem is the calibrated end-to-end far/non-collapse
+The remaining paper-level theorem is the calibrated end-to-end far-separation
 statement. The stage files account for concrete local invariants; the final gap
 is checked only after the composed projection chain and RS metric/radius regime
-are fixed.
+are fixed. `Proximity/Gates.lean` separates hard invariant evidence from the
+metric proof route: public-shadow respect is an early post-Plücker gate,
+Plücker-to-cochain non-collapse is the local fidelity gate, and the
+cochain-to-RS gate proves far separation over the RS received-word metric.
+
+Canonical RS now uses a certificate-driven smooth domain. Lean proves
+`candidateGeneratorUnit_order : orderOf candidateGeneratorUnit = 12288`; cubing
+that certified generator gives `canonicalPowerRoot : PowerRoot` with order
+`4096`, and the domain evaluates at `root^i`. The chosen field candidate is
+algebraic: `candidateGenerator := 11` and
+`candidateRoot := candidateGenerator^3`. This is not a brute-force
+cochain-to-RS extraction path.
+
+The canonical RS received-word metric is also geometric: `hammingDistanceToCode`
+is the infimum of Hamming distances to RS codewords, and
+`absoluteRadiusNormalization` proves the absolute Hamming radius compatibility.
+`CanonicalRS.BridgeData` packages the resulting endpoint while keeping external
+RS bounds explicit. The remaining projection-chain/far-gap facts are routed
+through an ordered certificate chain: `HardGateCertificate` carries stage and
+structural gates, while `RSMetricCertificate` extends it with
+`RadiusCalibration` and `rsFarSeparation`. The first concrete calibration is
+`BridgeData.johnsonRadiusCalibration`, using the absolute Hamming radius for
+`johnsonBelowRadius = 2047`; the remaining theorem is
+`JohnsonRSFarSeparation`, packaged in `CanonicalRS.FarSeparation`. This theorem
+is quotient-aware: intended pair collapse may occur, but far source instances
+must not collapse into target-near RS words.
 
 ## Core Theorems
 

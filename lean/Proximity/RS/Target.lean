@@ -1,4 +1,4 @@
-import Proximity.ReedSolomon
+import Proximity.RS.ReedSolomon
 import Proximity.Problem
 
 /- Reed-Solomon target layer for the hcrypt proximity pipeline. -/
@@ -24,8 +24,21 @@ structure Target
   threshold : ℕ
   listDecodingBound :
     parameters.ListDecodingBound listRadius listSize
+  listDecodingBoundAt :
+    parameters.ListDecodingBoundAt
+      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) listRadius)
+      listSize
   mutualCorrelatedAgreementBound :
     parameters.MutualCorrelatedAgreementBound pointRadius lineRadius threshold
+  mutualCorrelatedAgreementErrorBound :
+    parameters.MutualCorrelatedAgreementErrorBound
+      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) pointRadius)
+      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) lineRadius)
+      ((threshold : ℝ) / (Fintype.card F : ℝ))
+  paperMutualCorrelatedAgreementErrorBound :
+    parameters.PaperMutualCorrelatedAgreementErrorBound
+      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) pointRadius)
+      ((threshold : ℝ) / (Fintype.card F : ℝ))
 
 namespace Target
 
@@ -41,6 +54,13 @@ theorem listDecodingBoundHolds (T : Target F ι) :
     T.parameters.ListDecodingBound T.listRadius T.listSize :=
   T.listDecodingBound
 
+/-- The fractional list-decoding bound explicitly carried by the target. -/
+theorem listDecodingBoundAtHolds (T : Target F ι) :
+    T.parameters.ListDecodingBoundAt
+      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.listRadius)
+      T.listSize :=
+  T.listDecodingBoundAt
+
 /--
 The CA consequence available from the stored MCA input.
 -/
@@ -49,6 +69,21 @@ theorem correlatedAgreementBound (T : Target F ι) :
       T.pointRadius T.lineRadius T.threshold :=
   Hcrypt.Proximity.ReedSolomon.Parameters.correlatedAgreement_of_mutualCorrelatedAgreement
     T.parameters T.mutualCorrelatedAgreementBound
+
+/-- The fractional MCA error bound explicitly carried by the target. -/
+theorem mutualCorrelatedAgreementErrorBoundHolds (T : Target F ι) :
+    T.parameters.MutualCorrelatedAgreementErrorBound
+      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.lineRadius)
+      ((T.threshold : ℝ) / (Fintype.card F : ℝ)) :=
+  T.mutualCorrelatedAgreementErrorBound
+
+/-- The paper Definition 4.3 MCA error bound explicitly carried by the target. -/
+theorem paperMutualCorrelatedAgreementErrorBoundHolds (T : Target F ι) :
+    T.parameters.PaperMutualCorrelatedAgreementErrorBound
+      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+      ((T.threshold : ℝ) / (Fintype.card F : ℝ)) :=
+  T.paperMutualCorrelatedAgreementErrorBound
 
 /--
 Metric data turning the RS code into a `CodeShadow`.
@@ -81,6 +116,81 @@ theorem distance_eq_zero_of_codeword
   D.codeword_zero_distance w hw
 
 end ReceivedWordMetric
+
+/--
+Radius normalization for an RS received-word metric.
+
+RS/list-decoding bounds are usually stated with natural-number Hamming radii,
+while the generic hcrypt proximity interface uses real-valued scores. This
+structure fixes the conversion and records the compatibility fact needed for
+the near side: Hamming-close words are close in the selected real metric.
+-/
+structure RadiusNormalization
+    {T : Target F ι}
+    (D : ReceivedWordMetric T) where
+  hammingRadiusToReal : ℕ → ℝ
+  radius_zero : hammingRadiusToReal 0 = 0
+  radius_mono :
+    ∀ {r s : ℕ}, r ≤ s → hammingRadiusToReal r ≤ hammingRadiusToReal s
+  close_le_radius :
+    ∀ {r : ℕ} {w : Hcrypt.Proximity.Word ι F},
+      T.parameters.toBlockCode.Close r w →
+        D.distanceToRS w ≤ hammingRadiusToReal r
+  listRadiusReal : ℝ
+  pointRadiusReal : ℝ
+  lineRadiusReal : ℝ
+  listRadius_eq : listRadiusReal = hammingRadiusToReal T.listRadius
+  pointRadius_eq : pointRadiusReal = hammingRadiusToReal T.pointRadius
+  lineRadius_eq : lineRadiusReal = hammingRadiusToReal T.lineRadius
+
+namespace RadiusNormalization
+
+/--
+The relative Hamming convention for this target's coordinate domain.
+-/
+noncomputable def relativeHammingRadius (r : ℕ) : ℝ :=
+  Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) r
+
+/-- Relative Hamming radius sends zero to zero. -/
+theorem relativeHammingRadius_zero :
+    relativeHammingRadius (ι := ι) 0 = 0 :=
+  Hcrypt.Proximity.BlockCode.relativeRadius_zero
+
+/-- Relative Hamming radius is monotone in the Hamming-count radius. -/
+theorem relativeHammingRadius_mono {r s : ℕ} (hrs : r ≤ s) :
+    relativeHammingRadius (ι := ι) r ≤ relativeHammingRadius (ι := ι) s :=
+  Hcrypt.Proximity.BlockCode.relativeRadius_mono (ι := ι) hrs
+
+/--
+Build a radius-normalization witness for a relative Hamming-compatible metric.
+
+The metric remains real-valued and paper-facing; the natural-number radius is
+only the finite combinatorial representation of the same threshold.
+-/
+noncomputable def relative
+    {T : Target F ι}
+    (D : ReceivedWordMetric T)
+    (hclose :
+      ∀ {r : ℕ} {w : Hcrypt.Proximity.Word ι F},
+        T.parameters.toBlockCode.Close r w →
+          D.distanceToRS w ≤ relativeHammingRadius (ι := ι) r) :
+    RadiusNormalization D where
+  hammingRadiusToReal := relativeHammingRadius (ι := ι)
+  radius_zero := relativeHammingRadius_zero (ι := ι)
+  radius_mono := by
+    intro r s hrs
+    exact relativeHammingRadius_mono (ι := ι) hrs
+  close_le_radius := by
+    intro r w hw
+    exact hclose hw
+  listRadiusReal := relativeHammingRadius (ι := ι) T.listRadius
+  pointRadiusReal := relativeHammingRadius (ι := ι) T.pointRadius
+  lineRadiusReal := relativeHammingRadius (ι := ι) T.lineRadius
+  listRadius_eq := rfl
+  pointRadius_eq := rfl
+  lineRadius_eq := rfl
+
+end RadiusNormalization
 
 /--
 What remains to connect an hcrypt projection to this RS target.
@@ -287,8 +397,18 @@ structure InstantiationChecklist
   bridge : HcryptToRSBridge S T D
   rsBoundsNamed :
     T.parameters.ListDecodingBound T.listRadius T.listSize ∧
+      T.parameters.ListDecodingBoundAt
+        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.listRadius)
+        T.listSize ∧
       T.parameters.MutualCorrelatedAgreementBound
-        T.pointRadius T.lineRadius T.threshold
+        T.pointRadius T.lineRadius T.threshold ∧
+      T.parameters.MutualCorrelatedAgreementErrorBound
+        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.lineRadius)
+        ((T.threshold : ℝ) / (Fintype.card F : ℝ)) ∧
+      T.parameters.PaperMutualCorrelatedAgreementErrorBound
+        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+        ((T.threshold : ℝ) / (Fintype.card F : ℝ))
   bridgeComplete : bridge.obligations.Complete
   noProtocolImport : Prop
 
@@ -305,8 +425,18 @@ theorem obligations_complete (C : InstantiationChecklist S T D) :
 /-- A checklist exposes the list-decoding and MCA bounds. -/
 theorem bounds_named (C : InstantiationChecklist S T D) :
     T.parameters.ListDecodingBound T.listRadius T.listSize ∧
+      T.parameters.ListDecodingBoundAt
+        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.listRadius)
+        T.listSize ∧
       T.parameters.MutualCorrelatedAgreementBound
-        T.pointRadius T.lineRadius T.threshold :=
+        T.pointRadius T.lineRadius T.threshold ∧
+      T.parameters.MutualCorrelatedAgreementErrorBound
+        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.lineRadius)
+        ((T.threshold : ℝ) / (Fintype.card F : ℝ)) ∧
+      T.parameters.PaperMutualCorrelatedAgreementErrorBound
+        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+        ((T.threshold : ℝ) / (Fintype.card F : ℝ)) :=
   C.rsBoundsNamed
 
 end InstantiationChecklist
