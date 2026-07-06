@@ -14,6 +14,14 @@ namespace Hcrypt
 namespace Proximity
 namespace ReedSolomon
 
+/-- Paper-style vector symbols `F^s`, represented by coordinates `σ → F`. -/
+abbrev VectorSymbol (F σ : Type*) :=
+  σ → F
+
+/-- Paper-style vector received words `(F^s)^n`. -/
+abbrev VectorWord (ι F σ : Type*) :=
+  Word ι (VectorSymbol F σ)
+
 /-- A finite evaluation domain for a Reed-Solomon code. -/
 structure EvaluationDomain (F ι : Type*) where
   point : ι → F
@@ -56,6 +64,98 @@ def Codeword (P : Parameters F ι) (w : Word ι F) : Prop :=
 def toBlockCode (P : Parameters F ι) : BlockCode ι F where
   Codeword := P.Codeword
 
+/--
+The paper-alphabet RS endpoint `C ⊆ (F^s)^n`.
+
+This is the `σ`-fold interleaving of the scalar RS code: a vector word is a
+codeword exactly when every symbol coordinate is a scalar RS codeword.
+-/
+def vectorBlockCode (P : Parameters F ι) (σ : Type*) :
+    BlockCode ι (VectorSymbol F σ) :=
+  P.toBlockCode.interleaved σ
+
+/-- Codeword predicate for the paper-alphabet endpoint `(F^s)^n`. -/
+def VectorCodeword
+    (P : Parameters F ι)
+    (σ : Type*)
+    (w : VectorWord ι F σ) : Prop :=
+  (P.vectorBlockCode σ).Codeword w
+
+/-- F-additivity/linearity certificate for an RS parameter choice. -/
+structure FAdditive (P : Parameters F ι) : Prop where
+  zero_mem :
+    P.Codeword fun _ => 0
+  add_mem :
+    ∀ {u v : Word ι F},
+      P.Codeword u →
+        P.Codeword v →
+          P.Codeword fun i => u i + v i
+  smul_mem :
+    ∀ (a : F) {u : Word ι F},
+      P.Codeword u →
+        P.Codeword fun i => a • u i
+
+namespace FAdditive
+
+/-- View an additive RS parameter choice as the generic additive-code interface. -/
+def toFAdditiveCode
+    {P : Parameters F ι}
+    (hP : P.FAdditive) :
+    FAdditiveCode F ι F where
+  Codeword := P.Codeword
+  zero_mem := hP.zero_mem
+  add_mem := by
+    intro u v hu hv
+    exact hP.add_mem hu hv
+  smul_mem := by
+    intro a u hu
+    exact hP.smul_mem a hu
+
+/-- View an additive RS parameter choice as a paper-alphabet additive code. -/
+def toVectorFAdditiveCode
+    {P : Parameters F ι}
+    (hP : P.FAdditive)
+    (σ : Type*) :
+    FAdditiveCode F ι (VectorSymbol F σ) where
+  Codeword := (P.vectorBlockCode σ).Codeword
+  zero_mem := by
+    intro j
+    simpa using hP.zero_mem
+  add_mem := by
+    intro u v hu hv j
+    exact hP.add_mem (hu j) (hv j)
+  smul_mem := by
+    intro a u hu j
+    exact hP.smul_mem a (hu j)
+
+end FAdditive
+
+/-- RS codewords are closed under the F-additive operations when the degree bound is positive. -/
+def fAdditive_of_degreeBound_pos
+    (P : Parameters F ι)
+    (hDegree : 0 < P.degreeBound) :
+    P.FAdditive where
+  zero_mem := by
+    refine ⟨0, ?_, ?_⟩
+    · simpa using hDegree
+    · intro i
+      simp
+  add_mem := by
+    intro u v hu hv
+    rcases hu with ⟨p, hpdeg, hpu⟩
+    rcases hv with ⟨q, hqdeg, hqv⟩
+    refine ⟨p + q, ?_, ?_⟩
+    · exact (Polynomial.natDegree_add_le p q).trans_lt (max_lt hpdeg hqdeg)
+    · intro i
+      simp [hpu i, hqv i, Polynomial.eval_add]
+  smul_mem := by
+    intro a u hu
+    rcases hu with ⟨p, hpdeg, hpu⟩
+    refine ⟨a • p, ?_, ?_⟩
+    · exact (Polynomial.natDegree_smul_le a p).trans_lt hpdeg
+    · intro i
+      simp [hpu i, Polynomial.eval_smul]
+
 section ListDecoding
 
 variable [DecidableEq F]
@@ -67,6 +167,22 @@ def ListDecodingBound (P : Parameters F ι) (r L : ℕ) : Prop :=
 /-- RS list-decoding bound slot at relative Hamming radius `δ`. -/
 def ListDecodingBoundAt (P : Parameters F ι) (δ : ℝ) (L : ℕ) : Prop :=
   P.toBlockCode.ListSizeBoundAt δ L
+
+/-- Vector-valued RS list-decoding bound slot at Hamming radius `r`. -/
+def VectorListDecodingBound
+    (P : Parameters F ι)
+    (σ : Type*)
+    [DecidableEq (VectorSymbol F σ)]
+    (r L : ℕ) : Prop :=
+  (P.vectorBlockCode σ).ListSizeBound r L
+
+/-- Vector-valued RS list-decoding bound slot at relative Hamming radius `δ`. -/
+def VectorListDecodingBoundAt
+    (P : Parameters F ι)
+    (σ : Type*)
+    [DecidableEq (VectorSymbol F σ)]
+    (δ : ℝ) (L : ℕ) : Prop :=
+  (P.vectorBlockCode σ).ListSizeBoundAt δ L
 
 end ListDecoding
 
@@ -102,6 +218,22 @@ def MutualCorrelatedAgreementErrorBound
   P.toBlockCode.MutualCorrelatedAgreementErrorBound
     (F := F) δpoint δline ε
 
+/-- Vector-valued RS mutual-correlated-agreement bound slot. -/
+def VectorMutualCorrelatedAgreementBound
+    (P : Parameters F ι)
+    (σ : Type*)
+    (pointRadius lineRadius threshold : ℕ) : Prop :=
+  (P.vectorBlockCode σ).MutualCorrelatedAgreementBound
+    (F := F) pointRadius lineRadius threshold
+
+/-- Vector-valued RS MCA error bound slot in fractional paper notation. -/
+def VectorMutualCorrelatedAgreementErrorBound
+    (P : Parameters F ι)
+    (σ : Type*)
+    (δpoint δline ε : ℝ) : Prop :=
+  (P.vectorBlockCode σ).MutualCorrelatedAgreementErrorBound
+    (F := F) δpoint δline ε
+
 section PaperErrorBounds
 
 variable [DecidableEq F]
@@ -118,6 +250,24 @@ def PaperMutualCorrelatedAgreementErrorBound
     (P : Parameters F ι)
     (δ ε : ℝ) : Prop :=
   P.toBlockCode.PaperMutualCorrelatedAgreementErrorBound
+    (F := F) δ ε
+
+/-- Vector-valued RS Definition 4.1 CA error slot over `(F^s)^n`. -/
+def VectorPaperCorrelatedAgreementErrorBound
+    (P : Parameters F ι)
+    (σ : Type*)
+    [DecidableEq (VectorSymbol F σ)]
+    (δfld δint ε : ℝ) : Prop :=
+  (P.vectorBlockCode σ).PaperCorrelatedAgreementErrorBound
+    (F := F) δfld δint ε
+
+/-- Vector-valued RS Definition 4.3 MCA error slot over `(F^s)^n`. -/
+def VectorPaperMutualCorrelatedAgreementErrorBound
+    (P : Parameters F ι)
+    (σ : Type*)
+    [DecidableEq (VectorSymbol F σ)]
+    (δ ε : ℝ) : Prop :=
+  (P.vectorBlockCode σ).PaperMutualCorrelatedAgreementErrorBound
     (F := F) δ ε
 
 end PaperErrorBounds

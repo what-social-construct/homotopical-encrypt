@@ -3,6 +3,12 @@ import Mathlib
 /-
   Helfer-oriented first-order homotopical logic interface.
 
+  Provenance/scope label:
+  this module is a Lean interface inspired by Helfer-style first-order
+  homotopical logic, especially path/diagonal semantics and fibration-style
+  lifting principles. It is a formalization/specification boundary for external
+  paper semantics, not a claim that the repo reproves the source paper.
+
   This module is Lean-first specification glue for the core paper semantics:
   - equality interpreted by path space / diagonal semantics,
   - Grothendieck-fibration style lifting assumptions,

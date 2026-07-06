@@ -1,13 +1,44 @@
 # Proximity Paper Outline
 
 This is a working outline for the hcrypt proximity proof path. It is meant to
-guide the Lean implementation and eventual writeup, not to claim that the
-Proximity Prize target is already solved.
+guide the Lean implementation and eventual writeup.
+
+For the whole-paper narrative, including the hardness-first introduction and a
+possible multi-paper split, see [`PAPER_OUTLINE.md`](PAPER_OUTLINE.md). This
+file is the proximity component outline.
 
 The current paper should be framed as a formal projection architecture with a
-canonical Reed-Solomon endpoint and an explicit theorem-slot inventory. The
-stronger version becomes a full proximity-result paper only after the final
-far-separation theorem and external RS bounds are discharged.
+canonical Reed-Solomon endpoint, a verified paper-facing MCA surface, and an
+explicit trusted-boundary inventory for cited coding-theory results. The
+stronger version becomes a full hcrypt proximity-result paper only after the
+final source-to-RS far-separation theorem is discharged for the concrete
+Plucker/cochain/plane instantiation.
+
+## Provenance And Scope
+
+This outline separates three kinds of Lean content:
+
+- **Original hcrypt formalization:** projection-chain orchestration, Plucker to
+  cochain to plane to RS bridge interfaces, gates, certificates, and final
+  calibrated bridge plumbing.
+- **Formalized external-paper vocabulary:** list decoding, correlated
+  agreement, mutual correlated agreement, and paper-style Reed-Solomon endpoint
+  definitions from the Proximity Prize survey/paper, especially Definition 4.3
+  of *Open Problems in List Decoding and Correlated Agreement*.
+- **Trusted literature imports:** cited Johnson/list-decoding and BCHKS MCA
+  bounds are isolated in `Proximity.CanonicalRS.CitedBounds` as named theorem
+  constants with citation docstrings. This is a trusted boundary, not an
+  internal reproof of those coding-theory papers.
+
+Related repo provenance:
+
+- `Axioms/HelferFOL.lean` is a Helfer-style first-order homotopical-logic
+  interface/formalization layer, not a new claim about that paper.
+- `CVP.lean` is an explicit closest-vector-problem formalization and hardness
+  assumption schema, not an internal proof of CVP hardness.
+- `Proximity/RS/*` formalizes paper-facing coding-theory vocabulary.
+- `Proximity/CanonicalRS/CitedBounds.lean` imports external RS bounds through a
+  single cited assumption boundary.
 
 ## Working Title
 
@@ -16,6 +47,7 @@ Candidate titles:
 - Quotient-Aware Projection Chains from Hodge Proximity to Reed-Solomon Words
 - A Formal Plucker-Cochain-Reed-Solomon Projection for Homotopical Encryption
 - Traceable Proximity Projections for Sheaf/Hodge Cryptographic State
+- Certified Projection Chains to a Paper-Style Reed-Solomon MCA Endpoint
 
 ## One-Paragraph Abstract Draft
 
@@ -23,14 +55,18 @@ We formalize a quotient-aware projection chain from the hcrypt sheaf/Hodge
 proximity problem to a finite Reed-Solomon received-word target. The construction
 passes through Plucker shadows, committed cochains with local syndrome tests, a
 field-agnostic two-coordinate plane shadow, and an explicit finite-field
-encoding boundary. The projection is intentionally lossy along private
-representative directions; the verifier-facing claim is instead a calibrated
-far-region separation theorem after the RS metric and radius regime are fixed.
-The Lean development verifies stage-local invariants, the canonical RS parameter
-regime over `ZMod 12289`, the metric/radius normalization surface, and a
-certificate structure for hard gates and traceable runtime evidence. Remaining
-theorem slots are named explicitly, including concrete Plucker/cochain
-instantiation facts and the final Johnson-radius RS far-separation statement.
+encoding boundary. The paper-facing coding endpoint supports words in
+`(F^s)^n`; the canonical hcrypt endpoint evaluates this at `s = 1` and proves
+the scalar RS bad-challenge set agrees with the width-one paper MCA endpoint.
+The projection is intentionally lossy along private representative directions;
+the verifier-facing claim is instead a calibrated far-region separation theorem
+after the RS metric and radius regime are fixed. The Lean development verifies
+stage-local invariants, canonical RS parameters over `ZMod 12289`, fractional
+MCA/list-decoding surfaces, metric/radius normalization, and a certificate
+structure for hard gates and traceable runtime evidence. External
+Johnson/list-decoding and BCHKS MCA bounds are isolated in a cited trusted
+boundary; the remaining main theorem is the concrete source-to-RS
+far-separation proof.
 
 ## Claims And Nonclaims
 
@@ -40,7 +76,13 @@ This paper can claim:
 - A quotient-aware invariant discipline: private representative collapse is
   allowed, but public proximity collapse is isolated as the final theorem.
 - A canonical RS endpoint with fixed parameter regime, smooth power domain,
-  absolute Hamming metric, and radius normalization.
+  relative/paper-facing Hamming notation, an absolute metric implementation,
+  and radius normalization.
+- A paper-style Reed-Solomon endpoint `C ⊆ (F^s)^n`, with the canonical
+  projection evaluated at the verified `s = 1` slice.
+- A formal MCA endpoint matching Definition 4.3: bad challenges are measured by
+  fractional challenge density and agreement on a shared coordinate set `S`.
+- A cited-bound boundary for Johnson/list-decoding and BCHKS MCA inputs.
 - A certificate architecture separating hard gates, quantitative far-separation
   gates, and runtime trace evidence.
 - A precise inventory of the remaining mathematical and runtime obligations.
@@ -48,6 +90,7 @@ This paper can claim:
 This paper should not claim yet:
 
 - A completed Proximity Prize solution.
+- A new proof of Johnson, BCHKS, GG, or other cited coding-theory theorems.
 - That hashes or SNARKs are the mathematical source of the proximity theorem.
 - That the cochain commitment modulus chooses the semantic Lean field.
 - That all source data is preserved by projection.
@@ -95,7 +138,10 @@ Include only the background needed for the theorem statement:
 - Projective quotienting and why some pairs are supposed to collapse.
 - Cochains, local syndrome tests, and global-section candidates.
 - Reed-Solomon received words, Hamming distance, Johnson radius, and
-  list-decoding/correlated-agreement slots.
+  list-decoding/correlated-agreement/MCA slots.
+- Paper Definition 4.3: F-additive codes `C ⊆ (F^s)^n`, affine lines
+  `f₁ + γ · f₂`, shared agreement sets `S`, and the bad-challenge fraction
+  `εmca(C, δ)`.
 - Proof-carrying runtime evidence, hashes, and SNARK/verifier boundaries.
 
 ### 3. Source Proximity Problem
@@ -202,7 +248,47 @@ What to state:
 - The received word is derived from the plane shadow, not directly from
   cochain `edge_values`.
 
-### 8. Metric And Radius Calibration
+### 8. Paper-Style RS And MCA Endpoint
+
+Lean surfaces:
+
+- `Proximity.RS.ListDecoding`
+- `Proximity.RS.CorrelatedAgreement`
+- `Proximity.RS.ReedSolomon`
+- `Proximity.CanonicalRS.MCA.Line`
+- `Proximity.CanonicalRS.MCA`
+- `Proximity.CanonicalRS.MCA.Concrete`
+- `Proximity.CanonicalRS.CitedBounds`
+
+What to state:
+
+- The generic `BlockCode ι α` layer keeps the alphabet abstract.
+- Reed-Solomon parameters remain scalar as the source of truth:
+  `P.Codeword : Word ι F -> Prop`.
+- The paper alphabet is derived, not duplicated:
+  `P.vectorBlockCode σ : BlockCode ι (σ -> F)`, representing `C ⊆ (F^s)^n`.
+- The canonical endpoint evaluates the paper alphabet at `σ := Fin 1`.
+- `widthOneCodeword_iff`, `widthOneCloseOnSet_iff`, and
+  `widthOneInterleavedCloseOnSet_iff` show that the scalar endpoint and the
+  width-one paper endpoint agree.
+- `widthOneBadChallengeSet_eq` proves equality of the actual Definition 4.3
+  MCA bad-challenge set at the endpoint.
+- `paperMCAStatement_iff_widthOneTarget` proves theorem-level equivalence
+  between the scalar canonical MCA statement and the vector-paper `s = 1`
+  statement.
+- `CitedBounds.bounds` packages the cited Johnson/list-decoding and BCHKS MCA
+  inputs for the canonical below-Johnson setting.
+
+Important invariant:
+
+```text
+Scalar RS remains the implementation endpoint.
+The paper endpoint is `(F^s)^n`.
+The canonical bridge evaluates the paper endpoint at `s = 1`, with a proved
+bad-challenge-set equivalence.
+```
+
+### 9. Metric And Radius Calibration
 
 Lean surfaces:
 
@@ -213,7 +299,10 @@ Lean surfaces:
 What to state:
 
 - The canonical RS metric is absolute Hamming distance to the code.
-- Radius normalization is explicit and proved for the canonical metric.
+- The paper-facing list-decoding/MCA surface is fractional/relative Hamming
+  notation.
+- Radius normalization connects the finite count radius `2047` to the real
+  radius `2047 / 4096`.
 - Near compatibility is calibration data.
 - Far separation is the remaining theorem, not a stage-local invariant.
 
@@ -225,7 +314,7 @@ The final proximity gap is checked only after composing the projection chain and
 fixing the RS metric/radius regime.
 ```
 
-### 9. Hard Gates, Far Gates, And Certificates
+### 10. Hard Gates, Far Gates, And Certificates
 
 Lean surfaces:
 
@@ -257,7 +346,7 @@ ProjectionStageGateCertificate
   -> CalibratedHcryptToRSBridge
 ```
 
-### 10. Traceability And Runtime Boundary
+### 11. Traceability And Runtime Boundary
 
 Lean surfaces:
 
@@ -276,16 +365,16 @@ What to state:
 - `EvidenceDatabase` is verified-database-shaped evidence, but not the source
   of mathematical truth.
 
-### 11. Main Theorem Shape
+### 12. Main Theorem Shape
 
 Prose theorem:
 
 ```text
 Given a well-formed hcrypt proximity instance, a valid Plucker/cochain/plane/RS
-projection chain, hard-gate evidence, radius calibration, and the canonical
-Johnson RS far-separation theorem, the composed projection is a calibrated
-end-to-end gap projection from the hcrypt source problem to the canonical
-Reed-Solomon received-word target.
+projection chain, hard-gate evidence, cited canonical RS/list-decoding/MCA
+bounds, radius calibration, and the canonical source-to-RS far-separation
+theorem, the composed projection is a calibrated end-to-end gap projection from
+the hcrypt source problem to the canonical Reed-Solomon received-word target.
 ```
 
 Lean theorem dependency sketch:
@@ -298,18 +387,24 @@ ProjectiveSoundInputs
   -> CochainReedSolomon.Interpretation
   -> Gates.Projection.ProjectionStageGateCertificate
   -> Gates.Projection.HardGateCertificate
+  -> CanonicalRS.CitedBounds.bounds
   -> CanonicalRS.BridgeData.RSMetricCertificate
   -> RS.Target.CalibratedHcryptToRSBridge
 ```
 
-### 12. Relationship To The Proximity Prize
+### 13. Relationship To The Proximity Prize
 
 Careful wording:
 
 - The canonical endpoint is RS-specific and prize-relevant.
-- The current contribution is a formal projection path into that endpoint.
-- A prize-level claim requires completing the final far-separation theorem and
-  importing or proving the needed RS/list-decoding bounds.
+- The formalized endpoint uses the paper alphabet `C ⊆ (F^s)^n`; the concrete
+  hcrypt instance is the verified `s = 1` ordinary RS slice.
+- The current contribution is a formal projection path into that endpoint plus
+  a verified paper-MCA comparison layer.
+- A prize-level claim requires completing the final source-to-RS far-separation
+  theorem and choosing the prize parameter regime. The conservative canonical
+  endpoint is below Johnson; the grand challenge is about sharper behavior
+  near/beyond Johnson/capacity.
 - The architecture is designed so the final comparison is a precise theorem
   slot, not an informal analogy.
 
@@ -319,6 +414,8 @@ For an early repo/preprint draft, include:
 
 - The projection-chain definitions and diagrams.
 - The canonical RS parameter regime.
+- The paper-style RS/MCA endpoint and the `s = 1` equivalence.
+- The cited-bound boundary and its provenance labels.
 - The hard-gate and far-gate split.
 - The assumption inventory.
 - The exact final theorem statement as a theorem slot.
@@ -341,20 +438,24 @@ Do not include:
 4. Prove the concrete plane extraction alignment and distance-control facts.
 5. Refine naturality obligations from coarse `ProjectionStageGateCertificate` fields into
    stage-specific commuting-square statements.
-6. Supply or cite the canonical RS list-decoding and MCA bounds.
-7. Prove `JohnsonRSFarSeparation`.
-8. Convert the completed certificate into the final calibrated bridge theorem.
+6. Decide whether `CitedBounds` remains an axiom boundary for the first preprint
+   or whether any cited RS bounds should be mechanically derived from simpler
+   imported theorem constants.
+7. Prove `JohnsonRSFarSeparation` / final source-to-RS far non-collapse.
+8. Convert the completed certificate into the final calibrated bridge theorem
+   and state it as the main Lean theorem.
+9. Add a short provenance appendix labeling modules that formalize external
+   papers/problems (`HelferFOL`, `CVP`, `Proximity.RS`, `CitedBounds`).
 
 ## Build Status To Report
 
 Current targeted builds that have passed during this phase:
 
 ```text
-lake build Proximity.RS Proximity.RS.Target Proximity.CochainReedSolomon Proximity.CanonicalRS Proximity
-lake build Proximity.GrassmannianPlucker.Concrete Proximity
-lake build Proximity.Gates Proximity.CanonicalRS.BridgeData Proximity
-lake build Proximity.GateEvidence Proximity
+lake build Proximity.CanonicalRS.CitedBounds
+lake build Proximity.CanonicalRS
+lake build Proximity
 ```
 
-Run a final `lake build` before treating the outline as synchronized with the
-whole Lean workspace.
+Run a final full `lake build` before submission, but the proximity aggregate is
+currently synchronized with the Lean workspace.

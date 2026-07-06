@@ -19,6 +19,12 @@ import Proximity.Public
 /-
   Proximity bridge for the homotopical-encrypt Lean workspace.
 
+  Provenance/scope label:
+  the projection-chain/gate/certificate architecture is hcrypt-native, while
+  the RS/list-decoding/correlated-agreement/MCA vocabulary formalizes
+  paper-facing coding-theory definitions. Cited RS theorem inputs enter through
+  `Proximity.CanonicalRS.CitedBounds` as an explicit trusted boundary.
+
   This file names the hcrypt-native projection/proximity interface:
   cochains are the finite cellular shadow of a sheaf/fibration, disagreement is
   the local obstruction to gluing, and a code/evaluation shadow is a further

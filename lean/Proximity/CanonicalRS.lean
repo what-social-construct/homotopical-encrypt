@@ -7,7 +7,10 @@ import Proximity.CanonicalRS.BridgeData
 import Proximity.CanonicalRS.BridgeWitness
 import Proximity.CanonicalRS.BridgeCertificate
 import Proximity.CanonicalRS.FarSeparation
+import Proximity.CanonicalRS.MCA.Line
 import Proximity.CanonicalRS.MCA
+import Proximity.CanonicalRS.MCA.Concrete
+import Proximity.CanonicalRS.CitedBounds
 
 /-
   Canonical Reed-Solomon parameter regime for the hcrypt proximity bridge.

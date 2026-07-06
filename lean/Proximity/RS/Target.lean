@@ -16,6 +16,8 @@ so the target stores the stronger MCA input.
 structure Target
     (F ι : Type) [Field F] [Fintype F] [Fintype ι] [DecidableEq F] where
   parameters : Hcrypt.Proximity.ReedSolomon.Parameters F ι
+  fAdditive :
+    parameters.FAdditive
   smoothRegime : Prop
   listRadius : ℕ
   listSize : ℕ
@@ -48,6 +50,16 @@ variable {F ι : Type} [Field F] [Fintype F] [Fintype ι] [DecidableEq F]
 def blockCode (T : Target F ι) :
     Hcrypt.Proximity.BlockCode ι F :=
   T.parameters.toBlockCode
+
+/-- The target explicitly carries the F-additivity required by paper CA/MCA. -/
+theorem fAdditiveHolds (T : Target F ι) :
+    T.parameters.FAdditive :=
+  T.fAdditive
+
+/-- The target as the generic additive-code interface used by paper line arguments. -/
+def toFAdditiveCode (T : Target F ι) :
+    Hcrypt.Proximity.FAdditiveCode F ι F :=
+  T.fAdditive.toFAdditiveCode
 
 /-- The list-decoding bound explicitly carried by the target. -/
 theorem listDecodingBoundHolds (T : Target F ι) :

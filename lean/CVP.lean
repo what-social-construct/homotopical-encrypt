@@ -3,6 +3,11 @@ import Mathlib
 /-
   Generic explicit-lattice CVP vocabulary.
 
+  Provenance/scope label:
+  this module formalizes the standard Closest Vector Problem (CVP) interface
+  used as an external hardness/comparison problem. It is not an original
+  hcrypt theorem claiming CVP hardness from first principles.
+
   This file owns the known-lattice side of the security story. It defines the
   problem objects and oracle-correctness predicates used by `Hardness.lean`.
 

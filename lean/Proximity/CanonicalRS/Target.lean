@@ -43,10 +43,26 @@ structure Bounds (D : SmoothDomain) where
       (BlockCode.relativeRadius (ι := Fin length) johnsonBelowRadius)
       ((threshold : ℝ) / (Fintype.card RSField : ℝ))
 
+namespace Bounds
+
+variable {D : SmoothDomain}
+
+/-- The canonical RS parameter object is F-additive by polynomial closure. -/
+def fAdditive (D : SmoothDomain) :
+    D.parameters.FAdditive :=
+  ReedSolomon.Parameters.fAdditive_of_degreeBound_pos
+    D.parameters
+    (by
+      change 0 < degreeBound
+      native_decide)
+
+end Bounds
+
 /-- The canonical RS target at rate `1/4` and Johnson-below radius. -/
 def target (D : SmoothDomain) (B : Bounds D) :
     ReedSolomonTarget.Target RSField (Fin length) where
   parameters := D.parameters
+  fAdditive := Bounds.fAdditive D
   smoothRegime := D.smooth
   listRadius := johnsonBelowRadius
   listSize := B.listSize

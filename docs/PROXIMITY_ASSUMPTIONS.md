@@ -26,10 +26,13 @@ each assumption named, typed, owned, and visible while the proof is burned down.
 
 Current audit facts:
 
-- No `sorry`, `admit`, or Lean `axiom` declarations were found in `lean/Proximity`
-  or `lean/Axioms`.
-- The proximity build passed after the RS-folder refactor:
-  `lake build Proximity.RS Proximity.RS.Target Proximity.CochainReedSolomon Proximity.CanonicalRS Proximity`.
+- No `sorry` or `admit` declarations are expected in the proximity surface.
+- `Proximity.CanonicalRS.CitedBounds` intentionally contains Lean `axiom`
+  declarations for externally cited Johnson/list-decoding and BCHKS MCA theorem
+  inputs. These are trusted literature imports, not hidden proof gaps.
+- The proximity build passed after the paper-MCA endpoint and cited-bound pass:
+  `lake build Proximity.CanonicalRS.CitedBounds`,
+  `lake build Proximity.CanonicalRS`, and `lake build Proximity`.
 - The first concrete Plucker instantiation now builds:
   `lake build Proximity.GrassmannianPlucker.Concrete Proximity`.
 - The remaining assumptions are carried as structure fields, theorem slots, or
@@ -54,6 +57,10 @@ Current audit facts:
 | Absolute radius normalization | `Proximity/CanonicalRS/Metric.lean` | Lean-proved | `absoluteRadiusNormalization` discharges radius conversion for the canonical absolute-Hamming metric. |
 | Canonical bridge endpoint facts | `Proximity/CanonicalRS/BridgeData.lean` | Lean-proved | Domain cardinality, smoothness, evaluation-point compatibility, metric normalization, and radius parameter agreement are proved for `BridgeData`. |
 | Certificate plumbing to final bridge | `Proximity/CanonicalRS/BridgeData.lean` | Lean-proved | `RSMetricCertificate` converts hard gates plus far separation into a completed calibrated RS bridge. |
+| Paper-style RS endpoint | `Proximity/RS/ReedSolomon.lean` | Lean-defined | `vectorBlockCode P σ` represents `C ⊆ (F^s)^n` as an interleaving of scalar RS codewords. |
+| Definition 4.3 MCA surface | `Proximity/RS/CorrelatedAgreement.lean` | Lean-defined | Fractional MCA bad-challenge sets use shared agreement sets `S` and challenge fractions. |
+| Canonical `s = 1` MCA endpoint | `Proximity/CanonicalRS/MCA/Concrete.lean` | Lean-proved | Width-one scalar/vector equivalences culminate in `widthOneBadChallengeSet_eq` and `paperMCAStatement_iff_widthOneTarget`. |
+| Cited RS bounds package | `Proximity/CanonicalRS/CitedBounds.lean` | External theorem boundary packaged in Lean | `CitedBounds.bounds` supplies named/cited Johnson list-decoding and BCHKS MCA inputs for the canonical endpoint. |
 
 ## Construction Interfaces Still To Instantiate
 
@@ -84,8 +91,10 @@ interfaces. A concrete hcrypt instantiation must provide them.
 
 | Slot | Lean surface | Status | Notes |
 |------|--------------|--------|-------|
-| List-size/list-decoding bound | `CanonicalRS.Bounds.listDecodingBound` | External theorem slot | For the canonical target this is at `ZMod 12289`, length `4096`, degree bound `1024`, Johnson-below radius `2047`. |
-| Mutual correlated-agreement bound | `CanonicalRS.Bounds.mutualCorrelatedAgreementBound` | External theorem slot | Stored because ordinary CA follows from MCA generically in Lean. |
+| List-size/list-decoding bound | `CanonicalRS.Bounds.listDecodingBound` | Trusted cited theorem boundary | Supplied by `CanonicalRS.CitedBounds.johnsonListDecodingBound`, citing ePrint 2026/680 Theorem 3.2 / Corollary 3.3. |
+| Fractional list-decoding bound | `CanonicalRS.Bounds.listDecodingBoundAt` | Trusted cited theorem boundary | Supplied by `CanonicalRS.CitedBounds.johnsonListDecodingBoundAt` in paper fractional notation. |
+| Mutual correlated-agreement bound | `CanonicalRS.Bounds.mutualCorrelatedAgreementBound` | Trusted cited theorem boundary | Supplied by `CanonicalRS.CitedBounds.bchksMutualCorrelatedAgreementBound`, citing ePrint 2026/680 Theorem 4.12 / BCHKS25 Theorem 4.6. |
+| Paper Definition 4.3 MCA bound | `CanonicalRS.Bounds.paperMutualCorrelatedAgreementErrorBound` | Trusted cited theorem boundary plus Lean endpoint adapter | The cited theorem is stated over `(F^s)^n`; `bchksWidthOnePaperMutualCorrelatedAgreementErrorBound` enters at `s = 1`, then Lean derives the scalar endpoint bound using `paperMCAStatement_iff_widthOneTarget`. |
 | Correlated agreement consequence | `ReedSolomon.Parameters.correlatedAgreement_of_mutualCorrelatedAgreement` | Lean-proved from generic theorem | Not an extra assumption once MCA is supplied. |
 | Smooth evaluation domain, generic case | `ReedSolomon.SmoothEvaluationDomain.smooth` | Explicit input | Canonical power-domain case is discharged separately. |
 | Canonical Johnson RS far separation | `CanonicalRS.BridgeData.JohnsonRSFarSeparation` | Main theorem slot | Says canonical-source far instances remain far in the canonical RS metric after the full projection chain. |
@@ -198,18 +207,19 @@ contracts named by Lean and owned by Rust/proof-verifier/runtime.
    codeword mapping, and plane-distance control.
 7. Refine `RestrictionNaturality` and `CoboundaryNaturality` from the current
    coarse `ProjectionStageGateCertificate` token into explicit commuting-square statements.
-8. Supply canonical RS `Bounds`: list-decoding and MCA at the selected
-   `ZMod 12289`, length `4096`, degree bound `1024`, Johnson-below regime.
-7. Prove the final far-separation theorem, either directly as
+8. Keep `CanonicalRS.CitedBounds` as the named trusted boundary for the first
+   preprint, or replace individual cited axioms with imported theorem constants
+   if a more granular literature formalization is added.
+9. Prove the final far-separation theorem, either directly as
    `JohnsonRSFarSeparation`, by a pointwise projected-distance lower bound, or
    by exact calibrated distance equality.
-8. Wire runtime evidence: canonical bytes, domain separation, hash/proof
+10. Wire runtime evidence: canonical bytes, domain separation, hash/proof
    verification, and witness/verifier artifacts at the Rust/TCB boundary.
 
 ## Honest Current Claim
 
 The assumption surface is formalized and mostly well factored. The canonical
-RS parameter and metric layer is substantially discharged in Lean. The remaining
-proof work is concentrated in concrete Plucker/cochain instantiation, source
-metric discharge, granular naturality, external RS bounds, and the calibrated
-final far-separation theorem.
+RS parameter, metric, paper-MCA endpoint, and cited-bound package are
+substantially discharged or explicitly labeled. The remaining proof work is
+concentrated in concrete Plucker/cochain instantiation, source metric discharge,
+granular naturality, and the calibrated final far-separation theorem.

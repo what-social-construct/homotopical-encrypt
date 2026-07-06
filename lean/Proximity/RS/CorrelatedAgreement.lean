@@ -24,9 +24,38 @@ variable {F ι α : Type*} [Add α] [SMul F α]
 def point (L : AffineLine F ι α) (γ : F) : Word ι α :=
   fun i => L.base i + γ • L.direction i
 
+/-- Point evaluation on an affine line is coordinatewise `base + γ • direction`. -/
+@[simp]
+theorem point_apply
+    (L : AffineLine F ι α) (γ : F) (i : ι) :
+    L.point γ i = L.base i + γ • L.direction i :=
+  rfl
+
 end AffineLine
 
 namespace BlockCode
+
+/--
+Bundle two received words as the length-two interleaved word `(f₁, f₂)`.
+
+This is the word measured against `C≡2` in the paper's CA/MCA definitions.
+-/
+def pairWord {ι α : Type*} (f₁ f₂ : Word ι α) : Word ι (Fin 2 → α) :=
+  fun i j => if j = 0 then f₁ i else f₂ i
+
+/-- The first component of the paper interleaving `(f₁, f₂)` is `f₁`. -/
+@[simp]
+theorem pairWord_zero {ι α : Type*}
+    (f₁ f₂ : Word ι α) (i : ι) :
+    pairWord f₁ f₂ i 0 = f₁ i := by
+  simp [pairWord]
+
+/-- The second component of the paper interleaving `(f₁, f₂)` is `f₂`. -/
+@[simp]
+theorem pairWord_one {ι α : Type*}
+    (f₁ f₂ : Word ι α) (i : ι) :
+    pairWord f₁ f₂ i 1 = f₂ i := by
+  simp [pairWord]
 
 variable {F ι α : Type*}
 variable [Fintype F] [Fintype ι]
@@ -109,14 +138,6 @@ section PaperDefinitions
 variable [DecidableEq α]
 
 /--
-Bundle two received words as the length-two interleaved word `(f₁, f₂)`.
-
-This is the word measured against `C≡2` in the paper's CA/MCA definitions.
--/
-def pairWord (f₁ f₂ : Word ι α) : Word ι (Fin 2 → α) :=
-  fun i j => if j = 0 then f₁ i else f₂ i
-
-/--
 The bad challenge set from Definition 4.1:
 `f₁ + γ f₂` is `δfld`-close to `C`, but `(f₁, f₂)` is not `δint`-close
 to the two-fold interleaved code `C≡2`.
@@ -131,6 +152,19 @@ noncomputable def paperCABadParameterSet
       C.CloseAt δfld (L.point γ) ∧
         ¬ (C.interleaved (Fin 2)).CloseAt δint
             (pairWord L.base L.direction)
+
+/-- Membership in the paper Definition 4.1 CA bad-challenge set. -/
+theorem mem_paperCABadParameterSet
+    (C : BlockCode ι α)
+    (δfld δint : ℝ)
+    (L : AffineLine F ι α)
+    (γ : F) :
+    γ ∈ C.paperCABadParameterSet δfld δint L ↔
+      C.CloseAt δfld (L.point γ) ∧
+        ¬ (C.interleaved (Fin 2)).CloseAt δint
+          (pairWord L.base L.direction) := by
+  classical
+  simp [paperCABadParameterSet]
 
 /--
 Paper-facing correlated-agreement error bound with proximity loss
@@ -161,6 +195,22 @@ noncomputable def paperMCABadParameterSet
           C.CloseOnSet (L.point γ) S ∧
             ¬ (C.interleaved (Fin 2)).CloseOnSet
                 (pairWord L.base L.direction) S
+
+omit [DecidableEq α] in
+/-- Membership in the paper Definition 4.3 MCA bad-challenge set. -/
+theorem mem_paperMCABadParameterSet
+    (C : BlockCode ι α)
+    (δ : ℝ)
+    (L : AffineLine F ι α)
+    (γ : F) :
+    γ ∈ C.paperMCABadParameterSet δ L ↔
+      ∃ S : Finset ι,
+        LargeAgreementSetAt δ S ∧
+          C.CloseOnSet (L.point γ) S ∧
+            ¬ (C.interleaved (Fin 2)).CloseOnSet
+              (pairWord L.base L.direction) S := by
+  classical
+  simp [paperMCABadParameterSet]
 
 /--
 Paper-facing mutual-correlated-agreement error bound.
