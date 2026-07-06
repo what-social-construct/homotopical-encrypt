@@ -3,7 +3,7 @@
 This section states the central search problem and the hidden-operator model in
 which it is used.
 
-\begin{definition}[Harmonic Cochain Problem]
+\begin{definition}[Harmonic Cochain Problem]\label{def:hcp}
   The \emph{Harmonic Cochain Problem} (HCP) asks, given public
   cochain/class-level data associated to a Hodge system, to recover the
   harmonic cochain determined by the operative Laplacian kernel.
@@ -23,11 +23,56 @@ public data does not determine a unique \(\Delta\) or \(\ker(\Delta)\).
 
 \subsection{Public And Hidden Data}
 
-\todo{State the public interface: cochain/class-level data, public shadows,
-commitments, topology hashes, oracle judgments, and proof-carrying artifacts.}
+\begin{definition}[Public observation]\label{def:public-observation}
+  A public observation is the data exposed to a verifier or adversary before
+  choosing a hidden representative. In the abstract model it consists of a
+  public class or shadow value \(p\), together with cochain-facing data \(b\).
+  In the \HE{} instantiation, this public layer is represented by public
+  shadows, cochain commitments, topology hashes, oracle judgments, and
+  proof-carrying artifacts.
+\end{definition}
 
-\todo{State the hidden interface: fibration representative, restriction maps,
-Laplacian, harmonic kernel, and private witness/cochain data.}
+The public observation is intentionally not the hidden Hodge system. It is a
+classifier of a public equivalence class of possible hidden representatives.
+This is the point at which the fibrational and homotopical semantics enter the
+model: public equality is equality after applying a public classifier, not
+strict equality of hidden representatives. Section~\ref{sec:mathematical-framework}
+develops this semantic layer.
+
+\begin{definition}[Hidden Hodge witness]\label{def:hidden-hodge-witness}
+  A hidden Hodge witness for a public observation \((p,b)\) consists of
+  hidden operator data \(\Delta\), a harmonic cochain \(h\), and
+  Hodge-structured noise \(e\), such that
+  \[
+    \Delta \in \Hidden(p),
+    \qquad
+    h \in \ker(\Delta),
+    \qquad
+    e \in \image(\delta) \oplus \image(\delta^\ast),
+    \qquad
+    b = h + e.
+  \]
+  Here \(\Hidden(p)\) denotes the fiber of hidden Hodge--Laplacian
+  representatives compatible with the public class value \(p\).
+\end{definition}
+
+Concretely, the hidden data includes the fibration representative, restriction
+maps, the induced Laplacian, its harmonic kernel, and private witness/cochain
+data. The public data may bind to this hidden data through commitments or
+proof-carrying artifacts, but it does not present the operative kernel itself.
+
+\begin{definition}[HCP solution]\label{def:hcp-solution}
+  A solution to an HCP instance \((p,b)\) is a cochain \(h'\) that is the
+  harmonic component selected by the operative hidden witness. In the exact
+  recovery form used by the hidden-operator separation, \(h' = h\) for every
+  hidden witness \((\Delta,h,e)\) compatible with the public observation.
+\end{definition}
+
+The exact recovery formulation is deliberately strong. It isolates the
+ambiguity proved in the Lean development: the same public cochain may be
+compatible with hidden operators that disagree about harmonicity. Thus a solver
+that sees only public data cannot be uniformly sound unless the public
+observation determines enough hidden-operator structure.
 
 \subsection{Recovery Target}
 
@@ -36,8 +81,23 @@ not necessarily the entire kernel subspace. This distinction keeps HCP parallel
 to CVP: CVP asks for a closest vector in a presented lattice, while HCP asks for
 a harmonic cochain in the operative Hodge kernel.
 
+In the metric variant used for comparison with CVP, one may ask for the closest
+harmonic cochain to \(b\). Once \(\Delta\) or a basis for \(\ker(\Delta)\) is
+explicitly presented, this becomes a closest-vector question on the harmonic
+lattice. The hidden-operator model withholds precisely that presentation.
+
 \subsection{Computational Model}
 
-\todo{Separate the formal Lean predicates, external hardness assumptions, and
-runtime trust-boundary obligations for parsing, hashing, proof verification,
-and state transition.}
+The computational model separates three layers.
+\begin{enumerate}[label=(\roman*)]
+  \item The mathematical layer defines public projections, hidden operator
+    fibers, harmonicity, and kernel ambiguity.
+  \item External hardness assumptions and cited coding-theory theorems enter at
+    explicitly labeled theorem boundaries.
+  \item Runtime obligations such as byte parsing, canonical encodings, hash
+    domain separation, proof verification, and state transition are outside the
+    mathematical HCP definition.
+\end{enumerate}
+
+This paper focuses on the first two layers. The runtime layer is part of the
+protocol and proof-carrying-verification story developed in the sequel.
