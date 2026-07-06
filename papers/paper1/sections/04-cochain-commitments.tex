@@ -1,0 +1,23 @@
+\section{Cochain Commitment Framework}
+
+\subsection{Cochain Commitments}
+
+Cochain commitments provide the public handle on hidden cochain data. The Lean
+surface treats the canonical payload as a mathematical object with a modulus,
+edge values, declared edge count, and topology hash.
+
+\subsection{Commitment Map}
+
+\todo{Describe the map from hidden cochain data into public commitments,
+including what is preserved and what remains hidden.}
+
+\subsection{Projection Operator}
+
+Projection creates verifier-facing public artifacts from hidden or geometric
+data. The projection need not be injective; it must preserve enough structure
+to support the relevant verification theorem.
+
+\subsection{Fundamental Properties}
+
+\todo{State binding, well-formedness, topology-binding, and non-collapse
+properties. Keep byte-level hash and parser claims in the runtime/TCB boundary.}

@@ -1,0 +1,43 @@
+\section{The Harmonic Cochain Problem}
+
+This section states the central search problem and the hidden-operator model in
+which it is used.
+
+\begin{definition}[Harmonic Cochain Problem]
+  The \emph{Harmonic Cochain Problem} (HCP) asks, given public
+  cochain/class-level data associated to a Hodge system, to recover the
+  harmonic cochain determined by the operative Laplacian kernel.
+\end{definition}
+
+In the \HE{} public-sample model, the visible cochain has the form
+\[
+  b = h + e,
+  \qquad
+  h \in \ker(\Delta),
+  \qquad
+  e \in \image(\delta) \oplus \image(\delta^\ast).
+\]
+Here \(h\) is the harmonic cochain, equivalently the global-section component,
+and \(e\) is Hodge-structured noise. The hidden-operator condition is that the
+public data does not determine a unique \(\Delta\) or \(\ker(\Delta)\).
+
+\subsection{Public And Hidden Data}
+
+\todo{State the public interface: cochain/class-level data, public shadows,
+commitments, topology hashes, oracle judgments, and proof-carrying artifacts.}
+
+\todo{State the hidden interface: fibration representative, restriction maps,
+Laplacian, harmonic kernel, and private witness/cochain data.}
+
+\subsection{Recovery Target}
+
+The recovery target is the harmonic cochain selected by the operative kernel,
+not necessarily the entire kernel subspace. This distinction keeps HCP parallel
+to CVP: CVP asks for a closest vector in a presented lattice, while HCP asks for
+a harmonic cochain in the operative Hodge kernel.
+
+\subsection{Computational Model}
+
+\todo{Separate the formal Lean predicates, external hardness assumptions, and
+runtime trust-boundary obligations for parsing, hashing, proof verification,
+and state transition.}

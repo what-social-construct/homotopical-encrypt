@@ -1,0 +1,33 @@
+\section{Introduction}
+
+\subsection{Motivation}
+
+\HE{} is organized around the following security shape:
+\[
+\text{public cochain/shadow data}
+\quad\not\Rightarrow\quad
+\text{the operative Hodge--Laplacian kernel}.
+\]
+The private recovery object is not merely a scalar secret or a vector in a
+published lattice. It is the harmonic cochain selected by a hidden Hodge
+operator. Public verification therefore needs finite artifacts, while security
+must not collapse to recovering the private representative or the hidden
+operator.
+
+\subsection{Contributions}
+
+This paper develops the following contributions.
+\begin{enumerate}[label=(\roman*)]
+  \item The Harmonic Cochain Problem (HCP), a hidden-operator recovery problem
+    for Hodge-theoretic cochains.
+  \item A Hodge-structured noise model with public samples \(b = h + e\), where
+    \(h \in \ker(\Delta)\) and \(e \in \image(\delta) \oplus \image(\delta^\ast)\).
+  \item A comparison with CVP, separating known-lattice closest-vector search
+    from hidden-operator harmonic-cochain recovery.
+  \item A projection framework from hidden/geometric state to public finite
+    evidence.
+  \item A Lean formalization of the definitions, reductions, projection chain,
+    gates, and theorem boundaries.
+  \item A Reed--Solomon mutual-correlated-agreement corollary aligned with the
+    vocabulary of the Proximity Prize problem statement.
+\end{enumerate}

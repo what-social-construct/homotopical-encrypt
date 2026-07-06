@@ -190,12 +190,17 @@ same object when `Δ = Delta_W`.
 
 ### 8. Transaction/Block Validation Boundary (`lean/Chain.lean`)
 
-**Lean**: `TransactionWellFormed`, `TransactionAccepted`, `BlockAccepted`, and
-`LedgerState` specify the abstract consensus-state facts used by no-double-spend
-and block-acceptance reasoning. The preservation lemmas
-`acceptedTransaction_key_image_fresh`, `blockAccepted_tx_not_previously_spent`,
-`applyTransaction_marks_key_image`, and `applyBlock_marks_tx_key_image` make the
-key-image state boundary explicit.
+**Lean**: `TransactionWellFormed`, `TransactionAccepted`,
+`BlockCochainPayloadsCompatible`, `BlockAccepted`, and `LedgerState` specify the
+abstract consensus-state facts used by cochain-root aggregation,
+no-double-spend, and block-acceptance reasoning. `BlockCochainPayloadsCompatible`
+bundles the Lean-side requirements that every block cochain payload is
+well-formed and that all payloads share one topology hash and one edge-vector
+length. The preservation lemmas `acceptedTransaction_key_image_fresh`,
+`blockAccepted_cochainPayloadsCompatible`,
+`blockAccepted_tx_not_previously_spent`, `applyTransaction_marks_key_image`, and
+`applyBlock_marks_tx_key_image` make the cochain-batch and key-image boundaries
+explicit.
 
 **Rust**:
 - `rust/node/src/types.rs` — runtime transaction/block structures and cochain

@@ -1,0 +1,29 @@
+\section{Projection Framework}
+
+\subsection{Projection Theorem}
+
+The staged projection chain has the following shape:
+\[
+\begin{aligned}
+  &\text{FrameWitness} \\
+  &\quad\to \text{Projective Plucker shadow} \\
+  &\quad\to \text{committed cochain/local syndrome} \\
+  &\quad\to \text{plane shadow} \\
+  &\quad\to \text{finite-field received word} \\
+  &\quad\to \text{canonical Reed--Solomon target}.
+\end{aligned}
+\]
+Each stage has local gates and certificates. The orchestrating projection-chain
+theorem composes these local certificates without rechecking them.
+
+\subsection{Preserved Structure}
+
+\todo{List stage-by-stage invariants: public binding, quotient-aware shadow
+identity, local plane consistency, metric calibration, and final RS
+well-formedness.}
+
+\subsection{Lost Structure}
+
+Projection is deliberately lossy. The theorem is not an injectivity theorem; it
+is a controlled public projection theorem with calibrated non-collapse and
+far-separation hypotheses where they are needed.

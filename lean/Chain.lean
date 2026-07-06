@@ -184,6 +184,38 @@ def TransactionAccepted (spent_key_images : Set ℕ) (tx : Transaction) : Prop :
 def BlockWellFormed (b : Block) : Prop :=
   ∀ tx ∈ b.transactions, TransactionWellFormed tx
 
+/--
+All cochain payloads in a block are bound to the same topology hash.
+
+This is the Lean-side predicate matching the Rust root-accumulation boundary:
+commitments from different public topologies must not be aggregated into one
+block cochain root.
+-/
+def BlockCochainTopologyCompatible (b : Block) : Prop :=
+  ∀ tx ∈ b.transactions, ∀ ty ∈ b.transactions,
+    tx.cochain_commitment.SameTopology ty.cochain_commitment
+
+/--
+All cochain payloads in a block have the same declared edge-vector length.
+
+Rust checks this before accumulating edge values; Lean records it as a
+mathematical precondition for treating the block body as one cochain batch.
+-/
+def BlockCochainEdgeCountCompatible (b : Block) : Prop :=
+  ∀ tx ∈ b.transactions, ∀ ty ∈ b.transactions,
+    tx.cochain_commitment.n_edge_values = ty.cochain_commitment.n_edge_values
+
+/--
+Block-level cochain compatibility required before homomorphic accumulation.
+
+`BlockWellFormed` checks each payload individually; the topology and edge-count
+conditions check that the block body is one coherent cochain batch.
+-/
+def BlockCochainPayloadsCompatible (b : Block) : Prop :=
+  BlockWellFormed b
+    ∧ BlockCochainTopologyCompatible b
+    ∧ BlockCochainEdgeCountCompatible b
+
 /-- No transaction in the block spends a previously-spent key image. -/
 def BlockFreshAgainst (spent_key_images : Set ℕ) (b : Block) : Prop :=
   ∀ tx ∈ b.transactions, TransactionFresh spent_key_images tx
@@ -193,10 +225,11 @@ Consensus-level block acceptance.
 
 `block_valid` captures the existing PoV/geometric block predicate. The extra
 fields isolate the runtime/state boundary: every transaction has acceptable
-shape and every key image is fresh relative to prior ledger state.
+shape, the block cochain payloads form one compatible batch, and every key
+image is fresh relative to prior ledger state.
 -/
 def BlockAccepted (spent_key_images : Set ℕ) (b : Block) : Prop :=
-  block_valid b ∧ BlockWellFormed b ∧ BlockFreshAgainst spent_key_images b
+  block_valid b ∧ BlockCochainPayloadsCompatible b ∧ BlockFreshAgainst spent_key_images b
 
 /--
 Abstract ledger state used by preservation theorems.
@@ -257,6 +290,42 @@ theorem blockAccepted_key_images_fresh
     key_images_fresh b.transactions := by
   rcases hacc.1 with ⟨_, _, hfresh, _⟩
   exact hfresh
+
+/-- Accepted blocks have compatible cochain payloads. -/
+theorem blockAccepted_cochainPayloadsCompatible
+    {spent_key_images : Set ℕ} {b : Block}
+    (hacc : BlockAccepted spent_key_images b) :
+    BlockCochainPayloadsCompatible b := by
+  exact hacc.2.1
+
+/-- Accepted blocks have well-formed transaction payloads. -/
+theorem blockAccepted_blockWellFormed
+    {spent_key_images : Set ℕ} {b : Block}
+    (hacc : BlockAccepted spent_key_images b) :
+    BlockWellFormed b := by
+  exact hacc.2.1.1
+
+/-- Accepted blocks aggregate only cochain payloads with a shared topology hash. -/
+theorem blockAccepted_cochainTopologyCompatible
+    {spent_key_images : Set ℕ} {b : Block}
+    (hacc : BlockAccepted spent_key_images b) :
+    BlockCochainTopologyCompatible b := by
+  exact hacc.2.1.2.1
+
+/-- Accepted blocks aggregate only cochain payloads with a shared edge count. -/
+theorem blockAccepted_cochainEdgeCountCompatible
+    {spent_key_images : Set ℕ} {b : Block}
+    (hacc : BlockAccepted spent_key_images b) :
+    BlockCochainEdgeCountCompatible b := by
+  exact hacc.2.1.2.2
+
+/-- Every transaction in an accepted block is well-formed. -/
+theorem blockAccepted_tx_wellFormed
+    {spent_key_images : Set ℕ} {b : Block} {tx : Transaction}
+    (hacc : BlockAccepted spent_key_images b)
+    (htx : tx ∈ b.transactions) :
+    TransactionWellFormed tx := by
+  exact hacc.2.1.1 tx htx
 
 /-- Accepted blocks spend no key image that was already present in ledger state. -/
 theorem blockAccepted_tx_not_previously_spent

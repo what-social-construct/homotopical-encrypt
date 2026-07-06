@@ -131,6 +131,7 @@ preservation.
 | Header checks | Specify abstract block well-formedness | Check parent hash, height, timestamp window, chain id, version, proposer id | Test fixtures only |
 | Body checks | Specify block contains only valid transactions | Run transaction validator for every transaction, enforce count/size limits | E2E tests |
 | State root / commitments | Specify commitment/state invariants | Recompute roots, compare canonical hashes, enforce domain separation | Test vectors |
+| Cochain-root batch compatibility | Specify `BlockCochainPayloadsCompatible`: every payload is well-formed, shares topology hash, and shares edge-vector length | Reject mixed-topology or mixed-dimension batches before accumulation | Test vectors |
 | PoV / spectral proof | Specify stage admissibility and accepted oracle judgments | Verify oracle attestation, spectral judgment, validator eligibility | Worker/reference computations only |
 | Sheaf storage coherence | Specify restriction-map/cochain coherence invariants | Persist blocks/state atomically, verify indexes, reject corrupted storage proofs | Prototype storage layouts |
 | Fork choice | Specify high-level fork-resolution assumptions/invariants | Enforce deterministic fork-choice rule, finality, rollback bounds | Simulation |
@@ -242,6 +243,7 @@ Current Lean names:
 | Purpose | Module |
 |---|---|
 | Canonical cochain payload | `lean/Axioms/CochainCommitment.lean` |
+| Ephemeral fibration/fiber math spec | `lean/Axioms/Fibration.lean` |
 | Generic proximity projection vocabulary | `lean/Proximity/Projection.lean` |
 | Cochain/sheaf proximity bridge | `lean/Proximity/CochainBridge.lean` |
 | Hash/proof public artifact boundary | `lean/TCB/ProofCarrying.lean` |
@@ -250,6 +252,49 @@ Current Lean names:
 | Lean/Rust TCB contract scaffold | `lean/TCB/Runtime.lean` |
 | Runtime-observed public statements and proximity decisions | `lean/TCB/ObservationBoundary.lean` |
 | End-to-end witness/verifier envelope | `lean/TCB/WitnessVerifier.lean` |
+
+## Ephemeral Fibration Boundary
+
+Ephemeral fibration/fiber behavior has two owners.
+
+Lean owns the mathematical class/path statement in `Axioms.Fibration`:
+`EphemeralFiberSpec` gives an ephemeral representative, a path from the base
+representative, and a transport-admissibility obligation. From this, Lean proves
+that a path-respecting classifier gives the same public fingerprint/homotopy
+class.
+
+Rust owns the lifecycle facts in the TCB: fresh per message, single-use,
+zeroize/drop behavior, malformed-byte rejection, endpoint hardening, and the
+rule that Python is not consensus authority. These facts are named by
+`EphemeralRuntimeObligations` and bundled with the Lean math spec in
+`EphemeralFiberTCBContract`, but they are not proved by Lean.
+
+Do not introduce a second ephemeral-fibration type unless it is a concrete
+instantiation that delegates to this boundary.
+
+## Rust Workspace Boundary
+
+The Rust code is the production/runtime side of the Lean contracts. It should be
+read as verifier and state-transition infrastructure, not as a replacement for
+the Lean mathematical definitions.
+
+| Rust surface | Responsibility | Lean/TCB contract it realizes |
+|---|---|---|
+| `rust/node` | Consensus-facing node: transaction/block parsing, mempool, block storage, key-image checks, PoV block verification, cochain-root checks, networking/RPC. | `Chain.lean`, `Consensus/*`, `Gates/*`, `TCB.RuntimeBoundary` |
+| `rust/node/src/consensus` | Proof-of-Value, VRF/slot checks, worker signatures, block verification, optional geodesic proof checks. | `Axioms.Consensus`, `Axioms.SpectralBounds`, `Axioms.OracleModality`, `Consensus/ProofOfValue.lean` |
+| `rust/node/src/storage` | Durable block/state/key-image storage and indexes. | `Axioms.Ledger`, `Chain.TransactionAccepted`, `Chain.BlockAccepted` |
+| `rust/node/src/crypto` | Wire-facing commitment/proof helpers used by node validation. | `Axioms.CochainCommitment`, `TCB.ProofCarrying`, `TCB.SNARK` |
+| `rust/oracle` | Oracle service and stalk bridge: receives candidate/full-stalk material, computes or checks public commitments, classifies/verifies geometry-facing evidence. | `Axioms.OracleModality`, `Gates.Oracle`, `TCB.ObservationBoundary` |
+| `rust/wallet` | User-side witness/key/material storage and construction path. It can generate witness material but should not be the consensus authority. | `Axioms.Fibration`, `EphemeralFiberTCBContract`, `TCB.RuntimeBoundary` |
+
+The critical split is:
+
+- Lean says what it means for an object, gate, transaction, or block to be
+  mathematically acceptable.
+- Rust parses adversarial bytes, bounds resources, verifies proofs/attestations,
+  checks storage state, rejects malformed inputs, and applies atomic updates.
+- Python can still generate research/reference witnesses, but Rust must convert
+  anything consensus-facing into a bounded authenticated validation result.
 
 ## Lean Invariants To Prioritize
 
@@ -261,12 +306,16 @@ runtime execution.
 |---|---|
 | `TransactionWellFormed` | Abstract shape of a valid transaction |
 | `TransactionAccepted` | Abstract transaction shape plus freshness relative to ledger state |
-| `BlockWellFormed` | Abstract shape of a block |
-| `BlockAccepted` | Block whose transactions and oracle judgments are accepted |
+| `BlockWellFormed` | Per-transaction payload shape inside a block |
+| `BlockCochainTopologyCompatible` | All block cochain payloads share one topology hash |
+| `BlockCochainEdgeCountCompatible` | All block cochain payloads share one edge-vector length |
+| `BlockCochainPayloadsCompatible` | Batch-level cochain compatibility before root accumulation |
+| `BlockAccepted` | Valid PoV block with compatible cochain payloads and fresh key images |
 | `LedgerState` | Abstract state: balances/commitments/key images/sheaf indexes |
 | `applyTransaction` | State transition relation/function |
 | `applyBlock` | Block transition relation/function |
 | `acceptedTransaction_key_image_fresh` | Accepted transactions do not spend prior key images |
+| `blockAccepted_cochainPayloadsCompatible` | Accepted blocks expose the cochain batch-compatibility fact |
 | `blockAccepted_tx_not_previously_spent` | Accepted blocks contain no transaction spending a prior key image |
 | `applyTransaction_marks_key_image` | Applying a transaction records its key image |
 | `applyBlock_marks_tx_key_image` | Applying a block records every transaction key image in that block |

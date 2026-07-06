@@ -1,0 +1,43 @@
+\documentclass[11pt]{article}
+
+\input{macros}
+
+\title{Homotopical Encrypt: The Harmonic Cochain Problem and Certified Public Shadows}
+\author{Chloe Vander Vlugt}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We introduce the Harmonic Cochain Problem (HCP), a hidden-operator recovery
+problem in which public cochain or class-level data does not determine the
+operative Hodge--Laplacian kernel. In the Homotopical Encrypt model, public
+samples have the form \(b = h + e\), where \(h \in \ker(\Delta)\) is a
+harmonic cochain and \(e \in \image(\delta) \oplus \image(\delta^\ast)\) is
+Hodge-structured noise. We compare HCP with the closest vector problem (CVP):
+CVP is the known-lattice comparison problem, while HCP hides the operator and
+kernel that make the relevant lattice explicit. We also describe a certified
+projection chain from accepted hidden/geometric state to a finite
+Reed--Solomon mutual-correlated-agreement target, with theorem boundaries
+formalized in Lean.
+\end{abstract}
+
+\tableofcontents
+
+\input{sections/01-introduction}
+\input{sections/02-harmonic-cochain-problem}
+\input{sections/03-mathematical-framework}
+\input{sections/04-cochain-commitments}
+\input{sections/05-projection-framework}
+\input{sections/06-cvp-comparison}
+\input{sections/07-formal-verification}
+\input{sections/08-proximity-corollary}
+\input{sections/09-future-directions}
+\input{sections/appendices}
+
+\bibliographystyle{alpha}
+\bibliography{references}
+
+\end{document}

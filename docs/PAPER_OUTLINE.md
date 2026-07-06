@@ -1,20 +1,32 @@
-# hcrypt Paper Outline And Split Plan
+# Homotopical Encrypt Paper Outline And Split Plan
 
-This document is the high-level publication plan for the Lean-backed hcrypt
-work. It explains how the hardness story, semantic foundations, proximity
-projection, and runtime trust boundary should be staged across one preprint or
-split into multiple papers.
+This document is the high-level publication plan for the Lean-backed
+Homotopical Encrypt work. It explains how the hardness story, semantic
+foundations, proximity projection, and runtime trust boundary should be staged
+across one preprint or split into multiple papers.
 
 ## Core Thesis
 
-hcrypt should be presented first as a hidden-operator hardness problem:
+Homotopical Encrypt should be presented first through the **Harmonic Cochain
+Problem (HCP)**, a hidden-operator hardness problem:
 
 ```text
 public cochain / shadow data
   does not determine
-hidden Hodge/Laplacian structure
-  whose harmonic kernel controls recovery
+the operative Hodge/Laplacian kernel
+  whose harmonic cochains control recovery
 ```
+
+Working definition:
+
+> **Harmonic Cochain Problem (HCP).** Given public cochain/class-level data
+> associated to a Hodge system, recover the harmonic cochain determined by the
+> operative Laplacian kernel.
+
+In Homotopical Encrypt, HCP is instantiated in a hidden-operator model. Public
+samples have the form `b = h + e`, where `h ∈ ker(Δ)` is the harmonic cochain
+and `e ∈ im(δ) ⊕ im(δ*)` is Hodge-structured noise. The public data does not
+determine a unique `Δ` or `ker(Δ)`.
 
 The proximity construction is then the verifier-facing companion theorem:
 
@@ -26,8 +38,8 @@ accepted hidden/geometric state
 
 So the paper should not begin with Reed-Solomon. It should begin with the
 security problem: what is hidden, what is public, what an adversary would need
-to recover, and why a known-lattice CVP oracle is not enough to solve the
-hidden Hodge problem globally. The RS/proximity section then answers a separate
+to recover, and why a known-lattice CVP oracle is not enough to solve
+hidden-operator HCP globally. The RS/proximity section then answers a separate
 question: how a verifier can check finite public proximity evidence without
 recovering the private representative.
 
@@ -41,12 +53,14 @@ Reed-Solomon/MCA construction as the finite verifier-facing corollary.
 
 Touch the following points in order:
 
-- Homotopical hardness problem: public cochain/shadow data does not determine
-  the hidden Hodge/Laplacian structure.
+- Harmonic Cochain Problem: public cochain/shadow data does not determine the
+  operative Hodge/Laplacian kernel.
+- Hodge-structured noise model: public samples have shape `b = h + e` with
+  `h ∈ ker(Δ)` and `e ∈ im(δ) ⊕ im(δ*)`.
 - Main theorem: a certified projection theorem from accepted hidden/geometric
   state to a calibrated public target.
-- Relationship to CVP: CVP is the known-lattice comparison problem, while hcrypt
-  recovery hides the operative kernel/operator.
+- Relationship to CVP: CVP is the known-lattice comparison problem, while
+  Homotopical Encrypt recovery hides the operative kernel/operator.
 - Lean formalization: definitions, reductions, projection chain, gates, and
   theorem boundaries are machine-checked.
 - Proximity corollary: the endpoint is aligned with the Reed-Solomon MCA
@@ -62,8 +76,8 @@ Open with the security shape:
 ```text
 public cochain / shadow data
   does not determine
-hidden Hodge/Laplacian structure
-  whose harmonic kernel controls recovery
+the operative Hodge/Laplacian kernel
+  whose harmonic cochains control recovery
 ```
 
 The motivating tension is that public verification needs finite artifacts, but
@@ -72,7 +86,7 @@ operator.
 
 #### 1.2 Contributions
 
-- Homotopical hardness problem and hidden-operator formulation.
+- Harmonic Cochain Problem and hidden-operator formulation.
 - Cochain commitment construction and public shadow interface.
 - Projection framework from hidden/geometric state to public finite evidence.
 - Relationship to CVP through an explicit known-lattice comparison.
@@ -80,9 +94,9 @@ operator.
   gates.
 - Reed-Solomon projection endpoint.
 - Proximity/MCA corollary aligned with the paper vocabulary `C ⊆ (F^s)^n`, with
-  canonical hcrypt evaluation at `s = 1`.
+  canonical Homotopical Encrypt evaluation at `s = 1`.
 
-### 2. Homotopical Hardness Problem
+### 2. Harmonic Cochain Problem
 
 Lean anchors:
 
@@ -93,9 +107,22 @@ Lean anchors:
 
 #### 2.1 Problem Definition
 
-Define the hidden recovery problem: given public commitment/shadow data, recover
-or distinguish the hidden Hodge/Laplacian structure controlling the semantic
-representative.
+Define HCP as the central recovery problem:
+
+> Given public cochain/class-level data associated to a Hodge system, recover
+> the harmonic cochain determined by the operative Laplacian kernel.
+
+Use the Homotopical Encrypt public-sample model:
+
+```text
+b = h + e
+h ∈ ker(Δ)
+e ∈ im(δ) ⊕ im(δ*)
+```
+
+Here `h` is the harmonic cochain/global-section component and `e` is
+Hodge-structured noise. The hidden-operator condition is that the public data
+does not determine a unique `Δ` or `ker(Δ)`.
 
 State explicitly what is public, what is hidden, and what counts as recovery.
 
@@ -109,9 +136,9 @@ Separate:
 
 #### 2.3 Intuition
 
-CVP becomes visible only after a concrete lattice/operator presentation has been
-selected. The hcrypt problem is harder to phrase as ordinary CVP because the
-operative projection data is itself hidden.
+CVP asks for a closest vector in an explicitly presented lattice. HCP asks for
+a harmonic cochain in the operative Hodge kernel, and in the Homotopical
+Encrypt model that kernel is not explicitly presented by the public data.
 
 ### 3. Mathematical Framework
 
@@ -126,7 +153,8 @@ Lean anchors:
 
 Use this section to explain the provenance of the semantic layer. The paper
 should cite Helfer for the motivation and label the Lean file as a formalized
-interface used by hcrypt, not as a claim of fully reproving the external paper.
+interface used by Homotopical Encrypt, not as a claim of fully reproving the
+external paper.
 
 #### 3.2 Fibrational Identity Objects
 
@@ -217,8 +245,7 @@ Lean anchors:
 #### 6.1 Reduction From CVP
 
 State the comparison direction precisely: known-lattice CVP is formalized, and
-the hcrypt/Hodge recovery problem can expose CVP-like instances after the hidden
-operator data has been fixed.
+HCP can expose CVP-like instances after the hidden operator data has been fixed.
 
 #### 6.2 Recovery Theorem
 
@@ -230,7 +257,7 @@ solver implies which other solver, under which presentation assumptions.
 Emphasize the distinction between:
 
 - known-lattice closest-vector search;
-- hidden-operator/Hodge recovery;
+- hidden-operator HCP;
 - public projection/proximity verification.
 
 This keeps the CVP relation useful without overstating it.
@@ -267,8 +294,8 @@ Explain the module split:
 #### 7.3 Theorem Correspondence
 
 Give a Lean-to-paper table: definition names, theorem names, proof status, and
-whether each item is hcrypt-native, a formalized external definition, or a cited
-external theorem.
+whether each item is project-native, a formalized external definition, or a
+cited external theorem.
 
 ### 8. Corollaries And Applications
 
@@ -283,7 +310,7 @@ Lean anchors:
 - `Proximity/CanonicalRS/CitedBounds.lean`
 
 State the paper-style endpoint over `C ⊆ (F^s)^n`, then explain why the concrete
-hcrypt endpoint evaluates this at width `s = 1`.
+Homotopical Encrypt endpoint evaluates this at width `s = 1`.
 
 #### 8.2 Proximity Proof
 
@@ -332,11 +359,11 @@ Include two tables:
 
 If the material becomes too large, split it like this.
 
-### Paper A: Hidden Hodge Hardness And Public Shadows
+### Paper A: Harmonic Cochain Problem And Public Shadows
 
 Main topic:
 
-- Hodge/CVP relationship.
+- HCP/CVP relationship.
 - Hidden-operator strictness.
 - Helfer-style public equality/classifier semantics.
 - Commitment/public-shadow trust boundary.
@@ -352,7 +379,7 @@ Primary Lean modules:
 
 Best title shape:
 
-- Hidden-Operator Hodge Hardness for Homotopical Encryption
+- The Harmonic Cochain Problem for Homotopical Encryption
 - Public Shadows and Hidden Kernels in Homotopical Encryption
 
 ### Paper B: Certified Proximity Projection To Reed-Solomon MCA
