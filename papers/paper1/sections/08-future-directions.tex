@@ -2,8 +2,8 @@
 
 \subsection{Cryptographic Protocol}
 
-The present paper stops at the mathematical and formalization boundary. A
-protocol paper should turn the commitment, oracle, proof-carrying, and
+The present paper stops at the mathematical and formalization boundary. The
+subsequent protocol paper should turn the commitment, oracle, proof-carrying, and
 proximity surfaces into explicit adversary games and executable verification
 paths. The relevant Lean surfaces are already separated: \texttt{TCB} records
 proof-carrying artifacts and runtime obligations, \texttt{Gates} records
@@ -37,19 +37,25 @@ opened only through dedicated proof paths. The relevant Lean interfaces are
 
 Vertra is the working name for the chain/network layer. The paper should keep
 the mathematical protocol name separate from product and token naming.
-The chain layer belongs in the sequel: it consumes the mathematical surfaces
-from this paper as protocol evidence, but it also requires block validity,
+The chain layer belongs in the subsequent protocol paper: it consumes the
+mathematical surfaces from this paper as protocol evidence, but it also requires block validity,
 ledger updates, fork choice, oracle attestation, worker reliability, and
-runtime trust-boundary analysis. Lean files such as \texttt{Chain},
-\texttt{Consensus}, and \texttt{Consensus.ProofOfValue} already mark this
-boundary without making those architecture claims part of the HCP theorem.
+runtime trust-boundary analysis. A protocol-facing reference point is the higher
+categorical cryptoeconomics program
+\cite{higherCategoricalCryptoeconomics}; it is not used in the proofs of the
+present paper. Lean files such as \texttt{Chain}, \texttt{Consensus}, and
+\texttt{Consensus.ProofOfValue} already mark this boundary without making those
+architecture claims part of the HCP theorem.
 
 \subsection{Complexity-Theoretic Extensions}
 
-The current formalization isolates the hidden-operator obstruction: public data
-does not canonically determine the operative Hodge--Laplacian kernel. Future
-work should refine this into sharper complexity assumptions, adversary classes,
-and oracle-separation statements. Natural targets include quantitative families
-of hidden kernels, reductions between HCP variants, leakage models for public
-classifiers, and a clearer boundary between external CVP assumptions and
-project-native hidden-operator ambiguity.
+The current formalization already isolates the hidden-operator obstruction:
+public data does not canonically determine the operative Hodge--Laplacian
+kernel. It also separates the external known-lattice CVP assumption from the
+project-native hidden-operator ambiguity, gives public-data-only oracle
+insufficiency statements, records classical and quantum adversary surfaces, and
+proves infinitude results for the relevant Grassmannian/Laplacian families.
+Future work should build on those surfaces quantitatively: rates of growth for
+hidden-kernel families, leakage bounds for public classifiers, success
+probabilities for restricted adversary classes, and reductions between refined
+HCP variants.

@@ -1,6 +1,8 @@
-# Paper 2 Draft
+# Proof-Carrying Homotopical Encrypt: Gate Certificates And Vertra Chain Architecture
 
-Placeholder for the CS/protocol paper.
+Working title for Paper 2.
+
+Placeholder for the subsequent CS/protocol paper.
 
 Expected scope:
 

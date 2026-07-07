@@ -1,4 +1,4 @@
-\section{The Harmonic Cochain Problem}
+\section{The Harmonic Cochain Problem}\label{sec:hcp-definition}
 
 This section states the central search problem and the hidden-operator model in
 which it is used.
@@ -21,6 +21,128 @@ Here \(h\) is the harmonic cochain, equivalently the global-section component,
 and \(e\) is Hodge-structured noise. The hidden-operator condition is that the
 public data does not determine a unique \(\Delta\) or \(\ker(\Delta)\).
 
+\begin{definition}[Matrix harmonicity]\label{def:matrix-harmonicity}
+  For a hidden linear Hodge operator \(\Delta\), a cochain \(h\in R^N\)
+  is \(\Delta\)-harmonic when
+  \[
+    \Delta h=0.
+  \]
+  Thus the harmonic kernel is \(\ker(\Delta)\). In the projection model this
+  agrees with the condition \(h\in W\) when \(\Delta=\Delta_W=I-P_W\).
+\end{definition}
+
+\begin{definition}[Projection Laplacian, harmonic projection, and residual]\label{def:projection-laplacian}
+  Let \(V=R^n\) be equipped with its standard inner product, and let
+  \(W\subset V\) be a linear subspace. Write
+  \[
+    P_W:V\to W\subset V
+    \qquad\text{and}\qquad
+    P_{W^\perp}:V\to W^\perp\subset V
+  \]
+  for the orthogonal projections. The projection-model Laplacian attached to
+  \(W\) is
+  \[
+    \Delta_W = I-P_W.
+  \]
+  For \(b\in V\), define the harmonic projection, residual vector, and
+  residual score by
+  \[
+    \pi_W(b)=P_Wb,\qquad
+    r_W(b)=\Delta_W b,\qquad
+    \rho_W(b)=\|r_W(b)\|.
+  \]
+  We say that \(b\) is \(W\)-harmonic when \(r_W(b)=0\).
+\end{definition}
+
+\begin{proposition}[Projection harmonicity equivalences]\label{prop:projection-harmonicity-equivalences}
+  For every \(b\in V\),
+  \[
+    r_W(b)=P_{W^\perp}b,
+    \qquad
+    \rho_W(b)=\|P_{W^\perp}b\|,
+    \qquad
+    \rho_W(b)\ge 0.
+  \]
+  Moreover
+  \[
+    \pi_W(b)\in W,\qquad
+    r_W(\pi_W(b))=0,
+  \]
+  and the following conditions are equivalent:
+  \[
+    r_W(b)=0
+    \quad\Longleftrightarrow\quad
+    \rho_W(b)=0
+    \quad\Longleftrightarrow\quad
+    b\in W.
+  \]
+\end{proposition}
+
+\begin{proof}
+  Since \(V=W\oplus W^\perp\) orthogonally, every \(b\in V\) decomposes
+  uniquely as
+  \[
+    b=P_Wb+P_{W^\perp}b.
+  \]
+  Hence
+  \[
+    (I-P_W)b=b-P_Wb=P_{W^\perp}b,
+  \]
+  giving \(r_W(b)=P_{W^\perp}b\) and the displayed formula for
+  \(\rho_W(b)\). Nonnegativity is the nonnegativity of the norm.
+  The projection \(P_Wb\) lies in \(W\), so its orthogonal component is zero;
+  therefore \(r_W(\pi_W(b))=0\). Finally,
+  \(r_W(b)=0\) iff \(P_{W^\perp}b=0\), which holds iff \(b\in W\). The
+  equivalence with \(\rho_W(b)=0\) follows from \(\|x\|=0\) iff \(x=0\).
+\end{proof}
+
+\begin{proposition}[Hodge decomposition surface]\label{prop:hodge-decomposition}
+  Let
+  \[
+    d_{\mathrm{next}}d_{\mathrm{prev}}=0,
+    \qquad
+    \Delta=d_{\mathrm{prev}}d_{\mathrm{prev}}^\ast
+      +d_{\mathrm{next}}^\ast d_{\mathrm{next}} .
+  \]
+  Then every cochain \(b\) admits a decomposition
+  \[
+    b=h+e_1+e_2
+  \]
+  with
+  \[
+    \Delta h=0,\qquad
+    e_1\in\image(d_{\mathrm{prev}}),\qquad
+    e_2\in\image(d_{\mathrm{next}}^\ast),
+  \]
+  and
+  \[
+    \langle h,e_1\rangle=\langle h,e_2\rangle=\langle e_1,e_2\rangle=0.
+  \]
+\end{proposition}
+
+\begin{proof}
+  Since \(\Delta\) is self-adjoint, decompose the ambient cochain space as
+  \[
+    \ker(\Delta)\oplus\image(\Delta).
+  \]
+  Since
+  \[
+    \image(\Delta)
+    \subseteq
+    \image(d_{\mathrm{prev}})+\image(d_{\mathrm{next}}^\ast),
+  \]
+  every cochain \(b\) can be written as \(h+e_1+e_2\) with \(h\in\ker\Delta\),
+  \(e_1\in\image(d_{\mathrm{prev}})\), and
+  \(e_2\in\image(d_{\mathrm{next}}^\ast)\). From \(\Delta h=0\), one obtains
+  \[
+    \|d_{\mathrm{prev}}^\ast h\|^2+\|d_{\mathrm{next}}h\|^2=0,
+  \]
+  hence \(d_{\mathrm{prev}}^\ast h=0\) and \(d_{\mathrm{next}}h=0\). These
+  identities give \(\langle h,e_1\rangle=0\) and
+  \(\langle h,e_2\rangle=0\), while \(d_{\mathrm{next}}d_{\mathrm{prev}}=0\)
+  gives \(\langle e_1,e_2\rangle=0\).
+\end{proof}
+
 \subsection{Public And Hidden Data}
 
 \begin{definition}[Public observation]\label{def:public-observation}
@@ -38,6 +160,54 @@ This is the point at which the fibrational and homotopical semantics enter the
 model: public equality is equality after applying a public classifier, not
 strict equality of hidden representatives. Section~\ref{sec:mathematical-framework}
 develops this semantic layer.
+
+\begin{definition}[Hidden-operator public projection]\label{def:hidden-operator-public-projection}
+  A public projection is a map
+  \[
+    \pi:\{\text{hidden Hodge operators }\Delta\}\longrightarrow P
+  \]
+  to a public class type \(P\). Two hidden operators are publicly equivalent
+  when \(\pi(\Delta_1)=\pi(\Delta_2)\). The hidden operator fiber over
+  \(p\in P\) is
+  \[
+    \Hidden(p)=\{\Delta:\pi(\Delta)=p\},
+  \]
+  and the hidden class of \(\Delta\) is \(\Hidden(\pi(\Delta))\).
+\end{definition}
+
+\begin{definition}[Lossiness and kernel ambiguity]\label{def:kernel-ambiguity}
+  The public projection \(\pi\) is \emph{lossy} if there exist
+  \(\Delta_1\ne\Delta_2\) with \(\pi(\Delta_1)=\pi(\Delta_2)\). The two
+  operators have the same harmonic kernel if
+  \[
+    \forall v,\quad \Delta_1v=0\Longleftrightarrow \Delta_2v=0.
+  \]
+  The projection is \emph{kernel-ambiguous} if there are publicly equivalent
+  operators \(\Delta_1,\Delta_2\) whose harmonic kernels are not the same.
+\end{definition}
+
+\begin{definition}[Public-compatible Hodge ambiguity]\label{def:public-compatible-hodge-ambiguity}
+  Public-compatible Hodge ambiguity means that there exist publicly equivalent
+  operators \(\Delta_1,\Delta_2\) and a public cochain \(b\) such that
+  \[
+    \Delta_1 b=0
+    \qquad\text{but}\qquad
+    \Delta_2 b\ne 0.
+  \]
+\end{definition}
+
+\begin{proposition}[Ambiguity hierarchy]\label{prop:ambiguity-hierarchy}
+  Public-compatible Hodge ambiguity implies kernel ambiguity, and kernel
+  ambiguity implies that the public projection is lossy.
+\end{proposition}
+
+\begin{proof}
+  If \(b\) is harmonic for \(\Delta_1\) but not for \(\Delta_2\), then the two
+  operators cannot have the same harmonic kernel. This gives kernel ambiguity.
+  If publicly equivalent operators have different kernels, they cannot be the
+  same operator, since equality of operators implies equality of kernels.
+  Therefore the public projection identifies two distinct hidden operators.
+\end{proof}
 
 \begin{definition}[Hidden Hodge witness]\label{def:hidden-hodge-witness}
   A hidden Hodge witness for a public observation \((p,b)\) consists of
@@ -69,10 +239,10 @@ proof-carrying artifacts, but it does not present the operative kernel itself.
 \end{definition}
 
 The exact recovery formulation is deliberately strong. It isolates the
-ambiguity proved in the Lean development: the same public cochain may be
-compatible with hidden operators that disagree about harmonicity. Thus a solver
-that sees only public data cannot be uniformly sound unless the public
-observation determines enough hidden-operator structure.
+central ambiguity: the same public cochain may be compatible with hidden
+operators that disagree about harmonicity. Thus a solver that sees only public
+data cannot be uniformly sound unless the public observation determines enough
+hidden-operator structure.
 
 \subsection{Recovery Target}
 
@@ -100,4 +270,5 @@ The computational model separates three layers.
 \end{enumerate}
 
 This paper focuses on the first two layers. The runtime layer is part of the
-protocol and proof-carrying-verification story developed in the sequel.
+protocol and proof-carrying-verification story developed in the subsequent
+protocol paper.

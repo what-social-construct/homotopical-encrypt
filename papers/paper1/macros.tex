@@ -8,7 +8,7 @@
 \usepackage{hyperref}
 \usepackage[nameinlink,capitalise,noabbrev]{cleveref}
 
-\emergencystretch=3em
+\emergencystretch=6em
 
 \hypersetup{
   colorlinks=true,
@@ -42,5 +42,6 @@
 \newcommand{\Public}{\mathsf{Public}}
 \newcommand{\Hidden}{\mathsf{Hidden}}
 \newcommand{\Lean}{\textsc{Lean}}
-\newcommand{\lean}[1]{\path{#1}}
+\newcommand{\lean}[1]{\begingroup\Urlmuskip=0mu plus 1mu\path{#1}\endgroup}
+\newenvironment{leanledger}{\small\sloppy}{\par}
 \newcommand{\todo}[1]{\textcolor{red!65!black}{[TODO: #1]}}

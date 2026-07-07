@@ -20,7 +20,7 @@ number of import surfaces.
     feeds \lean{Proximity.CanonicalRS}.
   \item[Protocol boundary.]
     \lean{TCB/*}, \lean{Gates/*}, \lean{Consensus/*}, and
-    \lean{Chain} are the sequel-facing protocol surfaces.
+    \lean{Chain} are surfaces for the subsequent protocol paper.
 \end{description}
 
 For Paper~1, the main Lean check targets are:
@@ -37,6 +37,8 @@ are the theorem-surface checks most directly corresponding to this paper.
 
 \section{Lean/Paper Correspondence}
 
+\begin{leanledger}
+
 \subsection{Definitions And Interfaces}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
@@ -44,15 +46,33 @@ are the theorem-surface checks most directly corresponding to this paper.
     Sections 2--3; \lean{Hardness.PublicProjection},
     \lean{Hardness.HiddenOperatorFiber}, and
     \lean{Hardness.HiddenOperatorClass}.
+  \item[Matrix harmonicity and Hodge instances.]
+    Section 2; \lean{Hardness.Hodge_Instance} and
+    \lean{Hardness.MatrixIsHarmonic}.
   \item[Kernel ambiguity and lossy public data.]
-    Sections 2--3; \lean{Hardness.KernelAmbiguous} and
+    Sections 2--3; \lean{Hardness.SameKernel},
+    \lean{Hardness.KernelAmbiguous},
+    \lean{Hardness.PublicCompatibleHodgeAmbiguity}, and
     \lean{Hardness.LossyPublicProjection}.
+  \item[Public-data-only Hodge solvers.]
+    Section 3; \lean{Hardness.PublicHodgeInstance},
+    \lean{Hardness.PublicHodgeSolver},
+    \lean{Hardness.PublicHodgeSolverSound}, and
+    \lean{Hardness.PublicHodgeSolverExactOnHarmonic}.
   \item[Explicit-lattice CVP comparison.]
     Section 3; \lean{CVP.CVP_Instance}, \lean{CVP.CVPSolution}, and
     \lean{CVP.CVPOracleCorrect}.
+  \item[Hodge/CVP solution predicates.]
+    Section 3; \lean{Hardness.HodgeCVPSolution} and
+    \lean{Hardness.ProjectionHodgeCVPSolution}.
   \item[Hodge projection model.]
     Sections 2--3; \lean{Laplacian.harmonicProjection},
     \lean{Laplacian.residual}, and \lean{Laplacian.IsHarmonic}.
+  \item[Categorical fibration copy surface.]
+    Section 4; \lean{Hardness.IsCartesianMorphism},
+    \lean{Hardness.GrothendieckFibration},
+    \lean{Hardness.HomotopyEquivalent}, and
+    \lean{Hardness.FibrationCopy}.
   \item[Semantic/public equality surface.]
     Section 4; \lean{Axioms.HelferFOL}, \lean{Axioms.HomotopyClass}, and
     \lean{Axioms.Fibration}.
@@ -89,17 +109,41 @@ are the theorem-surface checks most directly corresponding to this paper.
   \item[Public-compatible Hodge ambiguity gives kernel ambiguity.]
     \lean{Hardness.kernelAmbiguous_of_publicCompatibleHodgeAmbiguity};
     Lean-proved.
+  \item[Concrete Hodge ambiguity exists in nontrivial dimension.]
+    \lean{Hardness.Hodge_Ambiguity},
+    \lean{Hardness.constantPublicProjection_publicCompatibleHodgeAmbiguity},
+    \lean{Hardness.constantPublicProjection_kernelAmbiguous}, and
+    \lean{Hardness.constantPublicProjection_lossy};
+    Lean-proved.
+  \item[Every explicit lattice image can be a Hodge kernel.]
+    \lean{Hardness.exists_matrix_ker_eq_range};
+    Lean-proved linear-algebra construction.
   \item[Hodge solver exposes a known-lattice CVP surface.]
     \lean{Hardness.Hodge_Hardness_Reduction} and
     \lean{Hardness.Hodge_Hardness_Reduction_Proof};
     Lean-proved surface.
+  \item[Hodge decomposition into harmonic, exact, and coexact parts.]
+    \lean{Hardness.Hodge_Decomposition_Theorem};
+    Lean-proved theorem surface.
+  \item[Ambiguous input contradicts public-data-only Hodge solving.]
+    \lean{Hardness.public_solver_eq_input_of_harmonic} and
+    \lean{Hardness.no_public_solver_on_ambiguous_input};
+    Lean-proved lemmas.
   \item[Known-lattice CVP does not select the hidden operator.]
     \lean{Hardness.CVP_Oracle_Insufficient_For_Public_Hodge_Solving};
     Lean-proved surface.
+  \item[Strict hidden-operator separation.]
+    \lean{Hardness.Hodge_Strictly_Harder};
+    Lean-proved model theorem.
   \item[Projection-model Hodge recovery is CVP-shaped.]
-    \lean{Hardness.Hodge_Projection_Is_CVP} and
+    \lean{Hardness.matrix_harmonic_iff_projection_isHarmonic},
+    \lean{Hardness.Hodge_Projection_Is_CVP}, and
     \lean{Hardness.harmonicProjection_Is_ProjectionHodgeCVPSolution};
     Lean-proved.
+  \item[Fibration copies preserve the hidden semantic surface.]
+    \lean{Hardness.copy_equivalent_thm} and
+    \lean{Hardness.FibrationCopy_is_Grothendieck};
+    Lean-proved categorical interface.
   \item[Exact sheaf gates supply \(d^2=0\) and Laplacian-from-coboundary.]
     \lean{Gates.structural_preconditions_of_sheaf_exact_gates};
     Lean-proved alias/interface.
@@ -126,3 +170,337 @@ are the theorem-surface checks most directly corresponding to this paper.
     \lean{CanonicalRS.MCA.projectionBadChallengeFraction_le};
     Lean-proved from cited bounds.
 \end{description}
+
+\end{leanledger}
+
+\section{Complete Lean Coverage Ledger}
+
+This ledger is the audit trail for the translation. The body of the paper gives
+the mathematical definitions and proofs; this appendix records where each
+Lean declaration family enters the written account. Import-only aggregate
+files are listed with the files they collect.
+
+\begin{leanledger}
+
+\subsection{Build And Aggregate Files}
+
+\begin{description}[leftmargin=2.4em,style=nextline]
+  \item[\lean{lakefile.lean}.]
+    Build configuration; no mathematical declaration is translated as a
+    theorem.
+  \item[\lean{Axioms.lean}, \lean{Gates.lean}, \lean{TCB.lean},
+    \lean{Consensus.lean}, \lean{Proximity.lean}, and
+    \lean{Proximity/CanonicalRS.lean}.]
+    Aggregate import surfaces. Their mathematical content is exactly the
+    union of the component files listed below.
+\end{description}
+
+\subsection{HCP, CVP, And Fibrational Algebra}
+
+\begin{description}[leftmargin=2.4em,style=nextline]
+  \item[\lean{Hardness.lean}.]
+    Sections 2--4 translate every declaration into the hidden Hodge-operator
+    algebra. The HCP data are
+    \lean{Hodge_Instance}, \lean{MatrixIsHarmonic},
+    \lean{PublicProjection}, \lean{PubliclyEquivalent},
+    \lean{HiddenOperatorFiber}, and \lean{HiddenOperatorClass}. The ambiguity
+    predicates are \lean{LossyPublicProjection}, \lean{SameKernel},
+    \lean{KernelAmbiguous}, and
+    \lean{PublicCompatibleHodgeAmbiguity}. The elementary closure lemmas
+    \lean{mem_hiddenOperatorClass_self}, \lean{sameKernel_refl},
+    \lean{kernelAmbiguous_implies_lossy}, and
+    \lean{kernelAmbiguous_of_publicCompatibleHodgeAmbiguity} are
+    \cref{prop:ambiguity-hierarchy}. The concrete ambiguity theorems
+    \lean{Hodge_Ambiguity}, \lean{Hodge_Ambiguity_Proof},
+    \lean{constantPublicProjection_publicCompatibleHodgeAmbiguity},
+    \lean{constantPublicProjection_kernelAmbiguous}, and
+    \lean{constantPublicProjection_lossy} are
+    \cref{prop:constant-public-ambiguity}. The known-lattice comparison
+    declarations \lean{Hodge_Solver_Correct},
+    \lean{exists_matrix_ker_eq_range},
+    \lean{Hodge_Hardness_Reduction}, and
+    \lean{Hodge_Hardness_Reduction_Proof} are
+    \cref{prop:hcp-to-cvp}. The decomposition theorem
+    \lean{Hodge_Decomposition_Theorem} is
+    \cref{prop:hodge-decomposition}. The public-solver predicates
+    \lean{PublicHodgeInstance}, \lean{PublicHodgeSolver},
+    \lean{PublicHodgeSolverSound},
+    \lean{PublicHodgeSolverExactOnHarmonic},
+    \lean{public_solver_eq_input_of_harmonic},
+    \lean{no_public_solver_on_ambiguous_input},
+    \lean{Hodge_Strictly_Harder}, and
+    \lean{CVP_Oracle_Insufficient_For_Public_Hodge_Solving} are
+    \cref{prop:cvp-insufficient}. The projection/CVP predicates
+    \lean{HodgeCVPSolution}, \lean{ProjectionHodgeCVPSolution},
+    \lean{matrix_harmonic_iff_projection_isHarmonic},
+    \lean{Hodge_Projection_Is_CVP}, and
+    \lean{harmonicProjection_Is_ProjectionHodgeCVPSolution} are
+    \cref{prop:hodge-projection-is-cvp}. The categorical declarations
+    \lean{IsCartesianMorphism}, \lean{GrothendieckFibration},
+    \lean{HomotopyEquivalent}, \lean{Wrapper}, \lean{Fibration},
+    \lean{FibrationCopy}, \lean{ToWrapper}, \lean{FromWrapper},
+    \lean{copy_equivalent_thm}, and \lean{FibrationCopy_is_Grothendieck}
+    are \cref{prop:fibration-copy-equivalence}.
+  \item[\lean{CVP.lean}.]
+    Section 3 translates \lean{ExplicitLattice}, \lean{CVP_Instance},
+    \lean{InExplicitLattice}, \lean{IsClosestLatticeVector},
+    \lean{CVPSolution}, \lean{CVP_Oracle},
+    \lean{LatticeOracleCorrect}, \lean{CVPOracleCorrect},
+    \lean{CVPSolverCorrect}, \lean{cvpSolverCorrect_iff_oracleCorrect},
+    \lean{CVPHardnessAssumption}, and
+    \lean{zero_lattice_oracle_correct} as the known-lattice comparison
+    surface.
+  \item[\lean{Axioms/HelferFOL.lean},
+    \lean{Axioms/Fibration.lean}, and
+    \lean{Axioms/HomotopyClass.lean}.]
+    Section 4 translates path equality, public classifiers, public fibers,
+    class-membership witnesses, transport, fiber systems, ephemeral fiber
+    specifications, and nonfaithful classifiers. The equivalence, symmetry,
+    transitivity, membership, and nonfaithfulness lemmas justify the public
+    fiber language used in HCP.
+\end{description}
+
+\subsection{Foundational, Sheaf, Spectral, And Judgment Axioms}
+
+\begin{description}[leftmargin=2.4em,style=nextline]
+  \item[\lean{Axioms/Foundation.lean} and \lean{Gates/Exact.lean}.]
+    Section 4 translates \lean{Foundation} and
+    \lean{FoundationWellFormed}: finite cochain data, coboundary
+    compatibility, Hodge Laplacian formation, topology connectivity, spectral
+    gap positivity, and public key-image/freshness premises. The exact-gate
+    aliases \lean{ExactGateBundle}, \lean{SheafExactGateBundle},
+    \lean{FoundationWithSheafExactGates}, and
+    \lean{structural_preconditions_of_sheaf_exact_gates} are
+    \cref{prop:exact-structural-preconditions}.
+  \item[\lean{Axioms/SheafCoherence.lean}.]
+    Section 4 translates restriction-shape compatibility, edge naturality,
+    triangle-face commutativity, sheaf cochain complexes, Hodge coherence,
+    finite simplicial nerves, \lean{SheafCoherence},
+    \lean{SheafCoherenceWellFormed},
+    \lean{FoundationWithSheafCoherence}, and
+    \lean{coherence_implies_structural_preconditions}.
+  \item[\lean{Axioms/Grassmannian.lean}.]
+    Sections 4 and 6 translate the Grassmannian metric and geometry objects:
+    \lean{GrassmannianDistance}, \lean{chordal_leq_geodesic},
+    \lean{KarcherMean}, \lean{SheafLaplacian}, \lean{CechNerve},
+    \lean{PluckerEligibility}, \lean{ConsensusGeometry}, and
+    \lean{ConsensusGeometryWellFormed}.
+  \item[\lean{Axioms/SpectralBounds.lean} and \lean{Gates/Spectral.lean}.]
+    Section 4 translates the constants
+    \(\sqrt2/2\) and \(2\sqrt2\), the predicates
+    \lean{SpectralGapInPoVBounds}, \lean{NearPoVSpectralBoundary},
+    \lean{TsirelsonPredicate}, \lean{NearTsirelsonBoundary}, the aliases
+    \lean{SpectralGapGate} and \lean{NearSpectralBoundary}, the geometry
+    witness \lean{ByConstructionPoVGeometry}, and the theorems
+    \lean{byConstruction_gap_in_bounds} and
+    \lean{byConstruction_passes_spectral_gate}.
+  \item[\lean{Tsirelson.lean}.]
+    Section 4 translates the Grassmannian/Laplacian family
+    \lean{Grassmannian_Laplacians}, \lean{Ω_G},
+    \lean{LaplacianSpace}, \lean{SpectralGap}, \lean{Ω_1},
+    \lean{projector_map}, \lean{Classical_Strategy},
+    \lean{Quantum_Strategy}, and \lean{MaxEigenvalue}; the infinitude and
+    injectivity results \lean{R_infinite}, \lean{infinite_lines},
+    \lean{Grassmannian_Laplacian_injective},
+    \lean{projector_injective}, \lean{laplacian_injective},
+    \lean{Ω_1_infinite}, \lean{R_uncountable},
+    \lean{Ω_1_infinite_v2}, and \lean{Ω_1_Nonempty}; the Laplacian-space
+    inclusions \lean{laplacian_properties},
+    \lean{laplacian_is_hermitian},
+    \lean{Ω_1_subset_LaplacianSpace},
+    \lean{Ω_1_subset_LaplacianSpace_v3},
+    \lean{Ω_1_subset_LaplacianSpace_v5},
+    \lean{Ω_1_subset_LaplacianSpace_explicit_v2}, and
+    \lean{Ω_1_subset_LaplacianSpace_explicit}; and the classical/quantum
+    statement forms \lean{Classical_Bound_Statement},
+    \lean{Quantum_Bound_Statement},
+    \lean{Classical_Bound_empty_family}, and
+    \lean{Quantum_Bound_empty_family}.
+  \item[\lean{Axioms/Heyting.lean} and
+    \lean{Axioms/OracleModality.lean}.]
+    Section 4 translates the three-valued Heyting algebra, meet, join,
+    implication, negation, failure of double-negation elimination, abstract
+    Heyting collapse, nonfaithful public truth, spectral judgments, consensus
+    actions, oracle queries and answers, \(\Omega_{\mathrm{nv}}\), witness
+    collapses, quotient equivalence, sheafification, oracle forcing,
+    \(\eta_1/\eta_2\) oracle modalities, Lawvere--Tierney idempotence,
+    boundary judgment behavior, canonical consensus admissibility, oracle
+    pipelines, and the oracle/consensus bridge theorems.
+  \item[\lean{Axioms/StageAdmissibility.lean},
+    \lean{Gates/Stage.lean}, and \lean{Gates/Oracle.lean}.]
+    Section 7 records the stage and oracle aliases: pipeline stages, stage
+    admissibility, transaction-critical invariant bundles, Python-stage
+    snapshots, refinement predicates, and the theorem that a refined
+    transaction-critical pass is admissible.
+\end{description}
+
+\subsection{Laplacian Geometry And Search Spaces}
+
+\begin{description}[leftmargin=2.4em,style=nextline]
+  \item[\lean{Laplacian/Hodge.lean} and \lean{Laplacian.lean}.]
+    Sections 2--3 translate harmonic projection, residual vector, residual
+    norm, harmonicity, projection membership, nonnegativity, and all
+    equivalences between zero residual, membership in the harmonic subspace,
+    and harmonicity.
+  \item[\lean{Laplacian/Projection.lean}.]
+    Section 3 translates the projection Laplacian
+    \(\Delta_W=I-P_W\) and its pointwise application formula.
+  \item[\lean{Laplacian/Spectral.lean}.]
+    Section 4 translates sheaf Laplacians, spectral fingerprints, spectral
+    equivalence, scalar Laplacians, kernel and eigenvalue lemmas, scalar
+    fingerprints, homotopy-equivalent Laplacians, and the theorem that spectrum
+    is not homotopy invariant.
+  \item[\lean{Laplacian/Likelihood.lean}.]
+    Section 4 records the classical and quantum adversary shapes, valid
+    quantum adversaries, Gaussian likelihoods, minimum spectral gaps,
+    normalized success probabilities, optimal-adversary likelihood, and the
+    Gaussian factorization lemmas as spectral-statistical surfaces rather than
+    HCP hardness assumptions.
+  \item[\lean{Laplacian/Grassmannian.lean},
+    \lean{Laplacian/Grassmannian/Injectivity.lean},
+    \lean{Laplacian/Grassmannian/SearchSpace.lean}, and
+    \lean{Laplacian/Grassmannian/ParametricFamily.lean}.]
+    Sections 4 and 6 translate harmonic subspaces, the map to projection
+    Laplacians, the families \(\Omega_r\) and \(\Omega_1\), membership in
+    Laplacian space, nonemptiness of \(\Omega_k\), injectivity of the
+    Grassmannian Laplacian map, and the parametric construction of families of
+    \(k\)-planes.
+\end{description}
+
+\subsection{Commitments, Public Artifacts, And TCB Boundary}
+
+\begin{description}[leftmargin=2.4em,style=nextline]
+  \item[\lean{Axioms/CochainCommitment/Payload.lean},
+    \lean{Axioms/CochainCommitment/Security.lean}, and
+    \lean{Axioms/CochainCommitment.lean}.]
+    Section 5 translates the canonical modulus, byte lengths, wire length,
+    \lean{CochainCommitmentData}, edge-count matching, nonempty edge data,
+    supported modulus, well-formedness, commitment sums, common-topology and
+    additive compatibility, zero and addition operations, payload lemmas,
+    binding/hiding/additivity/security axioms, blinded and vector commitment
+    axioms, cohomological MAC axioms, and the canonical commitment
+    construction from foundational data.
+  \item[\lean{TCB/ProofCarrying.lean}, \lean{TCB/Runtime.lean},
+    \lean{TCB/SNARK.lean}, \lean{TCB/CompressionBoundary.lean},
+    \lean{TCB/ObservationBoundary.lean}, and
+    \lean{TCB/WitnessVerifier.lean}.]
+    Sections 5 and 7 translate hash words, hashed committed cochains,
+    proof-carrying cochains, runtime specification boundaries, runtime
+    acceptance predicates, SNARK-carrying cochains, compression contracts,
+    compressed shadows, observation boundaries, gap-decision certificates,
+    witness-compression envelopes, public state updates, and theorems stating
+    that accepted artifacts expose well-formed cochain and oracle predicates.
+  \item[\lean{Axioms/ZKP.lean}.]
+    Section 5 records the zero-knowledge proof object and its well-formedness
+    predicate as an assumed proof-carrying artifact interface.
+\end{description}
+
+\subsection{Projection Chain, Proximity Gates, And RS/MCA Endpoint}
+
+\begin{description}[leftmargin=2.4em,style=nextline]
+  \item[\lean{Proximity/Problem.lean}, \lean{Proximity/Public.lean},
+    \lean{Proximity/Projection.lean}, and \lean{Proximity/PluckerShadow.lean}.]
+    Section 6 records the problem-facing public projection vocabulary that
+    prepares the Plucker and finite-code shadow.
+  \item[\lean{Proximity/Grassmannian.lean},
+    \lean{Proximity/GrassmannianPlucker.lean}, and
+    \lean{Proximity/GrassmannianPlucker/Concrete.lean}.]
+    Section 6 translates harmonic Grassmannian points, exterior coordinates,
+    frame witnesses, decomposability, framed systems, raw and public shadows,
+    soundness, projective equivalence, projective shadows, projective
+    normalization, projective framed systems, and projective sound inputs.
+  \item[\lean{Proximity/CochainBridge.lean},
+    \lean{Proximity/PluckerCochain.lean},
+    \lean{Proximity/PluckerCochain/Concrete.lean}, and
+    \lean{Proximity/PluckerCochain/PublicBinding.lean}.]
+    Section 6 translates valid frames, Plucker-to-cochain instances, local
+    syndrome targets, codeword predicates, evaluation projections, invariant
+    checklists, payload encoders, commitment-sum residuals, payload
+    realizations, hashed Plucker shadows, observed frame bindings, and the
+    theorems that valid public shadows bind to well-formed cochains and local
+    codewords.
+  \item[\lean{Proximity/CochainPlane.lean},
+    \lean{Proximity/CochainPlane/Core.lean},
+    \lean{Proximity/CochainPlane/Concrete.lean},
+    \lean{Proximity/CochainPlane/ReedSolomon.lean}, and
+    \lean{Proximity/CochainReedSolomon.lean}.]
+    Section 6 translates plane shadows, plane extraction contexts,
+    local nondegeneracy, alignment, projected planes, plane targets,
+    plane-to-evaluation projections, local-codeword-to-target-codeword
+    theorems, distance monotonicity, canonical-field plane encodings,
+    interpretations, and RS received words.
+  \item[\lean{Proximity/ProjectionChain.lean} and
+    \lean{Proximity/ProjectionChain/Core.lean}.]
+    Section 6 translates the complete projection chain, including accessors
+    for committed cochain, plane shadow, received word, and the composite
+    evaluation projection.
+  \item[\lean{Proximity/Gates.lean}, \lean{Proximity/Gates/Stage.lean},
+    \lean{Proximity/Gates/Final.lean}, and
+    \lean{Proximity/GateEvidence.lean}.]
+    Section 6 translates only proximity gates: source metric, Plucker metric,
+    semantic alignment, syndrome adequacy, public-shadow respect,
+    noncollapse, far-region separation, runtime binding, structural bundles,
+    hard-gate certificates, calibrated final certificates, certified state
+    buses, stage checklists, stage certificates, radius calibrations, final
+    readiness, evidence slots, evidence databases, and the binding/completeness
+    lemmas for proximity evidence.
+  \item[\lean{Proximity/RS/ListDecoding.lean},
+    \lean{Proximity/RS/ReedSolomon.lean},
+    \lean{Proximity/RS/CorrelatedAgreement.lean},
+    \lean{Proximity/RS/Target.lean}, and \lean{Proximity/RS.lean}.]
+    Section 6 translates words, block codes, Hamming and relative Hamming
+    balls, list-size bounds, interleaved and additive codes, RS parameters,
+    vector codewords, correlated-agreement and mutual-correlated-agreement
+    predicates, bad-parameter sets, bridge obligations, calibrated
+    \(\HE\)-to-RS bridges, and pullback-correctness theorems.
+  \item[\lean{Proximity/CanonicalRS/Parameters.lean},
+    \lean{Proximity/CanonicalRS/PowerDomain.lean},
+    \lean{Proximity/CanonicalRS/Encoding.lean},
+    \lean{Proximity/CanonicalRS/Metric.lean},
+    \lean{Proximity/CanonicalRS/Target.lean},
+    \lean{Proximity/CanonicalRS/FarSeparation.lean},
+    \lean{Proximity/CanonicalRS/BridgeData.lean},
+    \lean{Proximity/CanonicalRS/BridgeWitness.lean},
+    \lean{Proximity/CanonicalRS/BridgeCertificate.lean},
+    \lean{Proximity/CanonicalRS/CitedBounds.lean},
+    \lean{Proximity/CanonicalRS/MCA.lean},
+    \lean{Proximity/CanonicalRS/MCA/Line.lean}, and
+    \lean{Proximity/CanonicalRS/MCA/Concrete.lean}.]
+    Section 6 translates the canonical finite field, length, degree bound,
+    rate, Johnson and capacity radii, smooth domains, power-root domain,
+    canonical encoding, Hamming-to-code metrics, target bounds, far-separation
+    witnesses, bridge data and theorem slots, bridge certificates, cited
+    BCHKS-style bounds, MCA block code, challenge and bad-challenge fractions,
+    and the bound on the projected bad-challenge fraction.
+\end{description}
+
+\subsection{Sequel-Facing Protocol And Implementation Boundary}
+
+\begin{description}[leftmargin=2.4em,style=nextline]
+  \item[\lean{Axioms/Consensus.lean}, \lean{Axioms/Ledger.lean},
+    \lean{Axioms/Coregulator.lean}, and
+    \lean{Axioms/PythonHomotopyRefinement.lean}.]
+    Section 7 records consensus, ledger, coregulator, and Python homotopy
+    refinement as boundary objects. Their full protocol semantics belong to
+    Paper 2, but their predicates are named here so the Paper 1 mathematical
+    objects have explicit downstream interfaces.
+  \item[\lean{Consensus/Geometry.lean},
+    \lean{Consensus/Reliability.lean}, and
+    \lean{Consensus/ProofOfValue.lean}.]
+    Section 7 records Plucker eligibility and consensus geometry aliases,
+    reliability evidence and bounded reliability scores, proximity quality,
+    Proof-of-Value gates, Proof-of-Value inputs, scores with and without
+    reliability/proximity, and the score bounds. These are protocol-facing
+    uses of the Section 4 and Section 6 mathematical predicates.
+  \item[\lean{Chain.lean}.]
+    Section 7 records validators, transactions, blocks, chains, spectral
+    bounds, topology and freshness predicates, block validity, tips, heights,
+    extension, transaction and block acceptance, ledger-state updates,
+    key-image preservation theorems, validator eligibility, cumulative gap,
+    preference, transaction composition and identities, quadratic weight,
+    Sybil-resistance weighting, chain-growth monotonicity, fork-resolution
+    transitivity, and connectedness of eligible validators. The detailed
+    chain architecture remains Paper 2.
+\end{description}
+
+\end{leanledger}

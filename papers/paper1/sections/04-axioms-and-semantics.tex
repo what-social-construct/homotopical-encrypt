@@ -7,9 +7,11 @@ are only meaningful after the public/private boundary is fixed.
 \subsection{Fibrational Semantics}
 
 The semantic layer is motivated by Helfer's first-order homotopical logic
-\cite{helfer2019fol}. In this paper, the corresponding Lean files are used as
-a formalized interface for the semantic structure needed by \HE{}, not as a
-claim that every external theorem from Helfer's paper has been reproved.
+\cite{helfer2019fol} and by the standard topos-theoretic language of sheaves
+and internal logic \cite{macLaneMoerdijk1994}. We use it here as a semantic
+language for hidden representatives, public bases, and transport of witness
+data; the external foundational results are taken as background rather than
+reproved.
 We use the usual fibrational notation
 \[
   p:E\longrightarrow B,
@@ -33,6 +35,34 @@ For a dependent family \(F:E\to\mathsf{Type}\), a path
 Thus the primitive semantic data are fibers, paths, and transport along paths.
 The cryptographic objects introduced later live over this interface; they do
 not replace it with byte-level equality.
+
+We also use the corresponding categorical fibration vocabulary. For a functor
+\(p:E\to B\), a morphism \(f:U\to V\) in \(E\) is \(p\)-Cartesian when every
+arrow \(g:W\to V\) and base arrow \(\alpha:p(W)\to p(U)\) satisfying
+\[
+  p(g)=\alpha\,p(f)
+\]
+factor uniquely through \(f\). A Grothendieck fibration is then a functor
+with Cartesian lifts for every base arrow. This is the categorical form of the
+transport principle used by the hidden-representative semantics.
+
+\begin{proposition}[Fibration copies preserve hidden semantics]\label{prop:fibration-copy-equivalence}
+  Let \(p:E\to B\) be a Grothendieck fibration. For each tag \(n\), let
+  \(E^{(n)}\) be a tagged copy of \(E\) and let
+  \(p^{(n)}:E^{(n)}\to B\) be the induced fibration. Then
+  \(p^{(n)}\) is again a Grothendieck fibration, and \(p\) and \(p^{(n)}\) are
+  homotopy equivalent over \(B\).
+\end{proposition}
+
+\begin{proof}
+  The tagged copy has the same objects and morphisms as \(E\), with only the
+  external tag changed. The forgetful functor \(E^{(n)}\to E\) and the tagging
+  functor \(E\to E^{(n)}\) compose to the identity up to the evident natural
+  isomorphisms. Cartesian lifts in \(E^{(n)}\) are transported directly from
+  Cartesian lifts in \(E\), so the induced functor remains a Grothendieck
+  fibration. The two functors give the homotopy equivalence over the base
+  \(B\).
+\end{proof}
 
 \subsection{Fibrational Identity Objects}
 
@@ -80,13 +110,12 @@ introduced later in \cref{sec:rs-mca-projection}.
 
 \subsection{Axiom Surfaces}
 
-The Lean development separates assumptions and theorem surfaces into small
-modules. The relevant early interfaces are:
+The assumptions are separated by mathematical role:
 \begin{enumerate}[label=(\roman*)]
   \item foundational cochain and Hodge assumptions;
   \item fibration and homotopy-class interfaces;
   \item Heyting/oracle semantics for public judgments;
-  \item sheaf-coherence and spectral interfaces;
+  \item sheaf-coherence and spectral/Tsirelson admissibility interfaces;
   \item cochain-commitment payload and security assumptions.
 \end{enumerate}
 
@@ -94,8 +123,9 @@ modules. The relevant early interfaces are:
 
 The exact structural invariants are not a separate source of geometry. They
 package the same foundational and sheaf-coherence hypotheses at the point
-where an object is admitted. For a cochain complex \(C^\bullet\), the accepted
-surface supplies a differential
+where an object is admitted. We use the cellular-sheaf Hodge--Laplacian
+viewpoint of Hansen--Ghrist as background \cite{hansenGhrist2018sheaves}. For
+a cochain complex \(C^\bullet\), the accepted surface supplies a differential
 \[
   d^k:C^k\longrightarrow C^{k+1}
 \]
@@ -106,8 +136,8 @@ Hodge Laplacian
 \]
 In the sheaf setting, the corresponding coherence assumptions assert that
 restriction maps, local data, and gluing data are compatible with this
-cochain/Hodge structure. The Lean theorem surface extracts precisely these
-structural consequences for later use.
+cochain/Hodge structure. The only structural consequences used later are the
+differential identity \(d^2=0\) and the Hodge--Laplacian identity above.
 
 \begin{proposition}[Exact structural preconditions]\label{prop:exact-structural-preconditions}
   An accepted sheaf-coherence surface supplies
@@ -119,20 +149,356 @@ structural consequences for later use.
   for the cochain complex under discussion.
 \end{proposition}
 
+\subsection{Spectral/Tsirelson Axiom Surface}
+
+The spectral surface is also part of the object definition in this paper. It
+is not introduced as a consensus rule. The terminology is Tsirelson-style
+because the admissible window uses the familiar \(\sqrt 2\) scale from
+Tsirelson's bound \cite{tsirelson1980bell}. For a Hermitian positive
+semidefinite operator \(\Delta\), write
+\[
+  \lambda_1^+(\Delta)
+  =
+  \inf\{\lambda:\lambda\text{ is an eigenvalue of }\Delta,\ \lambda\ne 0\},
+\]
+with \(\lambda_1^+(\Delta)=0\) when \(\Delta\) has no nonzero spectral value.
+The Tsirelson-style admissibility axiom is the spectral window
+\[
+  \frac{\sqrt{2}}{2}
+  \le
+  \lambda_1^+(\Delta)
+  \le
+  2\sqrt{2}.
+\]
+A separate boundary predicate marks \(\Delta\) as \(\varepsilon\)-near one of
+the two endpoints:
+\[
+  \left|\lambda_1^+(\Delta)-\frac{\sqrt 2}{2}\right|\le \varepsilon
+  \quad\text{or}\quad
+  \left|\lambda_1^+(\Delta)-2\sqrt 2\right|\le \varepsilon .
+\]
+This predicate only records near-boundary status; it does not prescribe any
+protocol action in Paper 1.
+
+The corresponding Grassmannian/Laplacian surface makes the hidden-kernel
+search space concrete. Let
+\[
+  \mathcal L_\beta(R^n)
+  =
+  \{\Delta:\Delta=\Delta^\ast,\ \Delta\succeq 0,\ \dim_R\ker\Delta=\beta\}
+\]
+be the Laplacian space at kernel dimension \(\beta\). For
+\(W\in\Gr(k,R^n)\), let \(P_W\) be the orthogonal projection onto \(W\) and set
+\[
+  \Delta_W = I-P_W .
+\]
+Thus \(\ker(\Delta_W)=W\), and the Grassmannian family is
+\[
+  \Omega_k
+  =
+  \{\Delta_W:W\in\Gr(k,R^n)\}.
+\]
+Equivalently, a point of \(\Gr(k,R^n)\) is a \(k\)-dimensional harmonic
+subspace \(W\), and the map \(W\mapsto\Delta_W\) sends it to the corresponding
+projection Laplacian. In particular, \(\Omega_1\) is the one-dimensional
+Grassmannian family of rank-one harmonic kernels.
+
+\begin{proposition}[Grassmannian Laplacian search space]\label{prop:grassmannian-search-space}
+  For every \(k\le n\), the family \(\Omega_k\) is nonempty and satisfies
+  \[
+    \Omega_k
+    \subseteq
+    \{\Delta_W:W\subset R^n\text{ a linear subspace}\}.
+  \]
+  Moreover, every element of \(\Omega_k\) has a \(k\)-dimensional harmonic
+  kernel, so \(\Omega_k\subseteq\mathcal L_k(R^n)\).
+\end{proposition}
+
+\begin{proof}
+  If \(k\le n\), choose \(k\) coordinate basis vectors in \(R^n\). Their span
+  is a \(k\)-dimensional subspace \(W\), and \(\Delta_W\in\Omega_k\), proving
+  nonemptiness. The displayed containment is immediate from the definition of
+  \(\Omega_k\). Since \(\Delta_W=I-P_W=P_{W^\perp}\), its kernel is exactly
+  \(W\), hence has dimension \(k\).
+\end{proof}
+
+\begin{proposition}[Injectivity of the Grassmannian Laplacian map]\label{prop:grassmannian-laplacian-injective}
+  If \(W_1,W_2\subset R^n\) are subspaces and
+  \[
+    \Delta_{W_1}=\Delta_{W_2},
+  \]
+  then \(W_1=W_2\). Consequently \(W\mapsto\Delta_W\) is injective on
+  \(\Gr(k,R^n)\).
+\end{proposition}
+
+\begin{proof}
+  The equality \(\Delta_{W_1}=\Delta_{W_2}\) is the equality
+  \(I-P_{W_1}=I-P_{W_2}\), hence \(P_{W_1}=P_{W_2}\). For any
+  \(x\in W_1\), \(P_{W_1}x=x\), so \(P_{W_2}x=x\), and therefore
+  \(x\in W_2\). Thus \(W_1\subseteq W_2\). The reverse containment is
+  identical, so \(W_1=W_2\).
+\end{proof}
+
+The higher-rank Grassmannian search spaces contain explicit one-parameter
+families. Fix \(1\le k<n\). Choose linearly independent vectors \(u,v\in R^n\)
+and a \((k-1)\)-dimensional subspace \(W_0\) disjoint from
+\(\operatorname{span}\{u,v\}\). For \(t\in R\), set
+\[
+  W(t)=\operatorname{span}\{u+t v\}+W_0.
+\]
+Then \(W(t)\) has dimension \(k\), and varying \(t\) gives a corresponding
+family
+\[
+  \Delta_{W_t}=I-P_{W_t}.
+\]
+
+\begin{proposition}[Parametric Laplacian search space]\label{prop:parametric-laplacian-search-space}
+  If \(1\le k<n\), then there exist \(u,v,W_0\) as above such that the map
+  \[
+    R\longrightarrow\Gr(k,R^n),
+    \qquad
+    t\longmapsto W(t)
+  \]
+  is injective. Hence \(t\mapsto\Delta_{W(t)}\) is an injective
+  one-parameter family in \(\Omega_k\).
+\end{proposition}
+
+\begin{proof}
+  The existence of \(u,v,W_0\) follows by choosing a \((k-1)\)-plane and then
+  two independent directions outside it; the inequality \(k<n\) leaves enough
+  room for this choice. The dimension computation uses the disjointness:
+  \[
+    \dim W(t)
+    =
+    \dim\operatorname{span}\{u+tv\}+\dim W_0
+    =
+    1+(k-1)=k.
+  \]
+  If \(W(t_1)=W(t_2)\), then \(u+t_1v\) lies in
+  \(\operatorname{span}\{u+t_2v\}+W_0\). Modulo \(W_0\), this gives a linear
+  dependence between \(u\) and \(v\) unless \(t_1=t_2\). Since \(u,v\) were
+  chosen independent and \(W_0\) was disjoint from their span, \(t_1=t_2\).
+  Injectivity of \(t\mapsto\Delta_{W(t)}\) follows from
+  \cref{prop:grassmannian-laplacian-injective}.
+\end{proof}
+
+\begin{proposition}[Projection spectrum and spectral gap]\label{prop:projection-spectrum-gap}
+  For every \(W\subset R^n\), the projection Laplacian
+  \(\Delta_W=I-P_W=P_{W^\perp}\) has spectrum contained in \(\{0,1\}\).
+  Its kernel is \(W\), its image is \(W^\perp\), and, if
+  \(W\ne R^n\), its least nonzero eigenvalue and largest eigenvalue are both
+  \(1\). Thus the relative spectral gap of the Grassmannian projection family
+  is \(1\).
+\end{proposition}
+
+\begin{proof}
+  If \(x\in W\), then \(\Delta_Wx=0\). If \(x\in W^\perp\), then
+  \(\Delta_Wx=x\). Since \(R^n=W\oplus W^\perp\), these two subspaces exhaust
+  the eigenspace decomposition. Therefore the only possible eigenvalues are
+  \(0\) and \(1\), with \(0\)-eigenspace \(W\) and \(1\)-eigenspace
+  \(W^\perp\). When \(W^\perp\ne 0\), the nonzero spectral values consist
+  only of \(1\), so both \(\lambda_1^+\) and \(\lambda_{\max}\) are \(1\).
+\end{proof}
+
+The likelihood surface records the corresponding adversary vocabulary. A
+classical adversary is a map from an observation \(b\) to a guessed Laplacian;
+a quantum adversary is a probability density on candidate Laplacians. For a
+noise scale \(\sigma\), the Gaussian likelihood of a candidate \(A\) at
+observation \(b\) is written abstractly as
+\[
+  L_\sigma(b,A)
+  =
+  \exp\left(-\frac{\|A b\|_2^2}{2\sigma^2}\right),
+\]
+with normalized classical and quantum success probabilities obtained by
+integrating or maximizing this likelihood over the chosen family
+\(\Omega_k\). These likelihood objects are comparison surfaces for quantitative
+security statements; they are not assumptions used to prove the hidden-operator
+separation in \cref{prop:cvp-insufficient}.
+
+\begin{definition}[Adversary likelihood surfaces]\label{def:adversary-likelihood-surfaces}
+  A classical adversary on \(R^n\) is a function
+  \[
+    \mathcal A_{\mathrm{cl}}:R^n\to M_n(R)
+  \]
+  from an observation to a guessed Laplacian. A quantum adversary on a
+  candidate family \(\Omega_k\) is a nonnegative density
+  \[
+    \mathcal A_{\mathrm q}:R^n\times\Omega_k\to R_{\ge 0}
+  \]
+  whose integral over \(\Omega_k\) is \(1\) for each observation. With the
+  standard Gaussian prior on observations, the corresponding normalized
+  success surfaces are obtained from
+  \[
+    \int_{R^n}
+      L_\sigma\bigl(b,\mathcal A_{\mathrm{cl}}(b)\bigr)
+      e^{-\|b\|_2^2/2}\,db
+  \]
+  in the classical case and
+  \[
+    \int_{R^n}
+      \left(
+        \int_{\Omega_k}
+          \mathcal A_{\mathrm q}(b,A)L_\sigma(b,A)\,dA
+      \right)
+      e^{-\|b\|_2^2/2}\,db
+  \]
+  in the quantum-density case, up to the usual Gaussian normalization factor.
+\end{definition}
+
+The likelihood is written with the Euclidean norm. The Lean development also
+records a formal norm-convention check: the default norm on \(n\to R\) is the
+supremum norm, so the Euclidean likelihood is represented by passing to the
+\(\ell^2\) norm explicitly. The mathematical surface used here is the
+corrected Euclidean one.
+
+\begin{proposition}[Likelihood for a projection Laplacian]\label{prop:likelihood-projection-laplacian}
+  For \(A=\Delta_W\), the Euclidean Gaussian likelihood is
+  \[
+    L_\sigma(b,\Delta_W)
+    =
+    \exp\left(
+      -\frac{\|P_{W^\perp}b\|_2^2}{2\sigma^2}
+    \right).
+  \]
+\end{proposition}
+
+\begin{proof}
+  By \cref{prop:projection-harmonicity-equivalences},
+  \(\Delta_Wb=P_{W^\perp}b\). Substitute this identity into the definition of
+  \(L_\sigma(b,A)\).
+\end{proof}
+
+\begin{proposition}[Single-observation optimal classical guess]\label{prop:single-observation-optimal-guess}
+  If \(b\ne 0\) and \(W_b=\operatorname{span}\{b\}\), then
+  \[
+    L_\sigma(b,\Delta_{W_b})=1.
+  \]
+  Equivalently, the projection residual of \(b\) against the Laplacian whose
+  kernel is \(\operatorname{span}\{b\}\) is zero.
+\end{proposition}
+
+\begin{proof}
+  Since \(b\in W_b\), \(\Delta_{W_b}b=0\). Hence
+  \(L_\sigma(b,\Delta_{W_b})=\exp(0)=1\).
+\end{proof}
+
+This proposition is deliberately local: it concerns one observation \(b\) and
+the candidate subspace generated by that same observation. It does not collapse
+the HCP search problem, because the hardness comparison ranges over the whole
+hidden Grassmannian family and over public observations that do not reveal the
+operative kernel.
+
+\begin{proposition}[Gaussian prior factorization]\label{prop:gaussian-prior-factorization}
+  For \(x=(x_i)_{i=1}^n\in R^n\),
+  \[
+    \exp\left(-\frac{\|x\|_2^2}{2}\right)
+    =
+    \prod_{i=1}^n
+    \exp\left(-\frac{x_i^2}{2}\right).
+  \]
+\end{proposition}
+
+\begin{proof}
+  Since \(\|x\|_2^2=\sum_i x_i^2\), the left hand side is
+  \[
+    \exp\left(\sum_i -\frac{x_i^2}{2}\right),
+  \]
+  which equals the product of the exponentials.
+\end{proof}
+
+\begin{definition}[Spectral fingerprint]\label{def:spectral-fingerprint}
+  A finite-dimensional sheaf Laplacian is a self-adjoint positive
+  semidefinite linear operator \(L:V\to V\). Its spectral fingerprint is the
+  multiset
+  \[
+    \operatorname{Spec}_{\mathrm{multi}}(L)
+  \]
+  of eigenvalues counted with multiplicity. Two Laplacians are spectrally
+  equivalent when these multisets agree. In contrast, the coarse homotopy
+  equivalence surface used here records only harmonic dimension:
+  \[
+    L_1\simeq_{\ker}L_2
+    \quad\Longleftrightarrow\quad
+    \dim\ker L_1=\dim\ker L_2.
+  \]
+\end{definition}
+
+\begin{proposition}[Spectrum is not determined by harmonic dimension]\label{prop:spectrum-not-homotopy-invariant}
+  There exist self-adjoint positive semidefinite Laplacians \(L_1,L_2\) with
+  \[
+    \dim\ker L_1=\dim\ker L_2
+  \]
+  but
+  \[
+    \operatorname{Spec}_{\mathrm{multi}}(L_1)
+    \ne
+    \operatorname{Spec}_{\mathrm{multi}}(L_2).
+  \]
+\end{proposition}
+
+\begin{proof}
+  Take \(V=R\), \(L_1=\operatorname{id}_R\), and
+  \(L_2=2\operatorname{id}_R\). Both kernels are zero, so the harmonic
+  dimensions agree. The spectral fingerprints are the singleton multisets
+  \(\{1\}\) and \(\{2\}\), respectively, so the operators are not spectrally
+  equivalent.
+\end{proof}
+
+\begin{proposition}[Spectral/Tsirelson admissibility]\label{prop:spectral-admissibility}
+  If a public Hodge/spectral object satisfies the object-level
+  spectral/Tsirelson admissibility axiom, then
+  \[
+    \lambda_1^+(\Delta)\in
+    \left[\frac{\sqrt{2}}{2},\,2\sqrt{2}\right].
+  \]
+\end{proposition}
+
+For a nonempty family \(\Omega\subseteq\mathcal L_1(R^n)\), the associated
+classical and quantum Tsirelson-bound assertions are kept separate from the
+HCP hardness claim. They constrain admissible spectral behavior; they do not
+remove the hidden-operator ambiguity. The hardness story in
+\cref{sec:hcp-definition} remains the hidden-kernel ambiguity.
+
 \subsection{Heyting And Oracle Judgment Surface}
 
-The public judgment layer is also fixed here, because HCP uses public
-classifiers and oracle-visible predicates before any finite-code projection is
-introduced. We use a three-valued Heyting surface
+Following the Helfer-style fibrational/topos semantics used above
+\cite{helfer2019fol,macLaneMoerdijk1994}, the public judgment layer is a
+finite Heyting shadow of the richer semantic object carried by hidden
+representatives. Public truth values are quotients of hidden semantic evidence,
+not Boolean inspections of the hidden object itself. For the public judgment
+layer, we use a three-valued Heyting surface
 \[
   \Omega_3=\{\bot,\, ?,\, \top\},
   \qquad
   \bot< ? <\top,
 \]
-with the induced meet, join, and implication operations. Oracle-visible
-predicates such as vertex compatibility, Betti-number compatibility, public
-identity-hash compatibility, and spectral compatibility are mapped into
-\(\Omega_3\), and the acceptance predicate is formed in this public logic.
+with the induced meet, join, and implication operations.
+
+The oracle-specific part is the query/answer mechanism that produces public
+judgments. Following the oracle-modality viewpoint of Ahman--Bauer
+\cite{ahmanBauer2026oracle}, oracle-visible predicates such as vertex
+compatibility, Betti-number compatibility, public identity-hash compatibility,
+and spectral compatibility are mapped into this finite public Heyting surface,
+and the acceptance predicate is formed in the resulting public logic.
+The collapse from the richer hidden semantic object to \(\Omega_3\) is lossy:
+distinct hidden witnesses may have the same public truth value. It is also not
+classical Boolean logic. In the three-chain Heyting algebra, implication is the
+residuated operation
+\[
+  c\le (a\Rightarrow b)
+  \quad\Longleftrightarrow\quad
+  a\wedge c\le b,
+\]
+and the intermediate value \(?\) is not eliminated by classical reasoning. Thus
+the public oracle layer is a quotient of hidden semantic evidence, not a
+reconstruction of that evidence.
+
+The intermediate value \(?\) is a logical value in this public algebra, not a
+Boolean verdict in disguise. Operational maps out of \(\Omega_3\), such as
+protocol actions attached to an intermediate public judgment, belong to the
+subsequent protocol paper's runtime and consensus semantics. They are not the
+Heyting implication operation and do not alter the residuation law above.
 
 The identity hash used by the oracle surface is an observation obtained from
 the public Hodge projection and quantization path. It is not a cochain
@@ -140,10 +506,15 @@ commitment payload. The corresponding stability assumption says that equal
 public identity inputs give the same identity hash; it is a determinism
 condition for public identity observations, not a uniqueness or binding theorem
 for cochain commitments.
+Similarly, topological observations such as Betti-number compatibility are
+homotopy-invariant public data, whereas spectral fingerprints are not
+determined by homotopy class alone by
+\cref{prop:spectrum-not-homotopy-invariant}. The oracle surface therefore keeps
+Betti/topology observations, spectral admissibility, identity hashes, and
+cochain commitments as separate public predicates.
 
-This modular split is part of the mathematical statement. It prevents runtime
-facts, cryptographic assumptions, public classifiers, and Hodge-theoretic
-claims from being conflated. Exact and oracle invariants are used here as
-mathematical acceptance surfaces. Consensus composition and chain/runtime
-enforcement are recorded only at the formalization boundary; their full
-CS/protocol treatment is deferred to the sequel.
+This modular split is part of the mathematical statement. It prevents
+cryptographic assumptions, public classifiers, and Hodge-theoretic claims from
+being conflated. Exact and oracle invariants are used here as mathematical
+acceptance surfaces; their full CS/protocol treatment is deferred to the
+subsequent protocol paper.

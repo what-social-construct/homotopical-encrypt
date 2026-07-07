@@ -8,14 +8,11 @@
 \quad\not\Rightarrow\quad
 \text{the operative Hodge--Laplacian kernel}.
 \]
-The private recovery object is not merely a scalar secret or a vector in a
-published lattice. It is the harmonic cochain selected by a hidden Hodge
-operator. Public verification therefore needs finite artifacts, while security
+The private recovery object is the harmonic cochain selected by a hidden Hodge
+operator, instead of a scalar or a vector secret in a published lattice or algebraic object. 
+Public verification therefore needs finite artifacts, while security
 must not collapse to recovering the private representative or the hidden
 operator.
-The resulting design goal is transparency in action and anonymity in identity:
-public artifacts should make accepted actions auditable, without making the
-hidden representative or identity-selecting kernel public.
 
 \subsection{Contributions}
 
@@ -30,8 +27,7 @@ This paper develops the following contributions.
   \item A projection framework from hidden/geometric state to public finite
     evidence.
   \item A Lean formalization of the definitions, reductions, projection chain,
-    object-local invariants, projection-stage certificates, and theorem
-    boundaries.
+    gates, and theorem boundaries.
   \item A Reed--Solomon mutual-correlated-agreement corollary aligned with the
     vocabulary of the Proximity Prize problem statement.
 \end{enumerate}

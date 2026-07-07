@@ -2,6 +2,13 @@
 
 The concrete projection chain belongs here because its endpoint is the
 Reed--Solomon received-word surface and the mutual-correlated-agreement theorem.
+This section uses Grassmannian data in a different role from the HCP
+Grassmannian of Sections~\ref{sec:hcp-definition}--\ref{sec:mathematical-framework}.
+Earlier, \(W\in\Gr(k,R^n)\) parameterizes hidden harmonic kernels and
+projection Laplacians \(\Delta_W=I-P_W\). Here, after the hidden/geometric
+object has already been accepted, a frame for the Grassmannian point is used as
+the source of a lossy proximity projection through Plucker coordinates and
+actual cochain commitments toward a finite Reed--Solomon target.
 
 \subsection{Projection Chain}
 
@@ -22,10 +29,25 @@ them. These are proximity-specific projection gates, not the main \HE{}
 acceptance layer from Section~\ref{sec:mathematical-framework}. Their role is
 to certify the lossy path into the Reed--Solomon endpoint after the main
 hidden/geometric object has already been accepted.
+Thus the Plucker shadow is not part of the definition of HCP and is not the
+source of hidden-operator hardness. It is the first public projective encoding
+used by the proximity proof.
+
+The semantic roles in this chain are separated. The private witness consists of
+the fibration data, frame choices, paths, and openings. The shadow is the
+Plucker/cochain/proximity data derived from that witness. A hash or root is only
+a compressed public handle to canonical bytes for the shadow, not the
+mathematical shadow itself. A certificate or SNARK proves that the private
+witness produced the accepted shadow and satisfied the stage invariants.
 
 \subsection{Projection-Stage Gates}
 
 The source and Plucker stages carry metric and public-shadow invariants.
+We use the usual Grassmannian and Plucker-coordinate algebra: a frame
+\((w_1,\ldots,w_r)\) determines the exterior coordinate
+\([w_1\wedge\cdots\wedge w_r]\in\mathbb P(\bigwedge^r V)\), with the
+quadratic Plucker relations as the projective Grassmannian equations
+\cite{griffithsHarris1978}.
 The source disagreement score \(\rho(W)\) is required to be nonnegative and
 invariant under the public Plucker quotient. The Plucker metric is defined only
 on the admissible projective chart, and its distance must be nonnegative and
@@ -33,13 +55,28 @@ frame-quotient invariant. Public-shadow respect says that equality of the
 public Plucker shadow determines the same committed cochain, plane shadow, and
 received word along this projection path.
 
-The Plucker-to-cochain stage carries the local-syndrome interface. A concrete
-encoder sends valid Plucker frame data to a well-formed cochain commitment
-payload with the expected edge count. Syndrome adequacy then states that a
-well-formed committed cochain \(c\) with vanishing local syndrome
-\(\sigma(c)=0\) is a global-section candidate for the chosen sheaf. In the
-concrete bridge, the local syndrome is the commitment-sum witness; global
-candidates have zero commitment sum.
+The Plucker-to-cochain stage carries the local-syndrome interface and consumes
+the actual cochain commitment layer of Section~5. Its target is not an abstract
+stand-in for a cochain; it is the existing committed payload
+\[
+  (q,n,c,\tau)
+\]
+with supported modulus, declared edge count, edge values, and topology hash.
+A concrete encoder may send valid Plucker frame data to such a well-formed
+payload with the expected edge count, but the storage-native statement is
+relational: an observed or proof-carrying cochain commitment \(c\) realizes the
+public Plucker shadow. This is the boundary formalized by the public-binding
+surface: the chain/storage layer accepts the actual commitment payload, while
+the proximity proof supplies the statement that this payload realizes the
+Plucker shadow.
+
+Syndrome adequacy then states that a well-formed committed cochain \(c\) with
+vanishing local syndrome \(\sigma(c)=0\) is a global-section candidate for the
+chosen sheaf. In the concrete bridge, the local syndrome is the
+commitment-sum witness; global candidates have zero commitment sum. The point
+is that the proximity proof passes through real cochain commitments and their
+well-formedness/topology-binding interface, not through a separate synthetic
+cochain carrier.
 
 The cochain-to-plane and plane-to-RS stages carry semantic-alignment and
 non-collapse conditions. Semantic alignment requires valid frames, the plane
@@ -53,7 +90,27 @@ through the committed cochain, to the final Reed--Solomon received word.
 
 The proximity endpoint is stated over the paper-style alphabet shape
 \(C \subseteq (\F^s)^n\). The canonical \HE{} evaluation is the ordinary
-Reed--Solomon slice at width \(s = 1\).
+Reed--Solomon slice at width \(s = 1\), using the standard polynomial
+evaluation-code viewpoint of Reed--Solomon codes \cite{reedSolomon1960}.
+The concrete endpoint used by the Lean surface fixes
+\[
+  \F=\mathbb Z/12289\mathbb Z,\qquad n=4096,\qquad k=1024,
+\]
+so the rate is \(1/4\). The evaluation domain is a certified smooth power
+domain: the chosen generator has order \(12288\), and cubing it gives an
+element of order \(4096\). Hence the evaluation points are
+\[
+  1,\alpha,\alpha^2,\ldots,\alpha^{4095},
+\]
+with \(\alpha^{4096}=1\) and no earlier repetition. The canonical radius used
+for the below-Johnson comparison is the absolute Hamming radius
+\[
+  2047.
+\]
+Lean proves the field arithmetic, domain cardinality, smoothness,
+evaluation-point compatibility, and absolute-radius normalization for this
+endpoint; the deep list-decoding and MCA estimates enter only as cited
+code-theoretic theorem slots.
 
 \subsection{Mutual Correlated Agreement}
 
@@ -87,6 +144,11 @@ through \texttt{CanonicalRS.CitedBounds} as named theorem constants: the
 Johnson list-decoding bound, the count and fractional MCA bounds, and the
 paper Definition~4.3 width-one MCA bound. Lean proves the endpoint plumbing,
 the \(s=1\) equivalence, and the specialization to projection-induced lines.
+The list-decoding background is the usual Reed--Solomon list-decoding theory,
+for example Guruswami--Sudan and its standard formulations
+\cite{guruswamiSudan1999,guruswami2004listDecoding}; the project-specific MCA
+input is the cited Proximity Prize theorem boundary
+\cite{proximityPrize2026}.
 
 \subsection{Corollary}
 

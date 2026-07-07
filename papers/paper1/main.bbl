@@ -1,8 +1,73 @@
-\begin{thebibliography}{Hel19}
+\begin{thebibliography}{{Pro}26}
+
+\bibitem[AB26]{ahmanBauer2026oracle}
+Danel Ahman and Andrej Bauer.
+\newblock Sheaves as oracle computations.
+\newblock {\em arXiv preprint}, 2026.
+
+\bibitem[GH78]{griffithsHarris1978}
+Phillip Griffiths and Joseph Harris.
+\newblock {\em Principles of Algebraic Geometry}.
+\newblock John Wiley \& Sons, 1978.
+
+\bibitem[GS99]{guruswamiSudan1999}
+Venkatesan Guruswami and Madhu Sudan.
+\newblock Improved decoding of reed--solomon and algebraic-geometric codes.
+\newblock {\em IEEE Transactions on Information Theory}, 45(6):1757--1767,
+  1999.
+
+\bibitem[Gur04]{guruswami2004listDecoding}
+Venkatesan Guruswami.
+\newblock {\em List Decoding of Error-Correcting Codes}, volume 3282 of {\em
+  Lecture Notes in Computer Science}.
+\newblock Springer, 2004.
 
 \bibitem[Hel19]{helfer2019fol}
 Adam Helfer.
 \newblock First-order homotopical logic.
 \newblock {\em arXiv preprint}, 2019.
+
+\bibitem[HG18]{hansenGhrist2018sheaves}
+Jakob Hansen and Robert Ghrist.
+\newblock Toward a spectral theory of cellular sheaves.
+\newblock {\em arXiv preprint}, 2018.
+
+\bibitem[Ino26]{inoue2026cryptographicSheaves}
+Takao Inou{\'e}.
+\newblock Grothendieck topologies and sheaf-theoretic foundations of
+  cryptographic security: Attacker models and {$\Sigma$}-protocols as the first
+  step.
+\newblock {\em arXiv preprint}, 2026.
+
+\bibitem[LM94]{macLaneMoerdijk1994}
+Saunders~Mac Lane and Ieke Moerdijk.
+\newblock {\em Sheaves in Geometry and Logic: A First Introduction to Topos
+  Theory}.
+\newblock Universitext. Springer, 1994.
+
+\bibitem[{Pro}26]{proximityPrize2026}
+{Proximity Prize authors}.
+\newblock Open problems in list decoding and correlated agreement, 2026.
+\newblock Working citation placeholder; replace with full author metadata
+  before submission.
+
+\bibitem[RS60]{reedSolomon1960}
+Irving~S. Reed and Gustave Solomon.
+\newblock Polynomial codes over certain finite fields.
+\newblock {\em Journal of the Society for Industrial and Applied Mathematics},
+  8(2):300--304, 1960.
+
+\bibitem[SKdS25]{higherCategoricalCryptoeconomics}
+Melanie Swan, Takashi Kido, and Renato~P. dos Santos.
+\newblock Higher categorical cryptoeconomics: {HoTT} blockchains, petri net
+  computad ledgers, coregulator {DAOs}, and cohomology {ZKPs}, 2025.
+\newblock Working citation; author affiliations listed in project notes as
+  University College London, Teikyo University, and academicum.ai. Replace with
+  venue metadata before submission.
+
+\bibitem[Tsi80]{tsirelson1980bell}
+Boris~S. Tsirelson.
+\newblock Quantum generalizations of bell's inequality.
+\newblock {\em Letters in Mathematical Physics}, 4:93--100, 1980.
 
 \end{thebibliography}

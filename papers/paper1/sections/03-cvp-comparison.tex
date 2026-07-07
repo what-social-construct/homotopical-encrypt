@@ -4,20 +4,100 @@ CVP asks for a closest vector in an explicitly presented lattice. HCP asks for
 a harmonic cochain in the operative Hodge kernel, and in the \HE{} model that
 kernel is not explicitly presented by public data.
 
+\subsection{Known-Lattice CVP Surface}
+
+An explicit-lattice CVP instance consists of a generator matrix \(B\) and a
+target vector \(t\). The presented lattice is
+\[
+  \Lambda_B=\{Bx:x\in R^n\}.
+\]
+A correct CVP answer is a vector \(v\in\Lambda_B\) such that
+\[
+  \dist(t,v)\le \dist(t,w)
+  \qquad
+  \text{for every }w\in\Lambda_B.
+\]
+This is the separation between the known-lattice interface and the
+hidden-operator interface: a CVP oracle receives \(B\) and \(t\), while an HCP
+solver sees only the public Hodge/cochain data unless extra hidden-operator
+information is supplied.
+
 \subsection{Reduction Direction}
 
+The formalization separates two ingredients. First, for every presented
+lattice \(\Lambda_B=\image(B)\), there is a matrix \(\Delta\) whose kernel is
+exactly \(\image(B)\). Thus a Hodge solver that is sound for the presented
+operator returns a vector in the presented lattice. Second, when the solver is
+assumed to return the closest harmonic cochain, that vector is a genuine CVP
+solution. The paper states the combined closest-vector form, while the Lean
+surface keeps the kernel/range construction and the closestness predicate as
+separate theorem surfaces.
+
 \begin{proposition}[HCP solver exposes known-lattice CVP]\label{prop:hcp-to-cvp}
-  In the formal model, a solver that recovers harmonic components for every
-  presented Hodge operator induces a solver for the corresponding explicit
-  closest-vector problem on the harmonic lattice.
+  In the formal model, a solver that recovers closest harmonic components for
+  every presented Hodge operator induces a solver for the corresponding
+  explicit closest-vector problem on the harmonic lattice.
 \end{proposition}
 
-This is the direction formalized in Lean by the Hodge/CVP reduction surface:
-once the hidden operator data has been fixed or presented, the closest harmonic
-cochain problem becomes a CVP-style problem on \(\ker(\Delta)\). Thus CVP is a
-known-lattice shadow of the Hodge recovery problem.
+\begin{proof}
+  Let \(B\) be an explicit generator matrix for a lattice
+  \[
+    \Lambda_B=\{Bx:x\in R^n\}\subseteq R^n
+  \]
+  and let \(t\in R^n\) be the CVP target. We first show the following
+  linear-algebra fact: there is a matrix \(\Delta\) with
+  \[
+    \ker(\Delta)=\image(B)=\Lambda_B .
+  \]
+  Indeed, let \(V=\image(B)\). Since we are working over a field, choose a
+  complement \(W\) with \(R^n=V\oplus W\). Let \(P:R^n\to R^n\) be the
+  projection onto \(W\) along \(V\). Then \(\ker P=V\). Taking \(\Delta\) to be
+  the matrix of \(P\) gives the required operator.
+
+  Now present \(\Delta\) and \(t\) to the Hodge solver. A closest harmonic
+  solver returns a vector \(h\in\ker(\Delta)\) minimizing \(\dist(t,h)\) among
+  vectors in \(\ker(\Delta)\). Since \(\ker(\Delta)=\Lambda_B\), this \(h\) is
+  exactly a closest vector in the explicit lattice \(\Lambda_B\). Thus the
+  presented-operator Hodge solver induces a CVP solver for the explicit
+  lattice instance \((B,t)\).
+\end{proof}
+
+Once the hidden operator data has been fixed or presented, the closest harmonic
+cochain problem is precisely a CVP-style problem on \(\ker(\Delta)\). Thus CVP
+is a known-lattice shadow of the Hodge recovery problem.
+
+\begin{proposition}[Projection-model Hodge recovery is CVP-shaped]\label{prop:hodge-projection-is-cvp}
+  Fix a hidden harmonic subspace \(W\subseteq R^n\) with orthogonal projection
+  \(P_W\), and let \(\Delta_W=I-P_W\). A cochain \(h\) is
+  \(\Delta_W\)-harmonic exactly when \(h\in W\). Therefore, if \(h\) is
+  harmonic and closest to \(b\) among all harmonic cochains, then \(h\) is the
+  CVP solution for the target \(b\) in the lattice/subspace \(W\).
+\end{proposition}
+
+\begin{proof}
+  In the projection model,
+  \[
+    \Delta_W b=(I-P_W)b,
+  \]
+  equivalently the projection of \(b\) to \(W^\perp\). Hence
+  \[
+    \Delta_W h=0
+    \quad\Longleftrightarrow\quad
+    h\in W.
+  \]
+  The remaining statement is definitional: a Hodge/CVP solution is precisely a
+  vector that is \(\Delta\)-harmonic and minimizes \(\dist(b,-)\) among all
+  \(\Delta\)-harmonic vectors.
+\end{proof}
 
 \subsection{Oracle Insufficiency}
+
+The strictness direction uses a different contract. A public Hodge solver sees
+the public cochain and may call an explicit-lattice CVP oracle, but it is not
+given the hidden operator. Soundness asks that the solver's output be harmonic
+for every operative hidden \(\Delta\). Exactness on already-harmonic inputs
+asks that, if the public cochain \(b\) is already harmonic for the operative
+\(\Delta\), the solver return \(b\) unchanged.
 
 \begin{proposition}[Known-lattice CVP oracle insufficiency]\label{prop:cvp-insufficient}
   In the hidden-operator model, an oracle for explicit known-lattice CVP does
@@ -25,10 +105,62 @@ known-lattice shadow of the Hodge recovery problem.
   such an oracle does not uniformly solve HCP from public data alone.
 \end{proposition}
 
+\begin{proof}
+  Assume \(\dim R^n\ge 2\), and choose an index \(i\). Let
+  \[
+    b=e_i,\qquad
+    \Delta_1=0,\qquad
+    \Delta_2=\operatorname{diag}(1,0,\ldots,0),
+  \]
+  where the nonzero diagonal entry of \(\Delta_2\) is placed at \(i\). Then
+  \[
+    \Delta_1 b=0,
+    \qquad
+    \Delta_2 b=b\ne 0.
+  \]
+  Thus \(b\) is harmonic for \(\Delta_1\) but not harmonic for
+  \(\Delta_2\). If the public projection is lossy enough to identify
+  \(\Delta_1\) and \(\Delta_2\), the same public cochain \(b\) is compatible
+  with two hidden Hodge operators that disagree about whether \(b\) lies in the
+  harmonic kernel.
+
+  Now suppose, for contradiction, that there were a public-data-only Hodge
+  solver \(S\) which may call a correct explicit-lattice CVP oracle \(O\), and
+  which is uniformly sound and exact on already-harmonic inputs. Since \(b\) is
+  harmonic for \(\Delta_1\), exactness forces
+  \[
+    S(O,b)=b.
+  \]
+  But soundness for the hidden operator \(\Delta_2\) forces
+  \[
+    \Delta_2 S(O,b)=0.
+  \]
+  Combining the two equalities gives \(\Delta_2 b=0\), contradicting the
+  construction of \(b\). Hence no such public-data-only solver exists, even
+  assuming the availability of a correct oracle for explicitly presented CVP
+  instances.
+\end{proof}
+
 The obstruction is kernel ambiguity: the same public observation may be
 compatible with multiple hidden operators whose harmonic kernels differ. A CVP
 oracle can solve a closest-vector problem after the lattice is presented; it
 does not select which hidden kernel public data was meant to present.
+
+\begin{proposition}[Concrete public ambiguity]\label{prop:constant-public-ambiguity}
+  In every dimension at least two, the constant public projection is
+  public-compatible Hodge ambiguous, hence kernel-ambiguous and lossy.
+\end{proposition}
+
+\begin{proof}
+  Use the same witnesses as in the proof of
+  \cref{prop:cvp-insufficient}: \(b=e_i\), \(\Delta_1=0\), and
+  \(\Delta_2=\operatorname{diag}(1,0,\ldots,0)\). The constant projection sends
+  every hidden operator to the same public value, so \(\Delta_1\) and
+  \(\Delta_2\) are publicly equivalent. Since \(b\) is harmonic for
+  \(\Delta_1\) and not for \(\Delta_2\), this gives public-compatible Hodge
+  ambiguity. The implications of \cref{prop:ambiguity-hierarchy} then give
+  kernel ambiguity and lossiness.
+\end{proof}
 
 \subsection{Structural Comparison}
 

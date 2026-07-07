@@ -28,7 +28,7 @@ samples have the form `b = h + e`, where `h ∈ ker(Δ)` is the harmonic cochain
 and `e ∈ im(δ) ⊕ im(δ*)` is Hodge-structured noise. The public data does not
 determine a unique `Δ` or `ker(Δ)`.
 
-The proximity construction is then the verifier-facing companion theorem:
+The proximity construction is then the verifier-facing projection theorem:
 
 ```text
 accepted hidden/geometric state
@@ -180,6 +180,9 @@ Lean anchors:
 - `Axioms/Heyting.lean`
 - `Axioms/OracleModality.lean`
 - `Axioms/SheafCoherence.lean`
+- `Axioms/SpectralBounds.lean`
+- `Gates/Spectral.lean`
+- `Tsirelson.lean`
 - `Axioms/CochainCommitment/*`
 - `docs/HARDNESS_HELPER_DEPENDENCY_MAP.md`
 
@@ -206,6 +209,11 @@ by the verifier.
 Explain the role of the `Axioms/*` folder early: foundational cochain/Hodge
 assumptions, fibration and homotopy-class interfaces, Heyting/oracle semantics,
 sheaf-coherence/spectral interfaces, and cochain-commitment assumptions.
+Spectral admissibility belongs here as a mathematical public-judgment surface:
+`Axioms/SpectralBounds.lean` and `Tsirelson.lean` record the theorem-facing
+spectral/Tsirelson predicates used by HCP and public oracle judgments, while
+`Gates/Spectral.lean` packages the corresponding object-local admissibility
+wrapper. Their protocol use as Proof-of-Value policy is deferred to Paper 2.
 
 ### 5. Public Artifact Stack And Lossy Projection
 
@@ -403,6 +411,8 @@ Expected scope:
 - Hidden-kernel/operator ambiguity and CVP comparison.
 - Helfer-style public equality/classifier semantics.
 - Axiomatic public/private boundary.
+- Spectral/Tsirelson public judgment interfaces as mathematical axiom surfaces
+  and object-local admissibility wrappers, excluding Proof-of-Value policy.
 - Cochain commitment construction and public-shadow interface.
 - Lossy public-shadow/projection framework.
 - Certified projection chain to a Reed-Solomon/MCA endpoint.
@@ -414,6 +424,9 @@ Primary Lean modules:
 - `Hardness.lean`
 - `Laplacian/*`
 - `Axioms/*`
+- `Axioms/SpectralBounds.lean`
+- `Gates/Spectral.lean`
+- `Tsirelson.lean`
 - `Axioms/CochainCommitment/*`
 - `TCB/*`
 - `Proximity/*`
@@ -439,6 +452,9 @@ Expected scope:
 - Runtime trust boundaries.
 - Oracle/worker/attestation model.
 - Consensus and Proof of Value.
+- Coregulator predict/observe/update control loop.
+- Ledger/state-transition conservation and key-image monotonicity.
+- Runtime homotopy refinement/parity against the Lean semantic classifier.
 - Vertra chain architecture.
 - Rust implementation boundary.
 
@@ -446,6 +462,9 @@ Primary Lean/docs surfaces:
 
 - `TCB/*`
 - `Gates/*`
+- `Axioms/Coregulator.lean`
+- `Axioms/Ledger.lean`
+- `Axioms/PythonHomotopyRefinement.lean`
 - `Consensus/*`
 - `Chain.lean`
 - `docs/TRUST_BOUNDARIES.md`

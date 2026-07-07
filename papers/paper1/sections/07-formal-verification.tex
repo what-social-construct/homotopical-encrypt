@@ -29,7 +29,8 @@ The formalization is split by theorem surface.
     observation boundaries, SNARK specialization, witness verification, and
     runtime-owned obligations.
   \item \lean{Chain} contains the chain-level transaction, block, ledger, and
-    acceptance predicates that consume these surfaces in the sequel's
+    acceptance predicates that consume these surfaces in the subsequent
+    protocol paper's
     protocol setting.
 \end{enumerate}
 
@@ -37,15 +38,32 @@ The formalization is split by theorem surface.
 
 The core correspondence is:
 \begin{description}[leftmargin=2.6em,style=nextline]
-  \item[HCP hidden-kernel ambiguity.]
+  \item[HCP hidden-operator vocabulary.]
+    \lean{Hardness.MatrixIsHarmonic}, \lean{Hardness.PublicProjection},
+    \lean{Hardness.HiddenOperatorFiber}, and
     \lean{Hardness.KernelAmbiguous};
-    Lean-proved surface.
-  \item[Lossy public projection.]
-    \lean{Hardness.LossyPublicProjection};
-    Lean-proved implication.
-  \item[Hodge projection as CVP.]
+    Lean-defined surface.
+  \item[Hodge decomposition.]
+    \lean{Hardness.Hodge_Decomposition_Theorem};
+    Lean-proved theorem surface for harmonic/exact/coexact decomposition.
+  \item[Ambiguity hierarchy.]
+    \lean{Hardness.kernelAmbiguous_implies_lossy},
+    \lean{Hardness.kernelAmbiguous_of_publicCompatibleHodgeAmbiguity}, and
+    \lean{Hardness.Hodge_Ambiguity};
+    Lean-proved.
+  \item[Hodge/CVP reduction.]
+    \lean{Hardness.exists_matrix_ker_eq_range},
+    \lean{Hardness.Hodge_Hardness_Reduction_Proof}, and
     \lean{Hardness.Hodge_Projection_Is_CVP};
     Lean-proved.
+  \item[Known-lattice CVP oracle insufficiency.]
+    \lean{Hardness.no_public_solver_on_ambiguous_input} and
+    \lean{Hardness.CVP_Oracle_Insufficient_For_Public_Hodge_Solving};
+    Lean-proved hidden-operator separation.
+  \item[Hardness fibration semantics.]
+    \lean{Hardness.copy_equivalent_thm} and
+    \lean{Hardness.FibrationCopy_is_Grothendieck};
+    Lean-proved categorical interface.
   \item[Exact structural preconditions.]
     \lean{Gates.Exact} and
     \lean{Gates.structural_preconditions_of_sheaf_exact_gates};
