@@ -1,4 +1,4 @@
-\section{Reed--Solomon Projection And MCA}
+\section{Reed--Solomon Projection And MCA}\label{sec:rs-mca-projection}
 
 The concrete projection chain belongs here because its endpoint is the
 Reed--Solomon received-word surface and the mutual-correlated-agreement theorem.
@@ -26,29 +26,28 @@ hidden/geometric object has already been accepted.
 \subsection{Projection-Stage Gates}
 
 The source and Plucker stages carry metric and public-shadow invariants.
-\texttt{SourceMetricGate} records nonnegativity and quotient-invariance of the
-source disagreement measure. \texttt{PluckerMetricGate} records the admissible
-chart, projective-distance, valid-frame, nonnegativity, and quotient-invariance
-conditions. \texttt{PublicShadowRespectGate} says that equality of the public
-shadow determines the same committed cochain, plane shadow, and received word
-along this projection path.
+The source disagreement score \(\rho(W)\) is required to be nonnegative and
+invariant under the public Plucker quotient. The Plucker metric is defined only
+on the admissible projective chart, and its distance must be nonnegative and
+frame-quotient invariant. Public-shadow respect says that equality of the
+public Plucker shadow determines the same committed cochain, plane shadow, and
+received word along this projection path.
 
 The Plucker-to-cochain stage carries the local-syndrome interface. A concrete
-\texttt{PayloadEncoder} sends valid Plucker frame data to a well-formed
-cochain commitment payload with the expected edge count. The
-\texttt{SyndromeAdequacyGate} then states that a well-formed committed cochain
-with zero local syndrome is a global-section candidate for the chosen sheaf.
-In the concrete bridge, the local syndrome is the commitment-sum witness; the
-Lean theorem records that global candidates have zero commitment sum.
+encoder sends valid Plucker frame data to a well-formed cochain commitment
+payload with the expected edge count. Syndrome adequacy then states that a
+well-formed committed cochain \(c\) with vanishing local syndrome
+\(\sigma(c)=0\) is a global-section candidate for the chosen sheaf. In the
+concrete bridge, the local syndrome is the commitment-sum witness; global
+candidates have zero commitment sum.
 
 The cochain-to-plane and plane-to-RS stages carry semantic-alignment and
-non-collapse conditions. \texttt{SemanticAlignmentGate} requires the valid
-frames, plane shadow, and received word to agree with the extraction maps.
-\texttt{PlaneExtractionContext.Aligned} records the cochain well-formedness,
-expected edge count, and selected-index bounds needed for plane extraction.
-The far-region gates \texttt{PluckerToCochainNonCollapseGate},
-\texttt{CochainToRSFarGate}, and \texttt{FarGatePipeline} provide the
-calibrated non-collapse evidence consumed by the final RS/MCA corollary.
+non-collapse conditions. Semantic alignment requires valid frames, the plane
+shadow, and the received word to agree with the extraction maps. Plane
+extraction records the cochain well-formedness, expected edge count, and
+selected-index bounds needed to form the two-coordinate shadow. The far-region
+conditions assert calibrated non-collapse from the Plucker source region,
+through the committed cochain, to the final Reed--Solomon received word.
 
 \subsection{Canonical Reed--Solomon Endpoint}
 

@@ -75,9 +75,8 @@ operative Hodge--Laplacian, or the harmonic kernel.
   list length, and the edge list is nonempty.
 \end{definition}
 
-The security interface for this commitment layer is
-\texttt{CochainCommitmentAxioms}. It contains binding, hiding, homomorphic
-addition, homomorphic scalar multiplication, topology binding, and
+The security interface for this commitment layer consists of binding, hiding,
+homomorphic addition, homomorphic scalar multiplication, topology binding, and
 partial-opening soundness. The blinded-commitment, vector-commitment, and
 cohomological-MAC interfaces are separate axiom records rather than consequences
 silently bundled into the payload shape.
@@ -94,10 +93,9 @@ payload is well formed whenever the declared edge count is positive.
 
 Topology compatibility is a separate public invariant. Two committed cochains
 can be aggregated only when their moduli, declared edge counts, and topology
-hashes agree. This is the Lean predicate \texttt{AddCompatible}; the weaker
-same-topology predicate records equality of topology hashes alone. The
-cryptographic binding and topology-binding claims are supplied by
-\texttt{CochainCommitmentAxioms}, not by the raw payload record.
+hashes agree. The weaker same-topology relation records equality of topology
+hashes alone. Cryptographic binding and topology-binding claims are supplied by
+the commitment-security axioms, not by the raw payload record.
 
 At the artifact level, Lean records a hashed committed cochain as a public
 cochain payload together with digest data and a binding predicate. A

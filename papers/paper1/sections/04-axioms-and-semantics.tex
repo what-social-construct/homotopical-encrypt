@@ -10,18 +10,73 @@ The semantic layer is motivated by Helfer's first-order homotopical logic
 \cite{helfer2019fol}. In this paper, the corresponding Lean files are used as
 a formalized interface for the semantic structure needed by \HE{}, not as a
 claim that every external theorem from Helfer's paper has been reproved.
+We use the usual fibrational notation
+\[
+  p:E\longrightarrow B,
+  \qquad
+  E_b=p^{-1}(b)
+\]
+for a total space of hidden data over a base of public or contextual data.
+When \(x,y\in E_b\), equality in the semantic layer is interpreted through a
+path object rather than by strict equality in the ambient presentation. We
+write
+\[
+  x\simeq_b y
+  \quad\Longleftrightarrow\quad
+  \Path_{E_b}(x,y)\text{ is inhabited}.
+\]
+For a dependent family \(F:E\to\mathsf{Type}\), a path
+\(\gamma\in\Path_E(x,y)\) supplies the transport map
+\[
+  \mathsf{transport}_{\gamma}:F_x\longrightarrow F_y.
+\]
+Thus the primitive semantic data are fibers, paths, and transport along paths.
+The cryptographic objects introduced later live over this interface; they do
+not replace it with byte-level equality.
 
 \subsection{Fibrational Identity Objects}
 
-Public equality is not strict equality of hidden representatives. It is mediated
-by public classifiers, path data, and equivalence of the observable structure.
-This is the semantic source of the hidden-operator model used in HCP.
+Let \(\Delta_A:A\to A\times A\) denote the diagonal. Following the
+path/diagonal semantics, the identity object over a pair \((x,y)\) has fiber
+\(\Path_A(x,y)\). We therefore regard \(x\) and \(y\) as equal for the
+first-order homotopical semantics exactly when this fiber is inhabited:
+\[
+  x\simeq_A y
+  \quad\Longleftrightarrow\quad
+  \Path_A(x,y)\neq\varnothing .
+\]
+This is the semantic source of the hidden-operator model used in HCP: the
+verifier may receive evidence that two representatives lie in the same
+homotopical identity class without receiving the representative or the path
+witness itself.
 
 \subsection{Homotopy Classes}
 
-Public shadows may identify multiple hidden representatives while preserving
-the invariants required by a verifier. At this stage the shadow is only a
-public classifier or fingerprint; finite-code projection is introduced later.
+Let \(A\) be a type of hidden representatives and let \(P\) be a type of public
+class data. A public classifier is a map
+\[
+  \pi:A\longrightarrow P.
+\]
+It determines public fibers
+\[
+  A_p=\pi^{-1}(p)=\{x\in A:\pi(x)=p\}
+\]
+and a public equivalence relation
+\[
+  x\equiv_{\pi}y
+  \quad\Longleftrightarrow\quad
+  \pi(x)=\pi(y).
+\]
+The classifier is path-respecting when
+\[
+  x\simeq_A y\Longrightarrow x\equiv_{\pi}y,
+\]
+and non-faithful when some public fiber contains distinct hidden
+representatives. A hidden class-membership witness is a path
+\(\gamma\in\Path_A(x,y)\); its public shadow is only the equality
+\(\pi(x)=\pi(y)\). At this stage the shadow is only a classifier or
+fingerprint. The finite-code projection and Reed--Solomon/MCA endpoint are
+introduced later in \cref{sec:rs-mca-projection}.
 
 \subsection{Axiom Surfaces}
 
@@ -37,14 +92,22 @@ modules. The relevant early interfaces are:
 
 \subsection{Exact Structural Invariants}
 
-The exact gates used by the Lean development are not a separate source of
-structure. They package the same foundational and sheaf-coherence hypotheses
-at the point where an object is admitted. In Lean, \texttt{ExactGateBundle} is
-the foundation interface and \texttt{SheafExactGateBundle} is the
-sheaf-coherence interface. The theorem
-\texttt{structural\_preconditions\_of\_sheaf\_exact\_gates} extracts the two
-structural consequences used later: the cochain differential squares to zero
-and the Hodge Laplacian is the one induced by the coboundary data.
+The exact structural invariants are not a separate source of geometry. They
+package the same foundational and sheaf-coherence hypotheses at the point
+where an object is admitted. For a cochain complex \(C^\bullet\), the accepted
+surface supplies a differential
+\[
+  d^k:C^k\longrightarrow C^{k+1}
+\]
+with \(d^{k+1}d^k=0\), together with an adjoint \(d^\ast\) and the induced
+Hodge Laplacian
+\[
+  \Delta=d^\ast d+dd^\ast.
+\]
+In the sheaf setting, the corresponding coherence assumptions assert that
+restriction maps, local data, and gluing data are compatible with this
+cochain/Hodge structure. The Lean theorem surface extracts precisely these
+structural consequences for later use.
 
 \begin{proposition}[Exact structural preconditions]\label{prop:exact-structural-preconditions}
   An accepted sheaf-coherence surface supplies
@@ -60,18 +123,23 @@ and the Hodge Laplacian is the one induced by the coboundary data.
 
 The public judgment layer is also fixed here, because HCP uses public
 classifiers and oracle-visible predicates before any finite-code projection is
-introduced. Lean separates an \texttt{OracleQuery} from transaction cochain
-commitments: its \texttt{id\_commit} is an identity hash obtained from the
-public Hodge projection and quantization path, not a cochain commitment
-payload.
+introduced. We use a three-valued Heyting surface
+\[
+  \Omega_3=\{\bot,\, ?,\, \top\},
+  \qquad
+  \bot< ? <\top,
+\]
+with the induced meet, join, and implication operations. Oracle-visible
+predicates such as vertex compatibility, Betti-number compatibility, public
+identity-hash compatibility, and spectral compatibility are mapped into
+\(\Omega_3\), and the acceptance predicate is formed in this public logic.
 
-The oracle predicate checks public compatibility data such as the vertex
-identifier, Betti number, identity hash, and Tsirelson-style spectral judgment.
-The induced judgment is then mapped into the three-valued Heyting surface used
-by the acceptance predicate. The stability axiom \texttt{OracleEta2} records
-that equal public identity inputs produce the same identity hash; it is a
-determinism condition for public identity observations, not a uniqueness or
-binding theorem for cochain commitments.
+The identity hash used by the oracle surface is an observation obtained from
+the public Hodge projection and quantization path. It is not a cochain
+commitment payload. The corresponding stability assumption says that equal
+public identity inputs give the same identity hash; it is a determinism
+condition for public identity observations, not a uniqueness or binding theorem
+for cochain commitments.
 
 This modular split is part of the mathematical statement. It prevents runtime
 facts, cryptographic assumptions, public classifiers, and Hodge-theoretic
