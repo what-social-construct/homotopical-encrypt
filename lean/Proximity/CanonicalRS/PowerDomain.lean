@@ -4,6 +4,9 @@ import Mathlib.GroupTheory.OrderOfElement
 /-
   Certified power-domain construction for the canonical RS regime.
 
+  Paper correspondence:
+  - Paper 1 Section 6: canonical RS evaluation domain construction.
+
   This file is the algebraic boundary around multiplicative-order facts. A full
   generator of `ZMod 12289` has order `12288`; cubing it gives the order-`4096`
   root used for the smooth power-domain evaluation points.

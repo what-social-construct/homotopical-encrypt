@@ -3,6 +3,10 @@ import Laplacian.Projection
 /-
   Hodge-facing Laplacian interface.
 
+  Paper correspondence:
+  - Paper 1 Section 2: HCP harmonic projection and residual model.
+  - Paper 1 Section 3: Hodge projection as CVP comparison surface.
+
   `Laplacian.Projection` defines the concrete Grassmannian model
   `Δ_W = I - P_W`. This file names the Hodge/proximity-facing operations
   derived from that model:

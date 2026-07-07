@@ -1,6 +1,11 @@
 /-
 Chain Axiomatization (Swan Table 1 #9 — Goncharov)
 
+Paper correspondence:
+- Paper 2: chain architecture, consensus consumption, and proof-of-value
+  protocol setting.
+- Paper 1 Section 7: mentioned only as a formalization boundary/sequel surface.
+
 First-order axiomatization of the homotopical-encrypt blockchain.
 Goncharov axiomatizes "select longest chain" in first-order logic;
 we axiomatize Proof-of-Value (PoV) consensus where the SPECTRAL GAP

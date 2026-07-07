@@ -1,5 +1,12 @@
 import Laplacian.Projection
 
+/-
+  Paper correspondence:
+  - Paper 1 Section 2: public-sample likelihood intuition for hidden Hodge
+    operators.
+  - Paper 1 Section 3: adversarial comparison with known-operator recovery.
+-/
+
 set_option linter.mathlibStandardSet false
 set_option linter.unusedSectionVars false
 

@@ -3,6 +3,10 @@ import Mathlib
 /-
   Helfer-oriented first-order homotopical logic interface.
 
+  Paper correspondence:
+  - Paper 1 Section 4: fibrational semantics and public equality semantics.
+  - Paper 1 Section 7: Lean theorem-surface correspondence.
+
   Provenance/scope label:
   this module is a Lean interface inspired by Helfer-style first-order
   homotopical logic, especially path/diagonal semantics and fibration-style

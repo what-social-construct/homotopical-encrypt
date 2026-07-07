@@ -3,18 +3,83 @@
 \subsection{Lean Formalization}
 
 The Lean development records the mathematical predicates, reductions,
-projection stages, gate certificates, and trusted theorem boundaries used by
+projection stages, local certificates, and trusted theorem boundaries used by
 the paper. The proof is not a proof of the Rust runtime; runtime parsing,
 canonical encodings, domain separation, and proof verification are handled by a
 separate TCB boundary.
 
 \subsection{Repository Structure}
 
-\todo{Summarize the module split: Axioms, CVP/Hardness, Laplacian, Proximity,
-Gates, CanonicalRS, TCB, and Chain.}
+The formalization is split by theorem surface.
+\begin{enumerate}[label=(\roman*)]
+  \item \texttt{Axioms} contains the foundation, fibration, sheaf, Heyting,
+    oracle, commitment, spectral, and stage-admissibility interfaces.
+  \item \texttt{Laplacian}, \texttt{CVP}, and \texttt{Hardness} contain the
+    projection-model Hodge facts, explicit-lattice CVP comparison, public
+    projection ambiguity, and Hodge/CVP theorem surfaces.
+  \item \texttt{Gates} contains gate-facing aliases and lemmas for the exact,
+    spectral, oracle, and stage invariants stated with the corresponding
+    mathematical objects.
+  \item \texttt{Proximity} contains the Plucker shadow, cochain bridge, plane
+    projection, Reed--Solomon endpoint, projection chain, and
+    proximity-specific gate certificates.
+  \item \texttt{Proximity.CanonicalRS} contains the canonical RS endpoint,
+    bridge data, cited bounds, and MCA specialization.
+  \item \texttt{TCB} contains proof-carrying artifacts, compression boundaries,
+    observation boundaries, SNARK specialization, witness verification, and
+    runtime-owned obligations.
+  \item \texttt{Chain} contains the chain-level transaction, block, ledger, and
+    acceptance predicates that consume these surfaces in the sequel's
+    protocol setting.
+\end{enumerate}
 
 \subsection{Theorem Correspondence}
 
-\todo{Insert Lean-to-paper correspondence tables for definitions and theorems,
-with status labels: Lean-proved, cited external theorem, runtime obligation, or
-assumption boundary.}
+The core correspondence is:
+\begin{description}[leftmargin=2.6em,style=nextline]
+  \item[HCP hidden-kernel ambiguity.]
+    \texttt{Hardness.KernelAmbiguous};
+    Lean-proved surface.
+  \item[Lossy public projection.]
+    \texttt{Hardness.LossyPublicProjection};
+    Lean-proved implication.
+  \item[Hodge projection as CVP.]
+    \texttt{Hardness.Hodge\_Projection\_Is\_CVP};
+    Lean-proved.
+  \item[Exact structural preconditions.]
+    \texttt{Gates.Exact} and
+    \texttt{Gates.structural\_preconditions\_of\_sheaf\_exact\_gates};
+    alias/proved interface.
+  \item[Oracle/Heyting judgment surface.]
+    \texttt{Axioms.OracleModality};
+    assumption/interface.
+  \item[Cochain payload well-formedness.]
+    \texttt{CochainCommitmentData.WellFormed};
+    Lean-proved predicates.
+  \item[Proof-carrying artifact.]
+    \texttt{ProofCarryingCommittedCochain.WellFormed};
+    TCB boundary.
+  \item[Proximity gate certificates.]
+    \texttt{Proximity.Gates};
+    stage-local interfaces.
+  \item[Projection chain.]
+    \texttt{ProjectionChain.Chain.toEvaluationProjection};
+    Lean-proved plumbing.
+  \item[Canonical RS bridge data.]
+    \texttt{CanonicalRS.BridgeData};
+    Lean-proved endpoint facts.
+  \item[RS list/MCA bounds.]
+    \texttt{CanonicalRS.CitedBounds};
+    cited external theorem boundary.
+  \item[Canonical MCA corollary.]
+    \texttt{CanonicalRS.MCA.projectionBadChallengeFraction\_le};
+    Lean-proved from cited bounds.
+\end{description}
+
+The status labels are part of the verification claim. Lean-proved rows are
+formal consequences of the imported modules. Cited external theorem rows are
+trusted mathematical inputs from the coding-theory literature. TCB rows are
+runtime obligations about parsing, encoding, hashing, proof verification, and
+state transition. Assumption/interface rows are explicit predicates whose
+implementations or external justifications are not silently folded into the
+core HCP theorem.

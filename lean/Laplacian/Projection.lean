@@ -3,6 +3,10 @@ import Mathlib
 /-
   Projection-model Laplacian.
 
+  Paper correspondence:
+  - Paper 1 Section 2: hidden Hodge operator model.
+  - Paper 1 Section 3: explicit projection model used for CVP comparison.
+
   This file defines the concrete Grassmannian projection model
   `Δ_W = I - P_W` and the identity `Δ_W b = P_{Wᗮ} b`.
 -/

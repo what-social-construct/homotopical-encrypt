@@ -4,6 +4,10 @@ import TCB.ObservationBoundary
 /-
   Public/storage-layer binding between Plucker shadows and cochain payloads.
 
+  Paper correspondence:
+  - Paper 1 Section 6: public-shadow respect along the proximity projection.
+  - Paper 1 Section 5: observed/proof-carrying commitment payload boundary.
+
   The chain/storage layer constructs and accepts the actual
   `CochainCommitmentData` payload. Proximity should not pretend that every
   transaction commitment is definitionally produced by a Plucker encoder.

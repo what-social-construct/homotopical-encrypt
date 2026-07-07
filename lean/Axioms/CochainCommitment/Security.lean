@@ -4,6 +4,11 @@ import Axioms.Foundation
 /-
   Cochain commitment security interfaces.
 
+  Paper correspondence:
+  - Paper 1 Section 5: binding, hiding, homomorphic, topology-binding, and
+    partial-opening security interfaces.
+  - Paper 2: concrete adversary games and protocol evidence.
+
   This file contains binding/hiding/homomorphism assumptions and bridge
   theorems. The wire-facing payload lives in
   `Axioms.CochainCommitment.Payload`.

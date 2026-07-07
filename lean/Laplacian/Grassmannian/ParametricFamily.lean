@@ -3,6 +3,10 @@ import Laplacian.Grassmannian.SearchSpace
 /-
   Parametric Grassmannian families.
 
+  Paper correspondence:
+  - Paper 1 Sections 2--3: families of hidden harmonic subspaces compatible
+    with public data.
+
   This file builds the t ↦ span{u + t v} ⊕ W₀ family used to expose a
   continuum of candidate harmonic subspaces. It depends only on the search
   space file for the finite-dimensional existence lemma.

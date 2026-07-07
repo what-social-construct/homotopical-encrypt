@@ -3,6 +3,9 @@ import Proximity.Gates.Stage
 /-
   Final proximity checks for an already-orchestrated projection chain.
 
+  Paper correspondence:
+  - Paper 1 Section 6: final far/non-collapse gate and calibrated RS handoff.
+
   `ProjectionChain.Core` owns only the stage composition. This file owns the
   radius calibration, final far/non-collapse witness, and handoff to the
   generic gap/RS bridge surfaces.

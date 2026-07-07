@@ -2,10 +2,127 @@
 
 \section{Repository Dependency Graph}
 
-\todo{Include the dependency graph and build targets for the theorem surfaces
-used in the paper.}
+The Lean formalization is organized so that each paper section has a small
+number of import surfaces.
+\begin{description}[leftmargin=2.4em,style=nextline]
+  \item[HCP and CVP.]
+    \texttt{Axioms/*} feeds \texttt{Laplacian/*}, \texttt{CVP}, and
+    \texttt{Hardness}.
+  \item[Commitments and public artifacts.]
+    \texttt{Axioms.CochainCommitment/*} feeds \texttt{TCB/*} and
+    \texttt{Proximity.CochainBridge}.
+  \item[Projection chain.]
+    \texttt{Proximity.GrassmannianPlucker} feeds
+    \texttt{Proximity.PluckerCochain}, then \texttt{Proximity.CochainPlane},
+    then \texttt{Proximity.CochainReedSolomon}.
+  \item[Projection certificates.]
+    \texttt{Proximity.ProjectionChain} feeds \texttt{Proximity.Gates}, which
+    feeds \texttt{Proximity.CanonicalRS}.
+  \item[Protocol boundary.]
+    \texttt{TCB/*}, \texttt{Gates/*}, \texttt{Consensus/*}, and
+    \texttt{Chain} are the sequel-facing protocol surfaces.
+\end{description}
+
+For Paper~1, the main Lean check targets are:
+\begin{center}
+\small
+\begin{tabular}{ll}
+\texttt{lake env lean Axioms.lean} & \texttt{lake env lean Gates.lean} \\
+\texttt{lake env lean TCB.lean} & \texttt{lake env lean Hardness.lean} \\
+\texttt{lake env lean Proximity.lean}
+\end{tabular}
+\end{center}
+The full build target remains \texttt{lake build}; the smaller targets above
+are the theorem-surface checks most directly corresponding to this paper.
 
 \section{Lean/Paper Correspondence}
 
-\todo{Include tables matching Lean definitions and theorems to paper
-definitions and theorems.}
+\subsection{Definitions And Interfaces}
+
+\begin{description}[leftmargin=2.4em,style=nextline]
+  \item[HCP public observation and hidden witness.]
+    Sections 2--3; \texttt{Hardness.PublicProjection},
+    \texttt{Hardness.HiddenOperatorFiber}, and
+    \texttt{Hardness.HiddenOperatorClass}.
+  \item[Kernel ambiguity and lossy public data.]
+    Sections 2--3; \texttt{Hardness.KernelAmbiguous} and
+    \texttt{Hardness.LossyPublicProjection}.
+  \item[Explicit-lattice CVP comparison.]
+    Section 3; \texttt{CVP.CVP\_Instance}, \texttt{CVP.CVPSolution}, and
+    \texttt{CVP.CVPOracleCorrect}.
+  \item[Hodge projection model.]
+    Sections 2--3; \texttt{Laplacian.harmonicProjection},
+    \texttt{Laplacian.residual}, and \texttt{Laplacian.IsHarmonic}.
+  \item[Semantic/public equality surface.]
+    Section 4; \texttt{Axioms.HelferFOL}, \texttt{Axioms.HomotopyClass}, and
+    \texttt{Axioms.Fibration}.
+  \item[Heyting/oracle public judgment.]
+    Section 4; \texttt{Axioms.Heyting3}, \texttt{Axioms.OracleQuery},
+    \texttt{Axioms.OracleAnswer}, and \texttt{Axioms.OracleEta2}.
+  \item[Cochain commitment payload.]
+    Section 5; \texttt{Axioms.CochainCommitmentData},
+    \texttt{CochainCommitmentData.WellFormed}, and
+    \texttt{CochainCommitmentData.AddCompatible}.
+  \item[Commitment security interface.]
+    Section 5; \texttt{Axioms.CochainCommitmentAxioms}.
+  \item[Proof-carrying public artifact.]
+    Section 5; \texttt{TCB.HashedCommittedCochain} and
+    \texttt{TCB.ProofCarryingCommittedCochain}.
+  \item[Projection chain.]
+    Section 6; \texttt{ProjectionChain.Chain} and
+    \texttt{ProjectionChain.Chain.toEvaluationProjection}.
+  \item[Proximity-stage certificates.]
+    Section 6; \texttt{Proximity.Gates.SourceMetricGate},
+    \texttt{Proximity.Gates.SyndromeAdequacyGate}, and
+    \texttt{Proximity.Gates.HardGateCertificate}.
+  \item[Canonical RS/MCA endpoint.]
+    Section 6; \texttt{CanonicalRS.BridgeData}, \texttt{CanonicalRS.MCA.Line},
+    and \texttt{CanonicalRS.MCA.badChallengeFraction}.
+\end{description}
+
+\subsection{Theorems And Status}
+
+\begin{description}[leftmargin=2.4em,style=nextline]
+  \item[Kernel ambiguity implies lossy public projection.]
+    \texttt{Hardness.kernelAmbiguous\_implies\_lossy};
+    Lean-proved.
+  \item[Public-compatible Hodge ambiguity gives kernel ambiguity.]
+    \texttt{Hardness.kernelAmbiguous\_of\_publicCompatibleHodgeAmbiguity};
+    Lean-proved.
+  \item[Hodge solver exposes a known-lattice CVP surface.]
+    \texttt{Hardness.Hodge\_Hardness\_Reduction} and
+    \texttt{Hardness.Hodge\_Hardness\_Reduction\_Proof};
+    Lean-proved surface.
+  \item[Known-lattice CVP does not select the hidden operator.]
+    \texttt{Hardness.CVP\_Oracle\_Insufficient\_For\_Public\_Hodge\_Solving};
+    Lean-proved surface.
+  \item[Projection-model Hodge recovery is CVP-shaped.]
+    \texttt{Hardness.Hodge\_Projection\_Is\_CVP} and
+    \texttt{Hardness.harmonicProjection\_Is\_ProjectionHodgeCVPSolution};
+    Lean-proved.
+  \item[Exact sheaf gates supply \(d^2=0\) and Laplacian-from-coboundary.]
+    \texttt{Gates.structural\_preconditions\_of\_sheaf\_exact\_gates};
+    Lean-proved alias/interface.
+  \item[Well-formed payloads have nonempty edge data and supported modulus.]
+    \texttt{CochainCommitmentData.edge\_values\_nonempty\_of\_wellFormed} and
+    \texttt{CochainCommitmentData.modulus\_gt\_one\_of\_wellFormed};
+    Lean-proved.
+  \item[Proof-carrying artifacts expose the committed payload.]
+    \texttt{TCB.proofCarrying\_cochain\_wellFormed};
+    TCB boundary theorem.
+  \item[Projection chain composes to one evaluation projection.]
+    \texttt{ProjectionChain.Chain.toEvaluationProjection};
+    Lean-proved plumbing.
+  \item[Syndrome adequacy turns zero local syndrome into codeword/global candidate.]
+    \texttt{Proximity.Gates.SyndromeAdequacyGate.codeword\_of\_wellFormed\_zeroSyndrome};
+    stage-local interface.
+  \item[Final proximity evidence yields calibrated end-to-end readiness.]
+    \texttt{Proximity.Gates.CalibratedFinalCertificate.toCalibratedEndToEndReady};
+    Lean-proved plumbing.
+  \item[Canonical RS list/MCA bounds enter at a cited boundary.]
+    \texttt{CanonicalRS.CitedBounds.bounds};
+    cited external theorem package.
+  \item[Canonical MCA bad-challenge fraction is bounded after projection.]
+    \texttt{CanonicalRS.MCA.projectionBadChallengeFraction\_le};
+    Lean-proved from cited bounds.
+\end{description}

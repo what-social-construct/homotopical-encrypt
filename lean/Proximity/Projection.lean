@@ -3,6 +3,12 @@ import Mathlib.Data.Real.Basic
 /-
   Proximity projection vocabulary.
 
+  Paper correspondence:
+  - Paper 1 Section 6: abstract lossy projection from sheaf/cochain data to
+    code/evaluation shadows.
+  - Paper 1 Section 5: projection begins only after the public artifact stack is
+    fixed.
+
   This file is intentionally lightweight. It names the abstract projection from
   a sheaf-side received-word/cochain view to a code/evaluation shadow without
   importing the heavier hcrypt axiom modules.

@@ -4,6 +4,10 @@ import TCB.ProofCarrying
 /-
   Traceable hard-gate evidence records.
 
+  Paper correspondence:
+  - Paper 1 Section 6: proximity gate evidence boundary.
+  - Paper 2: runtime-owned evidence database, roots, and inclusion checks.
+
   The mathematical hard-gate certificate lives in `Proximity.Gates`. This file
   adds a verified-database style trace surface: a fixed-position array of
   evidence digests, a root digest, and runtime-owned binding/inclusion facts.

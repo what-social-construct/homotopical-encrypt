@@ -3,6 +3,10 @@ import TCB.ProofCarrying
 /-
   SNARK specialization of the proof-carrying artifact boundary.
 
+  Paper correspondence:
+  - Paper 1 Section 5: proof-carrying artifact boundary.
+  - Paper 2: concrete proof system and verifier implementation.
+
   A SNARK is not a core cochain object. It is a succinct certificate that a
   hidden witness satisfies a public statement about a committed object.
 -/

@@ -3,6 +3,9 @@ import Proximity.RS.ListDecoding
 /-
   Correlated agreement and mutual correlated agreement.
 
+  Paper correspondence:
+  - Paper 1 Section 6: CA/MCA paper-facing definitions.
+
   This module keeps count-based finite lemmas as proof plumbing, and exposes
   fractional/error-rate definitions for paper-facing CA/MCA statements.
 -/

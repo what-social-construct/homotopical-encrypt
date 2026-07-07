@@ -4,6 +4,9 @@ import Laplacian.Hodge
 /-
   Grassmannian proximity instance.
 
+  Paper correspondence:
+  - Paper 1 Section 6: source-side proximity instance before Plucker shadow.
+
   This is the first concrete instantiation of the generic proximity interface:
   a hidden harmonic subspace `W` determines a Laplacian `Δ_W = I - P_W`, and
   the sheaf-side disagreement of a cochain/vector `b` is the norm of its

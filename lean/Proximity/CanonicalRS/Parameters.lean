@@ -5,6 +5,9 @@ import Mathlib.Data.ZMod.Basic
 /-
   Lightweight canonical Reed-Solomon parameters for the hcrypt proximity bridge.
 
+  Paper correspondence:
+  - Paper 1 Section 6: canonical RS field, length, rate, and radius constants.
+
   This file fixes the field, length, rate, and radius constants. It deliberately
   avoids the multiplicative-generator/order proof so downstream files can import
   the parameter regime without paying for the power-domain construction.

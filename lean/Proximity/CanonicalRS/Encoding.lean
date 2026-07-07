@@ -3,6 +3,9 @@ import Proximity.CochainPlane.ReedSolomon
 
 /-
   Concrete plane-to-field encoding choices for the canonical RS regime.
+
+  Paper correspondence:
+  - Paper 1 Section 6: plane-shadow to finite-field received-word encoding.
 -/
 
 namespace Hcrypt

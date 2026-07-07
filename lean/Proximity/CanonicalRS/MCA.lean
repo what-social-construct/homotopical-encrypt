@@ -3,6 +3,10 @@ import Proximity.CanonicalRS.MCA.Line
 /-
   Concrete paper-facing MCA surface for the canonical RS endpoint.
 
+  Paper correspondence:
+  - Paper 1 Section 6: MCA bad-challenge fraction and canonical bound.
+  - Paper 1 Section 7: Lean-proved specialization from cited bounds.
+
   `CanonicalRS.MCA.Line` owns the canonical affine-line construction. This file
   owns the paper Definition 4.3 bad-challenge fraction and the MCA bound at the
   canonical RS endpoint.

@@ -4,6 +4,10 @@ import Proximity.Gates
 /-
   Canonical RS bridge certificates.
 
+  Paper correspondence:
+  - Paper 1 Section 6: RS/MCA bridge certificate packaging.
+  - Paper 1 Section 7: projection-chain theorem-surface correspondence.
+
   `BridgeData` owns the canonical endpoint and metric facts. This module owns
   the heavier projection-chain/gate certificates that consume those facts.
 -/

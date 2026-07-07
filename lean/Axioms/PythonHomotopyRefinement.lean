@@ -3,6 +3,10 @@ import Mathlib
 /-
   Future runtime-parity shim for `src/primitives/homotopy.py`.
 
+  Paper correspondence:
+  - Paper 2: runtime parity and implementation refinement surface.
+  - Paper 1 Section 4: related semantic object is `Axioms.HomotopyClass`.
+
   This file is intentionally not imported by `Axioms.lean`. The Lean-owned
   homotopy-class theory lives in `Axioms.HomotopyClass`; Python/Rust objects can
   later be checked against that theory once the runtime orchestration settles.

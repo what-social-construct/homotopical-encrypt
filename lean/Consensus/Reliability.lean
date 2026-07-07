@@ -4,6 +4,10 @@ import Mathlib.Tactic
 /-
   Reliability evidence and discount scores.
 
+  Paper correspondence:
+  - Paper 2: validator reliability and Proof-of-Value scoring.
+  - Paper 1 Section 7: sequel boundary only.
+
   Validators are automated, so reliability is not human effort. It is protocol
   behavior: assigned duties fulfilled correctly and on time, with no
   equivocation or invalid-block evidence. Reliability is a discount only.

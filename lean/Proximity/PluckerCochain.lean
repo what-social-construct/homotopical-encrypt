@@ -5,6 +5,10 @@ import Proximity.Problem
 /-
   Plucker-to-cochain proximity bridge.
 
+  Paper correspondence:
+  - Paper 1 Section 6: Plucker-to-committed-cochain/local-syndrome stage.
+  - Paper 1 Section 5: consumes the cochain commitment payload interface.
+
   This is the next projection stage after `GrassmannianPlucker`: a valid
   Plucker/exterior shadow is encoded as the committed cochain object already
   used by the storage and transaction layers, then checked by a local syndrome

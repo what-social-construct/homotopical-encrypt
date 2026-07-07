@@ -4,6 +4,12 @@ import TCB.Runtime
 /-
   Proximity-specific gate certificates.
 
+  Paper correspondence:
+  - Paper 1 Section 6: projection-stage gates only; these should not be moved
+    into the main HCP setup before the proximity section.
+  - Paper 2: runtime evidence records may consume these certificates, but the
+    protocol architecture is not developed in Paper 1.
+
   These gates name the invariants that sit between stage-local construction and
   the final RS far-region separation theorem. They are quotient-aware: collapse
   along intended directions is allowed, while far-to-near collapse is not.

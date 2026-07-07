@@ -3,6 +3,9 @@ import Proximity.Projection
 /-
   Plucker-coordinate shadow candidates.
 
+  Paper correspondence:
+  - Paper 1 Section 6: Plucker public-shadow interface.
+
   Python already has a concrete Plucker layer in `src/primitives/grassmann.py`:
   `to_plucker`, `from_plucker`, `plucker_inner_product`, and
   `plucker_distance`, built from `wedge_k` in `src/primitives/algebra.py`.

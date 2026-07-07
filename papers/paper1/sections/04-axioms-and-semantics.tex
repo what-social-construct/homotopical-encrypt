@@ -1,4 +1,8 @@
-\section{Mathematical Framework}\label{sec:mathematical-framework}
+\section{Axioms, Semantics, And Public Data}\label{sec:mathematical-framework}
+
+This section fixes the semantic and axiomatic surfaces used by the problem.
+It comes before the public artifact and commitment layer because those objects
+are only meaningful after the public/private boundary is fixed.
 
 \subsection{Fibrational Semantics}
 
@@ -16,5 +20,62 @@ This is the semantic source of the hidden-operator model used in HCP.
 \subsection{Homotopy Classes}
 
 Public shadows may identify multiple hidden representatives while preserving
-the invariants required by a verifier. The projection framework later turns
-this semantic quotienting into finite public evidence.
+the invariants required by a verifier. At this stage the shadow is only a
+public classifier or fingerprint; finite-code projection is introduced later.
+
+\subsection{Axiom Surfaces}
+
+The Lean development separates assumptions and theorem surfaces into small
+modules. The relevant early interfaces are:
+\begin{enumerate}[label=(\roman*)]
+  \item foundational cochain and Hodge assumptions;
+  \item fibration and homotopy-class interfaces;
+  \item Heyting/oracle semantics for public judgments;
+  \item sheaf-coherence and spectral interfaces;
+  \item cochain-commitment payload and security assumptions.
+\end{enumerate}
+
+\subsection{Exact Structural Invariants}
+
+The exact gates used by the Lean development are not a separate source of
+structure. They package the same foundational and sheaf-coherence hypotheses
+at the point where an object is admitted. In Lean, \texttt{ExactGateBundle} is
+the foundation interface and \texttt{SheafExactGateBundle} is the
+sheaf-coherence interface. The theorem
+\texttt{structural\_preconditions\_of\_sheaf\_exact\_gates} extracts the two
+structural consequences used later: the cochain differential squares to zero
+and the Hodge Laplacian is the one induced by the coboundary data.
+
+\begin{proposition}[Exact structural preconditions]\label{prop:exact-structural-preconditions}
+  An accepted sheaf-coherence surface supplies
+  \[
+    d^2=0
+    \qquad\text{and}\qquad
+    \Delta=d^\ast d+dd^\ast
+  \]
+  for the cochain complex under discussion.
+\end{proposition}
+
+\subsection{Heyting And Oracle Judgment Surface}
+
+The public judgment layer is also fixed here, because HCP uses public
+classifiers and oracle-visible predicates before any finite-code projection is
+introduced. Lean separates an \texttt{OracleQuery} from transaction cochain
+commitments: its \texttt{id\_commit} is an identity hash obtained from the
+public Hodge projection and quantization path, not a cochain commitment
+payload.
+
+The oracle predicate checks public compatibility data such as the vertex
+identifier, Betti number, identity hash, and Tsirelson-style spectral judgment.
+The induced judgment is then mapped into the three-valued Heyting surface used
+by the acceptance predicate. The stability axiom \texttt{OracleEta2} records
+that equal public identity inputs produce the same identity hash; it is a
+determinism condition for public identity observations, not a uniqueness or
+binding theorem for cochain commitments.
+
+This modular split is part of the mathematical statement. It prevents runtime
+facts, cryptographic assumptions, public classifiers, and Hodge-theoretic
+claims from being conflated. Exact and oracle invariants are used here as
+mathematical acceptance surfaces. Consensus composition and chain/runtime
+enforcement are recorded only at the formalization boundary; their full
+CS/protocol treatment is deferred to the sequel.

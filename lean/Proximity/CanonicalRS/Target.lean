@@ -4,6 +4,9 @@ import Proximity.RS.Target
 /-
   Target packaging for the canonical RS regime.
 
+  Paper correspondence:
+  - Paper 1 Section 6: canonical RS target and explicit theorem slots.
+
   The parameter regime is fixed here, while list-decoding and MCA bounds remain
   explicit theorem slots.
 -/

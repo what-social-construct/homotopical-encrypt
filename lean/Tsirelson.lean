@@ -1,6 +1,10 @@
 /-
 Tsirelson-bound formalization for the homotopical-encrypt Lean workspace.
 
+Paper correspondence:
+- Paper 1 Section 4: spectral/Tsirelson public judgment interface.
+- Paper 2: oracle and Proof-of-Value gate policy.
+
 Role in the architecture:
   This file is the formal geometry/edge-case layer for the PoV construction.
   It is not the runtime oracle implementation and it is not the core Hodge/CVP

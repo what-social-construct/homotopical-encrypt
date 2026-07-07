@@ -6,6 +6,9 @@ import Mathlib.Data.ZMod.Basic
 /-
   Reed-Solomon interpretation of cochain plane shadows.
 
+  Paper correspondence:
+  - Paper 1 Section 6: plane-shadow to RS received-word stage.
+
   The concrete projection from committed cochains to semantic two-coordinate
   plane shadows lives in `Proximity.CochainPlane`. This file begins only after
   that projection exists: it encodes each plane point into a finite field and

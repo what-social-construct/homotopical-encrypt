@@ -3,6 +3,10 @@ import Axioms.OracleModality
 /-
   Oracle gate.
 
+  Paper correspondence:
+  - Paper 1 Section 4: oracle/Heyting public judgment surface.
+  - Paper 2: oracle answer consumption as protocol evidence.
+
   This file exposes the Heyting/tri-valued consensus classification layer under
   the `Gates` namespace. The detailed semantics remain in
   `Axioms.OracleModality`.

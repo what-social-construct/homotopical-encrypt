@@ -4,6 +4,9 @@ import Mathlib.Algebra.Polynomial.Basic
 /-
   Reed-Solomon-specific proximity vocabulary.
 
+  Paper correspondence:
+  - Paper 1 Section 6: paper-alphabet Reed--Solomon endpoint.
+
   The generic CA/MCA/list-decoding layer lives in `ListDecoding.lean` and
   `CorrelatedAgreement.lean`. This file only instantiates the target shape for
   polynomial-evaluation codes. Bounds such as Johnson, list-decoding capacity,

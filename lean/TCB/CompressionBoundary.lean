@@ -3,6 +3,11 @@ import TCB.ProofCarrying
 /-
   Compression boundary.
 
+  Paper correspondence:
+  - Paper 1 Section 5: lossy public-shadow/artifact stack and digest/root
+    binding boundary.
+  - Paper 2: concrete compression, storage, proof, and runtime mechanisms.
+
   This module records the abstract pattern shared by hash commitments,
   proof-carrying artifacts, SNARKs, oracle attestations, and authenticated
   storage roots:

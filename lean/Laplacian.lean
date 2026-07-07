@@ -1,6 +1,11 @@
 /-
 Grassmannian Laplacian Hardness Proof
 
+Paper correspondence:
+- Paper 1 Sections 2--3: hidden Hodge operator/kernel, Hodge projection, and
+  CVP comparison.
+- Paper 1 Section 7: Laplacian theorem-surface correspondence.
+
 This file is now the public import surface for the Laplacian proof stack.
 The actual formalization is split by concern:
 

@@ -3,6 +3,9 @@ import Proximity.GrassmannianPlucker
 /-
   Concrete projective Plucker instantiation.
 
+  Paper correspondence:
+  - Paper 1 Section 6: concrete projective Plucker public-shadow surface.
+
   The raw coordinate is the actual exterior-power coordinate from
   `GrassmannianPlucker`. The public shadow is the projective quotient by
   nonzero scalar rescaling. This discharges the normalization/projective

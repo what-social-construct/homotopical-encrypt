@@ -5,6 +5,10 @@ import Proximity.Problem
 /-
   Runtime observation boundary.
 
+  Paper correspondence:
+  - Paper 1 Section 5: observed public artifacts expose bounded statements.
+  - Paper 2: runtime observation and chain-facing evidence.
+
   This file names the point where a public artifact becomes an observed
   chain-facing statement. It is intentionally thinner than an oracle: an
   observation is just an accepted, bounded artifact whose public statement

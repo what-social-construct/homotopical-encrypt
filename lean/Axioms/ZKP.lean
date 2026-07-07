@@ -3,6 +3,10 @@ import Mathlib
 /-
   ZKP interface assumptions.
 
+  Paper correspondence:
+  - Paper 1 Section 5: proof-carrying artifact boundary.
+  - Paper 2: concrete proof system and protocol evidence.
+
   These assumptions are intentionally abstract so different concrete proof
   systems (spectral range proof, homotopy/geodesic proof, class-membership
   proof) can refine this interface.

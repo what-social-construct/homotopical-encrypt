@@ -3,6 +3,10 @@ import Mathlib
 /-
   Foundational assumptions for the Hodge/CVP bridge.
 
+  Paper correspondence:
+  - Paper 1 Section 4: foundational cochain and Hodge axiom surface.
+  - Paper 1 Section 7: Lean theorem-surface correspondence.
+
   This module is intentionally assumption-oriented: it captures the exact
   preconditions the implementation relies on, even where full Lean proofs are
   still in progress in other modules.

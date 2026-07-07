@@ -61,8 +61,8 @@ Touch the following points in order:
   state to a calibrated public target.
 - Relationship to CVP: CVP is the known-lattice comparison problem, while
   Homotopical Encrypt recovery hides the operative kernel/operator.
-- Lean formalization: definitions, reductions, projection chain, gates, and
-  theorem boundaries are machine-checked.
+- Lean formalization: definitions, reductions, object-local invariants,
+  projection-stage certificates, and theorem boundaries are machine-checked.
 - Proximity corollary: the endpoint is aligned with the Reed-Solomon MCA
   vocabulary from the Proximity Prize paper, with cited bounds imported at a
   clearly labeled boundary.
@@ -87,14 +87,15 @@ operator.
 #### 1.2 Contributions
 
 - Harmonic Cochain Problem and hidden-operator formulation.
-- Cochain commitment construction and public shadow interface.
-- Projection framework from hidden/geometric state to public finite evidence.
 - Relationship to CVP through an explicit known-lattice comparison.
-- Lean formalization of the main definitions, theorem boundaries, and projection
-  gates.
-- Reed-Solomon projection endpoint.
-- Proximity/MCA corollary aligned with the paper vocabulary `C ⊆ (F^s)^n`, with
-  canonical Homotopical Encrypt evaluation at `s = 1`.
+- Axiomatic public/private data boundary.
+- Cochain commitment construction and public shadow interface.
+- Lossy public-shadow framework.
+- Lean formalization of the main definitions, theorem boundaries, object-local
+  invariants, and projection-stage certificates.
+- Reed-Solomon projection chain and MCA endpoint aligned with the paper
+  vocabulary `C ⊆ (F^s)^n`, with canonical Homotopical Encrypt evaluation at
+  `s = 1`.
 
 ### 2. Harmonic Cochain Problem
 
@@ -140,34 +141,73 @@ CVP asks for a closest vector in an explicitly presented lattice. HCP asks for
 a harmonic cochain in the operative Hodge kernel, and in the Homotopical
 Encrypt model that kernel is not explicitly presented by the public data.
 
-### 3. Mathematical Framework
+### 3. CVP Comparison And Kernel Ambiguity
 
 Lean anchors:
 
+- `CVP.lean`
+- `Hardness.lean`
+- `Laplacian/*`
+
+#### 3.1 Reduction Direction
+
+State the comparison direction early: once the Hodge operator or harmonic
+kernel is presented, harmonic recovery exposes a known-lattice CVP-style
+problem.
+
+#### 3.2 Oracle Insufficiency
+
+State the hidden-operator separation: a CVP oracle for explicitly presented
+lattices does not determine the hidden operator or kernel selected by public
+data.
+
+#### 3.3 Structural Comparison
+
+Emphasize the distinction between:
+
+- known-lattice closest-vector search;
+- hidden-operator HCP;
+- public projection/proximity verification.
+
+### 4. Axioms, Semantics, And Public Data
+
+Lean anchors:
+
+- `Axioms/Foundation.lean`
+- `Axioms/Fibration.lean`
+- `Axioms/HomotopyClass.lean`
 - `Axioms/HelferFOL.lean`
 - `Axioms/Heyting.lean`
 - `Axioms/OracleModality.lean`
+- `Axioms/SheafCoherence.lean`
+- `Axioms/CochainCommitment/*`
 - `docs/HARDNESS_HELPER_DEPENDENCY_MAP.md`
 
-#### 3.1 Helfer's Fibrational Semantics
+#### 4.1 Helfer's Fibrational Semantics
 
 Use this section to explain the provenance of the semantic layer. The paper
 should cite Helfer for the motivation and label the Lean file as a formalized
 interface used by Homotopical Encrypt, not as a claim of fully reproving the
 external paper.
 
-#### 3.2 Fibrational Identity Objects
+#### 4.2 Fibrational Identity Objects
 
 Explain why public equality is not strict equality of hidden representatives.
 This is where path/diagonal semantics and public classifiers enter the story.
 
-#### 3.3 Homotopy Classes
+#### 4.3 Homotopy Classes
 
 Connect semantic quotienting to the later projection philosophy: public shadows
 are allowed to identify representatives while preserving the invariants needed
 by the verifier.
 
-### 4. Cochain Commitment Framework
+#### 4.4 Axiom Surfaces
+
+Explain the role of the `Axioms/*` folder early: foundational cochain/Hodge
+assumptions, fibration and homotopy-class interfaces, Heyting/oracle semantics,
+sheaf-coherence/spectral interfaces, and cochain-commitment assumptions.
+
+### 5. Public Artifact Stack And Lossy Projection
 
 Lean anchors:
 
@@ -176,38 +216,71 @@ Lean anchors:
 - `Proximity/PluckerCochain/PublicBinding.lean`
 - `TCB/*`
 
-#### 4.1 Cochain Commitments
+#### 5.1 Public And Private Data Handling
+
+Use the trust-boundary docs: public artifacts include commitments, topology
+hashes, roots, public shadows, oracle judgments, and proof-carrying artifacts;
+private data includes the fibration representative, restriction maps, full
+cochains, and the Hodge operator/kernel.
+
+#### 5.2 The Artifact Stack
+
+Explain the layered public-artifact stack:
+
+```text
+hidden/private object
+  -> public shadow / compressed projection
+  -> commitment/root/hash artifact
+  -> proof-carrying artifact
+  -> verifier judgment
+```
+
+Hashes, roots, and commitments bind to or summarize previous layers; they do
+not replace the mathematical witness or proof obligation.
+
+#### 5.3 Cochain Commitments
 
 Define the commitment object and its intended role as the public handle on
 hidden cochain data.
 
-#### 4.2 Commitment Map
+#### 5.4 Commitment Map
 
 Describe the map from hidden/cochain data into public commitments, including
 what is preserved and what is deliberately hidden.
 
-#### 4.3 Projection Operator
+#### 5.5 Sheaf Storage And Witness Material
+
+Explain that storage roots, topology hashes, cochain roots, nullifiers, and
+proof objects are public artifacts in the stack. Full sheaf/cochain/fibration
+data remains witness material unless explicitly exposed.
+
+#### 5.6 Lossy Projection
 
 Introduce projection as the operation that creates verifier-facing public
-artifacts from hidden or geometric data.
+artifacts from hidden or geometric data. The concrete Plucker/cochain/plane/RS
+projection chain belongs in Section 6.
 
-#### 4.4 Fundamental Properties
+#### 5.7 Fundamental Properties
 
-State binding/well-formedness/non-collapse properties carefully. Any cryptographic
-hash or byte-level claim belongs to the TCB/runtime boundary, while the Lean layer
-owns the mathematical predicates and implications.
+State payload shape, topology compatibility, cryptographic binding interfaces,
+and proof-carrying artifact validity carefully. Non-collapse belongs to the
+projection-stage gates in Section 6. Any cryptographic hash or byte-level claim
+belongs to the TCB/runtime boundary, while the Lean layer owns the mathematical
+predicates and implications.
 
-### 5. Projection Framework
+### 6. Reed-Solomon Projection And MCA
 
 Lean anchors:
 
-- `Proximity/Projection.lean`
 - `Proximity/ProjectionChain/Core.lean`
 - `Proximity/Gates/*`
+- `Proximity/RS/ListDecoding.lean`
+- `Proximity/RS/CorrelatedAgreement.lean`
+- `Proximity/RS/ReedSolomon.lean`
 - `Proximity/CanonicalRS/*`
 - `docs/PROXIMITY_PAPER_OUTLINE.md`
 
-#### 5.1 Projection Theorem
+#### 6.1 Projection Chain
 
 Use the staged chain:
 
@@ -221,46 +294,26 @@ FrameWitness
 ```
 
 The proof architecture should read as one orchestrated projection chain, with
-local gates/certificates checked at their own stages.
+local proximity gates/certificates checked at their own stages: public-shadow
+respect and metric invariance at the source/Plucker surface, syndrome adequacy
+at the cochain bridge, semantic alignment at the plane/RS extraction, and
+far-region non-collapse at the final RS endpoint.
 
-#### 5.2 Preserved Structure
+#### 6.2 Canonical Reed-Solomon Endpoint
 
-List the invariants preserved stage by stage: public binding, quotient-aware
-shadow identity, local plane consistency, metric calibration, and final RS
-well-formedness.
+State the paper-style endpoint over `C ⊆ (F^s)^n`, then explain why the concrete
+Homotopical Encrypt endpoint evaluates this at width `s = 1`.
 
-#### 5.3 Lost Structure
+#### 6.3 Mutual Correlated Agreement
 
-Be explicit that projection is lossy. The theorem is not injectivity. It is a
-controlled public projection with calibrated non-collapse/far-separation
-conditions where needed.
+State MCA in the vocabulary of the Proximity Prize problem statement. Clearly
+separate Lean-proved definitions/equivalences from the imported
+Johnson/list-decoding/BCHKS theorem slots.
 
-### 6. Relationship To CVP
+#### 6.4 Proximity Corollary
 
-Lean anchors:
-
-- `CVP.lean`
-- `Hardness.lean`
-
-#### 6.1 Reduction From CVP
-
-State the comparison direction precisely: known-lattice CVP is formalized, and
-HCP can expose CVP-like instances after the hidden operator data has been fixed.
-
-#### 6.2 Recovery Theorem
-
-State the recovery implication that is actually formalized or intended: which
-solver implies which other solver, under which presentation assumptions.
-
-#### 6.3 Structural Comparison
-
-Emphasize the distinction between:
-
-- known-lattice closest-vector search;
-- hidden-operator HCP;
-- public projection/proximity verification.
-
-This keeps the CVP relation useful without overstating it.
+State the proximity/MCA corollary as a verifier-facing consequence of the
+projection chain plus cited RS bounds.
 
 ### 7. Formal Verification
 
@@ -287,7 +340,9 @@ Explain the module split:
 
 - `Axioms/*`: semantic and commitment interfaces.
 - `CVP.lean`, `Hardness.lean`: known-lattice comparison and hardness framing.
-- `Proximity/*`: projection chain, gates, metrics, RS endpoint.
+- `Gates/*`: aliases and lemmas for object-local exact/oracle/stage
+  invariants.
+- `Proximity/*`: projection chain, proximity gates, metrics, RS endpoint.
 - `TCB/*`: runtime trust-boundary declarations.
 - `docs/*`: paper maps, assumptions, and theorem correspondence.
 
@@ -297,49 +352,28 @@ Give a Lean-to-paper table: definition names, theorem names, proof status, and
 whether each item is project-native, a formalized external definition, or a
 cited external theorem.
 
-### 8. Corollaries And Applications
+### 8. Future Directions
 
-#### 8.1 Reed-Solomon Projection
-
-Lean anchors:
-
-- `Proximity/RS/ListDecoding.lean`
-- `Proximity/RS/CorrelatedAgreement.lean`
-- `Proximity/RS/ReedSolomon.lean`
-- `Proximity/CanonicalRS/MCA/Concrete.lean`
-- `Proximity/CanonicalRS/CitedBounds.lean`
-
-State the paper-style endpoint over `C ⊆ (F^s)^n`, then explain why the concrete
-Homotopical Encrypt endpoint evaluates this at width `s = 1`.
-
-#### 8.2 Proximity Proof
-
-State the proximity/MCA corollary as a verifier-facing consequence of the
-projection chain plus cited RS bounds. Clearly separate Lean-proved equivalence
-and adapter lemmas from the imported Johnson/list-decoding/BCHKS theorem slots.
-
-### 9. Future Directions
-
-#### 9.1 Cryptographic Protocol
+#### 8.1 Cryptographic Protocol
 
 Turn the mathematical commitment/projection framework into a concrete protocol
 with explicit adversary games.
 
-#### 9.2 Anonymous Identity System
+#### 8.2 Anonymous Identity System
 
 Develop the public-shadow/hidden-representative architecture as an anonymous
 identity mechanism.
 
-#### 9.3 Sheaf Storage
+#### 8.3 Sheaf Storage
 
 Study storage and retrieval systems where public commitments expose only
 controlled sheaf/cochain projections.
 
-#### 9.4 Native Chain
+#### 8.4 Native Chain
 
 Connect proof-carrying runtime evidence to a native verification chain.
 
-#### 9.5 Complexity-Theoretic Extensions
+#### 8.5 Complexity-Theoretic Extensions
 
 Refine reductions, oracle separations, and hidden-operator hardness assumptions.
 
@@ -355,91 +389,79 @@ Include two tables:
 - Lean definitions vs paper definitions.
 - Lean theorems vs paper theorems.
 
-## Split Plan
+## Paper Split
 
-If the material becomes too large, split it like this.
+### Paper 1: Math And Formalization
 
-### Paper A: Harmonic Cochain Problem And Public Shadows
+Paper 1 is the math/formalization paper. It should stay centered on the HCP
+hardness story and the Lean theorem surfaces, with the RS/MCA endpoint presented
+as a verifier-facing projection corollary rather than as the source of security.
 
-Main topic:
+Expected scope:
 
-- HCP/CVP relationship.
-- Hidden-operator strictness.
+- Harmonic Cochain Problem and hidden-operator formulation.
+- Hidden-kernel/operator ambiguity and CVP comparison.
 - Helfer-style public equality/classifier semantics.
-- Commitment/public-shadow trust boundary.
+- Axiomatic public/private boundary.
+- Cochain commitment construction and public-shadow interface.
+- Lossy public-shadow/projection framework.
+- Certified projection chain to a Reed-Solomon/MCA endpoint.
+- Lean theorem-surface correspondence and status labels.
 
 Primary Lean modules:
 
 - `CVP.lean`
 - `Hardness.lean`
-- `Axioms/HelferFOL.lean`
-- `Axioms/Foundation.lean`
+- `Laplacian/*`
+- `Axioms/*`
 - `Axioms/CochainCommitment/*`
 - `TCB/*`
-
-Best title shape:
-
-- The Harmonic Cochain Problem for Homotopical Encryption
-- Public Shadows and Hidden Kernels in Homotopical Encryption
-
-### Paper B: Certified Proximity Projection To Reed-Solomon MCA
-
-Main topic:
-
-- Plucker/cochain/plane/RS projection chain.
-- Stage gates and final gates.
-- Paper-style MCA endpoint.
-- Cited RS bound boundary.
-- Final source-to-RS far-separation theorem.
-
-Primary Lean modules:
-
 - `Proximity/*`
 - `Proximity/RS/*`
 - `Proximity/CanonicalRS/*`
-- `Proximity/Gates/*`
 
 Best title shape:
 
-- Certified Projection Chains to a Reed-Solomon MCA Endpoint
-- From Hodge Public Shadows to Reed-Solomon Proximity Targets
+- Homotopical Encrypt: Hidden Hodge Operators and the Harmonic Cochain Problem
+- The Harmonic Cochain Problem for Homotopical Encryption
+- Public Shadows and Hidden Kernels in Homotopical Encryption
 
-### Paper C: Runtime Evidence And Proof-Carrying Chain Integration
+### Paper 2: CS/Protocol Paper
 
-Main topic:
+Paper 2 is the CS/protocol paper. It should consume the mathematical and formal
+surfaces from Paper 1 and explain how they become protocol evidence and runtime
+validation.
 
-- Evidence roots.
-- Runtime hash/proof/verifier boundary.
-- Wire formats.
-- Consensus integration.
-- TCB minimization.
+Expected scope:
+
+- Proof-carrying verification.
+- Gate certificates as protocol evidence.
+- Runtime trust boundaries.
+- Oracle/worker/attestation model.
+- Consensus and Proof of Value.
+- Vertra chain architecture.
+- Rust implementation boundary.
 
 Primary Lean/docs surfaces:
 
 - `TCB/*`
 - `Gates/*`
 - `Consensus/*`
+- `Chain.lean`
 - `docs/TRUST_BOUNDARIES.md`
 - `docs/WIRE_FORMAT.md`
 - `docs/GATE_ARCHITECTURE.md`
+- `docs/CONSENSUS.md`
 
-This can wait until the math preprint is stable.
+This should wait until the math/formalization paper is stable.
 
 ## Recommended First Preprint
 
-The strongest first preprint is probably a combined Paper A + Paper B, but with
-the scope controlled:
-
-- lead with hardness;
-- present proximity as the public verification bridge;
-- state the final source-to-RS far-separation theorem as the main remaining
-  conditional if it is not fully proved by submission;
-- keep cited coding-theory inputs in a clearly labeled trusted boundary;
-- avoid broad runtime/performance claims.
-
-If the final far-separation proof is completed before submission, the preprint
-can be pitched as a full Lean-backed projection theorem. If not, it is still a
-credible formal architecture/preprint with a precise theorem-slot inventory.
+The strongest first preprint is Paper 1: lead with hidden-operator HCP
+hardness, develop the semantic and public-artifact boundary, then present the
+projection/RS/MCA endpoint as the finite verifier-facing corollary. Keep the
+CS/protocol machinery visible only as theorem-surface context or future work;
+avoid broad runtime, performance, consensus, or chain-architecture claims.
 
 ## Immediate Lean Work Before First Submission
 

@@ -3,6 +3,10 @@ import Mathlib
 /-
   Consensus-level assumptions used by PoV + Topos implementations.
 
+  Paper correspondence:
+  - Paper 2: consensus and Proof-of-Value protocol assumptions.
+  - Paper 1 Section 7: sequel boundary only.
+
   This isolates assumptions that are currently enforced operationally in
   Python/Rust but not yet fully proved end-to-end in Lean.
 -/

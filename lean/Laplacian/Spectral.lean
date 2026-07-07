@@ -1,5 +1,11 @@
 import Mathlib
 
+/-
+  Paper correspondence:
+  - Paper 1 Section 4: spectral public judgment interface.
+  - Paper 1 Sections 2--3: spectral fingerprints in hidden-operator ambiguity.
+-/
+
 set_option linter.mathlibStandardSet false
 
 open scoped BigOperators Real Nat Classical Pointwise

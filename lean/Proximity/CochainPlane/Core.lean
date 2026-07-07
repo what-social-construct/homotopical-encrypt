@@ -4,6 +4,9 @@ import Proximity.Problem
 /-
   Committed-cochain to plane-shadow projection.
 
+  Paper correspondence:
+  - Paper 1 Section 6: cochain-to-plane semantic-alignment stage.
+
   This file owns the semantic midpoint between local cochain/syndrome data and
   coding-theoretic interpretations. A committed cochain is projected to a
   two-coordinate plane shadow. Reed-Solomon does not appear here: field

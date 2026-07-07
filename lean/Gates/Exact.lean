@@ -4,6 +4,10 @@ import Axioms.SheafCoherence
 /-
   Exact gates.
 
+  Paper correspondence:
+  - Paper 1 Section 4: exact structural preconditions.
+  - Paper 1 Section 7: theorem-surface row for `Gates.Exact`.
+
   These are classical structural predicates: cochain-complex laws, Laplacian
   construction, Hodge decomposition/orthogonality, and sheaf-coherence shape
   checks. They are gate-facing aliases over the existing axiom/spec bundles.

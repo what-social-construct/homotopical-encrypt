@@ -5,6 +5,10 @@ import Axioms.Consensus
 /-
   Stage-level admissibility interface.
 
+  Paper correspondence:
+  - Paper 1 Section 7: formalization surface only.
+  - Paper 2: stage validation and protocol gate certificates.
+
   Purpose:
   - encode the contract
       "transaction stage critical invariant pass -> consensus admissible"

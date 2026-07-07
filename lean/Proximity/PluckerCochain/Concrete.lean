@@ -3,6 +3,10 @@ import Proximity.PluckerCochain
 /-
   Concrete Plucker-to-committed-cochain bridge.
 
+  Paper correspondence:
+  - Paper 1 Section 6: concrete Plucker-to-cochain/local-syndrome bridge.
+  - Paper 1 Section 5: consumes the cochain commitment payload shape.
+
   This file owns the first concrete payload boundary after the projective
   Plucker shadow. It does not choose a plane shadow or an RS field. The output
   carrier is the existing `Axioms.CochainCommitmentData` payload used by the

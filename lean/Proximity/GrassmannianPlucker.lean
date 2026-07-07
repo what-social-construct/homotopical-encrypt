@@ -5,6 +5,9 @@ import Mathlib.LinearAlgebra.ExteriorPower.Basic
 /-
   Grassmannian-to-Plucker bridge.
 
+  Paper correspondence:
+  - Paper 1 Section 6: hidden Grassmannian source to public Plucker shadow.
+
   This file records the bridge from the projection-facing Hodge/Grassmannian
   model to Plucker-coordinate public shadows. The concrete coordinate layer uses
   an explicit frame witness for a rank-`r` harmonic subspace and maps it into

@@ -5,6 +5,10 @@ import Axioms.SheafCoherence
 /-
   Cochain/sheaf bridge for proximity.
 
+  Paper correspondence:
+  - Paper 1 Section 6: committed cochain/local-syndrome projection stage.
+  - Paper 1 Section 5: reuses the commitment payload object defined there.
+
   This module connects the lightweight proximity vocabulary to the existing
   hcrypt cochain/sheaf interfaces. It reuses `CochainCommitmentData` as the
   committed cochain carrier, so proximity statements talk about the same object

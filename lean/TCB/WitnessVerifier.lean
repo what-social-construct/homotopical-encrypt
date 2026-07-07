@@ -4,6 +4,10 @@ import TCB.ObservationBoundary
 /-
   Witness/verifier pattern.
 
+  Paper correspondence:
+  - Paper 1 Section 5: public artifact stack and witness/private-object split.
+  - Paper 2: runtime verifier and witness handling.
+
   This module assembles the production validation shape:
 
     full/private witness

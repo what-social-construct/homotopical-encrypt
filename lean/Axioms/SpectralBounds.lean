@@ -6,6 +6,10 @@ namespace Axioms
 /-
   Spectral Bounds
 
+  Paper correspondence:
+  - Paper 1 Section 4: spectral admissibility interface.
+  - Paper 2: Proof-of-Value spectral gate policy.
+
   Canonical Lean home for the PoV/Tsirelson spectral window used by the
   homotopical-encrypt construction.
 

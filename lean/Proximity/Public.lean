@@ -7,6 +7,11 @@ import TCB.ObservationBoundary
 /-!
   Public/storage boundary for the proximity bridge.
 
+  Paper correspondence:
+  - Paper 1 Section 6: public boundary for proximity projections.
+  - Paper 1 Section 5: proof-carrying public artifacts and compressed shadows.
+  - Paper 2: storage/runtime evidence consumption.
+
   Core mathematical stages stay with their objects:
 
   * `PluckerCochain` owns Plucker-to-cochain math.

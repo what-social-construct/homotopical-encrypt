@@ -3,6 +3,10 @@ import Laplacian.Projection
 /-
   Grassmannian Laplacian search space.
 
+  Paper correspondence:
+  - Paper 1 Section 2: HCP hidden-kernel search space.
+  - Paper 1 Section 3: comparison with explicitly presented CVP instances.
+
   This file names the family Ω_k of Laplacians induced by k-dimensional
   harmonic subspaces and proves the basic shape facts needed downstream.
   It deliberately contains no adversary model and no proximity projection.

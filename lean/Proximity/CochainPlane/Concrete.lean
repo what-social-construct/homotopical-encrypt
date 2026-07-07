@@ -3,6 +3,10 @@ import Proximity.CochainPlane.Core
 /-
   Concrete committed-cochain to plane-shadow extraction inputs.
 
+  Paper correspondence:
+  - Paper 1 Section 6: concrete cochain-to-plane projection inputs and
+    alignment obligations.
+
   `CochainPlane.Core` defines the generic projection interface. This module
   packages the concrete choices needed to instantiate that interface: selected
   edge coordinates, coefficient interpretation, a plane target, and the local

@@ -3,6 +3,10 @@ import Proximity.CanonicalRS.MCA.Concrete
 /-
   Literature-imported bounds for the canonical RS endpoint.
 
+  Paper correspondence:
+  - Paper 1 Section 6: external Johnson/list-decoding/MCA theorem boundary.
+  - Paper 1 Section 7: cited external theorem status row.
+
   This module is the trusted boundary where externally cited RS/list-decoding
   and MCA theorems enter the Lean development. The surrounding modules prove
   the endpoint alignment and projection plumbing; the deep coding-theory bounds

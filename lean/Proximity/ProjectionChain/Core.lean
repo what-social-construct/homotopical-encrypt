@@ -3,6 +3,10 @@ import Proximity.CochainPlane.ReedSolomon
 /-
   Core projection-chain orchestrator.
 
+  Paper correspondence:
+  - Paper 1 Section 6: composed Plucker/cochain/plane/RS projection chain.
+  - Paper 1 Section 7: projection-chain theorem-surface row.
+
   This file only composes the already-defined local stages:
 
     Plucker frame witness -> committed cochain -> plane shadow -> RS word

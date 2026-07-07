@@ -4,6 +4,11 @@ import Axioms.Foundation
 /-
   Sheaf Coherence Axioms
 
+  Paper correspondence:
+  - Paper 1 Section 4: exact structural invariants and sheaf-coherence
+    preconditions.
+  - Paper 1 Section 6: consumed by the proximity cochain/global-section bridge.
+
   Dedicated interface for runtime sheaf-coherence checks.
 
   Separation of concerns:

@@ -4,6 +4,9 @@ import Mathlib.Data.Real.Archimedean
 /-
   Canonical received-word metric and radius normalization.
 
+  Paper correspondence:
+  - Paper 1 Section 6: Johnson-radius and received-word metric normalization.
+
   The verifier-facing metric is relative Hamming distance from a received word
   to the RS code. Absolute Hamming distance remains as a low-level finite
   helper; the bridge exposes the normalized `δ ∈ [0,1]` convention used by the

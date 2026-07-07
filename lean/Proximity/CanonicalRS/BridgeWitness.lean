@@ -4,6 +4,9 @@ import Proximity.Gates.Final
 /-
   Canonical RS bridge witnesses.
 
+  Paper correspondence:
+  - Paper 1 Section 6: far-separation/non-collapse witness for the RS endpoint.
+
   This module names the mathematical far-separation witness for the canonical
   RS endpoint. It deliberately stops before packaging that witness as a full
   bridge certificate.

@@ -6,6 +6,9 @@ import Mathlib.Tactic
 /-
   List-decoding vocabulary for finite block-code shadows.
 
+  Paper correspondence:
+  - Paper 1 Section 6: finite-code/list-decoding vocabulary for the RS endpoint.
+
   This module owns the generic Hamming-distance vocabulary. The raw Hamming
   count is kept as finite combinatorial plumbing; the paper-facing proximity
   surface is relative/fractional Hamming distance.

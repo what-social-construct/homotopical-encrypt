@@ -1,6 +1,8 @@
 import Proximity.RS.ReedSolomon
 import Proximity.Problem
 
+/- Paper correspondence: Paper 1 Section 6, RS target interface for proximity. -/
+
 /- Reed-Solomon target layer for the hcrypt proximity pipeline. -/
 
 namespace Hcrypt

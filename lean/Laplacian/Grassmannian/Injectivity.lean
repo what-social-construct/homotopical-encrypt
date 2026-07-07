@@ -3,6 +3,10 @@ import Laplacian.Projection
 /-
   Injectivity of the Grassmannian Laplacian map.
 
+  Paper correspondence:
+  - Paper 1 Section 3: hidden-operator ambiguity and what is recovered once
+    the operator is presented.
+
   This file isolates the fact that the projection-model Laplacian remembers
   the hidden harmonic subspace: Δ_W determines W.
 -/

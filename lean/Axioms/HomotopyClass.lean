@@ -4,6 +4,11 @@ import Axioms.HelferFOL
 /-
   Lean-native homotopy-class interface.
 
+  Paper correspondence:
+  - Paper 1 Section 4: homotopy classes, public classifiers, and hidden
+    representative ambiguity.
+  - Paper 1 Section 5: public shadows as lossy artifacts.
+
   This file owns the mathematical vocabulary for public homotopy classes:
   hidden representatives, public fingerprints/classifiers, class membership,
   and non-faithful public collapse. Runtime implementations may later refine

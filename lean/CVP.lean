@@ -3,6 +3,11 @@ import Mathlib
 /-
   Generic explicit-lattice CVP vocabulary.
 
+  Paper correspondence:
+  - Paper 1 Section 3: known-lattice CVP comparison and oracle-insufficiency
+    framing.
+  - Paper 1 Section 7: Lean theorem-surface correspondence.
+
   Provenance/scope label:
   this module formalizes the standard Closest Vector Problem (CVP) interface
   used as an external hardness/comparison problem. It is not an original

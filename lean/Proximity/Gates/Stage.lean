@@ -3,6 +3,9 @@ import Proximity.ProjectionChain.Core
 /-
   Stage-gate certificates for a projection chain.
 
+  Paper correspondence:
+  - Paper 1 Section 6: projection-stage certificates.
+
   `ProjectionChain.Core` owns the composed maps. This file owns the accumulated
   stage certificates for those maps:
 

@@ -3,6 +3,11 @@ import Mathlib
 /-
   Heyting collapse interface for runtime consensus truth values.
 
+  Paper correspondence:
+  - Paper 1 Section 4: Heyting/public judgment surface used by HCP.
+  - Paper 2: full consensus policy and runtime consumption of the collapsed
+    truth value.
+
   This module is intentionally constructive at the 3-valued layer:
   - defines a concrete 3-element chain,
   - defines meet/join/implication,

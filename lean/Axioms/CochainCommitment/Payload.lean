@@ -5,6 +5,10 @@ import Mathlib.Tactic
 /-
   Cochain commitment payload.
 
+  Paper correspondence:
+  - Paper 1 Section 5: cochain commitment payload shape and well-formedness.
+  - Paper 1 Section 6: consumed by the Plucker-to-cochain proximity bridge.
+
   Canonical wire-facing cochain commitment data shared by Lean, Python, and
   Rust. This file intentionally contains only the payload shape, lightweight
   well-formedness predicates, operations, and cheap lemmas.

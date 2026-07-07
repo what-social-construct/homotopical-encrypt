@@ -1,4 +1,45 @@
-\section{Cochain Commitment Framework}
+\section{Public Artifact Stack And Lossy Projection}
+
+Commitments and public shadows are the first concrete public-facing objects in
+the paper. They explain what public data can carry without revealing the hidden
+Hodge representative.
+They are the scaffolding for transparency in action and anonymity in identity:
+actions are exposed through auditable public artifacts, while identities remain
+inside hidden representatives and public equivalence classes.
+
+\subsection{Public And Private Data Handling}
+
+The public layer may contain commitments, topology hashes, roots, public
+shadows, oracle judgments, and proof-carrying artifacts. The private layer
+contains the fibration representative, transport/restriction data, full
+cochains, and the Hodge operator whose kernel selects the harmonic component.
+The paper's claims are stated so that public artifacts bind to hidden witnesses
+without turning the hidden witness into public data.
+
+\subsection{The Artifact Stack}
+
+The public artifact stack has the following shape:
+\[
+\begin{aligned}
+  &\text{hidden/private object} \\
+  &\quad\to \text{public shadow or compressed public datum} \\
+  &\quad\to \text{commitment/root/hash artifact} \\
+  &\quad\to \text{proof-carrying artifact} \\
+  &\quad\to \text{verifier judgment}.
+\end{aligned}
+\]
+Each layer binds to or summarizes the preceding layer. A hash does not replace
+the mathematical object, a commitment does not replace the witness, and a proof
+artifact does not replace the proof obligation. The purpose of the stack is to
+let public verification refer to hidden sheaf/cochain data without exposing it.
+In this sense, the stack separates what must be publicly accountable from what
+must remain representative-private.
+
+Hashes serve as public names, integrity bindings, and fixed-size pointers for
+larger artifacts. A topology hash names the public combinatorial support; a
+root commits to a batch or storage view; a transcript hash domain-separates a
+proof statement. None of these hashes asserts validity by itself. Validity
+comes from the predicate or proof attached to the hashed object.
 
 \subsection{Cochain Commitments}
 
@@ -8,16 +49,120 @@ edge values, declared edge count, and topology hash.
 
 \subsection{Commitment Map}
 
-\todo{Describe the map from hidden cochain data into public commitments,
-including what is preserved and what remains hidden.}
+\begin{definition}[Cochain commitment payload]\label{def:cochain-commitment-payload}
+  A cochain commitment payload is a tuple
+  \[
+    (q,n,c,\tau)
+  \]
+  consisting of a modulus \(q\), a declared edge count \(n\), a list \(c\) of
+  integer edge values, and a topology hash \(\tau\). In the canonical Lean
+  payload this is \texttt{CochainCommitmentData}.
+\end{definition}
 
-\subsection{Projection Operator}
+The intended commitment map is the transaction-facing coboundary map
+\[
+  (m,r) \longmapsto \delta(m\Vert r) \in C^1 \pmod q,
+\]
+stored together with the topology hash of the supporting complex. The payload
+therefore preserves the accepted modulus, the edge-vector shape, the public
+topology binding, and the serialized \(C^1\)-level commitment values. It does
+not expose the hidden fibration representative, private transport data, the
+operative Hodge--Laplacian, or the harmonic kernel.
 
-Projection creates verifier-facing public artifacts from hidden or geometric
-data. The projection need not be injective; it must preserve enough structure
-to support the relevant verification theorem.
+\begin{definition}[Commitment well-formedness]\label{def:commitment-well-formedness}
+  A cochain commitment payload is well formed when its modulus is the supported
+  canonical modulus, its declared edge count agrees with the actual edge-value
+  list length, and the edge list is nonempty.
+\end{definition}
+
+The security interface for this commitment layer is
+\texttt{CochainCommitmentAxioms}. It contains binding, hiding, homomorphic
+addition, homomorphic scalar multiplication, topology binding, and
+partial-opening soundness. The blinded-commitment, vector-commitment, and
+cohomological-MAC interfaces are separate axiom records rather than consequences
+silently bundled into the payload shape.
+
+\subsection{Commitment And Artifact Invariants}
+
+The commitment-facing invariants attach to the commitment payload and to the
+public artifact stack, not to the proximity projection. Payload
+well-formedness is a shape condition: it asserts the supported modulus,
+agreement between the declared edge count and the edge-value list, and a
+nonempty edge list. It is not a cryptographic uniqueness theorem and it does
+not assert that the cochain vector is nonzero. For example, the canonical zero
+payload is well formed whenever the declared edge count is positive.
+
+Topology compatibility is a separate public invariant. Two committed cochains
+can be aggregated only when their moduli, declared edge counts, and topology
+hashes agree. This is the Lean predicate \texttt{AddCompatible}; the weaker
+same-topology predicate records equality of topology hashes alone. The
+cryptographic binding and topology-binding claims are supplied by
+\texttt{CochainCommitmentAxioms}, not by the raw payload record.
+
+At the artifact level, Lean records a hashed committed cochain as a public
+cochain payload together with digest data and a binding predicate. A
+proof-carrying committed cochain adds a proof system, a statement, and a
+verification predicate. The basic theorem exposed to this paper is that a
+well-formed proof-carrying committed-cochain artifact has an underlying
+well-formed cochain commitment payload.
+
+\subsection{Sheaf Storage And Witness Material}
+
+Storage roots, topology hashes, cochain roots, nullifiers, and proof objects are
+public artifacts in the stack. Full sheaf, cochain, and fibration data remain
+witness material unless a protocol path explicitly exposes them. The storage
+mechanics are protocol-level concerns; the mathematical point here is that
+stored public artifacts are shadows of accepted witness data, not replacements
+for the hidden object.
+
+\subsection{Lossy Projection}
+
+Compression creates verifier-facing public artifacts from hidden or full
+witness data. The compression need not be injective; it must preserve enough
+structure to support the relevant public statement.
+
+A public shadow is allowed to forget hidden data. In fact, it must forget
+enough data that it does not select a private representative. The relevant
+question is not whether the public datum is injective, but which facts survive
+the compression relation.
+
+\subsection{Preserved And Lost Structure}
+
+The preserved structure before the finite-code layer is:
+\begin{enumerate}[label=(\roman*)]
+  \item public classifier or fingerprint equality for hidden representatives;
+  \item cochain commitment payload well-formedness;
+  \item topology binding for cochain commitments;
+  \item digest/root binding for compressed public shadows;
+  \item proof-carrying validity of the public statement attached to an artifact.
+\end{enumerate}
+
+The lost structure is the private representative itself: full sheaf/cochain
+witness data, hidden transport, the operative Hodge operator, private
+randomness, and runtime lifecycle facts. Those may be bound to public artifacts
+or certified by a proof-carrying statement, but they are not made public merely
+by the presence of a hash, root, or commitment payload.
 
 \subsection{Fundamental Properties}
 
-\todo{State binding, well-formedness, topology-binding, and non-collapse
-properties. Keep byte-level hash and parser claims in the runtime/TCB boundary.}
+\begin{proposition}[Well-formed committed payloads]\label{prop:well-formed-committed-payloads}
+  A well-formed cochain commitment payload has nonempty edge data and modulus
+  greater than one.
+\end{proposition}
+
+\begin{proposition}[Topology-compatible aggregation]\label{prop:topology-compatible-aggregation}
+  Commitment aggregation is only meaningful for payloads with compatible
+  modulus, declared edge count, and topology hash. This is the public
+  topology-binding condition consumed by the chain layer.
+\end{proposition}
+
+\begin{proposition}[Proof-carrying artifact exposes payload]\label{prop:proof-carrying-artifact-exposes-payload}
+  A well-formed proof-carrying committed-cochain artifact exposes a well-formed
+  underlying cochain commitment payload.
+\end{proposition}
+
+Byte parsing, allocation bounds, canonical encoding, concrete hash functions,
+domain separation, storage inclusion proofs, proof verification, state updates,
+and ephemeral-fiber lifecycle properties are TCB obligations. Lean records
+their boundary predicates; it does not identify them with the mathematical
+cochain commitment payload.

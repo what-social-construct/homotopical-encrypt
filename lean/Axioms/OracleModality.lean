@@ -8,12 +8,18 @@ import Axioms.StageAdmissibility
 /-
   Oracle Modality Interface
 
+  Paper correspondence:
+  - Paper 1 Section 4: oracle-visible public judgment and Heyting collapse
+    needed for the HCP setup.
+  - Paper 2: oracle/worker/attestation model, consensus action, and runtime
+    enforcement.
+
   Axiomatizes the oracle interaction layer of homotopical-encrypt using the
   modality framing from:
 
     Ahman & Bauer, "Sheaves as oracle computations" (arXiv:2602.22135)
 
-  Core idea (paper §2):
+  Core idea (external oracle-modality paper):
     Given a predicate P : Query → Answer → Prop, the oracle modality □_P A is the
     least modality forcing P. At each step: either we know the result, or we ask
     a query and proceed on the answer. Sheaves are exactly the algebras for this monad.
@@ -612,7 +618,7 @@ structure OracleEta2 where
     ∀ i, a₁.identity_hash i = a₂.identity_hash i
 
 -- ============================================================================
--- §4  LAWVERE-TIERNEY TOPOLOGY (paper §5 application)
+-- LAWVERE-TIERNEY TOPOLOGY / PUBLIC HEYTING JUDGMENT
 -- ============================================================================
 
 /--

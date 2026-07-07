@@ -5,6 +5,10 @@ import Proximity.Projection
 /-
   Proof of Value scoring contract.
 
+  Paper correspondence:
+  - Paper 2: Proof-of-Value scoring and consensus policy.
+  - Paper 1 Section 7: protocol-facing boundary only.
+
   PoV proves verifiable harmonic value:
 
     harmonic contribution × proximity quality × reliability

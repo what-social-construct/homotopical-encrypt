@@ -3,6 +3,10 @@ import Axioms.StageAdmissibility
 /-
   Stage gates.
 
+  Paper correspondence:
+  - Paper 1 Section 7: listed as a formalization surface only.
+  - Paper 2: stage validation and protocol/runtime gate certificates.
+
   Stage gates decide which exact/consensus predicates apply to keygen,
   encryption, transaction, and block contexts.
 -/

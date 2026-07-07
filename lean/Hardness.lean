@@ -1,6 +1,11 @@
 /-
 Formal verification of the Hodge-Lattice cryptography setup.
 
+Paper correspondence:
+- Paper 1 Sections 2--3: HCP definition, hidden-kernel ambiguity, and CVP
+  comparison.
+- Paper 1 Section 7: Lean theorem-surface correspondence.
+
 Terminology:
 - `CVP` := the closest-vector problem on an explicitly presented lattice.
 - `Hodge-hardness` := recovery of the harmonic component from public Hodge data

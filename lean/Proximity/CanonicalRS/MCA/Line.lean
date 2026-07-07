@@ -4,6 +4,9 @@ import Proximity.ProjectionChain.Core
 /-
   Canonical MCA affine lines.
 
+  Paper correspondence:
+  - Paper 1 Section 6: affine-line surface for mutual correlated agreement.
+
   The generic RS layer defines the paper vocabulary for affine combinations.
   This file owns the canonical object used by the hcrypt projection chain:
   final RS words in the canonical endpoint. The well-formedness facts are
