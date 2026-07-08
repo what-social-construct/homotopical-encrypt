@@ -7,15 +7,18 @@ They are the scaffolding for transparency in action and anonymity in identity:
 actions are exposed through auditable public artifacts, while identities remain
 inside hidden representatives and public equivalence classes.
 
-\subsection{Public And Private Data Handling}
+\subsection{Public, Artifact, And Private Layers}
 
-The public layer may contain commitments, topology hashes, roots, public
-shadows, oracle judgments, and proof-carrying artifacts. The private layer
-contains the fibration representative, transport/restriction data, full
-cochains, and the Hodge operator whose kernel selects the harmonic component.
-The paper's claims are stated so that public artifacts bind to hidden witnesses
-without turning the hidden witness into public data. This is compatible with
-the sheaf-theoretic attacker-observation viewpoint of
+The public-facing stack has three mathematical levels. The fully public handle
+level contains hashes, roots, topology hashes, nullifiers, public summaries, and
+oracle judgments. The verifier-facing artifact level contains public shadows,
+cochain commitments, proof-carrying cochain payloads, and certificate data. The
+private witness level contains the fibration representative,
+transport/restriction data, full cochains and openings, and the Hodge operator
+whose kernel selects the harmonic component. The paper's claims are stated so
+that public handles and verifier-facing artifacts bind to hidden witnesses
+without turning the hidden witness into public data. This is compatible with the
+sheaf-theoretic attacker-observation viewpoint of
 \cite{inoue2026cryptographicSheaves}; the associated security games and
 runtime observation model belong to the subsequent protocol paper. The present
 paper uses only the mathematical public/private separation described below.

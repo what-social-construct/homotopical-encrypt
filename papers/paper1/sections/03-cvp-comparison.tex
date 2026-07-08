@@ -18,25 +18,33 @@ A correct CVP answer is a vector \(v\in\Lambda_B\) such that
   \text{for every }w\in\Lambda_B.
 \]
 This is the separation between the known-lattice interface and the
-hidden-operator interface: a CVP oracle receives \(B\) and \(t\), while an HCP
-solver sees only the public Hodge/cochain data unless extra hidden-operator
-information is supplied.
+hidden-operator interface: a CVP oracle receives \(B\) and \(t\), while a
+public HCP procedure sees only the declared handles and verifier-facing
+artifacts unless extra hidden-operator information is supplied.
 
 \subsection{Reduction Direction}
 
-The formalization separates two ingredients. First, for every presented
-lattice \(\Lambda_B=\image(B)\), there is a matrix \(\Delta\) whose kernel is
-exactly \(\image(B)\). Thus a Hodge solver that is sound for the presented
-operator returns a vector in the presented lattice. Second, when the solver is
-assumed to return the closest harmonic cochain, that vector is a genuine CVP
-solution. The paper states the combined closest-vector form, while the Lean
-surface keeps the kernel/range construction and the closestness predicate as
-separate theorem surfaces.
+The formalization separates three ingredients. The first is pure linear
+algebra: every presented lattice \(\Lambda_B=\image(B)\) can be realized as
+the kernel of some matrix \(\Delta\). The second is the presented-operator
+Hodge contract: if a solver is sound for the displayed operator \(\Delta\),
+then its output is harmonic for that \(\Delta\), hence lies in
+\(\ker(\Delta)=\Lambda_B\). The third is the closestness contract owned by the
+CVP interface: only after adding minimization among harmonic vectors does the
+membership statement become a closest-vector statement. Lean keeps these
+surfaces separate.
 
-\begin{proposition}[HCP solver exposes known-lattice CVP]\label{prop:hcp-to-cvp}
-  In the formal model, a solver that recovers closest harmonic components for
-  every presented Hodge operator induces a solver for the corresponding
-  explicit closest-vector problem on the harmonic lattice.
+\begin{proposition}[Kernel realization for explicit lattices]\label{prop:hcp-to-cvp}
+  Let \(B\) be an explicit generator matrix over a field and set
+  \(\Lambda_B=\image(B)\). There exists a matrix \(\Delta\) such that
+  \[
+    \ker(\Delta)=\Lambda_B .
+  \]
+  Consequently, any solver whose output is \(\Delta\)-harmonic for every
+  presented \(\Delta\) returns a vector in the explicit lattice
+  \(\Lambda_B\) when run on this realized operator. If that solver is also
+  closest among \(\Delta\)-harmonic vectors, then its output is a CVP solution
+  for \((B,t)\).
 \end{proposition}
 
 \begin{proof}
@@ -49,17 +57,95 @@ separate theorem surfaces.
   \[
     \ker(\Delta)=\image(B)=\Lambda_B .
   \]
-  Indeed, let \(V=\image(B)\). Since we are working over a field, choose a
-  complement \(W\) with \(R^n=V\oplus W\). Let \(P:R^n\to R^n\) be the
-  projection onto \(W\) along \(V\). Then \(\ker P=V\). Taking \(\Delta\) to be
-  the matrix of \(P\) gives the required operator.
+  Put \(V=\image(B)\). Since \(R^n\) is finite-dimensional over a field, choose
+  a complementary subspace \(W\) with
+  \[
+    V+W=R^n,
+    \qquad
+    V\cap W=0 .
+  \]
+  Thus every \(y\in R^n\) has a unique decomposition
+  \[
+    y=v+w,
+    \qquad
+    v\in V,\quad w\in W.
+  \]
+  Equivalently, there is a unique element \(p(y)\in W\) such that
+  \(y-p(y)\in V\). Define
+  \[
+    P(y)=p(y).
+  \]
+  The uniqueness of the \(V\oplus W\) decomposition gives linearity: for
+  \(y,z\in R^n\), the vector \(P(y)+P(z)\) lies in \(W\), and
+  \[
+    (y+z)-(P(y)+P(z))
+    =
+    (y-P(y))+(z-P(z))\in V,
+  \]
+  so \(P(y+z)=P(y)+P(z)\). Similarly, for \(a\in R\),
+  \(aP(y)\in W\) and
+  \[
+    ay-aP(y)=a(y-P(y))\in V,
+  \]
+  so \(P(ay)=aP(y)\).
 
-  Now present \(\Delta\) and \(t\) to the Hodge solver. A closest harmonic
-  solver returns a vector \(h\in\ker(\Delta)\) minimizing \(\dist(t,h)\) among
-  vectors in \(\ker(\Delta)\). Since \(\ker(\Delta)=\Lambda_B\), this \(h\) is
-  exactly a closest vector in the explicit lattice \(\Lambda_B\). Thus the
-  presented-operator Hodge solver induces a CVP solver for the explicit
-  lattice instance \((B,t)\).
+  We now compute the kernel. If \(y\in V\), then \(0\in W\) and \(y-0\in V\),
+  hence uniqueness gives \(P(y)=0\). Conversely, if \(P(y)=0\), then
+  \(y-P(y)=y\in V\). Therefore
+  \[
+    \ker P=V=\image(B).
+  \]
+  Let \(\Delta\) be the matrix of the linear map \(P\). Then, for every
+  \(y\in R^n\),
+  \[
+    \Delta y=0
+    \quad\Longleftrightarrow\quad
+    y\in\ker P
+    \quad\Longleftrightarrow\quad
+    y\in\image(B)
+    \quad\Longleftrightarrow\quad
+    \exists x,\ Bx=y .
+  \]
+  This is the content of the Lean lemma
+  \lean{exists_matrix_ker_eq_range}.
+
+  Now apply a presented-operator Hodge solver to \(t\) under this realized
+  operator. In Lean the solver is a function \(S:R^n\to R^n\), and the
+  presented-operator soundness hypothesis is
+  \[
+    \forall \Delta\, b,\qquad
+    \Delta(S(b))=0.
+  \]
+  Applying this with the \(\Delta\) constructed above and \(b=t\) gives
+  \[
+    \Delta(S(t))=0.
+  \]
+  By the kernel calculation, there exists \(x\) with
+  \[
+    Bx=S(t).
+  \]
+  Hence \(S(t)\in\Lambda_B\). This is exactly the theorem
+  \lean{Hodge_Hardness_Reduction_Proof}: a solver that is harmonic for every
+  presented operator yields a lattice vector for every explicit-lattice
+  instance once the lattice has been realized as a kernel.
+
+  Finally, suppose in addition that the solver satisfies the closest-harmonic
+  contract
+  \[
+    \forall h',\quad
+    \Delta h'=0
+    \Longrightarrow
+    \dist(t,S(t))\le \dist(t,h').
+  \]
+  Since the \(\Delta\)-harmonic vectors are exactly the vectors of
+  \(\Lambda_B\), this inequality is precisely
+  \[
+    \dist(t,S(t))\le \dist(t,w)
+    \qquad
+    \text{for every }w\in\Lambda_B.
+  \]
+  Together with \(S(t)\in\Lambda_B\), this is the CVP correctness predicate
+  \lean{IsClosestLatticeVector} for the explicit instance \((B,t)\).
 \end{proof}
 
 Once the hidden operator data has been fixed or presented, the closest harmonic
@@ -85,18 +171,18 @@ is a known-lattice shadow of the Hodge recovery problem.
     \quad\Longleftrightarrow\quad
     h\in W.
   \]
-  The remaining statement is definitional: a Hodge/CVP solution is precisely a
-  vector that is \(\Delta\)-harmonic and minimizes \(\dist(b,-)\) among all
-  \(\Delta\)-harmonic vectors.
+  The remaining statement is definitional: the closest harmonic representative
+  is precisely a vector that is \(\Delta\)-harmonic and minimizes
+  \(\dist(b,-)\) among all \(\Delta\)-harmonic vectors.
 \end{proof}
 
 \subsection{Oracle Insufficiency}
 
 The strictness direction uses a different contract. A public Hodge solver sees
-the public cochain and may call an explicit-lattice CVP oracle, but it is not
-given the hidden operator. Soundness asks that the solver's output be harmonic
-for every operative hidden \(\Delta\). Exactness on already-harmonic inputs
-asks that, if the public cochain \(b\) is already harmonic for the operative
+the cochain-facing observation and may call an explicit-lattice CVP oracle, but
+it is not given the hidden operator. Soundness asks that the solver's output be
+harmonic for every operative hidden \(\Delta\). Exactness on already-harmonic
+inputs asks that, if the observation \(b\) is already harmonic for the operative
 \(\Delta\), the solver return \(b\) unchanged.
 
 \begin{proposition}[Known-lattice CVP oracle insufficiency]\label{prop:cvp-insufficient}
@@ -120,7 +206,7 @@ asks that, if the public cochain \(b\) is already harmonic for the operative
   \]
   Thus \(b\) is harmonic for \(\Delta_1\) but not harmonic for
   \(\Delta_2\). If the public projection is lossy enough to identify
-  \(\Delta_1\) and \(\Delta_2\), the same public cochain \(b\) is compatible
+  \(\Delta_1\) and \(\Delta_2\), the same cochain-facing observation \(b\) is compatible
   with two hidden Hodge operators that disagree about whether \(b\) lies in the
   harmonic kernel.
 

@@ -4,7 +4,10 @@
 
 \HE{} is organized around the following security shape:
 \[
-\text{public cochain/shadow data}
+\begin{gathered}
+\text{public handles}\\
+\text{and verifier-facing artifacts}
+\end{gathered}
 \quad\not\Rightarrow\quad
 \text{the operative Hodge--Laplacian kernel}.
 \]
@@ -20,8 +23,9 @@ This paper develops the following contributions.
 \begin{enumerate}[label=(\roman*)]
   \item The Harmonic Cochain Problem (HCP), a hidden-operator recovery problem
     for Hodge-theoretic cochains.
-  \item A Hodge-structured noise model with public samples \(b = h + e\), where
-    \(h \in \ker(\Delta)\) and \(e \in \image(\delta) \oplus \image(\delta^\ast)\).
+  \item A Hodge-structured noise model with cochain decomposition
+    \(b = h + e\), where \(h \in \ker(\Delta)\) and
+    \(e \in \image(\delta) \oplus \image(\delta^\ast)\).
   \item A comparison with CVP, separating known-lattice closest-vector search
     from hidden-operator harmonic-cochain recovery.
   \item A projection framework from hidden/geometric state to public finite

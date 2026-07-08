@@ -148,10 +148,12 @@ public data does not determine a unique \(\Delta\) or \(\ker(\Delta)\).
 \begin{definition}[Public observation]\label{def:public-observation}
   A public observation is the data exposed to a verifier or adversary before
   choosing a hidden representative. In the abstract model it consists of a
-  public class or shadow value \(p\), together with cochain-facing data \(b\).
-  In the \HE{} instantiation, this public layer is represented by public
-  shadows, cochain commitments, topology hashes, oracle judgments, and
-  proof-carrying artifacts.
+  public class or shadow value \(p\), together with a cochain-facing observation
+  \(b\). In the \HE{} instantiation, the fully public handles are hashes, roots,
+  topology hashes, nullifiers, and bounded public summaries; cochain
+  commitments and proof-carrying cochain payloads sit in the verifier-facing
+  artifact layer; full cochains and openings remain witness data unless an
+  explicit protocol path exposes them.
 \end{definition}
 
 The public observation is intentionally not the hidden Hodge system. It is a
@@ -188,7 +190,7 @@ develops this semantic layer.
 
 \begin{definition}[Public-compatible Hodge ambiguity]\label{def:public-compatible-hodge-ambiguity}
   Public-compatible Hodge ambiguity means that there exist publicly equivalent
-  operators \(\Delta_1,\Delta_2\) and a public cochain \(b\) such that
+  operators \(\Delta_1,\Delta_2\) and a cochain-facing observation \(b\) such that
   \[
     \Delta_1 b=0
     \qquad\text{but}\qquad
@@ -239,7 +241,7 @@ proof-carrying artifacts, but it does not present the operative kernel itself.
 \end{definition}
 
 The exact recovery formulation is deliberately strong. It isolates the
-central ambiguity: the same public cochain may be compatible with hidden
+central ambiguity: the same cochain-facing observation may be compatible with hidden
 operators that disagree about harmonicity. Thus a solver that sees only public
 data cannot be uniformly sound unless the public observation determines enough
 hidden-operator structure.

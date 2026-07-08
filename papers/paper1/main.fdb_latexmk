@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1783431538.58414 "main.aux" "main.bbl" "main" 1783434851.28685 0
+["bibtex main"] 1783436450.71585 "main.aux" "main.bbl" "main" 1783436476.16715 0
   "./references.bib" 1783390704.96029 4843 1e14fe84d545db75f5bbcbdfe7f570bd ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/base/alpha.bst" 1292289607 23907 a5f93555796fb564b924339521f10a7c ""
-  "main.aux" 1783434850.97035 16089 630ecec6ecd94445bbba99f46988074b "pdflatex"
+  "main.aux" 1783436475.85537 16093 2b8c79fbb13b9246cffcc1230a4dc4d9 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1783434850.23344 "main.tex" "main.pdf" "main" 1783434851.28723 0
+["pdflatex"] 1783436475.11897 "main.tex" "main.pdf" "main" 1783436476.16729 0
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
@@ -154,20 +154,20 @@
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1774209607 3636776 dc5fa9b6b1453b9d196cd42edf876004 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "macros.tex" 1783390682.9842 1469 124f6c40025582ca9a258c4dbb60a188 ""
-  "main.aux" 1783434850.97035 16089 630ecec6ecd94445bbba99f46988074b "pdflatex"
-  "main.bbl" 1783431538.66908 2636 9b62f6e1bde4f05d20e1340387f807d8 "bibtex main"
-  "main.out" 1783434850.97192 10884 716f7af691f427584b0d0716013eb329 "pdflatex"
-  "main.tex" 1783383062.75931 1435 807fa7a7d695bf523a0af2ccc4902783 ""
-  "main.toc" 1783434850.97215 5232 8393361bd210b9a4aed92d5a7c0942e3 "pdflatex"
-  "sections/01-introduction.tex" 1783393032.25704 1971 70c02db3fe4867e6d0965227d7dde7a5 ""
-  "sections/02-harmonic-cochain-problem.tex" 1783431723.30384 10206 064717d61a72772f1fa955888c62cc23 ""
-  "sections/03-cvp-comparison.tex" 1783393091.77809 7500 363cae38bc01505d3921ded45d381526 ""
-  "sections/04-axioms-and-semantics.tex" 1783431723.4125 20414 3b0adb557e9bc1406cb86dd02616e0ec ""
-  "sections/05-public-shadows-and-commitments.tex" 1783431723.52084 8486 6482394c6fd4154eabef6fe94eed37fb ""
+  "main.aux" 1783436475.85537 16093 2b8c79fbb13b9246cffcc1230a4dc4d9 "pdflatex"
+  "main.bbl" 1783436450.80224 2636 9b62f6e1bde4f05d20e1340387f807d8 "bibtex main"
+  "main.out" 1783436475.85659 10914 79c2710408a75f0dcb83414bc77de4a5 "pdflatex"
+  "main.tex" 1783435778.60083 1444 e9b21aed7fc0bdbbca618b466140b686 ""
+  "main.toc" 1783436475.85679 5238 1db288d1d63db69b68a4e315f21fe6f5 "pdflatex"
+  "sections/01-introduction.tex" 1783436468.92317 1488 ea73e8bf23a6295f31884ebb01758cc5 ""
+  "sections/02-harmonic-cochain-problem.tex" 1783435778.82986 10401 b99ce7c6552adeddd62aee0ac3984124 ""
+  "sections/03-cvp-comparison.tex" 1783436442.07981 9717 bb01edddb6ada46f5ffccee2de0d34c8 ""
+  "sections/04-axioms-and-semantics.tex" 1783436256.50659 21142 90d8acf95fe57bf54d6da0dd50a1fdd7 ""
+  "sections/05-public-shadows-and-commitments.tex" 1783435823.08601 8723 894065a1fb90f42a1da8a18e27f94e9e ""
   "sections/06-rs-mca-projection.tex" 1783431423.3621 8682 a00fb6b3803b5f6577cc70c43a81fb63 ""
   "sections/07-formal-verification.tex" 1783431723.63046 4539 b63649356b118df8fb5b380efad9be58 ""
   "sections/08-future-directions.tex" 1783431723.74111 3485 e6f184663036b64993f2258bbf8bc6a3 ""
-  "sections/appendices.tex" 1783431746.64694 25750 0e4804b0d9ada0af109b3a580dcb8410 ""
+  "sections/appendices.tex" 1783436363.27326 25775 96a4b8b7736d1c52ca34c1327d4cd2ab ""
   (generated)
   "main.aux"
   "main.log"

@@ -12,9 +12,9 @@
 
 \begin{abstract}
 We introduce the Harmonic Cochain Problem (HCP), a hidden-operator recovery
-problem in which public cochain or class-level data does not determine the
-operative Hodge--Laplacian kernel. In the Homotopical Encrypt model, public
-samples have the form \(b = h + e\), where \(h \in \ker(\Delta)\) is a
+problem in which public handles, shadows, commitments, or class-level data do
+not determine the operative Hodge--Laplacian kernel. The underlying cochain
+decomposition has the form \(b = h + e\), where \(h \in \ker(\Delta)\) is a
 harmonic cochain and \(e \in \image(\delta) \oplus \image(\delta^\ast)\) is
 Hodge-structured noise. We compare HCP with the closest vector problem (CVP):
 CVP is the known-lattice comparison problem, while HCP hides the operator and
@@ -28,13 +28,12 @@ formalized in Lean.
 
 \input{sections/01-introduction}
 \input{sections/02-harmonic-cochain-problem}
-\input{sections/03-mathematical-framework}
-\input{sections/04-cochain-commitments}
-\input{sections/05-projection-framework}
-\input{sections/06-cvp-comparison}
+\input{sections/03-cvp-comparison}
+\input{sections/04-axioms-and-semantics}
+\input{sections/05-public-shadows-and-commitments}
+\input{sections/06-rs-mca-projection}
 \input{sections/07-formal-verification}
-\input{sections/08-proximity-corollary}
-\input{sections/09-future-directions}
+\input{sections/08-future-directions}
 \input{sections/appendices}
 
 \bibliographystyle{alpha}

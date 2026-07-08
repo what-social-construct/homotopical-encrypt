@@ -263,6 +263,10 @@ INPUT ./sections/03-cvp-comparison.tex
 INPUT ./sections/03-cvp-comparison.tex
 INPUT ./sections/03-cvp-comparison.tex
 INPUT sections/03-cvp-comparison.tex
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/lm/t1lmtt.fd
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/lm/t1lmtt.fd
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/lm/t1lmtt.fd
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmtt10.tfm
 INPUT ./sections/04-axioms-and-semantics.tex
 INPUT ./sections/04-axioms-and-semantics.tex
 INPUT ./sections/04-axioms-and-semantics.tex
@@ -274,16 +278,12 @@ INPUT ./sections/05-public-shadows-and-commitments.tex
 INPUT ./sections/05-public-shadows-and-commitments.tex
 INPUT ./sections/05-public-shadows-and-commitments.tex
 INPUT sections/05-public-shadows-and-commitments.tex
-INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/lm/t1lmtt.fd
-INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/lm/t1lmtt.fd
-INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/lm/t1lmtt.fd
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmtti10.tfm
 INPUT ./sections/06-rs-mca-projection.tex
 INPUT ./sections/06-rs-mca-projection.tex
 INPUT ./sections/06-rs-mca-projection.tex
 INPUT ./sections/06-rs-mca-projection.tex
 INPUT sections/06-rs-mca-projection.tex
-INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmtt10.tfm
 INPUT ./sections/07-formal-verification.tex
 INPUT ./sections/07-formal-verification.tex
 INPUT ./sections/07-formal-verification.tex

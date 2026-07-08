@@ -149,13 +149,17 @@ differential identity \(d^2=0\) and the Hodge--Laplacian identity above.
   for the cochain complex under discussion.
 \end{proposition}
 
-\subsection{Spectral/Tsirelson Axiom Surface}
+\subsection{Spectral-Gap Admissibility Surface}
 
-The spectral surface is also part of the object definition in this paper. It
-is not introduced as a consensus rule. The terminology is Tsirelson-style
-because the admissible window uses the familiar \(\sqrt 2\) scale from
-Tsirelson's bound \cite{tsirelson1980bell}. For a Hermitian positive
-semidefinite operator \(\Delta\), write
+The spectral surface is an object-level admissibility interface. It is not the
+source of HCP hardness, not a reconstruction theorem for the hidden fibration,
+and not introduced here as a consensus rule. The Lean predicate
+\lean{SpectralGapInPoVBounds} records the PoV/Tsirelson spectral window used
+later by the protocol layer. In Paper 1 it is simply a hard mathematical
+predicate on candidate Hodge--Laplacian data. The terminology is
+Tsirelson-style because the admissible window uses the familiar \(\sqrt 2\)
+scale from Tsirelson's bound \cite{tsirelson1980bell}. For a Hermitian
+positive semidefinite operator \(\Delta\), write
 \[
   \lambda_1^+(\Delta)
   =
@@ -177,8 +181,8 @@ the two endpoints:
   \quad\text{or}\quad
   \left|\lambda_1^+(\Delta)-2\sqrt 2\right|\le \varepsilon .
 \]
-This predicate only records near-boundary status; it does not prescribe any
-protocol action in Paper 1.
+This predicate only records near-boundary status; runtime policy for such
+values belongs to the subsequent protocol paper.
 
 The corresponding Grassmannian/Laplacian surface makes the hidden-kernel
 search space concrete. Let
@@ -445,20 +449,28 @@ operative kernel.
   equivalent.
 \end{proof}
 
-\begin{proposition}[Spectral/Tsirelson admissibility]\label{prop:spectral-admissibility}
-  If a public Hodge/spectral object satisfies the object-level
-  spectral/Tsirelson admissibility axiom, then
+\begin{proposition}[Spectral-gap admissibility]\label{prop:spectral-admissibility}
+  If a candidate Hodge--Laplacian geometry carries a by-construction
+  PoV/Tsirelson admissibility witness, then
   \[
     \lambda_1^+(\Delta)\in
     \left[\frac{\sqrt{2}}{2},\,2\sqrt{2}\right].
   \]
 \end{proposition}
 
+This is exactly the Lean theorem that the field
+\lean{gap_in_bounds} of \lean{ByConstructionPoVGeometry} implies the hard
+spectral predicate, together with the gate-facing alias in
+\lean{Gates/Spectral.lean}. It constrains which candidate objects are
+admissible; it does not remove hidden-operator ambiguity. The HCP hardness
+story in \cref{sec:hcp-definition} remains the hidden fibration, hidden
+Laplacian, and hidden kernel.
+
 For a nonempty family \(\Omega\subseteq\mathcal L_1(R^n)\), the associated
-classical and quantum Tsirelson-bound assertions are kept separate from the
-HCP hardness claim. They constrain admissible spectral behavior; they do not
-remove the hidden-operator ambiguity. The hardness story in
-\cref{sec:hcp-definition} remains the hidden-kernel ambiguity.
+classical and quantum adversary-bound forms are spectral-statistical targets,
+not HCP hardness assumptions. The Lean file also contains empty-family
+sanity-check theorems, which are logically useful boundary checks but are not
+nontrivial hardness bounds.
 
 \subsection{Heyting And Oracle Judgment Surface}
 
