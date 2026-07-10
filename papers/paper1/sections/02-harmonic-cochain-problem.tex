@@ -1,8 +1,5 @@
 \section{The Harmonic Cochain Problem}\label{sec:hcp-definition}
 
-This section states the central search problem and the hidden-operator model in
-which it is used.
-
 \begin{definition}[Harmonic Cochain Problem]\label{def:hcp}
   The \emph{Harmonic Cochain Problem} (HCP) asks, given public
   cochain/class-level data associated to a Hodge system, to recover the
@@ -13,13 +10,40 @@ In the \HE{} public-sample model, the visible cochain has the form
 \[
   b = h + e,
   \qquad
-  h \in \ker(\Delta),
+  h \in \ker(\Delta_1),
   \qquad
-  e \in \image(\delta) \oplus \image(\delta^\ast).
+  e \in \image(\delta_0) \oplus \image(\delta_1^\ast).
 \]
 Here \(h\) is the harmonic cochain, equivalently the global-section component,
 and \(e\) is Hodge-structured noise. The hidden-operator condition is that the
-public data does not determine a unique \(\Delta\) or \(\ker(\Delta)\).
+public data does not determine a unique \(\Delta_1\) or \(\ker(\Delta_1)\).
+The algebraic recovery chain is
+\[
+  a
+  \longmapsto
+  \{R_{v\to e}\}
+  \longmapsto
+  (\delta_0,\delta_1)
+  \longmapsto
+  \Delta_1
+  \longmapsto
+  \pi_H:C^1\to\ker(\Delta_1),
+\]
+where \(a\) is a hidden representative, \(R_{v\to e}\) are the restriction
+maps determining the adjacent coboundaries
+\[
+  \delta_0:C^0\to C^1,
+  \qquad
+  \delta_1:C^1\to C^2,
+\]
+and
+\[
+  \Delta_1=\delta_0\delta_0^\ast+\delta_1^\ast\delta_1
+\]
+is the induced degree-one Hodge--Laplacian. The map \(\pi_H\) is the
+orthogonal projection onto \(\ker(\Delta_1)\). When the degree is fixed, we
+write \(\Delta\) for this operative Laplacian. The public observation may bind
+to this chain, but does not expose the chain.
 
 \begin{definition}[Matrix harmonicity]\label{def:matrix-harmonicity}
   For a hidden linear Hodge operator \(\Delta\), a cochain \(h\in R^N\)
@@ -156,12 +180,12 @@ public data does not determine a unique \(\Delta\) or \(\ker(\Delta)\).
   explicit protocol path exposes them.
 \end{definition}
 
-The public observation is intentionally not the hidden Hodge system. It is a
-classifier of a public equivalence class of possible hidden representatives.
-This is the point at which the fibrational and homotopical semantics enter the
-model: public equality is equality after applying a public classifier, not
-strict equality of hidden representatives. Section~\ref{sec:mathematical-framework}
-develops this semantic layer.
+The public observation is not the hidden Hodge system. It classifies a public
+equivalence class of possible hidden representatives. Fibrational and
+homotopical semantics enter through this distinction: public equality is
+equality after applying a public classifier, not strict equality of hidden
+representatives. Section~\ref{sec:mathematical-framework} develops this
+semantic layer.
 
 \begin{definition}[Hidden-operator public projection]\label{def:hidden-operator-public-projection}
   A public projection is a map
@@ -172,9 +196,9 @@ develops this semantic layer.
   when \(\pi(\Delta_1)=\pi(\Delta_2)\). The hidden operator fiber over
   \(p\in P\) is
   \[
-    \Hidden(p)=\{\Delta:\pi(\Delta)=p\},
+    \mathcal H_p=\pi^{-1}(p)=\{\Delta:\pi(\Delta)=p\},
   \]
-  and the hidden class of \(\Delta\) is \(\Hidden(\pi(\Delta))\).
+  and the hidden class of \(\Delta\) is \(\mathcal H_{\pi(\Delta)}\).
 \end{definition}
 
 \begin{definition}[Lossiness and kernel ambiguity]\label{def:kernel-ambiguity}
@@ -216,7 +240,7 @@ develops this semantic layer.
   hidden operator data \(\Delta\), a harmonic cochain \(h\), and
   Hodge-structured noise \(e\), such that
   \[
-    \Delta \in \Hidden(p),
+    \Delta \in \mathcal H_p,
     \qquad
     h \in \ker(\Delta),
     \qquad
@@ -224,36 +248,30 @@ develops this semantic layer.
     \qquad
     b = h + e.
   \]
-  Here \(\Hidden(p)\) denotes the fiber of hidden Hodge--Laplacian
-  representatives compatible with the public class value \(p\).
 \end{definition}
 
-Concretely, the hidden data includes the fibration representative, restriction
-maps, the induced Laplacian, its harmonic kernel, and private witness/cochain
-data. The public data may bind to this hidden data through commitments or
-proof-carrying artifacts, but it does not present the operative kernel itself.
+The hidden data includes the fibration representative, restriction maps, the
+induced Laplacian, its harmonic kernel, and private witness/cochain data. Public
+data may bind to this hidden data through commitments or proof-carrying
+artifacts, but it does not present the operative kernel.
 
 \begin{definition}[HCP solution]\label{def:hcp-solution}
   A solution to an HCP instance \((p,b)\) is a cochain \(h'\) that is the
   harmonic component selected by the operative hidden witness. In the exact
   recovery form used by the hidden-operator separation, \(h' = h\) for every
-  hidden witness \((\Delta,h,e)\) compatible with the public observation.
+  hidden witness \((\Delta,h,e)\) compatible with the public observation; hence
+  uniform public recovery requires the observation to determine the relevant
+  hidden harmonicity data.
 \end{definition}
-
-The exact recovery formulation is deliberately strong. It isolates the
-central ambiguity: the same cochain-facing observation may be compatible with hidden
-operators that disagree about harmonicity. Thus a solver that sees only public
-data cannot be uniformly sound unless the public observation determines enough
-hidden-operator structure.
 
 \subsection{Recovery Target}
 
 The recovery target is the harmonic cochain selected by the operative kernel,
-not necessarily the entire kernel subspace. This distinction keeps HCP parallel
-to CVP: CVP asks for a closest vector in a presented lattice, while HCP asks for
-a harmonic cochain in the operative Hodge kernel.
+not the entire kernel subspace. Thus CVP asks for a closest vector in a
+presented lattice, while HCP asks for a harmonic cochain in the operative Hodge
+kernel.
 
-In the metric variant used for comparison with CVP, one may ask for the closest
+In the metric variant used for comparison with CVP, the target is the closest
 harmonic cochain to \(b\). Once \(\Delta\) or a basis for \(\ker(\Delta)\) is
 explicitly presented, this becomes a closest-vector question on the harmonic
 lattice. The hidden-operator model withholds precisely that presentation.
@@ -271,6 +289,17 @@ The computational model separates three layers.
     mathematical HCP definition.
 \end{enumerate}
 
-This paper focuses on the first two layers. The runtime layer is part of the
-protocol and proof-carrying-verification story developed in the subsequent
-protocol paper.
+This paper treats the first two layers. The runtime layer belongs to the
+subsequent protocol paper.
+
+\subsection*{Lean Correspondence}
+
+The definitions and theorem surfaces in this section correspond to
+\lean{Hardness.MatrixIsHarmonic}, \lean{Hardness.PublicProjection},
+\lean{Hardness.HiddenOperatorFiber}, \lean{Hardness.HiddenOperatorClass},
+\lean{Hardness.SameKernel}, \lean{Hardness.KernelAmbiguous},
+\lean{Hardness.PublicCompatibleHodgeAmbiguity},
+\lean{Hardness.Hodge_Decomposition_Theorem},
+\lean{Hardness.kernelAmbiguous_implies_lossy},
+\lean{Hardness.kernelAmbiguous_of_publicCompatibleHodgeAmbiguity}, and
+\lean{Hardness.Hodge_Ambiguity}.

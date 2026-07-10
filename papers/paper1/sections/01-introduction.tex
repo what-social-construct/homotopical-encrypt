@@ -21,17 +21,19 @@ operator.
 
 This paper develops the following contributions.
 \begin{enumerate}[label=(\roman*)]
-  \item The Harmonic Cochain Problem (HCP), a hidden-operator recovery problem
-    for Hodge-theoretic cochains.
+  \item The Harmonic Cochain Problem (HCP): recovery of the harmonic cochain
+    selected by a hidden Hodge operator.
   \item A Hodge-structured noise model with cochain decomposition
     \(b = h + e\), where \(h \in \ker(\Delta)\) and
     \(e \in \image(\delta) \oplus \image(\delta^\ast)\).
-  \item A comparison with CVP, separating known-lattice closest-vector search
-    from hidden-operator harmonic-cochain recovery.
-  \item A projection framework from hidden/geometric state to public finite
-    evidence.
+  \item A CVP comparison in which an explicit lattice is realized as a kernel
+    \(\ker(\Delta)\), a harmonic solver yields a lattice vector, and the
+    closest-harmonic contract recovers the closest-vector predicate.
+  \item A hidden-operator ambiguity theorem: publicly equivalent Hodge operators
+    may disagree on harmonicity, so a correct explicit-lattice CVP oracle does
+    not uniformly solve public-data HCP.
   \item A Lean formalization of the definitions, reductions, projection chain,
     gates, and theorem boundaries.
-  \item A Reed--Solomon mutual-correlated-agreement corollary aligned with the
-    vocabulary of the Proximity Prize problem statement.
+  \item A projection chain through Plucker shadows and cochain commitments to a
+    canonical Reed--Solomon endpoint with an MCA bad-challenge bound.
 \end{enumerate}

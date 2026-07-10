@@ -1,61 +1,40 @@
 \section{Future Directions}
 
-\subsection{Cryptographic Protocol}
+\subsection{Protocol Boundary}
 
-The present paper stops at the mathematical and formalization boundary. The
-subsequent protocol paper should turn the commitment, oracle, proof-carrying, and
-proximity surfaces into explicit adversary games and executable verification
-paths. The relevant Lean surfaces are already separated: \texttt{TCB} records
-proof-carrying artifacts and runtime obligations, \texttt{Gates} records
-object-local admissibility predicates, and \texttt{Consensus} records the
-Proof-of-Value scoring and policy layer. The concrete protocol must specify
-which certificates are public evidence, which witnesses remain private, and
-which runtime failures cause rejection, hold, or re-evaluation.
+The present paper stops at the mathematical and formalization boundary. A
+subsequent protocol paper should turn the commitment, oracle, proof-carrying,
+identity, storage, and proximity surfaces into explicit adversary games and
+executable verification paths. The concrete protocol must specify which
+certificates are public evidence, which witnesses remain private, and which
+runtime failures cause rejection, hold, or re-evaluation.
 
-\subsection{Anonymous Identity System}
+On the identity side, the hidden-representative/public-classifier split should
+be developed into explicit class-membership, unlinkability, and nullifier
+properties. Public identity data should remain class values, hashes, proofs, or
+oracle judgments; the private side should retain fibration representatives,
+transport data, and the Hodge operator selecting the operative kernel.
 
-The hidden-representative/public-classifier split suggests an anonymous
-identity architecture. The public identity surface would expose class values,
-hashes, and oracle judgments, while the private side would retain fibration
-representatives, transport data, and the Hodge operator selecting the operative
-kernel. In Lean, this direction is anchored by \texttt{Axioms.HomotopyClass},
-\texttt{Axioms.Fibration}, and \texttt{Axioms.OracleModality}. A future system
-should make the unlinkability, class-membership, and nullifier properties
-explicit rather than treating public-shadow equality as strict identity.
+On the storage side, the commitment layer can be developed as a controlled
+system for sheaf/cochain projections. A public store may retain topology
+hashes, cochain roots, compressed shadows, and proof-carrying statements, while
+full sheaf and fibration witnesses remain private or are opened only through
+dedicated proof paths.
 
-\subsection{Sheaf Storage}
+The protocol-facing reference point is the higher categorical cryptoeconomics
+program \cite{higherCategoricalCryptoeconomics}. It is relevant to the design
+of protocol evidence and state semantics, but it is not used in the proofs of
+the present paper.
 
-The commitment layer can also be developed as a storage and retrieval system
-for controlled sheaf/cochain projections. The public store would retain
-topology hashes, cochain roots, compressed shadows, and proof-carrying
-statements. Full sheaf and fibration witnesses would remain private or be
-opened only through dedicated proof paths. The relevant Lean interfaces are
-\texttt{Axioms.CochainCommitment}, \texttt{TCB.CompressionBoundary},
-\texttt{TCB.ObservationBoundary}, and \texttt{Proximity.Public}.
+\subsection{Complexity-Theoretic Refinements}
 
-\subsection{Vertra Chain}
-
-Vertra is the working name for the chain/network layer. The paper should keep
-the mathematical protocol name separate from product and token naming.
-The chain layer belongs in the subsequent protocol paper: it consumes the
-mathematical surfaces from this paper as protocol evidence, but it also requires block validity,
-ledger updates, fork choice, oracle attestation, worker reliability, and
-runtime trust-boundary analysis. A protocol-facing reference point is the higher
-categorical cryptoeconomics program
-\cite{higherCategoricalCryptoeconomics}; it is not used in the proofs of the
-present paper. Lean files such as \texttt{Chain}, \texttt{Consensus}, and
-\texttt{Consensus.ProofOfValue} already mark this boundary without making those
-architecture claims part of the HCP theorem.
-
-\subsection{Complexity-Theoretic Extensions}
-
-The current formalization already isolates the hidden-operator obstruction:
-public data does not canonically determine the operative Hodge--Laplacian
-kernel. It also separates the external known-lattice CVP assumption from the
-project-native hidden-operator ambiguity, gives public-data-only oracle
-insufficiency statements, records classical and quantum adversary surfaces, and
+The current formalization isolates the hidden-operator obstruction: public data
+does not canonically determine the operative Hodge--Laplacian kernel. It also
+separates the external known-lattice CVP assumption from the project-native
+hidden-operator ambiguity, gives public-data-only oracle insufficiency
+statements, records classical and quantum adversary likelihood surfaces, and
 proves infinitude results for the relevant Grassmannian/Laplacian families.
-Future work should build on those surfaces quantitatively: rates of growth for
-hidden-kernel families, leakage bounds for public classifiers, success
-probabilities for restricted adversary classes, and reductions between refined
-HCP variants.
+Future work should sharpen these surfaces quantitatively: rates of growth for
+hidden-kernel families, refined leakage bounds for public classifiers, success
+probabilities for specified adversary classes, and reductions between variants
+of HCP.

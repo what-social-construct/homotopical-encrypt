@@ -46,8 +46,7 @@ The source and Plucker stages carry metric and public-shadow invariants.
 We use the usual Grassmannian and Plucker-coordinate algebra: a frame
 \((w_1,\ldots,w_r)\) determines the exterior coordinate
 \([w_1\wedge\cdots\wedge w_r]\in\mathbb P(\bigwedge^r V)\), with the
-quadratic Plucker relations as the projective Grassmannian equations
-\cite{griffithsHarris1978}.
+quadratic Plucker relations as the projective Grassmannian equations.
 The source disagreement score \(\rho(W)\) is required to be nonnegative and
 invariant under the public Plucker quotient. The Plucker metric is defined only
 on the admissible projective chart, and its distance must be nonnegative and
@@ -91,8 +90,8 @@ through the committed cochain, to the final Reed--Solomon received word.
 The proximity endpoint is stated over the paper-style alphabet shape
 \(C \subseteq (\F^s)^n\). The canonical \HE{} evaluation is the ordinary
 Reed--Solomon slice at width \(s = 1\), using the standard polynomial
-evaluation-code viewpoint of Reed--Solomon codes \cite{reedSolomon1960}.
-The concrete endpoint used by the Lean surface fixes
+evaluation-code convention.
+The canonical endpoint fixes
 \[
   \F=\mathbb Z/12289\mathbb Z,\qquad n=4096,\qquad k=1024,
 \]
@@ -107,9 +106,9 @@ for the below-Johnson comparison is the absolute Hamming radius
 \[
   2047.
 \]
-Lean proves the field arithmetic, domain cardinality, smoothness,
-evaluation-point compatibility, and absolute-radius normalization for this
-endpoint; the deep list-decoding and MCA estimates enter only as cited
+The required finite checks are the field arithmetic, domain cardinality,
+smoothness, evaluation-point compatibility, and absolute-radius normalization
+for this endpoint; the deep list-decoding and MCA estimates enter only as cited
 code-theoretic theorem slots.
 
 \subsection{Mutual Correlated Agreement}
@@ -124,11 +123,9 @@ code-theoretic theorem slots.
   fraction of bad challenges in \(\F\).
 \end{definition}
 
-The Lean endpoint specializes this paper definition to the canonical scalar
-Reed--Solomon slice \(s=1\). The width-one comparison is formalized in
-\texttt{CanonicalRS.MCA.Concrete}: ordinary scalar RS words are identified with
-words in \((\F^1)^n\), and the bad-challenge predicate is shown to agree with
-the paper-alphabet predicate.
+For the canonical scalar Reed--Solomon slice \(s=1\), ordinary scalar RS words
+are identified with words in \((\F^1)^n\), and the bad-challenge predicate
+agrees with the paper-alphabet predicate.
 
 \begin{theorem}[Canonical RS MCA bound]\label{thm:canonical-rs-mca}
   For the canonical \HE{} Reed--Solomon endpoint at the below-Johnson radius,
@@ -139,16 +136,13 @@ the paper-alphabet predicate.
   where \(\tau\) is the cited MCA threshold for the canonical endpoint.
 \end{theorem}
 
-The deep list-decoding and MCA estimates are not reproved in Lean. They enter
-through \texttt{CanonicalRS.CitedBounds} as named theorem constants: the
-Johnson list-decoding bound, the count and fractional MCA bounds, and the
-paper Definition~4.3 width-one MCA bound. Lean proves the endpoint plumbing,
-the \(s=1\) equivalence, and the specialization to projection-induced lines.
-The list-decoding background is the usual Reed--Solomon list-decoding theory,
-for example Guruswami--Sudan and its standard formulations
-\cite{guruswamiSudan1999,guruswami2004listDecoding}; the project-specific MCA
-input is the cited Proximity Prize theorem boundary
-\cite{proximityPrize2026}.
+The deep list-decoding and MCA estimates are external theorem inputs: the
+Johnson list-decoding bound, the count and fractional MCA bounds, and the paper
+Definition~4.3 width-one MCA bound. The internal finite part is the endpoint
+plumbing, the \(s=1\) equivalence, and the specialization to projection-induced
+lines.
+The project-specific list-decoding and MCA input is the cited Proximity Prize
+theorem boundary \cite{proximityPrize2026}.
 
 \subsection{Corollary}
 
@@ -166,3 +160,15 @@ state can be projected to a finite public RS/MCA target with calibrated
 non-collapse at the selected far region. It does not say that the projection is
 injective, and it does not turn the RS/MCA endpoint into the source of HCP
 hardness.
+
+\subsection*{Lean Correspondence}
+
+The proximity and finite-code endpoint in this section corresponds to the
+following Lean declarations:
+\lean{Proximity.GrassmannianPlucker}, \lean{Proximity.CochainBridge},
+\lean{Proximity.PluckerCochain}, \lean{Proximity.CochainPlane},
+\lean{Proximity.ProjectionChain}, \lean{ProjectionChain.Chain.toEvaluationProjection},
+\lean{Proximity.Gates}, \lean{Proximity.GateEvidence},
+\lean{CanonicalRS.BridgeData}, \lean{CanonicalRS.CitedBounds},
+\lean{CanonicalRS.MCA}, and
+\lean{CanonicalRS.MCA.projectionBadChallengeFraction_le}.

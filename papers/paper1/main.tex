@@ -11,17 +11,31 @@
 \maketitle
 
 \begin{abstract}
-We introduce the Harmonic Cochain Problem (HCP), a hidden-operator recovery
-problem in which public handles, shadows, commitments, or class-level data do
-not determine the operative Hodge--Laplacian kernel. The underlying cochain
-decomposition has the form \(b = h + e\), where \(h \in \ker(\Delta)\) is a
-harmonic cochain and \(e \in \image(\delta) \oplus \image(\delta^\ast)\) is
-Hodge-structured noise. We compare HCP with the closest vector problem (CVP):
-CVP is the known-lattice comparison problem, while HCP hides the operator and
-kernel that make the relevant lattice explicit. We also describe a certified
-projection chain from accepted hidden/geometric state to a finite
-Reed--Solomon mutual-correlated-agreement target, with theorem boundaries
-formalized in Lean.
+We introduce the Harmonic Cochain Problem (HCP), the problem of recovering the
+harmonic cochain \(h\in\ker(\Delta)\) selected by a hidden Hodge--Laplacian
+\(\Delta\) from a public homotopy class, without determining \(\Delta\) or
+\(\ker(\Delta)\). A hidden representative determines restriction data,
+adjacent coboundaries \(\delta_0,\delta_1\), the degree-one Hodge--Laplacian
+\(\Delta_1=\delta_0\delta_0^\ast+\delta_1^\ast\delta_1\), and the Hodge
+projection \(\pi_H:C^1\to\ker(\Delta_1)\) used for recovery; the public class
+records only a classifier shadow, while the observed cochain has the form
+\(b = h + e\), where
+\(e \in \image(\delta_0) \oplus \image(\delta_1^\ast)\) is Hodge-structured noise.
+For every explicitly generated lattice
+\(\Lambda_B=\image(B)\), there is a linear operator \(\Delta\) with
+\(\ker(\Delta)=\Lambda_B\); hence a presented-operator closest-harmonic solver
+returns a closest vector for the CVP instance \((B,t)\). Conversely, a correct
+known-lattice CVP oracle does not uniformly solve public-data HCP when publicly
+equivalent hidden operators may disagree on harmonicity. We isolate the
+semantic and axiomatic surfaces needed
+for this statement, including fibrational identity data, homotopy classes,
+exact invariants, spectral/Tsirelson admissibility, and Heyting-style oracle
+judgments. We then define the public artifact stack of cochain commitment
+payloads, commitment axioms, proof-carrying artifacts, and lossy projections,
+and construct the finite projection endpoint as a Reed--Solomon
+mutual-correlated-agreement statement. The definitions, theorem boundaries, and
+Lean correspondence are formalized and explicitly indexed in the appendix
+ledger.
 \end{abstract}
 
 \tableofcontents
@@ -32,7 +46,6 @@ formalized in Lean.
 \input{sections/04-axioms-and-semantics}
 \input{sections/05-public-shadows-and-commitments}
 \input{sections/06-rs-mca-projection}
-\input{sections/07-formal-verification}
 \input{sections/08-future-directions}
 \input{sections/appendices}
 

@@ -1,40 +1,5 @@
 \appendix
 
-\section{Repository Dependency Graph}
-
-The Lean formalization is organized so that each paper section has a small
-number of import surfaces.
-\begin{description}[leftmargin=2.4em,style=nextline]
-  \item[HCP and CVP.]
-    \lean{Axioms/*} feeds \lean{Laplacian/*}, \lean{CVP}, and
-    \lean{Hardness}.
-  \item[Commitments and public artifacts.]
-    \lean{Axioms.CochainCommitment/*} feeds \lean{TCB/*} and
-    \lean{Proximity.CochainBridge}.
-  \item[Projection chain.]
-    \lean{Proximity.GrassmannianPlucker} feeds
-    \lean{Proximity.PluckerCochain}, then \lean{Proximity.CochainPlane},
-    then \lean{Proximity.CochainReedSolomon}.
-  \item[Projection certificates.]
-    \lean{Proximity.ProjectionChain} feeds \lean{Proximity.Gates}, which
-    feeds \lean{Proximity.CanonicalRS}.
-  \item[Protocol boundary.]
-    \lean{TCB/*}, \lean{Gates/*}, \lean{Consensus/*}, and
-    \lean{Chain} are surfaces for the subsequent protocol paper.
-\end{description}
-
-For Paper~1, the main Lean check targets are:
-\begin{center}
-\small
-\begin{tabular}{ll}
-\lean{lake env lean Axioms.lean} & \lean{lake env lean Gates.lean} \\
-\lean{lake env lean TCB.lean} & \lean{lake env lean Hardness.lean} \\
-\lean{lake env lean Proximity.lean}
-\end{tabular}
-\end{center}
-The full build target remains \lean{lake build}; the smaller targets above
-are the theorem-surface checks most directly corresponding to this paper.
-
 \section{Lean/Paper Correspondence}
 
 \begin{leanledger}
@@ -215,7 +180,7 @@ files are listed with the files they collect.
     \lean{constantPublicProjection_publicCompatibleHodgeAmbiguity},
     \lean{constantPublicProjection_kernelAmbiguous}, and
     \lean{constantPublicProjection_lossy} are
-    \cref{prop:constant-public-ambiguity}. The known-lattice comparison
+    \cref{prop:cvp-insufficient}. The known-lattice comparison
     declarations \lean{Hodge_Solver_Correct},
     \lean{exists_matrix_ker_eq_range},
     \lean{Hodge_Hardness_Reduction}, and
@@ -328,7 +293,7 @@ files are listed with the files they collect.
     pipelines, and the oracle/consensus bridge theorems.
   \item[\lean{Axioms/StageAdmissibility.lean},
     \lean{Gates/Stage.lean}, and \lean{Gates/Oracle.lean}.]
-    Section 7 records the stage and oracle aliases: pipeline stages, stage
+    This appendix records the stage and oracle aliases: pipeline stages, stage
     admissibility, transaction-critical invariant bundles, Python-stage
     snapshots, refinement predicates, and the theorem that a refined
     transaction-critical pass is admissible.
@@ -384,7 +349,7 @@ files are listed with the files they collect.
     \lean{TCB/SNARK.lean}, \lean{TCB/CompressionBoundary.lean},
     \lean{TCB/ObservationBoundary.lean}, and
     \lean{TCB/WitnessVerifier.lean}.]
-    Sections 5 and 7 translate hash words, hashed committed cochains,
+    Section 5 and this appendix record hash words, hashed committed cochains,
     proof-carrying cochains, runtime specification boundaries, runtime
     acceptance predicates, SNARK-carrying cochains, compression contracts,
     compressed shadows, observation boundaries, gap-decision certificates,
@@ -474,33 +439,33 @@ files are listed with the files they collect.
     and the bound on the projected bad-challenge fraction.
 \end{description}
 
-\subsection{Sequel-Facing Protocol And Implementation Boundary}
+\subsection{Subsequent Protocol And Implementation Boundary}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{Axioms/Consensus.lean}, \lean{Axioms/Ledger.lean},
     \lean{Axioms/Coregulator.lean}, and
     \lean{Axioms/PythonHomotopyRefinement.lean}.]
-    Section 7 records consensus, ledger, coregulator, and Python homotopy
+    This appendix records consensus, ledger, coregulator, and Python homotopy
     refinement as boundary objects. Their full protocol semantics belong to
-    Paper 2, but their predicates are named here so the Paper 1 mathematical
-    objects have explicit downstream interfaces.
+    the subsequent protocol paper, but their predicates are named here so the
+    Paper 1 mathematical objects have explicit downstream interfaces.
   \item[\lean{Consensus/Geometry.lean},
     \lean{Consensus/Reliability.lean}, and
     \lean{Consensus/ProofOfValue.lean}.]
-    Section 7 records Plucker eligibility and consensus geometry aliases,
+    This appendix records Plucker eligibility and consensus geometry aliases,
     reliability evidence and bounded reliability scores, proximity quality,
     Proof-of-Value gates, Proof-of-Value inputs, scores with and without
     reliability/proximity, and the score bounds. These are protocol-facing
     uses of the Section 4 and Section 6 mathematical predicates.
   \item[\lean{Chain.lean}.]
-    Section 7 records validators, transactions, blocks, chains, spectral
+    This appendix records validators, transactions, blocks, protocol states, spectral
     bounds, topology and freshness predicates, block validity, tips, heights,
     extension, transaction and block acceptance, ledger-state updates,
     key-image preservation theorems, validator eligibility, cumulative gap,
     preference, transaction composition and identities, quadratic weight,
     Sybil-resistance weighting, chain-growth monotonicity, fork-resolution
     transitivity, and connectedness of eligible validators. The detailed
-    chain architecture remains Paper 2.
+    protocol architecture remains in the subsequent protocol paper.
 \end{description}
 
 \end{leanledger}

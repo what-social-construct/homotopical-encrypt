@@ -1,17 +1,12 @@
 \section{Axioms, Semantics, And Public Data}\label{sec:mathematical-framework}
 
-This section fixes the semantic and axiomatic surfaces used by the problem.
-It comes before the public artifact and commitment layer because those objects
-are only meaningful after the public/private boundary is fixed.
-
 \subsection{Fibrational Semantics}
 
 The semantic layer is motivated by Helfer's first-order homotopical logic
-\cite{helfer2019fol} and by the standard topos-theoretic language of sheaves
-and internal logic \cite{macLaneMoerdijk1994}. We use it here as a semantic
-language for hidden representatives, public bases, and transport of witness
-data; the external foundational results are taken as background rather than
-reproved.
+\cite{helfer2019fol}. We use the associated path, fibration, sheaf, and
+internal-logic language for hidden representatives, public bases, and transport
+of witness data; the external foundational results are taken as background
+rather than reproved.
 We use the usual fibrational notation
 \[
   p:E\longrightarrow B,
@@ -21,16 +16,17 @@ We use the usual fibrational notation
 for a total space of hidden data over a base of public or contextual data.
 When \(x,y\in E_b\), equality in the semantic layer is interpreted through a
 path object rather than by strict equality in the ambient presentation. We
-write
+write \(\mathcal P_X(x,y)\) for the path object from \(x\) to \(y\) in a space
+or type \(X\), and set
 \[
   x\simeq_b y
   \quad\Longleftrightarrow\quad
-  \Path_{E_b}(x,y)\text{ is inhabited}.
+  \mathcal P_{E_b}(x,y)\neq\varnothing .
 \]
 For a dependent family \(F:E\to\mathsf{Type}\), a path
-\(\gamma\in\Path_E(x,y)\) supplies the transport map
+\(\gamma\in\mathcal P_E(x,y)\) supplies the transport map
 \[
-  \mathsf{transport}_{\gamma}:F_x\longrightarrow F_y.
+  \gamma_{\ast}:F_x\longrightarrow F_y.
 \]
 Thus the primitive semantic data are fibers, paths, and transport along paths.
 The cryptographic objects introduced later live over this interface; they do
@@ -68,12 +64,12 @@ transport principle used by the hidden-representative semantics.
 
 Let \(\Delta_A:A\to A\times A\) denote the diagonal. Following the
 path/diagonal semantics, the identity object over a pair \((x,y)\) has fiber
-\(\Path_A(x,y)\). We therefore regard \(x\) and \(y\) as equal for the
+\(\mathcal P_A(x,y)\). We therefore regard \(x\) and \(y\) as equal for the
 first-order homotopical semantics exactly when this fiber is inhabited:
 \[
   x\simeq_A y
   \quad\Longleftrightarrow\quad
-  \Path_A(x,y)\neq\varnothing .
+  \mathcal P_A(x,y)\neq\varnothing .
 \]
 This is the semantic source of the hidden-operator model used in HCP: the
 verifier may receive evidence that two representatives lie in the same
@@ -103,21 +99,113 @@ The classifier is path-respecting when
 \]
 and non-faithful when some public fiber contains distinct hidden
 representatives. A hidden class-membership witness is a path
-\(\gamma\in\Path_A(x,y)\); its public shadow is only the equality
+\(\gamma\in\mathcal P_A(x,y)\); its public shadow is only the equality
 \(\pi(x)=\pi(y)\). At this stage the shadow is only a classifier or
 fingerprint. The finite-code projection and Reed--Solomon/MCA endpoint are
 introduced later in \cref{sec:rs-mca-projection}.
 
-\subsection{Axiom Surfaces}
+\subsection{Axiom And Interface Surfaces}
 
-The assumptions are separated by mathematical role:
+Here a \emph{surface} means a mathematical assumption, specification predicate,
+or interface boundary used by the paper. It does not mean that every item below
+is literally a file under \lean{Axioms/}. The relevant surfaces are the following.
 \begin{enumerate}[label=(\roman*)]
-  \item foundational cochain and Hodge assumptions;
-  \item fibration and homotopy-class interfaces;
-  \item Heyting/oracle semantics for public judgments;
-  \item sheaf-coherence and spectral/Tsirelson admissibility interfaces;
-  \item cochain-commitment payload and security assumptions.
+  \item Foundational cochain/Hodge surface: a cochain complex, a coboundary,
+  the induced Hodge--Laplacian, Hodge decomposition, and orthogonality.
+  \item Hidden semantic surface: paths, transport, fibration structure,
+  homotopy classes, public classifiers, and the nonfaithfulness of public
+  class data.
+  \item Sheaf-coherence surface: restriction-shape compatibility, naturality,
+  \(d^2=0\), the induced Hodge--Laplacian identity, finiteness, simpliciality,
+  and connectedness.
+  \item Spectral and stage-admissibility surface: Tsirelson-style spectral
+  window predicates, near-boundary predicates, and object-local admissibility
+  wrappers for candidate Hodge--Laplacian data.
+  \item Public-judgment surface: finite Heyting collapse, public truth
+  equivalence, oracle query/answer predicates, and oracle-visible spectral,
+  identity, and topology judgments.
+  \item Public-artifact surface: cochain-commitment payloads, commitment
+  security assumptions, proof-system assumptions, proof-carrying artifacts, and
+  compression/observation boundaries used in \cref{sec:public-artifact-stack}.
 \end{enumerate}
+Only the well-formedness boundaries that are directly consumed later are
+displayed as conjunctions below. The path/fibration, Heyting/oracle, spectral,
+stage, and runtime objects are invoked through their stated interface predicates
+unless a particular object-level predicate is displayed.
+
+\begin{definition}[Foundation assumption boundary]\label{def:foundation-assumption-boundary}
+  A foundation record is well formed exactly when
+  \[
+  \begin{gathered}
+    \mathsf{CochainComplex}\wedge
+    \mathsf{CoboundaryLinearity}
+    \\
+    {}\wedge
+    \mathsf{LaplacianFromCoboundary}\wedge
+    \mathsf{HodgeDecomposition}
+    \\
+    {}\wedge
+    \mathsf{HodgeOrthogonality}
+    \\
+    {}\wedge
+    \mathsf{CommitmentBinding}\wedge
+    \mathsf{CommitmentHiding}
+    \\
+    {}\wedge
+    \mathsf{CommitmentHomomorphic}.
+  \end{gathered}
+  \]
+\end{definition}
+
+\begin{definition}[Sheaf-coherence assumption boundary]\label{def:sheaf-coherence-assumption-boundary}
+  A sheaf-coherence record is well formed exactly when
+  \[
+  \begin{gathered}
+    \mathsf{IncidenceShapes}\wedge
+    \mathsf{EdgeSquareCommutes}
+    \\
+    {}\wedge
+    \mathsf{TriangleFacesCommute}\wedge
+    \mathsf{CoboundarySquaresZero}
+    \\
+    {}\wedge
+    \mathsf{LaplacianFromCoboundary}\wedge
+    \mathsf{Orthogonality}
+    \\
+    {}\wedge
+    \mathsf{Finite}\wedge
+    \mathsf{Simplicial}\wedge
+    \mathsf{Connected}.
+  \end{gathered}
+  \]
+\end{definition}
+
+\begin{definition}[Proof-system and commitment-security boundaries]\label{def:proof-commitment-assumption-boundary}
+  The commitment-security boundary is
+  \[
+  \begin{gathered}
+    \mathsf{Binding}\wedge
+    \mathsf{Hiding}\wedge
+    \mathsf{HomomorphicAddition}\wedge
+    \mathsf{HomomorphicScalarMult}
+    \\
+    {}\wedge
+    \mathsf{TopologyBinding}\wedge
+    \mathsf{PartialOpeningSoundness}.
+  \end{gathered}
+  \]
+  The proof-system boundary is
+  \[
+    \mathsf{Completeness}\wedge
+    \mathsf{Soundness}\wedge
+    \mathsf{ZeroKnowledge}\wedge
+    \mathsf{StatementBinding}.
+  \]
+\end{definition}
+
+Consensus, ledger, reliability, and Proof-of-Value records are mentioned here
+only at their mathematical interface boundary. Their runtime policy content
+belongs to the subsequent protocol paper.
 
 \subsection{Exact Structural Invariants}
 
@@ -125,7 +213,7 @@ The exact structural invariants are not a separate source of geometry. They
 package the same foundational and sheaf-coherence hypotheses at the point
 where an object is admitted. We use the cellular-sheaf Hodge--Laplacian
 viewpoint of Hansen--Ghrist as background \cite{hansenGhrist2018sheaves}. For
-a cochain complex \(C^\bullet\), the accepted surface supplies a differential
+a cochain complex \(C^\bullet\), the accepted data supply a differential
 \[
   d^k:C^k\longrightarrow C^{k+1}
 \]
@@ -138,9 +226,23 @@ In the sheaf setting, the corresponding coherence assumptions assert that
 restriction maps, local data, and gluing data are compatible with this
 cochain/Hodge structure. The only structural consequences used later are the
 differential identity \(d^2=0\) and the Hodge--Laplacian identity above.
+Equivalently, the projection maps used to pass from hidden sheaf data to public
+cochain-facing data are required to commute with the coboundary:
+\[
+\begin{array}{ccc}
+  F(V) & \xrightarrow{\eta_V} & G(V)\\
+  \delta_F\downarrow\phantom{\delta_F} & & \phantom{\delta_G}\downarrow\delta_G\\
+  F(E) & \xrightarrow{\eta_E} & G(E)
+\end{array}
+\qquad
+\eta_E\circ\delta_F=\delta_G\circ\eta_V .
+\]
+This is the functorial/naturality diagram used in the paper. It is a
+cochain-level coherence condition, not a runtime statement about byte transport
+or consensus execution.
 
 \begin{proposition}[Exact structural preconditions]\label{prop:exact-structural-preconditions}
-  An accepted sheaf-coherence surface supplies
+  Accepted sheaf-coherence data supply
   \[
     d^2=0
     \qquad\text{and}\qquad
@@ -149,14 +251,14 @@ differential identity \(d^2=0\) and the Hodge--Laplacian identity above.
   for the cochain complex under discussion.
 \end{proposition}
 
-\subsection{Spectral-Gap Admissibility Surface}
+\subsection{Spectral-Gap Admissibility}
 
-The spectral surface is an object-level admissibility interface. It is not the
+The spectral condition is an object-level admissibility predicate. It is not the
 source of HCP hardness, not a reconstruction theorem for the hidden fibration,
-and not introduced here as a consensus rule. The Lean predicate
-\lean{SpectralGapInPoVBounds} records the PoV/Tsirelson spectral window used
-later by the protocol layer. In Paper 1 it is simply a hard mathematical
-predicate on candidate Hodge--Laplacian data. The terminology is
+and not introduced here as a consensus rule. In Paper 1 the PoV/Tsirelson
+spectral window is a mathematical predicate on candidate
+Hodge--Laplacian data; its use as a protocol-level admissibility rule belongs to
+the subsequent protocol paper. The terminology is
 Tsirelson-style because the admissible window uses the familiar \(\sqrt 2\)
 scale from Tsirelson's bound \cite{tsirelson1980bell}. For a Hermitian
 positive semidefinite operator \(\Delta\), write
@@ -181,8 +283,8 @@ the two endpoints:
   \quad\text{or}\quad
   \left|\lambda_1^+(\Delta)-2\sqrt 2\right|\le \varepsilon .
 \]
-This predicate only records near-boundary status; runtime policy for such
-values belongs to the subsequent protocol paper.
+This predicate records near-boundary status only; runtime policy for such values
+belongs to the subsequent protocol paper.
 
 The corresponding Grassmannian/Laplacian surface makes the hidden-kernel
 search space concrete. Let
@@ -350,11 +452,10 @@ separation in \cref{prop:cvp-insufficient}.
   in the quantum-density case, up to the usual Gaussian normalization factor.
 \end{definition}
 
-The likelihood is written with the Euclidean norm. The Lean development also
-records a formal norm-convention check: the default norm on \(n\to R\) is the
-supremum norm, so the Euclidean likelihood is represented by passing to the
-\(\ell^2\) norm explicitly. The mathematical surface used here is the
-corrected Euclidean one.
+The likelihood is written with the Euclidean norm. The norm-convention check is
+that the default function-space norm may be the supremum norm, so the Euclidean
+likelihood must be represented by passing to the \(\ell^2\) norm explicitly. The
+mathematical surface used here is the corrected Euclidean one.
 
 \begin{proposition}[Likelihood for a projection Laplacian]\label{prop:likelihood-projection-laplacian}
   For \(A=\Delta_W\), the Euclidean Gaussian likelihood is
@@ -458,61 +559,69 @@ operative kernel.
   \]
 \end{proposition}
 
-This is exactly the Lean theorem that the field
-\lean{gap_in_bounds} of \lean{ByConstructionPoVGeometry} implies the hard
-spectral predicate, together with the gate-facing alias in
-\lean{Gates/Spectral.lean}. It constrains which candidate objects are
-admissible; it does not remove hidden-operator ambiguity. The HCP hardness
-story in \cref{sec:hcp-definition} remains the hidden fibration, hidden
-Laplacian, and hidden kernel.
+Thus the by-construction witness is an admissibility certificate for the
+displayed spectral window. It constrains which candidate objects are admissible;
+it does not remove hidden-operator ambiguity. The HCP hardness mechanism in
+\cref{sec:hcp-definition} remains the hidden fibration, hidden Laplacian, and
+hidden kernel.
 
 For a nonempty family \(\Omega\subseteq\mathcal L_1(R^n)\), the associated
 classical and quantum adversary-bound forms are spectral-statistical targets,
-not HCP hardness assumptions. The Lean file also contains empty-family
-sanity-check theorems, which are logically useful boundary checks but are not
-nontrivial hardness bounds.
+not HCP hardness assumptions. The corresponding empty-family statements are
+only boundary checks; they are not nontrivial hardness bounds.
 
 \subsection{Heyting And Oracle Judgment Surface}
 
-Following the Helfer-style fibrational/topos semantics used above
-\cite{helfer2019fol,macLaneMoerdijk1994}, the public judgment layer is a
-finite Heyting shadow of the richer semantic object carried by hidden
-representatives. Public truth values are quotients of hidden semantic evidence,
-not Boolean inspections of the hidden object itself. For the public judgment
-layer, we use a three-valued Heyting surface
+The ownership split is:
+\[
+\begin{array}{rcl}
+\text{hidden equality} &:&
+  x\simeq y\Longleftrightarrow \mathcal P(x,y)\neq\varnothing,\\[2pt]
+\text{public class data} &:&
+  x\equiv_\pi y\Longleftrightarrow \pi(x)=\pi(y),\\[2pt]
+\text{public truth data} &:&
+  q:\Omega\longrightarrow\Omega_3 .
+\end{array}
+\]
+The first line is the Helfer path/diagonal interface, together with the
+usual sheaf-theoretic interpretation of intuitionistic logic
+\cite{helfer2019fol}. The second line is the public classifier surface defined
+above. The third line is the finite public judgment surface. We take
 \[
   \Omega_3=\{\bot,\, ?,\, \top\},
   \qquad
   \bot< ? <\top,
 \]
-with the induced meet, join, and implication operations.
-
-The oracle-specific part is the query/answer mechanism that produces public
-judgments. Following the oracle-modality viewpoint of Ahman--Bauer
-\cite{ahmanBauer2026oracle}, oracle-visible predicates such as vertex
-compatibility, Betti-number compatibility, public identity-hash compatibility,
-and spectral compatibility are mapped into this finite public Heyting surface,
-and the acceptance predicate is formed in the resulting public logic.
-The collapse from the richer hidden semantic object to \(\Omega_3\) is lossy:
-distinct hidden witnesses may have the same public truth value. It is also not
-classical Boolean logic. In the three-chain Heyting algebra, implication is the
-residuated operation
+with meet and join given by minimum and maximum in the chain. Its implication
+is the residuated operation characterized by
 \[
   c\le (a\Rightarrow b)
   \quad\Longleftrightarrow\quad
-  a\wedge c\le b,
+  a\wedge c\le b.
 \]
-and the intermediate value \(?\) is not eliminated by classical reasoning. Thus
-the public oracle layer is a quotient of hidden semantic evidence, not a
-reconstruction of that evidence.
+The quotient map \(q\) is not assumed faithful:
+\[
+  \exists\,\omega_1\ne\omega_2
+  \quad\text{with}\quad
+  q(\omega_1)=q(\omega_2).
+\]
 
-The intermediate value \(?\) is a logical value in this public algebra, not a
-Boolean verdict in disguise. Operational maps out of \(\Omega_3\), such as
-protocol actions attached to an intermediate public judgment, belong to the
-subsequent protocol paper's runtime and consensus semantics. They are not the
-Heyting implication operation and do not alter the residuation law above.
+The oracle-specific component is the query/answer mechanism that produces these
+public judgments. For this boundary we use oracle-modality terminology
+compatible with Ahman--Bauer \cite{ahmanBauer2026oracle}: oracle-visible
+predicates such as vertex compatibility, Betti-number compatibility, public
+identity-hash compatibility, and spectral compatibility are evaluated in the
+finite public Heyting surface.
+Thus an oracle answer is a public quotient of hidden semantic evidence, not a
+reconstruction of the hidden representative, hidden path witness, fibration,
+Laplacian, or harmonic kernel.
 
-The identity hash used by the oracle surface is an observation obtained from
+Operational maps out of \(\Omega_3\), such as protocol actions attached to the
+intermediate public judgment \(?\), belong to the subsequent protocol paper's
+runtime and consensus semantics. They are not the Heyting implication operation
+and do not alter the residuation law above.
+
+The identity hash used by the oracle interface is an observation obtained from
 the public Hodge projection and quantization path. It is not a cochain
 commitment payload. The corresponding stability assumption says that equal
 public identity inputs give the same identity hash; it is a determinism
@@ -521,12 +630,24 @@ for cochain commitments.
 Similarly, topological observations such as Betti-number compatibility are
 homotopy-invariant public data, whereas spectral fingerprints are not
 determined by homotopy class alone by
-\cref{prop:spectrum-not-homotopy-invariant}. The oracle surface therefore keeps
+\cref{prop:spectrum-not-homotopy-invariant}. The oracle interface therefore keeps
 Betti/topology observations, spectral admissibility, identity hashes, and
 cochain commitments as separate public predicates.
 
-This modular split is part of the mathematical statement. It prevents
-cryptographic assumptions, public classifiers, and Hodge-theoretic claims from
-being conflated. Exact and oracle invariants are used here as mathematical
-acceptance surfaces; their full CS/protocol treatment is deferred to the
-subsequent protocol paper.
+This modular split is part of the mathematical statement: cryptographic
+assumptions, public classifiers, and Hodge-theoretic claims are not identified.
+Exact and oracle invariants are used here as mathematical acceptance predicates;
+their full CS/protocol treatment is deferred to the subsequent protocol paper.
+
+\subsection*{Lean Correspondence}
+
+The semantic and axiom surfaces in this section correspond to
+\lean{Axioms.HelferFOL}, \lean{Axioms.Fibration},
+\lean{Axioms.HomotopyClass}, \lean{Axioms.Foundation},
+\lean{Axioms.FoundationWellFormed}, \lean{Axioms.SheafCoherence},
+\lean{Axioms.SheafCoherenceWellFormed}, \lean{Gates.Exact},
+\lean{Gates.structural_preconditions_of_sheaf_exact_gates},
+\lean{Axioms.SpectralBounds}, \lean{Tsirelson},
+\lean{Gates.Spectral}, \lean{Axioms.StageAdmissibility},
+\lean{Gates.Stage}, \lean{Axioms.Heyting}, and
+\lean{Axioms.OracleModality}.

@@ -1,4 +1,4 @@
-\section{Public Artifact Stack And Lossy Projection}
+\section{Public Artifact Stack And Lossy Projection}\label{sec:public-artifact-stack}
 
 Commitments and public shadows are the first concrete public-facing objects in
 the paper. They explain what public data can carry without revealing the hidden
@@ -18,10 +18,10 @@ transport/restriction data, full cochains and openings, and the Hodge operator
 whose kernel selects the harmonic component. The paper's claims are stated so
 that public handles and verifier-facing artifacts bind to hidden witnesses
 without turning the hidden witness into public data. This is compatible with the
-sheaf-theoretic attacker-observation viewpoint of
-\cite{inoue2026cryptographicSheaves}; the associated security games and
-runtime observation model belong to the subsequent protocol paper. The present
-paper uses only the mathematical public/private separation described below.
+sheaf-theoretic attacker-observation viewpoint; the associated security games
+and runtime observation model belong to the subsequent protocol paper. The
+present paper uses only the mathematical public/private separation described
+below.
 
 \subsection{The Artifact Stack}
 
@@ -50,9 +50,9 @@ comes from the predicate or proof attached to the hashed object.
 
 \subsection{Cochain Commitments}
 
-Cochain commitments provide the public handle on hidden cochain data. The Lean
-surface treats the canonical payload as a mathematical object with a modulus,
-edge values, declared edge count, and topology hash.
+Cochain commitments provide the public handle on hidden cochain data. The
+canonical payload is a mathematical object with a modulus, edge values, declared
+edge count, and topology hash.
 
 \subsection{Commitment Map}
 
@@ -62,8 +62,7 @@ edge values, declared edge count, and topology hash.
     (q,n,c,\tau)
   \]
   consisting of a modulus \(q\), a declared edge count \(n\), a list \(c\) of
-  integer edge values, and a topology hash \(\tau\). In the canonical Lean
-  payload this is \texttt{CochainCommitmentData}.
+  integer edge values, and a topology hash \(\tau\).
 \end{definition}
 
 The intended commitment map is the transaction-facing coboundary map
@@ -82,11 +81,83 @@ operative Hodge--Laplacian, or the harmonic kernel.
   list length, and the edge list is nonempty.
 \end{definition}
 
+\begin{proposition}[Well-formed committed payloads]\label{prop:well-formed-committed-payloads}
+  A well-formed cochain commitment payload has nonempty edge data and modulus
+  greater than one.
+\end{proposition}
+
+\begin{proposition}[Topology-compatible aggregation]\label{prop:topology-compatible-aggregation}
+  Commitment aggregation is only meaningful for payloads with compatible
+  modulus, declared edge count, and topology hash. This is the public
+  topology-binding condition consumed by the protocol layer.
+\end{proposition}
+
 The security interface for this commitment layer consists of binding, hiding,
 homomorphic addition, homomorphic scalar multiplication, topology binding, and
 partial-opening soundness. The blinded-commitment, vector-commitment, and
 cohomological-MAC interfaces are separate axiom records rather than consequences
-silently bundled into the payload shape.
+silently bundled into the payload shape. In symbols, their well-formedness
+conditions are:
+
+\[
+\begin{array}{rcl}
+  \mathsf{BlindedCommitmentWF}
+  &\Longleftrightarrow&
+  \left\{
+  \begin{array}{l}
+    \mathsf{HodgeOrthogonality},\\
+    \mathsf{DeterministicBasis},\\
+    \mathsf{Binding},\\
+    \mathsf{Hiding};
+  \end{array}
+  \right.
+  \\[1.5em]
+  \mathsf{VectorCommitmentWF}
+  &\Longleftrightarrow&
+  \left\{
+  \begin{array}{l}
+    \mathsf{Completeness},\\
+    \mathsf{Soundness},\\
+    \mathsf{PositionBinding};
+  \end{array}
+  \right.
+  \\[1.5em]
+  \mathsf{CohomologicalMACWF}
+  &\Longleftrightarrow&
+  \left\{
+  \begin{array}{l}
+    \mathsf{Correctness},\\
+    \mathsf{Unforgeability},\\
+    \mathsf{KeyBinding},\\
+    \mathsf{Determinism}.
+  \end{array}
+  \right.
+\end{array}
+\]
+
+Here \(\mathsf{HodgeOrthogonality}\) denotes the orthogonal Hodge splitting
+\[
+  C^1
+  =
+  \mathcal H^1\oplus\image(\delta)\oplus\image(\delta^\ast),
+  \qquad
+  \mathcal H^1\perp\image(\delta)\perp\image(\delta^\ast).
+\]
+The binding predicate is a coboundary-collision condition: if two openings
+\((m,r)\) and \((m',r')\), over the same topology, determine the same committed
+cochain, then
+\[
+  \delta\bigl((m-m')\Vert(r-r')\bigr)=0,
+\]
+so a nontrivial double opening produces a nonzero element in the relevant
+kernel/collision relation for \(\delta\). The hiding predicate says that the
+randomized \(C^1\)-level value does not determine the message component.
+\(\mathsf{DeterministicBasis}\) says that the blinding harmonic direction is
+fixed by the topology hash rather than by trusted setup.
+\(\mathsf{PositionBinding}\) says that vertex positions are fixed by the
+topology hash, and \(\mathsf{KeyBinding}\) says that MAC tags are bound to the
+chosen Hodge--Laplacian key. Full adversarial games for hiding,
+unforgeability, and partial openings belong to the subsequent protocol paper.
 
 \subsection{Commitment And Artifact Invariants}
 
@@ -104,12 +175,17 @@ hashes agree. The weaker same-topology relation records equality of topology
 hashes alone. Cryptographic binding and topology-binding claims are supplied by
 the commitment-security axioms, not by the raw payload record.
 
-At the artifact level, Lean records a hashed committed cochain as a public
-cochain payload together with digest data and a binding predicate. A
-proof-carrying committed cochain adds a proof system, a statement, and a
-verification predicate. The basic theorem exposed to this paper is that a
-well-formed proof-carrying committed-cochain artifact has an underlying
-well-formed cochain commitment payload.
+At the artifact level, a hashed committed cochain is a public cochain payload
+together with digest data and a binding predicate. A proof-carrying committed
+cochain adds a proof system, a statement, and a verification predicate. The
+basic theorem exposed to this paper is that a well-formed proof-carrying
+committed-cochain artifact has an underlying well-formed cochain commitment
+payload.
+
+\begin{proposition}[Proof-carrying artifact exposes payload]\label{prop:proof-carrying-artifact-exposes-payload}
+  A well-formed proof-carrying committed-cochain artifact exposes a well-formed
+  underlying cochain commitment payload.
+\end{proposition}
 
 \subsection{Sheaf Storage And Witness Material}
 
@@ -148,26 +224,23 @@ randomness, and runtime lifecycle facts. Those may be bound to public artifacts
 or certified by a proof-carrying statement, but they are not made public merely
 by the presence of a hash, root, or commitment payload.
 
-\subsection{Fundamental Properties}
-
-\begin{proposition}[Well-formed committed payloads]\label{prop:well-formed-committed-payloads}
-  A well-formed cochain commitment payload has nonempty edge data and modulus
-  greater than one.
-\end{proposition}
-
-\begin{proposition}[Topology-compatible aggregation]\label{prop:topology-compatible-aggregation}
-  Commitment aggregation is only meaningful for payloads with compatible
-  modulus, declared edge count, and topology hash. This is the public
-  topology-binding condition consumed by the chain layer.
-\end{proposition}
-
-\begin{proposition}[Proof-carrying artifact exposes payload]\label{prop:proof-carrying-artifact-exposes-payload}
-  A well-formed proof-carrying committed-cochain artifact exposes a well-formed
-  underlying cochain commitment payload.
-\end{proposition}
-
 Byte parsing, allocation bounds, canonical encoding, concrete hash functions,
 domain separation, storage inclusion proofs, proof verification, state updates,
-and ephemeral-fiber lifecycle properties are TCB obligations. Lean records
-their boundary predicates; it does not identify them with the mathematical
-cochain commitment payload.
+and ephemeral-fiber lifecycle properties are TCB obligations. They are boundary
+predicates, not part of the mathematical cochain commitment payload.
+
+\subsection*{Lean Correspondence}
+
+The public artifact and commitment surfaces in this section correspond to
+\lean{Axioms.CochainCommitmentData},
+\lean{CochainCommitmentData.WellFormed},
+\lean{CochainCommitmentData.AddCompatible},
+\lean{CochainCommitmentData.edge_values_nonempty_of_wellFormed},
+\lean{CochainCommitmentData.modulus_gt_one_of_wellFormed},
+\lean{Axioms.CochainCommitmentAxioms},
+\lean{Axioms.BlindedCommitmentAxioms},
+\lean{Axioms.VectorCommitmentAxioms},
+\lean{Axioms.CohomologicalMACAxioms},
+\lean{TCB.HashedCommittedCochain},
+\lean{TCB.ProofCarryingCommittedCochain}, and
+\lean{TCB.proofCarrying_cochain_wellFormed}.
