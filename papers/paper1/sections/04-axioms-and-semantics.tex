@@ -62,14 +62,32 @@ transport principle used by the hidden-representative semantics.
 
 \subsection{Fibrational Identity Objects}
 
-Let \(\Delta_A:A\to A\times A\) denote the diagonal. Following the
-path/diagonal semantics, the identity object over a pair \((x,y)\) has fiber
-\(\mathcal P_A(x,y)\). We therefore regard \(x\) and \(y\) as equal for the
-first-order homotopical semantics exactly when this fiber is inhabited:
+Let \(\Delta_A:A\to A\times A\) denote the diagonal. In path-object notation,
+evaluation at the endpoints gives
+\[
+  A^I\xrightarrow{(e_0,e_1)}A\times A,
+  \qquad
+  \mathcal P_A(x,y)=(e_0,e_1)^{-1}(x,y).
+\]
+Following the path/diagonal semantics, the identity object over a pair
+\((x,y)\) has fiber \(\mathcal P_A(x,y)\). We therefore regard \(x\) and
+\(y\) as equal for the first-order homotopical semantics exactly when this
+fiber is inhabited:
 \[
   x\simeq_A y
   \quad\Longleftrightarrow\quad
   \mathcal P_A(x,y)\neq\varnothing .
+\]
+When path objects carry identity paths, reversal, and concatenation, the
+relation \(\simeq_A\) is reflexive, symmetric, and transitive. For structures
+\(M,N\) in the same homotopical semantic class, the corresponding invariance
+principle is
+\[
+  M\simeq N
+  \quad\Longrightarrow\quad
+  \bigl(M\models\varphi \Longleftrightarrow N\models\varphi\bigr)
+  \quad
+  \text{for every first-order formula }\varphi .
 \]
 This is the semantic source of the hidden-operator model used in HCP: the
 verifier may receive evidence that two representatives lie in the same
@@ -99,108 +117,133 @@ The classifier is path-respecting when
 \]
 and non-faithful when some public fiber contains distinct hidden
 representatives. A hidden class-membership witness is a path
-\(\gamma\in\mathcal P_A(x,y)\); its public shadow is only the equality
-\(\pi(x)=\pi(y)\). At this stage the shadow is only a classifier or
-fingerprint. The finite-code projection and Reed--Solomon/MCA endpoint are
+\(\gamma\in\mathcal P_A(x,y)\); its public consequence is only the equality
+\(\pi(x)=\pi(y)\). At this stage the public datum is only the homotopy-class
+value of the classifier. The finite-code projection and Reed--Solomon/MCA endpoint are
 introduced later in \cref{sec:rs-mca-projection}.
 
-\subsection{Axiom And Interface Surfaces}
+\subsection{Axiom Interfaces}
 
-Here a \emph{surface} means a mathematical assumption, specification predicate,
-or interface boundary used by the paper. It does not mean that every item below
-is literally a file under \lean{Axioms/}. The relevant surfaces are the following.
+The hypotheses used below are grouped by mathematical interface. This grouping
+does not assert that every item below is literally a file under \lean{Axioms/}.
+The relevant interfaces are the following.
 \begin{enumerate}[label=(\roman*)]
-  \item Foundational cochain/Hodge surface: a cochain complex, a coboundary,
+  \item Foundational cochain/Hodge interface: a cochain complex, a coboundary,
   the induced Hodge--Laplacian, Hodge decomposition, and orthogonality.
-  \item Hidden semantic surface: paths, transport, fibration structure,
+  \item Hidden semantic interface: paths, transport, fibration structure,
   homotopy classes, public classifiers, and the nonfaithfulness of public
   class data.
-  \item Sheaf-coherence surface: restriction-shape compatibility, naturality,
-  \(d^2=0\), the induced Hodge--Laplacian identity, finiteness, simpliciality,
-  and connectedness.
-  \item Spectral and stage-admissibility surface: Tsirelson-style spectral
-  window predicates, near-boundary predicates, and object-local admissibility
+  \item Sheaf-coherence interface: restriction-shape compatibility, naturality,
+  \(d^{k+1}d^k=0\), the induced Hodge--Laplacian identity, finiteness,
+  simpliciality, and connectedness.
+  \item Spectral and stage-admissibility interface: Tsirelson-style spectral
+  window conditions, near-boundary conditions, and object-local admissibility
   wrappers for candidate Hodge--Laplacian data.
-  \item Public-judgment surface: finite Heyting collapse, public truth
-  equivalence, oracle query/answer predicates, and oracle-visible spectral,
+  \item Public-judgment interface: finite Heyting collapse, public truth
+  equivalence, oracle query/answer conditions, and oracle-visible spectral,
   identity, and topology judgments.
-  \item Public-artifact surface: cochain-commitment payloads, commitment
+  \item Public-artifact interface: cochain-commitment payloads, commitment
   security assumptions, proof-system assumptions, proof-carrying artifacts, and
   compression/observation boundaries used in \cref{sec:public-artifact-stack}.
 \end{enumerate}
-Only the well-formedness boundaries that are directly consumed later are
-displayed as conjunctions below. The path/fibration, Heyting/oracle, spectral,
-stage, and runtime objects are invoked through their stated interface predicates
-unless a particular object-level predicate is displayed.
+The well-formedness boundaries are displayed below as enumerated conditions.
+
+\begin{definition}[Helfer semantic boundary]\label{def:helfer-semantic-boundary}
+  A first-order homotopical semantic record is well formed if and only if all
+  of the following hold:
+  \begin{enumerate}[label=(\roman*)]
+    \item Equality is interpreted by the path/diagonal condition
+      \(x\simeq_A y\Longleftrightarrow\mathcal P_A(x,y)\neq\varnothing\).
+    \item Cartesian lifting is available for the relevant fibrations.
+    \item Dependent sums and products are coherent with transport and
+      base-change along the fibration.
+    \item Homotopy-equivalent structures have the same first-order theory.
+    \item Class membership is witnessed by hidden path data, and under a
+      path-respecting public classifier its public consequence is
+      \(\pi(x)=\pi(y)\).
+  \end{enumerate}
+  These clauses correspond to \lean{Axioms.HelferFOL} and
+  \lean{Axioms.HelferFOLWellFormed}.
+\end{definition}
 
 \begin{definition}[Foundation assumption boundary]\label{def:foundation-assumption-boundary}
-  A foundation record is well formed exactly when
-  \[
-  \begin{gathered}
-    \mathsf{CochainComplex}\wedge
-    \mathsf{CoboundaryLinearity}
-    \\
-    {}\wedge
-    \mathsf{LaplacianFromCoboundary}\wedge
-    \mathsf{HodgeDecomposition}
-    \\
-    {}\wedge
-    \mathsf{HodgeOrthogonality}
-    \\
-    {}\wedge
-    \mathsf{CommitmentBinding}\wedge
-    \mathsf{CommitmentHiding}
-    \\
-    {}\wedge
-    \mathsf{CommitmentHomomorphic}.
-  \end{gathered}
-  \]
+  A foundation record is well formed if and only if all of the following hold:
+  \begin{enumerate}[label=(\roman*)]
+    \item \(C^\bullet\) is a cochain complex.
+    \item Each coboundary \(d^k:C^k\to C^{k+1}\) is linear.
+    \item The Hodge--Laplacian is obtained from adjacent coboundaries and
+      adjoints.
+    \item \(C^1\) admits the Hodge decomposition
+      \[
+        C^1=\mathcal H^1\oplus\image(\delta_0)\oplus\image(\delta_1^\ast).
+      \]
+    \item The summands
+      \(\mathcal H^1\), \(\image(\delta_0)\), and
+      \(\image(\delta_1^\ast)\) are pairwise orthogonal.
+    \item A commitment collision gives an element of the relevant coboundary
+      kernel.
+    \item The commitment hides the witness component specified by the
+      commitment interface.
+    \item The commitment operation is additive with respect to the cochain
+      group law.
+  \end{enumerate}
+  These clauses correspond to \lean{Axioms.Foundation} and
+  \lean{Axioms.FoundationWellFormed}.
 \end{definition}
 
 \begin{definition}[Sheaf-coherence assumption boundary]\label{def:sheaf-coherence-assumption-boundary}
-  A sheaf-coherence record is well formed exactly when
-  \[
-  \begin{gathered}
-    \mathsf{IncidenceShapes}\wedge
-    \mathsf{EdgeSquareCommutes}
-    \\
-    {}\wedge
-    \mathsf{TriangleFacesCommute}\wedge
-    \mathsf{CoboundarySquaresZero}
-    \\
-    {}\wedge
-    \mathsf{LaplacianFromCoboundary}\wedge
-    \mathsf{Orthogonality}
-    \\
-    {}\wedge
-    \mathsf{Finite}\wedge
-    \mathsf{Simplicial}\wedge
-    \mathsf{Connected}.
-  \end{gathered}
-  \]
+  A sheaf-coherence record is well formed if and only if all of the following
+  hold:
+  \begin{enumerate}[label=(\roman*)]
+    \item Restriction maps have compatible source and target dimensions on
+      incidences.
+    \item For every edge, the two restriction/transport paths commute.
+    \item On every triangle, the face-composition maps agree.
+    \item Adjacent sheaf coboundaries square to zero:
+      \(d^{k+1}d^k=0\).
+    \item The Hodge--Laplacian is obtained from the sheaf coboundaries and
+      adjoints.
+    \item The harmonic, exact, and coexact summands are pairwise orthogonal.
+    \item The nerve is finite.
+    \item The nerve is simplicial.
+    \item The nerve is connected.
+  \end{enumerate}
+  These clauses correspond to \lean{Axioms.SheafCoherence} and
+  \lean{Axioms.SheafCoherenceWellFormed}.
 \end{definition}
 
 \begin{definition}[Proof-system and commitment-security boundaries]\label{def:proof-commitment-assumption-boundary}
-  The commitment-security boundary is
-  \[
-  \begin{gathered}
-    \mathsf{Binding}\wedge
-    \mathsf{Hiding}\wedge
-    \mathsf{HomomorphicAddition}\wedge
-    \mathsf{HomomorphicScalarMult}
-    \\
-    {}\wedge
-    \mathsf{TopologyBinding}\wedge
-    \mathsf{PartialOpeningSoundness}.
-  \end{gathered}
-  \]
-  The proof-system boundary is
-  \[
-    \mathsf{Completeness}\wedge
-    \mathsf{Soundness}\wedge
-    \mathsf{ZeroKnowledge}\wedge
-    \mathsf{StatementBinding}.
-  \]
+  The commitment-security boundary holds if and only if all of the following
+  hold:
+  \begin{enumerate}[label=(\roman*)]
+    \item Binding: a collision requires a nontrivial relation in the relevant
+      coboundary kernel.
+    \item Hiding: the commitment distribution hides the committed witness
+      component.
+    \item Homomorphic addition:
+      \(C(m_1,r_1)+C(m_2,r_2)=C(m_1+m_2,r_1+r_2)\) when the two commitments
+      are compatible.
+    \item Homomorphic scalar multiplication:
+      \(a\,C(m,r)=C(am,ar)\) for admissible scalars \(a\).
+    \item Topology binding: a commitment is bound to its underlying
+      simplicial complex or topology identifier.
+    \item Partial opening soundness: opening a specified subset verifies the
+      corresponding local cochain constraints.
+  \end{enumerate}
+  The proof-system boundary holds if and only if all of the following hold:
+  \begin{enumerate}[label=(\roman*)]
+    \item Completeness: an honest proof for a valid witness verifies.
+    \item Soundness: verifier acceptance implies validity of the asserted
+      mathematical statement, up to the stated error model.
+    \item Zero knowledge: the proof transcript does not identify the hidden
+      witness.
+    \item Statement binding: the proof is bound to its public statement,
+      topology, and instance context.
+  \end{enumerate}
+  These clauses correspond to
+  \lean{Axioms.CochainCommitment.CochainCommitmentAxioms},
+  \lean{Axioms.CochainCommitment.CochainCommitmentWellFormed},
+  \lean{Axioms.ZKP}, and \lean{Axioms.ZKPWellFormed}.
 \end{definition}
 
 Consensus, ledger, reliability, and Proof-of-Value records are mentioned here
@@ -213,19 +256,27 @@ The exact structural invariants are not a separate source of geometry. They
 package the same foundational and sheaf-coherence hypotheses at the point
 where an object is admitted. We use the cellular-sheaf Hodge--Laplacian
 viewpoint of Hansen--Ghrist as background \cite{hansenGhrist2018sheaves}. For
-a cochain complex \(C^\bullet\), the accepted data supply a differential
+a finite cell poset \(X\), a cellular sheaf is represented here as
+\[
+  X^{\mathrm{op}}\xrightarrow{F}\mathsf{Vect},
+  \qquad
+  C^0(X;F)\xrightarrow{\delta_0}C^1(X;F)
+  \xrightarrow{\delta_1}C^2(X;F).
+\]
+For a cochain complex \(C^\bullet\), the accepted data supply differentials
 \[
   d^k:C^k\longrightarrow C^{k+1}
 \]
-with \(d^{k+1}d^k=0\), together with an adjoint \(d^\ast\) and the induced
-Hodge Laplacian
+with \(d^{k+1}d^k=0\). Together with adjoints, these give the degree-\(k\)
+Hodge--Laplacian
 \[
-  \Delta=d^\ast d+dd^\ast.
+  \Delta_k=d^{k-1}(d^{k-1})^\ast+(d^k)^\ast d^k.
 \]
 In the sheaf setting, the corresponding coherence assumptions assert that
 restriction maps, local data, and gluing data are compatible with this
 cochain/Hodge structure. The only structural consequences used later are the
-differential identity \(d^2=0\) and the Hodge--Laplacian identity above.
+adjacent differential identity \(d^{k+1}d^k=0\) and the Hodge--Laplacian
+identity above.
 Equivalently, the projection maps used to pass from hidden sheaf data to public
 cochain-facing data are required to commute with the coboundary:
 \[
@@ -244,9 +295,9 @@ or consensus execution.
 \begin{proposition}[Exact structural preconditions]\label{prop:exact-structural-preconditions}
   Accepted sheaf-coherence data supply
   \[
-    d^2=0
+    d^{k+1}d^k=0
     \qquad\text{and}\qquad
-    \Delta=d^\ast d+dd^\ast
+    \Delta_k=d^{k-1}(d^{k-1})^\ast+(d^k)^\ast d^k .
   \]
   for the cochain complex under discussion.
 \end{proposition}
@@ -529,6 +580,19 @@ operative kernel.
   \]
 \end{definition}
 
+The order of determination is important. The public homotopy class \(p\) gives
+the public fiber \(A_p\); it is not itself a fibration ID. A hidden
+representative \(x\in A_p\) determines the operative Hodge--Laplacian
+\(\Delta_x\). Once an HCP witness has selected or certified the hidden Hodge
+data \((\Delta_x,h,e)\), the fibration ID is the spectral fingerprint
+\[
+  \operatorname{FID}(x):=
+  \operatorname{Spec}_{\mathrm{multi}}(\Delta_x).
+\]
+Thus the spectral fingerprint gives the fibration identity in the certified
+Hodge layer, while remaining downstream of harmonic-cochain recovery and not
+part of the public homotopy class.
+
 \begin{proposition}[Spectrum is not determined by harmonic dimension]\label{prop:spectrum-not-homotopy-invariant}
   There exist self-adjoint positive semidefinite Laplacians \(L_1,L_2\) with
   \[
@@ -628,10 +692,10 @@ public identity inputs give the same identity hash; it is a determinism
 condition for public identity observations, not a uniqueness or binding theorem
 for cochain commitments.
 Similarly, topological observations such as Betti-number compatibility are
-homotopy-invariant public data, whereas spectral fingerprints are not
-determined by homotopy class alone by
-\cref{prop:spectrum-not-homotopy-invariant}. The oracle interface therefore keeps
-Betti/topology observations, spectral admissibility, identity hashes, and
+homotopy-invariant public data. Spectral fingerprints are post-recovery
+fibration-identification data: they are not determined by homotopy class alone
+by \cref{prop:spectrum-not-homotopy-invariant}. The oracle interface therefore
+keeps Betti/topology observations, spectral admissibility, identity hashes, and
 cochain commitments as separate public predicates.
 
 This modular split is part of the mathematical statement: cryptographic

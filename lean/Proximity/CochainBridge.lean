@@ -64,8 +64,8 @@ theorem wellFormed_of_globalSectionCandidate
 
 /--
 A global-section candidate provides the structural sheaf preconditions used by
-proximity and transaction-stage validation: `δ² = 0` and
-Laplacian-from-coboundary.
+proximity and transaction-stage validation: adjacent coboundaries compose to
+zero, and the Laplacian is built from coboundaries.
 -/
 theorem structural_preconditions_of_globalSectionCandidate
     {S : Axioms.SheafCoherence} {c : CommittedCochain}

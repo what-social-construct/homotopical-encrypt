@@ -18,7 +18,7 @@ import Axioms.StageAdmissibility
   Paper correspondence:
   - Paper 1 Section 4: semantic, public/private, exact, oracle, and commitment
     axiom surfaces.
-  - Paper 1 Section 7: axiom-module theorem-surface correspondence.
+  - Paper 1 appendix ledger: axiom-module theorem-surface correspondence.
   - Paper 2: consensus, ledger, and stage-admissibility interfaces are consumed
     by the protocol paper.
 -/

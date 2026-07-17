@@ -6,7 +6,7 @@ import Axioms.SheafCoherence
 
   Paper correspondence:
   - Paper 1 Section 4: exact structural preconditions.
-  - Paper 1 Section 7: theorem-surface row for `Gates.Exact`.
+  - Paper 1 appendix ledger: theorem-surface row for `Gates.Exact`.
 
   These are classical structural predicates: cochain-complex laws, Laplacian
   construction, Hodge decomposition/orthogonality, and sheaf-coherence shape
@@ -36,7 +36,8 @@ abbrev FoundationWithSheafExactGates :=
 
 /--
 Exact sheaf gates provide the structural preconditions needed downstream:
-`δ² = 0` and Laplacian-from-coboundary.
+adjacent coboundaries compose to zero, and the Laplacian is built from
+coboundaries.
 -/
 theorem structural_preconditions_of_sheaf_exact_gates
     (S : SheafExactGateBundle) :

@@ -7,10 +7,11 @@ Paper correspondence:
 
 Role in the architecture:
   This file is the formal geometry/edge-case layer for the PoV construction.
-  It is not the runtime oracle implementation and it is not the core Hodge/CVP
-  hardness proof. Its job is to make the Grassmannian/Laplacian objects precise
-  enough that the spectral gate has a mathematical target: admissible operators,
-  kernels, projections, bounds, and ambiguity/identifiability edge cases.
+  It is not the runtime oracle implementation and it is not the core HCP
+  hidden-operator hardness proof. Its job is to make the
+  Grassmannian/Laplacian objects precise enough that the spectral gate has a
+  mathematical target: admissible operators, kernels, projections, bounds, and
+  ambiguity/identifiability edge cases.
 
   In the TCB split, Lean handles these mathematical admissibility statements;
   Rust/oracle code must still validate concrete bytes, attest results, enforce

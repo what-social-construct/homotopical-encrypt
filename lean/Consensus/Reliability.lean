@@ -6,7 +6,7 @@ import Mathlib.Tactic
 
   Paper correspondence:
   - Paper 2: validator reliability and Proof-of-Value scoring.
-  - Paper 1 Section 7: sequel boundary only.
+  - Paper 1 appendix ledger: subsequent protocol-paper boundary only.
 
   Validators are automated, so reliability is not human effort. It is protocol
   behavior: assigned duties fulfilled correctly and on time, with no

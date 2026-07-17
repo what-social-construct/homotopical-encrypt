@@ -16,8 +16,8 @@ namespace Axioms
   Scope:
     * The predicate below is a hard mathematical admissibility condition.
     * Boundary/marginal runtime handling lives in `OracleModality.lean`.
-    * Hodge/CVP hardness does not depend on this predicate; hardness comes from
-      hidden fibration / hidden Laplacian / hidden kernel ambiguity.
+    * HCP hidden-operator hardness does not depend on this predicate; hardness
+      comes from hidden fibration / hidden Laplacian / hidden kernel ambiguity.
 -/
 
 /-- Lower PoV/Tsirelson spectral-gap bound: `1 / sqrt 2 = sqrt 2 / 2`. -/
@@ -44,9 +44,9 @@ PoV geometry object whose spectral gap is valid by construction.
 
 This is the Lean shape matching the documentation: the `sqrt 2` bounds are a
 consensus validity condition for geometrically admissible fibrations, not the
-core Hodge/CVP hardness assumption. Runtime code still has to compute and
-attest the concrete gap; this structure records what a successfully constructed
-PoV witness must carry.
+core HCP hidden-operator hardness assumption. Runtime code still has to compute
+and attest the concrete gap; this structure records what a successfully
+constructed PoV witness must carry.
 -/
 structure ByConstructionPoVGeometry where
   spectralGap : ℝ

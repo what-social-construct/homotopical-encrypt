@@ -164,7 +164,7 @@ contracts named by Lean and owned by Rust/proof-verifier/runtime.
 | Oracle/public attestations | `TCB.RuntimeBoundary` | oracle attestation verified |
 | Consensus state update | `TCB.RuntimeBoundary` | atomic state transition, no Python consensus authority |
 | Commitment security | `Axioms.CochainCommitmentAxioms` | binding, hiding, homomorphic addition/scalar multiplication, topology binding, partial-opening soundness |
-| Sheaf coherence | `Axioms.SheafCoherenceWellFormed` | restriction shape compatibility, edge/triangle naturality, `δ^2 = 0`, Laplacian from coboundary, orthogonality, finite/simplicial/connected nerve |
+| Sheaf coherence | `Axioms.SheafCoherenceWellFormed` | restriction shape compatibility, edge/triangle naturality, adjacent coboundary composites vanish, Laplacian from coboundary, orthogonality, finite/simplicial/connected nerve |
 | Foundation/Hodge assumptions | `Axioms.FoundationWellFormed` | cochain complex, coboundary linearity, Hodge decomposition/orthogonality, commitment binding/hiding/homomorphism |
 
 ## What Is Not An Assumption

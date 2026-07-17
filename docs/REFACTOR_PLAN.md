@@ -9,7 +9,7 @@ with the implementation:
 
 | Lean Theorem | Claim | Status |
 |---|---|---|
-| `Hodge_Decomposition_Theorem` | C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ*) | ✅ Matches `geometry/hodge.py` |
+| `Hodge_Decomposition_Theorem` | C^k = ker(Δ_k) ⊕ im(δ_{k-1}) ⊕ im(δ_k*) | ✅ Matches `geometry/hodge.py` |
 | `Hodge_Hardness_Reduction_Proof` | Hodge solver → CVP solver | ✅ Matches `crypto/hardness.py` |
 | `Hodge_Ambiguity_Proof` | Harmonic depends on Laplacian choice | ✅ Matches ambiguity argument |
 | `PublicCompatibleHodgeAmbiguity` / `KernelAmbiguous` | Public class need not determine one hidden kernel | ✅ Matches hidden-operator claim |
@@ -58,7 +58,7 @@ PUBLIC (revealed on-chain / to verifiers):
 PRIVATE (never leaves wallet):
   spectral fingerprint (eigenvalues)  — the actual private key
   fibration (restriction maps R_{v→e}) — the geometric secret
-  Laplacian Δ = δ*δ + δδ*            — derived from fibration
+  Laplacian Δ_k = δ_{k-1}δ_{k-1}* + δ_k*δ_k — derived from fibration
   topology (nerve vertices/edges)     — the actual graph structure
   
 Anonymity set: entire homotopy class — infinite by Hodge theory ✅

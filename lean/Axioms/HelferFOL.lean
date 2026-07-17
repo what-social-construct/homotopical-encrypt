@@ -5,7 +5,7 @@ import Mathlib
 
   Paper correspondence:
   - Paper 1 Section 4: fibrational semantics and public equality semantics.
-  - Paper 1 Section 7: Lean theorem-surface correspondence.
+  - Paper 1 appendix ledger: Lean theorem-surface correspondence.
 
   Provenance/scope label:
   this module is a Lean interface inspired by Helfer-style first-order

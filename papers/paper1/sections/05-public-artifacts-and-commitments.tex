@@ -1,0 +1,393 @@
+\section{Public Artifact Stack And Lossy Projection}\label{sec:public-artifact-stack}
+
+Public homotopy classes, commitment payloads, and compressed public artifacts
+are the first concrete public-facing objects in the paper. The commitment
+interface itself is mixed: payloads, hashes, roots, and verification statements
+are public-facing, while openings, randomness, full cochains, and hidden Hodge
+data remain witness-level unless a specified protocol path exposes them.
+These public-facing objects are the scaffolding for transparency in action and
+anonymity in identity: actions are exposed through auditable public artifacts,
+while identities remain inside hidden representatives and public equivalence
+classes.
+This section realizes the abstract public observation \((p,b)\) of
+\cref{def:public-observation}: the public homotopy class is \(p\), while
+accepted cochain payloads, specified partial openings, and proof-carrying
+statements supply the cochain-facing datum \(b\) without presenting the hidden
+representative, Hodge--Laplacian, or harmonic kernel.
+
+\subsection{Cochain Commitments}
+
+Cochain commitment payloads provide the public handle on hidden cochain data. The
+cochain data itself lives at three different visibility levels. Fix a hidden
+representative \(x\in A_p\), with induced cochain complex \(C_x^\bullet\),
+coboundaries \(\delta_0,\delta_1\), and Hodge--Laplacian \(\Delta_x\).
+\begin{enumerate}[label=(\roman*)]
+  \item The private witness level contains the actual \(C_x^1\)-data:
+    the harmonic component \(h\), the noise component \(e\), the full observed
+    cochain \(b=h+e\) when it is not explicitly published, the opening data
+    \((m,r)\), and the hidden restriction/Hodge data determining
+    \(\Delta_x\).
+  \item The public payload level contains only a serialized residue edge vector
+    \[
+      \bar c=\delta(m\Vert r)\in C_x^1/qC_x^1
+    \]
+    together with a modulus, an edge count, and a topology hash. This is the
+    cochain commitment payload. It is public as a committed \(C^1\)-level
+    artifact, but it is not the private opening, not the full hidden cochain
+    with Hodge decomposition, and not a presentation of \(\Delta_x\) or
+    \(\ker(\Delta_x)\).
+  \item The opening/proof level may reveal local restrictions or certify
+    equations involving \(\bar c\). Only the stated local values, predicates,
+    or proof statements become public.
+\end{enumerate}
+Thus the cochain-facing observation \(b\) in \cref{def:public-observation} is
+the abstract datum supplied by an accepted payload, opening, or proof-carrying
+statement; the commitment payload records the public residue edge vector
+\(\bar c\); and the hidden cochain witness remains private unless a protocol
+path explicitly exposes a specified part of it. The canonical payload is a
+mathematical object with a modulus, public residue edge values, declared edge
+count, and topology hash.
+
+\begin{definition}[Cochain commitment payload]\label{def:cochain-commitment-payload}
+  A cochain commitment payload is a tuple
+  \[
+    (q,n,c,\tau)
+  \]
+  consisting of a modulus \(q\), a declared edge count \(n\), a list \(c\) of
+  integer edge values, and a topology hash \(\tau\).
+\end{definition}
+
+The intended commitment map is the transaction-facing coboundary map
+\[
+  (m,r) \longmapsto \delta(m\Vert r) \in C^1 \pmod q,
+\]
+stored together with the topology hash of the supporting complex. The payload
+therefore preserves the accepted modulus, the edge-vector shape, the public
+topology binding, and the serialized \(C^1\)-level commitment values. It does
+not expose the hidden fibration representative, private transport data, the
+operative Hodge--Laplacian, or the harmonic kernel.
+
+\begin{definition}[Commitment well-formedness]\label{def:commitment-well-formedness}
+  A cochain commitment payload is well formed when its modulus is the supported
+  canonical modulus, its declared edge count agrees with the actual edge-value
+  list length, and the edge list is nonempty.
+\end{definition}
+
+\begin{proposition}[Well-formed committed payloads]\label{prop:well-formed-committed-payloads}
+  A well-formed cochain commitment payload has nonempty edge data and modulus
+  greater than one.
+\end{proposition}
+
+\begin{proposition}[Topology-compatible aggregation]\label{prop:topology-compatible-aggregation}
+  Commitment aggregation is only meaningful for payloads with compatible
+  modulus, declared edge count, and topology hash. This is the public
+  topology-binding condition consumed by the protocol layer.
+\end{proposition}
+
+The security interface for this commitment layer consists of binding, hiding,
+homomorphic addition, homomorphic scalar multiplication, topology binding, and
+partial-opening soundness. The blinded-commitment, vector-commitment, and
+cohomological-MAC interfaces are separate axiom records rather than consequences
+silently bundled into the payload shape.
+
+\begin{definition}[Blinded cochain commitment boundary]\label{def:blinded-commitment-boundary}
+  A blinded cochain commitment boundary is well formed if and only if all of
+  the following hold:
+  \begin{enumerate}[label=(\roman*)]
+    \item \(C^1\) has the orthogonal Hodge splitting
+      \[
+        C^1
+        =
+        \mathcal H^1\oplus\image(\delta_0)\oplus\image(\delta_1^\ast),
+        \qquad
+        \mathcal H^1\perp\image(\delta_0)\perp\image(\delta_1^\ast).
+      \]
+    \item For each public topology hash \(\tau\), the blinding direction
+      \(H_\tau\in\mathcal H^1\) is determined by \(\tau\).
+    \item The blinded commitment has the form
+      \[
+        C_\tau(m,r)=\delta(m\Vert r)+rH_\tau\in C^1/qC^1 .
+      \]
+    \item Binding is the coboundary-collision condition: if two openings
+      \((m,r)\) and \((m',r')\) over the same topology determine the same
+      committed cochain, then
+      \[
+        \delta\bigl((m-m')\Vert(r-r')\bigr)=0.
+      \]
+    \item Hiding says that, for all messages \(m,m'\),
+      \[
+        \{C_\tau(m,r):r\in\mathcal R\}
+        \equiv_{\mathsf{hide}}
+        \{C_\tau(m',r):r\in\mathcal R\}.
+      \]
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}[Vector commitment boundary]\label{def:vector-commitment-boundary}
+  A vector commitment boundary is well formed if and only if all of the
+  following hold:
+  \begin{enumerate}[label=(\roman*)]
+    \item For vertex values \(a=(a_v)\), the committed edge cochain is
+      \(c=\delta a\), i.e. on an oriented edge \(e=(u,v)\),
+      \[
+        c_e=(\delta a)_e=R_{v\to e}a_v-R_{u\to e}a_u .
+      \]
+    \item Completeness: for every revealed set \(S\) of vertices,
+      \[
+        \operatorname{Ver}_\tau
+        \bigl(c,S,a|_S,\operatorname{Open}_S(c)\bigr)=1
+      \]
+      for the honest opening.
+    \item Soundness: if
+      \[
+        \operatorname{Ver}_\tau(c,S,\alpha,\omega)=1,
+      \]
+      then every revealed incidence satisfies the same coboundary equation
+      \(c_e=R_{v\to e}\alpha_v-R_{u\to e}\alpha_u\).
+    \item Position binding: the public topology hash fixes the vertex and edge
+      positions with respect to which openings are interpreted.
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}[Cohomological MAC boundary]\label{def:cohomological-mac-boundary}
+  A cohomological MAC boundary is well formed if and only if all of the
+  following hold:
+  \begin{enumerate}[label=(\roman*)]
+    \item The key determines a Hodge--Laplacian \(\Delta\) and harmonic
+      projection \(P_H:C^1\to\ker(\Delta)\).
+    \item Correct tags have the form
+      \[
+        T_{\Delta,\nu}(m)=P_H c(m,\nu)
+      \]
+      for the committed cochain \(c(m,\nu)\) determined by the message and
+      nonce.
+    \item Verification is the Hodge-projection check
+      \[
+        \operatorname{Ver}_\Delta(m,\nu,T)=1
+        \Longleftrightarrow
+        \Delta T=0
+        \quad\text{and}\quad
+        P_HT=P_Hc(m,\nu).
+      \]
+    \item Correctness:
+      \[
+        \operatorname{Ver}_\Delta(m,\nu,T_{\Delta,\nu}(m))=1.
+      \]
+    \item Unforgeability: producing a verifying tag without the key is exactly
+      the stated hidden-Hodge projection obligation for this interface.
+    \item Key binding: accepted tags are bound to the chosen
+      Hodge--Laplacian key.
+    \item Determinism: the same key, message, and nonce determine the same tag.
+  \end{enumerate}
+\end{definition}
+
+Full adversarial games for hiding, unforgeability, and partial openings belong
+to the subsequent protocol paper.
+
+The commitment-facing invariants attach to the commitment payload and, after
+packaging, to the public artifact layer; they are not proximity projection data.
+Payload well-formedness is a shape condition: it asserts the supported modulus,
+agreement between the declared edge count and the edge-value list, and a
+nonempty edge list. It is not a cryptographic uniqueness theorem and it does
+not assert that the cochain vector is nonzero. For example, the canonical zero
+payload is well formed whenever the declared edge count is positive.
+
+Topology compatibility is a separate public invariant. Two committed cochains
+can be aggregated only when their moduli, declared edge counts, and topology
+hashes agree. The weaker same-topology relation records equality of topology
+hashes alone. Cryptographic binding and topology-binding claims are supplied by
+the commitment-security axioms, not by the raw payload record.
+
+At the artifact level, a hashed committed cochain is a public cochain payload
+together with digest data and a binding predicate. A proof-carrying committed
+cochain adds a proof system, a statement, and a verification predicate. The
+basic theorem exposed to this paper is that a well-formed proof-carrying
+committed-cochain artifact has an underlying well-formed cochain commitment
+payload.
+
+\begin{proposition}[Proof-carrying artifact exposes payload]\label{prop:proof-carrying-artifact-exposes-payload}
+  A well-formed proof-carrying committed-cochain artifact exposes a well-formed
+  underlying cochain commitment payload.
+\end{proposition}
+
+\subsection{Public Artifacts}
+
+The public-facing stack has three mathematical levels. The fully public handle
+level contains hashes, roots, topology hashes, nullifiers, public summaries, and
+declared public parameters. The verifier-facing artifact level contains
+compressed public data, cochain commitment artifacts, proof-carrying cochain
+payloads, and certificate data. The private witness level contains the fibration
+representative, transport/restriction data, full cochains and openings, and the
+Hodge operator whose kernel selects the harmonic component. The paper's claims
+are stated so that public handles and verifier-facing artifacts bind to hidden
+witnesses without turning the hidden witness into public data. This paper
+records the mathematical public/private separation required by the
+sheaf-theoretic attacker-observation viewpoint; the associated security games
+and runtime observation model are treated in the subsequent protocol paper.
+
+These layers form the following public artifact stack:
+\[
+\begin{aligned}
+  &\text{hidden/private object} \\
+  &\quad\to \text{compressed public datum} \\
+  &\quad\to \text{commitment/root/hash artifact} \\
+  &\quad\to \text{proof-carrying artifact}.
+\end{aligned}
+\]
+Verifier and oracle judgments are values of predicates applied to the terminal
+public artifact, not further objects in the stack.
+Each layer binds to or summarizes the preceding layer. A hash does not replace
+the mathematical object, a commitment does not replace the witness, and a proof
+artifact does not replace the proof obligation. The purpose of the stack is to
+let public verification refer to hidden sheaf/cochain data without exposing it.
+In this sense, the stack separates what must be publicly accountable from what
+must remain representative-private.
+
+Hashes serve as public names, integrity bindings, and fixed-size pointers for
+larger artifacts. A topology hash names the public combinatorial support; a
+root commits to a batch or storage view; a transcript hash domain-separates a
+proof statement. None of these hashes asserts validity by itself. Validity
+comes from the predicate or proof attached to the hashed object.
+
+\subsection{Lossy Projection And Preserved Structure}
+
+Storage roots, topology hashes, cochain roots, nullifiers, and proof objects are
+public artifacts in the stack. Full sheaf, cochain, and fibration data remain
+witness material unless a protocol path explicitly exposes them. The storage
+mechanics are protocol-level concerns; the mathematical point here is that
+stored public artifacts are compressed images of accepted witness data, not
+replacements for the hidden object.
+
+In the notation of \cref{def:public-observation}, \(p\) is the public homotopy
+class obtained as a lossy classifier value. Its fiber is
+\[
+  A_p=\pi^{-1}(p),
+\]
+the set of hidden representatives compatible with the same public class. For
+\(x\in A_p\), the induced cochain complex \(C_x^\bullet\),
+Hodge--Laplacian \(\Delta_x\), and harmonic kernel \(\ker(\Delta_x)\) are not
+determined by \(p\).
+
+Compression creates verifier-facing public artifacts from hidden or full
+witness data. The compression need not be injective; it must preserve enough
+structure to support the relevant public statement.
+
+A compressed public datum is allowed to forget hidden data. In fact, it must
+forget enough data that it does not select a private representative. The
+relevant question is not whether the public datum is injective, but which facts
+survive the compression relation.
+
+The preserved structure before the finite-code layer is:
+\begin{enumerate}[label=(\roman*)]
+  \item public homotopy-class equality for hidden representatives;
+  \item cochain commitment payload well-formedness;
+  \item topology binding for cochain commitments;
+  \item digest/root binding for compressed public data;
+  \item proof-carrying validity of the public statement attached to an artifact.
+\end{enumerate}
+
+The lost structure is the private representative itself: full sheaf/cochain
+witness data, hidden transport, the operative Hodge operator, private
+randomness, and runtime lifecycle facts. Those may be bound to public artifacts
+or certified by a proof-carrying statement, but they are not made public merely
+by the presence of a hash, root, or commitment payload.
+
+Byte parsing, allocation bounds, canonical encoding, concrete hash functions,
+domain separation, storage inclusion proofs, proof verification, state updates,
+and ephemeral-fiber lifecycle properties are TCB obligations. They are boundary
+predicates, not part of the mathematical cochain commitment payload.
+
+For HCP, the concrete sources for the abstract observation \((p,b)\) are:
+\(p\) is the public homotopy class, and \(b\) is the cochain-facing datum
+supplied by an accepted cochain payload, opening, or proof-carrying statement.
+For \(x\in A_p\), private restriction data determines \(C_x^\bullet\),
+\(\delta_0,\delta_1\), \(\Delta_x\), and the recovery target
+\[
+  h=\pi_{H_x}(b)\in\ker(\Delta_x),
+\]
+when \(b\in C_x^1\).
+
+The artifacts in this section may bind to the hidden representative or certify
+equations involving \(b\), but they do not present \(\Delta_x\),
+\(\ker(\Delta_x)\), or the private fibration data. Once HCP has selected or
+certified the hidden Hodge data, the fibration ID is
+\[
+  \operatorname{FID}(x)=\operatorname{Spec}_{\mathrm{multi}}(\Delta_x).
+\]
+
+\subsection{Plucker Coordinates}
+
+Let \(V\) be a finite-dimensional vector space over a field \(K\), and let
+\(1\le r\le \dim V\). A private rank-\(r\) frame
+\[
+  F=(w_1,\ldots,w_r)
+\]
+spans an \(r\)-plane
+\[
+  W=\langle w_1,\ldots,w_r\rangle\in \operatorname{Gr}(r,V).
+\]
+The Plucker embedding sends this Grassmannian point to
+\[
+  \operatorname{Pl}(W)
+  =
+  [w_1\wedge\cdots\wedge w_r]
+  \in \mathbb P(\bigwedge^r V).
+\]
+A Plucker coordinate is the public geometric datum obtained from such a private
+frame: a representative of \(\operatorname{Pl}(W)\), or a digest-bound
+canonical encoding of such a representative, equipped with the relevant
+projective well-formedness predicates. It is required to respect projective
+rescaling and the Plucker relations; changing the private frame for the same
+Grassmannian point does not change the normalized Plucker coordinate.
+This is the Plucker coordinate used by the proximity projection, not the HCP
+public class \(p\) fixed above.
+
+Thus the frame \(F\) is witness material, while the Plucker coordinate is the
+verifier-facing projective datum. It is not itself the witness. It can be bound
+by a hash, root, or proof-carrying statement, but the actual witness remains
+the hidden frame or representative.
+
+In the proximity specialization of \cref{sec:rs-mca-projection}, the cochain
+commitment remains the public committed payload. The Plucker coordinate enters
+as witness geometry for a public-binding statement:
+\[
+  \begin{aligned}
+    &\text{accepted cochain commitment} \\
+    &\quad\stackrel{\text{private frame / Plucker witness}}{\Longleftarrow}
+      \text{Plucker coordinate} \\
+    &\quad\longrightarrow \text{plane/RS/MCA verifier data}.
+  \end{aligned}
+\]
+A proof-carrying binding relation asserts that the accepted cochain commitment
+realizes the Plucker coordinate.
+
+\subsection*{Lean Correspondence}
+
+The public artifact and commitment surfaces in this section correspond to the
+following Lean declarations:
+\begin{leanledger}
+\begin{itemize}
+  \item Plucker coordinates and public binding:
+    \lean{Proximity.GrassmannianPlucker},
+    \lean{Proximity.GrassmannianPlucker.Concrete}, and
+    \lean{Proximity.PluckerCochain.PublicBinding};
+  \item payload shape and invariants:
+    \lean{Axioms.CochainCommitmentData},
+    \lean{CochainCommitmentData.WellFormed},
+    \lean{CochainCommitmentData.AddCompatible},
+    \lean{CochainCommitmentData.edge_values_nonempty_of_wellFormed}, and
+    \lean{CochainCommitmentData.modulus_gt_one_of_wellFormed};
+  \item commitment-security interfaces:
+    \lean{Axioms.CochainCommitmentAxioms},
+    \lean{Axioms.BlindedCommitmentAxioms},
+    \lean{Axioms.BlindedCommitmentWellFormed},
+    \lean{Axioms.VectorCommitmentAxioms},
+    \lean{Axioms.VectorCommitmentWellFormed},
+    \lean{Axioms.CohomologicalMACAxioms}, and
+    \lean{Axioms.CohomologicalMACWellFormed};
+  \item proof-carrying artifacts:
+    \lean{TCB.HashedCommittedCochain},
+    \lean{TCB.ProofCarryingCommittedCochain}, and
+    \lean{TCB.proofCarrying_cochain_wellFormed}.
+\end{itemize}
+\end{leanledger}

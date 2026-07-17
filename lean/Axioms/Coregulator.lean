@@ -5,7 +5,7 @@ import Mathlib
 
   Paper correspondence:
   - Paper 2: consensus control-loop and runtime protocol model.
-  - Paper 1 Section 7: sequel boundary only.
+  - Paper 1 appendix ledger: subsequent protocol-paper boundary only.
 
   Encodes predict/observe/update contracts used by the consensus control loop,
   without committing to a specific numerical estimator inside Lean yet.

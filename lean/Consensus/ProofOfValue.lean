@@ -7,7 +7,7 @@ import Proximity.Projection
 
   Paper correspondence:
   - Paper 2: Proof-of-Value scoring and consensus policy.
-  - Paper 1 Section 7: protocol-facing boundary only.
+  - Paper 1 appendix ledger: protocol-facing boundary only.
 
   PoV proves verifiable harmonic value:
 

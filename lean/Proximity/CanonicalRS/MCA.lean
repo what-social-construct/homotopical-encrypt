@@ -5,7 +5,7 @@ import Proximity.CanonicalRS.MCA.Line
 
   Paper correspondence:
   - Paper 1 Section 6: MCA bad-challenge fraction and canonical bound.
-  - Paper 1 Section 7: Lean-proved specialization from cited bounds.
+  - Paper 1 appendix ledger: Lean-proved specialization from cited bounds.
 
   `CanonicalRS.MCA.Line` owns the canonical affine-line construction. This file
   owns the paper Definition 4.3 bad-challenge fraction and the MCA bound at the

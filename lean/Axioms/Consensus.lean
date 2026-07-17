@@ -5,7 +5,7 @@ import Mathlib
 
   Paper correspondence:
   - Paper 2: consensus and Proof-of-Value protocol assumptions.
-  - Paper 1 Section 7: sequel boundary only.
+  - Paper 1 appendix ledger: subsequent protocol-paper boundary only.
 
   This isolates assumptions that are currently enforced operationally in
   Python/Rust but not yet fully proved end-to-end in Lean.

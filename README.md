@@ -18,18 +18,18 @@ Standard lattice (LWE):           Homotopical (Hodge-hardness):
 ───────────────────────           ───────────────────────────────
 Secret: vector s ∈ ℤ_q^n         Secret: fibration F = (topology, restriction maps, spectrum)
 Public: matrix A ∈ {0,1}^{m×n}   Public: cochain b ∈ C^k(X, ℤ_q)
-Operator: A (binary/ternary)      Operator: Δ = δ*δ + δδ* (continuous, derived from F)
+Operator: A (binary/ternary)      Operator: Δ_k = δ_{k-1}δ_{k-1}* + δ_k*δ_k (continuous, derived from F)
 Search space: finite field        Search space: manifold of fibrations
 Break: find s from As+e           Break: find ker(Δ) without knowing which F produced Δ
 ```
 
-**The fibration determines everything.** The restriction maps R_{v→e} (parallel transport between fibers) are **orthogonal matrices** — continuous-valued, not binary. These build the coboundary operator δ, which builds the **sheaf Laplacian** Δ = δ\*δ + δδ\* — the primary mathematical operator of the system. Δ defines the harmonic subspace ker(Δ) where messages live, and the **Hodge projection** π_H onto ker(Δ) is the decryption operator. The entire derivation chain is non-binary:
+**The fibration determines everything.** The restriction maps R_{v→e} (parallel transport between fibers) are **orthogonal matrices** — continuous-valued, not binary. These build the adjacent coboundaries δ_{k-1}, δ_k, which build the **degree-k sheaf Laplacian** Δ_k = δ_{k-1}δ_{k-1}\* + δ_k\*δ_k — the primary mathematical operator of the system. Δ_k defines the harmonic subspace ker(Δ_k) where messages live, and the **Hodge projection** π_H onto ker(Δ_k) is the decryption operator. For C¹ cochains, Δ_1 = δ_0δ_0\* + δ_1\*δ_1. The entire derivation chain is non-binary:
 
 | Layer | Object | Entries | Why not binary |
 |-------|--------|---------|---------------|
 | Fibration secret | Restriction maps R_{v→e} | **Orthogonal matrices** ∈ O(d) | **Continuous** — parallel transport on fiber bundle |
 | Coboundary δ | Block incidence × restriction maps | **ℝ-valued blocks** | **Non-discrete** — encodes fibration geometry |
-| Laplacian Δ = δ\*δ + δδ\* | Sums of products of orthogonal blocks | **ℝ-valued** | **Derived** from fibration, not chosen independently |
+| Laplacian Δ_k = δ_{k-1}δ_{k-1}\* + δ_k\*δ_k | Sums of products of orthogonal blocks | **ℝ-valued** | **Derived** from fibration, not chosen independently |
 
 Even at the simplest level (scalar stalks, dim=1), the coboundary δ is a **signed incidence matrix** with entries in {−1, 0, +1} — ternary, not binary. Orientation matters.
 
@@ -104,7 +104,7 @@ moved or requested the object and through which path.
 
 ## Why "Homotopical"?
 
-The encrypt/decrypt operation is Hodge-theoretic (embed in ker(Δ), noise in im(δ)⊕im(δ*), project via π_H). But the name describes the *security framework*, not the subroutine:
+The encrypt/decrypt operation is Hodge-theoretic (for C¹, embed in ker(Δ_1), add noise in im(δ_0)⊕im(δ_1*), project via π_H). But the name describes the *security framework*, not the subroutine:
 
 - The **secret key** is a fibration (a system of restriction maps between stalk contexts)
 - The **public identity** is its homotopy class (unified fingerprint: spectral + cohomological + homotopical invariants)
@@ -123,9 +123,9 @@ The unifying principle is **local-to-global coherence** via cellular sheaves:
 
   δ(c)_e = R_j·c_j - R_i·c_i      measures disagreement between vertices
   ker(Δ) = global sections          data consistent under all restrictions
-  im(δ)⊕im(δ*) ⊥ ker(Δ)            disagreement subspace
+  im(δ_{k-1})⊕im(δ_k*) ⊥ ker(Δ_k)  disagreement subspace
 
-  encrypt:  message ∈ ker(Δ), noise ∈ im(δ)⊕im(δ*)
+  encrypt:  message ∈ ker(Δ_k), noise ∈ im(δ_{k-1})⊕im(δ_k*)
   decrypt:  π_H(ciphertext) = message   (Hodge projection)
 ```
 
@@ -401,7 +401,7 @@ The mathematical foundation is Helfer's first-order homotopical logic ([arXiv:19
 | **Grothendieck fibration** (§4, [Hel20]) | Fibration with cartesian lifting of morphisms | Cellular sheaf over Čech nerve with restriction maps | `geometry/sheaf.py` |
 | **Free h=-fibration** (Prop 15.3) | Universal syntactic object — morphisms out of it = interpretations | Constraint that makes forgery require solving CVP on the lattice | `invariants/homotopical.py` |
 | **Fibration morphisms** (Def 4.4) | Structure-preserving maps between fibrations | Parallel transport along paths in the nerve | `geometry/fiber_bundle.py` |
-| **Hodge decomposition** C^k = H^k ⊕ im(δ) ⊕ im(δ*) | Orthogonal splitting of cochains (Hansen-Ghrist) | Message in ker(Δ), noise in exact⊕coexact complement | `geometry/hodge.py` |
+| **Hodge decomposition** C^k = H^k ⊕ im(δ_{k-1}) ⊕ im(δ_k*) | Orthogonal splitting of cochains (Hansen-Ghrist) | Message in ker(Δ_k), noise in exact⊕coexact complement | `geometry/hodge.py` |
 
 ### Papers
 
@@ -676,7 +676,7 @@ hcrypt doesn't use a hash function as its core commitment primitive. Commitments
 
 **Poseidon's geometry (or lack thereof):** Poseidon operates on a **flat** vector space 𝔽_p^t (the state width t, typically 3–12). There is no topology, no manifold structure, no curvature. The S-box x → x^α is an algebraic automorphism of the finite field — a power map, not a geometric operation. The MDS (Maximum Distance Separable) mixing matrix is chosen for maximal branch number (diffusion), not for any geometric property. The round structure (full rounds → partial rounds → full rounds) is designed to resist *algebraic* attacks: Gröbner basis methods, interpolation attacks, differential/linear cryptanalysis. Security analysis lives entirely in the algebraic world — no spectral invariants, no Betti numbers, no Hodge theory.
 
-**hcrypt's geometry:** The coboundary δ lives on a **simplicial complex X** — a topological space with vertices, edges, and faces. The Laplacian Δ = δ\*δ + δδ\* has genuine **spectral geometry**: its eigenvalues encode the topology (Betti numbers from zero eigenvalues, spectral gap from the first nonzero eigenvalue, curvature from the spectral distribution). The Hodge decomposition C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ\*) is a geometric fact about the complex — an orthogonal splitting determined by the topology and the restriction maps. Security comes from **geometric ambiguity**: which k-plane in ℝ^n is the harmonic subspace? This is a question about the Grassmannian Gr(k,n) — the manifold of all k-dimensional subspaces. The restriction maps R_{v→e} are parallel transport on a fiber bundle — genuine differential geometry with holonomy.
+**hcrypt's geometry:** The coboundary δ lives on a **simplicial complex X** — a topological space with vertices, edges, and faces. The degree-k Laplacian Δ_k = δ_{k-1}δ_{k-1}\* + δ_k\*δ_k has genuine **spectral geometry**: its eigenvalues encode the topology (Betti numbers from zero eigenvalues, spectral gap from the first nonzero eigenvalue, curvature from the spectral distribution). The Hodge decomposition C^k = ker(Δ_k) ⊕ im(δ_{k-1}) ⊕ im(δ_k\*) is a geometric fact about the complex — an orthogonal splitting determined by the topology and the restriction maps. Security comes from **geometric ambiguity**: which k-plane in ℝ^n is the harmonic subspace? This is a question about the Grassmannian Gr(k,n) — the manifold of all k-dimensional subspaces. The restriction maps R_{v→e} are parallel transport on a fiber bundle — genuine differential geometry with holonomy.
 
 ```
 Poseidon:                              hcrypt:
@@ -732,14 +732,14 @@ The linearity of δ is a *feature*: it gives native homomorphism (verify Σ inpu
 
 Fully Homomorphic Encryption (FHE) — BFV, BGV, CKKS, TFHE — allows computation on encrypted data without decryption. The ciphertext is a noisy lattice encoding, and homomorphic operations accumulate noise until bootstrapping resets it. FHE is general-purpose: any function can (in principle) be evaluated on ciphertexts.
 
-hcrypt's Hodge-based encryption is **not** general-purpose FHE. It's a *structured* encryption where the message lives in ker(Δ) (the harmonic subspace) and noise lives in the orthogonal complement im(δ) ⊕ im(δ*). Decryption is Hodge projection π_H, not bootstrapping. The structure is specialized for privacy-preserving transactions, not arbitrary computation.
+hcrypt's Hodge-based encryption is **not** general-purpose FHE. It's a *structured* encryption where the message lives in ker(Δ_k) (the harmonic subspace) and noise lives in the orthogonal complement im(δ_{k-1}) ⊕ im(δ_k*). Decryption is Hodge projection π_H, not bootstrapping. The structure is specialized for privacy-preserving transactions, not arbitrary computation.
 
 | | FHE (BFV/BGV/CKKS) | hcrypt (Hodge encryption) |
 |---|---|---|
 | Goal | Arbitrary computation on encrypted data | Privacy-preserving transactions + identity |
 | Plaintext space | ℤ_t^n (BFV), ℂ^{n/2} (CKKS) | ker(Δ) ⊂ ℤ_q^n (harmonic subspace of sheaf) |
-| Noise model | Gaussian on full lattice, accumulates with operations | Hodge-structured: noise ∈ im(δ) ⊕ im(δ*) ⊥ ker(Δ) |
-| Decryption | Secret key dot product + rounding | Hodge projection π_H onto ker(Δ) |
+| Noise model | Gaussian on full lattice, accumulates with operations | Hodge-structured: noise ∈ im(δ_{k-1}) ⊕ im(δ_k*) ⊥ ker(Δ_k) |
+| Decryption | Secret key dot product + rounding | Hodge projection π_H onto ker(Δ_k) |
 | Noise management | Bootstrapping (expensive: ~seconds per op) | No bootstrapping — π_H is exact (noise is orthogonal) |
 | Homomorphic addition | ✅ (native, cheap) | ✅ (native — δ is linear) |
 | Homomorphic multiply | ✅ (with relinearization + noise growth) | ❌ Not general multiplication |
@@ -765,7 +765,7 @@ Classical mixnets (Nym, Loopix) provide network-layer anonymity through onion en
 | Mixing | Poisson delay at each node | `MixingNode` with configurable delay |
 | Key management | Sphinx packet headers | Fiber bundle connection matrices |
 | Anonymity guarantee | Computational (break one key = break one layer) | Geometric (invert holonomy = Hodge-hardness) |
-| Cover traffic | Explicit dummy packets | Hodge-structured noise in im(δ)⊕im(δ*) |
+| Cover traffic | Explicit dummy packets | Hodge-structured noise in im(δ_{k-1})⊕im(δ_k*) |
 
 The structural advantage: in a classical mixnet, each hop's anonymity is independent. In hcrypt's fiber bundle routing, the hops are connected by the holonomy of the Grothendieck fibration — breaking the route requires inverting the holonomy, which is the same hard problem as the core encryption.
 
@@ -827,7 +827,7 @@ hcrypt is post-quantum for a different reason and in a different way. ML-KEM/ML-
 
 **The gap and the plan to close it.** The gap between "the math is proven correct" and "the code implements the math correctly" is currently bridged by testing, not formal verification. The [three-tier gate architecture](docs/GATE_ARCHITECTURE.md) is designed to close this systematically:
 
-**Tier 1 — Exact Gates (Python, classical boolean).** These are structural identities that are either true or false — no boundary zone. δ²=0 (cochain complex law), Δ = δ\*δ + δδ\* (Laplacian construction), P²=P (Hodge projection idempotent), H⊕im(δ)⊕im(δ\*)=C (Hodge decomposition completeness). Lean axioms: `Foundation.lean`. Python: `invariants/unified.py`. These are already enforced — they fail fast if violated.
+**Tier 1 — Exact Gates (Python, classical boolean).** These are structural identities that are either true or false — no boundary zone. δ_kδ_{k-1}=0 (cochain complex law), Δ_k = δ_{k-1}δ_{k-1}\* + δ_k\*δ_k (Laplacian construction), P²=P (Hodge projection idempotent), H^k⊕im(δ_{k-1})⊕im(δ_k\*)=C^k (Hodge decomposition completeness). Lean axioms: `Foundation.lean`. Python: `invariants/unified.py`. These are already enforced — they fail fast if violated.
 
 **Tier 2 — Consensus Gates (Rust Oracle, Heyting tri-valued).** Spectral gap classification, Betti consistency, naturality checks. These have genuine boundary zones — the oracle returns `SpectralJudgment` ∈ {InBounds, Boundary, OutOfBounds} mapped to Heyting three-valued logic (Valid/Undetermined/Invalid). Lean axioms: `OracleModality.lean`. Rust: `classify_spectral_gap()` in oracle. **Known issue:** 12 Python sites currently bypass the oracle and classify locally — these need to be replaced with oracle judgments (or pre-flight `gap_in_bounds()` for offline use).
 
@@ -874,7 +874,7 @@ This is machine-checked in the current Lean workspace (`lean/CVP.lean`, `lean/Ha
 
 3. **Spectral ≠ Homotopy**: Two fibrations can share all topological invariants (Betti numbers, kernel dimensions) but have completely different Laplacian spectra. The spectrum is *finer* than the homotopy type — it carries the secret.
 
-The fibration's internal logic is intuitionistic (Helfer, Thm 12.3), not classical. Identity has three states, not two. The sheaf Laplacian Δ — the primary mathematical operator — is ℝ-valued, derived from the fibration, and serves as the bridge between the categorical structure (Grothendieck fibrations, natural transformations, homotopy equivalence) and the computational hard problem (CVP on ker(Δ)). The Hodge projection π_H onto ker(Δ) is the decryption operator.
+The fibration's internal logic is intuitionistic (Helfer, Thm 12.3), not classical. Identity has three states, not two. The degree-k sheaf Laplacian Δ_k — the primary mathematical operator — is ℝ-valued, derived from the fibration, and serves as the bridge between the categorical structure (Grothendieck fibrations, natural transformations, homotopy equivalence) and the computational hard problem (CVP on ker(Δ_k)). The Hodge projection π_H onto ker(Δ_k) is the decryption operator.
 
 Privacy, post-quantum security, and infinite anonymity sets follow from the geometry.
 ## License

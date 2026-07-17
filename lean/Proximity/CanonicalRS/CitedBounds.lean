@@ -5,7 +5,7 @@ import Proximity.CanonicalRS.MCA.Concrete
 
   Paper correspondence:
   - Paper 1 Section 6: external Johnson/list-decoding/MCA theorem boundary.
-  - Paper 1 Section 7: cited external theorem status row.
+  - Paper 1 appendix ledger: cited external theorem status row.
 
   This module is the trusted boundary where externally cited RS/list-decoding
   and MCA theorems enter the Lean development. The surrounding modules prove

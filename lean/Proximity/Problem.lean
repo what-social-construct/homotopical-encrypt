@@ -6,7 +6,7 @@ import Proximity.Projection
   Paper correspondence:
   - Paper 1 Section 6: near/far proximity promise and calibrated projection
     corollary.
-  - Paper 1 Section 7: proximity theorem-surface status.
+  - Paper 1 appendix ledger: proximity theorem-surface status.
 
   `Projection.lean` says how a sheaf-side cochain projects to a code/evaluation
   shadow. This file names the near/far decision problem and the end-to-end

@@ -102,7 +102,8 @@ abbrev FoundationWithSheafCoherence
 
 /--
   Coherence implies the core structural preconditions used in transaction-stage
-  validation (δ² = 0 and Laplacian from coboundary).
+  validation: adjacent coboundaries compose to zero, and the Laplacian is built
+  from coboundaries.
 -/
 theorem coherence_implies_structural_preconditions (S : SheafCoherence) :
     SheafCoherenceWellFormed S →

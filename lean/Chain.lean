@@ -4,7 +4,8 @@ Chain Axiomatization (Swan Table 1 #9 — Goncharov)
 Paper correspondence:
 - Paper 2: chain architecture, consensus consumption, and proof-of-value
   protocol setting.
-- Paper 1 Section 7: mentioned only as a formalization boundary/sequel surface.
+- Paper 1 appendix ledger: mentioned only as a formalization boundary for the
+  subsequent protocol paper.
 
 First-order axiomatization of the homotopical-encrypt blockchain.
 Goncharov axiomatizes "select longest chain" in first-order logic;
@@ -39,7 +40,7 @@ References:
   - Goncharov & Nechesov (2023), "Axiomatization of Blockchain Theory"
   - Zhao (2020), "Algebraic Structure of Blockchains"
   - Helfer (2019), "First-order homotopical logic" (arXiv:1908.08944)
-  - lean/Hardness.lean (Hodge-CVP reduction — the crypto axioms)
+  - lean/Hardness.lean (Paper 1 hidden-operator comparison theorem surface)
   - lean/Tsirelson.lean (√2 bound — the consensus axioms)
 -/
 
@@ -524,33 +525,29 @@ theorem eligible_implies_connected (v : Validator) (h : eligible v) :
 
 
 -- ═══════════════════════════════════════════════════════════════════════
--- CONNECTION TO HARDNESS.LEAN
+-- PAPER-1 HARDNESS BOUNDARY
 -- ═══════════════════════════════════════════════════════════════════════
 
 /-
-  The chain axioms DEPEND ON the crypto axioms from Hardness.lean:
+  This file does not import `Hardness.lean`. It is a protocol/chain axiomatization
+  surface for Paper 2.
 
-  Axiom 1 (block validity):
-    spectral_gap is unforgeable because computing it requires
-    the secret Laplacian / hidden kernel
-    (KernelAmbiguous and CVP_Oracle_Insufficient_For_Public_Hodge_Solving
-    in Hardness.lean).
+  `Hardness.lean` is the Paper 1 theorem surface for HCP, hidden-operator
+  ambiguity, and the CVP comparison. Those theorems justify the mathematical
+  recovery problem, but they are not chain axioms and are not used as Lean
+  dependencies here.
 
   Axiom 3 (PoV selection):
-    VRF unpredictability + spectral gap unforgeable →
-    no validator can predict or manufacture selection.
+    VRF unpredictability and spectral admissibility are protocol assumptions
+    recorded in the consensus/runtime layer.
 
   Axiom 4 (fork resolution):
-    cumulative_gap is unforgeable (each block's gap verified by Axiom 1).
-    Attacker would need to forge N spectral gaps = N × Hodge-hard problems.
+    cumulative_gap is treated as a chain-level score over admitted blocks.
 
   Axiom 6 (Sybil resistance):
     Even if an attacker creates many validators, quadratic weighting
-    ensures total influence DECREASES. Combined with Axiom 1's
-    PoV bounds, sub-threshold validators get negligible weight.
-
-  Together: the chain is secure if Hodge > CVP (Hardness.lean)
-  and the spectral gap is a genuine geometric invariant (Tsirelson.lean).
+    ensures total influence DECREASES. Combined with PoV bounds,
+    sub-threshold validators get negligible weight.
 -/
 
 end

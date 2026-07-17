@@ -8,7 +8,7 @@ mathematical claims, while Python currently provides runtime checks and tests.
 
 | Lean | Python | Status |
 |------|--------|--------|
-| `SheafLaplacian V` (self-adjoint + PSD) | `src/geometry/sheaf_laplacian.py::SheafLaplacian` | ✅ Self-adjoint via `(L+L.T)/2`; PSD via `Δ = δ*δ` construction |
+| `SheafLaplacian V` (self-adjoint + PSD) | `src/geometry/sheaf_laplacian.py::SheafLaplacian` | ✅ Self-adjoint via `(L+L.T)/2`; PSD via degree-k `Δ_k = δ_{k-1}δ_{k-1}* + δ_k*δ_k` construction |
 | `SpectralFingerprint L` (multiset of eigenvalues) | `src/crypto/credential.py::SpectralFingerprint` | ✅ `.eigenvalues` field = Laplacian spectrum |
 | `SpectrallyEquivalent L1 L2` | `SpectralFingerprint.matches()` | ✅ Compares eigenvalue arrays |
 | `MatrixIsHarmonic Δ h := Δ·h = 0` (`lean/Hardness.lean`) | `src/invariants/harmonic.py::is_harmonic()` | ✅ Abstract hidden-operator harmonicity; runtime checks `‖Δc‖ < tol` |
@@ -109,7 +109,7 @@ the projection Laplacian.
 - `src/geometry/hodge.py::hodge_decomposition()` — full decomposition
 - `src/invariants/harmonic.py::hodge_decompose()` — alternative via projections
 - `src/invariants/harmonic.py::validate_hodge_orthogonality()` — checks pairwise ⊥
-- `src/invariants/harmonic.py::validate_laplacian_construction()` — checks Δ = δ*δ + δδ*
+- `src/invariants/harmonic.py::validate_laplacian_construction()` — checks the degree-k Laplacian construction `Δ_k = δ_{k-1}δ_{k-1}* + δ_k*δ_k`
 
 **Key precondition**: `d_next * d_prev = 0` (chain complex). Enforced by
 `src/geometry/hodge.py::build_coboundary_operator()` which constructs δ₀, δ₁
@@ -220,8 +220,8 @@ ENCRYPT (v3 — Hodge path):
   1. Build Δ_sheaf from credential's restriction maps     [SheafLaplacian]
   2. Find ker(Δ_sheaf) via eigendecomposition              [MatrixIsHarmonic / IsHarmonic]
   3. Encode message as coefficients in harmonic basis       [embed_in_harmonic]
-  4. Message embedding IS a global section ∈ ker(Δ)        [Hodge_Decomposition_Theorem]
-  5. Add noise in im(δ)⊕im(δ*) (orthogonal to message)   [Hodge_Decomposition_Theorem]
+  4. Message embedding IS a global section ∈ ker(Δ_k)      [Hodge_Decomposition_Theorem]
+  5. Add noise in im(δ_{k-1})⊕im(δ_k*)                    [Hodge_Decomposition_Theorem]
   6. ciphertext = harmonic_message + orthogonal_noise
 
 DECRYPT (v3 — Hodge path):

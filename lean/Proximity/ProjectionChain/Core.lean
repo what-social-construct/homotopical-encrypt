@@ -5,7 +5,7 @@ import Proximity.CochainPlane.ReedSolomon
 
   Paper correspondence:
   - Paper 1 Section 6: composed Plucker/cochain/plane/RS projection chain.
-  - Paper 1 Section 7: projection-chain theorem-surface row.
+  - Paper 1 appendix ledger: projection-chain theorem-surface row.
 
   This file only composes the already-defined local stages:
 

@@ -79,15 +79,15 @@ Layer 7: GEOMETRIC REALIZATION (|N•| → physical network)
 
 ## The Coboundary δ: The Fundamental Morphism
 
-The coboundary operator δ: C⁰ → C¹ is the single morphism from which
-everything else is derived. It threads through every layer:
+The coboundary operators δ_k: C^k → C^{k+1} are the morphisms from which
+the Hodge operators are derived. They thread through every layer:
 
 ```
-Layer 0 (primitives):  δ is a linear map, δ² = 0
-Layer 1 (geometry):    Δ = δ*δ + δδ* (Laplacian from δ)
-                       ker(Δ) ⊕ im(δ) ⊕ im(δ*) = C• (Hodge from δ)
+Layer 0 (primitives):  δ_k is linear, δ_kδ_{k-1} = 0
+Layer 1 (geometry):    Δ_k = δ_{k-1}δ_{k-1}* + δ_k*δ_k
+                       ker(Δ_k) ⊕ im(δ_{k-1}) ⊕ im(δ_k*) = C^k
 Layer 2 (crypto):      commitment = δ(m ∥ r) (coboundary of message+blinding)
-                       encryption = project into ker(Δ) (which δ defines)
+                       encryption = project into ker(Δ_k) (which δ defines)
 Layer 3 (proofs):      ZKP witnesses δ(x) without revealing x
 Layer 4 (consensus):   spectral gap λ₁(Δ) gates blocks (Δ built from δ)
 Layer 5 (storage):     η₁, η₂ are natural transformations that factor through δ
@@ -109,7 +109,7 @@ The blockchain is lim→ of this directed diagram. Each state transition
 is a coboundary: δ(tx) moves value along edges of the nerve. The
 colimit condition (Chain.lean: `block_extends`) requires:
   - δ preserves balance (linearity → conservation)
-  - δ² = 0 (no second-order effects — applying δ twice is trivial)
+  - adjacent coboundary composites vanish
   - key_images monotone (spent set only grows in the colimit)
 
 
@@ -338,9 +338,9 @@ Helfer's `CartesianLiftingPrinciple` ensures the transport is coherent.
 ### Security argument flows UPWARD:
 
 ```
-primitives     defines  δ² = 0          (algebraic identity)
+primitives     defines  δ_kδ_{k-1}=0    (algebraic identity)
     ↓
-geometry       derives  ker(Δ) ⊕ im(δ) ⊕ im(δ*) = C•  (Hodge)
+geometry       derives  ker(Δ_k) ⊕ im(δ_{k-1}) ⊕ im(δ_k*) = C^k
     ↓
 crypto         reduces  "break encryption" → CVP in ker(Δ)  (hardness)
     ↓

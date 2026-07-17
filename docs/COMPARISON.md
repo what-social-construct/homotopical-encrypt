@@ -69,7 +69,7 @@ Privacy source      zk-SNARK circuit   Ring signatures     Exact sequence
                     (Groth16/Halo2)    (CLSAG, size=16)    0→ker(η)→F_full→F_hash→0
 
 Commitment          Pedersen on        Pedersen on         Cochain commitment
-scheme              Jubjub curve       Ed25519             δ(m ∥ r), δ² = 0
+scheme              Jubjub curve       Ed25519             δ(m ∥ r), δ₁∘δ₀ = 0
 
 Hash function       Poseidon           Keccak-256          Spectral fingerprint
                     (SNARK-friendly)   (generic)           (eigenvalues of Δ)
@@ -264,7 +264,7 @@ Note = (value, recipient_key, randomness)
 HCRYPT's pipeline:
 ```
 Credential = FibrationCredential(topology, restriction_maps, Laplacian)
-    → Cochain commitment = δ(m ∥ r)  (coboundary, δ² = 0)
+    → Cochain commitment = δ(m ∥ r)  (coboundary, adjacent composites vanish)
     → Key image = homotopy-path hash of identity
     → Spectral proof  (eigenvalues of Δ)
     → Heyting judgment  (algebraic, no circuit)
@@ -454,7 +454,7 @@ This IS an LWE instance: given (A_e, A_e·s + e), recover s.
 But it's structured LWE — the matrix A_e encodes the sheaf topology,
 not random. This is what GEOMETRY.md calls **Hodge-hardness**:
 strictly harder than standard LWE because the noise is confined
-to im(δ) ⊕ im(δ*), giving the adversary LESS information.
+to im(δ_{k-1}) ⊕ im(δ_k*), giving the adversary LESS information.
 
 ### The Homomorphic Property
 
@@ -499,7 +499,7 @@ cell complex. This gives you:
 
 1. **Geometric binding**: collisions require finding cycles in
    the complex (topological, not just algebraic)
-2. **Hodge structure**: noise decomposes as ker(Δ) ⊕ im(δ) ⊕ im(δ*)
+2. **Hodge structure**: cochains decompose as ker(Δ_k) ⊕ im(δ_{k-1}) ⊕ im(δ_k*)
    (the adversary gets less than standard LWE)
 3. **Natural partial opening**: reveal some vertices, keep others
    hidden. The coboundary structure tells you exactly what leaks.
@@ -715,7 +715,7 @@ The geometric structure is a lattice problem, not a wrapper around one."
 
 The system doesn't need SNARKs because:
 1. The ZK property comes from homotopy path witnessing (native)
-2. The commitment scheme is cochain-based (native, δ² = 0)
+2. The commitment scheme is cochain-based (native cochain-complex law)
 3. The verification logic is Heyting 3-valued (richer than boolean)
 4. The anonymity set is a homotopy class (infinite, not ring-bounded)
 5. The hardness reduces to LWE in ker(Δ) (post-quantum)

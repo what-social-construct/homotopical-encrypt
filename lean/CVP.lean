@@ -6,7 +6,7 @@ import Mathlib
   Paper correspondence:
   - Paper 1 Section 3: known-lattice CVP comparison and oracle-insufficiency
     framing.
-  - Paper 1 Section 7: Lean theorem-surface correspondence.
+  - Paper 1 appendix ledger: Lean theorem-surface correspondence.
 
   Provenance/scope label:
   this module formalizes the standard Closest Vector Problem (CVP) interface

@@ -75,7 +75,7 @@ The Σ/Π duality is the encrypt/decrypt duality:
 The Hodge decomposition is the cryptographic foundation:
 
 ```
-    C^k(X, F) = ker(Δ) ⊕ im(δ) ⊕ im(δ*)
+    C^k(X, F) = ker(Δ_k) ⊕ im(δ_{k-1}) ⊕ im(δ_k*)
                   ↑          ↑         ↑
               harmonic    exact    coexact
               (message)   (noise)   (noise)
@@ -91,8 +91,8 @@ makes them perpendicular:
 ```
 
 This orthogonality is the encrypt/decrypt guarantee:
-- message m lives in ker(Δ) (harmonic subspace)
-- noise e lives in im(δ) ⊕ im(δ*) (orthogonal complement)
+- message m lives in ker(Δ_k) (harmonic subspace)
+- noise e lives in im(δ_{k-1}) ⊕ im(δ_k*) (orthogonal complement)
 - ciphertext b = m + e
 - projection π_H(b) = π_H(m) + π_H(e) = m + 0 = m
 
@@ -132,8 +132,8 @@ too weakly connected to support reliable harmonic projection.
 
 **The problem:**
 ```
-    Given:   b = h + e  where h ∈ ker(Δ), e ∈ im(δ) ⊕ im(δ*)
-    Without: Δ
+    Given:   b = h + e  where h ∈ ker(Δ_k), e ∈ im(δ_{k-1}) ⊕ im(δ_k*)
+    Without: Δ_k
     Find:    h
 ```
 
@@ -141,7 +141,7 @@ too weakly connected to support reliable harmonic projection.
 
 In standard LWE, the adversary receives (A, As + e) where e is
 random Gaussian noise. In Hodge-hardness, the noise is structured:
-it is given by im(δ) ⊕ im(δ*), a proper subspace of the full space.
+it is given by im(δ_{k-1}) ⊕ im(δ_k*), a proper subspace of the full space.
 
 This gives the adversary less information:
 - standard LWE noise: isotropic Gaussian (fills all dimensions)
@@ -283,5 +283,4 @@ f*:  Fib(B') → Fib(B)    pullback   (contravariant)
   encryption = ∃ message in harmonic space (existential hiding).
 - Π_f (dependent product): sections of F over fibers of f.
   decryption = ∀ vertices, agreement on message (universal recovery).
-
 

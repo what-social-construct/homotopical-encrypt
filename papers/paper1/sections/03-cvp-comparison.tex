@@ -1,21 +1,28 @@
 \section{CVP Comparison And Kernel Ambiguity}
 
 CVP asks for a closest vector in an explicitly presented lattice. HCP asks for
-the harmonic cochain selected by a hidden Hodge operator. In the \HE{} model,
+the harmonic cochain in the kernel of a hidden Hodge operator. In the \HE{} model,
 public data need not determine the corresponding harmonic kernel.
 
-\subsection{Known-Lattice CVP Surface}
+\subsection{Known-Lattice CVP}
 
 An explicit-lattice CVP instance consists of a generator matrix \(B\) and a
-target vector \(t\). The presented lattice is
+target vector \(t\). For a coefficient ring \(R\), write
 \[
-  \Lambda_B=\{Bx:x\in R^n\}.
+  \mathcal L_B(R)=\{Bx:x\in R^n\}.
 \]
-A correct CVP answer is a vector \(v\in\Lambda_B\) such that
+For classical Euclidean CVP one usually writes
+\[
+  \Lambda_B=B\mathbb Z^n=\{Bz:z\in\mathbb Z^n\}.
+\]
+The comparison uses the generated set condition
+\(\exists x,\ Bx=v\); over a field \(R\), \(\mathcal L_B(R)\) is the linear
+span of the columns of \(B\). A correct generated-set closest-vector answer is a vector
+\(v\in\mathcal L_B(R)\) such that
 \[
   \dist(t,v)\le \dist(t,w)
   \qquad
-  \text{for every }w\in\Lambda_B.
+  \text{for every }w\in\mathcal L_B(R).
 \]
 Equivalently, for a CVP oracle \(O\),
 \[
@@ -23,15 +30,15 @@ Equivalently, for a CVP oracle \(O\),
   \mathsf{CVP}_{\mathrm{corr}}(O)
   \quad\Longleftrightarrow\quad
   \forall B,t,\ 
-  \Bigl(&O(B,t)\in\Lambda_B\\
+  \Bigl(&O(B,t)\in\mathcal L_B(R)\\
   &{}\wedge
-    \forall w\in\Lambda_B,\ 
+    \forall w\in\mathcal L_B(R),\ 
       \dist(t,O(B,t))\le \dist(t,w)\Bigr).
 \end{aligned}
 \]
-The weaker output condition is merely lattice membership:
+The weaker output condition is merely membership in the presented generated set:
 \[
-  \forall B,t,\ O(B,t)\in\Lambda_B .
+  \forall B,t,\ O(B,t)\in\mathcal L_B(R) .
 \]
 Fix a class \(\mathcal C\) of admissible algorithms, such as polynomial-time or
 probabilistic polynomial-time algorithms. The external CVP hardness assumption
@@ -51,43 +58,43 @@ verifier-facing artifacts unless extra hidden-operator information is supplied.
 
 \subsection{Reduction Direction}
 
-Let \(B\) present \(\Lambda_B=\image(B)\). If a matrix \(\Delta\) satisfies
-\(\ker(\Delta)=\Lambda_B\), then any solver satisfying
+Let \(B\) present \(\mathcal L_B(R)=\{Bx:x\in R^n\}\). If a matrix
+\(\Delta\) satisfies \(\ker(\Delta)=\mathcal L_B(R)\), then any solver satisfying
 \[
   \Delta S(t)=0
 \]
-returns \(S(t)\in\Lambda_B\). If, in addition,
+returns \(S(t)\in\mathcal L_B(R)\). If, in addition,
 \[
   \forall h,\quad
   \Delta h=0\Rightarrow \dist(t,S(t))\le \dist(t,h),
 \]
-then \(S(t)\) is closest to \(t\) among all vectors of \(\Lambda_B\).
+then \(S(t)\) is closest to \(t\) among all vectors of \(\mathcal L_B(R)\).
 
-\begin{proposition}[Kernel realization for explicit lattices]\label{prop:hcp-to-cvp}
+\begin{proposition}[Kernel realization for explicit generated subspaces]\label{prop:hcp-to-cvp}
   Let \(B\) be an explicit generator matrix over a field and set
-  \(\Lambda_B=\image(B)\). There exists a matrix \(\Delta\) such that
+  \(\mathcal L_B(R)=\{Bx:x\in R^n\}\). There exists a matrix \(\Delta\) such that
   \[
-    \ker(\Delta)=\Lambda_B .
+    \ker(\Delta)=\mathcal L_B(R) .
   \]
   Consequently, any solver whose output is \(\Delta\)-harmonic for every
-  presented \(\Delta\) returns a vector in the explicit lattice
-  \(\Lambda_B\) when run on this realized operator. If that solver is also
-  closest among \(\Delta\)-harmonic vectors, then its output is a CVP solution
-  for \((B,t)\).
+  presented \(\Delta\) returns a vector in the explicit generated subspace
+  \(\mathcal L_B(R)\) when run on this realized operator. If that solver is also
+  closest among \(\Delta\)-harmonic vectors, then its output is a closest-vector
+  solution for the generated instance \((B,t)\).
 \end{proposition}
 
 \begin{proof}
-  Let \(B\) be an explicit generator matrix for a lattice
+  Let \(B\) be an explicit generator matrix over a field \(R\), set
 	  \[
-	    \Lambda_B=\{Bx:x\in R^n\}\subseteq R^n
+	    \mathcal L_B(R)=\{Bx:x\in R^n\}\subseteq R^n,
 	  \]
 	  and let \(t\in R^n\) be the CVP target. We construct a matrix \(\Delta\)
 	  with
   \[
-    \ker(\Delta)=\image(B)=\Lambda_B .
+    \ker(\Delta)=\mathcal L_B(R).
   \]
-  Put \(V=\image(B)\). Since \(R^n\) is finite-dimensional over a field, choose
-  a complementary subspace \(W\) with
+  Put \(V=\mathcal L_B(R)\). Since \(R^n\) is finite-dimensional over a field,
+  choose a complementary subspace \(W\) with
   \[
     V+W=R^n,
     \qquad
@@ -122,7 +129,7 @@ then \(S(t)\) is closest to \(t\) among all vectors of \(\Lambda_B\).
   hence uniqueness gives \(P(y)=0\). Conversely, if \(P(y)=0\), then
   \(y-P(y)=y\in V\). Therefore
   \[
-    \ker P=V=\image(B).
+    \ker P=V=\mathcal L_B(R).
   \]
   Let \(\Delta\) be the matrix of the linear map \(P\). Then, for every
   \(y\in R^n\),
@@ -131,7 +138,7 @@ then \(S(t)\) is closest to \(t\) among all vectors of \(\Lambda_B\).
     \quad\Longleftrightarrow\quad
     y\in\ker P
     \quad\Longleftrightarrow\quad
-    y\in\image(B)
+    y\in\mathcal L_B(R)
     \quad\Longleftrightarrow\quad
     \exists x,\ Bx=y .
   \]
@@ -149,7 +156,7 @@ then \(S(t)\) is closest to \(t\) among all vectors of \(\Lambda_B\).
   \[
     Bx=S(t).
   \]
-	  Hence \(S(t)\in\Lambda_B\).
+	  Hence \(S(t)\in\mathcal L_B(R)\).
 
 	  Suppose in addition that \(S\) satisfies
   \[
@@ -159,14 +166,14 @@ then \(S(t)\) is closest to \(t\) among all vectors of \(\Lambda_B\).
     \dist(t,S(t))\le \dist(t,h').
   \]
 	  Since the \(\Delta\)-harmonic vectors are exactly the vectors of
-	  \(\Lambda_B\), this inequality is precisely
+	  \(\mathcal L_B(R)\), this inequality is precisely
   \[
     \dist(t,S(t))\le \dist(t,w)
     \qquad
-    \text{for every }w\in\Lambda_B.
+    \text{for every }w\in\mathcal L_B(R).
   \]
-  Together with \(S(t)\in\Lambda_B\), this is exactly CVP correctness for the
-  explicit instance \((B,t)\).
+  Together with \(S(t)\in\mathcal L_B(R)\), this is exactly closest-vector
+  correctness for the explicit generated instance \((B,t)\).
 \end{proof}
 
 For fixed \(\Delta\), closest harmonic recovery is minimization over
@@ -223,7 +230,7 @@ For fixed \(\Delta\), closest harmonic recovery is minimization over
 
 The strictness direction uses a different contract. A public Hodge solver may
 call an explicit-lattice CVP oracle, but it receives no hidden operator. The
-predicates below encode uniform harmonicity with respect to every hidden
+conditions below require uniform harmonicity with respect to every hidden
 operator and fixedness on inputs already harmonic for that operator.
 
 \begin{definition}[Public-data Hodge solver contract]\label{def:public-hodge-solver-contract}
@@ -313,12 +320,12 @@ operator and fixedness on inputs already harmonic for that operator.
   \[
     \mathsf H_O(S)\wedge\mathsf F_O(S).
   \]
-  Since \(\Delta_1b=0\), the predicate \(\mathsf F_O(S)\), applied to
+  Since \(\Delta_1b=0\), the condition \(\mathsf F_O(S)\), applied to
   \((\Delta_1,b)\), gives
   \[
     S(O,b)=b.
   \]
-  The predicate \(\mathsf H_O(S)\), applied to \((\Delta_2,b)\), gives
+  The condition \(\mathsf H_O(S)\), applied to \((\Delta_2,b)\), gives
   \[
     \Delta_2 S(O,b)=0.
   \]
@@ -330,22 +337,10 @@ operator and fixedness on inputs already harmonic for that operator.
 
 The obstruction is kernel ambiguity: the same public observation may be
 compatible with multiple hidden operators whose harmonic kernels differ. A CVP
-oracle can solve a closest-vector problem after the lattice is presented; it
-does not select which hidden kernel public data was meant to present.
-
-\subsection{Structural Comparison}
-
-The comparison separates three problems:
-\begin{enumerate}[label=(\roman*)]
-  \item known-lattice closest-vector search;
-  \item hidden-operator HCP;
-  \item public projection/proximity verification.
-\end{enumerate}
-
-The first two carry the hardness comparison. The third is verifier-facing:
-given accepted hidden/geometric data, later sections construct finite public
-shadows and an RS/MCA endpoint without claiming that the projection is
-injective.
+oracle can solve a closest-vector problem after the lattice is presented. It is
+the discrete metric problem after the hidden Hodge operator has made the
+relevant harmonic space available; it does not determine which hidden kernel is
+compatible with the public data.
 
 \subsection*{Lean Correspondence}
 

@@ -17,7 +17,7 @@ import Proximity.CanonicalRS.CitedBounds
 
   Paper correspondence:
   - Paper 1 Section 6: canonical Reed--Solomon endpoint and MCA corollary.
-  - Paper 1 Section 7: cited-bound and endpoint theorem-surface rows.
+  - Paper 1 appendix ledger: cited-bound and endpoint theorem-surface rows.
 
   This aggregate module re-exports the concrete field/rate/radius parameters,
   the certified power-domain construction, the canonical plane encoding, and the

@@ -11,31 +11,30 @@
 \maketitle
 
 \begin{abstract}
-We introduce the Harmonic Cochain Problem (HCP), the problem of recovering the
-harmonic cochain \(h\in\ker(\Delta)\) selected by a hidden Hodge--Laplacian
-\(\Delta\) from a public homotopy class, without determining \(\Delta\) or
-\(\ker(\Delta)\). A hidden representative determines restriction data,
-adjacent coboundaries \(\delta_0,\delta_1\), the degree-one Hodge--Laplacian
-\(\Delta_1=\delta_0\delta_0^\ast+\delta_1^\ast\delta_1\), and the Hodge
-projection \(\pi_H:C^1\to\ker(\Delta_1)\) used for recovery; the public class
-records only a classifier shadow, while the observed cochain has the form
-\(b = h + e\), where
-\(e \in \image(\delta_0) \oplus \image(\delta_1^\ast)\) is Hodge-structured noise.
-For every explicitly generated lattice
-\(\Lambda_B=\image(B)\), there is a linear operator \(\Delta\) with
-\(\ker(\Delta)=\Lambda_B\); hence a presented-operator closest-harmonic solver
-returns a closest vector for the CVP instance \((B,t)\). Conversely, a correct
-known-lattice CVP oracle does not uniformly solve public-data HCP when publicly
-equivalent hidden operators may disagree on harmonicity. We isolate the
-semantic and axiomatic surfaces needed
-for this statement, including fibrational identity data, homotopy classes,
-exact invariants, spectral/Tsirelson admissibility, and Heyting-style oracle
-judgments. We then define the public artifact stack of cochain commitment
-payloads, commitment axioms, proof-carrying artifacts, and lossy projections,
-and construct the finite projection endpoint as a Reed--Solomon
-mutual-correlated-agreement statement. The definitions, theorem boundaries, and
-Lean correspondence are formalized and explicitly indexed in the appendix
-ledger.
+We introduce:
+(i) the Harmonic Cochain Problem (HCP), the problem of recovering
+\(h\in\ker(\Delta_1)\) from public data \((p,b)\), where
+\(\Delta_1\) is the degree-one Hodge--Laplacian induced by some hidden
+representative \(x\in A_p=\pi^{-1}(p)\) of the public homotopy class \(p\).
+This gives adjacent coboundaries \(\delta_0,\delta_1\), the degree-one
+Hodge--Laplacian \(\Delta_1\), the Hodge projection \(\pi_H\), and the
+Hodge-structured decomposition
+\(b=h+e\) with \(e\in\image(\delta_0)\oplus\image(\delta_1^\ast)\);
+(ii) a CVP comparison: for a presented generator matrix \(B\) over a field,
+the generated subspace \(\mathcal L_B(R)=\{Bx:x\in R^n\}\) is
+\(\ker(\Delta)\) for some linear operator \(\Delta\), hence a
+presented-operator closest-harmonic solver returns a closest vector for the
+generated instance \((B,t)\);
+(iii) a hidden-operator separation: a correct known-lattice CVP oracle does not
+uniformly solve public-data HCP when publicly equivalent hidden operators may
+disagree on harmonicity;
+(iv) the semantic and axiomatic hypotheses needed for these statements, including
+fibrational identity data, homotopy classes, exact Hodge/cochain invariants,
+spectral/Tsirelson admissibility, and Heyting-style oracle judgments; and
+(v) a public projection chain through Plucker coordinates and cochain commitments
+to a Reed--Solomon mutual-correlated-agreement endpoint. The definitions,
+theorem boundaries, and Lean correspondence are formalized and explicitly
+indexed in the appendix ledger.
 \end{abstract}
 
 \tableofcontents
@@ -44,7 +43,7 @@ ledger.
 \input{sections/02-harmonic-cochain-problem}
 \input{sections/03-cvp-comparison}
 \input{sections/04-axioms-and-semantics}
-\input{sections/05-public-shadows-and-commitments}
+\input{sections/05-public-artifacts-and-commitments}
 \input{sections/06-rs-mca-projection}
 \input{sections/08-future-directions}
 \input{sections/appendices}

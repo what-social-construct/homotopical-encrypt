@@ -1,159 +1,1639 @@
 \section{Reed--Solomon Projection And MCA}\label{sec:rs-mca-projection}
 
-The concrete projection chain belongs here because its endpoint is the
-Reed--Solomon received-word surface and the mutual-correlated-agreement theorem.
-This section uses Grassmannian data in a different role from the HCP
-Grassmannian of Sections~\ref{sec:hcp-definition}--\ref{sec:mathematical-framework}.
-Earlier, \(W\in\Gr(k,R^n)\) parameterizes hidden harmonic kernels and
-projection Laplacians \(\Delta_W=I-P_W\). Here, after the hidden/geometric
-object has already been accepted, a frame for the Grassmannian point is used as
-the source of a lossy proximity projection through Plucker coordinates and
-actual cochain commitments toward a finite Reed--Solomon target.
-
-\subsection{Projection Chain}
-
-The staged chain has the following shape:
+The staged chain is
 \[
 \begin{aligned}
-  &\text{FrameWitness} \\
-  &\quad\to \text{Projective Plucker shadow} \\
-  &\quad\to \text{committed cochain/local syndrome} \\
-  &\quad\to \text{plane shadow} \\
+  &\text{accepted cochain commitment} \\
+  &\quad\stackrel{\text{Plucker/frame witness}}{\Longleftarrow}
+    \text{projective Plucker coordinate} \\
+  &\quad\to \text{local syndrome } \sigma(c) \\
+  &\quad\to \text{plane projection} \\
   &\quad\to \text{finite-field received word} \\
   &\quad\to \text{canonical Reed--Solomon target}.
 \end{aligned}
 \]
-Each stage has local proximity gates and certificates. The orchestrating
-projection-chain theorem composes these local certificates without rechecking
-them. These are proximity-specific projection gates, not the main \HE{}
-acceptance layer from Section~\ref{sec:mathematical-framework}. Their role is
-to certify the lossy path into the Reed--Solomon endpoint after the main
-hidden/geometric object has already been accepted.
-Thus the Plucker shadow is not part of the definition of HCP and is not the
-source of hidden-operator hardness. It is the first public projective encoding
-used by the proximity proof.
+Each stage has local invariants. The composed chain contains the maps
+and the local metric handoffs; the final far-region theorem is a separate
+non-collapse statement. These are proximity-specific gates, not the main
+\HE{} acceptance layer from Section~\ref{sec:mathematical-framework}. The
+Plucker coordinate is not part of the definition of HCP and is not the source
+of hidden-operator hardness. It is projective witness data whose binding
+statement relates the proximity geometry to the already accepted cochain
+commitment.
 
-The semantic roles in this chain are separated. The private witness consists of
-the fibration data, frame choices, paths, and openings. The shadow is the
-Plucker/cochain/proximity data derived from that witness. A hash or root is only
-a compressed public handle to canonical bytes for the shadow, not the
-mathematical shadow itself. A certificate or SNARK proves that the private
-witness produced the accepted shadow and satisfied the stage invariants.
+The private witness consists of fibration data, frame choices, paths, and
+openings. The verifier-facing mathematical data consist of the accepted cochain
+commitment, the Plucker coordinate bound to it, the plane projection, and the
+finite received word. Hashes and roots are compressed handles for canonical
+bytes of those data, not replacements for the mathematical objects. The
+certificate proves that the private witness produced the accepted public
+artifacts and satisfied the stage invariants.
 
-\subsection{Projection-Stage Gates}
+\subsection{Abstract Projection And Gap Vocabulary}
 
-The source and Plucker stages carry metric and public-shadow invariants.
-We use the usual Grassmannian and Plucker-coordinate algebra: a frame
-\((w_1,\ldots,w_r)\) determines the exterior coordinate
-\([w_1\wedge\cdots\wedge w_r]\in\mathbb P(\bigwedge^r V)\), with the
-quadratic Plucker relations as the projective Grassmannian equations.
-The source disagreement score \(\rho(W)\) is required to be nonnegative and
-invariant under the public Plucker quotient. The Plucker metric is defined only
-on the admissible projective chart, and its distance must be nonnegative and
-frame-quotient invariant. Public-shadow respect says that equality of the
-public Plucker shadow determines the same committed cochain, plane shadow, and
-received word along this projection path.
-
-The Plucker-to-cochain stage carries the local-syndrome interface and consumes
-the actual cochain commitment layer of Section~5. Its target is not an abstract
-stand-in for a cochain; it is the existing committed payload
+A sheaf-side proximity space is a triple
 \[
-  (q,n,c,\tau)
+  \mathcal X=(X,G_X,\rho_X),
 \]
-with supported modulus, declared edge count, edge values, and topology hash.
-A concrete encoder may send valid Plucker frame data to such a well-formed
-payload with the expected edge count, but the storage-native statement is
-relational: an observed or proof-carrying cochain commitment \(c\) realizes the
-public Plucker shadow. This is the boundary formalized by the public-binding
-surface: the chain/storage layer accepts the actual commitment payload, while
-the proximity proof supplies the statement that this payload realizes the
-Plucker shadow.
-
-Syndrome adequacy then states that a well-formed committed cochain \(c\) with
-vanishing local syndrome \(\sigma(c)=0\) is a global-section candidate for the
-chosen sheaf. In the concrete bridge, the local syndrome is the
-commitment-sum witness; global candidates have zero commitment sum. The point
-is that the proximity proof passes through real cochain commitments and their
-well-formedness/topology-binding interface, not through a separate synthetic
-cochain carrier.
-
-The cochain-to-plane and plane-to-RS stages carry semantic-alignment and
-non-collapse conditions. Semantic alignment requires valid frames, the plane
-shadow, and the received word to agree with the extraction maps. Plane
-extraction records the cochain well-formedness, expected edge count, and
-selected-index bounds needed to form the two-coordinate shadow. The far-region
-conditions assert calibrated non-collapse from the Plucker source region,
-through the committed cochain, to the final Reed--Solomon received word.
-
-\subsection{Canonical Reed--Solomon Endpoint}
-
-The proximity endpoint is stated over the paper-style alphabet shape
-\(C \subseteq (\F^s)^n\). The canonical \HE{} evaluation is the ordinary
-Reed--Solomon slice at width \(s = 1\), using the standard polynomial
-evaluation-code convention.
-The canonical endpoint fixes
+where \(X\) is the received-word-like cochain carrier,
+\(G_X\subseteq X\) is the exact global-section locus, and
+\(\rho_X:X\to\mathbb R\) is the local disagreement score. A code-side
+proximity space is a triple
 \[
-  \F=\mathbb Z/12289\mathbb Z,\qquad n=4096,\qquad k=1024,
+  \mathcal Y=(Y,\mathcal C_Y,d_Y),
 \]
-so the rate is \(1/4\). The evaluation domain is a certified smooth power
-domain: the chosen generator has order \(12288\), and cubing it gives an
-element of order \(4096\). Hence the evaluation points are
-\[
-  1,\alpha,\alpha^2,\ldots,\alpha^{4095},
-\]
-with \(\alpha^{4096}=1\) and no earlier repetition. The canonical radius used
-for the below-Johnson comparison is the absolute Hamming radius
-\[
-  2047.
-\]
-The required finite checks are the field arithmetic, domain cardinality,
-smoothness, evaluation-point compatibility, and absolute-radius normalization
-for this endpoint; the deep list-decoding and MCA estimates enter only as cited
-code-theoretic theorem slots.
+where \(Y\) is the target word carrier, \(\mathcal C_Y\subseteq Y\) is
+the code, and \(d_Y:Y\to\mathbb R\) is the distance-to-code score.
 
-\subsection{Mutual Correlated Agreement}
-
-\begin{definition}[MCA bad-challenge fraction]\label{def:mca-bad-challenge}
-  Let \(C \subseteq (\F^s)^n\) be a block code and let
-  \(\ell(\gamma)=f_1+\gamma f_2\) be an affine line of received words. For a
-  radius \(\delta\), the bad challenges are those \(\gamma \in \F\) for which
-  \(\ell(\gamma)\) is \(\delta\)-close to \(C\) on a large coordinate set, but
-  the pair \((f_1,f_2)\) is not correspondingly close to the two-fold
-  interleaved code \(C^{\oplus 2}\) on that same set. The MCA error is the
-  fraction of bad challenges in \(\F\).
+\begin{definition}[Evaluation projection]\label{def:evaluation-projection}
+An evaluation projection \(\eta:\mathcal X\to\mathcal Y\) is a map
+\[
+  \eta:X\longrightarrow Y
+\]
+such that
+\[
+  x\in G_X\Longrightarrow \eta(x)\in\mathcal C_Y,
+  \qquad
+  d_Y(\eta(x))\le \rho_X(x)
+  \quad(x\in X).
+\]
+Consequently, if \(\rho_X(x)\le \varepsilon\), then
+\[
+  d_Y(\eta(x))\le \varepsilon.
+\]
 \end{definition}
 
-For the canonical scalar Reed--Solomon slice \(s=1\), ordinary scalar RS words
-are identified with words in \((\F^1)^n\), and the bad-challenge predicate
-agrees with the paper-alphabet predicate.
+A promised gap-proximity problem is a tuple
+\[
+  P=(X,s,r_{\mathrm{near}},r_{\mathrm{far}})
+  \qquad
+  \text{with}\qquad r_{\mathrm{near}}\le r_{\mathrm{far}}.
+\]
+A promised instance has near and far loci
+\[
+  P_{\mathrm{near}}=\{x\in X:s(x)\le r_{\mathrm{near}}\},
+  \qquad
+  P_{\mathrm{far}}=\{x\in X:r_{\mathrm{far}}\le s(x)\}.
+\]
+A solver \(A:X\to\{\operatorname{accept},\operatorname{reject}\}\) is correct
+on the promise when
+\[
+  x\in P_{\mathrm{near}}\Rightarrow A(x)=\operatorname{accept},
+  \qquad
+  x\in P_{\mathrm{far}}\Rightarrow A(x)=\operatorname{reject}.
+\]
+A gap reduction \(f:P\to Q\) preserves near instances and far instances. Hence
+any correct solver for \(Q\) pulls back to a correct solver for \(P\).
 
-\begin{theorem}[Canonical RS MCA bound]\label{thm:canonical-rs-mca}
-  For the canonical \HE{} Reed--Solomon endpoint at the below-Johnson radius,
-  every projection-induced final affine line has bad-challenge fraction at most
-  \[
-    \frac{\tau}{|\F|},
-  \]
-  where \(\tau\) is the cited MCA threshold for the canonical endpoint.
-\end{theorem}
+\begin{proposition}[Projection and solver pullback]\label{prop:projection-pullback}
+Let \(\eta:\mathcal X\to\mathcal Y\) be an evaluation projection.
+Then:
+\[
+  \rho_X(x)\le\varepsilon\Longrightarrow d_Y(\eta(x))\le\varepsilon.
+\]
+If, in addition, the projection is calibrated by radii
+\[
+  r^X_{\mathrm{near}}\le r^X_{\mathrm{far}},
+  \qquad
+  r^Y_{\mathrm{near}}\le r^Y_{\mathrm{far}},
+  \qquad
+  r^X_{\mathrm{near}}\le r^Y_{\mathrm{near}},
+\]
+and satisfies
+\[
+  r^X_{\mathrm{far}}\le\rho_X(x)
+  \Longrightarrow
+  r^Y_{\mathrm{far}}\le d_Y(\eta(x)),
+\]
+then \(\eta\) is a gap reduction from the source gap problem to the target gap
+problem. Consequently, every correct target solver \(A\) pulls back to the
+correct source solver \(A\circ\eta\).
+\end{proposition}
 
-The deep list-decoding and MCA estimates are external theorem inputs: the
-Johnson list-decoding bound, the count and fractional MCA bounds, and the paper
-Definition~4.3 width-one MCA bound. The internal finite part is the endpoint
-plumbing, the \(s=1\) equivalence, and the specialization to projection-induced
-lines.
+\begin{proof}
+The first assertion is transitivity:
+\[
+  d_Y(\eta(x))\le\rho_X(x)\le\varepsilon.
+\]
+For the calibrated near side, if \(x\) is source-near, then
+\[
+  d_Y(\eta(x))
+  \le \rho_X(x)
+  \le r^X_{\mathrm{near}}
+  \le r^Y_{\mathrm{near}},
+\]
+so \(\eta(x)\) is target-near. The far side is exactly the displayed
+non-collapse implication. If \(A\) is correct on the target promise, then for
+a source-near \(x\), the just-proved near preservation gives
+\[
+  A(\eta(x))=\operatorname{accept},
+\]
+and for a source-far \(x\), the far preservation gives
+\[
+  A(\eta(x))=\operatorname{reject}.
+\]
+This is precisely correctness of the pulled-back solver.
+\end{proof}
+
+For a lossy projection chain, the final interface is calibrated. A calibrated
+end-to-end gap projection consists of an evaluation projection
+\(\eta:\mathcal X\to\mathcal Y\), radii
+\[
+  r^X_{\mathrm{near}}\le r^X_{\mathrm{far}},
+  \qquad
+  r^Y_{\mathrm{near}}\le r^Y_{\mathrm{far}},
+\]
+the near compatibility
+\[
+  r^X_{\mathrm{near}}\le r^Y_{\mathrm{near}},
+\]
+and the far non-collapse implication
+\[
+  r^X_{\mathrm{far}}\le \rho_X(x)
+  \Longrightarrow
+  r^Y_{\mathrm{far}}\le d_Y(\eta(x)).
+\]
+The ordinary same-radius projection is the special case
+\(r^X_{\mathrm{near}}=r^Y_{\mathrm{near}}\) and
+\(r^X_{\mathrm{far}}=r^Y_{\mathrm{far}}\).
+
+\subsection{Grassmannian Source And Plucker Quotient}
+
+For the source proximity instance, let \(W\le \mathbb R^n\) be a
+Grassmannian point with orthogonal projection \(P_W\), and put
+\[
+  \Delta_W=I-P_W.
+\]
+The cochain carrier is \(\mathbb R^n\), the exact locus is
+\[
+  G_W=W,
+\]
+and the disagreement score is
+\[
+  \rho_W(b)=\|P_{W^\perp}b\|.
+\]
+The residual identity is
+\[
+  \rho_W(b)=\operatorname{res}_W(b),
+\]
+and
+\[
+  \rho_W(b)=0
+  \Longleftrightarrow
+  b\in W
+  \Longleftrightarrow
+  b\in\ker(\Delta_W).
+\]
+The identity map is therefore the first evaluation projection from the
+Grassmannian proximity space to its harmonic code space.
+
+\begin{proposition}[Grassmannian residual]\label{prop:grassmannian-residual}
+For \(W\le\mathbb R^n\) with orthogonal projection \(P_W\),
+\[
+  \rho_W(b)=\|P_{W^\perp}b\|
+  =
+  \operatorname{res}_W(b),
+\]
+and
+\[
+  \rho_W(b)=0
+  \Longleftrightarrow b\in W
+  \Longleftrightarrow b\in\ker(\Delta_W).
+\]
+\end{proposition}
+
+\begin{proof}
+The projection model has
+\[
+  b=P_Wb+P_{W^\perp}b,\qquad
+  \Delta_W b=(I-P_W)b=P_{W^\perp}b.
+\]
+Thus the Laplacian residual is
+\[
+  \operatorname{res}_W(b)=\|\Delta_W b\|=\|P_{W^\perp}b\|=\rho_W(b).
+\]
+Since a norm vanishes exactly on the zero vector,
+\[
+  \rho_W(b)=0
+  \Longleftrightarrow P_{W^\perp}b=0.
+\]
+The latter condition is equivalent to \(b=P_Wb\), hence to \(b\in W\). In the
+projection Hodge model, harmonicity is membership in \(\ker(\Delta_W)=W\).
+\end{proof}
+
+Now fix a rank \(r\) Grassmannian point. A frame witness is
+\[
+  \mathcal F=(W;w_1,\ldots,w_r)
+\]
+with \(w_i\in W\), linearly independent, and
+\[
+  \operatorname{span}_{\mathbb R}\{w_1,\ldots,w_r\}=W.
+\]
+Its exterior coordinate is
+\[
+  x_{\mathcal F}=w_1\wedge\cdots\wedge w_r
+  \in \bigwedge^r\mathbb R^n.
+\]
+The raw Plucker validity conditions are
+\[
+  x_{\mathcal F}\ne 0,\qquad
+  x_{\mathcal F}\text{ is decomposable},\qquad
+  x_{\mathcal F}\text{ satisfies the Plucker relations}.
+\]
+Let \(\mathcal V_{\mathrm{fr}}\) denote the locus of frame witnesses satisfying
+these validity conditions.
+In the concrete projective instantiation,
+\[
+  x\sim y
+  \Longleftrightarrow
+  \exists u\in\mathbb R^\times,\ y=u x,
+\]
+and the Plucker coordinate is the projective class
+\[
+  \operatorname{Pl}(W)=[x_{\mathcal F}]
+  \in \mathbb P\!\left(\bigwedge^r\mathbb R^n\right).
+\]
+The soundness obligations are:
+\[
+\begin{gathered}
+  x_{\mathcal F}\ne 0,\qquad
+  x_{\mathcal F}\text{ satisfies the Plucker relations},\\
+  \operatorname{Pl}(W)\text{ is normalized/support-admissible},\\
+  W=V\Longrightarrow x_{\mathcal F}\sim x_{\mathcal G},\qquad
+  x\sim y\Longrightarrow [x]=[y].
+\end{gathered}
+\]
+Thus changing the private frame for the same Grassmannian point does not change
+the projective Plucker coordinate.
+
+\begin{proposition}[Projective Plucker invariance]\label{prop:plucker-invariance}
+Assume the displayed Plucker soundness obligations. If two frame witnesses
+\(\mathcal F=(W;w_1,\ldots,w_r)\) and
+\(\mathcal G=(W;v_1,\ldots,v_r)\) present the same Grassmannian point, then
+\[
+  [w_1\wedge\cdots\wedge w_r]
+  =
+  [v_1\wedge\cdots\wedge v_r]
+  \in \mathbb P\!\left(\bigwedge^r\mathbb R^n\right).
+\]
+\end{proposition}
+
+\begin{proof}
+Let \(x_{\mathcal F}=w_1\wedge\cdots\wedge w_r\) and
+\(x_{\mathcal G}=v_1\wedge\cdots\wedge v_r\). The soundness obligation for
+frame change gives \(x_{\mathcal F}\sim x_{\mathcal G}\). By definition of the
+projective quotient, this means that for some \(u\in\mathbb R^\times\),
+\[
+  x_{\mathcal G}=u x_{\mathcal F}.
+\]
+The quotient map to projective space identifies nonzero scalar multiples; hence
+\([x_{\mathcal F}]=[x_{\mathcal G}]\).
+\end{proof}
+
+The source metric gate states
+\[
+  0\le \rho(\mathcal F),\qquad
+  \operatorname{Pl}(\mathcal F)=\operatorname{Pl}(\mathcal G)
+  \Longrightarrow
+  \rho(\mathcal F)=\rho(\mathcal G).
+\]
+The Plucker metric gate fixes the admissible projective chart and a projective
+distance \(d_{\mathrm{Pl}}\) satisfying
+\[
+  0\le d_{\mathrm{Pl}}(\mathcal F,\mathcal G),
+  \qquad
+  \operatorname{Pl}(\mathcal F)=\operatorname{Pl}(\mathcal F')
+  \Longrightarrow
+  d_{\mathrm{Pl}}(\mathcal F,\mathcal G)
+  =d_{\mathrm{Pl}}(\mathcal F',\mathcal G).
+\]
+
+\subsection{Committed Cochains And Local Syndrome}
+
+The committed-cochain carrier in the proximity bridge is exactly the cochain
+commitment payload of \cref{sec:public-artifact-stack}. Write
+\[
+  \mathcal C_{\mathrm{com}}
+\]
+for that carrier. An element is the payload
+\[
+  c=(q,n,\mathbf c,\tau)
+\]
+with supported modulus, declared edge count, edge values, and topology hash.
+Let
+\[
+  \mathcal C_{\mathrm{com}}^{\mathrm{wf}}\subseteq\mathcal C_{\mathrm{com}},
+  \qquad
+  \mathcal S_{\mathrm{coh}}
+\]
+denote respectively the well-formed commitment payloads and the coherent sheaf
+data. For \(S\in\mathcal S_{\mathrm{coh}}\), define
+\[
+  G_S=\{c\in\mathcal C_{\mathrm{com}}:
+  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\}.
+\]
+Equivalently,
+\[
+  c\in G_S
+  \Longleftrightarrow
+  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}
+  \quad(S\in\mathcal S_{\mathrm{coh}}).
+\]
+Consequently,
+\[
+  c\in G_S
+  \Longrightarrow
+  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}},
+\]
+and the sheaf coherence hypotheses give
+\[
+  \delta_1\delta_0=0,
+  \qquad
+  \Delta\text{ is built from the adjacent coboundaries}.
+\]
+The same global-section candidate also has nonempty edge data and a supported
+modulus \(q>1\).
+
+\begin{definition}[Local syndrome target]\label{def:local-syndrome-target}
+Fix sheaf coherence data \(S\). A local syndrome target is a quadruple
+\[
+  L=(\Sigma,\sigma,Z,d_L)
+\]
+where
+\[
+  \sigma:\mathcal C_{\mathrm{com}}\to\Sigma,\qquad
+  Z\subseteq\Sigma,\qquad
+  d_L:\mathcal C_{\mathrm{com}}\to\mathbb R,
+\]
+and
+\[
+  c\in G_S\Longrightarrow \sigma(c)\in Z
+  \qquad(c\in\mathcal C_{\mathrm{com}}).
+\]
+It determines the local code
+\[
+  \mathcal C_L\subseteq\mathcal C_{\mathrm{com}},\qquad
+  c\in\mathcal C_L
+  \Longleftrightarrow
+  c\in G_S\wedge \sigma(c)\in Z.
+\]
+\end{definition}
+
+The induced code-side proximity space has word carrier
+\(\mathcal C_{\mathrm{com}}\), code \(\mathcal C_L\), and distance \(d_L\).
+Hence every global-section candidate lies in the local code.
+
+\begin{definition}[Plucker-to-cochain projection]\label{def:plucker-cochain-projection}
+Let \(P_{\mathrm{Pl}}\) be the projective Plucker quotient. A
+Plucker-to-cochain projection is a map
+\[
+  E:P_{\mathrm{Pl}}\longrightarrow \mathcal C_{\mathrm{com}}
+\]
+such that, for every frame witness \(\mathcal F\),
+\[
+  \mathcal F\in\mathcal V_{\mathrm{fr}}
+  \Longrightarrow
+  E(\operatorname{Pl}(\mathcal F))\in G_S
+\]
+and
+\[
+  d_L(E(\operatorname{Pl}(\mathcal F)))\le \rho(\mathcal F).
+\]
+\end{definition}
+
+A concrete payload encoder is a special case of this relation. It provides
+\[
+  E:P_{\mathrm{Pl}}\to \mathcal C_{\mathrm{com}},
+  \qquad N_{\mathrm{edge}}\in\mathbb N,\quad N_{\mathrm{edge}}>0,
+\]
+and, for valid frames,
+\[
+  E(\operatorname{Pl}(\mathcal F))\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}},
+  \qquad
+  n_{\mathrm{edge}}(E(\operatorname{Pl}(\mathcal F)))=N_{\mathrm{edge}}.
+\]
+Thus the encoded edge vector has length \(N_{\mathrm{edge}}\). Since the
+encoder consumes the projective coordinate, equality of Plucker coordinates
+gives equality of the encoded committed cochain.
+
+The storage-native statement is relational. A payload realization is a relation
+\[
+  \mathcal R\subseteq P_{\mathrm{Pl}}\times \mathcal C_{\mathrm{com}}
+\]
+such that
+\[
+  (\xi,c)\in\mathcal R
+  \Longrightarrow c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}},
+  \qquad
+  \xi=\xi'\ \text{and}\ (\xi,c)\in\mathcal R
+  \Longrightarrow
+  (\xi',c)\in\mathcal R.
+\]
+An observed frame binding consists of a hashed Plucker coordinate, an observed
+proof-carrying cochain artifact, a valid frame, sheaf well-formedness, and a
+public statement proving
+\[
+  (\operatorname{Pl}(\mathcal F),c)\in\mathcal R.
+\]
+It yields
+\[
+  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}},\qquad
+  c\in G_S,\qquad
+  c\in\mathcal C_L.
+\]
+
+\begin{proposition}[Observed Plucker binding gives a local codeword]
+\label{prop:observed-binding-codeword}
+Let an observed frame binding prove
+\[
+  (\operatorname{Pl}(\mathcal F),c)\in\mathcal R
+\]
+for \(\mathcal F\in\mathcal V_{\mathrm{fr}}\), and assume
+\(S\in\mathcal S_{\mathrm{coh}}\).
+Then \(c\) is well formed, \(c\) is a global-section candidate, and \(c\) is a
+codeword for every local syndrome target \(L\) over \(S\).
+\end{proposition}
+
+\begin{proof}
+The payload-realization relation includes the implication
+\[
+  (\xi,c)\in\mathcal R
+  \Longrightarrow c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}.
+\]
+Applying it to \(\xi=\operatorname{Pl}(\mathcal F)\) gives
+\(c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\). By definition,
+\[
+  c\in G_S
+  \Longleftrightarrow
+  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}
+  \quad(S\in\mathcal S_{\mathrm{coh}}),
+\]
+so \(c\) is a global-section candidate. For a local syndrome target
+\(L=(\Sigma,\sigma,Z,d_L)\), the target axiom gives
+\[
+  c\in G_S\Longrightarrow \sigma(c)\in Z.
+\]
+Together with \(c\in G_S\), this is exactly \(c\in\mathcal C_L\).
+\end{proof}
+
+\begin{definition}[Syndrome adequacy gate]\label{def:syndrome-adequacy-gate}
+For a local syndrome target \(L=(\Sigma,\sigma,Z,d_L)\), the syndrome-adequacy
+gate is
+\[
+  \mathcal A_S(L)
+  \Longleftrightarrow
+  \forall c\in\mathcal C_{\mathrm{com}},\quad
+  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\wedge(\sigma(c)\in Z)
+  \Longrightarrow
+  c\in G_S.
+\]
+\end{definition}
+
+\begin{proposition}[Zero syndrome gives a local codeword]\label{prop:zero-syndrome-codeword}
+If \(\mathcal A_S(L)\), \(c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\),
+and \(\sigma(c)\in Z\), then
+\[
+  c\in\mathcal C_L.
+\]
+\end{proposition}
+
+\begin{proof}
+The adequacy implication gives \(c\in G_S\). Together with
+\(\sigma(c)\in Z\), this is the defining conjunction for
+\(c\in\mathcal C_L\).
+\end{proof}
+
+In the concrete commitment-sum bridge, the construction input is
+\[
+  c\in G_S
+  \Longrightarrow
+  \operatorname{sum}_{\mathrm{com}}(c)=0.
+\]
+The induced local syndrome target is
+\[
+  \Sigma=\mathbb Z,\qquad
+  \sigma(c)=\operatorname{sum}_{\mathrm{com}}(c),\qquad
+  Z=\{0\},
+\]
+with binary residual
+\[
+  d_L(c)=
+  \begin{cases}
+    0,& \operatorname{sum}_{\mathrm{com}}(c)=0,\\
+    1,& \operatorname{sum}_{\mathrm{com}}(c)\ne 0.
+  \end{cases}
+\]
+Global candidates have zero commitment-sum residual.
+
+\subsection{Plane Extraction And RS Encoding}
+
+Let \(I\) be the finite evaluation-index type. A two-coordinate plane word is
+\[
+  p:I\times\operatorname{Fin}(2)\to R.
+\]
+A plane extraction context is
+\[
+  \mathcal E=(N,\iota,a)
+\]
+where
+\[
+  N\in\mathbb N,\qquad
+  \iota:I\times\operatorname{Fin}(2)\to\mathbb N,\qquad
+  a:\mathbb Z\to R.
+\]
+It is locally nondegenerate when
+\[
+  \iota(i,0)\ne \iota(i,1)\qquad(i\in I).
+\]
+A committed cochain \(c=(q,n,\mathbf c,\tau)\) is aligned with
+\(\mathcal E\) when
+\[
+  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}},\qquad
+  n=N,\qquad
+  \iota(i,j)<|\mathbf c|\quad(i\in I,\ j\in\operatorname{Fin}(2)).
+\]
+The extracted plane is
+\[
+  p_c(i,j)=a(\mathbf c_{\iota(i,j)}).
+\]
+
+A plane target is a pair
+\[
+  \mathcal P=(\mathcal C_{\mathcal P},d_{\mathcal P})
+\]
+on plane words. A cochain-to-plane projection satisfies
+\[
+\begin{gathered}
+  c\in\mathcal C_L\Longrightarrow c\text{ is aligned with }\mathcal E,\\
+  c\in\mathcal C_L\Longrightarrow
+    p_c\in\mathcal C_{\mathcal P},\\
+  d_{\mathcal P}(p_c)\le d_L(c).
+\end{gathered}
+\]
+The associated invariants are local nondegeneracy, alignment,
+well-formedness, expected edge count, selected-index bounds, codeword
+preservation, and distance control.
+
+Now let \(F\) be a finite field. A plane encoding is
+\[
+  \Phi:(\operatorname{Fin}(2)\to R)\to F.
+\]
+It sends a plane word \(p\) to a received word
+\[
+  \Phi_\ast(p):I\to F,\qquad
+  \Phi_\ast(p)(i)=\Phi(p(i,\cdot)).
+\]
+For an RS target \(T\) with received-word metric \(D\), the RS plane target is
+\[
+  p\in\mathcal C_{\mathcal P}
+  \Longleftrightarrow
+  \Phi_\ast(p)\in T,
+  \qquad
+  d_{\mathcal P}(p)=D(\Phi_\ast(p)).
+\]
+An RS interpretation of a cochain-plane projection exposes an evaluation
+projection from the local syndrome space to the RS code space, with
+\[
+  c\in\mathcal C_L
+  \Longrightarrow
+  \Phi_\ast(p_c)\in T,
+  \qquad
+  D(\Phi_\ast(p_c))\le d_L(c).
+\]
+For the canonical integer boundary used below,
+\[
+  F=\mathbb Z/12289\mathbb Z,\qquad
+  \Phi(x_0,x_1)=x_0+\alpha x_1,
+\]
+where \(\alpha\) is the canonical RS root defined in
+\cref{sec:rs-canonical-endpoint}.
+
+\begin{proposition}[Plane and RS handoff]\label{prop:plane-rs-handoff}
+Let \(c\in\mathcal C_{\mathrm{com}}\). If \(c\in\mathcal C_L\), then
+the cochain-plane projection gives an aligned plane \(p_c\), and the
+plane-to-RS interpretation gives
+\[
+  \Phi_\ast(p_c)\in T,
+  \qquad
+  D(\Phi_\ast(p_c))\le d_L(c).
+\]
+\end{proposition}
+
+\begin{proof}
+The cochain-to-plane projection has three defining hypotheses. Applied to
+\(c\in\mathcal C_L\), they give alignment of \(c\) with
+\(\mathcal E\), the target-codeword assertion for \(p_c\), and
+\[
+  d_{\mathcal P}(p_c)\le d_L(c).
+\]
+For the RS plane target,
+\[
+  p\in\mathcal C_{\mathcal P}
+  \Longleftrightarrow \Phi_\ast(p)\in T,
+  \qquad
+  d_{\mathcal P}(p)=D(\Phi_\ast(p)).
+\]
+Substitution with \(p=p_c\) gives the two displayed conclusions.
+\end{proof}
+
+\subsection{Composed Chain, Gates, And Evidence}
+
+A concrete projection chain is a pair
+\[
+  \Gamma=(\pi_{\mathrm{Pl}\to c},\pi_{c\to \mathrm{RS}})
+\]
+consisting of the Plucker-to-cochain projection and the plane-to-RS
+interpretation. For a frame witness \(\mathcal F\), define
+\[
+\begin{aligned}
+  c_\Gamma(\mathcal F)
+    &=E(\operatorname{Pl}(\mathcal F)),\\
+  p_\Gamma(\mathcal F)
+    &=p_{c_\Gamma(\mathcal F)},\\
+  y_\Gamma(\mathcal F)
+    &=\Phi_\ast(p_\Gamma(\mathcal F)).
+\end{aligned}
+\]
+The composed evaluation projection is
+\[
+  \mathcal F\longmapsto y_\Gamma(\mathcal F).
+\]
+Its metric handoff is the chain of inequalities
+\[
+  D(y_\Gamma(\mathcal F))
+  \le d_L(c_\Gamma(\mathcal F))
+  \le \rho(\mathcal F).
+\]
+
+\begin{proposition}[Composed projection chain]\label{prop:composed-chain}
+If \(\mathcal F\) is a valid Plucker frame, then
+\[
+  y_\Gamma(\mathcal F)\in T.
+\]
+For every frame witness \(\mathcal F\),
+\[
+  D(y_\Gamma(\mathcal F))\le \rho(\mathcal F).
+\]
+\end{proposition}
+
+\begin{proof}
+For a valid frame, the Plucker-to-cochain projection gives
+\[
+  c_\Gamma(\mathcal F)\in G_S.
+\]
+The local syndrome target then gives \(\sigma(c_\Gamma(\mathcal F))\in Z\), so
+\[
+  c_\Gamma(\mathcal F)\in\mathcal C_L.
+\]
+The plane-to-RS interpretation maps local codewords to RS codewords; hence
+\[
+  y_\Gamma(\mathcal F)=\Phi_\ast(p_\Gamma(\mathcal F))\in T.
+\]
+For the metric statement, the plane-to-RS interpretation gives
+\[
+  D(y_\Gamma(\mathcal F))\le d_L(c_\Gamma(\mathcal F)),
+\]
+and the Plucker-to-cochain projection gives
+\[
+  d_L(c_\Gamma(\mathcal F))\le \rho(\mathcal F).
+\]
+The desired inequality follows by transitivity.
+\end{proof}
+
+The associated state tuple for one witness is
+\[
+  c_\Gamma(\mathcal F),\qquad p_\Gamma(\mathcal F),\qquad
+  y_\Gamma(\mathcal F),
+\]
+the definitional equalities by which they are produced, and the two local
+metric handoffs. Hence
+\[
+  D(y_\Gamma(\mathcal F))\le \rho(\mathcal F).
+\]
+
+The accumulated stage certificate is ordered:
+\[
+  \chi_{\mathrm{Pl}\to c}
+  \longrightarrow
+  \chi_{c\to p}
+  \longrightarrow
+  \chi_{p\to \mathrm{RS}}
+  \longrightarrow
+  \chi_{\mathrm{stage}}.
+\]
+The final stage certificate is equivalent to the three explicit invariant
+conditions for the Plucker/cochain, cochain/plane, and plane/RS stages.
+
+\begin{definition}[Stage certificates]\label{def:stage-certificates}
+For a chain \(\Gamma\), let
+\[
+  \chi_{\mathrm{Pl}\to c}(\Gamma)
+\]
+denote the conjunction
+\[
+\begin{gathered}
+  \mathcal F\in\mathcal V_{\mathrm{fr}}
+  \Rightarrow c_\Gamma(\mathcal F)\in G_S,\\
+  \mathcal F\in\mathcal V_{\mathrm{fr}}
+  \Rightarrow c_\Gamma(\mathcal F)\in\mathcal C_L,\\
+  d_L(c_\Gamma(\mathcal F))\le \rho(\mathcal F).
+\end{gathered}
+\]
+Let
+\[
+  \chi_{c\to p}(\Gamma)
+\]
+denote the conjunction of local nondegeneracy of \(\mathcal E\), alignment of
+all local codewords, well-formedness of aligned codewords, expected edge-count
+equality, selected-index bounds, plane-target codeword preservation, and
+\[
+  d_{\mathcal P}(p_c)\le d_L(c).
+\]
+Let
+\[
+  \chi_{p\to\mathrm{RS}}(\Gamma)
+\]
+denote the conjunction
+\[
+\begin{gathered}
+  y_\Gamma(c)=\Phi_\ast(p_c),\\
+  c\in\mathcal C_L\Rightarrow y_\Gamma(c)\in T,\\
+  D(y_\Gamma(c))\le d_L(c).
+\end{gathered}
+\]
+The accumulated stage certificate is the conjunction
+\[
+  \chi_{\mathrm{stage}}(\Gamma)
+  =
+  \chi_{\mathrm{Pl}\to c}(\Gamma)
+  \wedge \chi_{c\to p}(\Gamma)
+  \wedge \chi_{p\to\mathrm{RS}}(\Gamma).
+\]
+\end{definition}
+
+\begin{proposition}[Stage certificate existence]\label{prop:stage-certificate-exists}
+Every projection chain \(\Gamma\) satisfying the preceding definitions carries
+\(\chi_{\mathrm{stage}}(\Gamma)\).
+\end{proposition}
+
+\begin{proof}
+The Plucker-to-cochain projection supplies exactly the first and third clauses
+of \(\chi_{\mathrm{Pl}\to c}\). The second follows because a global
+candidate is a local codeword by the defining implication
+\[
+  c\in G_S\Rightarrow \sigma(c)\in Z.
+\]
+The cochain-to-plane projection hypotheses are precisely local nondegeneracy,
+alignment, plane-target preservation, and the distance inequality; the
+well-formedness, edge-count, and selected-index clauses are consequences of the
+alignment condition. The plane-to-RS interpretation hypotheses give the received
+word equality, RS codeword preservation, and the RS distance inequality.
+Taking these three conjunctions gives \(\chi_{\mathrm{stage}}(\Gamma)\).
+\end{proof}
+
+The structural hard-gate bundle consists of the following five gates:
+\[
+\begin{array}{ll}
+\text{source metric:}
+  & 0\le \rho(\mathcal F)\text{ and }\rho\text{ is Plucker-quotient invariant},\\[2pt]
+\text{Plucker metric:}
+  & \text{valid frames lie in the selected projective chart and }
+    d_{\mathrm{Pl}}\text{ is quotient invariant},\\[2pt]
+\text{quotient respect:}
+  & \operatorname{Pl}(\mathcal F)=\operatorname{Pl}(\mathcal G)
+    \Rightarrow
+    c_\Gamma(\mathcal F)=c_\Gamma(\mathcal G),\
+    p_\Gamma(\mathcal F)=p_\Gamma(\mathcal G),\
+    y_\Gamma(\mathcal F)=y_\Gamma(\mathcal G),\\[2pt]
+\text{semantic alignment:}
+  & \text{valid frames give aligned cochains, and the plane and RS words}\\
+  & \text{are exactly the extraction and encoding outputs},\\[2pt]
+\text{syndrome adequacy:}
+  & c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\wedge(\sigma(c)\in Z)
+    \Rightarrow c\in G_S.
+\end{array}
+\]
+
+\begin{definition}[Hard-gate certificate]\label{def:hard-gate-certificate}
+A hard-gate certificate for \(\Gamma\) is the tuple
+\[
+  \chi_{\mathrm{hard}}(\Gamma)
+  =
+  \bigl(
+    \chi_{\mathrm{stage}}(\Gamma),\
+    \gamma_{\mathrm{src}},\
+    \gamma_{\mathrm{Pl}},\
+    \gamma_{\mathrm{quot}},\
+    \gamma_{\mathrm{align}},\
+    \gamma_{\mathrm{syn}}
+  \bigr),
+\]
+where the five \(\gamma\)-terms are respectively the source metric gate, Plucker
+metric/chart gate, Plucker-quotient respect gate, semantic-alignment gate, and
+syndrome-adequacy gate.
+\end{definition}
+
+\begin{proposition}[Hard-gate certificate projections]\label{prop:hard-gate-projections}
+A hard-gate certificate exposes the accumulated stage certificate and each of
+the five structural gates. In particular, its syndrome entry implies
+\[
+  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\wedge(\sigma(c)\in Z)
+  \Longrightarrow
+  c\in\mathcal C_L,
+\]
+and its quotient-respect entry implies
+\[
+  \operatorname{Pl}(\mathcal F)=\operatorname{Pl}(\mathcal G)
+  \Longrightarrow
+  y_\Gamma(\mathcal F)=y_\Gamma(\mathcal G).
+\]
+\end{proposition}
+
+\begin{proof}
+The first sentence is projection from the displayed tuple. The syndrome
+entry is the implication
+\[
+  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\wedge(\sigma(c)\in Z)
+  \Rightarrow c\in G_S.
+\]
+Together with the assumed \(\sigma(c)\in Z\), this is exactly
+\[
+  c\in\mathcal C_L
+  \Longleftrightarrow
+  c\in G_S\wedge \sigma(c)\in Z.
+\]
+The quotient-respect entry contains equality of the downstream received
+words whenever the Plucker coordinates agree, which is the displayed
+conclusion.
+\end{proof}
+
+The far-side gates are not injectivity claims. They are calibrated
+non-collapse implications:
+\[
+  r_S\le \rho(\mathcal F)
+  \Longrightarrow
+  r_C\le d_L(c_\Gamma(\mathcal F)),
+\]
+and
+\[
+  r_C\le d_L(c_\Gamma(\mathcal F))
+  \Longrightarrow
+  r_T\le D(y_\Gamma(\mathcal F)).
+\]
+Together they yield the far-region separation witness
+\[
+  r_S\le \rho(\mathcal F)
+  \Longrightarrow
+  r_T\le D(y_\Gamma(\mathcal F)).
+\]
+If two source witnesses collapse to the same final received word, the theorem
+still says that any collapsed image of a far source witness is target-far. It
+rules out far-to-near collapse, not all quotient collapse.
+
+\begin{proposition}[Far-gate composition]\label{prop:far-gate-composition}
+The two far-side gates imply the final far-region separation
+\[
+  r_S\le \rho(\mathcal F)
+  \Longrightarrow
+  r_T\le D(y_\Gamma(\mathcal F)).
+\]
+If \(y_\Gamma(\mathcal F)=y_\Gamma(\mathcal G)\) and
+\(r_S\le \rho(\mathcal F)\), then
+\[
+  r_T\le D(y_\Gamma(\mathcal G)).
+\]
+\end{proposition}
+
+\begin{proof}
+Assume \(r_S\le\rho(\mathcal F)\). The first far gate gives
+\[
+  r_C\le d_L(c_\Gamma(\mathcal F)).
+\]
+Applying the second far gate gives
+\[
+  r_T\le D(y_\Gamma(\mathcal F)).
+\]
+If \(y_\Gamma(\mathcal F)=y_\Gamma(\mathcal G)\), substitute this equality in
+the last inequality to obtain \(r_T\le D(y_\Gamma(\mathcal G))\).
+\end{proof}
+
+A radius calibration is
+\[
+  \kappa=(r^S_{\mathrm{near}},r^S_{\mathrm{far}},
+          r^T_{\mathrm{near}},r^T_{\mathrm{far}})
+\]
+with source gap, target gap, and near compatibility. A calibrated final
+certificate consists of a hard-gate certificate and a far-region separation
+witness at the calibrated far radii. It yields calibrated end-to-end readiness
+and hence a calibrated gap projection into the RS code space.
+
+\begin{definition}[Calibrated final certificate]\label{def:calibrated-final-certificate}
+For a radius calibration \(\kappa\), a calibrated final certificate is
+\[
+  \Omega(\Gamma,\kappa)
+  =
+  \bigl(\chi_{\mathrm{hard}}(\Gamma),\omega_\kappa\bigr),
+\]
+where \(\omega_\kappa\) is the far-region separation statement
+\[
+  r^S_{\mathrm{far}}\le \rho(\mathcal F)
+  \Longrightarrow
+  r^T_{\mathrm{far}}\le D(y_\Gamma(\mathcal F)).
+\]
+The associated readiness condition is the conjunction
+\[
+  \chi_{\mathrm{stage}}(\Gamma)
+  \wedge
+  r^S_{\mathrm{near}}\le r^T_{\mathrm{near}}
+  \wedge
+  \omega_\kappa.
+\]
+\end{definition}
+
+\begin{proposition}[Final certificate gives readiness]\label{prop:final-cert-ready}
+A calibrated final certificate \(\Omega(\Gamma,\kappa)\) gives the readiness
+condition above, and therefore gives the calibrated end-to-end gap projection
+of \cref{prop:projection-pullback}.
+\end{proposition}
+
+\begin{proof}
+Project \(\Omega(\Gamma,\kappa)\) onto its hard-gate certificate and its
+far-region witness. By \cref{prop:hard-gate-projections}, the hard-gate
+certificate exposes \(\chi_{\mathrm{stage}}(\Gamma)\). The near compatibility
+\[
+  r^S_{\mathrm{near}}\le r^T_{\mathrm{near}}
+\]
+is part of the radius calibration \(\kappa\), and the far non-collapse
+implication is \(\omega_\kappa\). These are exactly the three clauses of the
+readiness condition. Combining readiness with the evaluation
+projection of \cref{prop:composed-chain} gives the calibrated gap projection,
+and \cref{prop:projection-pullback} proves the solver-pullback consequence.
+\end{proof}
+
+The evidence database has seven fixed slots:
+\[
+\begin{array}{c|l}
+0 & \text{accumulated stage certificate}\\
+1 & \text{source metric gate}\\
+2 & \text{Plucker metric/chart gate}\\
+3 & \text{Plucker-quotient respect gate}\\
+4 & \text{semantic-alignment gate}\\
+5 & \text{syndrome-adequacy gate}\\
+6 & \text{calibrated final far-region witness}.
+\end{array}
+\]
+Completeness means that every required slot binds to its digest and is included
+under the shared evidence root. In this paper the evidence root is a finite
+index for the displayed certificate assertions: each slot names one of the
+mathematical propositions above, and evidence completeness asserts that all
+such proofs are present. Canonical byte encoding, domain
+separation, hash binding, replay/state indexing, and live verification belong
+to the subsequent protocol paper; they are not hypotheses in the mathematical
+arguments below.
+
+\begin{proposition}[Evidence completeness]\label{prop:evidence-completeness}
+If the hard-gate prefix is complete, then every hard-gate slot binds to its
+digest and is included under the evidence root. If the final witness slot is
+complete, then the calibrated far-region witness slot binds to its digest and
+is included under the same root. A complete final evidence certificate therefore
+recovers the calibrated final certificate and calibrated end-to-end readiness.
+\end{proposition}
+
+\begin{proof}
+Hard-gate completeness is the conjunction
+\[
+  \Bigl(\forall s\in\{0,\ldots,5\},\
+    \beta_s\wedge\iota_s\Bigr)
+  \wedge
+  \beta_{\mathrm{root}}.
+\]
+Taking the corresponding conjuncts gives binding and inclusion for each hard
+slot. Final-witness completeness is
+\[
+  \beta_6\wedge\iota_6,
+\]
+so the two final-slot assertions follow. A final evidence certificate contains
+the mathematical hard-gate certificate and the final far-region witness. The
+definition of the calibrated final certificate adjoins this witness to the
+hard-gate certificate, and the calibrated-readiness map is the definition of
+end-to-end readiness for that final certificate.
+\end{proof}
+
+The public plane view is derived from the observed cochain artifact under the
+same storage stack root. It is specified by the storage root, the cochain artifact
+digest, inclusion of the cochain artifact, inclusion of the derived plane view,
+alignment with \(\mathcal E\), and the equality
+\[
+  p=p_c.
+\]
+Consequently, selected plane coordinates are in bounds and the cochain digest
+binds the artifact being projected.
+
+\begin{proposition}[Public plane-view certificate]
+\label{prop:public-plane-view-certificate}
+A public plane-view certificate exposes
+\[
+\begin{gathered}
+  \beta_{\mathrm{stack}},\qquad
+  \iota_c,\qquad
+  \iota_p,\\
+  p=p_c,\qquad
+  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}},\qquad
+  c\text{ is aligned with }\mathcal E,\\
+  n_{\mathrm{edge}}(c)=N,\qquad
+  \iota(i,j)<|\mathbf c|,\qquad
+  \beta_c.
+\end{gathered}
+\]
+\end{proposition}
+
+\begin{proof}
+The certificate is the conjunction of the storage-root binding
+\(\beta_{\mathrm{stack}}\), the inclusion assertions \(\iota_c,\iota_p\), the
+observed proof-carrying cochain statement, the plane word, the alignment proof,
+and the equality \(p=p_c\). Taking conjuncts gives root binding, both inclusion
+facts, alignment, and \(p=p_c\). The observed cochain statement contains a
+well-formed proof-carrying commitment, hence
+\(c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\). Alignment with
+\(\mathcal E\) contains
+\[
+  n_{\mathrm{edge}}(c)=N
+  \quad\text{and}\quad
+  \iota(i,j)<|\mathbf c|.
+\]
+Finally, well-formedness of the observed proof-carrying artifact includes the
+digest-binding assertion \(\beta_c\).
+\end{proof}
+
+\subsection{Finite Codes, RS Targets, And MCA}
+
+For a finite coordinate type \(I\) and alphabet \(A\), a word is a function
+\[
+  w:I\to A,
+\]
+and a block code is a subset \(C\subseteq A^I\). The Hamming distance is
+\[
+  d_H(u,v)=|\{i\in I:u_i\ne v_i\}|,
+\]
+and the relative distance is
+\[
+  \delta_H(u,v)=\frac{d_H(u,v)}{|I|}.
+\]
+The Hamming and relative balls around a received word \(w\) are
+\[
+\begin{aligned}
+  B_C(w,r)
+    &=\{c\in C:d_H(c,w)\le r\},\\
+  B_C(w,\delta)
+    &=\{c\in C:\delta_H(c,w)\le \delta\}.
+\end{aligned}
+\]
+The list-size inequalities are
+\[
+  \forall w,\ |B_C(w,r)|\le L,
+  \qquad
+  \forall w,\ |B_C(w,\delta)|\le L.
+\]
+A count-radius closeness witness implies relative-radius closeness at
+\(r/|I|\), and the relative-radius map is monotone.
+
+For a field \(F\), an \(F\)-additive code is closed under zero, addition, and
+scalar multiplication. Interleaving is defined by
+\[
+  C^{\oplus T}
+  =
+  \{w:I\to(T\to A):\forall t\in T,\ i\mapsto w(i,t)\in C\}.
+\]
+The pair word of \(f_1,f_2\in A^I\) is
+\[
+  (f_1,f_2)(i,0)=f_1(i),\qquad
+  (f_1,f_2)(i,1)=f_2(i).
+\]
+
+An affine line of received words is
+\[
+  \ell(\gamma)=f_1+\gamma f_2.
+\]
+For \(S\subseteq I\), write
+\[
+  S\text{ is }\delta\text{-large}
+  \Longleftrightarrow
+  |S|/|I|\ge 1-\delta.
+\]
+The paper Definition~4.3 MCA bad challenges are
+\[
+\begin{aligned}
+  \operatorname{Bad}_{\mathrm{MCA}}(C,\delta,\ell)
+  =
+  \{\gamma\in F:\ &\exists S\subseteq I,\
+    S\text{ is }\delta\text{-large}\wedge
+    \ell(\gamma)\text{ agrees on }S\text{ with some }c\in C\\
+  &{}\wedge
+    (f_1,f_2)\text{ does not agree on }S
+    \text{ with }C^{\oplus 2}\}.
+\end{aligned}
+\]
+The paper-facing MCA error bound is
+\[
+  \forall \ell,\qquad
+  \frac{|\operatorname{Bad}_{\mathrm{MCA}}(C,\delta,\ell)|}{|F|}
+  \le \varepsilon.
+\]
+The count-based MCA condition implies the count-based correlated-agreement
+condition: if too many line points are individually close, one of them is
+MCA-good, and its agreement witness becomes a common agreement witness for the
+line.
+
+\begin{proposition}[MCA implies correlated agreement]\label{prop:mca-implies-ca}
+Let \(C\) be a finite \(F\)-additive block code. If \(C\) satisfies the
+count-based MCA bound at point radius \(r_p\), line radius \(r_\ell\), and
+threshold \(\tau\), then \(C\) satisfies the count-based correlated-agreement
+bound at the same radii and threshold.
+\end{proposition}
+
+\begin{proof}
+Fix an affine line \(\ell\). Let
+\[
+  B=\{\gamma\in F:\ell(\gamma)\text{ is close on some large set at radius }r_p\}
+\]
+and let
+\[
+  M=\{\gamma\in F:\gamma\text{ is not MCA-good for }\ell\}.
+\]
+The MCA bound says \(|M|\le\tau\). Suppose \(\tau<|B|\) but correlated
+agreement fails, so no single large set witnesses line-close agreement at
+radius \(r_\ell\). If \(\gamma\in B\), choose a large set \(S\) witnessing the
+individual closeness of \(\ell(\gamma)\). If \(\gamma\) were MCA-good, this same
+\(S\) would extend to a common line witness, contrary to the assumed failure of
+correlated agreement. Hence \(\gamma\in M\). Thus \(B\subseteq M\), so
+\[
+  |B|\le |M|\le \tau,
+\]
+contradicting \(\tau<|B|\). Therefore a common large agreement set exists, which
+is precisely the correlated-agreement conclusion.
+\end{proof}
+
+For Reed--Solomon, an evaluation domain is an injective map
+\[
+  a:I\hookrightarrow F.
+\]
+Parameters \((a,k)\) define the scalar RS code
+\[
+  \operatorname{RS}(a,k)
+  =
+  \{(p(a_i))_{i\in I}:\deg p<k\}.
+\]
+The paper alphabet \(C\subseteq(F^s)^n\) is the \(s\)-fold interleaving of the
+scalar code. RS target data consist of the parameters, \(F\)-additivity, a
+smooth-regime condition, list radius and list size, point and line radii, MCA
+threshold, list-decoding bounds, MCA bounds, the paper Definition~4.3 MCA
+bound, a received-word metric, radius normalization, and bridge obligations.
+The bridge obligations are
+\[
+\begin{gathered}
+  \text{domain cardinality},\quad
+  \text{smooth domain},\quad
+  \text{evaluation-point compatibility},\\
+  \text{restriction naturality},\quad
+  \text{coboundary/syndrome naturality},\quad
+  \text{global sections map to RS codewords},\\
+  \text{projection equals the received word},\quad
+  \text{metric normalization},\quad
+  \text{near-distance compatibility},\quad
+  \text{far non-collapse},\quad
+  \text{radius-parameter matching}.
+\end{gathered}
+\]
+Completed obligations give the calibrated hcrypt-to-RS bridge, and a correct
+RS gap solver pulls back to a correct source-side gap solver.
+
+\subsection{Canonical Reed--Solomon Endpoint}\label{sec:rs-canonical-endpoint}
+
+The canonical endpoint fixes
+\[
+  F=\mathbb Z/12289\mathbb Z,\qquad n=4096,\qquad k=1024.
+\]
+Thus the rate is \(1/4\). The multiplicative group order is
+\[
+  12289-1=12288=3\cdot4096.
+\]
+The element \(11\in F^\times\) is fixed as a generator of order \(12288\).
+Cubing it gives
+\[
+  \alpha=11^3,
+\]
+with
+\[
+  \operatorname{ord}(\alpha)=4096.
+\]
+The evaluation domain is
+\[
+  a_i=\alpha^i,\qquad i\in\operatorname{Fin}(4096),
+\]
+and the order computation proves that \(i\mapsto a_i\) is injective. The
+smoothness witness is the divisibility
+\[
+  4096\mid 12289-1.
+\]
+
+\begin{proposition}[Canonical power domain]\label{prop:canonical-power-domain}
+In \(F=\mathbb Z/12289\mathbb Z\), the element \(11\) has multiplicative order
+\(12288\), the element
+\[
+  \alpha=11^3=1331
+\]
+has multiplicative order \(4096\), and the map
+\[
+  i\longmapsto \alpha^i,\qquad i\in\operatorname{Fin}(4096),
+\]
+is injective.
+\end{proposition}
+
+\begin{proof}
+The field has \(|F^\times|=12288\). Also
+\[
+  12288=2^{12}\cdot3,
+\]
+so the only prime divisors of \(12288\) are \(2\) and \(3\). Direct modular
+arithmetic gives
+\[
+  11^{12288}\equiv1,\qquad
+  11^{6144}\equiv12288=-1,\qquad
+  11^{4096}\equiv6240
+  \pmod{12289}.
+\]
+Thus \(11^{12288}=1\), while \(11^{12288/2}\ne1\) and
+\(11^{12288/3}\ne1\). The standard order criterion for a finite group element
+therefore gives
+\[
+  \operatorname{ord}(11)=12288.
+\]
+Since \(3\mid12288\) and \(3\ne0\), the order formula for powers gives
+\[
+  \operatorname{ord}(11^3)
+  =
+  \frac{\operatorname{ord}(11)}{3}
+  =
+  4096.
+\]
+Now suppose \(\alpha^i=\alpha^j\) with
+\(0\le i,j<4096\). Then
+\[
+  \alpha^{i-j}=1,
+\]
+so \(i\equiv j\pmod{\operatorname{ord}(\alpha)}\), hence
+\[
+  i\equiv j\pmod{4096}.
+\]
+The representatives \(i,j\) already lie in \(\{0,\ldots,4095\}\), so \(i=j\).
+\end{proof}
+
+The conservative Johnson-below radius is
+\[
+  r_J=2047,\qquad 2r_J<4096,
+\]
+and the strict capacity-below radius recorded separately is
+\[
+  r_{\mathrm{cap}}=3071,\qquad
+  4r_{\mathrm{cap}}<3\cdot4096.
+\]
+The canonical real radius is
+\[
+  \delta_J=\frac{2047}{4096}.
+\]
+The canonical metric is relative Hamming distance to the RS code:
+\[
+  D(w)=\frac{1}{4096}\inf\{d_H(c,w):c\in \operatorname{RS}(a,1024)\}.
+\]
+Exact RS codewords have \(D(w)=0\), and Hamming-close words satisfy the
+corresponding relative-radius bound. This supplies the radius-normalization
+object for the canonical target.
+
+\begin{proposition}[Canonical metric normalization]\label{prop:canonical-metric}
+For the canonical RS target:
+\[
+  w\in\operatorname{RS}(a,1024)\Longrightarrow D(w)=0.
+\]
+If \(w\) is Hamming-close to the code at radius \(r\), then
+\[
+  D(w)\le \frac r{4096}.
+\]
+Moreover the radius conversion \(r\mapsto r/4096\) sends \(0\) to \(0\) and is
+monotone.
+\end{proposition}
+
+\begin{proof}
+The zero polynomial has degree \(<1024\), so the zero word is an RS codeword.
+Thus the set
+\[
+  \{d_H(c,w):c\in\operatorname{RS}(a,1024)\}
+\]
+is nonempty and bounded below by \(0\). If \(w\) itself is a codeword, this set
+contains \(d_H(w,w)=0\); since all Hamming distances are nonnegative, its
+infimum is \(0\), and hence \(D(w)=0/4096=0\).
+
+If \(w\) is Hamming-close at radius \(r\), then there is
+\(c\in\operatorname{RS}(a,1024)\) with \(d_H(c,w)\le r\). The infimum of the
+distance set is at most this displayed distance, so after dividing by \(4096\)
+we obtain
+\[
+  D(w)\le r/4096.
+\]
+The map \(r\mapsto r/4096\) sends \(0\) to \(0\), and monotonicity follows from
+division by the positive integer \(4096\).
+\end{proof}
+
+The canonical bridge data are
+\[
+  \beta=(\text{canonical smooth domain},\ \text{canonical RS target},\
+  D,\ \Phi,\ \delta_J),
+\]
+where \(\Phi(x_0,x_1)=x_0+\alpha x_1\). The endpoint proves the concrete
+domain, smoothness, evaluation-point, metric-normalization, and radius-matching
+obligations. The remaining semantic theorem slots are:
+\[
+\begin{gathered}
+  \text{restriction naturality},\quad
+  \text{coboundary/syndrome naturality},\quad
+  \text{global sections map to RS codewords},\\
+  \text{projection equals the received word},\quad
+  \text{near-distance compatibility},\quad
+  \text{far non-collapse}.
+\end{gathered}
+\]
+
+\begin{definition}[Canonical bridge certificate]\label{def:canonical-bridge-certificate}
+For a canonical chain \(\Gamma\), let \(\Theta_\Gamma\) be the six-tuple of
+theorem slots
+\[
+\begin{gathered}
+  \theta^{\mathrm{rest}}_\Gamma,\qquad
+  \theta^{\mathrm{cob}}_\Gamma,\qquad
+  \theta^{\mathrm{code}}_\Gamma,\\
+  \theta^{\mathrm{word}}_\Gamma,\qquad
+  \theta^{\mathrm{near}}_\Gamma,\qquad
+  \theta^{\mathrm{far}}_\Gamma.
+\end{gathered}
+\]
+A bridge certificate is a proof of their conjunction:
+\[
+  \mathcal B_\Gamma
+  =
+  \theta^{\mathrm{rest}}_\Gamma
+  \wedge\theta^{\mathrm{cob}}_\Gamma
+  \wedge\theta^{\mathrm{code}}_\Gamma
+  \wedge\theta^{\mathrm{word}}_\Gamma
+  \wedge\theta^{\mathrm{near}}_\Gamma
+  \wedge\theta^{\mathrm{far}}_\Gamma.
+\]
+An RS metric certificate is a pair
+\[
+  \Omega_{\mathrm{RS}}=(\kappa,\Omega(\Gamma,\kappa)),
+\]
+where \(\Omega(\Gamma,\kappa)\) is the calibrated final certificate of
+\cref{def:calibrated-final-certificate}.
+\end{definition}
+
+\begin{proposition}[RS metric certificate fills the bridge slots]
+\label{prop:rs-metric-cert-slots}
+An RS metric certificate \(\Omega_{\mathrm{RS}}\) determines a bridge
+certificate for \(\Theta_\Gamma\). Consequently it completes the generic
+canonical RS bridge obligations once the endpoint data
+\[
+  (F,n,k,a,D,\Phi,\delta_J)
+\]
+have been fixed as above.
+\end{proposition}
+
+\begin{proof}
+Let \(\Omega_{\mathrm{RS}}=(\kappa,\Omega)\). By
+\cref{prop:final-cert-ready}, \(\Omega\) exposes the accumulated stage
+certificate, near compatibility, and far non-collapse. The stage certificate
+supplies the restriction-naturality and coboundary/syndrome-naturality slots:
+these slots assert that the already-defined projection stages commute with
+their extraction, syndrome, and received-word maps. By
+\cref{prop:composed-chain}, valid global frames map to RS codewords, giving
+\(\theta^{\mathrm{code}}_\Gamma\). The projection-matches-word slot is the
+definitional equality
+\[
+  \Gamma(\mathcal F)=y_\Gamma(\mathcal F).
+\]
+The near slot is \(\kappa\)'s near compatibility, and the far slot is
+\(\Omega\)'s far-region witness. These six proofs form
+\(\mathcal B_\Gamma\).
+
+The remaining canonical bridge obligations are endpoint facts: domain
+cardinality, smoothness, evaluation-point compatibility, metric normalization,
+and radius matching. They were fixed in the canonical endpoint data and proved
+in \cref{prop:canonical-power-domain,prop:canonical-metric}. Combining those
+endpoint facts with \(\mathcal B_\Gamma\) completes the bridge obligations.
+\end{proof}
+
+A canonical Johnson far-separation witness is the statement
+\[
+  \delta_J\le \rho(\mathcal F)
+  \Longrightarrow
+  \delta_J\le D(y_\Gamma(\mathcal F)).
+\]
+It may be supplied directly, by a pointwise lower bound
+\[
+  \rho(\mathcal F)\le D(y_\Gamma(\mathcal F)),
+\]
+or by exact distance preservation
+\[
+  D(y_\Gamma(\mathcal F))=\rho(\mathcal F).
+\]
+Together with the hard-gate certificate, this witness gives the canonical
+calibrated RS bridge.
+
+\begin{proposition}[Canonical bridge completion]\label{prop:canonical-bridge}
+A hard-gate certificate for \(\Gamma\), together with a canonical Johnson
+far-separation witness
+\[
+  \delta_J\le \rho(\mathcal F)
+  \Longrightarrow
+  \delta_J\le D(y_\Gamma(\mathcal F)),
+\]
+gives a completed calibrated hcrypt-to-RS bridge for the canonical endpoint.
+\end{proposition}
+
+\begin{proof}
+The canonical endpoint supplies the concrete bridge obligations:
+domain cardinality is \(|\operatorname{Fin}(4096)|=4096\), smoothness is
+\(4096\mid12289-1\), evaluation points are \(a_i=\alpha^i\) by
+\cref{prop:canonical-power-domain}, the metric normalization is
+\cref{prop:canonical-metric}, and the radius parameters are all the relative
+Hamming radius \(\delta_J\).
+
+The hard-gate certificate contains the accumulated stage certificate and the
+structural gate bundle. The stage certificate supplies the naturality slots
+used by the bridge surface. By \cref{prop:composed-chain}, valid source frames
+map to RS codewords and the composed map is definitionally
+\(\mathcal F\mapsto y_\Gamma(\mathcal F)\). The same-radius calibration has
+near compatibility by reflexivity:
+\[
+  \delta_J\le\delta_J.
+\]
+The displayed far-separation witness supplies the final far non-collapse slot.
+The hard-gate certificate and far-separation witness form the calibrated final
+certificate \(\Omega(\Gamma,\kappa)\); together with \(\kappa\), this is the RS
+metric certificate \(\Omega_{\mathrm{RS}}\). By
+\cref{prop:rs-metric-cert-slots}, it fills the bridge theorem slots and
+completes the canonical RS bridge obligations. Then
+\cref{prop:projection-pullback} gives the induced pullback of correct RS gap
+solvers.
+\end{proof}
+
+The deep list-decoding and MCA estimates are external theorem inputs. The
+cited theorem boundary supplies:
+\[
+\begin{gathered}
+  L_{\mathrm{cit}}\in\mathbb N,\qquad
+  \tau_{\mathrm{cit}}\in\mathbb N,\\
+  C\text{ is }(r_J,L_{\mathrm{cit}})\text{-list decodable},\\
+  C\text{ is }(\delta_J,L_{\mathrm{cit}})\text{-list decodable},\\
+  C\text{ satisfies }(r_J,r_J,\tau_{\mathrm{cit}})\text{-MCA},\\
+  \varepsilon_{\mathrm{MCA}}\le
+  \frac{\tau_{\mathrm{cit}}}{|F|},
+  \qquad
+  \varepsilon_{\mathrm{MCA}}^{\mathrm{paper}}(C,\delta_J)
+  \le
+  \frac{\tau_{\mathrm{cit}}}{|F|}.
+\end{gathered}
+\]
 The project-specific list-decoding and MCA input is the cited Proximity Prize
 theorem boundary \cite{proximityPrize2026}.
 
-\subsection{Corollary}
+\subsection{Canonical MCA Corollary}
+
+For the canonical scalar RS endpoint, let
+\[
+  \mathcal W_{\mathrm{fin}}=F^{\operatorname{Fin}(4096)}.
+\]
+A canonical MCA line is
+\[
+  L=(f_1,f_2),\qquad
+  L(\gamma)=f_1+\gamma f_2.
+\]
+The projection chain induces such a line from two source frame witnesses:
+\[
+  L_{\Gamma,\mathcal F_1,\mathcal F_2}
+  =
+  (y_\Gamma(\mathcal F_1),y_\Gamma(\mathcal F_2)).
+\]
+The canonical bad-challenge set is
+\[
+  \operatorname{Bad}_{\Gamma}(\mathcal F_1,\mathcal F_2)
+  =
+  \operatorname{Bad}_{\mathrm{MCA}}
+  (\operatorname{RS}(a,1024),\delta_J,L_{\Gamma,\mathcal F_1,\mathcal F_2}).
+\]
+
+The paper-alphabet endpoint \(C\subseteq(F^s)^n\) specializes here to
+\(s=1\). At width one,
+\[
+  F\cong F^1,\qquad
+  F^{4096}\cong(F^1)^{4096},
+\]
+and the scalar canonical bad-challenge set agrees with the paper's
+\(s=1\) bad-challenge set. Therefore the imported paper Definition~4.3 MCA
+bound yields the scalar canonical bound.
+
+\begin{theorem}[Canonical RS MCA bound]\label{thm:canonical-rs-mca}
+For the canonical \HE{} Reed--Solomon endpoint at radius
+\(\delta_J=2047/4096\), every projection-induced final affine line satisfies
+\[
+  \frac{|\operatorname{Bad}_{\Gamma}(\mathcal F_1,\mathcal F_2)|}{|F|}
+  \le
+  \frac{\tau_{\mathrm{cit}}}{|F|}.
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+  L=L_{\Gamma,\mathcal F_1,\mathcal F_2}
+  =
+  (y_\Gamma(\mathcal F_1),y_\Gamma(\mathcal F_2)).
+\]
+By definition,
+\[
+  \operatorname{Bad}_{\Gamma}(\mathcal F_1,\mathcal F_2)
+  =
+  \operatorname{Bad}_{\mathrm{MCA}}
+  (\operatorname{RS}(a,1024),\delta_J,L).
+\]
+It remains only to compare the scalar canonical line \(L\) with the paper
+alphabet at width \(s=1\). The maps
+\[
+  F\longrightarrow F^1,\qquad a\longmapsto(\ast\mapsto a),
+\]
+and
+\[
+  F^1\longrightarrow F,\qquad u\longmapsto u(\ast),
+\]
+are inverse. Applying them coordinatewise gives inverse bijections between
+\[
+  F^{4096}
+  \quad\text{and}\quad
+  (F^1)^{4096}.
+\]
+Under this identification, scalar RS codewords are exactly width-one
+paper-alphabet RS codewords: a width-one vector word is a codeword precisely
+when its unique scalar component is an RS codeword. Agreement on a coordinate
+set \(S\) is also preserved and reflected by the same bijection. The pair word
+\((f_1,f_2)\) is preserved componentwise, so closeness of the interleaved pair
+to \(C^{\oplus2}\) on \(S\) is unchanged.
+
+Therefore the scalar bad-challenge set is equal to the paper Definition~4.3
+bad-challenge set for the width-one endpoint. The cited width-one paper-MCA
+theorem gives
+\[
+  \frac{
+    |\operatorname{Bad}_{\mathrm{MCA}}
+      (\operatorname{RS}(a,1024),\delta_J,L)|
+  }{|F|}
+  \le
+  \frac{\tau_{\mathrm{cit}}}{|F|}.
+\]
+Substituting the displayed equality of bad-challenge sets gives the theorem.
+\end{proof}
 
 \begin{corollary}[Verifier-facing RS/MCA projection]\label{cor:verifier-rs-mca}
-  Given an accepted hidden/geometric witness, a certified
-  Plucker-to-cochain-to-plane-to-RS projection chain, the required hard
-  projection-gate evidence, and a canonical Johnson-radius far-separation
-  witness, the public verifier obtains a finite Reed--Solomon received word
-  whose canonical MCA bad-challenge fraction is bounded by the cited threshold
-  \(\tau/|\F|\).
+Given an accepted hidden/geometric witness, a certified
+Plucker-to-cochain-to-plane-to-RS projection chain, the hard projection-gate
+evidence, and a canonical Johnson-radius far-separation witness, the public
+verifier obtains a finite Reed--Solomon received word whose canonical MCA
+bad-challenge fraction is bounded by the cited threshold
+\(\tau_{\mathrm{cit}}/|F|\).
 \end{corollary}
+
+\begin{proof}
+The certified projection chain provides the maps
+\[
+  \mathcal F\longmapsto
+  c_\Gamma(\mathcal F)\longmapsto
+  p_\Gamma(\mathcal F)\longmapsto
+  y_\Gamma(\mathcal F).
+\]
+By \cref{prop:composed-chain}, valid source data map to RS received words and
+satisfy
+\[
+  D(y_\Gamma(\mathcal F))\le\rho(\mathcal F).
+\]
+The hard projection-gate evidence gives the structural and stage certificates,
+and the Johnson far-separation witness gives the calibrated bridge by
+\cref{prop:canonical-bridge}. For any second projected witness
+\(\mathcal G\), \cref{thm:canonical-rs-mca} applied to the final affine line
+\[
+  (y_\Gamma(\mathcal F),y_\Gamma(\mathcal G))
+\]
+gives the stated bound
+\[
+  |\operatorname{Bad}_{\Gamma}(\mathcal F,\mathcal G)|/|F|
+  \le \tau_{\mathrm{cit}}/|F|.
+\]
+\end{proof}
 
 This corollary is a proximity statement. It says that accepted hidden/geometric
 state can be projected to a finite public RS/MCA target with calibrated
@@ -163,12 +1643,34 @@ hardness.
 
 \subsection*{Lean Correspondence}
 
-The proximity and finite-code endpoint in this section corresponds to the
-following Lean declarations:
-\lean{Proximity.GrassmannianPlucker}, \lean{Proximity.CochainBridge},
-\lean{Proximity.PluckerCochain}, \lean{Proximity.CochainPlane},
-\lean{Proximity.ProjectionChain}, \lean{ProjectionChain.Chain.toEvaluationProjection},
-\lean{Proximity.Gates}, \lean{Proximity.GateEvidence},
-\lean{CanonicalRS.BridgeData}, \lean{CanonicalRS.CitedBounds},
-\lean{CanonicalRS.MCA}, and
-\lean{CanonicalRS.MCA.projectionBadChallengeFraction_le}.
+The abstract projection and gap vocabulary corresponds to
+\lean{Proximity.Projection} and \lean{Proximity.Problem}. The Grassmannian and
+Plucker source stages correspond to \lean{Proximity.Grassmannian},
+\lean{Proximity.GrassmannianPlucker}, and
+\lean{Proximity.GrassmannianPlucker.Concrete}. The committed-cochain and
+local-syndrome stages correspond to \lean{Proximity.CochainBridge},
+\lean{Proximity.PluckerCochain}, \lean{Proximity.PluckerCochain.Concrete}, and
+\lean{Proximity.PluckerCochain.PublicBinding}. The plane and finite-field
+encoding stages correspond to \lean{Proximity.CochainPlane.Core},
+\lean{Proximity.CochainPlane.Concrete},
+\lean{Proximity.CochainPlane.ReedSolomon}, and
+\lean{Proximity.CochainReedSolomon}.
+
+The composed chain, gates, public boundary, and evidence records correspond to
+\lean{Proximity.ProjectionChain.Core}, \lean{Proximity.Gates.Stage},
+\lean{Proximity.Gates.Final}, \lean{Proximity.Gates},
+\lean{Proximity.GateEvidence}, and \lean{Proximity.Public}. The generic finite
+code, RS, list-decoding, and CA/MCA vocabulary corresponds to
+\lean{Proximity.RS.ListDecoding}, \lean{Proximity.RS.CorrelatedAgreement},
+\lean{Proximity.RS.ReedSolomon}, \lean{Proximity.RS.Target}, and
+\lean{Proximity.RS}. The canonical endpoint and MCA specialization correspond
+to \lean{Proximity.CanonicalRS.Parameters},
+\lean{Proximity.CanonicalRS.PowerDomain},
+\lean{Proximity.CanonicalRS.Encoding}, \lean{Proximity.CanonicalRS.Target},
+\lean{Proximity.CanonicalRS.Metric}, \lean{Proximity.CanonicalRS.BridgeData},
+\lean{Proximity.CanonicalRS.BridgeWitness},
+\lean{Proximity.CanonicalRS.BridgeCertificate},
+\lean{Proximity.CanonicalRS.FarSeparation},
+\lean{Proximity.CanonicalRS.MCA.Line}, \lean{Proximity.CanonicalRS.MCA},
+\lean{Proximity.CanonicalRS.MCA.Concrete},
+\lean{Proximity.CanonicalRS.CitedBounds}, and \lean{Proximity.CanonicalRS}.

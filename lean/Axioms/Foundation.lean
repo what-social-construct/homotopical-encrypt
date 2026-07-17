@@ -1,11 +1,11 @@
 import Mathlib
 
 /-
-  Foundational assumptions for the Hodge/CVP bridge.
+  Foundational assumptions for the cochain/Hodge and commitment surfaces.
 
   Paper correspondence:
   - Paper 1 Section 4: foundational cochain and Hodge axiom surface.
-  - Paper 1 Section 7: Lean theorem-surface correspondence.
+  - Paper 1 appendix ledger: Lean theorem-surface correspondence.
 
   This module is intentionally assumption-oriented: it captures the exact
   preconditions the implementation relies on, even where full Lean proofs are
@@ -18,9 +18,9 @@ namespace Axioms
 /--
   Foundational axiom bundle.
 
-  Each field is a `Prop` assumption that is referenced by downstream
-  Lean modules (Chain, Hardness, Tsirelson) and expected to hold in
-  the Python/Rust runtime via concrete implementations:
+  Each field is a `Prop` assumption that downstream axiom/gate interfaces may
+  consume and that implementation layers are expected to realize via concrete
+  Python/Rust code:
 
   | Foundation field        | Python module                   | Rust module                        |
   |-------------------------|---------------------------------|------------------------------------|
@@ -37,19 +37,19 @@ namespace Axioms
   cochain commitment axiom module.
 -/
 structure Foundation where
-  /-- Cochain complex law: δ₁ ∘ δ₀ = 0. -/
+  /-- Cochain complex law: adjacent coboundaries compose to zero. -/
   CochainComplex : Prop
   /-- Coboundary linearity: δ(a + b) = δ(a) + δ(b), δ(k·a) = k·δ(a). -/
   CoboundaryLinearity : Prop
-  /-- Laplacian construction law: Δ = δ*δ + δδ*. -/
+  /-- Hodge--Laplacian construction law from adjacent coboundaries and adjoints. -/
   LaplacianFromCoboundary : Prop
-  /-- Hodge decomposition law: C¹ = H ⊕ im(δ) ⊕ im(δ*). -/
+  /-- Hodge decomposition law, e.g. C¹ = H¹ ⊕ im(δ₀) ⊕ im(δ₁*). -/
   HodgeDecomposition : Prop
   /-- Pairwise orthogonality law for H/im(δ)/im(δ*) components. -/
   HodgeOrthogonality : Prop
-  /-- Commitment binding: collision ↔ ker(δ) element (SVP-hard). -/
+  /-- Commitment binding: a collision gives a relevant coboundary-kernel relation. -/
   CommitmentBinding : Prop
-  /-- Commitment hiding: edge values leak no vertex information (lattice-hard). -/
+  /-- Commitment hiding: the commitment hides the specified witness component. -/
   CommitmentHiding : Prop
   /-- Commitment homomorphism: δ(m₁∥r₁) + δ(m₂∥r₂) = δ((m₁+m₂)∥(r₁+r₂)). -/
   CommitmentHomomorphic : Prop

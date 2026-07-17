@@ -1,9 +1,18 @@
 \section{The Harmonic Cochain Problem}\label{sec:hcp-definition}
 
+Let \(A\) denote the type of hidden representatives, let \(P\) denote the type
+of public class data, and let
+\[
+  \pi:A\to P,\qquad
+  A_p=\pi^{-1}(p)=\{x\in A:\pi(x)=p\}.
+\]
+
 \begin{definition}[Harmonic Cochain Problem]\label{def:hcp}
-  The \emph{Harmonic Cochain Problem} (HCP) asks, given public
-  cochain/class-level data associated to a Hodge system, to recover the
-  harmonic cochain determined by the operative Laplacian kernel.
+  The \emph{Harmonic Cochain Problem} (HCP) asks, given public data \((p,b)\)
+  consisting of a public homotopy class \(p\) and a cochain-facing observation
+  \(b\), to recover a cochain \(h\in\ker(\Delta_1)\), where \(\Delta_1\) is the
+  degree-one Hodge--Laplacian induced by some hidden representative
+  \(x\in A_p=\pi^{-1}(p)\).
 \end{definition}
 
 In the \HE{} public-sample model, the visible cochain has the form
@@ -19,7 +28,7 @@ and \(e\) is Hodge-structured noise. The hidden-operator condition is that the
 public data does not determine a unique \(\Delta_1\) or \(\ker(\Delta_1)\).
 The algebraic recovery chain is
 \[
-  a
+  x
   \longmapsto
   \{R_{v\to e}\}
   \longmapsto
@@ -29,7 +38,7 @@ The algebraic recovery chain is
   \longmapsto
   \pi_H:C^1\to\ker(\Delta_1),
 \]
-where \(a\) is a hidden representative, \(R_{v\to e}\) are the restriction
+where \(x\in A_p\) is a hidden representative, \(R_{v\to e}\) are the restriction
 maps determining the adjacent coboundaries
 \[
   \delta_0:C^0\to C^1,
@@ -172,13 +181,20 @@ to this chain, but does not expose the chain.
 \begin{definition}[Public observation]\label{def:public-observation}
   A public observation is the data exposed to a verifier or adversary before
   choosing a hidden representative. In the abstract model it consists of a
-  public class or shadow value \(p\), together with a cochain-facing observation
+  public homotopy-class value \(p\), together with a cochain-facing observation
   \(b\). In the \HE{} instantiation, the fully public handles are hashes, roots,
   topology hashes, nullifiers, and bounded public summaries; cochain
   commitments and proof-carrying cochain payloads sit in the verifier-facing
   artifact layer; full cochains and openings remain witness data unless an
   explicit protocol path exposes them.
 \end{definition}
+
+Thus \((p,b)\) is the protocol-independent abstraction of the concrete
+artifact stack in \cref{sec:public-artifact-stack}: \(p\) records the public
+homotopy class, while \(b\) records the cochain-level
+datum made available through an accepted payload, commitment, opening, or
+proof-carrying statement. This abstraction is the public datum used in the HCP
+definition and in the hidden-kernel ambiguity comparison.
 
 The public observation is not the hidden Hodge system. It classifies a public
 equivalence class of possible hidden representatives. Fibrational and
@@ -190,20 +206,20 @@ semantic layer.
 \begin{definition}[Hidden-operator public projection]\label{def:hidden-operator-public-projection}
   A public projection is a map
   \[
-    \pi:\{\text{hidden Hodge operators }\Delta\}\longrightarrow P
+    \pi_\Delta:\{\text{hidden Hodge operators }\Delta\}\longrightarrow P
   \]
   to a public class type \(P\). Two hidden operators are publicly equivalent
-  when \(\pi(\Delta_1)=\pi(\Delta_2)\). The hidden operator fiber over
+  when \(\pi_\Delta(\Delta_1)=\pi_\Delta(\Delta_2)\). The hidden operator fiber over
   \(p\in P\) is
   \[
-    \mathcal H_p=\pi^{-1}(p)=\{\Delta:\pi(\Delta)=p\},
+    \mathcal H_p=\pi_\Delta^{-1}(p)=\{\Delta:\pi_\Delta(\Delta)=p\},
   \]
-  and the hidden class of \(\Delta\) is \(\mathcal H_{\pi(\Delta)}\).
+  and the hidden class of \(\Delta\) is \(\mathcal H_{\pi_\Delta(\Delta)}\).
 \end{definition}
 
 \begin{definition}[Lossiness and kernel ambiguity]\label{def:kernel-ambiguity}
-  The public projection \(\pi\) is \emph{lossy} if there exist
-  \(\Delta_1\ne\Delta_2\) with \(\pi(\Delta_1)=\pi(\Delta_2)\). The two
+  The public projection \(\pi_\Delta\) is \emph{lossy} if there exist
+  \(\Delta_1\ne\Delta_2\) with \(\pi_\Delta(\Delta_1)=\pi_\Delta(\Delta_2)\). The two
   operators have the same harmonic kernel if
   \[
     \forall v,\quad \Delta_1v=0\Longleftrightarrow \Delta_2v=0.
@@ -244,7 +260,7 @@ semantic layer.
     \qquad
     h \in \ker(\Delta),
     \qquad
-    e \in \image(\delta) \oplus \image(\delta^\ast),
+    e \in \image(\delta_0) \oplus \image(\delta_1^\ast),
     \qquad
     b = h + e.
   \]
@@ -257,7 +273,7 @@ artifacts, but it does not present the operative kernel.
 
 \begin{definition}[HCP solution]\label{def:hcp-solution}
   A solution to an HCP instance \((p,b)\) is a cochain \(h'\) that is the
-  harmonic component selected by the operative hidden witness. In the exact
+  harmonic component of the operative hidden witness. In the exact
   recovery form used by the hidden-operator separation, \(h' = h\) for every
   hidden witness \((\Delta,h,e)\) compatible with the public observation; hence
   uniform public recovery requires the observation to determine the relevant
@@ -266,7 +282,7 @@ artifacts, but it does not present the operative kernel.
 
 \subsection{Recovery Target}
 
-The recovery target is the harmonic cochain selected by the operative kernel,
+The recovery target is the harmonic cochain in the operative kernel,
 not the entire kernel subspace. Thus CVP asks for a closest vector in a
 presented lattice, while HCP asks for a harmonic cochain in the operative Hodge
 kernel.

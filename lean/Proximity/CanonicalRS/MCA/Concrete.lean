@@ -5,7 +5,7 @@ import Proximity.CanonicalRS.MCA
 
   Paper correspondence:
   - Paper 1 Section 6: width-one canonical MCA comparison.
-  - Paper 1 Section 7: cited-bound alignment theorem surface.
+  - Paper 1 appendix ledger: cited-bound alignment theorem surface.
 
   This file is the comparison layer between the actual canonical RS/MCA object
   and the target theorem slot. It does not prove the deep RS MCA theorem; it

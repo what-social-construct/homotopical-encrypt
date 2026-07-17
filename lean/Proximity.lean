@@ -22,7 +22,8 @@ import Proximity.Public
   Paper correspondence:
   - Paper 1 Section 6: Plucker/cochain/plane/RS projection chain and MCA
     endpoint.
-  - Paper 1 Section 7: Lean theorem-surface correspondence for proximity.
+  - Paper 1 appendix ledger: Lean theorem-surface correspondence for
+    proximity.
 
   Provenance/scope label:
   the projection-chain/gate/certificate architecture is hcrypt-native, while

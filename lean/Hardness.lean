@@ -1,46 +1,51 @@
 /-
-Formal verification of the Hodge-Lattice cryptography setup.
+Formal verification of the hidden Hodge-operator/HCP comparison setup.
 
 Paper correspondence:
 - Paper 1 Sections 2--3: HCP definition, hidden-kernel ambiguity, and CVP
   comparison.
-- Paper 1 Section 7: Lean theorem-surface correspondence.
+- Paper 1 appendix ledger: Lean theorem-surface correspondence.
 
 Terminology:
 - `CVP` := the closest-vector problem on an explicitly presented lattice.
-- `Hodge-hardness` := recovery of the harmonic component from public Hodge data
-  when the operative Laplacian/fibration is hidden.
-- `hidden-operator model` := the attacker sees only public cochain / class-level
-  data, while the actual fibration, Laplacian `Δ`, and hence the lattice
-  `ker(Δ)` remain hidden up to equivalence.
+- `HCP hidden-operator hardness` := recovery of the harmonic cochain from
+  public homotopy-class and cochain/commitment-facing observations when the
+  operative Laplacian and its harmonic kernel are hidden.
+- `hidden-operator model` := the attacker sees only public data, while the
+  actual fibration representative, Laplacian `Δ`, and harmonic kernel
+  `ker(Δ)` remain hidden up to the public equivalence relation.
 
-This module verifies the soundness of the proposed cryptographic hardness hierarchy:
+This module verifies the formal comparison used by the paper:
 1. **Hodge Decomposition**: Proves that any cochain decomposes into harmonic,
    exact, and coexact parts (`Hodge_Decomposition_Theorem`).
-2. **Hodge/CVP Relation**: Proves that a Hodge solver induces a solver for the
-   projected explicit-lattice problem (`Hodge_Hardness_Reduction_Proof` and
+2. **Closest-harmonic/CVP comparison**: Proves the presented-operator
+   closest-harmonic comparison surface (`Hodge_Hardness_Reduction_Proof` and
    `Hodge_Projection_Is_CVP`).
 3. **Hidden-Operator Strictness**: Proves the core separation result intended by
    the project. In the hidden-fibration / hidden-Laplacian model, a correct CVP
-   oracle for explicit known lattices is still insufficient to solve the Hodge
-   problem from public data alone, because the relevant lattice `ker(Δ)` is not
-   uniquely determined by the public cochain
+   oracle for explicitly presented instances is still insufficient to solve HCP
+   from public data alone, because the relevant harmonic kernel `ker(Δ)` is not
+   uniquely determined by the public observation
    (`CVP_Oracle_Insufficient_For_Public_Hodge_Solving`).
 
-The formal proofs confirm that the lattice problem is a projection of the Hodge problem, and that the extra topological structure (the Laplacian/fibration) adds a layer of hardness not captured by the lattice problem alone.
+The formal proofs separate the known-instance closest-vector comparison from
+the hidden-operator recovery problem. CVP is the metric problem after the
+relevant kernel has been presented; HCP includes the ambiguity of which hidden
+operator presents that kernel.
 
 Important scope note:
-- the reduction theorems support the claim `CVP ≤ Hodge-hardness`;
+- the reduction theorems support the presented-operator closest-harmonic/CVP
+  comparison used in Paper 1 Section 3;
 - the oracle-insufficiency theorems support a strict separation in the hidden-operator model;
 - this is therefore a hardness / complexity inequality in the formal model used here:
   the public data determines only an equivalence class of compatible hidden
   fibrations/Laplacians, not a unique operator;
-- accordingly, the attacker is not given a canonically presented lattice, but must
+- accordingly, the attacker is not given a canonically presented kernel, but must
   first identify which hidden representative determines the operative subspace
   `ker(Δ)`;
 - this is the structural gap from CVP: CVP assumes an explicit known lattice,
-  whereas Hodge-hardness is posed over public data compatible with multiple hidden
-  representatives;
+  whereas HCP is posed over public data compatible with multiple hidden
+  representatives/operators;
 -/
 
 import Mathlib
@@ -81,11 +86,13 @@ def MatrixIsHarmonic {N : Type} [Fintype N] {R : Type} [CommRing R]
   Matrix.mulVec Δ h = 0
 
 /--
-A public projection from hidden Hodge operators to observable class-level data.
+A public projection from hidden Hodge operators to observable public data.
 
 This is deliberately lossy in the intended security model: public data may
 identify a class of compatible hidden operators rather than one canonical
-operator.
+operator. Concrete public artifacts such as cochain commitments, hashes, or
+class fingerprints are represented here only through this abstract public
+projection.
 -/
 def PublicProjection (N : Type) [Fintype N] (R : Type) [CommRing R] (P : Type) :=
   Matrix N N R → P
@@ -193,10 +200,10 @@ theorem kernelAmbiguous_of_publicCompatibleHodgeAmbiguity
   have hb_harm₂ : MatrixIsHarmonic Δ₂ b := (hsame b).1 hb_harm₁
   exact hb₂ ⟨b, hb_harm₂, rfl⟩
 
--- We define a solver as a function that takes the "public" part of the instance.
--- For Hodge, the public part is just the cochain 'b' (and implicitly the system parameters).
--- The 'secret' is Δ.
--- However, to state the correctness, we need to refer to Δ.
+-- We define a solver as a function that takes the public-facing observation.
+-- In this file, cochain values, commitment-facing data, hashes, and public
+-- class handles are abstracted to the observed cochain `b` plus the lossy
+-- public projection above. The hidden datum needed to state correctness is `Δ`.
 
 def Hodge_Solver_Correct {N : Type} [Fintype N] {R : Type} [CommRing R]
   (solver : (N → R) → (N → R)) (Δ : Matrix N N R) (b : N → R) : Prop :=
@@ -500,8 +507,10 @@ theorem Hodge_Decomposition_Theorem
 /--
 Public Hodge instance available to an attacker.
 
-In the documented model, the public side exposes the cochain/commitment-facing
-data, while the hidden Laplacian/fibration is not given to the solver.
+In the documented model, the public side exposes cochain/commitment-facing
+data, hashes, and class handles. This file abstracts those public artifacts to
+the observed cochain-facing datum `b : n → R`; the hidden Laplacian/fibration
+is not given to the solver.
 -/
 def PublicHodgeInstance (n : Type) (R : Type) := n → R
 
@@ -612,9 +621,7 @@ theorem CVP_Oracle_Insufficient_For_Public_Hodge_Solving
   obtain ⟨Δ₁, Δ₂, b, hb₁, hb₂⟩ := Hodge_Ambiguity (n := n) (R := R) h_dim
   exact no_public_solver_on_ambiguous_input hsound hexact hb₁ hb₂
 
-/-
-Verification that the Hodge projection (closest harmonic form) is the solution to CVP on the kernel lattice.
--/
+/- Verification of the closest-harmonic comparison surface. -/
 /-- A Hodge-side CVP solution: harmonic and closest among harmonic sections. -/
 def HodgeCVPSolution
   {n : Type} [Fintype n]
@@ -623,10 +630,7 @@ def HodgeCVPSolution
   MatrixIsHarmonic Δ h ∧
     ∀ v, MatrixIsHarmonic Δ v → dist b h ≤ dist b v
 
-/--
-Projection-model Hodge/CVP solution using the canonical `Laplacian.Hodge`
-harmonic-section predicate.
--/
+/-- Projection-model closest-harmonic solution using the canonical predicate. -/
 def ProjectionHodgeCVPSolution
   {n : Type} [Fintype n] [DecidableEq n]
   (W : Submodule ℝ (EuclideanSpace ℝ n))
@@ -659,8 +663,8 @@ theorem Hodge_Projection_Is_CVP
   exact ⟨h_harmonic, fun v hv => h_closest v hv⟩
 
 /--
-The actual Hodge harmonic projection is a Hodge/CVP solution once the closest
-harmonic-section property has been supplied.
+The Hodge harmonic projection is closest-harmonic once the closest-section
+property has been supplied.
 -/
 theorem harmonicProjection_Is_ProjectionHodgeCVPSolution
   {n : Type} [Fintype n] [DecidableEq n]

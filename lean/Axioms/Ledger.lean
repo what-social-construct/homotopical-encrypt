@@ -5,7 +5,7 @@ import Mathlib
 
   Paper correspondence:
   - Paper 2: ledger/state-transition and conservation assumptions.
-  - Paper 1 Section 7: sequel boundary only.
+  - Paper 1 appendix ledger: subsequent protocol-paper boundary only.
 
   These assumptions align fee-flow and state-transition invariants with the
   implementation's treasury and account update rules.

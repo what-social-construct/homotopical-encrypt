@@ -27,7 +27,7 @@
   \item[Explicit-lattice CVP comparison.]
     Section 3; \lean{CVP.CVP_Instance}, \lean{CVP.CVPSolution}, and
     \lean{CVP.CVPOracleCorrect}.
-  \item[Hodge/CVP solution predicates.]
+  \item[Closest-harmonic solution predicates.]
     Section 3; \lean{Hardness.HodgeCVPSolution} and
     \lean{Hardness.ProjectionHodgeCVPSolution}.
   \item[Hodge projection model.]
@@ -109,7 +109,7 @@
     \lean{Hardness.copy_equivalent_thm} and
     \lean{Hardness.FibrationCopy_is_Grothendieck};
     Lean-proved categorical interface.
-  \item[Exact sheaf gates supply \(d^2=0\) and Laplacian-from-coboundary.]
+  \item[Exact sheaf gates supply \(d^{k+1}d^k=0\) and Laplacian-from-coboundary.]
     \lean{Gates.structural_preconditions_of_sheaf_exact_gates};
     Lean-proved alias/interface.
   \item[Well-formed payloads have nonempty edge data and supported modulus.]
@@ -219,10 +219,11 @@ files are listed with the files they collect.
     \lean{Axioms/Fibration.lean}, and
     \lean{Axioms/HomotopyClass.lean}.]
     Section 4 translates path equality, public classifiers, public fibers,
-    class-membership witnesses, transport, fiber systems, ephemeral fiber
-    specifications, and nonfaithful classifiers. The equivalence, symmetry,
-    transitivity, membership, and nonfaithfulness lemmas justify the public
-    fiber language used in HCP.
+    class-membership witnesses, transport, the Helfer semantic
+    well-formedness clauses, fiber systems, ephemeral fiber specifications,
+    and nonfaithful classifiers. The equivalence, symmetry, transitivity,
+    membership, and nonfaithfulness lemmas justify the public fiber language
+    used in HCP.
 \end{description}
 
 \subsection{Foundational, Sheaf, Spectral, And Judgment Axioms}
@@ -352,7 +353,7 @@ files are listed with the files they collect.
     Section 5 and this appendix record hash words, hashed committed cochains,
     proof-carrying cochains, runtime specification boundaries, runtime
     acceptance predicates, SNARK-carrying cochains, compression contracts,
-    compressed shadows, observation boundaries, gap-decision certificates,
+    compressed public data, observation boundaries, gap-decision certificates,
     witness-compression envelopes, public state updates, and theorems stating
     that accepted artifacts expose well-formed cochain and oracle predicates.
   \item[\lean{Axioms/ZKP.lean}.]
@@ -364,15 +365,16 @@ files are listed with the files they collect.
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{Proximity/Problem.lean}, \lean{Proximity/Public.lean},
-    \lean{Proximity/Projection.lean}, and \lean{Proximity/PluckerShadow.lean}.]
+    \lean{Proximity/Projection.lean}, \lean{Proximity/GrassmannianPlucker.lean},
+    and \lean{Proximity/PluckerCochain/PublicBinding.lean}.]
     Section 6 records the problem-facing public projection vocabulary that
-    prepares the Plucker and finite-code shadow.
+    prepares the Plucker coordinate and finite-code datum.
   \item[\lean{Proximity/Grassmannian.lean},
     \lean{Proximity/GrassmannianPlucker.lean}, and
     \lean{Proximity/GrassmannianPlucker/Concrete.lean}.]
     Section 6 translates harmonic Grassmannian points, exterior coordinates,
-    frame witnesses, decomposability, framed systems, raw and public shadows,
-    soundness, projective equivalence, projective shadows, projective
+    frame witnesses, decomposability, framed systems, raw and normalized
+    Plucker coordinates, soundness, projective equivalence, projective
     normalization, projective framed systems, and projective sound inputs.
   \item[\lean{Proximity/CochainBridge.lean},
     \lean{Proximity/PluckerCochain.lean},
@@ -381,15 +383,15 @@ files are listed with the files they collect.
     Section 6 translates valid frames, Plucker-to-cochain instances, local
     syndrome targets, codeword predicates, evaluation projections, invariant
     checklists, payload encoders, commitment-sum residuals, payload
-    realizations, hashed Plucker shadows, observed frame bindings, and the
-    theorems that valid public shadows bind to well-formed cochains and local
+    realizations, hashed Plucker coordinates, observed frame bindings, and the
+    theorems that valid Plucker coordinates bind to well-formed cochains and local
     codewords.
   \item[\lean{Proximity/CochainPlane.lean},
     \lean{Proximity/CochainPlane/Core.lean},
     \lean{Proximity/CochainPlane/Concrete.lean},
     \lean{Proximity/CochainPlane/ReedSolomon.lean}, and
     \lean{Proximity/CochainReedSolomon.lean}.]
-    Section 6 translates plane shadows, plane extraction contexts,
+    Section 6 translates plane projections, plane extraction contexts,
     local nondegeneracy, alignment, projected planes, plane targets,
     plane-to-evaluation projections, local-codeword-to-target-codeword
     theorems, distance monotonicity, canonical-field plane encodings,
@@ -397,13 +399,13 @@ files are listed with the files they collect.
   \item[\lean{Proximity/ProjectionChain.lean} and
     \lean{Proximity/ProjectionChain/Core.lean}.]
     Section 6 translates the complete projection chain, including accessors
-    for committed cochain, plane shadow, received word, and the composite
+    for committed cochain, plane projection, received word, and the composite
     evaluation projection.
   \item[\lean{Proximity/Gates.lean}, \lean{Proximity/Gates/Stage.lean},
     \lean{Proximity/Gates/Final.lean}, and
     \lean{Proximity/GateEvidence.lean}.]
     Section 6 translates only proximity gates: source metric, Plucker metric,
-    semantic alignment, syndrome adequacy, public-shadow respect,
+    semantic alignment, syndrome adequacy, projective-coordinate respect,
     noncollapse, far-region separation, runtime binding, structural bundles,
     hard-gate certificates, calibrated final certificates, certified state
     buses, stage checklists, stage certificates, radius calibrations, final

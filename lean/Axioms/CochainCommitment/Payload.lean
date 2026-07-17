@@ -17,7 +17,7 @@ import Mathlib.Tactic
 namespace Hcrypt
 namespace Axioms
 
-/-- Canonical lattice modulus used by the current Python/Rust commitment path. -/
+/-- Canonical commitment modulus used by the current Python/Rust commitment path. -/
 def canonicalCochainModulus : ℕ := 12289
 
 /-- Wire-format header bytes: modulus(4 LE) + n_edges(4 LE). -/
@@ -45,7 +45,7 @@ def cochainCommitmentWireLength (n : ℕ) : ℕ :=
   The topology_hash binds the commitment to a specific simplicial complex.
 -/
 structure CochainCommitmentData where
-  /-- Lattice modulus q (default 12289 in Python/Rust). -/
+  /-- Commitment modulus q (default 12289 in Python/Rust). -/
   modulus : ℕ
   /-- Declared number of edge values (= |E| × stalk_dim). -/
   n_edge_values : ℕ

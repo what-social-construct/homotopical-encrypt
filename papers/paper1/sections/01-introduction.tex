@@ -1,39 +1,55 @@
 \section{Introduction}
 
-\subsection{Motivation}
+\subsection{Motivation And Contributions}
 
-\HE{} is organized around the following security shape:
+\HE{} studies recovery from public homotopy-class data when the Hodge operator
+whose kernel is the message space is not part of the public input.  In a
+known-lattice closest-vector problem, the lattice is presented before the
+search begins.  In HCP, the recovery target is
 \[
-\begin{gathered}
-\text{public handles}\\
-\text{and verifier-facing artifacts}
-\end{gathered}
-\quad\not\Rightarrow\quad
-\text{the operative Hodge--Laplacian kernel}.
+  h=\pi_H(b)\in\ker(\Delta),
 \]
-The private recovery object is the harmonic cochain selected by a hidden Hodge
-operator, instead of a scalar or a vector secret in a published lattice or algebraic object. 
-Public verification therefore needs finite artifacts, while security
-must not collapse to recovering the private representative or the hidden
-operator.
+but the public class does not include the Hodge--Laplacian \(\Delta\), its
+kernel, or the restriction maps from which \(\Delta\) is built.  The private
+recovery object is therefore not a scalar secret or a vector in a published
+lattice; it is the harmonic cochain in the kernel of a hidden Hodge operator.
 
-\subsection{Contributions}
+This changes the comparison problem.  If a lattice \(\Lambda\) is explicitly
+presented, then one may realize \(\Lambda=\ker(\Delta)\) for a suitable linear
+operator and compare closest-harmonic recovery with CVP.  That comparison does
+not make public-data HCP a known-lattice problem: public homotopy-class data
+may be compatible with distinct hidden operators, distinct kernels, and
+different harmonicity judgments.  The paper isolates this boundary and then
+separates it from the finite verifier-facing projection artifacts used later.
+Those artifacts supply concrete sources for the abstract observation \((p,b)\):
+the public homotopy class supplies \(p\), while accepted cochain payloads,
+openings, or proof-carrying statements supply the cochain-facing datum \(b\).
+They bind to hidden Hodge data without presenting \(\Delta\) or
+\(\ker(\Delta)\). The fibration ID is the spectral fingerprint
+\(\operatorname{Spec}_{\mathrm{multi}}(\Delta)\), obtained only after the
+relevant Hodge data has been recovered or certified; it is not part of the
+public homotopy class.
 
-This paper develops the following contributions.
+This paper develops this boundary through the following statements.
 \begin{enumerate}[label=(\roman*)]
-  \item The Harmonic Cochain Problem (HCP): recovery of the harmonic cochain
-    selected by a hidden Hodge operator.
+  \item The Harmonic Cochain Problem (HCP): recovery of a cochain \(h\) with
+    \(\Delta h=0\) for a hidden Hodge operator \(\Delta\).
   \item A Hodge-structured noise model with cochain decomposition
-    \(b = h + e\), where \(h \in \ker(\Delta)\) and
-    \(e \in \image(\delta) \oplus \image(\delta^\ast)\).
-  \item A CVP comparison in which an explicit lattice is realized as a kernel
-    \(\ker(\Delta)\), a harmonic solver yields a lattice vector, and the
-    closest-harmonic contract recovers the closest-vector predicate.
+    \(b = h + e\), where \(h \in \ker(\Delta_1)\) and
+    \(e \in \image(\delta_0) \oplus \image(\delta_1^\ast)\).
+  \item A CVP comparison: when an explicit lattice is realized as a kernel
+    \(\ker(\Delta)\), a presented-operator harmonic solver yields a lattice
+    vector, and the closest-harmonic contract recovers the closest-vector
+    condition.
   \item A hidden-operator ambiguity theorem: publicly equivalent Hodge operators
-    may disagree on harmonicity, so a correct explicit-lattice CVP oracle does
-    not uniformly solve public-data HCP.
-  \item A Lean formalization of the definitions, reductions, projection chain,
-    gates, and theorem boundaries.
-  \item A projection chain through Plucker shadows and cochain commitments to a
+    may disagree on harmonicity, so the CVP comparison does not make a correct
+    explicit-lattice CVP oracle into a uniform public-data HCP solver.
+  \item The semantic and axiomatic hypotheses needed for these statements:
+    fibrational identity, homotopy classes, exact Hodge/cochain invariants,
+    spectral/Tsirelson admissibility, and Heyting-style public judgments.
+  \item A projection chain through Plucker coordinates and cochain commitments to a
     canonical Reed--Solomon endpoint with an MCA bad-challenge bound.
 \end{enumerate}
+
+The corresponding Lean definitions, reductions, gates, theorem boundaries, and
+section-by-section coverage ledger are recorded in the appendix.

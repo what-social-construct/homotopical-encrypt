@@ -5,7 +5,7 @@ open Lake DSL
   Homotopical-Encrypt Lean Proofs
 
   Consolidated proof modules:
-    Hardness.lean  — Hodge decomposition, CVP reduction, hidden-operator hardness
+    Hardness.lean  — Hodge decomposition, CVP comparison, hidden-operator hardness
     CVP.lean       — explicit-lattice/CVP problem objects and assumptions
     Tsirelson.lean — Grassmannian Laplacians, Tsirelson bounds, adversary models
     Laplacian.lean — Grassmannian hardness, norm correction, injectivity

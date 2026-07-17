@@ -19,17 +19,18 @@ namespace Axioms
 
 /--
   Cochain commitment axioms capturing the security properties
-  that Python/Rust implement and Hardness.lean reduces to CVP.
+  that Paper 1 treats as interface assumptions.
 
-  These are the interface assumptions that bridge:
-    - Foundation.CochainComplex (δ exists and δ∘δ = 0)
-    - Hardness.Hodge_Hardness_Reduction (CVP ≤ Hodge)
-    - Chain.balance_preserved (homomorphic accumulation)
+  A value of `CochainCommitmentAxioms` is the Lean witness that the commitment
+  layer has binding, hiding, homomorphic, topology-binding, and partial-opening
+  properties. This file imports only payload and foundation data; hardness
+  comparisons and chain-level use of homomorphic accumulation are outside this
+  file.
 -/
 structure CochainCommitmentAxioms where
   /-- BINDING: collision requires finding ker(δ) element.
-      In Hardness.lean this is proved ≥ CVP-hard via Hodge_Hardness_Reduction.
-      This axiom records the reduction for commitment-specific use. -/
+      This axiom records the commitment-specific binding boundary; CVP
+      hardness remains an external comparison assumption. -/
   Binding : Prop
 
   /-- HIDING: commitment reveals nothing about message.
@@ -142,8 +143,8 @@ abbrev CohomologicalMACWellFormed (M : CohomologicalMACAxioms) : Prop :=
 /--
   Foundation implies commitment binding preconditions.
 
-  CochainComplex + LaplacianFromCoboundary give us the δ operator
-  and the lattice structure needed for SVP-hardness of binding.
+  CochainComplex + LaplacianFromCoboundary give the cochain/Hodge structure
+  used by the commitment-binding interface.
 -/
 theorem foundation_implies_binding_preconditions (F : Foundation) :
     FoundationWellFormed F →
@@ -168,8 +169,12 @@ theorem homomorphic_implies_balance_law
   Canonical CochainCommitmentAxioms instance derived from Foundation
   and a binding/hiding hypothesis.
 
-  This is the explicit instantiation point for connecting the abstract
-  axioms to the Hodge-CVP reduction in Hardness.lean.
+  This lightweight interface instance fills the homomorphic fields with the
+  cochain-complex premise currently carried by `Foundation`. The separate
+  `Foundation.CoboundaryLinearity` field records the stronger mathematical
+  linearity assumption, but this constructor does not use it. Binding, hiding,
+  and partial-opening soundness remain explicit witnesses supplied to the
+  constructor.
 -/
 def CochainCommitmentFromFoundation
     (F : Foundation) (_hF : FoundationWellFormed F)
@@ -177,7 +182,7 @@ def CochainCommitmentFromFoundation
     CochainCommitmentAxioms where
   Binding := hBinding
   Hiding := hHiding
-  -- Homomorphic properties follow from linearity of δ (CochainComplex axiom)
+  -- Current lightweight interface witness for the homomorphic fields.
   HomomorphicAddition := F.CochainComplex
   HomomorphicScalarMult := F.CochainComplex
   TopologyBinding := True
@@ -185,7 +190,7 @@ def CochainCommitmentFromFoundation
 
 /--
   The canonical commitment from Foundation is well-formed when the
-  external binding/hiding/partial-opening hypotheses hold.
+  binding, hiding, and partial-opening witnesses are supplied.
 -/
 theorem canonical_commitment_wellformed
     (F : Foundation) (hF : FoundationWellFormed F)

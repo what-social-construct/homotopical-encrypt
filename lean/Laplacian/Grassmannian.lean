@@ -4,7 +4,7 @@
   Paper correspondence:
   - Paper 1 Sections 2--3: hidden Hodge operator/kernel search space and CVP
     comparison.
-  - Paper 1 Section 7: Laplacian theorem-surface correspondence.
+  - Paper 1 appendix ledger: Laplacian theorem-surface correspondence.
 
   The implementation is split by concern:
 

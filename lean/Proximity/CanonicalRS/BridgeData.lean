@@ -6,7 +6,7 @@ import Proximity.CanonicalRS.Metric
 
   Paper correspondence:
   - Paper 1 Section 6: canonical Reed--Solomon endpoint data.
-  - Paper 1 Section 7: endpoint theorem-surface row.
+  - Paper 1 appendix ledger: endpoint theorem-surface row.
 
   This module packages the concrete canonical RS endpoint for the hcrypt
   proximity bridge. Reed-Solomon list-decoding and MCA bounds remain explicit

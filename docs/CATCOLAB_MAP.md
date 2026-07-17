@@ -47,10 +47,10 @@ These are the main objects we would want to model.
 | Stalk assignment | Presheaf/sheaf data | Vertex/edge fibers |
 | Restriction maps `R_{v→e}` | Morphisms in the presheaf | Parallel transport / local compatibility |
 | Cochain groups `C^k(X, F)` | Derived objects from the sheaf | Degreewise data containers |
-| Coboundary `δ` | Morphism `C^k → C^{k+1}` | Fundamental operator |
-| Adjoint `δ*` | Reverse/adjoint morphism | Used for Hodge decomposition |
-| Laplacian `Δ = δ*δ + δδ*` | Derived endomorphism | Built from the secret geometry |
-| Harmonic subspace `ker(Δ)` | Distinguished subobject | Message-bearing space |
+| Coboundaries `δ_{k-1}, δ_k` | Morphisms `C^{k-1} → C^k → C^{k+1}` | Fundamental adjacent operators |
+| Adjoints `δ_{k-1}*, δ_k*` | Reverse/adjoint morphisms | Used for Hodge decomposition |
+| Laplacian `Δ_k = δ_{k-1}δ_{k-1}* + δ_k*δ_k` | Derived endomorphism of `C^k` | Built from the secret geometry |
+| Harmonic subspace `ker(Δ_k)` | Distinguished subobject | Message-bearing space |
 | Public fingerprint / class | Quotient/projection object | Public shadow of hidden geometry |
 | Oracle stages `F_full`, `F_zk`, `F_hash` | Three related sheaf-like views | Already used in the docs |
 | Ledger / chain state | Colimit/state object | Runtime-side semantic target |
@@ -60,9 +60,9 @@ These are the main objects we would want to model.
 | HCRYPT morphism | Role |
 |----------------|------|
 | `R_{v→e}` | Local restriction / transport |
-| `δ` | Pushes local data to disagreements on higher cells |
-| `δ*` | Pulls data back / adjoint operator |
-| `π_H` | Hodge projection onto `ker(Δ)` |
+| `δ_k` | Pushes local data to disagreements on higher cells |
+| `δ_k*` | Pulls data back / adjoint operator |
+| `π_H` | Hodge projection onto `ker(Δ_k)` |
 | `pub : hidden → public` | Public projection / class fingerprint |
 | `η₁ : F_full → F_zk` | Oracle reduction / witness-producing step |
 | `η₂ : F_zk → F_hash` | Compression / public commitment step |
@@ -86,13 +86,13 @@ rendering because almost everything else is derived from it.
 
 ```text
 C^k(X,F)
-  = ker(Δ) ⊕ im(δ) ⊕ im(δ*)
+  = ker(Δ_k) ⊕ im(δ_{k-1}) ⊕ im(δ_k*)
 ```
 
 This is not just crypto flavor text; it is the semantic reason:
 
-- message lives in `ker(Δ)`
-- noise lives in `im(δ) ⊕ im(δ*)`
+- message lives in `ker(Δ_k)`
+- noise lives in `im(δ_{k-1}) ⊕ im(δ_k*)`
 - decryption is projection back onto the harmonic part
 
 ### 3. Hidden/Public Projection Diagram

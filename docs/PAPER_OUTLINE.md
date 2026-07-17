@@ -24,9 +24,9 @@ Working definition:
 > operative Laplacian kernel.
 
 In Homotopical Encrypt, HCP is instantiated in a hidden-operator model. Public
-samples have the form `b = h + e`, where `h ∈ ker(Δ)` is the harmonic cochain
-and `e ∈ im(δ) ⊕ im(δ*)` is Hodge-structured noise. The public data does not
-determine a unique `Δ` or `ker(Δ)`.
+samples have the form `b = h + e`, where `h ∈ ker(Δ_1)` is the harmonic
+cochain and `e ∈ im(δ_0) ⊕ im(δ_1*)` is Hodge-structured noise. The public data
+does not determine a unique `Δ_1` or `ker(Δ_1)`.
 
 The proximity construction is then the verifier-facing projection theorem:
 
@@ -56,7 +56,7 @@ Touch the following points in order:
 - Harmonic Cochain Problem: public cochain/shadow data does not determine the
   operative Hodge/Laplacian kernel.
 - Hodge-structured noise model: public samples have shape `b = h + e` with
-  `h ∈ ker(Δ)` and `e ∈ im(δ) ⊕ im(δ*)`.
+  `h ∈ ker(Δ_1)` and `e ∈ im(δ_0) ⊕ im(δ_1*)`.
 - Main theorem: a certified projection theorem from accepted hidden/geometric
   state to a calibrated public target.
 - Relationship to CVP: CVP is the known-lattice comparison problem, while
@@ -117,13 +117,13 @@ Use the Homotopical Encrypt public-sample model:
 
 ```text
 b = h + e
-h ∈ ker(Δ)
-e ∈ im(δ) ⊕ im(δ*)
+h ∈ ker(Δ_1)
+e ∈ im(δ_0) ⊕ im(δ_1*)
 ```
 
 Here `h` is the harmonic cochain/global-section component and `e` is
 Hodge-structured noise. The hidden-operator condition is that the public data
-does not determine a unique `Δ` or `ker(Δ)`.
+does not determine a unique `Δ_1` or `ker(Δ_1)`.
 
 State explicitly what is public, what is hidden, and what counts as recovery.
 

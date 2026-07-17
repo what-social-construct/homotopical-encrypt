@@ -18,11 +18,11 @@ No boundary zone, no Heyting semantics — classical logic.
 
 | Gate | Check | Module | Tolerance |
 |------|-------|--------|-----------|
-| δ²=0 | Cochain complex law | `primitives/cochain.py` | NONE (integer) |
-| Δ = δ*δ + δδ* | Laplacian construction | `geometry/sheaf_laplacian.py` | NONE (matrix identity) |
+| δ_kδ_{k-1}=0 | Cochain complex law | `primitives/cochain.py` | NONE (integer) |
+| Δ_k = δ_{k-1}δ_{k-1}* + δ_k*δ_k | Laplacian construction | `geometry/sheaf_laplacian.py` | NONE (matrix identity) |
 | P²=P | Hodge projection idempotent | `geometry/hodge.py` | ε=1e-10 (float) |
-| H⊕im(δ)⊕im(δ*)=C | Hodge decomposition | `geometry/hodge.py` | ε=1e-10 (float) |
-| ⟨H,im(δ)⟩=0 | Hodge orthogonality | `geometry/hodge.py` | ε=1e-10 (float) |
+| H^k⊕im(δ_{k-1})⊕im(δ_k*)=C^k | Hodge decomposition | `geometry/hodge.py` | ε=1e-10 (float) |
+| ⟨H^k,im(δ_{k-1})⟩=0 | Hodge orthogonality | `geometry/hodge.py` | ε=1e-10 (float) |
 | Δ ≥ 0 | Laplacian PSD | `geometry/sheaf_laplacian.py` | ε=1e-6 (eigenvalue) |
 | dim ∈ {128,256,512,1024} | Dimension | `crypto/validation.py` | NONE (integer) |
 | β₀ ≥ 1 | Connected topology | `geometry/topology.py` | NONE (integer) |
@@ -81,7 +81,7 @@ Python (wallet)                  Rust (oracle)              Rust (node)
    - Betti numbers (exact int)  
                                  
 2. Check EXACT gates locally     
-   (δ²=0, P²=P, dim, etc.)     
+   (δ_kδ_{k-1}=0, P²=P, dim, etc.)     
    FAIL FAST if violated         
                                  
 3. Pre-flight consensus check    
@@ -107,7 +107,7 @@ Python (wallet)                  Rust (oracle)              Rust (node)
 
 The paper's insight applies: "objects with the same shape have the same
 logical structure." Exact gates check SHAPE (structural identity):
-- δ²=0 is the cochain complex law — it's algebraic, not numeric
+- δ_kδ_{k-1}=0 is the cochain complex law — it's algebraic, not numeric
 - dim=256 is a type constraint — no boundary zone exists
 - β₀ ≥ 1 is a topological invariant — it's an integer
 
@@ -142,7 +142,7 @@ The framework already has:
 - `FiberBundle` with SO(n) parallel transport (`geometry/fiber_bundle.py`)
 - `ChernData`, `compute_chern_classes` from holonomy curvature (`primitives/k_theory.py`)
 - Segre classes, Stiefel-Whitney, Pontryagin, Adams operations (all in `k_theory.py`)
-- `CochainComplex` with δ² = 0 (`primitives/cochain.py`)
+- `CochainComplex` with adjacent coboundary composites equal to zero (`primitives/cochain.py`)
 
 The Chern character ch: K(X) → A*(X)⊗ℚ is the bridge between K-theory
 (vector bundles, already computed) and cohomology (Chow ring / intersection
