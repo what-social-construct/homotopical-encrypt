@@ -1,4 +1,4 @@
-# Proof-Carrying Homotopical Encrypt: Gate Certificates And Vertra Chain Architecture
+# Proof-Carrying Homotopical Encryption: Gate Certificates And Vertra Chain Architecture
 
 Working title for Paper 2.
 

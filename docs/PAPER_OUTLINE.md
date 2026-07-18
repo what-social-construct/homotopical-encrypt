@@ -1,13 +1,13 @@
-# Homotopical Encrypt Paper Outline And Split Plan
+# Homotopical Encryption Paper Outline And Split Plan
 
 This document is the high-level publication plan for the Lean-backed
-Homotopical Encrypt work. It explains how the hardness story, semantic
+Homotopical Encryption work. It explains how the hardness story, semantic
 foundations, proximity projection, and runtime trust boundary should be staged
 across one preprint or split into multiple papers.
 
 ## Core Thesis
 
-Homotopical Encrypt should be presented first through the **Harmonic Cochain
+Homotopical Encryption should be presented first through the **Harmonic Cochain
 Problem (HCP)**, a hidden-operator hardness problem:
 
 ```text
@@ -23,7 +23,7 @@ Working definition:
 > associated to a Hodge system, recover the harmonic cochain determined by the
 > operative Laplacian kernel.
 
-In Homotopical Encrypt, HCP is instantiated in a hidden-operator model. Public
+In Homotopical Encryption, HCP is instantiated in a hidden-operator model. Public
 samples have the form `b = h + e`, where `h ∈ ker(Δ_1)` is the harmonic
 cochain and `e ∈ im(δ_0) ⊕ im(δ_1*)` is Hodge-structured noise. The public data
 does not determine a unique `Δ_1` or `ker(Δ_1)`.
@@ -60,7 +60,7 @@ Touch the following points in order:
 - Main theorem: a certified projection theorem from accepted hidden/geometric
   state to a calibrated public target.
 - Relationship to CVP: CVP is the known-lattice comparison problem, while
-  Homotopical Encrypt recovery hides the operative kernel/operator.
+  Homotopical Encryption recovery hides the operative kernel/operator.
 - Lean formalization: definitions, reductions, object-local invariants,
   projection-stage certificates, and theorem boundaries are machine-checked.
 - Proximity corollary: the endpoint is aligned with the Reed-Solomon MCA
@@ -94,7 +94,7 @@ operator.
 - Lean formalization of the main definitions, theorem boundaries, object-local
   invariants, and projection-stage certificates.
 - Reed-Solomon projection chain and MCA endpoint aligned with the paper
-  vocabulary `C ⊆ (F^s)^n`, with canonical Homotopical Encrypt evaluation at
+  vocabulary `C ⊆ (F^s)^n`, with canonical Homotopical Encryption evaluation at
   `s = 1`.
 
 ### 2. Harmonic Cochain Problem
@@ -113,7 +113,7 @@ Define HCP as the central recovery problem:
 > Given public cochain/class-level data associated to a Hodge system, recover
 > the harmonic cochain determined by the operative Laplacian kernel.
 
-Use the Homotopical Encrypt public-sample model:
+Use the Homotopical Encryption public-sample model:
 
 ```text
 b = h + e
@@ -190,7 +190,7 @@ Lean anchors:
 
 Use this section to explain the provenance of the semantic layer. The paper
 should cite Helfer for the motivation and label the Lean file as a formalized
-interface used by Homotopical Encrypt, not as a claim of fully reproving the
+interface used by Homotopical Encryption, not as a claim of fully reproving the
 external paper.
 
 #### 4.2 Fibrational Identity Objects
@@ -310,7 +310,7 @@ far-region non-collapse at the final RS endpoint.
 #### 6.2 Canonical Reed-Solomon Endpoint
 
 State the paper-style endpoint over `C ⊆ (F^s)^n`, then explain why the concrete
-Homotopical Encrypt endpoint evaluates this at width `s = 1`.
+Homotopical Encryption endpoint evaluates this at width `s = 1`.
 
 #### 6.3 Mutual Correlated Agreement
 
@@ -435,7 +435,7 @@ Primary Lean modules:
 
 Best title shape:
 
-- Homotopical Encrypt: Hidden Hodge Operators and the Harmonic Cochain Problem
+- Homotopical Encryption: Hidden Hodge Operators and the Harmonic Cochain Problem
 - The Harmonic Cochain Problem for Homotopical Encryption
 - Public Shadows and Hidden Kernels in Homotopical Encryption
 

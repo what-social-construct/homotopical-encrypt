@@ -2,12 +2,16 @@
 Formal verification of the hidden Hodge-operator/HCP comparison setup.
 
 Paper correspondence:
-- Paper 1 Sections 2--3: HCP definition, hidden-kernel ambiguity, and CVP
-  comparison.
+- Paper 1 Sections 2--3: HCP definition, hidden-kernel ambiguity, the
+  presented-linear-subspace comparison, and the separate discrete-CVP oracle
+  insufficiency corollary.
 - Paper 1 appendix ledger: Lean theorem-surface correspondence.
 
 Terminology:
-- `CVP` := the closest-vector problem on an explicitly presented lattice.
+- `CVP` := the discrete closest-vector problem from `CVP.lean`, with integer
+  coefficient vectors in a real ambient space.
+- `presented linear image` := the field-linear subspace `B R^n`; this is not a
+  lattice and is used only for the kernel/image linear algebra below.
 - `HCP hidden-operator hardness` := recovery of the harmonic cochain from
   public homotopy-class and cochain/commitment-facing observations when the
   operative Laplacian and its harmonic kernel are hidden.
@@ -18,24 +22,31 @@ Terminology:
 This module verifies the formal comparison used by the paper:
 1. **Hodge Decomposition**: Proves that any cochain decomposes into harmonic,
    exact, and coexact parts (`Hodge_Decomposition_Theorem`).
-2. **Closest-harmonic/CVP comparison**: Proves the presented-operator
-   closest-harmonic comparison surface (`Hodge_Hardness_Reduction_Proof` and
-   `Hodge_Projection_Is_CVP`).
-3. **Hidden-Operator Strictness**: Proves the core separation result intended by
+2. **Presented linear-image comparison**: Proves that any finite-dimensional
+   field-linear image can be realized as a matrix kernel
+   (`Hodge_GeneratedSubspace_Reduction_Proof`).
+3. **Discrete harmonic-lattice bridge**: Given an explicit lattice
+   `Λ ⊆ W = ker(Δ_W)`, proves the Pythagorean distance decomposition and that
+   projecting the target onto `W` preserves the closest lattice vectors
+   (`HarmonicCVPBridge.solution_iff_projectedTarget`).
+4. **Hidden-Operator Strictness**: Proves the core separation result intended by
    the project. In the hidden-fibration / hidden-Laplacian model, a correct CVP
    oracle for explicitly presented instances is still insufficient to solve HCP
    from public data alone, because the relevant harmonic kernel `ker(Δ)` is not
    uniquely determined by the public observation
-   (`CVP_Oracle_Insufficient_For_Public_Hodge_Solving`).
+   (`CVP_Oracle_Insufficient_For_Public_Hodge_Solving`). This corollary uses
+   the corrected discrete-CVP oracle only as auxiliary information; it does not
+   identify a Hodge kernel with a discrete lattice.
 
-The formal proofs separate the known-instance closest-vector comparison from
-the hidden-operator recovery problem. CVP is the metric problem after the
-relevant kernel has been presented; HCP includes the ambiguity of which hidden
-operator presents that kernel.
+The formal proofs separate the presented-subspace projection problem, the
+discrete known-lattice CVP problem, and the hidden-operator recovery problem.
 
 Important scope note:
-- the reduction theorems support the presented-operator closest-harmonic/CVP
-  comparison used in Paper 1 Section 3;
+- the kernel/image theorems are linear algebra and do not constitute a
+  reduction from discrete CVP;
+- the explicit HCP/CVP bridge starts only after a discrete lattice `Λ` inside
+  the harmonic subspace has been supplied; it does not identify the whole real
+  kernel with that lattice;
 - the oracle-insufficiency theorems support a strict separation in the hidden-operator model;
 - this is therefore a hardness / complexity inequality in the formal model used here:
   the public data determines only an equivalence class of compatible hidden
@@ -43,9 +54,8 @@ Important scope note:
 - accordingly, the attacker is not given a canonically presented kernel, but must
   first identify which hidden representative determines the operative subspace
   `ker(Δ)`;
-- this is the structural gap from CVP: CVP assumes an explicit known lattice,
-  whereas HCP is posed over public data compatible with multiple hidden
-  representatives/operators;
+- a discrete-CVP oracle may be granted as an auxiliary oracle, but it cannot
+  resolve two hidden operators that are compatible with the same public input;
 -/
 
 import Mathlib
@@ -214,27 +224,22 @@ def Hodge_Solver_Correct {N : Type} [Fintype N] {R : Type} [CommRing R]
   -- but for CVP we need the "closest" property.
   -- Let's assume the solver returns the *unique* closest harmonic cochain.
 
--- The Reduction Claim
--- "Breaking hcrypt is at least as hard as CVP"
--- This means: If there exists a Hodge Solver, there exists a CVP Solver.
+-- Presented-linear-image realization.
+-- This is deliberately not stated as a discrete-CVP reduction.
 
-theorem Hodge_Hardness_Reduction
+theorem Hodge_GeneratedSubspace_Reduction
   {n : Type} [Fintype n] [DecidableEq n]
   {R : Type} [Field R] -- Using Field for dimension/basis arguments
   (solver : (n → R) → (n → R))
   -- Assumption: The solver works for any valid Hodge instance constructed from the system
   (h_solver : ∀ (Δ : Matrix n n R) (b : n → R),
     MatrixIsHarmonic Δ (solver b) ∧
-    -- We need a condition that solver(b) is "close" to b.
-    -- Let's say it minimizes the distance in some metric, or just that it's the projection.
-    -- For the reduction to work, we need: if b = t (target), solver(b) = closest lattice point.
     True) :
-  -- Conclusion: We can solve CVP
   ∀ (B : Matrix n n R) (t : n → R),
     ∃ (Δ : Matrix n n R),
-      -- The constructed Δ has kernel equal to the lattice generated by B
+      -- The constructed Δ has kernel equal to the field-linear image of B.
       (∀ v, Matrix.mulVec Δ v = 0 ↔ ∃ x, Matrix.mulVec B x = v) ∧
-      -- And the solver output is the lattice vector
+      -- The solver output lies in that image.
       (∃ x, Matrix.mulVec B x = solver t) :=
   by
     -- Let's choose any matrix $B$ and vector $t$.
@@ -394,9 +399,11 @@ lemma exists_matrix_ker_eq_range {n : Type} [Fintype n] [DecidableEq n] {R : Typ
   use Δ
 
 /-
-Formal verification of the Reverse Reduction claim: Breaking hcrypt (Hodge solver) implies solving CVP (finding a lattice vector).
+Formal verification that a solver harmonic for every presented operator returns
+an element of a generated linear subspace after that subspace is realized as a
+kernel. This theorem does not concern the discrete lattice `B ℤ^n`.
 -/
-theorem Hodge_Hardness_Reduction_Proof
+theorem Hodge_GeneratedSubspace_Reduction_Proof
   {n : Type} [Fintype n] [DecidableEq n]
   {R : Type} [Field R] [DecidableEq R]
   (solver : (n → R) → (n → R))
@@ -514,15 +521,23 @@ is not given to the solver.
 -/
 def PublicHodgeInstance (n : Type) (R : Type) := n → R
 
-/-- A solver that only sees the public Hodge instance and an explicit-lattice oracle. -/
-def PublicHodgeSolver (n : Type) [Fintype n] (R : Type) [CommRing R] :=
-  CVP_Oracle n R → PublicHodgeInstance n R → (n → R)
+/--
+A public-data Hodge solver with arbitrary auxiliary information.
+
+The auxiliary type is explicit so the ambiguity theorem can be proved without
+conflating a field-linear kernel with a discrete lattice. The CVP corollary
+below instantiates `Aux` with a genuine `CVP.Oracle`.
+-/
+def PublicHodgeSolver
+    (Aux : Type) (n : Type) [Fintype n] (R : Type) [CommRing R] :=
+  Aux → PublicHodgeInstance n R → (n → R)
 
 /-- Soundness requirement: the solver outputs a harmonic vector for the hidden `Δ`. -/
-def PublicHodgeSolverSound {n : Type} [Fintype n] {R : Type} [CommRing R]
-  (solver : PublicHodgeSolver n R) (O : CVP_Oracle n R) : Prop :=
+def PublicHodgeSolverSound
+    {Aux n : Type} [Fintype n] {R : Type} [CommRing R]
+    (solver : PublicHodgeSolver Aux n R) (aux : Aux) : Prop :=
   ∀ (Δ : Matrix n n R) (b : PublicHodgeInstance n R),
-    MatrixIsHarmonic Δ (solver O b)
+    MatrixIsHarmonic Δ (solver aux b)
 
 /--
 Exactness requirement on already-harmonic inputs.
@@ -530,22 +545,23 @@ Exactness requirement on already-harmonic inputs.
 If the public cochain is already harmonic for the hidden `Δ`, a correct solver
 should recover it unchanged.
 -/
-def PublicHodgeSolverExactOnHarmonic {n : Type} [Fintype n] {R : Type} [CommRing R]
-  (solver : PublicHodgeSolver n R) (O : CVP_Oracle n R) : Prop :=
+def PublicHodgeSolverExactOnHarmonic
+    {Aux n : Type} [Fintype n] {R : Type} [CommRing R]
+    (solver : PublicHodgeSolver Aux n R) (aux : Aux) : Prop :=
   ∀ (Δ : Matrix n n R) (b : PublicHodgeInstance n R),
-    MatrixIsHarmonic Δ b → solver O b = b
+    MatrixIsHarmonic Δ b → solver aux b = b
 
 /--
 If a public cochain `b` is already harmonic for `Δ`, exactness forces a public
 solver to return `b` unchanged.
 -/
 lemma public_solver_eq_input_of_harmonic
-  {n : Type} [Fintype n] {R : Type} [CommRing R]
-  {solver : PublicHodgeSolver n R} {O : CVP_Oracle n R}
-  (hexact : PublicHodgeSolverExactOnHarmonic solver O)
+  {Aux n : Type} [Fintype n] {R : Type} [CommRing R]
+  {solver : PublicHodgeSolver Aux n R} {aux : Aux}
+  (hexact : PublicHodgeSolverExactOnHarmonic solver aux)
   {Δ : Matrix n n R} {b : PublicHodgeInstance n R}
   (hb : MatrixIsHarmonic Δ b) :
-  solver O b = b := by
+  solver aux b = b := by
   exact hexact Δ b hb
 
 /--
@@ -555,44 +571,37 @@ If the same public cochain is harmonic for one hidden Laplacian and not for
 another, then a solver that is both sound and exact-on-harmonic cannot exist.
 -/
 lemma no_public_solver_on_ambiguous_input
-  {n : Type} [Fintype n] {R : Type} [CommRing R]
-  {solver : PublicHodgeSolver n R} {O : CVP_Oracle n R}
-  (hsound : PublicHodgeSolverSound solver O)
-  (hexact : PublicHodgeSolverExactOnHarmonic solver O)
+  {Aux n : Type} [Fintype n] {R : Type} [CommRing R]
+  {solver : PublicHodgeSolver Aux n R} {aux : Aux}
+  (hsound : PublicHodgeSolverSound solver aux)
+  (hexact : PublicHodgeSolverExactOnHarmonic solver aux)
   {Δ₁ Δ₂ : Matrix n n R} {b : PublicHodgeInstance n R}
   (hb₁ : ∃ h₁, MatrixIsHarmonic Δ₁ h₁ ∧ h₁ = b)
   (hb₂ : ¬ ∃ h₂, MatrixIsHarmonic Δ₂ h₂ ∧ h₂ = b) :
   False := by
   rcases hb₁ with ⟨h₁, hh₁_harm, hh₁_eq⟩
   have hb_harm₁ : MatrixIsHarmonic Δ₁ b := by simpa [hh₁_eq] using hh₁_harm
-  have h_eq : solver O b = b := public_solver_eq_input_of_harmonic hexact hb_harm₁
-  have h_harm₂ : MatrixIsHarmonic Δ₂ (solver O b) := hsound Δ₂ b
-  exact hb₂ ⟨solver O b, h_harm₂, h_eq⟩
+  have h_eq : solver aux b = b := public_solver_eq_input_of_harmonic hexact hb_harm₁
+  have h_harm₂ : MatrixIsHarmonic Δ₂ (solver aux b) := hsound Δ₂ b
+  exact hb₂ ⟨solver aux b, h_harm₂, h_eq⟩
 
-theorem Hodge_Strictly_Harder
+/-- Hidden-operator ambiguity rules out a uniform public-data-only solver. -/
+theorem no_uniform_public_hodge_solver
   {n : Type} [Fintype n] [DecidableEq n]
   {R : Type} [Field R] [DecidableEq R]
   (h_dim : Fintype.card n ≥ 2) :
-  ¬ ∃ (solver : CVP_Oracle n R → (n → R) → (n → R)),
-    ∀ (O : CVP_Oracle n R) (Δ : Matrix n n R) (b : n → R),
-      -- The oracle behaves correctly for the lattice of Δ
-      (∀ B t, Matrix.mulVec Δ (O B t) = 0) → -- This is a weak oracle condition, just says it returns lattice vectors.
-      -- Actually, the oracle takes a Basis B. It doesn't know Δ.
-      -- The condition should be: The oracle works for ANY basis.
-      -- But here we are quantifying over O.
-      -- The solver must work for ANY valid oracle.
-      -- And for ANY instance (Δ, b).
-      -- But the solver only sees b.
-      MatrixIsHarmonic Δ (solver O b) ∧ (solver O b = b) := by
-  by_contra h;
-  obtain ⟨ solver, hsolver ⟩ := h;
-  -- By Hodge_Ambiguity, there exist Δ₁, Δ₂, and b such that b is harmonic for Δ₁ but not Δ₂.
-  obtain ⟨Δ₁, Δ₂, b, hb₁, hb₂⟩ : ∃ (Δ₁ Δ₂ : Matrix n n R) (b : n → R), (∃ h₁, MatrixIsHarmonic Δ₁ h₁ ∧ h₁ = b) ∧ (¬∃ h₂, MatrixIsHarmonic Δ₂ h₂ ∧ h₂ = b) := by
-    apply Hodge_Ambiguity h_dim;
-  obtain ⟨O, hO⟩ : ∃ O : CVP_Oracle n R, (∀ B : Matrix n n R, ∀ t : n → R, Δ₁.mulVec (O B t) = 0) ∧ (∀ B : Matrix n n R, ∀ t : n → R, Δ₂.mulVec (O B t) = 0) := by
-    use fun B t => 0;
-    simp +decide;
-  exact hb₂ ⟨ _, hsolver O Δ₂ b hO.2 |>.1, hsolver O Δ₂ b hO.2 |>.2 ⟩
+  ¬ ∃ (solver : (n → R) → (n → R)),
+    (∀ (Δ : Matrix n n R) (b : n → R),
+      MatrixIsHarmonic Δ (solver b)) ∧
+    (∀ (Δ : Matrix n n R) (b : n → R),
+      MatrixIsHarmonic Δ b → solver b = b) := by
+  intro h
+  rcases h with ⟨solver, hsound, hexact⟩
+  obtain ⟨Δ₁, Δ₂, b, hb₁, hb₂⟩ :=
+    Hodge_Ambiguity (n := n) (R := R) h_dim
+  rcases hb₁ with ⟨h₁, hh₁, rfl⟩
+  have heq : solver h₁ = h₁ := hexact Δ₁ h₁ hh₁
+  exact hb₂ ⟨solver h₁, hsound Δ₂ h₁, heq⟩
 
 /--
 Stronger hidden-operator formulation of the hardness separation.
@@ -604,11 +613,10 @@ one hidden Laplacian and non-harmonic for another.
 -/
 theorem CVP_Oracle_Insufficient_For_Public_Hodge_Solving
   {n : Type} [Fintype n] [DecidableEq n]
-  {R : Type} [NormedField R] [DecidableEq R]
   (h_dim : Fintype.card n ≥ 2) :
-  (∃ O : CVP_Oracle n R, CVPOracleCorrect O) →
-  ¬ ∃ (solver : PublicHodgeSolver n R),
-    ∀ (O : CVP_Oracle n R), CVPOracleCorrect O →
+  (∃ O : _root_.CVP.Oracle n n, _root_.CVP.OracleCorrect O) →
+  ¬ ∃ (solver : PublicHodgeSolver (_root_.CVP.Oracle n n) n ℝ),
+    ∀ (O : _root_.CVP.Oracle n n), _root_.CVP.OracleCorrect O →
       PublicHodgeSolverSound solver O ∧
       PublicHodgeSolverExactOnHarmonic solver O := by
   classical
@@ -616,14 +624,183 @@ theorem CVP_Oracle_Insufficient_For_Public_Hodge_Solving
   by_contra h
   obtain ⟨solver, hsolver⟩ := h
   obtain ⟨O, hO⟩ :
-      ∃ O : CVP_Oracle n R, CVPOracleCorrect (n := n) (R := R) O := hO_exists
+      ∃ O : _root_.CVP.Oracle n n, _root_.CVP.OracleCorrect O := hO_exists
   obtain ⟨hsound, hexact⟩ := hsolver O hO
-  obtain ⟨Δ₁, Δ₂, b, hb₁, hb₂⟩ := Hodge_Ambiguity (n := n) (R := R) h_dim
+  obtain ⟨Δ₁, Δ₂, b, hb₁, hb₂⟩ :=
+    Hodge_Ambiguity (n := n) (R := ℝ) h_dim
   exact no_public_solver_on_ambiguous_input hsound hexact hb₁ hb₂
 
+-- ═══════════════════════════════════════════════════════════════════════
+-- Explicit HCP / discrete-CVP bridge
+-- ═══════════════════════════════════════════════════════════════════════
+
+/-- Regard the coordinate carrier used by `CVP` as its Euclidean space. -/
+def cvpVectorAsEuclidean
+    {m : Type} [Fintype m]
+    (v : _root_.CVP.AmbientVector m) : EuclideanSpace ℝ m :=
+  v
+
+/-- Forget the Euclidean norm structure while retaining the coordinates. -/
+def cvpVectorOfEuclidean
+    {m : Type} [Fintype m]
+    (v : EuclideanSpace ℝ m) : _root_.CVP.AmbientVector m :=
+  fun i => v i
+
+/-- The coordinate-sum distance in `CVP` is the squared Euclidean norm. -/
+theorem cvp_squaredEuclideanDistance_eq_norm_sq
+    {m : Type} [Fintype m]
+    (u v : _root_.CVP.AmbientVector m) :
+    _root_.CVP.squaredEuclideanDistance u v =
+      ‖cvpVectorAsEuclidean u - cvpVectorAsEuclidean v‖ ^ 2 := by
+  rw [EuclideanSpace.norm_sq_eq]
+  simp [_root_.CVP.squaredEuclideanDistance, cvpVectorAsEuclidean,
+    Real.norm_eq_abs, sq_abs]
+
+/--
+The data needed to compare Hodge projection with genuine discrete CVP.
+
+`lattice` is the discrete set `B ℤⁿ`. `harmonicSubspace` is the real Hodge
+subspace `W`; the final field says only that every lattice point lies in `W`.
+It deliberately does not identify the real subspace `W` with the discrete
+lattice.
+-/
+structure HarmonicCVPBridge
+    (m n : Type) [Fintype m] [Fintype n] where
+  lattice : _root_.CVP.ExplicitLattice m n
+  harmonicSubspace : Submodule ℝ (EuclideanSpace ℝ m)
+  latticeVector_mem :
+    ∀ z : n → ℤ,
+      cvpVectorAsEuclidean (_root_.CVP.latticeVector lattice z) ∈
+        harmonicSubspace
+
+namespace HarmonicCVPBridge
+
+/-- Project a CVP target onto the Hodge subspace while retaining its coordinates. -/
+def projectedTarget
+    {m n : Type} [Fintype m] [Fintype n]
+    (H : HarmonicCVPBridge m n)
+    [H.harmonicSubspace.HasOrthogonalProjection]
+    (t : _root_.CVP.AmbientVector m) : _root_.CVP.AmbientVector m :=
+  cvpVectorOfEuclidean
+    (H.harmonicSubspace.starProjection (cvpVectorAsEuclidean t))
+
+/-- Package a bridge lattice and a target as a genuine discrete CVP instance. -/
+def cvpInstance
+    {m n : Type} [Fintype m] [Fintype n]
+    (H : HarmonicCVPBridge m n)
+    (t : _root_.CVP.AmbientVector m) : _root_.CVP.Instance m n :=
+  ⟨H.lattice, t⟩
+
+/-- Every point of the bridge lattice is harmonic for `Δ_W = I - P_W`. -/
+theorem latticeVector_isHarmonic
+    {m n : Type} [Fintype m] [Fintype n]
+    (H : HarmonicCVPBridge m n)
+    [H.harmonicSubspace.HasOrthogonalProjection]
+    (z : n → ℤ) :
+    MatrixIsHarmonic (_root_.laplacian H.harmonicSubspace)
+      (_root_.CVP.latticeVector H.lattice z) := by
+  change Hcrypt.Laplacian.IsHarmonic H.harmonicSubspace
+    (cvpVectorAsEuclidean (_root_.CVP.latticeVector H.lattice z))
+  exact Hcrypt.Laplacian.isHarmonic_of_mem H.harmonicSubspace
+    (H.latticeVector_mem z)
+
+/-- The projected CVP target is the harmonic projection for `Δ_W`. -/
+theorem projectedTarget_isHarmonic
+    {m n : Type} [Fintype m] [Fintype n]
+    (H : HarmonicCVPBridge m n)
+    [H.harmonicSubspace.HasOrthogonalProjection]
+    (t : _root_.CVP.AmbientVector m) :
+    MatrixIsHarmonic (_root_.laplacian H.harmonicSubspace)
+      (H.projectedTarget t) := by
+  change Hcrypt.Laplacian.IsHarmonic H.harmonicSubspace
+    (H.harmonicSubspace.starProjection (cvpVectorAsEuclidean t))
+  exact Hcrypt.Laplacian.harmonicProjection_isHarmonic H.harmonicSubspace
+    (cvpVectorAsEuclidean t)
+
+/--
+Pythagorean bridge for a lattice point `v ∈ Λ ⊆ W`:
+
+`‖t - v‖² = ‖t - P_W t‖² + ‖P_W t - v‖²`.
+
+The first summand is independent of `v`; this is the geometric reason target
+projection preserves the discrete closest-vector problem.
+-/
+theorem squaredDistance_projection_decomposition
+    {m n : Type} [Fintype m] [Fintype n]
+    (H : HarmonicCVPBridge m n)
+    [H.harmonicSubspace.HasOrthogonalProjection]
+    (t v : _root_.CVP.AmbientVector m)
+    (hv : _root_.CVP.InExplicitLattice H.lattice v) :
+    _root_.CVP.squaredEuclideanDistance t v =
+      _root_.CVP.squaredEuclideanDistance t (H.projectedTarget t) +
+      _root_.CVP.squaredEuclideanDistance (H.projectedTarget t) v := by
+  rcases hv with ⟨z, rfl⟩
+  rw [cvp_squaredEuclideanDistance_eq_norm_sq,
+    cvp_squaredEuclideanDistance_eq_norm_sq,
+    cvp_squaredEuclideanDistance_eq_norm_sq]
+  let tE := cvpVectorAsEuclidean t
+  let p := H.harmonicSubspace.starProjection tE
+  let l := cvpVectorAsEuclidean (_root_.CVP.latticeVector H.lattice z)
+  change ‖tE - l‖ ^ 2 = ‖tE - p‖ ^ 2 + ‖p - l‖ ^ 2
+  have hl : l ∈ H.harmonicSubspace := H.latticeVector_mem z
+  have hp : p ∈ H.harmonicSubspace :=
+    H.harmonicSubspace.starProjection_apply_mem tE
+  have hpl : p - l ∈ H.harmonicSubspace :=
+    H.harmonicSubspace.sub_mem hp hl
+  have horth : inner ℝ (tE - p) (p - l) = 0 :=
+    H.harmonicSubspace.starProjection_inner_eq_zero tE (p - l) hpl
+  have hpyth :=
+    norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero
+      (tE - p) (p - l) horth
+  have hsplit : tE - l = (tE - p) + (p - l) := by
+    abel
+  rw [hsplit]
+  simpa [pow_two] using hpyth
+
+/--
+A vector is closest in the original CVP instance exactly when it is closest
+after Hodge-projecting the target. This preserves the discrete search inside
+`W`; it does not replace that search by the continuous projection itself.
+-/
+theorem isClosestLatticeVector_iff_projectedTarget
+    {m n : Type} [Fintype m] [Fintype n]
+    (H : HarmonicCVPBridge m n)
+    [H.harmonicSubspace.HasOrthogonalProjection]
+    (t v : _root_.CVP.AmbientVector m) :
+    _root_.CVP.IsClosestLatticeVector H.lattice t v ↔
+      _root_.CVP.IsClosestLatticeVector H.lattice (H.projectedTarget t) v := by
+  constructor
+  · rintro ⟨hv, hmin⟩
+    refine ⟨hv, ?_⟩
+    intro w hw
+    have hvd := H.squaredDistance_projection_decomposition t v hv
+    have hwd := H.squaredDistance_projection_decomposition t w hw
+    have h := hmin w hw
+    rw [hvd, hwd] at h
+    exact (add_le_add_iff_left _).mp h
+  · rintro ⟨hv, hmin⟩
+    refine ⟨hv, ?_⟩
+    intro w hw
+    have hvd := H.squaredDistance_projection_decomposition t v hv
+    have hwd := H.squaredDistance_projection_decomposition t w hw
+    rw [hvd, hwd]
+    exact add_le_add_left (hmin w hw) _
+
+/-- Instance-level form of the explicit HCP/CVP bridge. -/
+theorem solution_iff_projectedTarget
+    {m n : Type} [Fintype m] [Fintype n]
+    (H : HarmonicCVPBridge m n)
+    [H.harmonicSubspace.HasOrthogonalProjection]
+    (t v : _root_.CVP.AmbientVector m) :
+    _root_.CVP.Solution (H.cvpInstance t) v ↔
+      _root_.CVP.Solution (H.cvpInstance (H.projectedTarget t)) v := by
+  exact H.isClosestLatticeVector_iff_projectedTarget t v
+
+end HarmonicCVPBridge
+
 /- Verification of the closest-harmonic comparison surface. -/
-/-- A Hodge-side CVP solution: harmonic and closest among harmonic sections. -/
-def HodgeCVPSolution
+/-- A harmonic vector closest to the input among all harmonic vectors. -/
+def ClosestHarmonicSolution
   {n : Type} [Fintype n]
   (Δ : Matrix n n Real)
   (b h : n → Real) : Prop :=
@@ -631,7 +808,7 @@ def HodgeCVPSolution
     ∀ v, MatrixIsHarmonic Δ v → dist b h ≤ dist b v
 
 /-- Projection-model closest-harmonic solution using the canonical predicate. -/
-def ProjectionHodgeCVPSolution
+def ProjectionClosestHarmonicSolution
   {n : Type} [Fintype n] [DecidableEq n]
   (W : Submodule ℝ (EuclideanSpace ℝ n))
   [W.HasOrthogonalProjection]
@@ -652,21 +829,21 @@ theorem matrix_harmonic_iff_projection_isHarmonic
     Hcrypt.Laplacian.IsHarmonic W h := by
   rfl
 
-theorem Hodge_Projection_Is_CVP
+theorem Hodge_Projection_Is_ClosestHarmonic
   {n : Type} [Fintype n] [DecidableEq n]
   (Δ : Matrix n n Real)
   (b : n → Real)
   (h : n → Real)
   (h_harmonic : MatrixIsHarmonic Δ h)
   (h_closest : ∀ h', MatrixIsHarmonic Δ h' → dist b h ≤ dist b h') :
-  HodgeCVPSolution Δ b h := by
+  ClosestHarmonicSolution Δ b h := by
   exact ⟨h_harmonic, fun v hv => h_closest v hv⟩
 
 /--
 The Hodge harmonic projection is closest-harmonic once the closest-section
 property has been supplied.
 -/
-theorem harmonicProjection_Is_ProjectionHodgeCVPSolution
+theorem harmonicProjection_is_closestHarmonic
   {n : Type} [Fintype n] [DecidableEq n]
   (W : Submodule ℝ (EuclideanSpace ℝ n))
   [W.HasOrthogonalProjection]
@@ -675,7 +852,8 @@ theorem harmonicProjection_Is_ProjectionHodgeCVPSolution
     ∀ v,
       Hcrypt.Laplacian.IsHarmonic W v →
         dist b (Hcrypt.Laplacian.harmonicProjection W b) ≤ dist b v) :
-  ProjectionHodgeCVPSolution W b (Hcrypt.Laplacian.harmonicProjection W b) := by
+  ProjectionClosestHarmonicSolution W b
+    (Hcrypt.Laplacian.harmonicProjection W b) := by
   exact ⟨Hcrypt.Laplacian.harmonicProjection_isHarmonic W b, h_closest⟩
 
 -- ═══════════════════════════════════════════════════════════════════════

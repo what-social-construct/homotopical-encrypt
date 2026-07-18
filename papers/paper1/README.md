@@ -1,7 +1,7 @@
 # Paper 1 Draft
 
 This folder is the LaTeX source of truth for Paper 1: the math/formalization
-paper for Homotopical Encrypt.
+paper for Homotopical Encryption.
 
 Suggested local build:
 

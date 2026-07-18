@@ -11,7 +11,7 @@
 - Ethereum (L1) - PoS consensus
 - Monero (L1) - PoW + RingCT privacy
 - Solana (L1) - PoH + PoS consensus
-- **Homotopical-Encrypt (L1)** - PoV + homotopy privacy
+- **Homotopical Encryption (L1)** - PoV + homotopy privacy
 
 **NOT Layer 1**:
 - Uniswap (app on Ethereum)
@@ -399,7 +399,7 @@ rust/contracts/
 
 ## Conclusion
 
-**Homotopical-Encrypt = Layer 1 Privacy Chain**
+**Homotopical Encryption = Layer 1 Privacy Chain**
 
 Like Monero, but:
 - ✅ Post-quantum secure

@@ -1,4 +1,4 @@
-# Homotopical Encrypt
+# Homotopical Encryption
 
 **Layer 1 Privacy Blockchain with Post-Quantum Geometric Encryption**
 
@@ -347,7 +347,7 @@ The system maps private geometric data (off-chain) to public commitments (on-cha
 
 Traditional privacy coins (Monero) use **ring signatures**: hide the real signer among N decoys (currently N=16). The anonymity set is finite and chosen at transaction time. Chain analysis can sometimes narrow the set by eliminating known-spent outputs. Probability of identifying the signer: **1/16**.
 
-Homotopical Encrypt uses **homotopy class membership**: prove you know *some* fibration F whose unified invariants (spectral, cohomological, homotopical) match a public fingerprint, without revealing *which* one. The anonymity set is the entire homotopy class [F] — an **infinite** set of all fibrations with matching invariants. Probability of identifying which F: **1/∞ = 0**.
+Homotopical Encryption uses **homotopy class membership**: prove you know *some* fibration F whose unified invariants (spectral, cohomological, homotopical) match a public fingerprint, without revealing *which* one. The anonymity set is the entire homotopy class [F] — an **infinite** set of all fibrations with matching invariants. Probability of identifying which F: **1/∞ = 0**.
 
 | | Monero | hcrypt |
 |---|---|---|
