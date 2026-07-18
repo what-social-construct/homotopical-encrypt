@@ -1,10 +1,12 @@
-\section{Public Artifact Stack And Lossy Projection}\label{sec:public-artifact-stack}
+\section{Cochain Commitments: Private Witnesses And Public Artifacts}\label{sec:public-artifacts-commitments}
 
-Public homotopy classes, commitment payloads, and compressed public artifacts
-are the first concrete public-facing objects in the paper. The commitment
-interface itself is mixed: payloads, hashes, roots, and verification statements
-are public-facing, while openings, randomness, full cochains, and hidden Hodge
-data remain witness-level unless a specified protocol path exposes them.
+This section treats cochain commitments at the boundary between private witness
+data and public-facing artifacts. In this section, ``artifact'' means
+public-facing artifact unless explicitly qualified. The commitment interface
+itself is mixed: commitment values, payloads, hashes, roots, and verification
+statements are public-facing, while openings, randomness, full cochains, and
+hidden Hodge data remain witness-level unless a specified protocol path exposes
+them.
 These public-facing objects are the scaffolding for transparency in action and
 anonymity in identity: actions are exposed through auditable public artifacts,
 while identities remain inside hidden representatives and public equivalence
@@ -37,7 +39,7 @@ coboundaries \(\delta_0,\delta_1\), and Hodge--Laplacian \(\Delta_x\).
     with Hodge decomposition, and not a presentation of \(\Delta_x\) or
     \(\ker(\Delta_x)\).
   \item The opening/proof level may reveal local restrictions or certify
-    equations involving \(\bar c\). Only the stated local values, predicates,
+    equations involving \(\bar c\). Only the stated local values, conditions,
     or proof statements become public.
 \end{enumerate}
 Thus the cochain-facing observation \(b\) in \cref{def:public-observation} is
@@ -174,7 +176,7 @@ silently bundled into the payload shape.
         \operatorname{Ver}_\Delta(m,\nu,T_{\Delta,\nu}(m))=1.
       \]
     \item Unforgeability: producing a verifying tag without the key is exactly
-      the stated hidden-Hodge projection obligation for this interface.
+      the stated hidden-Hodge projection condition for this interface.
     \item Key binding: accepted tags are bound to the chosen
       Hodge--Laplacian key.
     \item Determinism: the same key, message, and nonce determine the same tag.
@@ -196,11 +198,11 @@ Topology compatibility is a separate public invariant. Two committed cochains
 can be aggregated only when their moduli, declared edge counts, and topology
 hashes agree. The weaker same-topology relation records equality of topology
 hashes alone. Cryptographic binding and topology-binding claims are supplied by
-the commitment-security axioms, not by the raw payload record.
+the commitment-security axioms, not by the raw payload data.
 
 At the artifact level, a hashed committed cochain is a public cochain payload
-together with digest data and a binding predicate. A proof-carrying committed
-cochain adds a proof system, a statement, and a verification predicate. The
+together with digest data and a binding assertion. A proof-carrying committed
+cochain adds a proof system, a statement, and a verification condition. The
 basic theorem exposed to this paper is that a well-formed proof-carrying
 committed-cochain artifact has an underlying well-formed cochain commitment
 payload.
@@ -234,11 +236,11 @@ These layers form the following public artifact stack:
   &\quad\to \text{proof-carrying artifact}.
 \end{aligned}
 \]
-Verifier and oracle judgments are values of predicates applied to the terminal
+Verifier and oracle judgments are conditions evaluated on the terminal
 public artifact, not further objects in the stack.
 Each layer binds to or summarizes the preceding layer. A hash does not replace
 the mathematical object, a commitment does not replace the witness, and a proof
-artifact does not replace the proof obligation. The purpose of the stack is to
+artifact does not replace the proof statement. The purpose of the stack is to
 let public verification refer to hidden sheaf/cochain data without exposing it.
 In this sense, the stack separates what must be publicly accountable from what
 must remain representative-private.
@@ -247,7 +249,7 @@ Hashes serve as public names, integrity bindings, and fixed-size pointers for
 larger artifacts. A topology hash names the public combinatorial support; a
 root commits to a batch or storage view; a transcript hash domain-separates a
 proof statement. None of these hashes asserts validity by itself. Validity
-comes from the predicate or proof attached to the hashed object.
+comes from the condition or proof attached to the hashed object.
 
 \subsection{Lossy Projection And Preserved Structure}
 
@@ -294,8 +296,8 @@ by the presence of a hash, root, or commitment payload.
 
 Byte parsing, allocation bounds, canonical encoding, concrete hash functions,
 domain separation, storage inclusion proofs, proof verification, state updates,
-and ephemeral-fiber lifecycle properties are TCB obligations. They are boundary
-predicates, not part of the mathematical cochain commitment payload.
+and ephemeral-fiber lifecycle properties are TCB requirements. They are boundary
+conditions, not part of the mathematical cochain commitment payload.
 
 For HCP, the concrete sources for the abstract observation \((p,b)\) are:
 \(p\) is the public homotopy class, and \(b\) is the cochain-facing datum
@@ -320,7 +322,7 @@ certified the hidden Hodge data, the fibration ID is
 Let \(V\) be a finite-dimensional vector space over a field \(K\), and let
 \(1\le r\le \dim V\). A private rank-\(r\) frame
 \[
-  F=(w_1,\ldots,w_r)
+  \mathcal F=(w_1,\ldots,w_r)
 \]
 spans an \(r\)-plane
 \[
@@ -336,18 +338,18 @@ The Plucker embedding sends this Grassmannian point to
 A Plucker coordinate is the public geometric datum obtained from such a private
 frame: a representative of \(\operatorname{Pl}(W)\), or a digest-bound
 canonical encoding of such a representative, equipped with the relevant
-projective well-formedness predicates. It is required to respect projective
+projective well-formedness conditions. It is required to respect projective
 rescaling and the Plucker relations; changing the private frame for the same
 Grassmannian point does not change the normalized Plucker coordinate.
 This is the Plucker coordinate used by the proximity projection, not the HCP
 public class \(p\) fixed above.
 
-Thus the frame \(F\) is witness material, while the Plucker coordinate is the
+Thus the frame \(\mathcal F\) is witness material, while the Plucker coordinate is the
 verifier-facing projective datum. It is not itself the witness. It can be bound
 by a hash, root, or proof-carrying statement, but the actual witness remains
 the hidden frame or representative.
 
-In the proximity specialization of \cref{sec:rs-mca-projection}, the cochain
+In the proximity specialization of \cref{sec:rs-proximity-projection}, the cochain
 commitment remains the public committed payload. The Plucker coordinate enters
 as witness geometry for a public-binding statement:
 \[
@@ -361,9 +363,9 @@ as witness geometry for a public-binding statement:
 A proof-carrying binding relation asserts that the accepted cochain commitment
 realizes the Plucker coordinate.
 
-\subsection*{Lean Correspondence}
+\subsection*{Lean Cross-Reference}
 
-The public artifact and commitment surfaces in this section correspond to the
+The public artifact and commitment interfaces in this section correspond to the
 following Lean declarations:
 \begin{leanledger}
 \begin{itemize}

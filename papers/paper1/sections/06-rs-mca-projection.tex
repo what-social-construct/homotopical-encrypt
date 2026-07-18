@@ -1,4 +1,4 @@
-\section{Reed--Solomon Projection And MCA}\label{sec:rs-mca-projection}
+\section{Reed--Solomon Projection And Proximity}\label{sec:rs-proximity-projection}
 
 The staged chain is
 \[
@@ -253,7 +253,7 @@ and the Plucker coordinate is the projective class
   \operatorname{Pl}(W)=[x_{\mathcal F}]
   \in \mathbb P\!\left(\bigwedge^r\mathbb R^n\right).
 \]
-The soundness obligations are:
+The soundness conditions are:
 \[
 \begin{gathered}
   x_{\mathcal F}\ne 0,\qquad
@@ -267,7 +267,7 @@ Thus changing the private frame for the same Grassmannian point does not change
 the projective Plucker coordinate.
 
 \begin{proposition}[Projective Plucker invariance]\label{prop:plucker-invariance}
-Assume the displayed Plucker soundness obligations. If two frame witnesses
+Assume the displayed Plucker soundness conditions. If two frame witnesses
 \(\mathcal F=(W;w_1,\ldots,w_r)\) and
 \(\mathcal G=(W;v_1,\ldots,v_r)\) present the same Grassmannian point, then
 \[
@@ -280,7 +280,7 @@ Assume the displayed Plucker soundness obligations. If two frame witnesses
 
 \begin{proof}
 Let \(x_{\mathcal F}=w_1\wedge\cdots\wedge w_r\) and
-\(x_{\mathcal G}=v_1\wedge\cdots\wedge v_r\). The soundness obligation for
+\(x_{\mathcal G}=v_1\wedge\cdots\wedge v_r\). The soundness condition for
 frame change gives \(x_{\mathcal F}\sim x_{\mathcal G}\). By definition of the
 projective quotient, this means that for some \(u\in\mathbb R^\times\),
 \[
@@ -311,7 +311,7 @@ distance \(d_{\mathrm{Pl}}\) satisfying
 \subsection{Committed Cochains And Local Syndrome}
 
 The committed-cochain carrier in the proximity bridge is exactly the cochain
-commitment payload of \cref{sec:public-artifact-stack}. Write
+commitment payload of \cref{sec:public-artifacts-commitments}. Write
 \[
   \mathcal C_{\mathrm{com}}
 \]
@@ -1071,7 +1071,7 @@ For a finite coordinate type \(I\) and alphabet \(A\), a word is a function
 \[
   w:I\to A,
 \]
-and a block code is a subset \(C\subseteq A^I\). The Hamming distance is
+and a block code is a subset \(\mathcal C\subseteq A^I\). The Hamming distance is
 \[
   d_H(u,v)=|\{i\in I:u_i\ne v_i\}|,
 \]
@@ -1082,17 +1082,17 @@ and the relative distance is
 The Hamming and relative balls around a received word \(w\) are
 \[
 \begin{aligned}
-  B_C(w,r)
-    &=\{c\in C:d_H(c,w)\le r\},\\
-  B_C(w,\delta)
-    &=\{c\in C:\delta_H(c,w)\le \delta\}.
+  B_{\mathcal C}(w,r)
+    &=\{c\in \mathcal C:d_H(c,w)\le r\},\\
+  B_{\mathcal C}(w,\delta)
+    &=\{c\in \mathcal C:\delta_H(c,w)\le \delta\}.
 \end{aligned}
 \]
 The list-size inequalities are
 \[
-  \forall w,\ |B_C(w,r)|\le L,
+  \forall w,\ |B_{\mathcal C}(w,r)|\le L,
   \qquad
-  \forall w,\ |B_C(w,\delta)|\le L.
+  \forall w,\ |B_{\mathcal C}(w,\delta)|\le L.
 \]
 A count-radius closeness witness implies relative-radius closeness at
 \(r/|I|\), and the relative-radius map is monotone.
@@ -1100,9 +1100,9 @@ A count-radius closeness witness implies relative-radius closeness at
 For a field \(F\), an \(F\)-additive code is closed under zero, addition, and
 scalar multiplication. Interleaving is defined by
 \[
-  C^{\oplus T}
+  \mathcal C^{\oplus T}
   =
-  \{w:I\to(T\to A):\forall t\in T,\ i\mapsto w(i,t)\in C\}.
+  \{w:I\to(T\to A):\forall t\in T,\ i\mapsto w(i,t)\in \mathcal C\}.
 \]
 The pair word of \(f_1,f_2\in A^I\) is
 \[
@@ -1123,20 +1123,20 @@ For \(S\subseteq I\), write
 The paper Definition~4.3 MCA bad challenges are
 \[
 \begin{aligned}
-  \operatorname{Bad}_{\mathrm{MCA}}(C,\delta,\ell)
+  \operatorname{Bad}_{\mathrm{MCA}}(\mathcal C,\delta,\ell)
   =
   \{\gamma\in F:\ &\exists S\subseteq I,\
     S\text{ is }\delta\text{-large}\wedge
-    \ell(\gamma)\text{ agrees on }S\text{ with some }c\in C\\
+    \ell(\gamma)\text{ agrees on }S\text{ with some }c\in \mathcal C\\
   &{}\wedge
     (f_1,f_2)\text{ does not agree on }S
-    \text{ with }C^{\oplus 2}\}.
+    \text{ with }\mathcal C^{\oplus 2}\}.
 \end{aligned}
 \]
 The paper-facing MCA error bound is
 \[
   \forall \ell,\qquad
-  \frac{|\operatorname{Bad}_{\mathrm{MCA}}(C,\delta,\ell)|}{|F|}
+  \frac{|\operatorname{Bad}_{\mathrm{MCA}}(\mathcal C,\delta,\ell)|}{|F|}
   \le \varepsilon.
 \]
 The count-based MCA condition implies the count-based correlated-agreement
@@ -1145,10 +1145,10 @@ MCA-good, and its agreement witness becomes a common agreement witness for the
 line.
 
 \begin{proposition}[MCA implies correlated agreement]\label{prop:mca-implies-ca}
-Let \(C\) be a finite \(F\)-additive block code. If \(C\) satisfies the
-count-based MCA bound at point radius \(r_p\), line radius \(r_\ell\), and
-threshold \(\tau\), then \(C\) satisfies the count-based correlated-agreement
-bound at the same radii and threshold.
+Let \(\mathcal C\) be a finite \(F\)-additive block code. If \(\mathcal C\)
+satisfies the count-based MCA bound at point radius \(r_p\), line radius
+\(r_\ell\), and threshold \(\tau\), then \(\mathcal C\) satisfies the
+count-based correlated-agreement bound at the same radii and threshold.
 \end{proposition}
 
 \begin{proof}
@@ -1187,8 +1187,8 @@ The paper alphabet \(C\subseteq(F^s)^n\) is the \(s\)-fold interleaving of the
 scalar code. RS target data consist of the parameters, \(F\)-additivity, a
 smooth-regime condition, list radius and list size, point and line radii, MCA
 threshold, list-decoding bounds, MCA bounds, the paper Definition~4.3 MCA
-bound, a received-word metric, radius normalization, and bridge obligations.
-The bridge obligations are
+bound, a received-word metric, radius normalization, and bridge conditions.
+The bridge conditions are
 \[
 \begin{gathered}
   \text{domain cardinality},\quad
@@ -1204,7 +1204,7 @@ The bridge obligations are
   \text{radius-parameter matching}.
 \end{gathered}
 \]
-Completed obligations give the calibrated hcrypt-to-RS bridge, and a correct
+These conditions give the calibrated hcrypt-to-RS bridge, and a correct
 RS gap solver pulls back to a correct source-side gap solver.
 
 \subsection{Canonical Reed--Solomon Endpoint}\label{sec:rs-canonical-endpoint}
@@ -1350,7 +1350,7 @@ The canonical bridge data are
 \]
 where \(\Phi(x_0,x_1)=x_0+\alpha x_1\). The endpoint proves the concrete
 domain, smoothness, evaluation-point, metric-normalization, and radius-matching
-obligations. The remaining semantic theorem slots are:
+facts. The remaining semantic theorem slots are:
 \[
 \begin{gathered}
   \text{restriction naturality},\quad
@@ -1398,7 +1398,7 @@ where \(\Omega(\Gamma,\kappa)\) is the calibrated final certificate of
 \label{prop:rs-metric-cert-slots}
 An RS metric certificate \(\Omega_{\mathrm{RS}}\) determines a bridge
 certificate for \(\Theta_\Gamma\). Consequently it completes the generic
-canonical RS bridge obligations once the endpoint data
+canonical RS bridge conditions once the endpoint data
 \[
   (F,n,k,a,D,\Phi,\delta_J)
 \]
@@ -1422,11 +1422,11 @@ The near slot is \(\kappa\)'s near compatibility, and the far slot is
 \(\Omega\)'s far-region witness. These six proofs form
 \(\mathcal B_\Gamma\).
 
-The remaining canonical bridge obligations are endpoint facts: domain
+The remaining canonical bridge conditions are endpoint facts: domain
 cardinality, smoothness, evaluation-point compatibility, metric normalization,
 and radius matching. They were fixed in the canonical endpoint data and proved
 in \cref{prop:canonical-power-domain,prop:canonical-metric}. Combining those
-endpoint facts with \(\mathcal B_\Gamma\) completes the bridge obligations.
+endpoint facts with \(\mathcal B_\Gamma\) completes the bridge conditions.
 \end{proof}
 
 A canonical Johnson far-separation witness is the statement
@@ -1458,7 +1458,7 @@ gives a completed calibrated hcrypt-to-RS bridge for the canonical endpoint.
 \end{proposition}
 
 \begin{proof}
-The canonical endpoint supplies the concrete bridge obligations:
+The canonical endpoint supplies the concrete bridge conditions:
 domain cardinality is \(|\operatorname{Fin}(4096)|=4096\), smoothness is
 \(4096\mid12289-1\), evaluation points are \(a_i=\alpha^i\) by
 \cref{prop:canonical-power-domain}, the metric normalization is
@@ -1479,7 +1479,7 @@ The hard-gate certificate and far-separation witness form the calibrated final
 certificate \(\Omega(\Gamma,\kappa)\); together with \(\kappa\), this is the RS
 metric certificate \(\Omega_{\mathrm{RS}}\). By
 \cref{prop:rs-metric-cert-slots}, it fills the bridge theorem slots and
-completes the canonical RS bridge obligations. Then
+completes the canonical RS bridge conditions. Then
 \cref{prop:projection-pullback} gives the induced pullback of correct RS gap
 solvers.
 \end{proof}
@@ -1490,13 +1490,13 @@ cited theorem boundary supplies:
 \begin{gathered}
   L_{\mathrm{cit}}\in\mathbb N,\qquad
   \tau_{\mathrm{cit}}\in\mathbb N,\\
-  C\text{ is }(r_J,L_{\mathrm{cit}})\text{-list decodable},\\
-  C\text{ is }(\delta_J,L_{\mathrm{cit}})\text{-list decodable},\\
-  C\text{ satisfies }(r_J,r_J,\tau_{\mathrm{cit}})\text{-MCA},\\
+  \mathcal C_{\mathrm{RS}}\text{ is }(r_J,L_{\mathrm{cit}})\text{-list decodable},\\
+  \mathcal C_{\mathrm{RS}}\text{ is }(\delta_J,L_{\mathrm{cit}})\text{-list decodable},\\
+  \mathcal C_{\mathrm{RS}}\text{ satisfies }(r_J,r_J,\tau_{\mathrm{cit}})\text{-MCA},\\
   \varepsilon_{\mathrm{MCA}}\le
   \frac{\tau_{\mathrm{cit}}}{|F|},
   \qquad
-  \varepsilon_{\mathrm{MCA}}^{\mathrm{paper}}(C,\delta_J)
+  \varepsilon_{\mathrm{MCA}}^{\mathrm{paper}}(\mathcal C_{\mathrm{RS}},\delta_J)
   \le
   \frac{\tau_{\mathrm{cit}}}{|F|}.
 \end{gathered}
@@ -1529,7 +1529,7 @@ The canonical bad-challenge set is
   (\operatorname{RS}(a,1024),\delta_J,L_{\Gamma,\mathcal F_1,\mathcal F_2}).
 \]
 
-The paper-alphabet endpoint \(C\subseteq(F^s)^n\) specializes here to
+The paper-alphabet endpoint \(\mathcal C_{\mathrm{RS}}\subseteq(F^s)^n\) specializes here to
 \(s=1\). At width one,
 \[
   F\cong F^1,\qquad
@@ -1641,7 +1641,7 @@ non-collapse at the selected far region. It does not say that the projection is
 injective, and it does not turn the RS/MCA endpoint into the source of HCP
 hardness.
 
-\subsection*{Lean Correspondence}
+\subsection*{Lean Cross-Reference}
 
 The abstract projection and gap vocabulary corresponds to
 \lean{Proximity.Projection} and \lean{Proximity.Problem}. The Grassmannian and

@@ -1,4 +1,4 @@
-\section{Axioms, Semantics, And Public Data}\label{sec:mathematical-framework}
+\section{Axioms And Semantics}\label{sec:mathematical-framework}
 
 \subsection{Fibrational Semantics}
 
@@ -120,7 +120,7 @@ representatives. A hidden class-membership witness is a path
 \(\gamma\in\mathcal P_A(x,y)\); its public consequence is only the equality
 \(\pi(x)=\pi(y)\). At this stage the public datum is only the homotopy-class
 value of the classifier. The finite-code projection and Reed--Solomon/MCA endpoint are
-introduced later in \cref{sec:rs-mca-projection}.
+introduced later in \cref{sec:rs-proximity-projection}.
 
 \subsection{Axiom Interfaces}
 
@@ -144,12 +144,12 @@ The relevant interfaces are the following.
   identity, and topology judgments.
   \item Public-artifact interface: cochain-commitment payloads, commitment
   security assumptions, proof-system assumptions, proof-carrying artifacts, and
-  compression/observation boundaries used in \cref{sec:public-artifact-stack}.
+  compression/observation boundaries used in \cref{sec:public-artifacts-commitments}.
 \end{enumerate}
 The well-formedness boundaries are displayed below as enumerated conditions.
 
 \begin{definition}[Helfer semantic boundary]\label{def:helfer-semantic-boundary}
-  A first-order homotopical semantic record is well formed if and only if all
+  A first-order homotopical semantic datum is admissible if and only if all
   of the following hold:
   \begin{enumerate}[label=(\roman*)]
     \item Equality is interpreted by the path/diagonal condition
@@ -167,7 +167,7 @@ The well-formedness boundaries are displayed below as enumerated conditions.
 \end{definition}
 
 \begin{definition}[Foundation assumption boundary]\label{def:foundation-assumption-boundary}
-  A foundation record is well formed if and only if all of the following hold:
+  A foundation datum is admissible if and only if all of the following hold:
   \begin{enumerate}[label=(\roman*)]
     \item \(C^\bullet\) is a cochain complex.
     \item Each coboundary \(d^k:C^k\to C^{k+1}\) is linear.
@@ -192,7 +192,7 @@ The well-formedness boundaries are displayed below as enumerated conditions.
 \end{definition}
 
 \begin{definition}[Sheaf-coherence assumption boundary]\label{def:sheaf-coherence-assumption-boundary}
-  A sheaf-coherence record is well formed if and only if all of the following
+  A sheaf-coherence datum is admissible if and only if all of the following
   hold:
   \begin{enumerate}[label=(\roman*)]
     \item Restriction maps have compatible source and target dimensions on
@@ -304,10 +304,10 @@ or consensus execution.
 
 \subsection{Spectral-Gap Admissibility}
 
-The spectral condition is an object-level admissibility predicate. It is not the
+The spectral condition is an object-level admissibility condition. It is not the
 source of HCP hardness, not a reconstruction theorem for the hidden fibration,
 and not introduced here as a consensus rule. In Paper 1 the PoV/Tsirelson
-spectral window is a mathematical predicate on candidate
+spectral window is a mathematical condition on candidate
 Hodge--Laplacian data; its use as a protocol-level admissibility rule belongs to
 the subsequent protocol paper. The terminology is
 Tsirelson-style because the admissible window uses the familiar \(\sqrt 2\)
@@ -327,17 +327,17 @@ The Tsirelson-style admissibility axiom is the spectral window
   \le
   2\sqrt{2}.
 \]
-A separate boundary predicate marks \(\Delta\) as \(\varepsilon\)-near one of
+A separate boundary condition marks \(\Delta\) as \(\varepsilon\)-near one of
 the two endpoints:
 \[
   \left|\lambda_1^+(\Delta)-\frac{\sqrt 2}{2}\right|\le \varepsilon
   \quad\text{or}\quad
   \left|\lambda_1^+(\Delta)-2\sqrt 2\right|\le \varepsilon .
 \]
-This predicate records near-boundary status only; runtime policy for such values
+This condition records near-boundary status only; runtime policy for such values
 belongs to the subsequent protocol paper.
 
-The corresponding Grassmannian/Laplacian surface makes the hidden-kernel
+The corresponding Grassmannian/Laplacian interface makes the hidden-kernel
 search space concrete. Let
 \[
   \mathcal L_\beta(R^n)
@@ -485,7 +485,7 @@ separation in \cref{prop:cvp-insufficient}.
   \]
   whose integral over \(\Omega_k\) is \(1\) for each observation. With the
   standard Gaussian prior on observations, the corresponding normalized
-  success surfaces are obtained from
+  success quantities are obtained from
   \[
     \int_{R^n}
       L_\sigma\bigl(b,\mathcal A_{\mathrm{cl}}(b)\bigr)
@@ -649,8 +649,8 @@ The ownership split is:
 \]
 The first line is the Helfer path/diagonal interface, together with the
 usual sheaf-theoretic interpretation of intuitionistic logic
-\cite{helfer2019fol}. The second line is the public classifier surface defined
-above. The third line is the finite public judgment surface. We take
+\cite{helfer2019fol}. The second line is the public classifier interface
+defined above. The third line is the finite public judgment interface. We take
 \[
   \Omega_3=\{\bot,\, ?,\, \top\},
   \qquad
@@ -670,12 +670,12 @@ The quotient map \(q\) is not assumed faithful:
   q(\omega_1)=q(\omega_2).
 \]
 
-The oracle-specific component is the query/answer mechanism that produces these
+The oracle-specific part is the query/answer mechanism that produces these
 public judgments. For this boundary we use oracle-modality terminology
 compatible with Ahman--Bauer \cite{ahmanBauer2026oracle}: oracle-visible
-predicates such as vertex compatibility, Betti-number compatibility, public
+conditions such as vertex compatibility, Betti-number compatibility, public
 identity-hash compatibility, and spectral compatibility are evaluated in the
-finite public Heyting surface.
+finite public Heyting algebra.
 Thus an oracle answer is a public quotient of hidden semantic evidence, not a
 reconstruction of the hidden representative, hidden path witness, fibration,
 Laplacian, or harmonic kernel.
@@ -692,20 +692,20 @@ public identity inputs give the same identity hash; it is a determinism
 condition for public identity observations, not a uniqueness or binding theorem
 for cochain commitments.
 Similarly, topological observations such as Betti-number compatibility are
-homotopy-invariant public data. Spectral fingerprints are post-recovery
+homotopy-invariant public judgments. Spectral fingerprints are post-recovery
 fibration-identification data: they are not determined by homotopy class alone
 by \cref{prop:spectrum-not-homotopy-invariant}. The oracle interface therefore
 keeps Betti/topology observations, spectral admissibility, identity hashes, and
-cochain commitments as separate public predicates.
+cochain commitments as separate public conditions.
 
 This modular split is part of the mathematical statement: cryptographic
 assumptions, public classifiers, and Hodge-theoretic claims are not identified.
-Exact and oracle invariants are used here as mathematical acceptance predicates;
+Exact and oracle invariants are used here as mathematical acceptance conditions;
 their full CS/protocol treatment is deferred to the subsequent protocol paper.
 
-\subsection*{Lean Correspondence}
+\subsection*{Lean Cross-Reference}
 
-The semantic and axiom surfaces in this section correspond to
+The semantic and axiom interfaces in this section correspond to
 \lean{Axioms.HelferFOL}, \lean{Axioms.Fibration},
 \lean{Axioms.HomotopyClass}, \lean{Axioms.Foundation},
 \lean{Axioms.FoundationWellFormed}, \lean{Axioms.SheafCoherence},

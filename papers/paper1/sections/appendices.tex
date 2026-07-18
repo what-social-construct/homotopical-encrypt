@@ -1,6 +1,6 @@
 \appendix
 
-\section{Lean/Paper Correspondence}
+\section{Paper--Lean Cross-Reference}
 
 \begin{leanledger}
 
@@ -138,12 +138,12 @@
 
 \end{leanledger}
 
-\section{Complete Lean Coverage Ledger}
+\section{Lean Source Coverage By File}
 
-This ledger is the audit trail for the translation. The body of the paper gives
-the mathematical definitions and proofs; this appendix records where each
-Lean declaration family enters the written account. Import-only aggregate
-files are listed with the files they collect.
+This appendix is the file-by-file coverage audit for the translation. The body
+of the paper gives the mathematical definitions and proofs; this appendix
+records where each Lean declaration family enters the written account.
+Import-only aggregate files are listed with the files they collect.
 
 \begin{leanledger}
 
@@ -418,7 +418,7 @@ files are listed with the files they collect.
     Section 6 translates words, block codes, Hamming and relative Hamming
     balls, list-size bounds, interleaved and additive codes, RS parameters,
     vector codewords, correlated-agreement and mutual-correlated-agreement
-    predicates, bad-parameter sets, bridge obligations, calibrated
+    predicates, bad-parameter sets, bridge conditions, calibrated
     \(\HE\)-to-RS bridges, and pullback-correctness theorems.
   \item[\lean{Proximity/CanonicalRS/Parameters.lean},
     \lean{Proximity/CanonicalRS/PowerDomain.lean},

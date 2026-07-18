@@ -190,7 +190,7 @@ to this chain, but does not expose the chain.
 \end{definition}
 
 Thus \((p,b)\) is the protocol-independent abstraction of the concrete
-artifact stack in \cref{sec:public-artifact-stack}: \(p\) records the public
+artifact-and-commitment layer in \cref{sec:public-artifacts-commitments}: \(p\) records the public
 homotopy class, while \(b\) records the cochain-level
 datum made available through an accepted payload, commitment, opening, or
 proof-carrying statement. This abstraction is the public datum used in the HCP
@@ -300,7 +300,7 @@ The computational model separates three layers.
     fibers, harmonicity, and kernel ambiguity.
   \item External hardness assumptions and cited coding-theory theorems enter at
     explicitly labeled theorem boundaries.
-  \item Runtime obligations such as byte parsing, canonical encodings, hash
+  \item Runtime requirements such as byte parsing, canonical encodings, hash
     domain separation, proof verification, and state transition are outside the
     mathematical HCP definition.
 \end{enumerate}
@@ -308,7 +308,7 @@ The computational model separates three layers.
 This paper treats the first two layers. The runtime layer belongs to the
 subsequent protocol paper.
 
-\subsection*{Lean Correspondence}
+\subsection*{Lean Cross-Reference}
 
 The definitions and theorem surfaces in this section correspond to
 \lean{Hardness.MatrixIsHarmonic}, \lean{Hardness.PublicProjection},
