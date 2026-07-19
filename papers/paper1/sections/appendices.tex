@@ -386,10 +386,13 @@ Import-only aggregate files are listed with the files they collect.
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{Proximity/Problem.lean}, \lean{Proximity/Public.lean},
-    \lean{Proximity/Projection.lean}, \lean{Proximity/GrassmannianPlucker.lean},
-    and \lean{Proximity/PluckerCochain/PublicBinding.lean}.]
-    Section 6 records the problem-facing public projection vocabulary that
-    prepares the Plucker coordinate and finite-code datum.
+    \lean{Proximity/Projection.lean}, \lean{Proximity/PluckerShadow.lean},
+    \lean{Proximity/GrassmannianPlucker.lean}, and
+    \lean{Proximity/PluckerCochain/PublicBinding.lean}.]
+    Section 6 records the problem-facing public projection vocabulary, the
+    abstract Plucker coordinate-system and public-shadow contracts, and the
+    interfaces that prepare the concrete Plucker coordinate and finite-code
+    datum.
   \item[\lean{Proximity/Grassmannian.lean},
     \lean{Proximity/GrassmannianPlucker.lean}, and
     \lean{Proximity/GrassmannianPlucker/Concrete.lean}.]

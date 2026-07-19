@@ -383,11 +383,31 @@ def toFarRegionSeparation
 end Bundle
 
 /--
+Final structural naturality gate for the assembled projection chain.
+
+This gate is checked only after the Plucker-to-cochain, cochain-to-plane, and
+plane-to-RS maps have been fixed.  Commitment acceptance already supplies the
+ambient sheaf-coherence and cocycle facts; this later gate carries the distinct
+claims that the assembled projection commutes with the selected restriction
+and coboundary/syndrome maps.
+
+The two statements remain fields because their concrete typed squares depend
+on the source and target restriction interfaces chosen by an instantiation.
+-/
+structure ProjectionNaturalityGate
+    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement) where
+  RestrictionNaturality : Prop
+  CoboundaryNaturality : Prop
+  restrictionNaturality : RestrictionNaturality
+  coboundaryNaturality : CoboundaryNaturality
+
+/--
 Hard gate certificate for the proximity pipeline.
 
 This is the gate-to-gate invariant certificate. It contains the accumulated
-stage certificate plus the hard structural gates. Quantitative metric/radius
-proofs are kept separate from this hard-gate layer.
+stage certificate plus the earlier hard structural gates. The assembled-chain
+naturality check and quantitative metric/radius proofs are appended by later,
+thin certificates.
 -/
 structure HardGateCertificate
     (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement) where
@@ -413,27 +433,66 @@ def structural
 end HardGateCertificate
 
 /--
+Thin accumulated certificate for the final structural naturality check.
+
+The previous hard-gate certificate is stored unchanged.  This wrapper appends
+only the once-checked naturality gate for the fully assembled projection.
+-/
+structure NaturalityGateCertificate
+    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement) where
+  previous : HardGateCertificate Γ
+  naturality : ProjectionNaturalityGate Γ
+
+namespace NaturalityGateCertificate
+
+/-- Append the final structural naturality check to an existing hard certificate. -/
+def extend
+    {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+    (χ : HardGateCertificate Γ)
+    (ν : ProjectionNaturalityGate Γ) :
+    NaturalityGateCertificate Γ where
+  previous := χ
+  naturality := ν
+
+/-- Recover the already-checked hard-gate certificate. -/
+def hardGateCertificate
+    {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+    (χ : NaturalityGateCertificate Γ) :
+    HardGateCertificate Γ :=
+  χ.previous
+
+/-- Recover the once-checked projection naturality gate. -/
+def projectionNaturality
+    {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+    (χ : NaturalityGateCertificate Γ) :
+    ProjectionNaturalityGate Γ :=
+  χ.naturality
+
+end NaturalityGateCertificate
+
+/--
 Calibrated final proximity certificate.
 
-This is the gate-layer "everything passed" object. It consumes the completed
-hard-gate certificate and appends the final quantitative far-region separation
-witness for the chosen radius calibration. The projection orchestrator does not
-own this object; statebus/evidence records can carry and bind it.
+This is the gate-layer "everything passed" object. It consumes the hard-gate
+certificate already extended through the naturality gate, then appends the
+final quantitative far-region separation witness for the chosen radius
+calibration. The projection orchestrator does not own this object;
+statebus/evidence records can carry and bind it.
 -/
 structure CalibratedFinalCertificate
     (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
     (κ : RadiusCalibration) where
-  previous : HardGateCertificate Γ
+  previous : NaturalityGateCertificate Γ
   finalWitness :
     FarRegionSeparation
       Γ κ.sourceFarRadius κ.targetFarRadius
 
 namespace CalibratedFinalCertificate
 
-/-- Extend hard gates with an explicit final far-region separation witness. -/
+/-- Extend the naturality-checked chain with explicit final far separation. -/
 def of_farRegionSeparation
     {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
-    (χ : HardGateCertificate Γ)
+    (χ : NaturalityGateCertificate Γ)
     (κ : RadiusCalibration)
     (ω :
       FarRegionSeparation
@@ -450,7 +509,7 @@ certificate records only the calibrated source/target radii.
 -/
 def of_farPipeline
     {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
-    (χ : HardGateCertificate Γ)
+    (χ : NaturalityGateCertificate Γ)
     (κ : RadiusCalibration)
     {cochainFarRadius : ℝ}
     (G :
@@ -465,7 +524,15 @@ def hardGateCertificate
     {κ : RadiusCalibration}
     (Ω : CalibratedFinalCertificate Γ κ) :
     HardGateCertificate Γ :=
-  Ω.previous
+  Ω.previous.previous
+
+/-- The final certificate exposes the once-checked projection naturality gate. -/
+def projectionNaturality
+    {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+    {κ : RadiusCalibration}
+    (Ω : CalibratedFinalCertificate Γ κ) :
+    ProjectionNaturalityGate Γ :=
+  Ω.previous.naturality
 
 /-- The final certificate exposes the accumulated projection-stage certificate. -/
 def stageCertificate
@@ -473,7 +540,7 @@ def stageCertificate
     {κ : RadiusCalibration}
     (Ω : CalibratedFinalCertificate Γ κ) :
     ProjectionStageGateCertificate Γ :=
-  Ω.previous.stage
+  Ω.previous.previous.stage
 
 /-- The final certificate exposes the structural hard-gate bundle. -/
 def structuralBundle
@@ -481,7 +548,7 @@ def structuralBundle
     {κ : RadiusCalibration}
     (Ω : CalibratedFinalCertificate Γ κ) :
     StructuralBundle Γ :=
-  Ω.previous.gates
+  Ω.previous.previous.gates
 
 /--
 Forget down to the projection-chain final gate.
@@ -496,7 +563,7 @@ def toProjectionChainFinalGate
     (Ω : CalibratedFinalCertificate Γ κ) :
     CalibratedFinalGateCertificate Γ κ :=
   CalibratedFinalGateCertificate.extend
-    Ω.previous.stage κ Ω.finalWitness
+    Ω.previous.previous.stage κ Ω.finalWitness
 
 /-- The calibrated final certificate gives the final metric/radius check. -/
 def finalCheck
@@ -523,7 +590,7 @@ def calibratedReady
       κ.sourceFarRadius
       κ.targetNearRadius
       κ.targetFarRadius :=
-  Ω.finalCheck.toCalibratedEndToEndReady Ω.previous.stage
+  Ω.finalCheck.toCalibratedEndToEndReady Ω.previous.previous.stage
 
 end CalibratedFinalCertificate
 

@@ -56,7 +56,7 @@ def of_rsFarSeparation
     (Γ :
       ProjectionChain.Chain
         P S L β.rsTarget β.metric E β.planeEncoding pluckerDisagreement)
-    (χ : Gates.Projection.HardGateCertificate Γ)
+    (χ : Gates.Projection.NaturalityGateCertificate Γ)
     (κ : Gates.Projection.RadiusCalibration)
     (ω :
       Gates.Projection.FarRegionSeparation
@@ -78,7 +78,7 @@ def of_johnsonRSFarSeparation
     {Γ :
       ProjectionChain.Chain
         P S L β.rsTarget β.metric E β.planeEncoding pluckerDisagreement}
-    (χ : Gates.Projection.HardGateCertificate Γ)
+    (χ : Gates.Projection.NaturalityGateCertificate Γ)
     (ω :
       Gates.Projection.FarRegionSeparation
         Γ β.johnsonRadiusReal β.johnsonRadiusReal) :
@@ -162,9 +162,12 @@ def calibratedReady
 /--
 The terminal theorem slots induced by a concrete RS metric certificate.
 
-The naturality slots are supplied by the hard-gate certificate contained in the
-final certificate. The certificate itself owns the quantitative radius and RS
-far-separation slots.
+The accumulated stage certificate already proves the ordered local facts:
+accepted committed cocycles at the first gate, aligned plane extraction at the
+second gate, and finite-field/RS encoding at the third gate.  Those facts are
+not themselves proofs that the projection commutes with restriction and
+coboundary maps.  Those two statements and their proofs are supplied by the
+final structural `ProjectionNaturalityGate` in the hard-gate certificate.
 -/
 def theoremSlots
     {β : BridgeData}
@@ -180,9 +183,9 @@ def theoremSlots
     (Ω : RSMetricCertificate β Γ) :
     BridgeTheoremSlots where
   RestrictionNaturality :=
-    Gates.Projection.ProjectionStageGateCertificate Γ
+    Ω.finalCertificate.previous.naturality.RestrictionNaturality
   CoboundaryNaturality :=
-    Gates.Projection.ProjectionStageGateCertificate Γ
+    Ω.finalCertificate.previous.naturality.CoboundaryNaturality
   GlobalSectionsMapToRSCodewords :=
     ∀ W : GrassmannianPlucker.FrameWitness n r,
       PluckerCochain.ValidFrame P W →
@@ -227,8 +230,10 @@ def toBridgeCertificate
         P S L β.rsTarget β.metric E β.planeEncoding pluckerDisagreement}
     (Ω : RSMetricCertificate β Γ) :
     BridgeCertificate Ω.theoremSlots where
-  restrictionNaturality := Ω.finalCertificate.previous.stage
-  coboundaryNaturality := Ω.finalCertificate.previous.stage
+  restrictionNaturality :=
+    Ω.finalCertificate.previous.naturality.restrictionNaturality
+  coboundaryNaturality :=
+    Ω.finalCertificate.previous.naturality.coboundaryNaturality
   globalSectionsMapToRSCodewords := by
     intro W hW
     exact Γ.toEvaluationProjection.preservesGlobalSections W hW
@@ -302,7 +307,7 @@ def toRSMetricCertificate
     (J : JohnsonRSFarSeparation
       (β := β) (P := P) (S := S) (L := L) (E := E)
       (pluckerDisagreement := pluckerDisagreement) (Γ := Γ))
-    (χ : Gates.Projection.HardGateCertificate Γ) :
+    (χ : Gates.Projection.NaturalityGateCertificate Γ) :
     RSMetricCertificate β Γ :=
   RSMetricCertificate.of_johnsonRSFarSeparation χ J.witness
 
@@ -321,7 +326,7 @@ def finalGate
     (J : JohnsonRSFarSeparation
       (β := β) (P := P) (S := S) (L := L) (E := E)
       (pluckerDisagreement := pluckerDisagreement) (Γ := Γ))
-    (χ : Gates.Projection.HardGateCertificate Γ) :
+    (χ : Gates.Projection.NaturalityGateCertificate Γ) :
     Gates.Projection.CalibratedFinalGateCertificate
       Γ β.johnsonRadiusCalibration :=
   J.toRSMetricCertificate χ |>.calibratedFinalGateCertificate
@@ -341,7 +346,7 @@ def toBridge
     (J : JohnsonRSFarSeparation
       (β := β) (P := P) (S := S) (L := L) (E := E)
       (pluckerDisagreement := pluckerDisagreement) (Γ := Γ))
-    (χ : Gates.Projection.HardGateCertificate Γ) :
+    (χ : Gates.Projection.NaturalityGateCertificate Γ) :
     ReedSolomonTarget.Target.CalibratedHcryptToRSBridge
       (PluckerCochain.pluckerInstance P pluckerDisagreement)
       β.rsTarget

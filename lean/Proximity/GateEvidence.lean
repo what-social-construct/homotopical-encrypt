@@ -42,8 +42,8 @@ variable
 /-- Number of fixed hard-gate evidence slots before the final metric witness. -/
 def hardGateEvidenceSlotCount : ℕ := 6
 
-/-- Total fixed evidence slots: six hard-gate slots plus one final witness slot. -/
-def evidenceSlotCount : ℕ := hardGateEvidenceSlotCount + 1
+/-- Total slots: six hard gates, one naturality gate, and one final witness. -/
+def evidenceSlotCount : ℕ := hardGateEvidenceSlotCount + 2
 
 /-- Fixed-position evidence slot under the public evidence root. -/
 abbrev EvidenceSlot :=
@@ -89,9 +89,13 @@ def semanticAlignment : EvidenceSlot :=
 def syndromeAdequacy : EvidenceSlot :=
   ⟨5, by native_decide⟩
 
-/-- Slot 6: calibrated final far-region witness. -/
-def finalFarRegion : EvidenceSlot :=
+/-- Slot 6: final structural naturality gate for the assembled projection. -/
+def projectionNaturality : EvidenceSlot :=
   ⟨6, by native_decide⟩
+
+/-- Slot 7: calibrated final far-region witness. -/
+def finalFarRegion : EvidenceSlot :=
+  ⟨7, by native_decide⟩
 
 end EvidenceSlot
 
@@ -159,6 +163,11 @@ def FinalWitnessComplete (db : EvidenceDatabase runtime) : Prop :=
   db.SlotBinds EvidenceSlot.finalFarRegion
     ∧ db.SlotIncludedInRoot EvidenceSlot.finalFarRegion
 
+/-- The naturality slot is complete when it binds and is root-included. -/
+def NaturalityComplete (db : EvidenceDatabase runtime) : Prop :=
+  db.SlotBinds EvidenceSlot.projectionNaturality
+    ∧ db.SlotIncludedInRoot EvidenceSlot.projectionNaturality
+
 /-- Complete hard-gate evidence exposes slot binding for each hard-gate slot. -/
 theorem hard_slot_binds
     {db : EvidenceDatabase runtime}
@@ -194,6 +203,20 @@ theorem final_witness_included
     {db : EvidenceDatabase runtime}
     (hdb : db.FinalWitnessComplete) :
     db.SlotIncludedInRoot EvidenceSlot.finalFarRegion :=
+  hdb.2
+
+/-- Complete naturality evidence exposes binding for its dedicated slot. -/
+theorem naturality_binds
+    {db : EvidenceDatabase runtime}
+    (hdb : db.NaturalityComplete) :
+    db.SlotBinds EvidenceSlot.projectionNaturality :=
+  hdb.1
+
+/-- Complete naturality evidence exposes root inclusion for its dedicated slot. -/
+theorem naturality_included
+    {db : EvidenceDatabase runtime}
+    (hdb : db.NaturalityComplete) :
+    db.SlotIncludedInRoot EvidenceSlot.projectionNaturality :=
   hdb.2
 
 end EvidenceDatabase
@@ -260,6 +283,47 @@ theorem hash_binding_verified
 end HardGateEvidenceRecord
 
 /--
+Thin evidence wrapper for the once-checked assembled-projection naturality gate.
+
+The hard-gate evidence record is retained unchanged; this layer appends only
+the mathematical naturality gate and the binding/inclusion evidence for its
+dedicated slot.
+-/
+structure NaturalityGateEvidenceRecord
+    (runtime : TCB.RuntimeBoundary)
+    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement) where
+  hardGateRecord : HardGateEvidenceRecord runtime Γ
+  naturality : Gates.Projection.ProjectionNaturalityGate Γ
+  naturalityRecorded : hardGateRecord.database.NaturalityComplete
+
+namespace NaturalityGateEvidenceRecord
+
+variable {runtime : TCB.RuntimeBoundary}
+variable {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+
+/-- Recover the accumulated mathematical certificate through naturality. -/
+def certificate
+    (record : NaturalityGateEvidenceRecord runtime Γ) :
+    Gates.Projection.NaturalityGateCertificate Γ :=
+  Gates.Projection.NaturalityGateCertificate.extend
+    record.hardGateRecord.certificate record.naturality
+
+/-- The naturality evidence slot is bound under the shared evidence root. -/
+theorem naturality_binds
+    (record : NaturalityGateEvidenceRecord runtime Γ) :
+    record.hardGateRecord.database.SlotBinds EvidenceSlot.projectionNaturality :=
+  EvidenceDatabase.naturality_binds record.naturalityRecorded
+
+/-- The naturality evidence slot is included under the shared evidence root. -/
+theorem naturality_included
+    (record : NaturalityGateEvidenceRecord runtime Γ) :
+    record.hardGateRecord.database.SlotIncludedInRoot
+      EvidenceSlot.projectionNaturality :=
+  EvidenceDatabase.naturality_included record.naturalityRecorded
+
+end NaturalityGateEvidenceRecord
+
+/--
 Statebus/evidence record for the calibrated final proximity certificate.
 
 The mathematical certificate is still a gate-layer object. The statebus record
@@ -270,12 +334,12 @@ structure CalibratedFinalEvidenceRecord
     (runtime : TCB.RuntimeBoundary)
     (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
     (κ : Gates.Projection.RadiusCalibration) where
-  hardGateRecord : HardGateEvidenceRecord runtime Γ
+  naturalityGateRecord : NaturalityGateEvidenceRecord runtime Γ
   finalWitness :
     Gates.Projection.FarRegionSeparation
       Γ κ.sourceFarRadius κ.targetFarRadius
   finalWitnessRecorded :
-    hardGateRecord.database.FinalWitnessComplete
+    naturalityGateRecord.hardGateRecord.database.FinalWitnessComplete
 
 namespace CalibratedFinalEvidenceRecord
 
@@ -289,14 +353,14 @@ included. The hard-gate prefix completeness is already part of the embedded
 `HardGateEvidenceRecord`.
 -/
 def Complete (record : CalibratedFinalEvidenceRecord runtime Γ κ) : Prop :=
-  record.hardGateRecord.database.FinalWitnessComplete
+  record.naturalityGateRecord.hardGateRecord.database.FinalWitnessComplete
 
 /-- Recover the mathematical gate-layer final certificate from statebus evidence. -/
 def finalCertificate
     (record : CalibratedFinalEvidenceRecord runtime Γ κ) :
     Gates.Projection.CalibratedFinalCertificate Γ κ :=
   Gates.Projection.CalibratedFinalCertificate.of_farRegionSeparation
-    record.hardGateRecord.certificate κ record.finalWitness
+    record.naturalityGateRecord.certificate κ record.finalWitness
 
 /-- The final evidence record gives calibrated end-to-end readiness. -/
 def calibratedReady
@@ -313,7 +377,8 @@ def calibratedReady
 def finalWitnessDigest
     (record : CalibratedFinalEvidenceRecord runtime Γ κ) :
     TCB.Hash32 :=
-  record.hardGateRecord.database.slotDigest EvidenceSlot.finalFarRegion
+  record.naturalityGateRecord.hardGateRecord.database.slotDigest
+    EvidenceSlot.finalFarRegion
 
 /-- A final evidence record carries its own final-slot completeness proof. -/
 theorem complete
@@ -325,21 +390,23 @@ theorem complete
 theorem final_witness_binds
     (record : CalibratedFinalEvidenceRecord runtime Γ κ)
     (hrecord : record.Complete) :
-    record.hardGateRecord.database.SlotBinds EvidenceSlot.finalFarRegion :=
+    record.naturalityGateRecord.hardGateRecord.database.SlotBinds
+      EvidenceSlot.finalFarRegion :=
   EvidenceDatabase.final_witness_binds hrecord
 
 /-- Complete final evidence exposes root inclusion for the final witness slot. -/
 theorem final_witness_included
     (record : CalibratedFinalEvidenceRecord runtime Γ κ)
     (hrecord : record.Complete) :
-    record.hardGateRecord.database.SlotIncludedInRoot EvidenceSlot.finalFarRegion :=
+    record.naturalityGateRecord.hardGateRecord.database.SlotIncludedInRoot
+      EvidenceSlot.finalFarRegion :=
   EvidenceDatabase.final_witness_included hrecord
 
 /-- Final statebus evidence inherits runtime hash-binding from hard-gate evidence. -/
 theorem hash_binding_verified
     (record : CalibratedFinalEvidenceRecord runtime Γ κ) :
     runtime.HashBindingVerified :=
-  record.hardGateRecord.hash_binding_verified
+  record.naturalityGateRecord.hardGateRecord.hash_binding_verified
 
 end CalibratedFinalEvidenceRecord
 
