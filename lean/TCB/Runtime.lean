@@ -91,6 +91,14 @@ def RuntimeAcceptsProofCarryingCochain
     ∧ R.ProofVerificationSound
     ∧ P.WellFormed
 
+/-- Runtime acceptance refined by the full sheaf-semantic cochain contract. -/
+def RuntimeAcceptsSheafCommittedCochain
+    (R : RuntimeBoundary)
+    (S : Axioms.SheafCoherence)
+    (P : ProofCarryingCommittedCochain) : Prop :=
+  RuntimeAcceptsProofCarryingCochain R P
+    ∧ P.publicArtifact.cochain.CoherentWith S
+
 /--
 If Rust accepts a proof-carrying cochain artifact under the TCB runtime
 contract, Lean can recover the canonical well-formed cochain payload.
@@ -100,6 +108,15 @@ theorem accepted_proofCarryingCochain_implies_cochain_wellFormed
     (h : RuntimeAcceptsProofCarryingCochain R P) :
     P.publicArtifact.cochain.WellFormed :=
   proofCarrying_cochain_wellFormed h.2.2.2.2
+
+/-- Refined runtime acceptance exposes the full semantic cochain contract. -/
+theorem accepted_sheafCommittedCochain_implies_coherentWith
+    {R : RuntimeBoundary}
+    {S : Axioms.SheafCoherence}
+    {P : ProofCarryingCommittedCochain}
+    (h : RuntimeAcceptsSheafCommittedCochain R S P) :
+    P.publicArtifact.cochain.CoherentWith S :=
+  h.2
 
 /--
 Runtime acceptance contract for an oracle answer.

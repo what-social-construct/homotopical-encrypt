@@ -2,8 +2,43 @@
 
 This document is the high-level publication plan for the Lean-backed
 Homotopical Encryption work. It explains how the hardness story, semantic
-foundations, proximity projection, and runtime trust boundary should be staged
-across one preprint or split into multiple papers.
+foundations, proximity projection, and runtime trust boundary are staged across
+the current three-paper plan.
+
+## Current Status And Source Of Truth
+
+This is now a planning and cross-paper scope document, not the current table of
+contents. The manuscript source of truth is `papers/paper1/main.tex` together
+with the files under `papers/paper1/sections/`. The generated `main.toc` is the
+most direct snapshot of the compiled organization.
+
+The current Paper 1 structure is:
+
+1. Introduction.
+2. The Harmonic Cochain Problem.
+3. CVP Comparison And Kernel Ambiguity.
+4. Axioms And Semantics.
+5. Cochain Commitments: Private Witnesses And Public Artifacts.
+6. Reed--Solomon Projection And Proximity.
+7. Future Directions.
+8. Appendices for the Paper--Lean cross-reference and file-by-file source
+   coverage.
+
+The planning outline below is close to that structure, but the manuscript made
+four editorial improvements:
+
+- formal-verification correspondence moved from a full body section into the
+  appendices, keeping the mathematical narrative uninterrupted;
+- the commitment/public-artifact section now leads with the concrete cochain
+  object and ends with Plucker coordinates as the handoff to proximity;
+- the proximity material is expanded into eight subsections rather than the
+  four-item summary here;
+- the five detailed future-work categories were compressed into protocol and
+  complexity-theoretic boundaries, with product/runtime details assigned to
+  Papers 2 and 3.
+
+Accordingly, use this document for thesis, scope, and paper-split decisions.
+Use the LaTeX manuscript for present section order and theorem placement.
 
 ## Core Thesis
 
@@ -43,11 +78,11 @@ hidden-operator HCP globally. The RS/proximity section then answers a separate
 question: how a verifier can check finite public proximity evidence without
 recovering the private representative.
 
-## Working Outline
+## Planning Outline And Manuscript Crosswalk
 
-This is the best shape for a first preprint if we want a single coherent
-mathematical story. It leads with the hardness problem and treats the
-Reed-Solomon/MCA construction as the finite verifier-facing corollary.
+This is the planning outline from which the current manuscript was developed.
+It still records the intended narrative, but headings below do not override
+the current LaTeX organization.
 
 ### Abstract
 
@@ -121,9 +156,10 @@ h ∈ ker(Δ_1)
 e ∈ im(δ_0) ⊕ im(δ_1*)
 ```
 
-Here `h` is the harmonic cochain/global-section component and `e` is
-Hodge-structured noise. The hidden-operator condition is that the public data
-does not determine a unique `Δ_1` or `ker(Δ_1)`.
+Here `h` is the harmonic degree-one cochain and `e` is Hodge-structured noise.
+It is not being identified with the degree-zero global-section space. The
+hidden-operator condition is that the public data does not determine a unique
+`Δ_1` or `ker(Δ_1)`.
 
 State explicitly what is public, what is hidden, and what counts as recovery.
 
@@ -276,7 +312,7 @@ projection-stage gates in Section 6. Any cryptographic hash or byte-level claim
 belongs to the TCB/runtime boundary, while the Lean layer owns the mathematical
 predicates and implications.
 
-### 6. Reed-Solomon Projection And MCA
+### 6. Reed-Solomon Projection And Proximity
 
 Lean anchors:
 
@@ -295,7 +331,7 @@ Use the staged chain:
 ```text
 FrameWitness
   -> Projective Plucker shadow
-  -> committed cochain / local syndrome
+  -> accepted committed cocycle / local syndrome
   -> PlaneShadow R i
   -> finite-field received word
   -> canonical Reed-Solomon target
@@ -335,12 +371,14 @@ Include a status table with these categories:
 - runtime/TCB-owned.
 - remaining theorem slot.
 
-Recommended build commands:
+Current aggregate audit command:
 
 ```text
-lake build CVP Hardness Axioms.HelferFOL
-lake build Proximity
+lake build Axioms TCB Chain Gates Proximity
 ```
+
+Treat this as an audit recipe, not a permanent status claim; rerun it and the
+full build against the submission checkpoint.
 
 #### 7.2 Repository Structure
 
@@ -474,6 +512,21 @@ Primary Lean/docs surfaces:
 
 This should wait until the math/formalization paper is stable.
 
+### Paper 3: Whitepaper And Product Paper
+
+Paper 3 is the later system-facing account. It should explain the product
+story, user model, deployment posture, and comparisons without enlarging the
+claim surface of Papers 1 or 2.
+
+Expected scope:
+
+- high-level Homotopical Encryption and Vertra narrative;
+- user-facing privacy, identity, storage, and payment model;
+- product and ecosystem positioning;
+- deployment assumptions and operational roadmap;
+- comparisons with existing privacy, proof, consensus, and post-quantum
+  systems, checked against their then-current specifications.
+
 ## Recommended First Preprint
 
 The strongest first preprint is Paper 1: lead with hidden-operator HCP
@@ -482,15 +535,22 @@ projection/RS/MCA endpoint as the finite verifier-facing corollary. Keep the
 CS/protocol machinery visible only as theorem-surface context or future work;
 avoid broad runtime, performance, consensus, or chain-architecture claims.
 
-## Immediate Lean Work Before First Submission
+## Lean Checkpoints Before First Submission
 
-1. State a top-level theorem that consumes `CitedBounds.bounds`, hard gates,
-   radius calibration, and final far separation, then returns the calibrated
-   bridge.
-2. Burn down concrete Plucker/cochain/plane construction inputs as much as
-   possible.
-3. Refine coarse naturality fields into explicit restriction/coboundary
-   commuting squares.
-4. Keep `CitedBounds` as the only coding-theory axiom boundary.
-5. Add a short provenance appendix in the paper for `HelferFOL`, `CVP`, and
-   Proximity Prize coding-theory definitions.
+The original immediate-work list has partly been absorbed by the current
+manuscript and Lean hierarchy. The current checkpoints are:
+
+1. Keep the top-level calibrated-bridge plumbing synchronized with the exact
+   status of the supplied far-separation witness; do not describe the
+   project-specific witness as internally proved unless it has been discharged.
+2. Continue burning down concrete Plucker/cochain/plane construction inputs,
+   while preserving the distinction between proved consequences and supplied
+   construction data.
+3. Maintain the typed, element-dependent cochain bridge:
+   accepted commitment payloads bind to a sheaf, decode to exact one-cochains,
+   and hence satisfy the degree-one cocycle equation.
+4. Keep `CitedBounds` as the isolated coding-theory literature boundary.
+5. Keep the provenance and Paper--Lean correspondence appendices synchronized
+   with declaration renames and status changes.
+6. Before submission, rerun the aggregate Lean build and the full LaTeX build;
+   do not rely on historical build counts in this outline.

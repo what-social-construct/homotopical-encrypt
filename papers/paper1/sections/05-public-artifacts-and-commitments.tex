@@ -11,8 +11,8 @@ These public-facing objects are the scaffolding for transparency in action and
 anonymity in identity: actions are exposed through auditable public artifacts,
 while identities remain inside hidden representatives and public equivalence
 classes.
-This section realizes the abstract public observation \((p,b)\) of
-\cref{def:public-observation}: the public homotopy class is \(p\), while
+This section realizes the abstract public observation \((\alpha,b)\) of
+\cref{def:public-observation}: the public homotopy-class label is \(\alpha\), while
 accepted cochain payloads, specified partial openings, and proof-carrying
 statements supply the cochain-facing datum \(b\) without presenting the hidden
 representative, Hodge--Laplacian, or harmonic kernel.
@@ -21,7 +21,7 @@ representative, Hodge--Laplacian, or harmonic kernel.
 
 Cochain commitment payloads provide the public handle on hidden cochain data. The
 cochain data itself lives at three different visibility levels. Fix a hidden
-representative \(x\in A_p\), with induced cochain complex \(C_x^\bullet\),
+representative \(x\in A_\alpha\), with induced cochain complex \(C_x^\bullet\),
 coboundaries \(\delta_0,\delta_1\), and Hodge--Laplacian \(\Delta_x\).
 \begin{enumerate}[label=(\roman*)]
   \item The private witness level contains the actual \(C_x^1\)-data:
@@ -71,20 +71,41 @@ operative Hodge--Laplacian, or the harmonic kernel.
 
 \begin{definition}[Commitment well-formedness]\label{def:commitment-well-formedness}
   A cochain commitment payload is well formed when its modulus is the supported
-  canonical modulus, its declared edge count agrees with the actual edge-value
-  list length, and the edge list is nonempty.
+  canonical modulus \(q=12289\), its declared edge count agrees with the actual
+  edge-value list length, and the declared edge count is positive.
 \end{definition}
+
+This payload predicate is deliberately only a wire-shape condition. Relative
+to an ambient sheaf \(S\), the stronger mathematical acceptance condition is
+the committed one-cochain coherence predicate \(c\in\mathcal G_S\) from
+\cref{def:committed-one-cochain-coherence}: it additionally requires coherent
+typed coboundaries, binding to \(S\), and a witness
+\(\operatorname{dec}_S(c)=\delta_0a\). Consequently an accepted committed
+one-cochain is a cocycle by
+\cref{prop:committed-exact-cochains-are-cocycles}.
 
 \begin{proposition}[Well-formed committed payloads]\label{prop:well-formed-committed-payloads}
   A well-formed cochain commitment payload has nonempty edge data and modulus
   greater than one.
 \end{proposition}
 
+\begin{proof}
+  By well-formedness, the declared edge count equals the edge-list length and
+  is positive, so the edge list is nonempty. The modulus is \(12289>1\).
+\end{proof}
+
 \begin{proposition}[Topology-compatible aggregation]\label{prop:topology-compatible-aggregation}
   Commitment aggregation is only meaningful for payloads with compatible
   modulus, declared edge count, and topology hash. This is the public
   topology-binding condition consumed by the protocol layer.
 \end{proposition}
+
+\begin{proof}
+  This is the definition of aggregation compatibility: both payloads must be
+  well formed, and their modulus, declared edge count, and topology hash must
+  agree. Without these equalities the payload-level addition operation is not
+  an accepted aggregation.
+\end{proof}
 
 The security interface for this commitment layer consists of binding, hiding,
 homomorphic addition, homomorphic scalar multiplication, topology binding, and
@@ -134,18 +155,25 @@ silently bundled into the payload shape.
       \[
         c_e=(\delta a)_e=R_{v\to e}a_v-R_{u\to e}a_u .
       \]
-    \item Completeness: for every revealed set \(S\) of vertices,
+    \item An opening over a revealed set \(S\) is a pair
       \[
-        \operatorname{Ver}_\tau
-        \bigl(c,S,a|_S,\operatorname{Open}_S(c)\bigr)=1
+        o_S=(a'_S,\omega_S),
       \]
-      for the honest opening.
-    \item Soundness: if
+      where \(a'_S=(a'_v)_{v\in S}\) is the claimed restriction and
+      \(\omega_S\) is its authentication witness.
+    \item Completeness: for every revealed set \(S\) of vertices, the honest
+      opening
       \[
-        \operatorname{Ver}_\tau(c,S,\alpha,\omega)=1,
+        o_S^{\mathrm{hon}}
+        =\bigl(a|_S,\operatorname{Open}_S(c)\bigr)
+      \]
+      satisfies \(\operatorname{Ver}_\tau(c,S,o_S^{\mathrm{hon}})=1\).
+    \item Soundness: if \(o_S=(a'_S,\omega_S)\) and
+      \[
+        \operatorname{Ver}_\tau(c,S,o_S)=1,
       \]
       then every revealed incidence satisfies the same coboundary equation
-      \(c_e=R_{v\to e}\alpha_v-R_{u\to e}\alpha_u\).
+      \(c_e=R_{v\to e}a'_v-R_{u\to e}a'_u\).
     \item Position binding: the public topology hash fixes the vertex and edge
       positions with respect to which openings are interpreted.
   \end{enumerate}
@@ -203,14 +231,45 @@ the commitment-security axioms, not by the raw payload data.
 At the artifact level, a hashed committed cochain is a public cochain payload
 together with digest data and a binding assertion. A proof-carrying committed
 cochain adds a proof system, a statement, and a verification condition. The
+well-formedness predicate for the proof-carrying artifact includes
+well-formedness of the hashed public artifact; well-formedness of that hashed
+artifact in turn includes well-formedness of its underlying cochain payload. The
 basic theorem exposed to this paper is that a well-formed proof-carrying
 committed-cochain artifact has an underlying well-formed cochain commitment
 payload.
+
+When a sheaf context \(S\) is available, the refined artifact predicate
+requires the underlying payload to satisfy \(c\in\mathcal G_S\), not merely
+payload well-formedness. This refinement is inherited by the corresponding
+proof-carrying and runtime-acceptance predicates. It separates two valid but
+different claims: ordinary artifact well-formedness exposes a valid serialized
+payload, whereas sheaf-coherent artifact well-formedness exposes an exact
+committed one-cochain and therefore a one-cocycle.
 
 \begin{proposition}[Proof-carrying artifact exposes payload]\label{prop:proof-carrying-artifact-exposes-payload}
   A well-formed proof-carrying committed-cochain artifact exposes a well-formed
   underlying cochain commitment payload.
 \end{proposition}
+
+\begin{proof}
+  Unpack proof-carrying well-formedness to obtain well-formedness of the hashed
+  public artifact, then unpack hashed-artifact well-formedness to obtain
+  well-formedness of its cochain payload.
+\end{proof}
+
+\begin{proposition}[Sheaf-coherent proof artifact exposes an exact cocycle]
+\label{prop:coherent-proof-artifact-exposes-cocycle}
+  If a proof-carrying committed-cochain artifact is coherent with \(S\), then
+  its underlying payload \(c\) lies in \(\mathcal G_S\) and satisfies
+  \[
+    \delta_1\operatorname{dec}_S(c)=0.
+  \]
+\end{proposition}
+
+\begin{proof}
+  The refined artifact predicate projects to \(c\in\mathcal G_S\). Apply
+  \cref{prop:committed-exact-cochains-are-cocycles}.
+\end{proof}
 
 \subsection{Public Artifacts}
 
@@ -260,15 +319,15 @@ mechanics are protocol-level concerns; the mathematical point here is that
 stored public artifacts are compressed images of accepted witness data, not
 replacements for the hidden object.
 
-In the notation of \cref{def:public-observation}, \(p\) is the public homotopy
-class obtained as a lossy classifier value. Its fiber is
+In the notation of \cref{def:public-observation}, \(\alpha\) is the public
+homotopy-class label obtained as a lossy classifier value. Its fiber is
 \[
-  A_p=\pi^{-1}(p),
+  A_\alpha=\pi^{-1}(\alpha),
 \]
 the set of hidden representatives compatible with the same public class. For
-\(x\in A_p\), the induced cochain complex \(C_x^\bullet\),
+\(x\in A_\alpha\), the induced cochain complex \(C_x^\bullet\),
 Hodge--Laplacian \(\Delta_x\), and harmonic kernel \(\ker(\Delta_x)\) are not
-determined by \(p\).
+determined by \(\alpha\).
 
 Compression creates verifier-facing public artifacts from hidden or full
 witness data. The compression need not be injective; it must preserve enough
@@ -283,7 +342,8 @@ The preserved structure before the finite-code layer is:
 \begin{enumerate}[label=(\roman*)]
   \item public homotopy-class equality for hidden representatives;
   \item cochain commitment payload well-formedness;
-  \item topology binding for cochain commitments;
+  \item topology binding and exact-one-cochain realization for accepted
+    sheaf-coherent commitments;
   \item digest/root binding for compressed public data;
   \item proof-carrying validity of the public statement attached to an artifact.
 \end{enumerate}
@@ -299,10 +359,10 @@ domain separation, storage inclusion proofs, proof verification, state updates,
 and ephemeral-fiber lifecycle properties are TCB requirements. They are boundary
 conditions, not part of the mathematical cochain commitment payload.
 
-For HCP, the concrete sources for the abstract observation \((p,b)\) are:
-\(p\) is the public homotopy class, and \(b\) is the cochain-facing datum
+For HCP, the concrete sources for the abstract observation \((\alpha,b)\) are:
+\(\alpha\) is the public homotopy-class label, and \(b\) is the cochain-facing datum
 supplied by an accepted cochain payload, opening, or proof-carrying statement.
-For \(x\in A_p\), private restriction data determines \(C_x^\bullet\),
+For \(x\in A_\alpha\), private restriction data determines \(C_x^\bullet\),
 \(\delta_0,\delta_1\), \(\Delta_x\), and the recovery target
 \[
   h=\pi_{H_x}(b)\in\ker(\Delta_x),
@@ -342,7 +402,7 @@ projective well-formedness conditions. It is required to respect projective
 rescaling and the Plucker relations; changing the private frame for the same
 Grassmannian point does not change the normalized Plucker coordinate.
 This is the Plucker coordinate used by the proximity projection, not the HCP
-public class \(p\) fixed above.
+public class label \(\alpha\) fixed above.
 
 Thus the frame \(\mathcal F\) is witness material, while the Plucker coordinate is the
 verifier-facing projective datum. It is not itself the witness. It can be bound
@@ -351,14 +411,17 @@ the hidden frame or representative.
 
 In the proximity specialization of \cref{sec:rs-proximity-projection}, the cochain
 commitment remains the public committed payload. The Plucker coordinate enters
-as witness geometry for a public-binding statement:
+as witness geometry for a public-binding statement
 \[
-  \begin{aligned}
-    &\text{accepted cochain commitment} \\
-    &\quad\stackrel{\text{private frame / Plucker witness}}{\Longleftarrow}
-      \text{Plucker coordinate} \\
-    &\quad\longrightarrow \text{plane/RS/MCA verifier data}.
-  \end{aligned}
+  \bigl(\operatorname{Pl}(\mathcal F),c\bigr)\in\mathcal R.
+\]
+For the functional encoder, the projection direction is
+\[
+  \operatorname{Pl}(\mathcal F)
+  \xrightarrow{\ E\ }
+  \underbrace{c}_{\text{accepted cochain commitment}}
+  \longrightarrow
+  \text{plane/RS/MCA verifier data}.
 \]
 A proof-carrying binding relation asserts that the accepted cochain commitment
 realizes the Plucker coordinate.
@@ -379,6 +442,12 @@ following Lean declarations:
     \lean{CochainCommitmentData.AddCompatible},
     \lean{CochainCommitmentData.edge_values_nonempty_of_wellFormed}, and
     \lean{CochainCommitmentData.modulus_gt_one_of_wellFormed};
+  \item sheaf-semantic commitment invariants:
+    \lean{Axioms.CommittedCochainWellFormed},
+    \lean{CochainCommitmentData.CoherentWith},
+    \lean{Axioms.RepresentsExactOneCochain},
+    \lean{Axioms.IsOneCocycle}, and
+    \lean{Axioms.oneCocycle_of_committedCochainWellFormed};
   \item commitment-security interfaces:
     \lean{Axioms.CochainCommitmentAxioms},
     \lean{Axioms.BlindedCommitmentAxioms},
@@ -390,6 +459,11 @@ following Lean declarations:
   \item proof-carrying artifacts:
     \lean{TCB.HashedCommittedCochain},
     \lean{TCB.ProofCarryingCommittedCochain}, and
-    \lean{TCB.proofCarrying_cochain_wellFormed}.
+    \lean{TCB.proofCarrying_cochain_wellFormed};
+  \item sheaf-coherent artifact refinements:
+    \lean{TCB.HashedCommittedCochain.CoherentWith},
+    \lean{TCB.ProofCarryingCommittedCochain.CoherentWith},
+    \lean{TCB.proofCarrying_cochain_coherentWith}, and
+    \lean{TCB.RuntimeAcceptsSheafCommittedCochain}.
 \end{itemize}
 \end{leanledger}

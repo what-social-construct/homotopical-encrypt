@@ -91,45 +91,46 @@ storage artifact corresponding to the Plucker shadow `σ`. Concrete byte
 serialization, hash binding, inclusion proofs, and proof verification remain
 runtime/TCB-owned.
 -/
-structure PayloadRealization (P : FramedSystem n r) where
+structure PayloadRealization
+    (P : FramedSystem n r)
+    (S : Axioms.SheafCoherence) where
   Realizes : P.Shadow → CochainBridge.CommittedCochain → Prop
-  wellFormed_of_realizes :
+  committedCochainWellFormed_of_realizes :
     ∀ {σ : P.Shadow} {c : CochainBridge.CommittedCochain},
-      Realizes σ c → c.WellFormed
+      Realizes σ c → Axioms.CommittedCochainWellFormed S c
   respects_shadow_eq :
     ∀ {σ τ : P.Shadow} {c : CochainBridge.CommittedCochain},
       σ = τ → Realizes σ c → Realizes τ c
 
 namespace PayloadRealization
 
-variable {P : FramedSystem n r}
+variable {P : FramedSystem n r} {S : Axioms.SheafCoherence}
 
 /-- A realized payload over a frame witness uses that witness's public shadow. -/
 def RealizesFrame
-    (B : PayloadRealization P)
+    (B : PayloadRealization P S)
     (W : FrameWitness n r)
     (c : CochainBridge.CommittedCochain) : Prop :=
   ValidFrame P W ∧ B.Realizes (P.publicShadow W) c
 
 /-- Realized frame payloads are well formed at the chain commitment layer. -/
 theorem wellFormed_of_realizesFrame
-    (B : PayloadRealization P)
+    (B : PayloadRealization P S)
     {W : FrameWitness n r}
     {c : CochainBridge.CommittedCochain}
     (h : B.RealizesFrame W c) :
     c.WellFormed :=
-  B.wellFormed_of_realizes h.2
+  Axioms.cochain_wellFormed_of_committedCochainWellFormed
+    (B.committedCochainWellFormed_of_realizes h.2)
 
-/-- Realized frame payloads become global-section candidates once sheaf coherence holds. -/
+/-- Realized frame payloads satisfy the full sheaf/commitment contract. -/
 theorem globalSectionCandidate_of_realizesFrame
-    {S : Axioms.SheafCoherence}
-    (B : PayloadRealization P)
-    (hS : Axioms.SheafCoherenceWellFormed S)
+    (B : PayloadRealization P S)
     {W : FrameWitness n r}
     {c : CochainBridge.CommittedCochain}
     (h : B.RealizesFrame W c) :
     CochainBridge.CommittedCochain.GlobalSectionCandidate S c :=
-  ⟨B.wellFormed_of_realizesFrame h, hS⟩
+  B.committedCochainWellFormed_of_realizes h.2
 
 /--
 Deterministic encoders are a special case of public payload realization.
@@ -139,15 +140,15 @@ well-formedness guarantee can be used without claiming all arbitrary shadows
 are meaningful chain payloads.
 -/
 def ofPayloadEncoder
-    (E : Concrete.PayloadEncoder P) :
-    PayloadRealization P where
+    (E : Concrete.PayloadEncoder P S) :
+    PayloadRealization P S where
   Realizes := fun σ c =>
     c = E.encode σ ∧
       ∃ W : FrameWitness n r, ValidFrame P W ∧ σ = P.publicShadow W
-  wellFormed_of_realizes := by
+  committedCochainWellFormed_of_realizes := by
     intro σ c h
     rcases h with ⟨rfl, W, hW, hσ⟩
-    simpa [hσ] using E.wellFormed_of_validFrame W hW
+    simpa [hσ] using E.committedCochainWellFormed_of_validFrame W hW
   respects_shadow_eq := by
     intro σ τ c hστ h
     subst hστ
@@ -165,15 +166,14 @@ that this payload realizes the Plucker public shadow.
 structure ObservedFrameBinding
     (R : TCB.RuntimeBoundary)
     {P : FramedSystem n r}
-    (B : PayloadRealization P)
     (S : Axioms.SheafCoherence)
+    (B : PayloadRealization P S)
     (W : FrameWitness n r) where
   shadowArtifact : HashedPluckerShadow P
   shadowArtifactWellFormed : shadowArtifact.WellFormed
   shadowMatchesFrame : shadowArtifact.shadow = P.publicShadow W
   observation : TCB.ObservationBoundary.ObservedStatement R
   validFrame : ValidFrame P W
-  sheafWellFormed : Axioms.SheafCoherenceWellFormed S
   statementRealizes :
     observation.publicStatement →
       B.Realizes shadowArtifact.shadow observation.cochain
@@ -183,13 +183,13 @@ namespace ObservedFrameBinding
 variable
     {R : TCB.RuntimeBoundary}
     {P : FramedSystem n r}
-    {B : PayloadRealization P}
     {S : Axioms.SheafCoherence}
+    {B : PayloadRealization P S}
     {W : FrameWitness n r}
 
 /-- The observed cochain payload realizes the Plucker public shadow. -/
 theorem realizes
-    (O : ObservedFrameBinding R B S W) :
+    (O : ObservedFrameBinding R S B W) :
     B.Realizes (P.publicShadow W) O.observation.cochain :=
   B.respects_shadow_eq O.shadowMatchesFrame
     (O.statementRealizes
@@ -197,27 +197,28 @@ theorem realizes
 
 /-- The Plucker-shadow hash handle is bound at the public/TCB layer. -/
 theorem shadowDigestBinds
-    (O : ObservedFrameBinding R B S W) :
+    (O : ObservedFrameBinding R S B W) :
     O.shadowArtifact.Binds :=
   HashedPluckerShadow.binds O.shadowArtifactWellFormed
 
 /-- The observed payload is well formed as a chain cochain commitment. -/
 theorem cochain_wellFormed
-    (O : ObservedFrameBinding R B S W) :
+    (O : ObservedFrameBinding R S B W) :
     O.observation.cochain.WellFormed :=
-  B.wellFormed_of_realizes O.realizes
+  Axioms.cochain_wellFormed_of_committedCochainWellFormed
+    (B.committedCochainWellFormed_of_realizes O.realizes)
 
 /-- The observed payload is a global-section candidate under the supplied sheaf context. -/
 theorem globalSectionCandidate
-    (O : ObservedFrameBinding R B S W) :
+    (O : ObservedFrameBinding R S B W) :
     CochainBridge.CommittedCochain.GlobalSectionCandidate S
       O.observation.cochain :=
-  ⟨O.cochain_wellFormed, O.sheafWellFormed⟩
+  B.committedCochainWellFormed_of_realizes O.realizes
 
 /-- Any local syndrome target accepts the observed payload as a codeword. -/
 theorem localCodeword
     {L : LocalSyndromeTarget S}
-    (O : ObservedFrameBinding R B S W) :
+    (O : ObservedFrameBinding R S B W) :
     L.Codeword O.observation.cochain :=
   L.codeword_of_globalCandidate O.globalSectionCandidate
 

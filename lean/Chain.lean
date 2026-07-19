@@ -46,6 +46,7 @@ References:
 
 import Mathlib
 import Axioms.CochainCommitment.Payload
+import Axioms.SheafCoherence
 
 set_option linter.mathlibStandardSet false
 
@@ -172,6 +173,12 @@ this level.
 def TransactionWellFormed (tx : Transaction) : Prop :=
   tx.cochain_commitment.WellFormed
 
+/-- A transaction whose commitment satisfies the full sheaf-semantic contract. -/
+def TransactionCochainCoherent
+    (S : Hcrypt.Axioms.SheafCoherence)
+    (tx : Transaction) : Prop :=
+  tx.cochain_commitment.CoherentWith S
+
 /-- A transaction is fresh relative to the already-spent key-image set. -/
 def TransactionFresh (spent_key_images : Set ℕ) (tx : Transaction) : Prop :=
   tx.key_image ∉ spent_key_images
@@ -186,9 +193,40 @@ Rust. Lean records the mathematical/state facts Rust must enforce.
 def TransactionAccepted (spent_key_images : Set ℕ) (tx : Transaction) : Prop :=
   TransactionWellFormed tx ∧ TransactionFresh spent_key_images tx
 
+/-- Consensus acceptance refined by commitment coherence with a concrete sheaf. -/
+def TransactionAcceptedInSheaf
+    (S : Hcrypt.Axioms.SheafCoherence)
+    (spent_key_images : Set ℕ)
+    (tx : Transaction) : Prop :=
+  TransactionCochainCoherent S tx ∧ TransactionFresh spent_key_images tx
+
+/-- Sheaf-coherent transaction acceptance inherits ordinary acceptance. -/
+theorem transactionAccepted_of_acceptedInSheaf
+    {S : Hcrypt.Axioms.SheafCoherence}
+    {spent_key_images : Set ℕ}
+    {tx : Transaction}
+    (h : TransactionAcceptedInSheaf S spent_key_images tx) :
+    TransactionAccepted spent_key_images tx :=
+  ⟨Hcrypt.Axioms.cochain_wellFormed_of_committedCochainWellFormed h.1, h.2⟩
+
 /-- Every transaction in the block has the abstract well-formed shape. -/
 def BlockWellFormed (b : Block) : Prop :=
   ∀ tx ∈ b.transactions, TransactionWellFormed tx
+
+/-- Every transaction commitment in the block is coherent with one sheaf. -/
+def BlockCochainsCoherent
+    (S : Hcrypt.Axioms.SheafCoherence)
+    (b : Block) : Prop :=
+  ∀ tx ∈ b.transactions, TransactionCochainCoherent S tx
+
+/-- Semantic block coherence inherits ordinary payload well-formedness. -/
+theorem blockWellFormed_of_cochainsCoherent
+    {S : Hcrypt.Axioms.SheafCoherence}
+    {b : Block}
+    (h : BlockCochainsCoherent S b) :
+    BlockWellFormed b := by
+  intro tx htx
+  exact Hcrypt.Axioms.cochain_wellFormed_of_committedCochainWellFormed (h tx htx)
 
 /--
 All cochain payloads in a block are bound to the same topology hash.

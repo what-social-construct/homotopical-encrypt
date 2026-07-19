@@ -148,12 +148,12 @@ def ofObservedFrameBinding
     {runtime : TCB.RuntimeBoundary}
     {n : Type} [Fintype n] [DecidableEq n] {r : ℕ}
     {P : GrassmannianPlucker.FramedSystem n r}
-    {B : PluckerCochain.PublicBinding.PayloadRealization P}
     {S : Axioms.SheafCoherence}
+    {B : PluckerCochain.PublicBinding.PayloadRealization P S}
     {W : GrassmannianPlucker.FrameWitness n r}
     (O :
       PluckerCochain.PublicBinding.ObservedFrameBinding
-        runtime B S W)
+        runtime S B W)
     (storageContract : CompressionContract)
     (storageStack : CompressedShadow storageContract)
     (E : PlaneExtractionContext R ι)

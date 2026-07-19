@@ -1,46 +1,47 @@
 \contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
 \contentsline {subsection}{\numberline {1.1}Motivation And Contributions}{3}{subsection.1.1}%
-\contentsline {section}{\numberline {2}The Harmonic Cochain Problem}{4}{section.2}%
+\contentsline {section}{\numberline {2}The Harmonic Cochain Problem}{5}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Public And Hidden Data}{7}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Recovery Target}{8}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.2}Recovery Target}{9}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}Computational Model}{9}{subsection.2.3}%
-\contentsline {section}{\numberline {3}CVP Comparison And Kernel Ambiguity}{9}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Known-Lattice CVP}{9}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Reduction Direction}{10}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Oracle Insufficiency}{13}{subsection.3.3}%
-\contentsline {section}{\numberline {4}Axioms And Semantics}{15}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Fibrational Semantics}{15}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Fibrational Identity Objects}{16}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Homotopy Classes}{17}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Axiom Interfaces}{17}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Exact Structural Invariants}{21}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Spectral-Gap Admissibility}{22}{subsection.4.6}%
-\contentsline {subsection}{\numberline {4.7}Heyting And Oracle Judgment Surface}{27}{subsection.4.7}%
-\contentsline {section}{\numberline {5}Cochain Commitments: Private Witnesses And Public Artifacts}{29}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Cochain Commitments}{29}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Public Artifacts}{33}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Lossy Projection And Preserved Structure}{34}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Plucker Coordinates}{35}{subsection.5.4}%
-\contentsline {section}{\numberline {6}Reed--Solomon Projection And Proximity}{37}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Abstract Projection And Gap Vocabulary}{37}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Grassmannian Source And Plucker Quotient}{39}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Committed Cochains And Local Syndrome}{42}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Plane Extraction And RS Encoding}{45}{subsection.6.4}%
-\contentsline {subsection}{\numberline {6.5}Composed Chain, Gates, And Evidence}{46}{subsection.6.5}%
-\contentsline {subsection}{\numberline {6.6}Finite Codes, RS Targets, And MCA}{53}{subsection.6.6}%
-\contentsline {subsection}{\numberline {6.7}Canonical Reed--Solomon Endpoint}{55}{subsection.6.7}%
-\contentsline {subsection}{\numberline {6.8}Canonical MCA Corollary}{60}{subsection.6.8}%
-\contentsline {section}{\numberline {7}Future Directions}{63}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Protocol Boundary}{63}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Complexity-Theoretic Refinements}{64}{subsection.7.2}%
-\contentsline {section}{\numberline {A}Paper--Lean Cross-Reference}{64}{appendix.A}%
-\contentsline {subsection}{\numberline {A.1}Definitions And Interfaces}{64}{subsection.A.1}%
-\contentsline {subsection}{\numberline {A.2}Theorems And Status}{65}{subsection.A.2}%
-\contentsline {section}{\numberline {B}Lean Source Coverage By File}{67}{appendix.B}%
-\contentsline {subsection}{\numberline {B.1}Build And Aggregate Files}{67}{subsection.B.1}%
-\contentsline {subsection}{\numberline {B.2}HCP, CVP, And Fibrational Algebra}{67}{subsection.B.2}%
-\contentsline {subsection}{\numberline {B.3}Foundational, Sheaf, Spectral, And Judgment Axioms}{68}{subsection.B.3}%
-\contentsline {subsection}{\numberline {B.4}Laplacian Geometry And Search Spaces}{70}{subsection.B.4}%
-\contentsline {subsection}{\numberline {B.5}Commitments, Public Artifacts, And TCB Boundary}{70}{subsection.B.5}%
-\contentsline {subsection}{\numberline {B.6}Projection Chain, Proximity Gates, And RS/MCA Endpoint}{71}{subsection.B.6}%
-\contentsline {subsection}{\numberline {B.7}Subsequent Protocol And Implementation Boundary}{72}{subsection.B.7}%
+\contentsline {section}{\numberline {3}CVP Comparison And Kernel Ambiguity}{10}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Known-Lattice CVP}{10}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Presented Linear Images}{11}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Explicit Harmonic-Lattice Bridge}{13}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Oracle Insufficiency}{14}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Axioms And Semantics}{16}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Fibrational Semantics}{16}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Fibrational Identity Objects}{17}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Homotopy Classes}{18}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Axiom Interfaces}{19}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Exact Structural Invariants}{22}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Spectral-Gap Admissibility}{23}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Heyting And Oracle Judgment Surface}{28}{subsection.4.7}%
+\contentsline {section}{\numberline {5}Cochain Commitments: Private Witnesses And Public Artifacts}{30}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Cochain Commitments}{30}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Public Artifacts}{35}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Lossy Projection And Preserved Structure}{36}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Plucker Coordinates}{37}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Reed--Solomon Projection And Proximity}{39}{section.6}%
+\contentsline {subsection}{\numberline {6.1}The End-to-End Projection Contract}{39}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Grassmannian Source And Plucker Quotient}{42}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Committed Cochains And Local Syndrome}{44}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Plane Extraction And RS Encoding}{47}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Composed Chain, Gates, And Evidence}{49}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Finite Codes, RS Targets, And MCA}{55}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7}Canonical Reed--Solomon Endpoint}{58}{subsection.6.7}%
+\contentsline {subsection}{\numberline {6.8}Canonical MCA Corollary}{62}{subsection.6.8}%
+\contentsline {section}{\numberline {7}Future Directions}{65}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Protocol Boundary}{65}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Complexity-Theoretic Refinements}{66}{subsection.7.2}%
+\contentsline {section}{\numberline {A}Paper--Lean Cross-Reference}{66}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Definitions And Interfaces}{66}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}Theorems And Status}{68}{subsection.A.2}%
+\contentsline {section}{\numberline {B}Lean Source Coverage By File}{69}{appendix.B}%
+\contentsline {subsection}{\numberline {B.1}Build And Aggregate Files}{69}{subsection.B.1}%
+\contentsline {subsection}{\numberline {B.2}HCP, CVP, And Fibrational Algebra}{70}{subsection.B.2}%
+\contentsline {subsection}{\numberline {B.3}Foundational, Sheaf, Spectral, And Judgment Axioms}{71}{subsection.B.3}%
+\contentsline {subsection}{\numberline {B.4}Laplacian Geometry And Search Spaces}{72}{subsection.B.4}%
+\contentsline {subsection}{\numberline {B.5}Commitments, Public Artifacts, And TCB Boundary}{73}{subsection.B.5}%
+\contentsline {subsection}{\numberline {B.6}Projection Chain, Proximity Gates, And RS/MCA Endpoint}{73}{subsection.B.6}%
+\contentsline {subsection}{\numberline {B.7}Subsequent Protocol And Implementation Boundary}{75}{subsection.B.7}%

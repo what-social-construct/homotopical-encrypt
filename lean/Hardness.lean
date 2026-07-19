@@ -215,14 +215,11 @@ theorem kernelAmbiguous_of_publicCompatibleHodgeAmbiguity
 -- class handles are abstracted to the observed cochain `b` plus the lossy
 -- public projection above. The hidden datum needed to state correctness is `Δ`.
 
+/-- Correctness surface for a solver that is explicitly given the operator. -/
 def Hodge_Solver_Correct {N : Type} [Fintype N] {R : Type} [CommRing R]
-  (solver : (N → R) → (N → R)) (Δ : Matrix N N R) (b : N → R) : Prop :=
-  MatrixIsHarmonic Δ (solver b) ∧ (solver b = b) -- Ideally, h is close to b.
-  -- For the reduction, we just need h to be in the kernel and "related" to b.
-  -- If we assume the solver performs "projection", then solver(b) is the projection of b onto ker(Δ).
-  -- We'll weaken the condition to just "MatrixIsHarmonic" for the basic hardness claim,
-  -- but for CVP we need the "closest" property.
-  -- Let's assume the solver returns the *unique* closest harmonic cochain.
+  (solver : Matrix N N R → (N → R) → (N → R))
+  (Δ : Matrix N N R) (b : N → R) : Prop :=
+  MatrixIsHarmonic Δ (solver Δ b)
 
 -- Presented-linear-image realization.
 -- This is deliberately not stated as a discrete-CVP reduction.
@@ -230,17 +227,16 @@ def Hodge_Solver_Correct {N : Type} [Fintype N] {R : Type} [CommRing R]
 theorem Hodge_GeneratedSubspace_Reduction
   {n : Type} [Fintype n] [DecidableEq n]
   {R : Type} [Field R] -- Using Field for dimension/basis arguments
-  (solver : (n → R) → (n → R))
+  (solver : Matrix n n R → (n → R) → (n → R))
   -- Assumption: The solver works for any valid Hodge instance constructed from the system
   (h_solver : ∀ (Δ : Matrix n n R) (b : n → R),
-    MatrixIsHarmonic Δ (solver b) ∧
-    True) :
+    MatrixIsHarmonic Δ (solver Δ b)) :
   ∀ (B : Matrix n n R) (t : n → R),
     ∃ (Δ : Matrix n n R),
       -- The constructed Δ has kernel equal to the field-linear image of B.
       (∀ v, Matrix.mulVec Δ v = 0 ↔ ∃ x, Matrix.mulVec B x = v) ∧
       -- The solver output lies in that image.
-      (∃ x, Matrix.mulVec B x = solver t) :=
+      (∃ x, Matrix.mulVec B x = solver Δ t) :=
   by
     -- Let's choose any matrix $B$ and vector $t$.
     intro B t
@@ -270,7 +266,7 @@ theorem Hodge_GeneratedSubspace_Reduction
           · intro m x; specialize hP₂ ( m • x ) ( m • P x ) ; simp_all +decide [ Submodule.smul_mem ] ;
             exact Eq.symm ( hP₂ ( by simpa only [ smul_sub ] using Submodule.smul_mem _ _ ( hP₁ x |>.2 ) ) );
           · intro v hv; specialize hP₂ v 0; aesop;
-          · exact fun w hw => Eq.symm ( hP₂ w w hw ( by simp ) );
+          · exact fun w hw => Eq.symm (hP₂ w w ⟨hw, by simp⟩)
         -- Let $\Delta$ be the matrix representation of $P$.
         obtain ⟨Δ, hΔ⟩ : ∃ Δ : Matrix n n R, P = Matrix.mulVecLin Δ := by
           use LinearMap.toMatrix' P;
@@ -282,9 +278,14 @@ theorem Hodge_GeneratedSubspace_Reduction
           simpa [ eq_comm ] using Submodule.mem_sup.mp ( this.symm ▸ Submodule.mem_top : v ∈ V ⊔ W );
         simp_all +decide [ Matrix.mulVec_add ];
       exact h_ker_range _;
-    obtain ⟨ Δ, hΔ ⟩ := h_ker_range;
-    simp_all +decide [ SetLike.ext_iff ];
-    exact ⟨ ⟨ Δ, hΔ ⟩, by simpa [ MatrixIsHarmonic ] using hΔ ( solver t ) |>.1 ( h_solver Δ t ) ⟩
+    obtain ⟨Δ, hΔ⟩ := h_ker_range
+    have hΔ_pointwise :
+        ∀ v, Matrix.mulVec Δ v = 0 ↔ ∃ x, Matrix.mulVec B x = v := by
+      intro v
+      have hv := SetLike.ext_iff.mp hΔ v
+      simpa only [LinearMap.mem_ker, LinearMap.mem_range] using hv
+    refine ⟨Δ, hΔ_pointwise, ?_⟩
+    exact (hΔ_pointwise (solver Δ t)).mp (h_solver Δ t)
 
 /-
 Theorem showing that the harmonic property depends on the Laplacian (Ambiguity).
@@ -406,19 +407,19 @@ kernel. This theorem does not concern the discrete lattice `B ℤ^n`.
 theorem Hodge_GeneratedSubspace_Reduction_Proof
   {n : Type} [Fintype n] [DecidableEq n]
   {R : Type} [Field R] [DecidableEq R]
-  (solver : (n → R) → (n → R))
+  (solver : Matrix n n R → (n → R) → (n → R))
   (h_solver : ∀ (Δ : Matrix n n R) (b : n → R),
-    MatrixIsHarmonic Δ (solver b) ∧ True) :
+    MatrixIsHarmonic Δ (solver Δ b)) :
   ∀ (B : Matrix n n R) (t : n → R),
     ∃ (Δ : Matrix n n R),
       (∀ v, Matrix.mulVec Δ v = 0 ↔ ∃ x, Matrix.mulVec B x = v) ∧
-      (∃ x, Matrix.mulVec B x = solver t) := by
+      (∃ x, Matrix.mulVec B x = solver Δ t) := by
   intro B t
   obtain ⟨Δ, hΔ⟩ := exists_matrix_ker_eq_range B
   use Δ
   constructor
   · exact hΔ
-  · have h_harm := (h_solver Δ t).1
+  · have h_harm := h_solver Δ t
     rw [MatrixIsHarmonic] at h_harm
     rw [hΔ] at h_harm
     exact h_harm

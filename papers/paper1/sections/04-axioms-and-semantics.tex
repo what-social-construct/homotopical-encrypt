@@ -34,11 +34,17 @@ not replace it with byte-level equality.
 
 We also use the corresponding categorical fibration vocabulary. For a functor
 \(p:E\to B\), a morphism \(f:U\to V\) in \(E\) is \(p\)-Cartesian when every
-arrow \(g:W\to V\) and base arrow \(\alpha:p(W)\to p(U)\) satisfying
+arrow \(\psi:W\to V\) and base arrow \(u:p(W)\to p(U)\) satisfying
 \[
-  p(g)=\alpha\,p(f)
+  p(\psi)=p(f)\circ u
 \]
-factor uniquely through \(f\). A Grothendieck fibration is then a functor
+admit a unique factor \(\widetilde\psi:W\to U\) with
+\[
+  p(\widetilde\psi)=u,
+  \qquad
+  f\circ\widetilde\psi=\psi.
+\]
+A Grothendieck fibration is then a functor
 with Cartesian lifts for every base arrow. This is the categorical form of the
 transport principle used by the hidden-representative semantics.
 
@@ -103,7 +109,8 @@ class data. A public classifier is a map
 \]
 It determines public fibers
 \[
-  A_p=\pi^{-1}(p)=\{x\in A:\pi(x)=p\}
+  A_\alpha=\pi^{-1}(\alpha)=\{x\in A:\pi(x)=\alpha\},
+  \qquad \alpha\in\image(\pi),
 \]
 and a public equivalence relation
 \[
@@ -121,6 +128,23 @@ representatives. A hidden class-membership witness is a path
 \(\pi(x)=\pi(y)\). At this stage the public datum is only the homotopy-class
 value of the classifier. The finite-code projection and Reed--Solomon/MCA endpoint are
 introduced later in \cref{sec:rs-proximity-projection}.
+
+The fibration projection and public classifier describe compatible but
+distinct levels. When the hidden representatives are the objects of \(E\), a
+map \(\kappa:B\to P\) on objects supplies the compatibility condition
+\[
+  \pi=\kappa\circ p.
+\]
+Then \(p(x)\) is the fibration-base point of \(x\), while
+\(\alpha=\pi(x)=\kappa(p(x))\) is its public class label. The special case
+\(B=P\) and \(\kappa=\mathrm{id}_B\) identifies the underlying object maps
+\(\pi\) and \(p\). In general, \(\kappa\) may be lossy, and
+\[
+  A_\alpha
+  =\bigcup_{\substack{b\in B\\ \kappa(b)=\alpha}}E_b.
+\]
+This compatibility datum is additional structure; it is not implied merely by
+the requirement that \(\pi\) respect paths.
 
 \subsection{Axiom Interfaces}
 
@@ -212,6 +236,52 @@ The well-formedness boundaries are displayed below as enumerated conditions.
   \lean{Axioms.SheafCoherenceWellFormed}.
 \end{definition}
 
+The preceding boundary is a condition on the ambient sheaf complex.  A
+particular serialized commitment requires an additional, element-dependent
+condition.  Let
+\[
+  \operatorname{dec}_S:\mathcal C_{\mathrm{com}}\longrightarrow C_S^1
+\]
+be the interpretation of commitment payloads in the degree-one cochain carrier
+of \(S\), and let \(c\mathrel{\mathsf{binds}}S\) denote the topology-binding
+condition for that interpretation.
+
+\begin{definition}[Committed one-cochain coherence]\label{def:committed-one-cochain-coherence}
+  A commitment payload \(c\) is coherent with a sheaf datum \(S\), written
+  \(c\in\mathcal G_S\), if and only if
+  \begin{enumerate}[label=(\roman*)]
+    \item \(c\) is well formed as a serialized commitment payload;
+    \item \(S\) satisfies the sheaf-coherence boundary of
+      \cref{def:sheaf-coherence-assumption-boundary};
+    \item \(c\mathrel{\mathsf{binds}}S\); and
+    \item there is an \(a\in C_S^0\) such that
+      \[
+        \operatorname{dec}_S(c)=\delta_0 a.
+      \]
+  \end{enumerate}
+  Thus \(c\) represents an exact one-cochain, rather than merely having a
+  valid wire shape.
+\end{definition}
+
+\begin{proposition}[Committed exact cochains are cocycles]
+\label{prop:committed-exact-cochains-are-cocycles}
+  If \(c\in\mathcal G_S\), then
+  \[
+    \delta_1\operatorname{dec}_S(c)=0.
+  \]
+\end{proposition}
+
+\begin{proof}
+  Choose \(a\in C_S^0\) with
+  \(\operatorname{dec}_S(c)=\delta_0a\).  Ambient sheaf coherence gives the
+  actual cochain-map equation \(\delta_1\delta_0=0\).  Hence
+  \[
+    \delta_1\operatorname{dec}_S(c)
+    =\delta_1\delta_0a
+    =0.
+  \]
+\end{proof}
+
 \begin{definition}[Proof-system and commitment-security boundaries]\label{def:proof-commitment-assumption-boundary}
   The commitment-security boundary holds if and only if all of the following
   hold:
@@ -293,7 +363,8 @@ cochain-level coherence condition, not a runtime statement about byte transport
 or consensus execution.
 
 \begin{proposition}[Exact structural preconditions]\label{prop:exact-structural-preconditions}
-  Accepted sheaf-coherence data supply
+  If a sheaf exact-gate bundle is accepted as well formed, then its
+  sheaf-coherence data supply
   \[
     d^{k+1}d^k=0
     \qquad\text{and}\qquad
@@ -301,6 +372,14 @@ or consensus execution.
   \]
   for the cochain complex under discussion.
 \end{proposition}
+
+\begin{proof}
+  Well-formedness of the exact-gate bundle includes the sheaf-coherence
+  condition. By definition of that condition, the adjacent coboundaries
+  compose to zero and the recorded Laplacian is the displayed sum of the two
+  coboundary terms. Projecting these two fields from the well-formedness
+  witness gives the stated identities.
+\end{proof}
 
 \subsection{Spectral-Gap Admissibility}
 
@@ -580,9 +659,9 @@ operative kernel.
   \]
 \end{definition}
 
-The order of determination is important. The public homotopy class \(p\) gives
-the public fiber \(A_p\); it is not itself a fibration ID. A hidden
-representative \(x\in A_p\) determines the operative Hodge--Laplacian
+The order of determination is important. The public homotopy-class label
+\(\alpha\) gives the public fiber \(A_\alpha\); it is not itself a fibration
+ID. A hidden representative \(x\in A_\alpha\) determines the operative Hodge--Laplacian
 \(\Delta_x\). Once an HCP witness has selected or certified the hidden Hodge
 data \((\Delta_x,h,e)\), the fibration ID is the spectral fingerprint
 \[
@@ -622,6 +701,17 @@ part of the public homotopy class.
     \left[\frac{\sqrt{2}}{2},\,2\sqrt{2}\right].
   \]
 \end{proposition}
+
+\begin{proof}
+  The by-construction witness contains
+  \[
+    \frac{\sqrt{2}}{2}\le\lambda_1^+(\Delta)
+    \qquad\text{and}\qquad
+    \lambda_1^+(\Delta)\le 2\sqrt{2}.
+  \]
+  These two inequalities are exactly membership in the displayed closed
+  interval.
+\end{proof}
 
 Thus the by-construction witness is an admissibility certificate for the
 displayed spectral window. It constrains which candidate objects are admissible;
@@ -705,13 +795,21 @@ their full CS/protocol treatment is deferred to the subsequent protocol paper.
 
 \subsection*{Lean Cross-Reference}
 
+\begin{leanledger}
 The semantic and axiom interfaces in this section correspond to
 \lean{Axioms.HelferFOL}, \lean{Axioms.Fibration},
+\lean{Axioms.PublicClassifierFactorization},
+\lean{Axioms.PublicClassifierFactorization.publicFiber_eq_iUnion_baseFibers},
 \lean{Axioms.HomotopyClass}, \lean{Axioms.Foundation},
 \lean{Axioms.FoundationWellFormed}, \lean{Axioms.SheafCoherence},
-\lean{Axioms.SheafCoherenceWellFormed}, \lean{Gates.Exact},
+\lean{Axioms.SheafCoherenceWellFormed},
+\lean{Axioms.CommittedCochainWellFormed},
+\lean{Axioms.RepresentsExactOneCochain},
+\lean{Axioms.IsOneCocycle},
+\lean{Axioms.oneCocycle_of_committedCochainWellFormed}, \lean{Gates.Exact},
 \lean{Gates.structural_preconditions_of_sheaf_exact_gates},
 \lean{Axioms.SpectralBounds}, \lean{Tsirelson},
 \lean{Gates.Spectral}, \lean{Axioms.StageAdmissibility},
 \lean{Gates.Stage}, \lean{Axioms.Heyting}, and
 \lean{Axioms.OracleModality}.
+\end{leanledger}

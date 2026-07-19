@@ -30,6 +30,10 @@ abbrev SheafExactGateBundle := Hcrypt.Axioms.SheafCoherence
 abbrev SheafExactGateBundleWellFormed :=
   Hcrypt.Axioms.SheafCoherenceWellFormed
 
+/-- Full exact-gate contract for a concrete committed one-cochain. -/
+abbrev CommittedCochainExactGateWellFormed :=
+  Hcrypt.Axioms.CommittedCochainWellFormed
+
 /-- Joint exact-gate bundle used by transaction/block validation. -/
 abbrev FoundationWithSheafExactGates :=
   Hcrypt.Axioms.FoundationWithSheafCoherence

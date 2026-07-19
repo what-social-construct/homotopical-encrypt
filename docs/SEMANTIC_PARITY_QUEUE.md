@@ -202,6 +202,28 @@ that fails on legacy filenames.
     `src/invariants/cohomology.py` and `src/invariants/unified.py`.
   - Keeps `Grassmannian.lean` focused on manifold/metric geometry only.
 
+### R15. Commitment payloads inherit element-dependent sheaf coherence
+- **Was:** `Proximity.CochainBridge.GlobalSectionCandidate S c` combined raw
+  payload shape with ambient `SheafCoherenceWellFormed S`, but did not relate
+  the particular payload `c` to `S`. It therefore did not establish that the
+  decoded payload was exact, closed, or topology-bound. The name “global
+  section” was also degree-inaccurate for a committed element of `C¹`.
+- **Fix:**
+  - `SheafCochainComplex` now carries typed `C⁰`, `C¹`, and `C²` carriers,
+    typed adjacent coboundaries, and the actual square-zero consequence.
+  - `CommittedCochainInterpretation` supplies the payload decoder and
+    payload-to-sheaf binding predicate.
+  - `CommittedCochainWellFormed S c` combines wire shape, ambient sheaf
+    coherence, binding to `S`, and an exact-one-cochain witness
+    `decode c = δ₀ a`.
+  - `oneCocycle_of_committedCochainWellFormed` derives
+    `δ₁ (decode c) = 0`.
+  - The stronger predicate propagates through proximity encoders and observed
+    Plucker bindings, proof-carrying/SNARK/runtime artifacts, exact gates, and
+    sheaf-indexed transaction/block predicates in `Chain.lean`.
+  - `GlobalSectionCandidate` remains only as a compatibility alias for the
+    correctly named `AcceptedCocycle`.
+
 ---
 
 ## Priority 1 — Consensus Semantics
@@ -224,11 +246,53 @@ that fails on legacy filenames.
    - Keep assumptions explicit in `lean/Axioms/*` until discharged by proofs.
    - ~~`Chain.lean` 3 `sorry` holes~~ → Resolved as R13.
 
+6. **Infinite-anonymity classifier bridge and security game**
+   - Lean proves infinite Grassmannian/Laplacian candidate families
+     (`infinite_lines`, `Ω_1_infinite`, and the injective real-parameter
+     subspace construction).
+   - `Axioms/HomotopyClass.lean` currently proves classifier-fiber membership,
+     nontriviality, and non-faithfulness, but not that each protocol-relevant
+     public fiber is infinite.
+   - Add an explicit bridge showing that an infinite candidate family lies in
+     one chosen public classifier fiber under stated hypotheses.
+   - Paper 2 should then state the adversarial sampling/distribution model.
+     Avoid treating “`1/∞ = 0`” as a literal uniform probability theorem until
+     that game exists; use it only as shorthand for an asymptotic finite-family
+     limit.
+
 ## Priority 4 — Rust Hodge Geometry
 
-6. **Hodge decomposition in Rust**
+7. **Hodge decomposition in Rust**
    - Python has `src/geometry/hodge.py`; Rust only has `geometry.rs` in oracle
      (Laplacian + spectral gap). Need Rust Hodge decomposition for full
      `BlindedCommitment` orthogonality verification.
    - Foundation.lean `HodgeDecomposition` and `HodgeOrthogonality` map to
      Python only — Rust side is planned.
+
+## Priority 5 — Architecture Document Recovery Audit
+
+8. **Audit `docs/ARCHITECTURE.md` as a mixed-status design source**
+   - Treat the document as partially deprecated, not disposable. It contains
+     original narrative, diagrams, categorical intuition, and system context
+     that may still be valuable even where its concrete claims or names are
+     stale.
+   - Classify each substantive section or diagram into one of five outcomes:
+     **retain as context**, **promote to Paper 1**, **formalize or bridge in
+     Lean**, **move to Paper 2/3**, or **delete as obsolete/duplicated**.
+   - Cross-reference every mathematical claim against the current Lean
+     theorem/axiom surface and Paper 1. In particular, distinguish actual
+     homotopy-class semantics from spectral identity claims, degree-zero global
+     sections from degree-one harmonic/exact cochains, and proved structure
+     from architectural analogy.
+   - Mine strong phrasing and useful diagrams before removing deprecated
+     sections. Preserve the original story when it clarifies design intent,
+     but label it as motivation unless the corresponding formal object exists.
+   - For concepts present in the document but absent from Lean, decide
+     explicitly whether the gap is:
+     1. a missing mathematical definition/theorem that belongs in Lean;
+     2. a protocol/runtime obligation for Paper 2;
+     3. a product/positioning idea for Paper 3; or
+     4. an obsolete idea that should not be implemented.
+   - Update links from the main README only after this classification, so the
+     README can continue to point to useful architecture context without
+     treating the entire document as current normative specification.

@@ -43,7 +43,7 @@ import Mathlib
 namespace Hcrypt
 namespace Axioms
 
-universe u v
+universe u v w
 
 /-- Minimal path-space interface used for first-order equality semantics. -/
 class HasPathSpace (A : Type u) where
@@ -99,6 +99,40 @@ theorem pathEquivalent_trans {A : Type u} [PathAxioms A] {x y z : A} :
 structure PublicClassifier (A : Type u) (P : Type v) where
   π : A → P
 
+/--
+Compatibility datum saying that a public classifier is obtained from a
+fibration/base projection followed by a (possibly lossy) classifier on the
+base.
+
+At the level of objects this is the factorization `π = κ ∘ p` used in Paper 1,
+Section 4.  The special case `κ = id` identifies the classifier with the base
+projection, while the general case permits several base points to share one
+public class value.
+-/
+structure PublicClassifierFactorization
+    {A : Type u} {B : Type v} {P : Type w}
+    (baseProjection : A → B) (C : PublicClassifier A P) where
+  classifyBase : B → P
+  factors : C.π = classifyBase ∘ baseProjection
+
+/-- Fiber of the underlying base projection over one base point. -/
+def BaseFiber {A : Type u} {B : Type v}
+    (baseProjection : A → B) (b : B) : Set A :=
+  { x | baseProjection x = b }
+
+namespace PublicClassifierFactorization
+
+/-- Classification of a hidden representative agrees with classification of its base point. -/
+theorem classValue_eq_baseClass
+    {A : Type u} {B : Type v} {P : Type w}
+    {baseProjection : A → B} {C : PublicClassifier A P}
+    (F : PublicClassifierFactorization baseProjection C) (x : A) :
+    C.π x = F.classifyBase (baseProjection x) := by
+  rw [F.factors]
+  rfl
+
+end PublicClassifierFactorization
+
 /-- Two hidden objects have the same public class/fingerprint. -/
 def SamePublicClass {A : Type u} {P : Type v}
     (C : PublicClassifier A P) (x y : A) : Prop :=
@@ -108,6 +142,34 @@ def SamePublicClass {A : Type u} {P : Type v}
 def PublicFiber {A : Type u} {P : Type v}
     (C : PublicClassifier A P) (p : P) : Set A :=
   { x | C.π x = p }
+
+namespace PublicClassifierFactorization
+
+/--
+The public fiber over `α` is the union of all base fibers whose base points
+are sent to `α`.
+-/
+theorem publicFiber_eq_iUnion_baseFibers
+    {A : Type u} {B : Type v} {P : Type w}
+    {baseProjection : A → B} {C : PublicClassifier A P}
+    (F : PublicClassifierFactorization baseProjection C) (α : P) :
+    PublicFiber C α =
+      ⋃ b : { b : B // F.classifyBase b = α }, BaseFiber baseProjection b.1 := by
+  ext x
+  constructor
+  · intro hx
+    have hα : F.classifyBase (baseProjection x) = α := by
+      rw [← F.classValue_eq_baseClass x]
+      exact hx
+    apply Set.mem_iUnion.2
+    exact ⟨⟨baseProjection x, hα⟩, rfl⟩
+  · intro hx
+    obtain ⟨b, hb⟩ := Set.mem_iUnion.1 hx
+    change C.π x = α
+    rw [F.classValue_eq_baseClass x, hb]
+    exact b.property
+
+end PublicClassifierFactorization
 
 /-- Public class of a hidden representative. -/
 def PublicClassOf {A : Type u} {P : Type v}

@@ -1,4 +1,5 @@
 import Axioms.CochainCommitment.Payload
+import Axioms.SheafCoherence
 import Axioms.ZKP
 
 /-
@@ -36,6 +37,20 @@ def HashedCommittedCochain.WellFormed
     (H : HashedCommittedCochain) : Prop :=
   H.cochain.WellFormed ∧ H.Binds
 
+/-- A hash artifact whose payload satisfies the full sheaf-semantic contract. -/
+def HashedCommittedCochain.CoherentWith
+    (S : Axioms.SheafCoherence)
+    (H : HashedCommittedCochain) : Prop :=
+  H.cochain.CoherentWith S ∧ H.Binds
+
+/-- Sheaf-coherent hash artifacts inherit ordinary payload/hash validity. -/
+theorem HashedCommittedCochain.wellFormed_of_coherentWith
+    {S : Axioms.SheafCoherence}
+    {H : HashedCommittedCochain}
+    (h : H.CoherentWith S) :
+    H.WellFormed :=
+  ⟨Axioms.cochain_wellFormed_of_committedCochainWellFormed h.1, h.2⟩
+
 /--
 SNARK/ZK certificate for a committed cochain statement.
 
@@ -56,6 +71,31 @@ def ProofCarryingCommittedCochain.WellFormed
     ∧ Axioms.ZKPWellFormed P.proofSystem
     ∧ P.statement
     ∧ P.VerifiesStatement
+
+/-- A proof-carrying artifact whose public payload is coherent with `S`. -/
+def ProofCarryingCommittedCochain.CoherentWith
+    (S : Axioms.SheafCoherence)
+    (P : ProofCarryingCommittedCochain) : Prop :=
+  P.publicArtifact.CoherentWith S
+    ∧ Axioms.ZKPWellFormed P.proofSystem
+    ∧ P.statement
+    ∧ P.VerifiesStatement
+
+/-- Sheaf-coherent proof artifacts inherit ordinary proof-carrying validity. -/
+theorem ProofCarryingCommittedCochain.wellFormed_of_coherentWith
+    {S : Axioms.SheafCoherence}
+    {P : ProofCarryingCommittedCochain}
+    (h : P.CoherentWith S) :
+    P.WellFormed :=
+  ⟨HashedCommittedCochain.wellFormed_of_coherentWith h.1, h.2⟩
+
+/-- A coherent proof artifact exposes the full semantic cochain contract. -/
+theorem proofCarrying_cochain_coherentWith
+    {S : Axioms.SheafCoherence}
+    {P : ProofCarryingCommittedCochain}
+    (h : P.CoherentWith S) :
+    P.publicArtifact.cochain.CoherentWith S :=
+  h.1.1
 
 /-- Proof-carrying artifacts expose the underlying committed cochain payload. -/
 theorem proofCarrying_cochain_wellFormed

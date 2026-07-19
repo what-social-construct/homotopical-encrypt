@@ -6,39 +6,35 @@ public data need not determine the corresponding harmonic kernel.
 
 \subsection{Known-Lattice CVP}
 
-An explicit-lattice CVP instance consists of a generator matrix \(B\) and a
-target vector \(t\). For a coefficient ring \(R\), write
-\[
-  \mathcal L_B(R)=\{Bx:x\in R^n\}.
-\]
-For classical Euclidean CVP one usually writes
+An explicit Euclidean CVP instance consists of a full-column-rank generator
+matrix \(B\in\mathbb R^{m\times n}\) and a target \(t\in\mathbb R^m\). Its
+discrete lattice is
 \[
   \Lambda_B=B\mathbb Z^n=\{Bz:z\in\mathbb Z^n\}.
 \]
-The comparison uses the generated set condition
-\(\exists x,\ Bx=v\); over a field \(R\), \(\mathcal L_B(R)\) is the linear
-span of the columns of \(B\). A correct generated-set closest-vector answer is a vector
-\(v\in\mathcal L_B(R)\) such that
+The injectivity of \(z\mapsto Bz\) records that the displayed columns are a
+lattice basis. A correct closest-vector answer is a vector
+\(v\in\Lambda_B\) such that
 \[
-  \dist(t,v)\le \dist(t,w)
+  \|t-v\|^2\le \|t-w\|^2
   \qquad
-  \text{for every }w\in\mathcal L_B(R).
+  \text{for every }w\in\Lambda_B.
 \]
-Equivalently, for a CVP oracle \(O\),
+Thus, for fixed dimensions, a CVP oracle \(O\) is correct when
 \[
 \begin{aligned}
   \mathsf{CVP}_{\mathrm{corr}}(O)
-  \quad\Longleftrightarrow\quad
-  \forall B,t,\ 
-  \Bigl(&O(B,t)\in\mathcal L_B(R)\\
-  &{}\wedge
-    \forall w\in\mathcal L_B(R),\ 
-      \dist(t,O(B,t))\le \dist(t,w)\Bigr).
+  &\quad\Longleftrightarrow\quad
+  \forall\text{ full-column-rank }B,t,\\
+  &\qquad O(B,t)\in\Lambda_B
+  \quad\text{and}\quad
+  \forall w\in\Lambda_B,\\
+  &\qquad \|t-O(B,t)\|^2\le \|t-w\|^2.
 \end{aligned}
 \]
-The weaker output condition is merely membership in the presented generated set:
+The weaker output condition is merely lattice membership:
 \[
-  \forall B,t,\ O(B,t)\in\mathcal L_B(R) .
+  \forall B,t,\ O(B,t)\in\Lambda_B .
 \]
 Fix a class \(\mathcal C\) of admissible algorithms, such as polynomial-time or
 probabilistic polynomial-time algorithms. The external CVP hardness assumption
@@ -56,44 +52,46 @@ hidden-operator interface: a CVP oracle receives \(B\) and \(t\), while a
 public HCP procedure sees only public class values, hashes, commitments, and
 verifier-facing artifacts unless extra hidden-operator information is supplied.
 
-\subsection{Reduction Direction}
+\subsection{Presented Linear Images}
 
-Let \(B\) present \(\mathcal L_B(R)=\{Bx:x\in R^n\}\). If a matrix
-\(\Delta\) satisfies \(\ker(\Delta)=\mathcal L_B(R)\), then any solver satisfying
+The field-linear image of \(B\) is a different object:
 \[
-  \Delta S(t)=0
+  \mathcal V_B(R)=BR^n=\{Bx:x\in R^n\}.
 \]
-returns \(S(t)\in\mathcal L_B(R)\). If, in addition,
+Over a field this is a linear subspace, not the discrete lattice
+\(B\mathbb Z^n\). The following comparison is therefore linear algebra; it is
+not a reduction from discrete CVP.
+
+Let \(B\) present \(\mathcal V_B(R)\). If a matrix
+\(\Delta\) satisfies \(\ker(\Delta)=\mathcal V_B(R)\), then any solver satisfying
 \[
-  \forall h,\quad
-  \Delta h=0\Rightarrow \dist(t,S(t))\le \dist(t,h),
+  \Delta S(\Delta,t)=0
 \]
-then \(S(t)\) is closest to \(t\) among all vectors of \(\mathcal L_B(R)\).
+returns \(S(\Delta,t)\in\mathcal V_B(R)\).
 
 \begin{proposition}[Kernel realization for explicit generated subspaces]\label{prop:hcp-to-cvp}
   Let \(B\) be an explicit generator matrix over a field and set
-  \(\mathcal L_B(R)=\{Bx:x\in R^n\}\). There exists a matrix \(\Delta\) such that
+  \(\mathcal V_B(R)=\{Bx:x\in R^n\}\). There exists a matrix \(\Delta\) such that
   \[
-    \ker(\Delta)=\mathcal L_B(R) .
+    \ker(\Delta)=\mathcal V_B(R) .
   \]
-  Consequently, any solver whose output is \(\Delta\)-harmonic for every
+  Consequently, any solver \(S(\Delta,b)\) whose output is
+  \(\Delta\)-harmonic for every
   presented \(\Delta\) returns a vector in the explicit generated subspace
-  \(\mathcal L_B(R)\) when run on this realized operator. If that solver is also
-  closest among \(\Delta\)-harmonic vectors, then its output is a closest-vector
-  solution for the generated instance \((B,t)\).
+  \(\mathcal V_B(R)\) when run on this realized operator.
 \end{proposition}
 
 \begin{proof}
   Let \(B\) be an explicit generator matrix over a field \(R\), set
 	  \[
-	    \mathcal L_B(R)=\{Bx:x\in R^n\}\subseteq R^n,
+	    \mathcal V_B(R)=\{Bx:x\in R^n\}\subseteq R^n,
 	  \]
-	  and let \(t\in R^n\) be the CVP target. We construct a matrix \(\Delta\)
+	  and let \(t\in R^n\) be the solver input. We construct a matrix \(\Delta\)
 	  with
   \[
-    \ker(\Delta)=\mathcal L_B(R).
+    \ker(\Delta)=\mathcal V_B(R).
   \]
-  Put \(V=\mathcal L_B(R)\). Since \(R^n\) is finite-dimensional over a field,
+  Put \(V=\mathcal V_B(R)\). Since \(R^n\) is finite-dimensional over a field,
   choose a complementary subspace \(W\) with
   \[
     V+W=R^n,
@@ -106,10 +104,10 @@ then \(S(t)\) is closest to \(t\) among all vectors of \(\mathcal L_B(R)\).
     \qquad
     v\in V,\quad w\in W.
   \]
-  Equivalently, there is a unique element \(p(y)\in W\) such that
-  \(y-p(y)\in V\). Define
+  Equivalently, there is a unique element \(w_y\in W\) such that
+  \(y-w_y\in V\). Define
   \[
-    P(y)=p(y).
+    P(y)=w_y.
   \]
   The uniqueness of the \(V\oplus W\) decomposition gives linearity: for
   \(y,z\in R^n\), the vector \(P(y)+P(z)\) lies in \(W\), and
@@ -129,7 +127,7 @@ then \(S(t)\) is closest to \(t\) among all vectors of \(\mathcal L_B(R)\).
   hence uniqueness gives \(P(y)=0\). Conversely, if \(P(y)=0\), then
   \(y-P(y)=y\in V\). Therefore
   \[
-    \ker P=V=\mathcal L_B(R).
+    \ker P=V=\mathcal V_B(R).
   \]
   Let \(\Delta\) be the matrix of the linear map \(P\). Then, for every
   \(y\in R^n\),
@@ -138,97 +136,91 @@ then \(S(t)\) is closest to \(t\) among all vectors of \(\mathcal L_B(R)\).
     \quad\Longleftrightarrow\quad
     y\in\ker P
     \quad\Longleftrightarrow\quad
-    y\in\mathcal L_B(R)
+    y\in\mathcal V_B(R)
     \quad\Longleftrightarrow\quad
     \exists x,\ Bx=y .
   \]
 
-	  Let \(S:R^n\to R^n\) be a presented-operator Hodge solver satisfying
+	  Let \(S:R^{n\times n}\times R^n\to R^n\) be a presented-operator Hodge
+  solver satisfying
   \[
     \forall \Delta\, b,\qquad
-    \Delta(S(b))=0.
+    \Delta(S(\Delta,b))=0.
   \]
 	  Applying this to the \(\Delta\) constructed above and \(b=t\) gives
   \[
-    \Delta(S(t))=0.
+    \Delta(S(\Delta,t))=0.
   \]
   By the kernel calculation, there exists \(x\) with
   \[
-    Bx=S(t).
+    Bx=S(\Delta,t).
   \]
-	  Hence \(S(t)\in\mathcal L_B(R)\).
-
-	  Suppose in addition that \(S\) satisfies
-  \[
-    \forall h',\quad
-    \Delta h'=0
-    \Longrightarrow
-    \dist(t,S(t))\le \dist(t,h').
-  \]
-	  Since the \(\Delta\)-harmonic vectors are exactly the vectors of
-	  \(\mathcal L_B(R)\), this inequality is precisely
-  \[
-    \dist(t,S(t))\le \dist(t,w)
-    \qquad
-    \text{for every }w\in\mathcal L_B(R).
-  \]
-  Together with \(S(t)\in\mathcal L_B(R)\), this is exactly closest-vector
-  correctness for the explicit generated instance \((B,t)\).
+	  Hence \(S(\Delta,t)\in\mathcal V_B(R)\).
 \end{proof}
 
-For fixed \(\Delta\), closest harmonic recovery is minimization over
-\(\ker(\Delta)\).
+When \(R=\mathbb R\), if a presented-operator solver additionally minimizes
+Euclidean distance among \(\Delta\)-harmonic vectors, the same kernel equality
+says that it returns the continuous closest point of \(\mathcal V_B(\mathbb
+R)\). This is still not discrete CVP unless a separate lattice is supplied.
 
-\begin{proposition}[Projection-model Hodge recovery is CVP-shaped]\label{prop:hodge-projection-is-cvp}
-  Let \(W\subseteq R^n\), let \(P_W:R^n\to W\) be orthogonal projection, and
-  set
-  \[
-    \Delta_W=I-P_W.
-  \]
-  Then
-  \[
-    \Delta_W h=0
-    \quad\Longleftrightarrow\quad
-    h\in W.
-  \]
-  Hence
-  \[
-\begin{aligned}
-    \Bigl(\Delta_W h=0
-      \ \wedge\
-      \forall v,\ \Delta_W v=0\Rightarrow
-        \dist(b,h)\le \dist(b,v)\Bigr)
-    \quad\Longleftrightarrow\quad&
-    \\
-    \Bigl(h\in W
-      \ \wedge\
-      \forall v\in W,\ \dist(b,h)\le \dist(b,v)\Bigr).
-\end{aligned}
-  \]
+\subsection{Explicit Harmonic-Lattice Bridge}
+
+The discrete bridge requires both kinds of data: a real harmonic subspace and
+an integer lattice contained in it. Let \(W\subseteq\mathbb R^m\) be the
+operative harmonic subspace, let \(P_W\) be its orthogonal projection, and let
+\(\Lambda_B=B\mathbb Z^n\subseteq W\) be an explicitly presented lattice. Set
+\[
+  \Delta_W=I-P_W.
+\]
+The inclusion \(\Lambda_B\subseteq W\) does not identify the discrete lattice
+with the real subspace.
+
+\begin{proposition}[Discrete CVP through harmonic projection]\label{prop:hodge-projection-is-cvp}
+  For \(t\in\mathbb R^m\), put \(t_W=P_Wt\). Then:
+  \begin{enumerate}[label=(\roman*)]
+    \item \(t_W\) and every \(\lambda\in\Lambda_B\) are
+      \(\Delta_W\)-harmonic;
+    \item for every \(\lambda\in\Lambda_B\),
+      \[
+        \|t-\lambda\|^2
+        =
+        \|t-t_W\|^2+\|t_W-\lambda\|^2;
+      \]
+    \item a lattice vector \(\lambda\) is closest to \(t\) in
+      \(\Lambda_B\) if and only if it is closest to \(t_W\) in
+      \(\Lambda_B\).
+  \end{enumerate}
 \end{proposition}
 
 \begin{proof}
+  Since \(t_W\in W\), every \(\lambda\in\Lambda_B\) also lies in \(W\), and
+  \(\ker(\Delta_W)=W\), the harmonicity claims follow. For the distance
+  identity, write
   \[
-    \Delta_W b=(I-P_W)b=P_{W^\perp}b.
+    t-\lambda=(t-t_W)+(t_W-\lambda).
   \]
-  Hence
+  Orthogonal projection gives \(t-t_W\in W^\perp\), while
+  \(t_W-\lambda\in W\). The two summands are orthogonal, so the Pythagorean
+  identity gives (ii). The term \(\|t-t_W\|^2\) is independent of
+  \(\lambda\); consequently, for any \(\lambda,\mu\in\Lambda_B\),
   \[
-    \Delta_W u=0
+    \|t-\lambda\|^2\le \|t-\mu\|^2
     \quad\Longleftrightarrow\quad
-    P_{W^\perp}u=0
-    \quad\Longleftrightarrow\quad
-    u\in W
+    \|t_W-\lambda\|^2\le \|t_W-\mu\|^2.
   \]
-  for every \(u\in R^n\). Substituting this equivalence for \(u=h\) gives the
-  harmonicity term on the right. Substituting it for every \(u=v\) in the
-  universal quantifier identifies minimization over
-  \(\{v:\Delta_Wv=0\}\) with minimization over \(W\). This proves the displayed
-  equivalence.
+  This is exactly (iii).
 \end{proof}
+
+The continuous projection \(t_W=P_Wt\) is the closest harmonic vector to
+\(t\), but it need not lie in \(\Lambda_B\). Thus projection transports the
+target to the harmonic subspace while preserving the discrete minimizers; it
+does not perform the remaining lattice search. The proposition also presumes
+that \(W\) and the inclusion \(\Lambda_B\subseteq W\) have been supplied. It
+does not discover the operative hidden subspace from public class data.
 
 \subsection{Oracle Insufficiency}
 
-The strictness direction uses a different contract. A public Hodge solver may
+The oracle-insufficiency direction uses a different contract. A public Hodge solver may
 call an explicit-lattice CVP oracle, but it receives no hidden operator. The
 conditions below require uniform harmonicity with respect to every hidden
 operator and fixedness on inputs already harmonic for that operator.
@@ -236,7 +228,7 @@ operator and fixedness on inputs already harmonic for that operator.
 \begin{definition}[Public-data Hodge solver contract]\label{def:public-hodge-solver-contract}
   Let
   \[
-    S:\mathcal O_{\mathrm{CVP}}\times R^n\longrightarrow R^n,
+    S:\mathcal O_{\mathrm{CVP}}\times\mathbb R^n\longrightarrow\mathbb R^n,
   \]
   where \(\mathcal O_{\mathrm{CVP}}\) is the class of explicit-lattice CVP
   oracles. For \(O\in\mathcal O_{\mathrm{CVP}}\), define
@@ -244,14 +236,14 @@ operator and fixedness on inputs already harmonic for that operator.
   \begin{aligned}
     \mathsf H_O(S)
     &\Longleftrightarrow
-    \forall\text{ linear }\Delta:R^n\to R^n,\ 
-    \forall b\in R^n,\quad
-    \Delta(S(O,b))=0,\\
+    \forall\text{ linear }L:\mathbb R^n\to\mathbb R^n,\quad
+    \forall b\in\mathbb R^n,\quad
+    L(S(O,b))=0,\\
     \mathsf F_O(S)
     &\Longleftrightarrow
-    \forall\text{ linear }\Delta:R^n\to R^n,\ 
-    \forall b\in R^n,\quad
-    \Delta b=0\Rightarrow S(O,b)=b.
+    \forall\text{ linear }L:\mathbb R^n\to\mathbb R^n,\quad
+    \forall b\in\mathbb R^n,\quad
+    Lb=0\Rightarrow S(O,b)=b.
   \end{aligned}
   \]
   The public-data-only contract is
@@ -268,7 +260,7 @@ operator and fixedness on inputs already harmonic for that operator.
 \end{definition}
 
 \begin{proposition}[Public ambiguity and CVP oracle insufficiency]\label{prop:cvp-insufficient}
-  Suppose \(\dim R^n\ge 2\). Then:
+  Suppose \(n\ge 2\). Then:
   \begin{enumerate}[label=(\roman*)]
     \item The constant public projection on hidden linear Hodge operators is
     public-compatible Hodge ambiguous, hence kernel-ambiguous and lossy.
@@ -293,21 +285,24 @@ operator and fixedness on inputs already harmonic for that operator.
 \end{proposition}
 
 \begin{proof}
-  Assume \(\dim R^n\ge 2\), and choose an index \(i\). Let
+  Assume \(n\ge 2\), and choose an index \(i\). Let
   \[
     b=e_i,\qquad
-    \Delta_1=0,\qquad
-    \Delta_2=\operatorname{diag}(1,0,\ldots,0),
+    L=0,\qquad
+    L'=\operatorname{diag}(1,0,\ldots,0),
   \]
-  where the nonzero diagonal entry of \(\Delta_2\) is placed at \(i\). Then
+  where the nonzero diagonal entry of \(L'\) is placed at \(i\). Then
   \[
-    \Delta_1 b=0,
+    Lb=0,
     \qquad
-    \Delta_2 b=b\ne 0.
+    L'b=b\ne 0.
   \]
-  Thus \(b\) is harmonic for \(\Delta_1\) but not harmonic for
-  \(\Delta_2\). The constant public projection sends every hidden operator to
-  the same public value, so \(\Delta_1\) and \(\Delta_2\) are publicly
+  Both operators are self-adjoint positive-semidefinite projection-model
+  Laplacians: \(L=I-P_{\mathbb R^n}\), while
+  \(L'=I-P_{e_i^\perp}\).
+  Thus \(b\) is harmonic for \(L\) but not harmonic for
+  \(L'\). The constant public projection sends every hidden operator to
+  the same public value, so \(L\) and \(L'\) are publicly
   equivalent. The same cochain-facing observation \(b\) is therefore compatible
   with two hidden Hodge operators that disagree about whether \(b\) lies in the
   harmonic kernel. This gives public-compatible Hodge ambiguity; the implications
@@ -320,16 +315,16 @@ operator and fixedness on inputs already harmonic for that operator.
   \[
     \mathsf H_O(S)\wedge\mathsf F_O(S).
   \]
-  Since \(\Delta_1b=0\), the condition \(\mathsf F_O(S)\), applied to
-  \((\Delta_1,b)\), gives
+  Since \(Lb=0\), the condition \(\mathsf F_O(S)\), applied to
+  \((L,b)\), gives
   \[
     S(O,b)=b.
   \]
-  The condition \(\mathsf H_O(S)\), applied to \((\Delta_2,b)\), gives
+  The condition \(\mathsf H_O(S)\), applied to \((L',b)\), gives
   \[
-    \Delta_2 S(O,b)=0.
+    L'S(O,b)=0.
   \]
-  Combining the two equalities gives \(\Delta_2 b=0\), contradicting the
+  Combining the two equalities gives \(L'b=0\), contradicting the
   construction of \(b\). Hence no such public-data-only solver exists, even
   assuming the availability of a correct oracle for explicitly presented CVP
   instances.
@@ -337,21 +332,27 @@ operator and fixedness on inputs already harmonic for that operator.
 
 The obstruction is kernel ambiguity: the same public observation may be
 compatible with multiple hidden operators whose harmonic kernels differ. A CVP
-oracle can solve a closest-vector problem after the lattice is presented. It is
-the discrete metric problem after the hidden Hodge operator has made the
-relevant harmonic space available; it does not determine which hidden kernel is
-compatible with the public data.
+oracle can solve a closest-vector problem after the lattice is presented. The
+bridge in \cref{prop:hodge-projection-is-cvp} applies only after the operative
+harmonic subspace and the lattice inclusion have also been supplied; it does
+not determine which hidden kernel is compatible with the public data.
 
 \subsection*{Lean Cross-Reference}
 
-The explicit-lattice comparison corresponds to \lean{CVP.ExplicitLattice},
-\lean{CVP.CVP_Instance}, \lean{CVP.CVPSolution},
-\lean{CVP.CVPOracleCorrect}, \lean{CVP.CVPHardnessAssumption},
-\lean{Hardness.exists_matrix_ker_eq_range},
-\lean{Hardness.Hodge_Hardness_Reduction_Proof},
-\lean{Hardness.HodgeCVPSolution},
-\lean{Hardness.ProjectionHodgeCVPSolution},
+The discrete CVP definitions correspond to \lean{CVP.ExplicitLattice},
+\lean{CVP.Instance}, \lean{CVP.InExplicitLattice},
+\lean{CVP.squaredEuclideanDistance},
+\lean{CVP.IsClosestLatticeVector}, \lean{CVP.Solution},
+\lean{CVP.OracleCorrect}, and \lean{CVP.HardnessAssumption}. The separate
+field-linear comparison is \lean{Hardness.exists_matrix_ker_eq_range} and
+\lean{Hardness.Hodge_GeneratedSubspace_Reduction_Proof}. The explicit
+harmonic-lattice bridge is \lean{Hardness.HarmonicCVPBridge},
+\lean{Hardness.HarmonicCVPBridge.squaredDistance_projection_decomposition},
+\lean{Hardness.HarmonicCVPBridge.isClosestLatticeVector_iff_projectedTarget},
+and \lean{Hardness.HarmonicCVPBridge.solution_iff_projectedTarget}. The
+closest-harmonic and hidden-operator surfaces are
+\lean{Hardness.ClosestHarmonicSolution},
+\lean{Hardness.ProjectionClosestHarmonicSolution},
 \lean{Hardness.matrix_harmonic_iff_projection_isHarmonic},
-\lean{Hardness.Hodge_Projection_Is_CVP},
 \lean{Hardness.no_public_solver_on_ambiguous_input}, and
 \lean{Hardness.CVP_Oracle_Insufficient_For_Public_Hodge_Solving}.

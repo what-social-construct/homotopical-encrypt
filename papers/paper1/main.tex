@@ -13,18 +13,20 @@
 \begin{abstract}
 We introduce:
 (i) the Harmonic Cochain Problem (HCP), the problem of recovering
-\(h\in\ker(\Delta_1)\) from public data \((p,b)\), where
+\(h\in\ker(\Delta_1)\) from public data \((\alpha,b)\), where
 \(\Delta_1\) is the degree-one Hodge--Laplacian induced by some hidden
-representative \(x\in A_p=\pi^{-1}(p)\) of the public homotopy class \(p\).
+representative \(x\in A_\alpha=\pi^{-1}(\alpha)\) of the public homotopy
+class label \(\alpha\).
 This gives adjacent coboundaries \(\delta_0,\delta_1\), the degree-one
 Hodge--Laplacian \(\Delta_1\), the Hodge projection \(\pi_H\), and the
 Hodge-structured decomposition
 \(b=h+e\) with \(e\in\image(\delta_0)\oplus\image(\delta_1^\ast)\);
-(ii) a CVP comparison: for a presented generator matrix \(B\) over a field,
-the generated subspace \(\mathcal L_B(R)=\{Bx:x\in R^n\}\) is
-\(\ker(\Delta)\) for some linear operator \(\Delta\), hence a
-presented-operator closest-harmonic solver returns a closest vector for the
-generated instance \((B,t)\);
+(ii) a CVP comparison that separates the field-linear image
+\(\mathcal V_B(R)=\{Bx:x\in R^n\}\) from the discrete lattice
+\(\Lambda_B=B\mathbb Z^n\): the former can be realized as a linear kernel,
+while for an explicitly supplied inclusion \(\Lambda_B\subseteq W\),
+orthogonal projection onto the harmonic subspace \(W\) preserves the closest
+lattice vectors;
 (iii) a hidden-operator separation: a correct known-lattice CVP oracle does not
 uniformly solve public-data HCP when publicly equivalent hidden operators may
 disagree on harmonicity;

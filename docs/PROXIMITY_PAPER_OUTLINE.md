@@ -1,18 +1,37 @@
-# Proximity Paper Outline
+# Proximity Section Design Outline
 
-This is a working outline for the hcrypt proximity proof path. It is meant to
-guide the Lean implementation and eventual writeup.
+This is the detailed design outline for Section 6 of Paper 1, not a separate
+paper in the current publication plan. It guides the Lean proximity hierarchy
+and preserves the finer-grained reasoning that was compressed into the
+manuscript section.
 
-For the whole-paper narrative, including the hardness-first introduction and a
-possible multi-paper split, see [`PAPER_OUTLINE.md`](PAPER_OUTLINE.md). This
-file is the proximity component outline.
+For the whole-paper narrative, including the hardness-first introduction and
+the three-paper scope split, see [`PAPER_OUTLINE.md`](PAPER_OUTLINE.md). This
+file is the Section 6 component outline.
 
-The current paper should be framed as a formal projection architecture with a
-canonical Reed-Solomon endpoint, a verified paper-facing MCA surface, and an
-explicit trusted-boundary inventory for cited coding-theory results. The
-stronger version becomes a full hcrypt proximity-result paper only after the
-final source-to-RS far-separation theorem is discharged for the concrete
-Plucker/cochain/plane instantiation.
+The manuscript source of truth is
+`papers/paper1/sections/06-rs-mca-projection.tex`. It presents the formal
+projection architecture, canonical Reed--Solomon endpoint, paper-facing MCA
+surface, and trusted-boundary inventory as the verifier-facing part of the HCP
+paper. There is no separate proximity paper in the current publication plan.
+
+## Current Section 6 Crosswalk
+
+| Current Paper 1 subsection | Material recovered from this design outline |
+|---|---|
+| 6.1 End-to-End Projection Contract | Introduction, background, source proximity, and the main theorem shape. |
+| 6.2 Grassmannian Source And Plucker Quotient | Source Grassmannian geometry and projective/Plucker quotienting. |
+| 6.3 Committed Cochains And Local Syndrome | Plucker-to-cochain realization, sheaf-relative accepted cocycles, public binding, and syndrome adequacy. |
+| 6.4 Plane Extraction And RS Encoding | Plane shadow and the semantic-to-finite-field encoding boundary. |
+| 6.5 Composed Chain, Gates, And Evidence | Chain composition, hard/far gates, certificates, and traceable runtime evidence. |
+| 6.6 Finite Codes, RS Targets, And MCA | Generic coding, list decoding, CA/MCA, and the paper alphabet. |
+| 6.7 Canonical Reed--Solomon Endpoint | Canonical field/domain/metric/radius data, cited bounds, and calibrated bridge certificates. |
+| 6.8 Canonical MCA Corollary | Width-one correspondence, the MCA bound, and the final proximity corollary. |
+
+This eight-part organization is preferable for Paper 1. The thirteen-part
+decomposition below remains useful as an implementation and proof-obligation
+checklist because it preserves obligations compressed in the manuscript, but
+it is not the current paper table of contents.
 
 ## Provenance And Scope
 
@@ -40,7 +59,7 @@ Related repo provenance:
 - `Proximity/CanonicalRS/CitedBounds.lean` imports external RS bounds through a
   single cited assumption boundary.
 
-## Working Title
+## Historical Section 6 Title Ideas
 
 Candidate titles:
 
@@ -49,7 +68,7 @@ Candidate titles:
 - Traceable Proximity Projections for Sheaf/Hodge Cryptographic State
 - Certified Projection Chains to a Paper-Style Reed-Solomon MCA Endpoint
 
-## One-Paragraph Abstract Draft
+## Reusable Section 6 Summary Draft
 
 We formalize a quotient-aware projection chain from the hcrypt sheaf/Hodge
 proximity problem to a finite Reed-Solomon received-word target. The construction
@@ -65,16 +84,18 @@ stage-local invariants, canonical RS parameters over `ZMod 12289`, fractional
 MCA/list-decoding surfaces, metric/radius normalization, and a certificate
 structure for hard gates and traceable runtime evidence. External
 Johnson/list-decoding and BCHKS MCA bounds are isolated in a cited trusted
-boundary; the remaining main theorem is the concrete source-to-RS
-far-separation proof.
+boundary. The remaining project-specific obligation is a concrete
+source-to-RS far-separation witness; current Paper 1 exposes that obligation
+explicitly rather than presenting it as already discharged.
 
 ## Claims And Nonclaims
 
-This paper can claim:
+Section 6 can claim:
 
 - A formal projection-chain interface from hcrypt proximity data to an RS target.
 - A quotient-aware invariant discipline: private representative collapse is
-  allowed, but public proximity collapse is isolated as the final theorem.
+  allowed, but public proximity collapse is isolated as the final theorem
+  obligation.
 - A canonical RS endpoint with fixed parameter regime, smooth power domain,
   relative/paper-facing Hamming notation, an absolute metric implementation,
   and radius normalization.
@@ -87,7 +108,7 @@ This paper can claim:
   gates, and runtime trace evidence.
 - A precise inventory of the remaining mathematical and runtime obligations.
 
-This paper should not claim yet:
+Section 6 should not claim yet:
 
 - A completed Proximity Prize solution.
 - A new proof of Johnson, BCHKS, GG, or other cited coding-theory theorems.
@@ -101,7 +122,7 @@ This paper should not claim yet:
 ```text
 hidden Hodge / harmonic subspace
   -> Plucker frame witness
-  -> committed cochain / local syndrome
+  -> accepted committed cocycle / local syndrome
   -> PlaneShadow R i
   -> finite-field received word over F
   -> canonical RS proximity target
@@ -110,7 +131,7 @@ hidden Hodge / harmonic subspace
 The midpoint `PlaneShadow R i := i -> Fin 2 -> R` is semantic and
 field-agnostic. The RS field appears only at the encoding boundary.
 
-## Section Outline
+## Fine-Grained Design Decomposition
 
 ### 1. Introduction
 
@@ -136,7 +157,8 @@ Include only the background needed for the theorem statement:
 - Sheaf/Hodge state and harmonic public observables.
 - Grassmannian witnesses and Plucker coordinates.
 - Projective quotienting and why some pairs are supposed to collapse.
-- Cochains, local syndrome tests, and global-section candidates.
+- Cochains, local syndrome tests, and sheaf-relative accepted committed
+  cocycles.
 - Reed-Solomon received words, Hamming distance, Johnson radius, and
   list-decoding/correlated-agreement/MCA slots.
 - Paper Definition 4.3: F-additive codes `C ⊆ (F^s)^n`, affine lines
@@ -195,9 +217,9 @@ Lean surfaces:
 - `Proximity.PluckerCochain.PublicBinding.ObservedFrameBinding`
 - `Proximity.PluckerCochain.Concrete.PayloadEncoder`
 - `Proximity.PluckerCochain.Concrete.ProjectionInputs`
-- `Proximity.Gates.SyndromeAdequacyGate` 
+- `Proximity.Gates.SyndromeAdequacyGate`
 
-/What to state:
+What to state:
 
 - Plucker data maps into the existing committed cochain/local-test surface.
 - The Plucker shadow may be hash-bound as a public artifact, but the hash is
@@ -207,7 +229,7 @@ Lean surfaces:
 - The storage-native path is relational: an observed proof-carrying chain
   commitment realizes the hash-bound Plucker shadow.
 - `PayloadEncoder` is the concrete Plucker-shadow-to-chain-commitment boundary.
-- Global-section candidates imply accepted local syndrome.
+- Sheaf-relative accepted committed cocycles imply accepted local syndrome.
 - The verifier may use zero/well-formed syndrome as evidence only through an
   explicit `SyndromeAdequacyGate`.
 - This keeps storage/runtime commitments separate from semantic proof objects.
@@ -304,7 +326,8 @@ What to state:
 - Radius normalization connects the finite count radius `2047` to the real
   radius `2047 / 4096`.
 - Near compatibility is calibration data.
-- Far separation is the remaining theorem, not a stage-local invariant.
+- Concrete far separation is a supplied theorem/witness obligation, not a
+  stage-local invariant.
 
 Important distinction:
 
@@ -408,9 +431,10 @@ Careful wording:
 - The architecture is designed so the final comparison is a precise theorem
   slot, not an informal analogy.
 
-## Minimum Viable Paper Version
+## Historical Minimum Viable Section Version
 
-For an early repo/preprint draft, include:
+The current Section 6 now exceeds this early repo/preprint checklist, which
+remains useful when deciding what must survive any future compression:
 
 - The projection-chain definitions and diagrams.
 - The canonical RS parameter regime.
@@ -427,35 +451,37 @@ Do not include:
 - Runtime performance claims before Rust verifier integration.
 - SNARK claims beyond the TCB/verifier boundary.
 
-## Lean Burn-Down Before Stronger Draft
+## Current Lean Obligation Ledger
 
-1. Complete the concrete Plucker exterior algebra facts:
+1. **Open:** complete the concrete Plucker exterior-algebra facts, including
    nonzero exterior product from independence and same-point projective
    equivalence.
-2. Instantiate the concrete cochain/local-syndrome target from the existing
-   cochain machinery.
-3. Prove the Plucker-to-cochain distance-control statement.
-4. Prove the concrete plane extraction alignment and distance-control facts.
-5. Refine naturality obligations from coarse `ProjectionStageGateCertificate` fields into
-   stage-specific commuting-square statements.
-6. Decide whether `CitedBounds` remains an axiom boundary for the first preprint
-   or whether any cited RS bounds should be mechanically derived from simpler
-   imported theorem constants.
-7. Prove `JohnsonRSFarSeparation` / final source-to-RS far non-collapse.
-8. Convert the completed certificate into the final calibrated bridge theorem
-   and state it as the main Lean theorem.
-9. Add a short provenance appendix labeling modules that formalize external
-   papers/problems (`HelferFOL`, `CVP`, `Proximity.RS`, `CitedBounds`).
+2. **Partially resolved:** the cochain layer now uses the existing commitment
+   payload and sheaf-relative exact/cocycle semantics; the concrete
+   Plucker-payload encoder and syndrome map remain explicit inputs.
+3. **Open:** prove the Plucker-to-cochain distance-control statement.
+4. **Partially resolved:** the plane-extraction interface and alignment gates
+   are present, but the concrete alignment/distance-control realization remains
+   an obligation.
+5. **Partially resolved:** stage-typed equations exist; some naturality
+   obligations still live in coarse `ProjectionStageGateCertificate` fields
+   rather than dedicated commuting-square structures.
+6. **Resolved policy:** `CitedBounds` remains a named, documented trusted
+   literature boundary for Paper 1.
+7. **Open:** supply a concrete `JohnsonRSFarSeparation` witness proving final
+   source-to-RS far non-collapse.
+8. **Resolved plumbing:** once that witness is supplied, the certificate-to-
+   calibrated-bridge path is implemented.
+9. **Resolved placement:** provenance for `HelferFOL`, `CVP`,
+   `Proximity.RS`, and `CitedBounds` belongs in the Paper--Lean appendices.
 
 ## Build Status To Report
 
-Current targeted builds that have passed during this phase:
+The current isolated audit passed:
 
 ```text
-lake build Proximity.CanonicalRS.CitedBounds
-lake build Proximity.CanonicalRS
-lake build Proximity
+lake build Axioms TCB Chain Gates Proximity
 ```
 
-Run a final full `lake build` before submission, but the proximity aggregate is
-currently synchronized with the Lean workspace.
+This is an audit record, not a permanent status badge. Rerun the aggregate and
+then a full `lake build` against the submission checkpoint.

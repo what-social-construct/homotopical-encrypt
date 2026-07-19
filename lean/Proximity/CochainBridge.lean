@@ -28,16 +28,19 @@ abbrev CommittedCochain := Axioms.CochainCommitmentData
 namespace CommittedCochain
 
 /--
-Global-section candidate predicate for an existing committed cochain.
+An accepted committed one-cocycle in its sheaf context.
 
-The payload must be well formed, and the surrounding sheaf coherence contract
-must hold. This keeps the cochain object itself identical to the tested
-commitment data used elsewhere in Lean/Rust.
+This is the Axioms-level semantic contract: the payload is wire-well-formed,
+the sheaf is coherent, the topology binding holds, and the payload decodes as
+an exact one-cochain.  Exactness then implies the cocycle equation.
 -/
-def GlobalSectionCandidate
+abbrev AcceptedCocycle
     (S : Axioms.SheafCoherence)
     (c : CommittedCochain) : Prop :=
-  c.WellFormed ∧ Axioms.SheafCoherenceWellFormed S
+  Axioms.CommittedCochainWellFormed S c
+
+/-- Compatibility name for the exact predicate used by the generic proximity record. -/
+abbrev GlobalSectionCandidate := AcceptedCocycle
 
 /--
 Committed-cochain proximity instance.
@@ -52,7 +55,7 @@ def proximityInstance
     (disagreement : CommittedCochain → ℝ) :
     SheafProximityInstance where
   Cochain := CommittedCochain
-  GlobalSection := GlobalSectionCandidate S
+  GlobalSection := AcceptedCocycle S
   disagreement := disagreement
 
 /-- A global-section candidate has a well-formed cochain commitment payload. -/
@@ -60,7 +63,7 @@ theorem wellFormed_of_globalSectionCandidate
     {S : Axioms.SheafCoherence} {c : CommittedCochain}
     (hc : GlobalSectionCandidate S c) :
     c.WellFormed :=
-  hc.1
+  Axioms.cochain_wellFormed_of_committedCochainWellFormed hc
 
 /--
 A global-section candidate provides the structural sheaf preconditions used by
@@ -71,7 +74,29 @@ theorem structural_preconditions_of_globalSectionCandidate
     {S : Axioms.SheafCoherence} {c : CommittedCochain}
     (hc : GlobalSectionCandidate S c) :
     S.Complex.CoboundarySquaresZero ∧ S.Hodge.LaplacianFromCoboundary :=
-  Axioms.coherence_implies_structural_preconditions S hc.2
+  Axioms.coherence_implies_structural_preconditions S
+    (Axioms.sheaf_wellFormed_of_committedCochainWellFormed hc)
+
+/-- An accepted committed cochain is bound to the supplied sheaf context. -/
+theorem boundToSheaf_of_globalSectionCandidate
+    {S : Axioms.SheafCoherence} {c : CommittedCochain}
+    (hc : GlobalSectionCandidate S c) :
+    S.CommittedCochains.BoundToSheaf c :=
+  Axioms.boundToSheaf_of_committedCochainWellFormed hc
+
+/-- An accepted committed cochain decodes as an exact degree-one cochain. -/
+theorem exactOneCochain_of_globalSectionCandidate
+    {S : Axioms.SheafCoherence} {c : CommittedCochain}
+    (hc : GlobalSectionCandidate S c) :
+    Axioms.RepresentsExactOneCochain S c :=
+  Axioms.exactOneCochain_of_committedCochainWellFormed hc
+
+/-- An accepted committed cochain satisfies the degree-one cocycle equation. -/
+theorem oneCocycle_of_globalSectionCandidate
+    {S : Axioms.SheafCoherence} {c : CommittedCochain}
+    (hc : GlobalSectionCandidate S c) :
+    Axioms.IsOneCocycle S c :=
+  Axioms.oneCocycle_of_committedCochainWellFormed hc
 
 /-- A global-section candidate has nonempty edge/cochain data. -/
 theorem edge_values_nonempty_of_globalSectionCandidate

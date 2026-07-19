@@ -1,5 +1,6 @@
 import Mathlib
 import Axioms.Foundation
+import Axioms.CochainCommitment.Payload
 
 /-
   Sheaf Coherence Axioms
@@ -48,10 +49,36 @@ structure TriangleFaceCommutativity where
   /-- On each triangle, all face-composition paths agree. -/
   TriangleFacesCommute : Prop
 
-/-- Cochain-complex validity for sheaf coboundaries. -/
+/--
+Typed degree-zero through degree-two sheaf cochain complex.
+
+`CoboundarySquaresZero` remains an assumption-oriented gate so runtime-facing
+contracts can require it explicitly.  Unlike the former proposition-only
+placeholder, `coboundarySquaresZero_spec` ties that gate to the actual
+coboundary maps.
+-/
 structure SheafCochainComplex where
+  C0 : Type
+  C1 : Type
+  C2 : Type
+  zeroC2 : C2
+  coboundary0 : C0 → C1
+  coboundary1 : C1 → C2
   /-- δ₁ ∘ δ₀ = 0. -/
   CoboundarySquaresZero : Prop
+  /-- The abstract gate denotes the actual equation on the carried maps. -/
+  coboundarySquaresZero_spec :
+    CoboundarySquaresZero →
+      ∀ x : C0, coboundary1 (coboundary0 x) = zeroC2
+
+/--
+Interpret serialized cochain commitments in a particular sheaf cochain
+complex.  `BoundToSheaf` is the mathematical topology-binding predicate; the
+runtime owns the concrete hash/serialization check that establishes it.
+-/
+structure CommittedCochainInterpretation (K : SheafCochainComplex) where
+  decode : CochainCommitmentData → K.C1
+  BoundToSheaf : CochainCommitmentData → Prop
 
 /-- Hodge-level coherence needed for stable decomposition. -/
 structure HodgeCoherence where
@@ -81,6 +108,7 @@ structure SheafCoherence where
   EdgeNat : EdgeNaturality
   TriangleNat : TriangleFaceCommutativity
   Complex : SheafCochainComplex
+  CommittedCochains : CommittedCochainInterpretation Complex
   Hodge : HodgeCoherence
   Nerve : FiniteSimplicialNerve
 
@@ -94,6 +122,44 @@ abbrev SheafCoherenceWellFormed (S : SheafCoherence) : Prop :=
   ∧ S.Nerve.Finite
   ∧ S.Nerve.Simplicial
   ∧ S.Nerve.Connected
+
+/-- A payload decodes as an exact degree-one cochain in the supplied sheaf. -/
+def RepresentsExactOneCochain
+    (S : SheafCoherence)
+    (c : CochainCommitmentData) : Prop :=
+  ∃ x : S.Complex.C0,
+    S.CommittedCochains.decode c = S.Complex.coboundary0 x
+
+/-- The decoded payload is a degree-one cocycle. -/
+def IsOneCocycle
+    (S : SheafCoherence)
+    (c : CochainCommitmentData) : Prop :=
+  S.Complex.coboundary1 (S.CommittedCochains.decode c) = S.Complex.zeroC2
+
+/--
+Full mathematical well-formedness for a committed cochain in a sheaf context.
+
+This strengthens the wire-facing `CochainCommitmentData.WellFormed` predicate
+with ambient sheaf coherence, topology binding, and the witness that the
+payload really is an exact one-cochain.
+-/
+def CommittedCochainWellFormed
+    (S : SheafCoherence)
+    (c : CochainCommitmentData) : Prop :=
+  c.WellFormed
+    ∧ SheafCoherenceWellFormed S
+    ∧ S.CommittedCochains.BoundToSheaf c
+    ∧ RepresentsExactOneCochain S c
+
+namespace CochainCommitmentData
+
+/-- Dot-notation view of the full sheaf-semantic commitment contract. -/
+abbrev CoherentWith
+    (c : CochainCommitmentData)
+    (S : SheafCoherence) : Prop :=
+  CommittedCochainWellFormed S c
+
+end CochainCommitmentData
 
 /-- Foundation and sheaf coherence are jointly admissible assumptions. -/
 abbrev FoundationWithSheafCoherence
@@ -111,6 +177,46 @@ theorem coherence_implies_structural_preconditions (S : SheafCoherence) :
   intro h
   rcases h with ⟨_, _, _, hδ2, hLap, _, _, _, _⟩
   exact ⟨hδ2, hLap⟩
+
+/-- Semantic cochain validity inherits the underlying wire-format validity. -/
+theorem cochain_wellFormed_of_committedCochainWellFormed
+    {S : SheafCoherence} {c : CochainCommitmentData}
+    (h : CommittedCochainWellFormed S c) :
+    c.WellFormed :=
+  h.1
+
+/-- Semantic cochain validity carries the ambient sheaf-coherence contract. -/
+theorem sheaf_wellFormed_of_committedCochainWellFormed
+    {S : SheafCoherence} {c : CochainCommitmentData}
+    (h : CommittedCochainWellFormed S c) :
+    SheafCoherenceWellFormed S :=
+  h.2.1
+
+/-- Semantically valid committed cochains are bound to their sheaf context. -/
+theorem boundToSheaf_of_committedCochainWellFormed
+    {S : SheafCoherence} {c : CochainCommitmentData}
+    (h : CommittedCochainWellFormed S c) :
+    S.CommittedCochains.BoundToSheaf c :=
+  h.2.2.1
+
+/-- Semantically valid committed cochains carry their exactness witness. -/
+theorem exactOneCochain_of_committedCochainWellFormed
+    {S : SheafCoherence} {c : CochainCommitmentData}
+    (h : CommittedCochainWellFormed S c) :
+    RepresentsExactOneCochain S c :=
+  h.2.2.2
+
+/-- Exact committed one-cochains are cocycles by the sheaf complex law. -/
+theorem oneCocycle_of_committedCochainWellFormed
+    {S : SheafCoherence} {c : CochainCommitmentData}
+    (h : CommittedCochainWellFormed S c) :
+    IsOneCocycle S c := by
+  obtain ⟨x, hx⟩ := exactOneCochain_of_committedCochainWellFormed h
+  unfold IsOneCocycle
+  rw [hx]
+  exact S.Complex.coboundarySquaresZero_spec
+    (coherence_implies_structural_preconditions S
+      (sheaf_wellFormed_of_committedCochainWellFormed h)).1 x
 
 end Axioms
 end Hcrypt

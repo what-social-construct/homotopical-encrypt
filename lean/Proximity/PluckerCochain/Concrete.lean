@@ -37,14 +37,16 @@ The encoder is total on public shadows, but its payload guarantees are required
 only on valid frame witnesses. This matches the proof pipeline: valid Plucker
 frames are what enter the cochain/local-syndrome gate.
 -/
-structure PayloadEncoder (P : FramedSystem n r) where
+structure PayloadEncoder
+    (P : FramedSystem n r)
+    (S : Axioms.SheafCoherence) where
   encode : P.Shadow → CochainBridge.CommittedCochain
   expectedEdgeCount : ℕ
   expectedEdgeCount_pos : 0 < expectedEdgeCount
-  wellFormed_of_validFrame :
+  committedCochainWellFormed_of_validFrame :
     ∀ W : FrameWitness n r,
       ValidFrame P W →
-        (encode (P.publicShadow W)).WellFormed
+        Axioms.CommittedCochainWellFormed S (encode (P.publicShadow W))
   edgeCount_of_validFrame :
     ∀ W : FrameWitness n r,
       ValidFrame P W →
@@ -52,11 +54,20 @@ structure PayloadEncoder (P : FramedSystem n r) where
 
 namespace PayloadEncoder
 
-variable {P : FramedSystem n r}
+variable {P : FramedSystem n r} {S : Axioms.SheafCoherence}
+
+/-- Valid Plucker frames encode to wire-well-formed cochain payloads. -/
+theorem wellFormed_of_validFrame
+    (E : PayloadEncoder P S)
+    (W : FrameWitness n r)
+    (hW : ValidFrame P W) :
+    (E.encode (P.publicShadow W)).WellFormed :=
+  Axioms.cochain_wellFormed_of_committedCochainWellFormed
+    (E.committedCochainWellFormed_of_validFrame W hW)
 
 /-- Valid Plucker frames encode to the canonical payload modulus. -/
 theorem supportedModulus_of_validFrame
-    (E : PayloadEncoder P)
+    (E : PayloadEncoder P S)
     (W : FrameWitness n r)
     (hW : ValidFrame P W) :
     Axioms.CochainCommitmentData.SupportedModulus
@@ -65,7 +76,7 @@ theorem supportedModulus_of_validFrame
 
 /-- Valid Plucker frames encode to the expected edge count. -/
 theorem edgeCount_eq_expected
-    (E : PayloadEncoder P)
+    (E : PayloadEncoder P S)
     (W : FrameWitness n r)
     (hW : ValidFrame P W) :
     (E.encode (P.publicShadow W)).n_edge_values = E.expectedEdgeCount :=
@@ -73,7 +84,7 @@ theorem edgeCount_eq_expected
 
 /-- The encoded edge vector has the expected length for valid Plucker frames. -/
 theorem edgeValues_length_eq_expected
-    (E : PayloadEncoder P)
+    (E : PayloadEncoder P S)
     (W : FrameWitness n r)
     (hW : ValidFrame P W) :
     (E.encode (P.publicShadow W)).edge_values.length = E.expectedEdgeCount := by
@@ -86,22 +97,20 @@ Encoding is automatically quotient-respecting at the payload level because the
 encoder consumes the public Plucker shadow, not the private frame witness.
 -/
 theorem encode_eq_of_publicShadow_eq
-    (E : PayloadEncoder P)
+    (E : PayloadEncoder P S)
     {W V : FrameWitness n r}
     (hWV : P.publicShadow W = P.publicShadow V) :
     E.encode (P.publicShadow W) = E.encode (P.publicShadow V) := by
   simp [hWV]
 
-/-- Valid Plucker frames become global-section candidates once sheaf coherence holds. -/
+/-- Valid Plucker frames encode to semantically accepted committed cocycles. -/
 theorem globalSectionCandidate_of_validFrame
-    {S : Axioms.SheafCoherence}
-    (E : PayloadEncoder P)
-    (hS : Axioms.SheafCoherenceWellFormed S)
+    (E : PayloadEncoder P S)
     (W : FrameWitness n r)
     (hW : ValidFrame P W) :
     CochainBridge.CommittedCochain.GlobalSectionCandidate S
       (E.encode (P.publicShadow W)) :=
-  ⟨E.wellFormed_of_validFrame W hW, hS⟩
+  E.committedCochainWellFormed_of_validFrame W hW
 
 end PayloadEncoder
 
@@ -185,8 +194,7 @@ structure ProjectionInputs
     (S : Axioms.SheafCoherence)
     (L : LocalSyndromeTarget S)
     (pluckerDisagreement : FrameWitness n r → ℝ) where
-  encoder : PayloadEncoder P
-  sheafWellFormed : Axioms.SheafCoherenceWellFormed S
+  encoder : PayloadEncoder P S
   distanceControlled :
     ∀ W : FrameWitness n r,
       L.distanceToCode (encoder.encode (P.publicShadow W)) ≤
@@ -207,7 +215,7 @@ def toProjection
   encode := I.encoder.encode
   preservesValidFrame := by
     intro W hW
-    exact I.encoder.globalSectionCandidate_of_validFrame I.sheafWellFormed W hW
+    exact I.encoder.globalSectionCandidate_of_validFrame W hW
   distanceControlled := I.distanceControlled
 
 /-- Concrete inputs expose the standard stage-local invariant checklist. -/
@@ -225,7 +233,7 @@ theorem validFrame_maps_to_codeword
   have hCandidate :
       CochainBridge.CommittedCochain.GlobalSectionCandidate S
         (I.encoder.encode (P.publicShadow W)) :=
-    I.encoder.globalSectionCandidate_of_validFrame I.sheafWellFormed W hW
+    I.encoder.globalSectionCandidate_of_validFrame W hW
   exact L.codeword_of_globalCandidate hCandidate
 
 /-- The concrete bridge satisfies the Plucker-to-cochain distance bound. -/

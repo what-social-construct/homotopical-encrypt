@@ -25,11 +25,14 @@
     \lean{Hardness.PublicHodgeSolverSound}, and
     \lean{Hardness.PublicHodgeSolverExactOnHarmonic}.
   \item[Explicit-lattice CVP comparison.]
-    Section 3; \lean{CVP.CVP_Instance}, \lean{CVP.CVPSolution}, and
-    \lean{CVP.CVPOracleCorrect}.
+    Section 3; \lean{CVP.Instance}, \lean{CVP.Solution}, and
+    \lean{CVP.OracleCorrect}.
+  \item[Harmonic-lattice bridge.]
+    Section 3; \lean{Hardness.HarmonicCVPBridge} and
+    \lean{Hardness.HarmonicCVPBridge.projectedTarget}.
   \item[Closest-harmonic solution predicates.]
-    Section 3; \lean{Hardness.HodgeCVPSolution} and
-    \lean{Hardness.ProjectionHodgeCVPSolution}.
+    Section 3; \lean{Hardness.ClosestHarmonicSolution} and
+    \lean{Hardness.ProjectionClosestHarmonicSolution}.
   \item[Hodge projection model.]
     Sections 2--3; \lean{Laplacian.harmonicProjection},
     \lean{Laplacian.residual}, and \lean{Laplacian.IsHarmonic}.
@@ -39,8 +42,10 @@
     \lean{Hardness.HomotopyEquivalent}, and
     \lean{Hardness.FibrationCopy}.
   \item[Semantic/public equality surface.]
-    Section 4; \lean{Axioms.HelferFOL}, \lean{Axioms.HomotopyClass}, and
-    \lean{Axioms.Fibration}.
+    Section 4; \lean{Axioms.HelferFOL},
+    \lean{Axioms.PublicClassifierFactorization},
+    \lean{Axioms.PublicClassifierFactorization.publicFiber_eq_iUnion_baseFibers},
+    \lean{Axioms.HomotopyClass}, and \lean{Axioms.Fibration}.
   \item[Heyting/oracle public judgment.]
     Section 4; \lean{Axioms.Heyting3}, \lean{Axioms.OracleQuery},
     \lean{Axioms.OracleAnswer}, and \lean{Axioms.OracleEta2}.
@@ -80,12 +85,12 @@
     \lean{Hardness.constantPublicProjection_kernelAmbiguous}, and
     \lean{Hardness.constantPublicProjection_lossy};
     Lean-proved.
-  \item[Every explicit lattice image can be a Hodge kernel.]
+  \item[Every field-linear image can be a Hodge kernel.]
     \lean{Hardness.exists_matrix_ker_eq_range};
     Lean-proved linear-algebra construction.
-  \item[Kernel realization for explicit lattices.]
-    \lean{Hardness.Hodge_Hardness_Reduction} and
-    \lean{Hardness.Hodge_Hardness_Reduction_Proof};
+  \item[Kernel realization for presented generated subspaces.]
+    \lean{Hardness.Hodge_GeneratedSubspace_Reduction} and
+    \lean{Hardness.Hodge_GeneratedSubspace_Reduction_Proof};
     Lean-proved surface.
   \item[Hodge decomposition into harmonic, exact, and coexact parts.]
     \lean{Hardness.Hodge_Decomposition_Theorem};
@@ -97,13 +102,18 @@
   \item[Known-lattice CVP does not select the hidden operator.]
     \lean{Hardness.CVP_Oracle_Insufficient_For_Public_Hodge_Solving};
     Lean-proved surface.
-  \item[Strict hidden-operator separation.]
-    \lean{Hardness.Hodge_Strictly_Harder};
-    Lean-proved model theorem.
-  \item[Projection-model Hodge recovery is CVP-shaped.]
+  \item[No uniform public-data Hodge solver.]
+    \lean{Hardness.no_uniform_public_hodge_solver};
+    Lean-proved hidden-operator model theorem.
+  \item[Projection-model closest-harmonic surface.]
     \lean{Hardness.matrix_harmonic_iff_projection_isHarmonic},
-    \lean{Hardness.Hodge_Projection_Is_CVP}, and
-    \lean{Hardness.harmonicProjection_Is_ProjectionHodgeCVPSolution};
+    \lean{Hardness.Hodge_Projection_Is_ClosestHarmonic}, and
+    \lean{Hardness.harmonicProjection_is_closestHarmonic};
+    Lean-proved.
+  \item[Discrete CVP minimizers are preserved by harmonic projection.]
+    \lean{Hardness.HarmonicCVPBridge.squaredDistance_projection_decomposition},
+    \lean{Hardness.HarmonicCVPBridge.isClosestLatticeVector_iff_projectedTarget},
+    and \lean{Hardness.HarmonicCVPBridge.solution_iff_projectedTarget};
     Lean-proved.
   \item[Fibration copies preserve the hidden semantic surface.]
     \lean{Hardness.copy_equivalent_thm} and
@@ -180,11 +190,11 @@ Import-only aggregate files are listed with the files they collect.
     \lean{constantPublicProjection_publicCompatibleHodgeAmbiguity},
     \lean{constantPublicProjection_kernelAmbiguous}, and
     \lean{constantPublicProjection_lossy} are
-    \cref{prop:cvp-insufficient}. The known-lattice comparison
+    \cref{prop:cvp-insufficient}. The presented-linear-image comparison
     declarations \lean{Hodge_Solver_Correct},
     \lean{exists_matrix_ker_eq_range},
-    \lean{Hodge_Hardness_Reduction}, and
-    \lean{Hodge_Hardness_Reduction_Proof} are
+    \lean{Hodge_GeneratedSubspace_Reduction}, and
+    \lean{Hodge_GeneratedSubspace_Reduction_Proof} are
     \cref{prop:hcp-to-cvp}. The decomposition theorem
     \lean{Hodge_Decomposition_Theorem} is
     \cref{prop:hodge-decomposition}. The public-solver predicates
@@ -193,13 +203,18 @@ Import-only aggregate files are listed with the files they collect.
     \lean{PublicHodgeSolverExactOnHarmonic},
     \lean{public_solver_eq_input_of_harmonic},
     \lean{no_public_solver_on_ambiguous_input},
-    \lean{Hodge_Strictly_Harder}, and
+    \lean{no_uniform_public_hodge_solver}, and
     \lean{CVP_Oracle_Insufficient_For_Public_Hodge_Solving} are
-    \cref{prop:cvp-insufficient}. The projection/CVP predicates
-    \lean{HodgeCVPSolution}, \lean{ProjectionHodgeCVPSolution},
+    \cref{prop:cvp-insufficient}. The closest-harmonic predicates
+    \lean{ClosestHarmonicSolution}, \lean{ProjectionClosestHarmonicSolution},
     \lean{matrix_harmonic_iff_projection_isHarmonic},
-    \lean{Hodge_Projection_Is_CVP}, and
-    \lean{harmonicProjection_Is_ProjectionHodgeCVPSolution} are
+    \lean{Hodge_Projection_Is_ClosestHarmonic}, and
+    \lean{harmonicProjection_is_closestHarmonic} record the continuous
+    projection surface. The discrete bridge declarations
+    \lean{HarmonicCVPBridge},
+    \lean{HarmonicCVPBridge.squaredDistance_projection_decomposition},
+    \lean{HarmonicCVPBridge.isClosestLatticeVector_iff_projectedTarget}, and
+    \lean{HarmonicCVPBridge.solution_iff_projectedTarget} are
     \cref{prop:hodge-projection-is-cvp}. The categorical declarations
     \lean{IsCartesianMorphism}, \lean{GrothendieckFibration},
     \lean{HomotopyEquivalent}, \lean{Wrapper}, \lean{Fibration},
@@ -207,19 +222,21 @@ Import-only aggregate files are listed with the files they collect.
     \lean{copy_equivalent_thm}, and \lean{FibrationCopy_is_Grothendieck}
     are \cref{prop:fibration-copy-equivalence}.
   \item[\lean{CVP.lean}.]
-    Section 3 translates \lean{ExplicitLattice}, \lean{CVP_Instance},
+    Section 3 translates \lean{AmbientVector}, \lean{ExplicitLattice},
+    \lean{latticeVector},
     \lean{InExplicitLattice}, \lean{IsClosestLatticeVector},
-    \lean{CVPSolution}, \lean{CVP_Oracle},
-    \lean{LatticeOracleCorrect}, \lean{CVPOracleCorrect},
-    \lean{CVPSolverCorrect}, \lean{cvpSolverCorrect_iff_oracleCorrect},
-    \lean{CVPHardnessAssumption}, and
+    \lean{squaredEuclideanDistance}, \lean{Instance}, \lean{Solution},
+    \lean{Oracle}, \lean{LatticeOracleCorrect}, \lean{OracleCorrect},
+    \lean{SolverCorrect}, \lean{solverCorrect_iff_oracleCorrect},
+    \lean{HardnessAssumption}, and
     \lean{zero_lattice_oracle_correct} as the known-lattice comparison
     surface.
   \item[\lean{Axioms/HelferFOL.lean},
     \lean{Axioms/Fibration.lean}, and
     \lean{Axioms/HomotopyClass.lean}.]
     Section 4 translates path equality, public classifiers, public fibers,
-    class-membership witnesses, transport, the Helfer semantic
+    classifier factorization through a base projection, class-membership
+    witnesses, transport, the Helfer semantic
     well-formedness clauses, fiber systems, ephemeral fiber specifications,
     and nonfaithful classifiers. The equivalence, symmetry, transitivity,
     membership, and nonfaithfulness lemmas justify the public fiber language
@@ -243,6 +260,10 @@ Import-only aggregate files are listed with the files they collect.
     triangle-face commutativity, sheaf cochain complexes, Hodge coherence,
     finite simplicial nerves, \lean{SheafCoherence},
     \lean{SheafCoherenceWellFormed},
+    typed degree-zero through degree-two coboundaries,
+    \lean{CommittedCochainWellFormed},
+    \lean{RepresentsExactOneCochain}, \lean{IsOneCocycle},
+    \lean{oneCocycle_of_committedCochainWellFormed},
     \lean{FoundationWithSheafCoherence}, and
     \lean{coherence_implies_structural_preconditions}.
   \item[\lean{Axioms/Grassmannian.lean}.]
@@ -384,8 +405,8 @@ Import-only aggregate files are listed with the files they collect.
     syndrome targets, codeword predicates, evaluation projections, invariant
     checklists, payload encoders, commitment-sum residuals, payload
     realizations, hashed Plucker coordinates, observed frame bindings, and the
-    theorems that valid Plucker coordinates bind to well-formed cochains and local
-    codewords.
+    theorems that valid Plucker coordinates bind to sheaf-coherent exact
+    one-cochains, hence to accepted committed cocycles and local codewords.
   \item[\lean{Proximity/CochainPlane.lean},
     \lean{Proximity/CochainPlane/Core.lean},
     \lean{Proximity/CochainPlane/Concrete.lean},

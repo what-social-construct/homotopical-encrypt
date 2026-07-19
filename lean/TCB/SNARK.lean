@@ -58,6 +58,15 @@ def SNARKCarryingCommittedCochain.WellFormed
     ∧ P.statement
     ∧ P.VerifiesStatement
 
+/-- A SNARK-carrying artifact whose public cochain is coherent with `S`. -/
+def SNARKCarryingCommittedCochain.CoherentWith
+    (S : Axioms.SheafCoherence)
+    (P : SNARKCarryingCommittedCochain) : Prop :=
+  P.publicArtifact.CoherentWith S
+    ∧ P.snark.WellFormed
+    ∧ P.statement
+    ∧ P.VerifiesStatement
+
 /-- Forget a SNARK-carrying artifact to the generic proof-carrying interface. -/
 def SNARKCarryingCommittedCochain.toProofCarrying
     (P : SNARKCarryingCommittedCochain) :
@@ -72,6 +81,15 @@ theorem snarkCarrying_toProofCarrying_wellFormed
     {P : SNARKCarryingCommittedCochain}
     (hP : P.WellFormed) :
     P.toProofCarrying.WellFormed := by
+  rcases hP with ⟨hPublic, hSnark, hStmt, hVerify⟩
+  exact ⟨hPublic, hSnark.1, hStmt, hVerify⟩
+
+/-- A coherent SNARK artifact remains coherent after forgetting the specialization. -/
+theorem snarkCarrying_toProofCarrying_coherentWith
+    {S : Axioms.SheafCoherence}
+    {P : SNARKCarryingCommittedCochain}
+    (hP : P.CoherentWith S) :
+    P.toProofCarrying.CoherentWith S := by
   rcases hP with ⟨hPublic, hSnark, hStmt, hVerify⟩
   exact ⟨hPublic, hSnark.1, hStmt, hVerify⟩
 

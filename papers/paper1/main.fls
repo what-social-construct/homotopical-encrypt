@@ -274,6 +274,10 @@ INPUT ./sections/04-axioms-and-semantics.tex
 INPUT ./sections/04-axioms-and-semantics.tex
 INPUT sections/04-axioms-and-semantics.tex
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmtti10.tfm
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmtt10.tfm
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/rm-lmss10.tfm
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/rm-lmss8.tfm
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/rm-lmss8.tfm
 INPUT ./sections/05-public-artifacts-and-commitments.tex
 INPUT ./sections/05-public-artifacts-and-commitments.tex
 INPUT ./sections/05-public-artifacts-and-commitments.tex
@@ -283,10 +287,6 @@ INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/lm/ts1lmr.fd
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/lm/ts1lmr.fd
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/lm/ts1lmr.fd
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ts1-lmr10.tfm
-INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmtt10.tfm
-INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/rm-lmss10.tfm
-INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/rm-lmss8.tfm
-INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/rm-lmss8.tfm
 INPUT ./sections/06-rs-mca-projection.tex
 INPUT ./sections/06-rs-mca-projection.tex
 INPUT ./sections/06-rs-mca-projection.tex
