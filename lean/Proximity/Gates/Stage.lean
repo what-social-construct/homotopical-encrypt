@@ -58,12 +58,16 @@ structure StateBus
     receivedWord = Φ.receivedWord planeShadow
   localDistance_le_source :
     L.distanceToCode committedCochain ≤ pluckerDisagreement W
-  rsDistance_le_local :
-    D.distanceToRS receivedWord ≤ L.distanceToCode committedCochain
+  planeDistance_le_local :
+    Γ.planeToRS.planeTarget.distanceToCode planeShadow ≤
+      L.distanceToCode committedCochain
+  rsDistance_le_plane :
+    D.distanceToRS receivedWord ≤
+      Γ.planeToRS.planeTarget.distanceToCode planeShadow
 
 namespace StateBus
 
-/-- The canonical state bus produced by a projection chain at a witness. -/
+/-- Convenience state bus produced directly from a projection chain. -/
 def of_chain
     (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
     (W : FrameWitness n r) :
@@ -75,7 +79,17 @@ def of_chain
   planeShadow_matches := rfl
   receivedWord_matches := rfl
   localDistance_le_source := Γ.pluckerToCochain.distanceControlled W
-  rsDistance_le_local := Γ.planeToRS.projection.distanceControlled (Γ.committedCochain W)
+  planeDistance_le_local :=
+    Γ.planeToRS.projection.distanceControlled (Γ.committedCochain W)
+  rsDistance_le_plane := Γ.planeToRS.distanceControlled (Γ.planeShadow W)
+
+/-- The state bus composes the plane and RS metric handoffs. -/
+theorem rsDistance_le_local
+    {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+    {W : FrameWitness n r}
+    (σ : StateBus Γ W) :
+    D.distanceToRS σ.receivedWord ≤ L.distanceToCode σ.committedCochain :=
+  le_trans σ.rsDistance_le_plane σ.planeDistance_le_local
 
 /--
 The state bus composes the local metric handoffs: the selected RS target metric
@@ -237,6 +251,32 @@ def toStageChecklists
   χ.final.toStageChecklists
 
 end ProjectionStageGateCertificate
+
+namespace StateBus
+
+/--
+Specialize an already-checked uniform stage certificate to one witness-local
+state bus. No stage invariant is rechecked here.
+-/
+def of_stageCertificate
+    {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+    (χ : ProjectionStageGateCertificate Γ)
+    (W : FrameWitness n r) :
+    StateBus Γ W where
+  committedCochain := Γ.committedCochain W
+  planeShadow := Γ.planeShadow W
+  receivedWord := Γ.receivedWord W
+  committedCochain_matches := rfl
+  planeShadow_matches := rfl
+  receivedWord_matches := rfl
+  localDistance_le_source :=
+    χ.final.previous.previous.pluckerCochain.distanceControlled W
+  planeDistance_le_local :=
+    χ.final.previous.cochainPlane.distanceControlled (Γ.committedCochain W)
+  rsDistance_le_plane :=
+    χ.final.planeRS.planeDistanceControlled (Γ.planeShadow W)
+
+end StateBus
 
 end
 

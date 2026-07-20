@@ -312,7 +312,9 @@ Structural proximity-gate bundle for a concrete projection chain.
 
 This bundle contains gates that are not alternative proofs of final separation:
 pre-chain source/Plucker admissibility, structural respect for the public-shadow
-quotient, semantic alignment, and syndrome adequacy.
+quotient, and semantic alignment. Commitment/sheaf acceptance is established
+before this bundle is formed, so the optional converse `SyndromeAdequacyGate`
+is not required by the projection chain.
 -/
 structure StructuralBundle
     (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement) where
@@ -320,7 +322,6 @@ structure StructuralBundle
   pluckerMetric : PluckerMetricGate P
   publicShadowRespect : PublicShadowRespectGate Γ
   semanticAlignment : SemanticAlignmentGate Γ
-  syndromeAdequacy : SyndromeAdequacyGate L
 
 namespace StructuralBundle
 
@@ -554,8 +555,8 @@ def structuralBundle
 Forget down to the projection-chain final gate.
 
 This lower-level certificate intentionally remembers only the accumulated stage
-certificate plus the final metric witness. The full hard-gate context remains
-available on `CalibratedFinalCertificate.previous`.
+certificate plus the final metric witness. The full naturality and hard-gate
+context remains available through `CalibratedFinalCertificate.previous`.
 -/
 def toProjectionChainFinalGate
     {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
@@ -620,7 +621,7 @@ def of_certificate
     (W : FrameWitness n r)
     (Ω : CalibratedFinalCertificate Γ κ) :
     CertifiedStateBus Γ κ W where
-  state := StateBus.of_chain Γ W
+  state := StateBus.of_stageCertificate Ω.stageCertificate W
   certificate := Ω
 
 /-- A certified state bus exposes the already-checked hard-gate certificate. -/

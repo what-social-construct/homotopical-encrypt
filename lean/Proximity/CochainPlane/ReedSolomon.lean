@@ -84,8 +84,9 @@ def rsPlaneTarget
 RS interpretation of an already-defined cochain-plane projection.
 
 The projection itself remains the concrete `CochainPlane.PlaneExtractionContext`
-extraction from `edge_values` into a semantic plane shadow. This structure only
-records the later finite-field/RS interpretation of that plane.
+extraction from `edge_values` into an explicit semantic plane target. The last
+two fields are the genuinely later boundary: plane codewords encode to RS
+codewords, and RS distance is controlled by the plane metric.
 -/
 structure Interpretation
     {S : Axioms.SheafCoherence}
@@ -94,9 +95,39 @@ structure Interpretation
     (D : ReedSolomonTarget.Target.ReceivedWordMetric T)
     (E : CochainPlane.PlaneExtractionContext R ι)
     (Φ : PlaneEncoding R F) where
-  projection : CochainPlane.Projection L E (rsPlaneTarget T D Φ)
+  planeTarget : CochainPlane.PlaneTarget R ι
+  projection : CochainPlane.Projection L E planeTarget
+  mapsPlaneCodewordsToRS :
+    ∀ p : CochainPlane.PlaneShadow R ι,
+      planeTarget.Codeword p → T.parameters.Codeword (Φ.receivedWord p)
+  distanceControlled :
+    ∀ p : CochainPlane.PlaneShadow R ι,
+      D.distanceToRS (Φ.receivedWord p) ≤ planeTarget.distanceToCode p
 
 namespace Interpretation
+
+/--
+Compatibility constructor whose semantic plane target is induced directly by
+the selected RS target. This is the fused special case; general interpretations
+should supply an independently meaningful plane predicate and metric.
+-/
+def of_rsPlaneTarget
+    {S : Axioms.SheafCoherence}
+    {L : PluckerCochain.LocalSyndromeTarget S}
+    {T : ReedSolomonTarget.Target F ι}
+    {D : ReedSolomonTarget.Target.ReceivedWordMetric T}
+    {E : CochainPlane.PlaneExtractionContext R ι}
+    {Φ : PlaneEncoding R F}
+    (π : CochainPlane.Projection L E (rsPlaneTarget T D Φ)) :
+    Interpretation L T D E Φ where
+  planeTarget := rsPlaneTarget T D Φ
+  projection := π
+  mapsPlaneCodewordsToRS := by
+    intro p hp
+    exact hp
+  distanceControlled := by
+    intro p
+    exact le_rfl
 
 /-- Map a committed cochain through plane projection and then RS field encoding. -/
 def receivedWord
@@ -126,10 +157,13 @@ def toEvaluationProjection
   map := I.receivedWord
   preservesGlobalSections := by
     intro c hc
-    exact I.projection.mapsCodewordsToTarget c hc
+    exact I.mapsPlaneCodewordsToRS (E.projectedPlane c)
+      (I.projection.mapsCodewordsToTarget c hc)
   distanceControlled := by
     intro c
-    exact I.projection.distanceControlled c
+    exact le_trans
+      (I.distanceControlled (E.projectedPlane c))
+      (I.projection.distanceControlled c)
 
 /-- Accepted local cochain tests project to RS codewords under this interpretation. -/
 theorem projected_localCodeword_is_RSCodeword
@@ -142,7 +176,34 @@ theorem projected_localCodeword_is_RSCodeword
     (I : Interpretation L T D E Φ)
     (c : CochainBridge.CommittedCochain) :
     L.Codeword c → T.parameters.Codeword (I.receivedWord c) :=
-  I.projection.mapsCodewordsToTarget c
+  fun hc => I.mapsPlaneCodewordsToRS (E.projectedPlane c)
+    (I.projection.mapsCodewordsToTarget c hc)
+
+/-- Semantic plane codewords encode to RS codewords. -/
+theorem projected_planeCodeword_is_RSCodeword
+    {S : Axioms.SheafCoherence}
+    {L : PluckerCochain.LocalSyndromeTarget S}
+    {T : ReedSolomonTarget.Target F ι}
+    {D : ReedSolomonTarget.Target.ReceivedWordMetric T}
+    {E : CochainPlane.PlaneExtractionContext R ι}
+    {Φ : PlaneEncoding R F}
+    (I : Interpretation L T D E Φ)
+    (p : CochainPlane.PlaneShadow R ι) :
+    I.planeTarget.Codeword p → T.parameters.Codeword (Φ.receivedWord p) :=
+  I.mapsPlaneCodewordsToRS p
+
+/-- RS distance is bounded by the independently selected plane metric. -/
+theorem projected_distance_le_planeDistance
+    {S : Axioms.SheafCoherence}
+    {L : PluckerCochain.LocalSyndromeTarget S}
+    {T : ReedSolomonTarget.Target F ι}
+    {D : ReedSolomonTarget.Target.ReceivedWordMetric T}
+    {E : CochainPlane.PlaneExtractionContext R ι}
+    {Φ : PlaneEncoding R F}
+    (I : Interpretation L T D E Φ)
+    (p : CochainPlane.PlaneShadow R ι) :
+    D.distanceToRS (Φ.receivedWord p) ≤ I.planeTarget.distanceToCode p :=
+  I.distanceControlled p
 
 /-- RS distance is bounded by the local cochain syndrome distance. -/
 theorem projected_distance_le_localSyndromeDistance
@@ -155,17 +216,18 @@ theorem projected_distance_le_localSyndromeDistance
     (I : Interpretation L T D E Φ)
     (c : CochainBridge.CommittedCochain) :
     D.distanceToRS (I.receivedWord c) ≤ L.distanceToCode c :=
-  I.projection.distanceControlled c
+  le_trans
+    (I.distanceControlled (E.projectedPlane c))
+    (I.projection.distanceControlled c)
 
 end Interpretation
 
 /--
 Stage-local invariant checklist for the plane-to-RS interpretation.
 
-This checklist is the finite-field encoding boundary. It records that the RS
-received word is obtained only by encoding the already-projected plane shadow,
-that accepted local cochains become RS codewords, and that the selected RS
-metric remains controlled by the local syndrome distance.
+This checklist is the finite-field encoding boundary. It separately records
+plane-codeword preservation and the plane-to-RS metric handoff, then exposes
+their composed consequences for accepted local cochains.
 -/
 structure InvariantChecklist
     {S : Axioms.SheafCoherence}
@@ -178,6 +240,12 @@ structure InvariantChecklist
   receivedWordMatchesPlaneEncoding :
     ∀ c : CochainBridge.CommittedCochain,
       I.receivedWord c = Φ.receivedWord (E.projectedPlane c)
+  planeCodewordsMapToRSCodewords :
+    ∀ p : CochainPlane.PlaneShadow R ι,
+      I.planeTarget.Codeword p → T.parameters.Codeword (Φ.receivedWord p)
+  planeDistanceControlled :
+    ∀ p : CochainPlane.PlaneShadow R ι,
+      D.distanceToRS (Φ.receivedWord p) ≤ I.planeTarget.distanceToCode p
   localCodewordsMapToRSCodewords :
     ∀ c : CochainBridge.CommittedCochain,
       L.Codeword c → T.parameters.Codeword (I.receivedWord c)
@@ -200,12 +268,17 @@ def of_interpretation
   receivedWordMatchesPlaneEncoding := by
     intro c
     rfl
+  planeCodewordsMapToRSCodewords := I.mapsPlaneCodewordsToRS
+  planeDistanceControlled := I.distanceControlled
   localCodewordsMapToRSCodewords := by
     intro c hc
-    exact I.projection.mapsCodewordsToTarget c hc
+    exact I.mapsPlaneCodewordsToRS (E.projectedPlane c)
+      (I.projection.mapsCodewordsToTarget c hc)
   distanceControlled := by
     intro c
-    exact I.projection.distanceControlled c
+    exact le_trans
+      (I.distanceControlled (E.projectedPlane c))
+      (I.projection.distanceControlled c)
 
 end InvariantChecklist
 

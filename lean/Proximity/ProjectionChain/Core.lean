@@ -32,7 +32,8 @@ The concrete projection chain from a Plucker frame witness to an RS received
 word.
 
 `pluckerToCochain` owns the algebraic-to-committed-cochain step.
-`planeToRS` owns the committed-cochain -> plane -> finite-field RS step.
+`planeToRS` owns an explicit semantic plane target, the committed-cochain to
+plane projection, and the later finite-field RS interpretation.
 -/
 structure Chain
     (P : FramedSystem n r)
@@ -94,17 +95,29 @@ def toEvaluationProjection
       Γ.pluckerToCochain.preservesValidFrame W hW
     have hLocal : L.Codeword (Γ.committedCochain W) :=
       L.codeword_of_globalCandidate hCandidate
-    exact Γ.planeToRS.projection.mapsCodewordsToTarget (Γ.committedCochain W) hLocal
+    have hPlane :
+        Γ.planeToRS.planeTarget.Codeword (Γ.planeShadow W) :=
+      Γ.planeToRS.projection.mapsCodewordsToTarget
+        (Γ.committedCochain W) hLocal
+    exact Γ.planeToRS.mapsPlaneCodewordsToRS (Γ.planeShadow W) hPlane
   distanceControlled := by
     intro W
-    have hRS :
+    have hRSPlane :
         D.distanceToRS (Γ.receivedWord W) ≤
+          Γ.planeToRS.planeTarget.distanceToCode (Γ.planeShadow W) :=
+      Γ.planeToRS.distanceControlled (Γ.planeShadow W)
+    have hPlaneLocal :
+        Γ.planeToRS.planeTarget.distanceToCode (Γ.planeShadow W) ≤
           L.distanceToCode (Γ.committedCochain W) :=
       Γ.planeToRS.projection.distanceControlled (Γ.committedCochain W)
+    have hRSLocal :
+        D.distanceToRS (Γ.receivedWord W) ≤
+          L.distanceToCode (Γ.committedCochain W) :=
+      le_trans hRSPlane hPlaneLocal
     have hLocal :
         L.distanceToCode (Γ.committedCochain W) ≤ pluckerDisagreement W :=
       Γ.pluckerToCochain.distanceControlled W
-    exact le_trans hRS hLocal
+    exact le_trans hRSLocal hLocal
 
 end Chain
 

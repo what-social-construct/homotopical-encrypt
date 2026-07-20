@@ -39,10 +39,10 @@ variable
     {Φ : CochainReedSolomon.PlaneEncoding R F}
     {pluckerDisagreement : FrameWitness n r → ℝ}
 
-/-- Number of fixed hard-gate evidence slots before the final metric witness. -/
-def hardGateEvidenceSlotCount : ℕ := 6
+/-- Number of fixed hard-gate slots before naturality and the final witness. -/
+def hardGateEvidenceSlotCount : ℕ := 5
 
-/-- Total slots: six hard gates, one naturality gate, and one final witness. -/
+/-- Total slots: five hard gates, one naturality gate, and one final witness. -/
 def evidenceSlotCount : ℕ := hardGateEvidenceSlotCount + 2
 
 /-- Fixed-position evidence slot under the public evidence root. -/
@@ -57,8 +57,7 @@ Runtime storage can use this as an array index. The order is:
 1. source metric/disagreement gate;
 2. Plucker metric/chart gate;
 3. public-shadow respect gate;
-4. semantic-alignment gate;
-5. syndrome-adequacy gate.
+4. semantic-alignment gate.
 -/
 abbrev HardGateSlot :=
   Fin hardGateEvidenceSlotCount
@@ -85,17 +84,13 @@ def publicShadowRespect : EvidenceSlot :=
 def semanticAlignment : EvidenceSlot :=
   ⟨4, by native_decide⟩
 
-/-- Slot 5: syndrome-adequacy gate. -/
-def syndromeAdequacy : EvidenceSlot :=
+/-- Slot 5: final structural naturality gate for the assembled projection. -/
+def projectionNaturality : EvidenceSlot :=
   ⟨5, by native_decide⟩
 
-/-- Slot 6: final structural naturality gate for the assembled projection. -/
-def projectionNaturality : EvidenceSlot :=
-  ⟨6, by native_decide⟩
-
-/-- Slot 7: calibrated final far-region witness. -/
+/-- Slot 6: calibrated final far-region witness. -/
 def finalFarRegion : EvidenceSlot :=
-  ⟨7, by native_decide⟩
+  ⟨6, by native_decide⟩
 
 end EvidenceSlot
 
@@ -124,10 +119,6 @@ def publicShadowRespect : HardGateSlot :=
 /-- Slot 4: semantic-alignment gate. -/
 def semanticAlignment : HardGateSlot :=
   ⟨4, by native_decide⟩
-
-/-- Slot 5: syndrome-adequacy gate. -/
-def syndromeAdequacy : HardGateSlot :=
-  ⟨5, by native_decide⟩
 
 end HardGateSlot
 
@@ -328,7 +319,8 @@ Statebus/evidence record for the calibrated final proximity certificate.
 
 The mathematical certificate is still a gate-layer object. The statebus record
 adds traceability by requiring the final far-region witness slot to be bound
-and included under the same public evidence root as the hard-gate slots.
+and included under the same public evidence root as the hard and naturality
+gate slots.
 -/
 structure CalibratedFinalEvidenceRecord
     (runtime : TCB.RuntimeBoundary)
@@ -349,8 +341,8 @@ variable {κ : Gates.Projection.RadiusCalibration}
 
 /--
 A final evidence record is complete when the final witness slot is bound and
-included. The hard-gate prefix completeness is already part of the embedded
-`HardGateEvidenceRecord`.
+included. Hard-gate and naturality completeness are already carried by the
+embedded `NaturalityGateEvidenceRecord`.
 -/
 def Complete (record : CalibratedFinalEvidenceRecord runtime Γ κ) : Prop :=
   record.naturalityGateRecord.hardGateRecord.database.FinalWitnessComplete

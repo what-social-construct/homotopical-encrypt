@@ -144,7 +144,10 @@ theorem commitmentSumResidual_eq_zero_of_sum_zero
 Concrete local syndrome target using the existing commitment-sum residual.
 
 This target is intentionally modest: it is a chain-facing summary syndrome, not
-the final cochain-to-plane or RS distance theorem.
+the final cochain-to-plane or RS distance theorem. In particular, zero
+commitment sum does not imply the already-separate sheaf/commitment acceptance
+predicate; the projection chain consumes an accepted commitment before applying
+this summary test.
 -/
 def commitmentSumLocalSyndromeTarget
     (S : Axioms.SheafCoherence)

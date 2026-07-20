@@ -23,9 +23,10 @@ namespace BridgeData
 /--
 Canonical RS metric certificate.
 
-This is the ordered successor to the hard-gate certificate. It carries one
-already-aggregated calibrated final certificate; previous hard/stage gates are
-projected from that certificate instead of rebuilt.
+This is the ordered successor to the naturality-checked hard-gate certificate.
+It carries one already-aggregated calibrated final certificate; previous
+naturality, hard, and stage gates are projected from that certificate instead
+of rebuilt.
 -/
 structure RSMetricCertificate
     (β : BridgeData)
@@ -44,7 +45,7 @@ structure RSMetricCertificate
 
 namespace RSMetricCertificate
 
-/-- Extend hard gates with an explicit calibrated RS far-separation proof. -/
+/-- Extend a naturality-checked chain with calibrated RS far separation. -/
 def of_rsFarSeparation
     {β : BridgeData}
     {n : Type} [Fintype n] [DecidableEq n] {r : ℕ}
@@ -66,7 +67,7 @@ def of_rsFarSeparation
   finalCertificate :=
     Gates.Projection.CalibratedFinalCertificate.of_farRegionSeparation χ κ ω
 
-/-- Extend hard gates with the canonical Johnson-radius RS far-separation proof. -/
+/-- Extend a naturality-checked chain with canonical Johnson-radius separation. -/
 def of_johnsonRSFarSeparation
     {β : BridgeData}
     {n : Type} [Fintype n] [DecidableEq n] {r : ℕ}
@@ -167,7 +168,8 @@ accepted committed cocycles at the first gate, aligned plane extraction at the
 second gate, and finite-field/RS encoding at the third gate.  Those facts are
 not themselves proofs that the projection commutes with restriction and
 coboundary maps.  Those two statements and their proofs are supplied by the
-final structural `ProjectionNaturalityGate` in the hard-gate certificate.
+final structural `ProjectionNaturalityGate` carried by the thin naturality
+certificate immediately after the hard-gate certificate.
 -/
 def theoremSlots
     {β : BridgeData}
@@ -262,8 +264,8 @@ def complete
 /--
 Package a calibrated ready canonical chain as the completed calibrated RS bridge.
 
-This is the clean handoff from the ordered hard-gate -> RS-metric certificate
-to the generic RS bridge surface.
+This is the clean handoff from the ordered hard-gate -> naturality -> RS-metric
+certificates to the generic RS bridge surface.
 -/
 def toCalibratedHcryptToRSBridge
     {β : BridgeData}
