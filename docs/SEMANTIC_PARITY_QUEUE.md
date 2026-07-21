@@ -224,6 +224,26 @@ that fails on legacy filenames.
   - `GlobalSectionCandidate` remains only as a compatibility alias for the
     correctly named `AcceptedCocycle`.
 
+### R16. Exact payload to Hodge-blinded value is a typed bridge
+- **Was:** `BlindedCommitmentAxioms` contained four independent proposition
+  fields but did not carry an accepted exact payload, a topology-derived
+  harmonic direction, or the equation relating them. The paper-level formula
+  could therefore be read as though the serialized exact payload and the
+  Hodge-blinded value were the same object, and reused one symbol for opening
+  data and the harmonic blinding scalar.
+- **Fix:** Added `lean/Axioms/CochainCommitment/Blinded.lean`.
+  - `HodgeBlindingContext` carries typed addition/scalar action, harmonicity,
+    orthogonality, and the topology-hash-indexed direction `H_τ`.
+  - `BlindedCommittedCochain` starts from an already accepted exact payload and
+    records the separate equation `value = decode(base) + s • H_τ`.
+  - Bridge theorems recover the exact base witness, prove the base is a
+    one-cocycle, prove the selected direction is harmonic, establish
+    exact–harmonic orthogonality, and expose the exact-plus-harmonic
+    decomposition.
+  - Cryptographic binding and hiding remain explicit assumptions in
+    `BlindedCommitmentAxioms`: exactness supplies the geometric substrate but
+    does not by itself prove a distributional hiding game.
+
 ---
 
 ## Priority 1 — Consensus Semantics
@@ -255,6 +275,19 @@ that fails on legacy filenames.
      public fiber is infinite.
    - Add an explicit bridge showing that an infinite candidate family lies in
      one chosen public classifier fiber under stated hypotheses.
+   - `Axioms/Fibration.lean` currently proves same-class membership only for
+     one already-supplied `EphemeralFiberSpec`. It does not define a generation
+     family, prove distinct outputs, or connect `FiberSystem.transport` to the
+     transported private state. Introduce an `EphemeralRepresentativeSpec`
+     (keeping the old name as a compatibility alias), an indexed
+     `EphemeralRepresentativeFamily`, and a transported-state package. The
+     path is the class-membership witness; the generated endpoint is the
+     ephemeral representative, not a “random cochain candidate.”
+   - For an infinite seed/index type and an injective representative family,
+     prove that the family range is an infinite subset of the base
+     representative's public classifier fiber. Then add the concrete bridge
+     hypothesis relating the Grassmannian/Laplacian candidate family to the
+     chosen protocol classifier.
    - Paper 2 should then state the adversarial sampling/distribution model.
      Avoid treating “`1/∞ = 0`” as a literal uniform probability theorem until
      that game exists; use it only as shorthand for an asymptotic finite-family
@@ -296,3 +329,80 @@ that fails on legacy filenames.
    - Update links from the main README only after this classification, so the
      README can continue to point to useful architecture context without
      treating the entire document as current normative specification.
+
+9. **Correct active infinity/anonymity overclaims (`docs/archive/` excluded)**
+   - `docs/ARCHITECTURE.md` currently treats path availability, public-class
+     membership, infinite class size, cryptographic indistinguishability, and
+     constant-size proofs as though they were one proved result. Separate the
+     semantic classifier fiber from the unproved cardinality bridge and the
+     later anonymity game.
+   - `docs/REFACTOR_PLAN.md` calls the public fiber infinite “by Hodge theory”
+     and says `1/∞` anonymity is rigorous. Reclassify these as target claims;
+     Hodge decomposition alone does not prove that a protocol-relevant
+     classifier fiber is infinite.
+   - `docs/COMPARISON.md`, `docs/ORACLE_SECURITY.md`, `docs/PROOF_MAP.md`, and
+     `docs/ROADMAP.md` present infinite anonymity as an existing system
+     guarantee. Replace with the proved facts (non-faithful public collapse and
+     infinite Grassmannian/Laplacian candidate families) plus the explicit
+     missing classifier-fiber/security-game bridge.
+   - `docs/GEOMETRY.md` equates homotopy equivalence with cryptographic
+     indistinguishability. Rewrite this as semantic equivalence under the
+     selected public classifier; computational indistinguishability requires a
+     protocol observation model and adversarial game.
+   - `docs/GATE_ARCHITECTURE.md` says “same Betti implies
+     indistinguishable.” Treat same-Betti membership only as a candidate public
+     equivalence relation until leakage, proof, and sampling models are fixed.
+   - Do not alter valid non-anonymity uses of infinity, such as the
+     `t → ∞` heat-flow/Hodge-projection limit in `docs/SECURITY.md`.
+   - Leave `docs/archive/` unchanged as historical design record. Active docs
+     may link to an archive file only when clearly labeled as superseded or
+     motivational.
+
+## Priority 6 — Projection Evidence Lifecycle (Paper 2 / Runtime)
+
+10. **Reset the active state bus per commitment; persist only finalized evidence**
+   - The Lean `ProjectionStage.StateBus` is a proof-level, per-witness chain of
+     invariants. Runtime code must not reuse an active bus or any stage result
+     for a different cochain commitment.
+   - Starting a new commitment initializes a fresh active bus keyed by at least
+     the commitment hash, topology hash, and projection/parameter-set ID.
+   - Each restriction and syndrome naturality check is evaluated at its owning
+     transition exactly once. Later stages consume the certified predecessor;
+     the final gate composes stored stage equations and does not rederive them.
+   - After successful finalization, discard/reset the mutable active bus and
+     persist an immutable certificate/evidence object in sheaf or
+     content-addressed storage.
+   - The main chain should store only an evidence-root hash bound to the
+     commitment hash, topology hash, projection/parameter-set ID, and evidence
+     schema/version. A later commitment may link to a previous finalized root
+     for history, but must never inherit its current-stage proofs.
+   - This is a protocol/storage obligation, not an additional Paper 1
+     proximity theorem. Specify serialization, replay protection, garbage
+     collection, and reorganization behavior in Paper 2 before implementing
+     the Rust/Python path.
+
+## Priority 7 — Lean Protocol Layer Separation
+
+11. **Keep one Lean workspace; introduce a one-way `Protocol/` dependency layer**
+   - Do not create independent Lean projects per paper. Keep the existing
+     `lean/` workspace and add `lean/Protocol/` for Paper 2 specifications and
+     proofs.
+   - Add aggregate imports `Paper1.lean` and `Paper2.lean`. `Paper1.lean`
+     imports only core mathematics and shared public-artifact boundaries;
+     `Paper2.lean` imports `Paper1` plus `Protocol`.
+   - Move or re-export consensus, coregulator, ledger, chain, stage
+     admissibility, ephemeral lifecycle, storage transitions, and mutable
+     proximity-evidence lifecycle under `Protocol/`. Preserve temporary
+     compatibility imports during the migration so theorem work and file moves
+     remain reviewable as separate changes.
+   - Split mixed files rather than classifying them wholesale:
+     `Axioms/Fibration` keeps path/class/transport mathematics, while runtime
+     freshness/single-use obligations move to `Protocol/EphemeralLifecycle`;
+     proximity gate theorems stay in `Proximity`, while authenticated evidence
+     databases and reset/finalization transitions move to
+     `Protocol/ProximityEvidence`.
+   - Lean owns the abstract protocol state machines and safety/preservation
+     theorems. Rust owns CSPRNG calls, concrete cryptography, canonical bytes,
+     hashing, database atomicity, zeroization, malformed-input rejection, and
+     networking. A later refinement layer should state that Rust acceptance
+     realizes the Lean transition relation.

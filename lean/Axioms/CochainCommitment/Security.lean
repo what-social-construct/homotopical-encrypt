@@ -1,4 +1,5 @@
 import Axioms.CochainCommitment.Payload
+import Axioms.CochainCommitment.Blinded
 import Axioms.Foundation
 
 /-
@@ -67,11 +68,13 @@ abbrev CochainCommitmentWellFormed (C : CochainCommitmentAxioms) : Prop :=
   ∧ C.PartialOpeningSoundness
 
 /--
-  Blinded commitment axioms.
+  Cryptographic assumptions for the typed blinded-commitment construction.
 
-  Python: BlindedCommitment uses Hodge decomposition structure:
-    Commit(m, r) = δ(m_cochain) + r·H
-  where H is a deterministic element in C¹ generated from topology hash.
+  `BlindedCommittedCochain` carries the mathematical construction
+    decode(base) + s·Hτ = δ₀(a) + s·Hτ.
+  This record separately states the cryptographic properties of that
+  construction; those distributional claims do not follow from exactness
+  alone.
 -/
 structure BlindedCommitmentAxioms where
   /-- Hodge orthogonality: im(δ) and harmonic element H are in

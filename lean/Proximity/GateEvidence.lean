@@ -284,7 +284,6 @@ structure NaturalityGateEvidenceRecord
     (runtime : TCB.RuntimeBoundary)
     (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement) where
   hardGateRecord : HardGateEvidenceRecord runtime Γ
-  naturality : Gates.Projection.ProjectionNaturalityGate Γ
   naturalityRecorded : hardGateRecord.database.NaturalityComplete
 
 namespace NaturalityGateEvidenceRecord
@@ -297,7 +296,7 @@ def certificate
     (record : NaturalityGateEvidenceRecord runtime Γ) :
     Gates.Projection.NaturalityGateCertificate Γ :=
   Gates.Projection.NaturalityGateCertificate.extend
-    record.hardGateRecord.certificate record.naturality
+    record.hardGateRecord.certificate
 
 /-- The naturality evidence slot is bound under the shared evidence root. -/
 theorem naturality_binds

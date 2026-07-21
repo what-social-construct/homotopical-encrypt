@@ -35,53 +35,63 @@ variable
     {Φ : CochainReedSolomon.PlaneEncoding R F}
     {pluckerDisagreement : FrameWitness n r → ℝ}
 
-/--
-Internal projection-chain state bus for one source witness.
+/-- Witness-local state after the Plucker-to-cochain gate. -/
+structure PluckerCochainState
+    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
+    (W : FrameWitness n r) where
+  committedCochain : CochainBridge.CommittedCochain
+  committedCochain_matches :
+    committedCochain = Γ.committedCochain W
+  localDistance_le_source :
+    L.distanceToCode committedCochain ≤ pluckerDisagreement W
 
-The committed cochain is the inherited hcrypt commitment payload
-`Axioms.CochainCommitmentData` through `CochainBridge.CommittedCochain`. The
-gate layer carries that payload forward into the plane shadow and RS received
-word, together with the local metric handoff facts between the native metrics
-at each gate.
+/-- Witness-local state after the cochain-to-plane gate. -/
+structure CochainPlaneState
+    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
+    (W : FrameWitness n r) where
+  previous : PluckerCochainState Γ W
+  planeShadow : CochainPlane.PlaneShadow R ι
+  planeShadow_matches :
+    planeShadow = E.projectedPlane previous.committedCochain
+  planeDistance_le_local :
+    Γ.planeToRS.planeTarget.distanceToCode planeShadow ≤
+      L.distanceToCode previous.committedCochain
+
+/--
+Final witness-local state bus after the plane-to-RS gate.
+
+Each layer stores the previous state and appends only its own output and metric
+handoff. Thus the RS layer is constructed only after the cochain and plane
+layers have already passed for this witness.
 -/
 structure StateBus
     (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
     (W : FrameWitness n r) where
-  committedCochain : CochainBridge.CommittedCochain
-  planeShadow : CochainPlane.PlaneShadow R ι
+  previous : CochainPlaneState Γ W
   receivedWord : Word ι F
-  committedCochain_matches :
-    committedCochain = Γ.committedCochain W
-  planeShadow_matches :
-    planeShadow = E.projectedPlane committedCochain
   receivedWord_matches :
-    receivedWord = Φ.receivedWord planeShadow
-  localDistance_le_source :
-    L.distanceToCode committedCochain ≤ pluckerDisagreement W
-  planeDistance_le_local :
-    Γ.planeToRS.planeTarget.distanceToCode planeShadow ≤
-      L.distanceToCode committedCochain
+    receivedWord = Φ.receivedWord previous.planeShadow
   rsDistance_le_plane :
     D.distanceToRS receivedWord ≤
-      Γ.planeToRS.planeTarget.distanceToCode planeShadow
+      Γ.planeToRS.planeTarget.distanceToCode previous.planeShadow
 
 namespace StateBus
 
-/-- Convenience state bus produced directly from a projection chain. -/
-def of_chain
-    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
-    (W : FrameWitness n r) :
-    StateBus Γ W where
-  committedCochain := Γ.committedCochain W
-  planeShadow := Γ.planeShadow W
-  receivedWord := Γ.receivedWord W
-  committedCochain_matches := rfl
-  planeShadow_matches := rfl
-  receivedWord_matches := rfl
-  localDistance_le_source := Γ.pluckerToCochain.distanceControlled W
-  planeDistance_le_local :=
-    Γ.planeToRS.projection.distanceControlled (Γ.committedCochain W)
-  rsDistance_le_plane := Γ.planeToRS.distanceControlled (Γ.planeShadow W)
+/-- The committed cochain already carried by the previous stage. -/
+def committedCochain
+    {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+    {W : FrameWitness n r}
+    (σ : StateBus Γ W) :
+    CochainBridge.CommittedCochain :=
+  σ.previous.previous.committedCochain
+
+/-- The plane shadow already carried by the previous stage. -/
+def planeShadow
+    {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+    {W : FrameWitness n r}
+    (σ : StateBus Γ W) :
+    CochainPlane.PlaneShadow R ι :=
+  σ.previous.planeShadow
 
 /-- The state bus composes the plane and RS metric handoffs. -/
 theorem rsDistance_le_local
@@ -89,7 +99,7 @@ theorem rsDistance_le_local
     {W : FrameWitness n r}
     (σ : StateBus Γ W) :
     D.distanceToRS σ.receivedWord ≤ L.distanceToCode σ.committedCochain :=
-  le_trans σ.rsDistance_le_plane σ.planeDistance_le_local
+  le_trans σ.rsDistance_le_plane σ.previous.planeDistance_le_local
 
 /--
 The state bus composes the local metric handoffs: the selected RS target metric
@@ -100,7 +110,7 @@ theorem rsDistance_le_source
     {W : FrameWitness n r}
     (σ : StateBus Γ W) :
     D.distanceToRS σ.receivedWord ≤ pluckerDisagreement W :=
-  le_trans σ.rsDistance_le_local σ.localDistance_le_source
+  le_trans σ.rsDistance_le_local σ.previous.previous.localDistance_le_source
 
 end StateBus
 
@@ -252,6 +262,38 @@ def toStageChecklists
 
 end ProjectionStageGateCertificate
 
+namespace PluckerCochainState
+
+/-- Specialize the first uniform gate certificate to one witness. -/
+def of_gateCertificate
+    {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+    (χ : PluckerCochainGateCertificate Γ)
+    (W : FrameWitness n r) :
+    PluckerCochainState Γ W where
+  committedCochain := Γ.committedCochain W
+  committedCochain_matches := rfl
+  localDistance_le_source := χ.pluckerCochain.distanceControlled W
+
+end PluckerCochainState
+
+namespace CochainPlaneState
+
+/-- Append only the cochain-to-plane output and metric invariant. -/
+def extend
+    {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+    {W : FrameWitness n r}
+    (σ : PluckerCochainState Γ W)
+    (χ : CochainPlaneGateCertificate Γ) :
+    CochainPlaneState Γ W where
+  previous := σ
+  planeShadow := E.projectedPlane σ.committedCochain
+  planeShadow_matches := rfl
+  planeDistance_le_local := by
+    simpa [σ.committedCochain_matches] using
+      χ.cochainPlane.distanceControlled (Γ.committedCochain W)
+
+end CochainPlaneState
+
 namespace StateBus
 
 /--
@@ -262,19 +304,23 @@ def of_stageCertificate
     {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
     (χ : ProjectionStageGateCertificate Γ)
     (W : FrameWitness n r) :
-    StateBus Γ W where
-  committedCochain := Γ.committedCochain W
-  planeShadow := Γ.planeShadow W
-  receivedWord := Γ.receivedWord W
-  committedCochain_matches := rfl
-  planeShadow_matches := rfl
-  receivedWord_matches := rfl
-  localDistance_le_source :=
-    χ.final.previous.previous.pluckerCochain.distanceControlled W
-  planeDistance_le_local :=
-    χ.final.previous.cochainPlane.distanceControlled (Γ.committedCochain W)
-  rsDistance_le_plane :=
-    χ.final.planeRS.planeDistanceControlled (Γ.planeShadow W)
+    StateBus Γ W := by
+  let cochainState :=
+    PluckerCochainState.of_gateCertificate χ.final.previous.previous W
+  let planeState := CochainPlaneState.extend cochainState χ.final.previous
+  exact
+    { previous := planeState
+      receivedWord := Φ.receivedWord planeState.planeShadow
+      receivedWord_matches := rfl
+      rsDistance_le_plane :=
+        χ.final.planeRS.planeDistanceControlled planeState.planeShadow }
+
+/-- Convenience constructor using the canonical accumulated stage certificate. -/
+def of_chain
+    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
+    (W : FrameWitness n r) :
+    StateBus Γ W :=
+  of_stageCertificate (ProjectionStageGateCertificate.of_chain Γ) W
 
 end StateBus
 

@@ -35,6 +35,7 @@ structure ProjectionInputs
     (R ι : Type) where
   extraction : PlaneExtractionContext R ι
   target : PlaneTarget R ι
+  naturality : Naturality L extraction
   layoutNondegenerate :
     extraction.LocallyNondegenerate
   alignsCodewords :
@@ -56,6 +57,7 @@ variable {L : PluckerCochain.LocalSyndromeTarget S}
 def toProjection
     (I : ProjectionInputs L R ι) :
     Projection L I.extraction I.target where
+  naturality := I.naturality
   layoutNondegenerate := I.layoutNondegenerate
   alignsCodewords := I.alignsCodewords
   mapsCodewordsToTarget := I.mapsCodewordsToTarget

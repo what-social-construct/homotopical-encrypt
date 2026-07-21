@@ -136,6 +136,29 @@ def toCodeShadow (C : PlaneTarget R ι) :
 end PlaneTarget
 
 /--
+The two typed naturality checks owned by the cochain-to-plane transition.
+
+`restrictionCommutes` is the restriction square. `syndromeCommutes` is the
+coboundary/local-syndrome square through a selected semantic plane syndrome.
+-/
+structure Naturality
+    {S : Axioms.SheafCoherence}
+    (L : PluckerCochain.LocalSyndromeTarget S)
+    (E : PlaneExtractionContext R ι) where
+  restrictCochain :
+    CochainBridge.CommittedCochain → CochainBridge.CommittedCochain
+  restrictPlane : PlaneShadow R ι → PlaneShadow R ι
+  PlaneSyndrome : Type
+  planeSyndrome : PlaneShadow R ι → PlaneSyndrome
+  mapSyndrome : L.Syndrome → PlaneSyndrome
+  restrictionCommutes :
+    ∀ c : CochainBridge.CommittedCochain,
+      E.projectedPlane (restrictCochain c) = restrictPlane (E.projectedPlane c)
+  syndromeCommutes :
+    ∀ c : CochainBridge.CommittedCochain,
+      planeSyndrome (E.projectedPlane c) = mapSyndrome (L.syndrome c)
+
+/--
 Concrete projection from committed cochains to a plane-shadow target.
 
 This is not RS-specific. The map is the actual two-coordinate projection out of
@@ -147,6 +170,7 @@ structure Projection
     (L : PluckerCochain.LocalSyndromeTarget S)
     (E : PlaneExtractionContext R ι)
     (C : PlaneTarget R ι) where
+  naturality : Naturality L E
   layoutNondegenerate :
     E.LocallyNondegenerate
   alignsCodewords :
@@ -211,6 +235,14 @@ structure InvariantChecklist
     {E : PlaneExtractionContext R ι}
     {C : PlaneTarget R ι}
     (π : Projection L E C) : Prop where
+  restrictionNaturality :
+    ∀ c : CochainBridge.CommittedCochain,
+      E.projectedPlane (π.naturality.restrictCochain c) =
+        π.naturality.restrictPlane (E.projectedPlane c)
+  syndromeNaturality :
+    ∀ c : CochainBridge.CommittedCochain,
+      π.naturality.planeSyndrome (E.projectedPlane c) =
+        π.naturality.mapSyndrome (L.syndrome c)
   layoutNondegenerate :
     E.LocallyNondegenerate
   codewordsAligned :
@@ -243,6 +275,8 @@ def of_projection
     {C : PlaneTarget R ι}
     (π : Projection L E C) :
     InvariantChecklist π where
+  restrictionNaturality := π.naturality.restrictionCommutes
+  syndromeNaturality := π.naturality.syndromeCommutes
   layoutNondegenerate := π.layoutNondegenerate
   codewordsAligned := π.alignsCodewords
   alignedCodewordsWellFormed := by

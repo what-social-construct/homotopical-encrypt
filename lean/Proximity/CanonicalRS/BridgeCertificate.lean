@@ -185,9 +185,9 @@ def theoremSlots
     (Ω : RSMetricCertificate β Γ) :
     BridgeTheoremSlots where
   RestrictionNaturality :=
-    Ω.finalCertificate.previous.naturality.RestrictionNaturality
+    Gates.Projection.RestrictionNaturality Γ
   CoboundaryNaturality :=
-    Ω.finalCertificate.previous.naturality.CoboundaryNaturality
+    Gates.Projection.CoboundaryNaturality Γ
   GlobalSectionsMapToRSCodewords :=
     ∀ W : GrassmannianPlucker.FrameWitness n r,
       PluckerCochain.ValidFrame P W →

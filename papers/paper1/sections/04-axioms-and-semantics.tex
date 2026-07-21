@@ -129,6 +129,12 @@ representatives. A hidden class-membership witness is a path
 value of the classifier. The finite-code projection and Reed--Solomon/MCA endpoint are
 introduced later in \cref{sec:rs-proximity-projection}.
 
+Path-respecting gives only the displayed forward implication. Unless a
+separate completeness condition is imposed, equality of classifier values
+need not imply the existence of a path; a public fiber \(A_\alpha\) may be a
+coarser union of path components. Accordingly, \(\alpha\) denotes the public
+classifier value and \(A_\alpha\) its fiber, not a hidden path witness.
+
 The fibration projection and public classifier describe compatible but
 distinct levels. When the hidden representatives are the objects of \(E\), a
 map \(\kappa:B\to P\) on objects supplies the compatibility condition
@@ -347,8 +353,9 @@ restriction maps, local data, and gluing data are compatible with this
 cochain/Hodge structure. The only structural consequences used later are the
 adjacent differential identity \(d^{k+1}d^k=0\) and the Hodge--Laplacian
 identity above.
-Equivalently, the projection maps used to pass from hidden sheaf data to public
-cochain-facing data are required to commute with the coboundary:
+For the projection chain, we additionally require the maps used to pass from
+hidden sheaf data to public cochain-facing data to commute with the
+coboundary:
 \[
 \begin{array}{ccc}
   F(V) & \xrightarrow{\eta_V} & G(V)\\
@@ -417,7 +424,8 @@ This condition records near-boundary status only; runtime policy for such values
 belongs to the subsequent protocol paper.
 
 The corresponding Grassmannian/Laplacian interface makes the hidden-kernel
-search space concrete. Let
+search space concrete. Throughout this subsection, set \(R=\mathbb R\), with its
+standard inner product. Let
 \[
   \mathcal L_\beta(R^n)
   =
@@ -436,8 +444,8 @@ Thus \(\ker(\Delta_W)=W\), and the Grassmannian family is
 \]
 Equivalently, a point of \(\Gr(k,R^n)\) is a \(k\)-dimensional harmonic
 subspace \(W\), and the map \(W\mapsto\Delta_W\) sends it to the corresponding
-projection Laplacian. In particular, \(\Omega_1\) is the one-dimensional
-Grassmannian family of rank-one harmonic kernels.
+projection Laplacian. In particular, \(\Omega_1\) is the Grassmannian family
+of one-dimensional harmonic kernels.
 
 \begin{proposition}[Grassmannian Laplacian search space]\label{prop:grassmannian-search-space}
   For every \(k\le n\), the family \(\Omega_k\) is nonempty and satisfies
@@ -659,7 +667,7 @@ operative kernel.
   \]
 \end{definition}
 
-The order of determination is important. The public homotopy-class label
+The order of determination is important. The public classifier value
 \(\alpha\) gives the public fiber \(A_\alpha\); it is not itself a fibration
 ID. A hidden representative \(x\in A_\alpha\) determines the operative Hodge--Laplacian
 \(\Delta_x\). Once an HCP witness has selected or certified the hidden Hodge
@@ -670,7 +678,7 @@ data \((\Delta_x,h,e)\), the fibration ID is the spectral fingerprint
 \]
 Thus the spectral fingerprint gives the fibration identity in the certified
 Hodge layer, while remaining downstream of harmonic-cochain recovery and not
-part of the public homotopy class.
+part of the public classifier value.
 
 \begin{proposition}[Spectrum is not determined by harmonic dimension]\label{prop:spectrum-not-homotopy-invariant}
   There exist self-adjoint positive semidefinite Laplacians \(L_1,L_2\) with

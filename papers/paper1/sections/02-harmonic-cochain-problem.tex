@@ -13,7 +13,7 @@ descriptions agree: \(A_\alpha=[x]_\pi\).
 
 \begin{definition}[Harmonic Cochain Problem]\label{def:hcp}
   The \emph{Harmonic Cochain Problem} (HCP) asks, given public data
-  \((\alpha,b)\) consisting of a realized public homotopy-class label
+  \((\alpha,b)\) consisting of a realized public classifier value
   \(\alpha\in\image(\pi)\) and a cochain-facing observation \(b\), to recover a
   cochain \(h\in\ker(\Delta_1)\), where \(\Delta_1\) is the degree-one
   Hodge--Laplacian induced by some hidden representative
@@ -136,7 +136,8 @@ to this chain, but does not expose the chain.
 \end{proof}
 
 \begin{proposition}[Hodge decomposition surface]\label{prop:hodge-decomposition}
-  Let
+  Let the three consecutive cochain spaces be finite-dimensional real inner
+  product spaces, and let the displayed stars denote adjoints. Suppose
   \[
     d_{\mathrm{next}}d_{\mathrm{prev}}=0,
     \qquad
@@ -160,7 +161,8 @@ to this chain, but does not expose the chain.
 \end{proposition}
 
 \begin{proof}
-  Since \(\Delta\) is self-adjoint, decompose the ambient cochain space as
+  Since the ambient cochain space is finite-dimensional and \(\Delta\) is
+  self-adjoint, decompose it as
   \[
     \ker(\Delta)\oplus\image(\Delta).
   \]
@@ -187,7 +189,7 @@ to this chain, but does not expose the chain.
 \begin{definition}[Public observation]\label{def:public-observation}
   A public observation is the data exposed to a verifier or adversary without
   revealing a hidden representative. In the abstract model it consists of a
-  realized public homotopy-class label \(\alpha\), together with a
+  realized public classifier value \(\alpha\), together with a
   cochain-facing observation \(b\). In the \HE{} instantiation, the fully
   public handles are hashes, roots,
   topology hashes, nullifiers, and bounded public summaries; cochain
@@ -198,7 +200,7 @@ to this chain, but does not expose the chain.
 
 Thus \((\alpha,b)\) is the protocol-independent abstraction of the concrete
 artifact-and-commitment layer in \cref{sec:public-artifacts-commitments}:
-\(\alpha\) records the public homotopy-class label, while \(b\) records the cochain-level
+\(\alpha\) records the public classifier value, while \(b\) records the cochain-level
 datum made available through an accepted payload, commitment, opening, or
 proof-carrying statement. This abstraction is the public datum used in the HCP
 definition and in the hidden-kernel ambiguity comparison.

@@ -44,14 +44,14 @@ may be compatible with distinct hidden operators, distinct kernels, and
 different harmonicity judgments.  The paper isolates this boundary and then
 separates it from the finite verifier-facing projection artifacts used later.
 Those artifacts supply concrete sources for the abstract observation
-\((\alpha,b)\): the public homotopy class supplies the realized class label
+\((\alpha,b)\): the public classifier supplies the realized class value
 \(\alpha\), while accepted cochain payloads,
 openings, or proof-carrying statements supply the cochain-facing datum \(b\).
 They bind to hidden Hodge data without presenting \(\Delta\) or
 \(\ker(\Delta)\). The fibration ID is the spectral fingerprint
 \(\operatorname{Spec}_{\mathrm{multi}}(\Delta)\), obtained only after the
 relevant Hodge data has been recovered or certified; it is not part of the
-public homotopy class.
+public classifier value.
 
 The principal notation is fixed globally as follows. Symbols used only inside
 a single proposition or construction are defined locally.
@@ -64,8 +64,8 @@ a single proposition or construction are defined locally.
     \hline
     \(p:E\to B\) & Helfer-style fibration projection \\
     \(\mathcal P_X(x,y)\) & path object from \(x\) to \(y\) in \(X\) \\
-    \(\pi:A\to P\) & public homotopy-class classifier \\
-    \(\alpha=\pi(x)\in P\) & realized public class label or fingerprint \\
+    \(\pi:A\to P\) & path-respecting public classifier \\
+    \(\alpha=\pi(x)\in P\) & realized public classifier value \\
     \(A_\alpha=[x]_\pi\) & fiber of hidden representatives with public label \(\alpha\) \\
     \((\alpha,b)\) & public HCP observation \\
     \(\delta_0,\delta_1,\Delta_1\) & adjacent coboundaries and degree-one Hodge--Laplacian \\
@@ -94,7 +94,8 @@ This paper develops this boundary through the following statements.
     fibrational identity, homotopy classes, exact Hodge/cochain invariants,
     spectral/Tsirelson admissibility, and Heyting-style public judgments.
   \item A projection chain through Plucker coordinates and cochain commitments to a
-    canonical Reed--Solomon endpoint with an MCA bad-challenge bound.
+    canonical Reed--Solomon endpoint, with a conditional far-separation gate and
+    an MCA bad-challenge bound imported at an explicit cited theorem boundary.
 \end{enumerate}
 
 The corresponding Lean definitions, reductions, gates, theorem boundaries,

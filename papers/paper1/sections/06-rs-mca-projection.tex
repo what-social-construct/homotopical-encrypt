@@ -406,7 +406,7 @@ and a supported modulus \(q>1\).
 \begin{definition}[Local syndrome target]\label{def:local-syndrome-target}
 Fix sheaf coherence data \(S\). A local syndrome target is a quadruple
 \[
-  L=(\Sigma,\sigma,Z,d_L)
+  \mathcal L=(\Sigma,\sigma,Z,d_L)
 \]
 where
 \[
@@ -498,7 +498,7 @@ Let an observed frame binding relative to \(S\) prove
 \]
 for \(\mathcal F\in\mathcal V_{\mathrm{fr}}\).
 Then \(c\) is well formed, \(c\) is an accepted committed cocycle, and \(c\) is a
-codeword for every local syndrome target \(L\) over \(S\).
+codeword for every local syndrome target \(\mathcal L\) over \(S\).
 \end{proposition}
 
 \begin{proof}
@@ -510,7 +510,7 @@ The payload-realization relation includes the implication
 Applying it to \(\xi=\operatorname{Pl}(\mathcal F)\) gives
 \(c\in G_S\), which in particular gives payload well-formedness and the
 degree-one cocycle equation. For a local syndrome target
-\(L=(\Sigma,\sigma,Z,d_L)\), the target axiom gives
+\(\mathcal L=(\Sigma,\sigma,Z,d_L)\), the target axiom gives
 \[
   c\in G_S\Longrightarrow \sigma(c)\in Z.
 \]
@@ -518,10 +518,10 @@ Together with \(c\in G_S\), this is exactly \(c\in\mathcal C_L\).
 \end{proof}
 
 \begin{definition}[Syndrome adequacy gate]\label{def:syndrome-adequacy-gate}
-For a local syndrome target \(L=(\Sigma,\sigma,Z,d_L)\), the syndrome-adequacy
+For a local syndrome target \(\mathcal L=(\Sigma,\sigma,Z,d_L)\), the syndrome-adequacy
 gate is
 \[
-  \mathcal A_S(L)
+  \mathcal A_S(\mathcal L)
   \Longleftrightarrow
   \forall c\in\mathcal C_{\mathrm{com}},\quad
   c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\wedge(\sigma(c)\in Z)
@@ -530,8 +530,8 @@ gate is
 \]
 \end{definition}
 
-\begin{proposition}[Zero syndrome gives a local codeword]\label{prop:zero-syndrome-codeword}
-If \(\mathcal A_S(L)\), \(c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\),
+\begin{proposition}[An adequate syndrome gives a local codeword]\label{prop:zero-syndrome-codeword}
+If \(\mathcal A_S(\mathcal L)\), \(c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\),
 and \(\sigma(c)\in Z\), then
 \[
   c\in\mathcal C_L.
@@ -624,16 +624,18 @@ It sends a plane word \(p\) to a received word
   \Phi_\ast(p):I\to F,\qquad
   \Phi_\ast(p)(i)=\Phi(p(i,\cdot)).
 \]
-For an RS target \(T\) with received-word metric \(D\), the RS plane target is
+An RS interpretation retains an independently meaningful plane target
+\((\mathcal C_{\mathcal P},d_{\mathcal P})\) and supplies the two later-stage
+conditions
 \[
   p\in\mathcal C_{\mathcal P}
-  \Longleftrightarrow
+  \Longrightarrow
   \Phi_\ast(p)\in T,
   \qquad
-  d_{\mathcal P}(p)=D(\Phi_\ast(p)).
+  D(\Phi_\ast(p))\le d_{\mathcal P}(p).
 \]
-An RS interpretation of a cochain-plane projection exposes an evaluation
-projection from the local syndrome space to the RS code space, with
+It therefore exposes an evaluation projection from the local syndrome space
+to the RS code space, with
 \[
   c\in\mathcal C_L
   \Longrightarrow
@@ -648,6 +650,22 @@ For the canonical integer boundary used below,
 \]
 where \(g\) is the canonical RS generator defined in
 \cref{sec:rs-canonical-endpoint}.
+
+This integer encoding is not globally injective.  If the first coordinate is
+shifted by \(12289\), its image in \(F\) is unchanged.  Consequently the
+plane-to-RS far theorem cannot be inferred from the displayed encoding alone.
+It must either restrict plane points to an admissible region on which \(\Phi\)
+is faithful, or supply the required metric lower bound directly.  For a set
+\(A\subseteq(\operatorname{Fin}(2)\to\mathbb Z)\), write
+\[
+  \operatorname{FaithfulOn}(\Phi,A)
+  \quad\Longleftrightarrow\quad
+  \Phi|_A\text{ is injective}.
+\]
+Coordinatewise membership in \(A\), together with
+\(\operatorname{FaithfulOn}(\Phi,A)\), prevents two plane words from encoding
+to the same received word.  This is a non-collapse precondition, not yet a
+quantitative distance lower bound.
 
 \begin{proposition}[Plane and RS handoff]\label{prop:plane-rs-handoff}
 Let \(c\in\mathcal C_{\mathrm{com}}\). If \(c\in\mathcal C_L\), then
@@ -667,14 +685,13 @@ The cochain-to-plane projection has three defining hypotheses. Applied to
 \[
   d_{\mathcal P}(p_c)\le d_L(c).
 \]
-For the RS plane target,
+The plane-to-RS interpretation maps the resulting plane codeword to an RS
+codeword and gives
 \[
-  p\in\mathcal C_{\mathcal P}
-  \Longleftrightarrow \Phi_\ast(p)\in T,
-  \qquad
-  d_{\mathcal P}(p)=D(\Phi_\ast(p)).
+  D(\Phi_\ast(p_c))\le d_{\mathcal P}(p_c).
 \]
-Substitution with \(p=p_c\) gives the two displayed conclusions.
+Composing this inequality with
+\(d_{\mathcal P}(p_c)\le d_L(c)\) gives the metric conclusion.
 \end{proof}
 
 \subsection{Composed Chain, Gates, And Evidence}
@@ -702,6 +719,7 @@ The composed evaluation projection is
 Its metric handoff is the chain of inequalities
 \[
   D(y_\Gamma(\mathcal F))
+  \le d_{\mathcal P}(p_\Gamma(\mathcal F))
   \le d_L(c_\Gamma(\mathcal F))
   \le \rho(\mathcal F).
 \]
@@ -732,7 +750,13 @@ The plane-to-RS interpretation maps local codewords to RS codewords; hence
 \]
 For the metric statement, the plane-to-RS interpretation gives
 \[
-  D(y_\Gamma(\mathcal F))\le d_L(c_\Gamma(\mathcal F)),
+  D(y_\Gamma(\mathcal F))
+  \le d_{\mathcal P}(p_\Gamma(\mathcal F)),
+\]
+the cochain-to-plane projection gives
+\[
+  d_{\mathcal P}(p_\Gamma(\mathcal F))
+  \le d_L(c_\Gamma(\mathcal F)),
 \]
 and the Plucker-to-cochain projection gives
 \[
@@ -741,13 +765,16 @@ and the Plucker-to-cochain projection gives
 The desired inequality follows by transitivity.
 \end{proof}
 
-The associated state tuple for one witness is
-\[
-  c_\Gamma(\mathcal F),\qquad p_\Gamma(\mathcal F),\qquad
-  y_\Gamma(\mathcal F),
-\]
-the definitional equalities by which they are produced, and the two local
-metric handoffs. Hence
+For one witness, the state bus is nested in the same order as the projection:
+the Plucker/cochain state stores \(c_\Gamma(\mathcal F)\) and
+\(d_L(c_\Gamma(\mathcal F))\le\rho(\mathcal F)\); the cochain/plane state
+stores that predecessor together with \(p_\Gamma(\mathcal F)\) and
+\(d_{\mathcal P}(p_\Gamma(\mathcal F))\le d_L(c_\Gamma(\mathcal F))\); and
+the final plane/RS state stores its predecessor together with
+\(y_\Gamma(\mathcal F)\) and
+\(D(y_\Gamma(\mathcal F))\le d_{\mathcal P}(p_\Gamma(\mathcal F))\).
+The definitional equalities record that each output is exactly the result of
+its owning transition.  Transitivity yields
 \[
   D(y_\Gamma(\mathcal F))\le \rho(\mathcal F).
 \]
@@ -784,9 +811,11 @@ Let
 \[
   \chi_{c\to p}(\Gamma)
 \]
-denote the conjunction of local nondegeneracy of \(\mathcal E\), alignment of
-all local codewords, well-formedness of aligned codewords, expected edge-count
-equality, selected-index bounds, plane-target codeword preservation, and
+denote the conjunction of the typed restriction and syndrome naturality
+squares for the cochain-to-plane transition, local nondegeneracy of
+\(\mathcal E\), alignment of all local codewords, well-formedness of aligned
+codewords, expected edge-count equality, selected-index bounds, plane-target
+codeword preservation, and
 \[
   d_{\mathcal P}(p_c)\le d_L(c).
 \]
@@ -797,11 +826,14 @@ Let
 denote the conjunction
 \[
 \begin{gathered}
+  \text{the typed restriction and syndrome naturality squares for }p\to\mathrm{RS},\\
   \Phi_\ast(p_c)\text{ is the received word associated with }c,\\
-  c\in\mathcal C_L\Rightarrow \Phi_\ast(p_c)\in T,\\
-  D(\Phi_\ast(p_c))\le d_L(c).
+  p\in\mathcal C_{\mathcal P}\Rightarrow \Phi_\ast(p)\in T,\\
+  D(\Phi_\ast(p))\le d_{\mathcal P}(p),
 \end{gathered}
 \]
+together with the resulting composed codeword and distance consequences for
+local cochains.
 The accumulated stage certificate is the conjunction
 \[
   \chi_{\mathrm{stage}}(\Gamma)
@@ -824,15 +856,17 @@ committed cocycle is a local codeword by the defining implication
 \[
   c\in G_S\Rightarrow \sigma(c)\in Z.
 \]
-The cochain-to-plane projection hypotheses are precisely local nondegeneracy,
-alignment, plane-target preservation, and the distance inequality; the
-well-formedness, edge-count, and selected-index clauses are consequences of the
-alignment condition. The plane-to-RS interpretation hypotheses give the received
-word equality, RS codeword preservation, and the RS distance inequality.
+The cochain-to-plane projection hypotheses are precisely its two typed
+naturality squares, local nondegeneracy, alignment, plane-target preservation,
+and the distance inequality; the well-formedness, edge-count, and
+selected-index clauses are consequences of the alignment condition. The
+plane-to-RS interpretation hypotheses give its two typed naturality squares,
+the received-word equality, plane-codeword preservation, and the
+plane-to-RS distance inequality.
 Taking these three conjunctions gives \(\chi_{\mathrm{stage}}(\Gamma)\).
 \end{proof}
 
-The structural hard-gate bundle consists of the following five gates:
+The structural hard-gate bundle consists of the following four gates:
 \[
 \begin{array}{ll}
 \text{source metric:}
@@ -848,12 +882,15 @@ The structural hard-gate bundle consists of the following five gates:
     y_\Gamma(\mathcal F)=y_\Gamma(\mathcal G),\\[2pt]
 \text{semantic alignment:}
   & \text{valid frames give aligned cochains, and the plane and RS words}\\
-  & \text{are exactly the extraction and encoding outputs},\\[2pt]
-\text{syndrome adequacy:}
-  & c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\wedge(\sigma(c)\in Z)
-    \Rightarrow c\in G_S.
+  & \text{are exactly the extraction and encoding outputs}.
 \end{array}
 \]
+
+Commitment acceptance has already established \(c\in G_S\) before the
+projection chain begins.  Thus no converse inference from a local syndrome to
+sheaf acceptance is required here.  The optional assertion
+\(\sigma(c)\in Z\Rightarrow c\in G_S\) would be a separate adequacy hypothesis,
+not a hard gate of this construction.
 
 \begin{definition}[Hard-gate certificate]\label{def:hard-gate-certificate}
 A hard-gate certificate for \(\Gamma\) is the tuple
@@ -865,47 +902,48 @@ A hard-gate certificate for \(\Gamma\) is the tuple
     \gamma_{\mathrm{src}},\
     \gamma_{\mathrm{Pl}},\
     \gamma_{\mathrm{quot}},\
-    \gamma_{\mathrm{align}},\
-    \gamma_{\mathrm{syn}}
+    \gamma_{\mathrm{align}}
   \bigr),
 \]
-where the five \(\gamma\)-terms are respectively the source metric gate, Plucker
-metric/chart gate, Plucker-quotient respect gate, semantic-alignment gate, and
-syndrome-adequacy gate.
+where the four \(\gamma\)-terms are respectively the source metric gate,
+Plucker metric/chart gate, Plucker-quotient respect gate, and
+semantic-alignment gate.
 \end{definition}
+
+The two local restriction squares compose to a whole-chain restriction square,
+and the two local syndrome squares compose to a whole-chain
+coboundary/syndrome square.  The naturality certificate
+\[
+  \chi_{\mathrm{nat}}(\Gamma)
+  =\bigl(\chi_{\mathrm{hard}}(\Gamma),\nu_\Gamma\bigr)
+\]
+stores the hard certificate unchanged and appends only these two composites.
+It does not run either stage-local check a second time.
 
 \begin{proposition}[Hard-gate certificate projections]\label{prop:hard-gate-projections}
 A hard-gate certificate exposes the accumulated stage certificate and each of
-the five structural gates. In particular, its syndrome entry implies
-\[
-  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\wedge(\sigma(c)\in Z)
-  \Longrightarrow
-  c\in\mathcal C_L,
-\]
-and its quotient-respect entry implies
+the four structural gates. Its quotient-respect entry implies
 \[
   \operatorname{Pl}(\mathcal F)=\operatorname{Pl}(\mathcal G)
   \Longrightarrow
   y_\Gamma(\mathcal F)=y_\Gamma(\mathcal G).
 \]
+Extending it through \(\chi_{\mathrm{nat}}(\Gamma)\) exposes the two
+whole-chain naturality equations obtained by composing the stage-local
+squares.
 \end{proposition}
 
 \begin{proof}
-The first sentence is projection from the displayed tuple. The syndrome
-entry is the implication
-\[
-  c\in\mathcal C_{\mathrm{com}}^{\mathrm{wf}}\wedge(\sigma(c)\in Z)
-  \Rightarrow c\in G_S.
-\]
-Together with the assumed \(\sigma(c)\in Z\), this is exactly
-\[
-  c\in\mathcal C_L
-  \Longleftrightarrow
-  c\in G_S\wedge \sigma(c)\in Z.
-\]
-The quotient-respect entry contains equality of the downstream received
+The structural statements are projections from the displayed tuple. The
+quotient-respect entry contains equality of the downstream received
 words whenever the Plucker coordinates agree, which is the displayed
-conclusion.
+conclusion.  For naturality, first apply the cochain-to-plane restriction
+square and then the plane-to-RS restriction square; functoriality of
+\(\Phi_\ast\) gives the whole-chain restriction equation.  Likewise, first
+apply the plane-to-RS syndrome square and then the cochain-to-plane syndrome
+square; applying the intervening syndrome map gives the whole-chain
+coboundary/syndrome equation.  These are compositions of the stored local
+proofs.
 \end{proof}
 
 The far-side gates are not injectivity claims. They are calibrated
@@ -915,9 +953,14 @@ non-collapse implications:
   \Longrightarrow
   r_C\le d_L(c_\Gamma(\mathcal F)),
 \]
-and
 \[
   r_C\le d_L(c_\Gamma(\mathcal F))
+  \Longrightarrow
+  r_P\le d_{\mathcal P}(p_\Gamma(\mathcal F)),
+\]
+and
+\[
+  r_P\le d_{\mathcal P}(p_\Gamma(\mathcal F))
   \Longrightarrow
   r_T\le D(y_\Gamma(\mathcal F)).
 \]
@@ -932,7 +975,7 @@ still says that any collapsed image of a far source witness is target-far. It
 rules out far-to-near collapse, not all quotient collapse.
 
 \begin{proposition}[Far-gate composition]\label{prop:far-gate-composition}
-The two far-side gates imply the final far-region separation
+The three far-side gates imply the final far-region separation
 \[
   r_S\le \rho(\mathcal F)
   \Longrightarrow
@@ -950,7 +993,11 @@ Assume \(r_S\le\rho(\mathcal F)\). The first far gate gives
 \[
   r_C\le d_L(c_\Gamma(\mathcal F)).
 \]
-Applying the second far gate gives
+The second gives
+\[
+  r_P\le d_{\mathcal P}(p_\Gamma(\mathcal F)),
+\]
+and the third gives
 \[
   r_T\le D(y_\Gamma(\mathcal F)).
 \]
@@ -964,16 +1011,19 @@ A radius calibration is
           r^T_{\mathrm{near}},r^T_{\mathrm{far}})
 \]
 with source gap, target gap, and near compatibility. A calibrated final
-certificate consists of a hard-gate certificate and a far-region separation
-witness at the calibrated far radii. It yields calibrated end-to-end readiness
-and hence a calibrated gap projection into the RS code space.
+certificate consists of a naturality-extended hard-gate certificate and a
+far-region separation witness at the calibrated far radii. The intermediate
+cochain and plane far radii remain explicit in a three-stage far pipeline, but
+the final certificate records only its calibrated source and target endpoints.
+It yields calibrated end-to-end readiness and hence a calibrated gap projection
+into the RS code space.
 
 \begin{definition}[Calibrated final certificate]\label{def:calibrated-final-certificate}
 For a radius calibration \(\kappa\), a calibrated final certificate is
 \[
   \Omega(\Gamma,\kappa)
   =
-  \bigl(\chi_{\mathrm{hard}}(\Gamma),\omega_\kappa\bigr),
+  \bigl(\chi_{\mathrm{nat}}(\Gamma),\omega_\kappa\bigr),
 \]
 where \(\omega_\kappa\) is the far-region separation statement
 \[
@@ -998,9 +1048,10 @@ of \cref{prop:projection-pullback}.
 \end{proposition}
 
 \begin{proof}
-Project \(\Omega(\Gamma,\kappa)\) onto its hard-gate certificate and its
-far-region witness. By \cref{prop:hard-gate-projections}, the hard-gate
-certificate exposes \(\chi_{\mathrm{stage}}(\Gamma)\). The near compatibility
+Project \(\Omega(\Gamma,\kappa)\) onto its naturality-extended hard-gate
+certificate and its far-region witness. By
+\cref{prop:hard-gate-projections}, the former retains the hard-gate certificate,
+which exposes \(\chi_{\mathrm{stage}}(\Gamma)\). The near compatibility
 \[
   r^S_{\mathrm{near}}\le r^T_{\mathrm{near}}
 \]
@@ -1019,7 +1070,7 @@ The evidence database has seven fixed slots:
 2 & \text{Plucker metric/chart gate}\\
 3 & \text{Plucker-quotient respect gate}\\
 4 & \text{semantic-alignment gate}\\
-5 & \text{syndrome-adequacy gate}\\
+5 & \text{assembled restriction/syndrome naturality gate}\\
 6 & \text{calibrated final far-region witness}.
 \end{array}
 \]
@@ -1034,30 +1085,37 @@ arguments below.
 
 \begin{proposition}[Evidence completeness]\label{prop:evidence-completeness}
 If the hard-gate prefix is complete, then every hard-gate slot binds to its
-digest and is included under the evidence root. If the final witness slot is
-complete, then the calibrated far-region witness slot binds to its digest and
-is included under the same root. A complete final evidence certificate therefore
-recovers the calibrated final certificate and calibrated end-to-end readiness.
+digest and is included under the evidence root. If the naturality slot is
+complete, then the composed naturality proof binds and is included under that
+root. If the final witness slot is complete, then the calibrated far-region
+witness also binds and is included under the same root. A complete final
+evidence certificate therefore recovers the calibrated final certificate and
+calibrated end-to-end readiness.
 \end{proposition}
 
 \begin{proof}
 Hard-gate completeness is the conjunction
 \[
-  \Bigl(\forall s\in\{0,\ldots,5\},\
+  \Bigl(\forall s\in\{0,\ldots,4\},\
     \beta_s\wedge\iota_s\Bigr)
   \wedge
   \beta_{\mathrm{root}}.
 \]
 Taking the corresponding conjuncts gives binding and inclusion for each hard
-slot. Final-witness completeness is
+slot. Naturality completeness is
+\[
+  \beta_5\wedge\iota_5,
+\]
+and final-witness completeness is
 \[
   \beta_6\wedge\iota_6,
 \]
-so the two final-slot assertions follow. A final evidence certificate contains
-the mathematical hard-gate certificate and the final far-region witness. The
-definition of the calibrated final certificate adjoins this witness to the
-hard-gate certificate, and the calibrated-readiness map is the definition of
-end-to-end readiness for that final certificate.
+so the two appended-slot assertions follow. A final evidence certificate
+contains the mathematical hard-gate certificate, its derived whole-chain
+naturality proof, and the final far-region witness. The definition of the
+calibrated final certificate adjoins the last witness to the
+naturality-extended certificate, and the calibrated-readiness map is the
+definition of end-to-end readiness for that final certificate.
 \end{proof}
 
 The public plane view is derived from the observed cochain artifact under the
@@ -1309,11 +1367,12 @@ therefore gives
 \[
   \operatorname{ord}(11)=12288.
 \]
-Since \(3\mid12288\) and \(3\ne0\), the order formula for powers gives
+The order formula for powers gives
 \[
   \operatorname{ord}(11^3)
   =
-  \frac{\operatorname{ord}(11)}{3}
+  \frac{\operatorname{ord}(11)}{\gcd(\operatorname{ord}(11),3)}
+  =\frac{12288}{3}
   =
   4096.
 \]
@@ -1449,10 +1508,10 @@ have been fixed as above.
 \begin{proof}
 Let \(\Omega_{\mathrm{RS}}=(\kappa,\Omega)\). By
 \cref{prop:final-cert-ready}, \(\Omega\) exposes the accumulated stage
-certificate, near compatibility, and far non-collapse. The stage certificate
-supplies the restriction-naturality and coboundary/syndrome-naturality slots:
-these slots assert that the already-defined projection stages commute with
-their extraction, syndrome, and received-word maps. By
+certificate, the derived whole-chain naturality gate, near compatibility, and
+far non-collapse. The naturality gate supplies the restriction-naturality and
+coboundary/syndrome-naturality slots by composing the two corresponding
+stage-local squares; it does not assume new unrelated propositions. By
 \cref{prop:composed-chain}, valid global frames map to RS codewords, giving
 \(\theta^{\mathrm{code}}_\Gamma\). The projection-matches-word slot is the
 definitional equality
@@ -1484,12 +1543,12 @@ or by exact distance preservation
 \[
   D(y_\Gamma(\mathcal F))=\rho(\mathcal F).
 \]
-Together with the hard-gate certificate, this witness gives the canonical
-calibrated RS bridge.
+Together with the naturality-extended hard-gate certificate, this witness gives
+the canonical calibrated RS bridge.
 
 \begin{proposition}[Canonical bridge completion]\label{prop:canonical-bridge}
-A hard-gate certificate for \(\Gamma\), together with a canonical Johnson
-far-separation witness
+A naturality-extended hard-gate certificate for \(\Gamma\), together with a
+canonical Johnson far-separation witness
 \[
   \delta_J\le \rho(\mathcal F)
   \Longrightarrow
@@ -1506,9 +1565,11 @@ domain cardinality is \(|\operatorname{Fin}(4096)|=4096\), smoothness is
 \cref{prop:canonical-metric}, and the radius parameters are all the relative
 Hamming radius \(\delta_J\).
 
-The hard-gate certificate contains the accumulated stage certificate and the
-structural gate bundle. The stage certificate supplies the naturality slots
-used by the bridge surface. By \cref{prop:composed-chain}, valid source frames
+The naturality-extended certificate contains the hard-gate certificate, hence
+the accumulated stage certificate and structural gate bundle. Its two
+naturality fields are the whole-chain composites of the restriction and
+syndrome squares already stored at the cochain/plane and plane/RS stages. By
+\cref{prop:composed-chain}, valid source frames
 map to RS codewords and the composed map is definitionally
 \(\mathcal F\mapsto y_\Gamma(\mathcal F)\). The same-radius calibration has
 near compatibility by reflexivity:
@@ -1516,17 +1577,20 @@ near compatibility by reflexivity:
   \delta_J\le\delta_J.
 \]
 The displayed far-separation witness supplies the final far non-collapse slot.
-The hard-gate certificate and far-separation witness form the calibrated final
-certificate \(\Omega(\Gamma,\kappa)\); together with \(\kappa\), this is the RS
-metric certificate \(\Omega_{\mathrm{RS}}\). By
+The naturality-extended certificate and far-separation witness form the
+calibrated final certificate \(\Omega(\Gamma,\kappa)\); together with
+\(\kappa\), this is the RS metric certificate \(\Omega_{\mathrm{RS}}\). By
 \cref{prop:rs-metric-cert-slots}, it fills the bridge theorem slots and
 completes the canonical RS bridge conditions. Then
 \cref{prop:projection-pullback} gives the induced pullback of correct RS gap
 solvers.
 \end{proof}
 
-The deep list-decoding and MCA estimates are external theorem inputs. The
-cited theorem boundary supplies:
+The deep list-decoding and MCA estimates are external theorem inputs
+\cite{benSassonCarmonHabockKoppartySaraf2026,proximityPrize2026}.
+
+\begin{assumption}[Cited canonical list/MCA bound]
+The cited theorem boundary supplies:
 \[
 \begin{gathered}
   L_{\mathrm{cit}}\in\mathbb N,\qquad
@@ -1542,8 +1606,13 @@ cited theorem boundary supplies:
   \frac{\tau_{\mathrm{cit}}}{|F|}.
 \end{gathered}
 \]
-The project-specific list-decoding and MCA input is the cited Proximity Prize
-theorem boundary \cite{proximityPrize2026}.
+Here \(\tau_{\mathrm{cit}}\) and \(L_{\mathrm{cit}}\) denote the specialized
+finite witnesses. This paper does not claim
+\(\tau_{\mathrm{cit}}<|F|\), or any fixed-bit security level, without a
+separate numerical evaluation of the cited formula at the canonical
+parameters. Thus the displayed fraction is a theorem-shaped external bound;
+its nontriviality is a distinct parameter check.
+\end{assumption}
 
 \subsection{Canonical MCA Corollary}
 
@@ -1642,10 +1711,11 @@ Substituting the displayed equality of bad-challenge sets gives the theorem.
 
 \begin{corollary}[Verifier-facing RS/MCA projection]\label{cor:verifier-rs-mca}
 Given an accepted hidden/geometric witness, a certified
-Plucker-to-cochain-to-plane-to-RS projection chain, the hard projection-gate
-evidence, and a canonical Johnson-radius far-separation witness, the public
-verifier obtains a finite Reed--Solomon received word whose canonical MCA
-bad-challenge fraction is bounded by the cited threshold
+Plucker-to-cochain-to-plane-to-RS projection chain, hard projection-gate
+evidence extended through assembled naturality, and a canonical
+Johnson-radius far-separation witness, the public verifier obtains a finite
+Reed--Solomon received word whose canonical MCA bad-challenge fraction is
+bounded by the cited threshold
 \(\tau_{\mathrm{cit}}/|F|\).
 \end{corollary}
 
@@ -1662,9 +1732,10 @@ satisfy
 \[
   D(y_\Gamma(\mathcal F))\le\rho(\mathcal F).
 \]
-The hard projection-gate evidence gives the structural and stage certificates,
-and the Johnson far-separation witness gives the calibrated bridge by
-\cref{prop:canonical-bridge}. For any second projected witness
+The projection-gate evidence gives the structural and stage certificates and
+the composed naturality equations; the Johnson far-separation witness then
+gives the calibrated bridge by \cref{prop:canonical-bridge}. For any second
+projected witness
 \(\mathcal G\), \cref{thm:canonical-rs-mca} applied to the final affine line
 \[
   (y_\Gamma(\mathcal F),y_\Gamma(\mathcal G))
@@ -1698,7 +1769,11 @@ inherits \lean{Axioms.CommittedCochainWellFormed} and
 encoding stages correspond to \lean{Proximity.CochainPlane.Core},
 \lean{Proximity.CochainPlane.Concrete},
 \lean{Proximity.CochainPlane.ReedSolomon}, and
-\lean{Proximity.CochainReedSolomon}.
+\lean{Proximity.CochainReedSolomon}.  In particular,
+\lean{CochainReedSolomon.PlaneEncoding.receivedWord_injective_on} is the
+faithful-admissible-region lemma, while
+\lean{CanonicalRS.integerPlaneEncoding_not_injective} records the global
+modulus collision at the canonical integer boundary.
 
 The composed chain, gates, public boundary, and evidence records correspond to
 \lean{Proximity.ProjectionChain.Core}, \lean{Proximity.Gates.Stage},

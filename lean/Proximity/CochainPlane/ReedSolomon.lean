@@ -49,6 +49,12 @@ structure PlaneEncoding (R F : Type) where
 
 namespace PlaneEncoding
 
+/-- Point encoding is faithful on a selected admissible plane region. -/
+def FaithfulOn
+    (E : PlaneEncoding R F)
+    (A : Set (Fin 2 → R)) : Prop :=
+  Set.InjOn E.encodePoint A
+
 /-- Encode an indexed plane shadow as an RS received word. -/
 def receivedWord
     (E : PlaneEncoding R F)
@@ -56,6 +62,20 @@ def receivedWord
     (p : CochainPlane.PlaneShadow R ι) :
     Word ι F :=
   fun i => E.encodePoint (p i)
+
+omit [Field F] [Fintype F] [Fintype ι] [DecidableEq F] in
+/-- Coordinatewise admissibility plus pointwise faithfulness prevents word collapse. -/
+theorem receivedWord_injective_on
+    (E : PlaneEncoding R F)
+    {A : Set (Fin 2 → R)}
+    (hFaithful : E.FaithfulOn A)
+    {p q : CochainPlane.PlaneShadow R ι}
+    (hp : ∀ i : ι, p i ∈ A)
+    (hq : ∀ i : ι, q i ∈ A)
+    (hWord : E.receivedWord p = E.receivedWord q) :
+    p = q := by
+  funext i
+  exact hFaithful (hp i) (hq i) (congrFun hWord i)
 
 /--
 Integer plane encoding into the canonical RS field.
@@ -103,6 +123,18 @@ structure Interpretation
   distanceControlled :
     ∀ p : CochainPlane.PlaneShadow R ι,
       D.distanceToRS (Φ.receivedWord p) ≤ planeTarget.distanceToCode p
+  restrictWord : Word ι F → Word ι F
+  RSSyndrome : Type
+  wordSyndrome : Word ι F → RSSyndrome
+  mapPlaneSyndrome : projection.naturality.PlaneSyndrome → RSSyndrome
+  restrictionCommutes :
+    ∀ p : CochainPlane.PlaneShadow R ι,
+      Φ.receivedWord (projection.naturality.restrictPlane p) =
+        restrictWord (Φ.receivedWord p)
+  syndromeCommutes :
+    ∀ p : CochainPlane.PlaneShadow R ι,
+      wordSyndrome (Φ.receivedWord p) =
+        mapPlaneSyndrome (projection.naturality.planeSyndrome p)
 
 namespace Interpretation
 
@@ -118,7 +150,19 @@ def of_rsPlaneTarget
     {D : ReedSolomonTarget.Target.ReceivedWordMetric T}
     {E : CochainPlane.PlaneExtractionContext R ι}
     {Φ : PlaneEncoding R F}
-    (π : CochainPlane.Projection L E (rsPlaneTarget T D Φ)) :
+    (π : CochainPlane.Projection L E (rsPlaneTarget T D Φ))
+    (restrictWord : Word ι F → Word ι F)
+    (RSSyndrome : Type)
+    (wordSyndrome : Word ι F → RSSyndrome)
+    (mapPlaneSyndrome : π.naturality.PlaneSyndrome → RSSyndrome)
+    (restrictionCommutes :
+      ∀ p : CochainPlane.PlaneShadow R ι,
+        Φ.receivedWord (π.naturality.restrictPlane p) =
+          restrictWord (Φ.receivedWord p))
+    (syndromeCommutes :
+      ∀ p : CochainPlane.PlaneShadow R ι,
+        wordSyndrome (Φ.receivedWord p) =
+          mapPlaneSyndrome (π.naturality.planeSyndrome p)) :
     Interpretation L T D E Φ where
   planeTarget := rsPlaneTarget T D Φ
   projection := π
@@ -128,6 +172,12 @@ def of_rsPlaneTarget
   distanceControlled := by
     intro p
     exact le_rfl
+  restrictWord := restrictWord
+  RSSyndrome := RSSyndrome
+  wordSyndrome := wordSyndrome
+  mapPlaneSyndrome := mapPlaneSyndrome
+  restrictionCommutes := restrictionCommutes
+  syndromeCommutes := syndromeCommutes
 
 /-- Map a committed cochain through plane projection and then RS field encoding. -/
 def receivedWord
@@ -237,6 +287,14 @@ structure InvariantChecklist
     {E : CochainPlane.PlaneExtractionContext R ι}
     {Φ : PlaneEncoding R F}
     (I : Interpretation L T D E Φ) : Prop where
+  restrictionNaturality :
+    ∀ p : CochainPlane.PlaneShadow R ι,
+      Φ.receivedWord (I.projection.naturality.restrictPlane p) =
+        I.restrictWord (Φ.receivedWord p)
+  syndromeNaturality :
+    ∀ p : CochainPlane.PlaneShadow R ι,
+      I.wordSyndrome (Φ.receivedWord p) =
+        I.mapPlaneSyndrome (I.projection.naturality.planeSyndrome p)
   receivedWordMatchesPlaneEncoding :
     ∀ c : CochainBridge.CommittedCochain,
       I.receivedWord c = Φ.receivedWord (E.projectedPlane c)
@@ -265,6 +323,8 @@ def of_interpretation
     {Φ : PlaneEncoding R F}
     (I : Interpretation L T D E Φ) :
     InvariantChecklist I where
+  restrictionNaturality := I.restrictionCommutes
+  syndromeNaturality := I.syndromeCommutes
   receivedWordMatchesPlaneEncoding := by
     intro c
     rfl

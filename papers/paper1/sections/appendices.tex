@@ -63,8 +63,11 @@
     \lean{ProjectionChain.Chain.toEvaluationProjection}.
   \item[Proximity-stage certificates.]
     Section 6; \lean{Proximity.Gates.SourceMetricGate},
-    \lean{Proximity.Gates.SyndromeAdequacyGate}, and
-    \lean{Proximity.Gates.HardGateCertificate}.
+    \lean{Proximity.Gates.HardGateCertificate},
+    \lean{Proximity.Gates.ProjectionNaturalityGate}, and
+    \lean{Proximity.Gates.NaturalityGateCertificate}. The separately defined
+    \lean{Proximity.Gates.SyndromeAdequacyGate} is optional and is not a hard
+    gate of the accepted-commitment projection chain.
   \item[Canonical RS/MCA endpoint.]
     Section 6; \lean{CanonicalRS.BridgeData}, \lean{CanonicalRS.MCA.Line},
     and \lean{CanonicalRS.MCA.badChallengeFraction}.
@@ -135,6 +138,10 @@
   \item[Syndrome adequacy turns zero local syndrome into codeword/global candidate.]
     \lean{Proximity.Gates.SyndromeAdequacyGate.codeword_of_wellFormed_zeroSyndrome};
     stage-local interface.
+  \item[Stage naturality composes without rechecking.]
+    \lean{Proximity.Gates.ProjectionNaturalityGate.of_stageCertificate};
+    Lean-proved composition of the cochain/plane and plane/RS restriction and
+    syndrome squares.
   \item[Final proximity evidence yields calibrated end-to-end readiness.]
     \lean{Proximity.Gates.CalibratedFinalCertificate.toCalibratedEndToEndReady};
     Lean-proved plumbing.
@@ -358,15 +365,17 @@ Import-only aggregate files are listed with the files they collect.
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{Axioms/CochainCommitment/Payload.lean},
+    \lean{Axioms/CochainCommitment/Blinded.lean},
     \lean{Axioms/CochainCommitment/Security.lean}, and
     \lean{Axioms/CochainCommitment.lean}.]
     Section 5 translates the canonical modulus, byte lengths, wire length,
     \lean{CochainCommitmentData}, edge-count matching, nonempty edge data,
     supported modulus, well-formedness, commitment sums, common-topology and
     additive compatibility, zero and addition operations, payload lemmas,
-    binding/hiding/additivity/security axioms, blinded and vector commitment
-    axioms, cohomological MAC axioms, and the canonical commitment
-    construction from foundational data.
+    binding/hiding/additivity/security axioms, the typed exact-payload to
+    Hodge-blinded-value bridge, exact--harmonic orthogonality and decomposition
+    theorems, blinded and vector commitment axioms, cohomological MAC axioms,
+    and the canonical commitment construction from foundational data.
   \item[\lean{TCB/ProofCarrying.lean}, \lean{TCB/Runtime.lean},
     \lean{TCB/SNARK.lean}, \lean{TCB/CompressionBoundary.lean},
     \lean{TCB/ObservationBoundary.lean}, and
@@ -417,9 +426,11 @@ Import-only aggregate files are listed with the files they collect.
     \lean{Proximity/CochainReedSolomon.lean}.]
     Section 6 translates plane projections, plane extraction contexts,
     local nondegeneracy, alignment, projected planes, plane targets,
-    plane-to-evaluation projections, local-codeword-to-target-codeword
-    theorems, distance monotonicity, canonical-field plane encodings,
-    interpretations, and RS received words.
+    plane-to-evaluation projections, typed restriction and syndrome naturality
+    at the cochain/plane and plane/RS transitions,
+    local-codeword-to-target-codeword theorems, separate plane and RS metric
+    handoffs, faithful-on-region plane encodings, interpretations, and RS
+    received words.
   \item[\lean{Proximity/ProjectionChain.lean} and
     \lean{Proximity/ProjectionChain/Core.lean}.]
     Section 6 translates the complete projection chain, including accessors
@@ -429,12 +440,13 @@ Import-only aggregate files are listed with the files they collect.
     \lean{Proximity/Gates/Final.lean}, and
     \lean{Proximity/GateEvidence.lean}.]
     Section 6 translates only proximity gates: source metric, Plucker metric,
-    semantic alignment, syndrome adequacy, projective-coordinate respect,
-    noncollapse, far-region separation, runtime binding, structural bundles,
-    hard-gate certificates, calibrated final certificates, certified state
-    buses, stage checklists, stage certificates, radius calibrations, final
-    readiness, evidence slots, evidence databases, and the binding/completeness
-    lemmas for proximity evidence.
+    semantic alignment, optional syndrome adequacy, projective-coordinate
+    respect, three-stage noncollapse through cochain and plane radii,
+    far-region separation, runtime binding, structural bundles, hard-gate and
+    derived naturality certificates, calibrated final certificates, nested
+    witness-local state buses, stage checklists, stage certificates, radius
+    calibrations, final readiness, evidence slots, evidence databases, and the
+    binding/completeness lemmas for proximity evidence.
   \item[\lean{Proximity/RS/ListDecoding.lean},
     \lean{Proximity/RS/ReedSolomon.lean},
     \lean{Proximity/RS/CorrelatedAgreement.lean},
@@ -459,7 +471,8 @@ Import-only aggregate files are listed with the files they collect.
     \lean{Proximity/CanonicalRS/MCA/Concrete.lean}.]
     Section 6 translates the canonical finite field, length, degree bound,
     rate, Johnson and capacity radii, smooth domains, power-root domain,
-    canonical encoding, Hamming-to-code metrics, target bounds, far-separation
+    canonical encoding, the proof that the unbounded integer encoding is not
+    globally injective, Hamming-to-code metrics, target bounds, far-separation
     witnesses, bridge data and theorem slots, bridge certificates, cited
     BCHKS-style bounds, MCA block code, challenge and bad-challenge fractions,
     and the bound on the projected bad-challenge fraction.

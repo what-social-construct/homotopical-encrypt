@@ -12,7 +12,7 @@ anonymity in identity: actions are exposed through auditable public artifacts,
 while identities remain inside hidden representatives and public equivalence
 classes.
 This section realizes the abstract public observation \((\alpha,b)\) of
-\cref{def:public-observation}: the public homotopy-class label is \(\alpha\), while
+\cref{def:public-observation}: the public classifier value is \(\alpha\), while
 accepted cochain payloads, specified partial openings, and proof-carrying
 statements supply the cochain-facing datum \(b\) without presenting the hidden
 representative, Hodge--Laplacian, or harmonic kernel.
@@ -31,7 +31,8 @@ coboundaries \(\delta_0,\delta_1\), and Hodge--Laplacian \(\Delta_x\).
     \(\Delta_x\).
   \item The public payload level contains only a serialized residue edge vector
     \[
-      \bar c=\delta(m\Vert r)\in C_x^1/qC_x^1
+      \bar c=\delta_0 a\pmod q,
+      \qquad a=\operatorname{enc}(m,r)\in C_x^0,
     \]
     together with a modulus, an edge count, and a topology hash. This is the
     cochain commitment payload. It is public as a committed \(C^1\)-level
@@ -114,8 +115,10 @@ cohomological-MAC interfaces are separate axiom records rather than consequences
 silently bundled into the payload shape.
 
 \begin{definition}[Blinded cochain commitment boundary]\label{def:blinded-commitment-boundary}
-  A blinded cochain commitment boundary is well formed if and only if all of
-  the following hold:
+  Fix an accepted exact payload \(c\), with decoded value
+  \(\operatorname{dec}_S(c)=\delta_0a\), and write \(s\) for a separate
+  harmonic blinding scalar. A typed Hodge-blinding boundary consists of the
+  following data and conditions:
   \begin{enumerate}[label=(\roman*)]
     \item \(C^1\) has the orthogonal Hodge splitting
       \[
@@ -127,24 +130,28 @@ silently bundled into the payload shape.
       \]
     \item For each public topology hash \(\tau\), the blinding direction
       \(H_\tau\in\mathcal H^1\) is determined by \(\tau\).
-    \item The blinded commitment has the form
+    \item The associated blinded value has the form
       \[
-        C_\tau(m,r)=\delta(m\Vert r)+rH_\tau\in C^1/qC^1 .
+        c^{\mathrm{blind}}_\tau(a,s)
+        =\operatorname{dec}_S(c)+sH_\tau
+        =\delta_0a+sH_\tau\in C_S^1 .
       \]
-    \item Binding is the coboundary-collision condition: if two openings
-      \((m,r)\) and \((m',r')\) over the same topology determine the same
-      committed cochain, then
-      \[
-        \delta\bigl((m-m')\Vert(r-r')\bigr)=0.
-      \]
-    \item Hiding says that, for all messages \(m,m'\),
-      \[
-        \{C_\tau(m,r):r\in\mathcal R\}
-        \equiv_{\mathsf{hide}}
-        \{C_\tau(m',r):r\in\mathcal R\}.
-      \]
+    \item The exact component \(\delta_0a\) is orthogonal to \(H_\tau\).
+    \item Binding and hiding for the resulting commitment scheme are separate
+      cryptographic assumptions. In particular, exactness and Hodge
+      orthogonality supply the geometric decomposition but do not by
+      themselves prove a distributional hiding game.
   \end{enumerate}
 \end{definition}
+
+The distinction between \(a\) and \(s\) is intentional.  The former is the
+degree-zero opening whose coboundary gives the accepted public payload; the
+latter scales the topology-derived harmonic direction.  Moreover, the
+serialized exact payload and the associated Hodge-blinded value are related
+objects, not definitionally the same wire object. In particular, the modular
+wire representation is interpreted by \(\operatorname{dec}_S\) before the
+Hodge-space addition is formed; the paper does not identify a real cochain
+space with the quotient \(C^1/qC^1\).
 
 \begin{definition}[Vector commitment boundary]\label{def:vector-commitment-boundary}
   A vector commitment boundary is well formed if and only if all of the
@@ -320,7 +327,7 @@ stored public artifacts are compressed images of accepted witness data, not
 replacements for the hidden object.
 
 In the notation of \cref{def:public-observation}, \(\alpha\) is the public
-homotopy-class label obtained as a lossy classifier value. Its fiber is
+classifier value obtained from a lossy public map. Its fiber is
 \[
   A_\alpha=\pi^{-1}(\alpha),
 \]
@@ -360,7 +367,7 @@ and ephemeral-fiber lifecycle properties are TCB requirements. They are boundary
 conditions, not part of the mathematical cochain commitment payload.
 
 For HCP, the concrete sources for the abstract observation \((\alpha,b)\) are:
-\(\alpha\) is the public homotopy-class label, and \(b\) is the cochain-facing datum
+\(\alpha\) is the public classifier value, and \(b\) is the cochain-facing datum
 supplied by an accepted cochain payload, opening, or proof-carrying statement.
 For \(x\in A_\alpha\), private restriction data determines \(C_x^\bullet\),
 \(\delta_0,\delta_1\), \(\Delta_x\), and the recovery target
@@ -450,6 +457,13 @@ following Lean declarations:
     \lean{Axioms.oneCocycle_of_committedCochainWellFormed};
   \item commitment-security interfaces:
     \lean{Axioms.CochainCommitmentAxioms},
+    \lean{Axioms.HodgeBlindingContext},
+    \lean{Axioms.BlindedCommittedCochain},
+    \lean{Axioms.BlindedCommittedCochain.base_representsExactOneCochain},
+    \lean{Axioms.BlindedCommittedCochain.base_isOneCocycle},
+    \lean{Axioms.BlindedCommittedCochain.harmonicDirection_isHarmonic},
+    \lean{Axioms.BlindedCommittedCochain.exactComponent_orthogonal_harmonicDirection},
+    \lean{Axioms.BlindedCommittedCochain.exists_exact_harmonic_decomposition},
     \lean{Axioms.BlindedCommitmentAxioms},
     \lean{Axioms.BlindedCommitmentWellFormed},
     \lean{Axioms.VectorCommitmentAxioms},

@@ -241,46 +241,56 @@ structure PluckerToCochainNonCollapseGate
       sourceFarRadius ≤ pluckerDisagreement W →
         cochainFarRadius ≤ L.distanceToCode (Γ.committedCochain W)
 
-/--
-Cochain-to-RS far gate.
-
-This is the second far-side separation step: local cochain far-ness must remain
-far after plane projection, finite-field encoding, and RS metric evaluation.
--/
-structure CochainToRSFarGate
+/-- Cochain-to-plane far gate for the semantic plane metric. -/
+structure CochainToPlaneNonCollapseGate
     (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
-    (cochainFarRadius targetFarRadius : ℝ) : Prop where
+    (cochainFarRadius planeFarRadius : ℝ) : Prop where
   separatesFar :
     ∀ W : FrameWitness n r,
       cochainFarRadius ≤ L.distanceToCode (Γ.committedCochain W) →
+        planeFarRadius ≤
+          Γ.planeToRS.planeTarget.distanceToCode (Γ.planeShadow W)
+
+/-- Plane-to-RS far gate for the finite-field encoding and RS metric. -/
+structure PlaneToRSNonCollapseGate
+    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
+    (planeFarRadius targetFarRadius : ℝ) : Prop where
+  separatesFar :
+    ∀ W : FrameWitness n r,
+      planeFarRadius ≤
+          Γ.planeToRS.planeTarget.distanceToCode (Γ.planeShadow W) →
         targetFarRadius ≤ D.distanceToRS (Γ.receivedWord W)
 
 /--
-Two-step far-gate pipeline.
+Three-step far-gate pipeline.
 
-The intermediate cochain radius is explicit so later work can tune the exact
-calibration instead of pretending every stage is isometric.
+The cochain and plane radii are explicit so later work can tune each transition
+instead of pretending the plane encoding is isometric.
 -/
 structure FarGatePipeline
     (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
-    (sourceFarRadius cochainFarRadius targetFarRadius : ℝ) : Prop where
+    (sourceFarRadius cochainFarRadius planeFarRadius targetFarRadius : ℝ) : Prop where
   pluckerToCochain :
     PluckerToCochainNonCollapseGate Γ sourceFarRadius cochainFarRadius
-  cochainToRS :
-    CochainToRSFarGate Γ cochainFarRadius targetFarRadius
+  cochainToPlane :
+    CochainToPlaneNonCollapseGate Γ cochainFarRadius planeFarRadius
+  planeToRS :
+    PlaneToRSNonCollapseGate Γ planeFarRadius targetFarRadius
 
 namespace FarGatePipeline
 
-/-- The two far gates compose to the final far-region separation witness. -/
+/-- The three far gates compose to the final far-region separation witness. -/
 def toFarRegionSeparation
     {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
-    {sourceFarRadius cochainFarRadius targetFarRadius : ℝ}
-    (G : FarGatePipeline Γ sourceFarRadius cochainFarRadius targetFarRadius) :
+    {sourceFarRadius cochainFarRadius planeFarRadius targetFarRadius : ℝ}
+    (G : FarGatePipeline
+      Γ sourceFarRadius cochainFarRadius planeFarRadius targetFarRadius) :
     FarRegionSeparation
       Γ sourceFarRadius targetFarRadius :=
   FarNonCollapseWitness.of_noncollapse fun W hFar =>
-    G.cochainToRS.separatesFar W
-      (G.pluckerToCochain.separatesFar W hFar)
+    G.planeToRS.separatesFar W
+      (G.cochainToPlane.separatesFar W
+        (G.pluckerToCochain.separatesFar W hFar))
 
 end FarGatePipeline
 
@@ -359,24 +369,26 @@ end StructuralBundle
 Complete proximity-gate bundle for a concrete projection chain and calibration.
 
 This combines structural gates with the chosen final-separation route:
-Plucker far -> cochain/local-syndrome far -> RS far. The quotient gate has
-already run as part of the structural/post-Plucker phase, so it is not a second
-route to the final theorem.
+Plucker far -> cochain/local-syndrome far -> plane far -> RS far. The quotient
+gate has already run as part of the structural/post-Plucker phase, so it is not
+a second route to the final theorem.
 -/
 structure Bundle
     (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement)
-    (sourceFarRadius cochainFarRadius targetFarRadius : ℝ) where
+    (sourceFarRadius cochainFarRadius planeFarRadius targetFarRadius : ℝ) where
   structural : StructuralBundle Γ
   farPipeline :
-    FarGatePipeline Γ sourceFarRadius cochainFarRadius targetFarRadius
+    FarGatePipeline
+      Γ sourceFarRadius cochainFarRadius planeFarRadius targetFarRadius
 
 namespace Bundle
 
 /-- A complete proximity-gate bundle yields far-region separation. -/
 def toFarRegionSeparation
     {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
-    {sourceFarRadius cochainFarRadius targetFarRadius : ℝ}
-    (G : Bundle Γ sourceFarRadius cochainFarRadius targetFarRadius) :
+    {sourceFarRadius cochainFarRadius planeFarRadius targetFarRadius : ℝ}
+    (G : Bundle
+      Γ sourceFarRadius cochainFarRadius planeFarRadius targetFarRadius) :
     FarRegionSeparation
       Γ sourceFarRadius targetFarRadius :=
   G.farPipeline.toFarRegionSeparation
@@ -392,15 +404,66 @@ ambient sheaf-coherence and cocycle facts; this later gate carries the distinct
 claims that the assembled projection commutes with the selected restriction
 and coboundary/syndrome maps.
 
-The two statements remain fields because their concrete typed squares depend
-on the source and target restriction interfaces chosen by an instantiation.
+Each transition has already checked its own typed restriction and syndrome
+squares. This gate exposes their two whole-chain composites without rechecking
+either transition.
 -/
+def RestrictionNaturality
+    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement) : Prop :=
+  ∀ c : CochainBridge.CommittedCochain,
+    Φ.receivedWord
+        (E.projectedPlane
+          (Γ.planeToRS.projection.naturality.restrictCochain c)) =
+      Γ.planeToRS.restrictWord (Φ.receivedWord (E.projectedPlane c))
+
+def CoboundaryNaturality
+    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement) : Prop :=
+  ∀ c : CochainBridge.CommittedCochain,
+    Γ.planeToRS.wordSyndrome (Φ.receivedWord (E.projectedPlane c)) =
+      Γ.planeToRS.mapPlaneSyndrome
+        (Γ.planeToRS.projection.naturality.mapSyndrome (L.syndrome c))
+
 structure ProjectionNaturalityGate
-    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement) where
-  RestrictionNaturality : Prop
-  CoboundaryNaturality : Prop
-  restrictionNaturality : RestrictionNaturality
-  coboundaryNaturality : CoboundaryNaturality
+    (Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement) : Prop where
+  restrictionNaturality : RestrictionNaturality Γ
+  coboundaryNaturality : CoboundaryNaturality Γ
+
+namespace ProjectionNaturalityGate
+
+/-- Compose the two local restriction squares and the two local syndrome squares. -/
+def of_stageCertificate
+    {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
+    (χ : ProjectionStageGateCertificate Γ) :
+    ProjectionNaturalityGate Γ where
+  restrictionNaturality := by
+    intro c
+    calc
+      Φ.receivedWord
+          (E.projectedPlane
+            (Γ.planeToRS.projection.naturality.restrictCochain c)) =
+          Φ.receivedWord
+            (Γ.planeToRS.projection.naturality.restrictPlane
+              (E.projectedPlane c)) :=
+        congrArg Φ.receivedWord
+          (χ.final.previous.cochainPlane.restrictionNaturality c)
+      _ = Γ.planeToRS.restrictWord
+            (Φ.receivedWord (E.projectedPlane c)) :=
+        χ.final.planeRS.restrictionNaturality (E.projectedPlane c)
+  coboundaryNaturality := by
+    intro c
+    calc
+      Γ.planeToRS.wordSyndrome (Φ.receivedWord (E.projectedPlane c)) =
+          Γ.planeToRS.mapPlaneSyndrome
+            (Γ.planeToRS.projection.naturality.planeSyndrome
+              (E.projectedPlane c)) :=
+        χ.final.planeRS.syndromeNaturality (E.projectedPlane c)
+      _ = Γ.planeToRS.mapPlaneSyndrome
+            (Γ.planeToRS.projection.naturality.mapSyndrome
+              (L.syndrome c)) :=
+        congrArg Γ.planeToRS.mapPlaneSyndrome
+          (χ.final.previous.cochainPlane.syndromeNaturality c)
+
+end ProjectionNaturalityGate
 
 /--
 Hard gate certificate for the proximity pipeline.
@@ -449,11 +512,10 @@ namespace NaturalityGateCertificate
 /-- Append the final structural naturality check to an existing hard certificate. -/
 def extend
     {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
-    (χ : HardGateCertificate Γ)
-    (ν : ProjectionNaturalityGate Γ) :
+    (χ : HardGateCertificate Γ) :
     NaturalityGateCertificate Γ where
   previous := χ
-  naturality := ν
+  naturality := ProjectionNaturalityGate.of_stageCertificate χ.stage
 
 /-- Recover the already-checked hard-gate certificate. -/
 def hardGateCertificate
@@ -503,19 +565,19 @@ def of_farRegionSeparation
   finalWitness := ω
 
 /--
-Extend hard gates with a two-step far pipeline.
+Extend hard gates with a three-step far pipeline.
 
-The intermediate cochain radius remains explicit in the far pipeline; the final
-certificate records only the calibrated source/target radii.
+The intermediate cochain and plane radii remain explicit in the far pipeline;
+the final certificate records only the calibrated source/target radii.
 -/
 def of_farPipeline
     {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
     (χ : NaturalityGateCertificate Γ)
     (κ : RadiusCalibration)
-    {cochainFarRadius : ℝ}
+    {cochainFarRadius planeFarRadius : ℝ}
     (G :
       FarGatePipeline
-        Γ κ.sourceFarRadius cochainFarRadius κ.targetFarRadius) :
+        Γ κ.sourceFarRadius cochainFarRadius planeFarRadius κ.targetFarRadius) :
     CalibratedFinalCertificate Γ κ :=
   of_farRegionSeparation χ κ G.toFarRegionSeparation
 
