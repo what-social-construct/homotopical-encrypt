@@ -1,4 +1,4 @@
-import Proximity.CanonicalRS.BridgeData
+import Proximity.CanonicalRS.MCA
 import Proximity.Gates.Final
 
 /-
@@ -141,6 +141,82 @@ def of_distanceEquality
       (targetFarRadius := β.johnsonRadiusReal)
       le_rfl
       hEq
+
+/--
+Build Johnson RS far separation through the concrete admissible-plane/paper-pair
+bridge.
+
+The three inputs are exactly the remaining non-automatic facts:
+
+1. projected integer planes use canonical representatives;
+2. source far-ness implies far-ness in the admissible plane metric `d_A`;
+3. the fixed canonical challenge is outside the plane's MCA bad set.
+
+The two proved plane/pair inequalities turn (2) into `D_pair` far-ness, and the
+good-challenge MCA transfer then rules out a scalar RS word below the Johnson
+radius.
+-/
+def of_admissiblePlanePair
+    {β : BridgeData}
+    {n : Type} [Fintype n] [DecidableEq n] {r : ℕ}
+    {P : GrassmannianPlucker.FramedSystem n r}
+    {S : Axioms.SheafCoherence}
+    {L : PluckerCochain.LocalSyndromeTarget S}
+    {E : CochainPlane.PlaneExtractionContext ℤ (Fin length)}
+    {pluckerDisagreement : GrassmannianPlucker.FrameWitness n r → ℝ}
+    {Γ :
+      ProjectionChain.Chain
+        P S L β.rsTarget β.metric E β.planeEncoding pluckerDisagreement}
+    (hAdmissible :
+      ∀ W : GrassmannianPlucker.FrameWitness n r,
+        ∀ i j,
+          IsCanonicalRepresentative ((Γ.planeShadow W) i j))
+    (hSourceFarToPlane :
+      ∀ W : GrassmannianPlucker.FrameWitness n r,
+        β.johnsonRadiusReal ≤ pluckerDisagreement W →
+          β.johnsonRadiusReal ≤
+            PlanePair.admissibleDistance β
+              (PlanePair.bundle
+                ⟨Γ.planeShadow W, hAdmissible W⟩))
+    (hCanonicalChallengeGood :
+      ∀ W : GrassmannianPlucker.FrameWitness n r,
+        canonicalMix ∉
+          MCA.planeBadChallengeSet
+            β β.johnsonRadiusReal (Γ.planeShadow W)) :
+    JohnsonRSFarSeparation
+      (β := β) (P := P) (S := S) (L := L) (E := E)
+      (pluckerDisagreement := pluckerDisagreement) (Γ := Γ) := by
+  apply of_farSeparation
+  intro W hSourceFar
+  let pA : AdmissiblePlane (Fin length) :=
+    ⟨Γ.planeShadow W, hAdmissible W⟩
+  have hPlaneFar :
+      β.johnsonRadiusReal ≤
+        PlanePair.admissibleDistance β (PlanePair.bundle pA) :=
+    hSourceFarToPlane W hSourceFar
+  have hPairMetricEq :
+      PlanePair.pairDistance β (reduceIntegerPlane (Γ.planeShadow W)) =
+        PlanePair.admissibleDistance β (PlanePair.bundle pA) := by
+    rw [← PlanePair.encode_bundle pA]
+    exact PlanePair.pairDistance_encode_eq_admissibleDistance
+      β (PlanePair.bundle pA)
+  have hPairFar :
+      β.johnsonRadiusReal ≤
+        PlanePair.pairDistance β (reduceIntegerPlane (Γ.planeShadow W)) := by
+    rw [hPairMetricEq]
+    exact hPlaneFar
+  by_contra hTargetFar
+  have hTargetNear :
+      β.metric.distanceToRS (Γ.receivedWord W) < β.johnsonRadiusReal :=
+    lt_of_not_ge hTargetFar
+  have hPairNear :
+      PlanePair.pairDistance β (reduceIntegerPlane (Γ.planeShadow W)) <
+        β.johnsonRadiusReal := by
+    apply MCA.pairDistance_lt_of_metric_lt_of_goodChallenge
+      β β.johnsonRadiusReal (Γ.planeShadow W) canonicalMix
+      (hCanonicalChallengeGood W)
+    exact hTargetNear
+  exact (not_lt_of_ge hPairFar) hPairNear
 
 end JohnsonRSFarSeparation
 

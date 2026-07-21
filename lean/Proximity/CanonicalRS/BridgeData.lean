@@ -55,6 +55,18 @@ def planeEncoding (_β : BridgeData) :
     CochainReedSolomon.PlaneEncoding ℤ RSField :=
   integerPlaneEncoding
 
+/-- The canonical plane encoding evaluated at an arbitrary public challenge. -/
+def planeEncodingAt
+    (_β : BridgeData)
+    (gamma : RSField) :
+    CochainReedSolomon.PlaneEncoding ℤ RSField :=
+  integerPlaneEncodingAt gamma
+
+/-- The chain's fixed encoding is the canonical-challenge specialization. -/
+theorem planeEncoding_eq_planeEncodingAt_canonicalMix (β : BridgeData) :
+    β.planeEncoding = β.planeEncodingAt canonicalMix :=
+  rfl
+
 /-- The generic code-shadow view induced by the canonical metric. -/
 def codeShadow (β : BridgeData) :
     CodeShadow :=
@@ -107,6 +119,186 @@ theorem paperMutualCorrelatedAgreementErrorBound (β : BridgeData) :
   simpa [rsTarget, target, johnsonRadiusReal,
     ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius]
     using β.bounds.paperMutualCorrelatedAgreementErrorBound
+
+/-!
+### Concrete admissible-plane to paper-pair metric bridge
+
+The source alphabet below is the canonical integer region
+`A = [0, q)^2`.  Coordinatewise reduction is an equivalence from `A` to the
+paper pair alphabet `F^2`.  We transport the interleaved RS code along that
+equivalence, but define the two distances independently on their respective
+alphabets.  Equality follows from preservation of relative Hamming distance.
+-/
+
+namespace PlanePair
+
+/-- Admissible integer-plane words at the canonical block length. -/
+abbrev AdmissibleWord :=
+  AdmissiblePlaneWord (Fin length)
+
+/-- Field-valued two-coordinate words, definitionally the paper pair alphabet. -/
+abbrev PairWord :=
+  CochainPlane.PlaneShadow RSField (Fin length)
+
+/-- Encode an admissible integer plane as the full field-valued pair. -/
+def encode (p : AdmissibleWord) : PairWord :=
+  canonicalPlaneWordEquiv (Fin length) p
+
+/-- Recover canonical integer representatives from a field-valued pair. -/
+def decode (p : PairWord) : AdmissibleWord :=
+  (canonicalPlaneWordEquiv (Fin length)).symm p
+
+/-- Pair encoding followed by decoding is identity. -/
+@[simp]
+theorem decode_encode (p : AdmissibleWord) :
+    decode (encode p) = p :=
+  (canonicalPlaneWordEquiv (Fin length)).left_inv p
+
+/-- Pair decoding followed by encoding is identity. -/
+@[simp]
+theorem encode_decode (p : PairWord) :
+    encode (decode p) = p :=
+  (canonicalPlaneWordEquiv (Fin length)).right_inv p
+
+/-- Bundle a raw integer plane together with its explicit canonical-region proof. -/
+def bundle
+    (p : AdmissiblePlane (Fin length)) :
+    AdmissibleWord :=
+  fun i => ⟨p.1 i, p.2 i⟩
+
+/-- Encoding a bundled admissible plane is ordinary coordinatewise reduction. -/
+@[simp]
+theorem encode_bundle
+    (p : AdmissiblePlane (Fin length)) :
+    encode (bundle p) = reduceIntegerPlane p.1 := by
+  rfl
+
+/-- The paper's two-fold interleaving of the canonical scalar RS code. -/
+def pairCode (β : BridgeData) :
+    BlockCode (Fin length) (Fin 2 → RSField) :=
+  β.rsTarget.parameters.toBlockCode.interleaved (Fin 2)
+
+/-- Pull the paper pair code back to the admissible integer-plane alphabet. -/
+def admissibleCode (β : BridgeData) :
+    BlockCode (Fin length) AdmissiblePoint where
+  Codeword p := (pairCode β).Codeword (encode p)
+
+/-- Relative-Hamming distance values from a word to a selected block code. -/
+def relativeDistanceSet
+    {alpha : Type}
+    [DecidableEq alpha]
+    (C : BlockCode (Fin length) alpha)
+    (w : Word (Fin length) alpha) :
+    Set ℝ :=
+  {d | ∃ c : Word (Fin length) alpha,
+    C.Codeword c ∧ d = BlockCode.relativeHammingDistance c w}
+
+/-- Relative-Hamming distance to a selected block code. -/
+def relativeDistanceToCode
+    {alpha : Type}
+    [DecidableEq alpha]
+    (C : BlockCode (Fin length) alpha)
+    (w : Word (Fin length) alpha) :
+    ℝ :=
+  sInf (relativeDistanceSet C w)
+
+/-- Every relative codeword-distance set is bounded below by zero. -/
+theorem relativeDistanceSet_bddBelow
+    {alpha : Type}
+    [DecidableEq alpha]
+    (C : BlockCode (Fin length) alpha)
+    (w : Word (Fin length) alpha) :
+    BddBelow (relativeDistanceSet C w) := by
+  refine ⟨0, ?_⟩
+  intro d hd
+  rcases hd with ⟨c, _hc, rfl⟩
+  unfold BlockCode.relativeHammingDistance
+  positivity
+
+/-- Distance to a code is bounded by distance to any concrete codeword. -/
+theorem relativeDistanceToCode_le_of_codeword
+    {alpha : Type}
+    [DecidableEq alpha]
+    (C : BlockCode (Fin length) alpha)
+    {w c : Word (Fin length) alpha}
+    (hc : C.Codeword c) :
+    relativeDistanceToCode C w ≤
+      BlockCode.relativeHammingDistance c w := by
+  unfold relativeDistanceToCode
+  exact csInf_le
+    (relativeDistanceSet_bddBelow C w)
+    ⟨c, hc, rfl⟩
+
+/-- The paper-pair distance `D_pair`. -/
+def pairDistance
+    (β : BridgeData)
+    (p : PairWord) : ℝ :=
+  relativeDistanceToCode (pairCode β) p
+
+/-- The admissible-plane distance `d_A`. -/
+def admissibleDistance
+    (β : BridgeData)
+    (p : AdmissibleWord) : ℝ :=
+  relativeDistanceToCode (admissibleCode β) p
+
+/-- Encoding preserves relative Hamming distance between admissible plane words. -/
+theorem encode_relativeHammingDistance
+    (p q : AdmissibleWord) :
+    BlockCode.relativeHammingDistance (encode p) (encode q) =
+      BlockCode.relativeHammingDistance p q := by
+  exact canonicalPlaneWordEquiv_relativeHammingDistance p q
+
+/-- The target and source codeword-distance sets agree under pair encoding. -/
+theorem pairRelativeDistanceSet_encode_eq
+    (β : BridgeData)
+    (p : AdmissibleWord) :
+    relativeDistanceSet (pairCode β) (encode p) =
+      relativeDistanceSet (admissibleCode β) p := by
+  ext d
+  constructor
+  · rintro ⟨c, hc, hd⟩
+    refine ⟨decode c, ?_, ?_⟩
+    · change (pairCode β).Codeword (encode (decode c))
+      simpa using hc
+    · calc
+        d = BlockCode.relativeHammingDistance c (encode p) := hd
+        _ = BlockCode.relativeHammingDistance
+              (encode (decode c)) (encode p) := by simp
+        _ = BlockCode.relativeHammingDistance (decode c) p :=
+          encode_relativeHammingDistance (decode c) p
+  · rintro ⟨c, hc, hd⟩
+    refine ⟨encode c, hc, ?_⟩
+    calc
+      d = BlockCode.relativeHammingDistance c p := hd
+      _ = BlockCode.relativeHammingDistance (encode c) (encode p) :=
+        (encode_relativeHammingDistance c p).symm
+
+/-- First comparison: `D_pair (encode p) ≤ d_A p`. -/
+theorem pairDistance_encode_le_admissibleDistance
+    (β : BridgeData)
+    (p : AdmissibleWord) :
+    pairDistance β (encode p) ≤ admissibleDistance β p := by
+  unfold pairDistance admissibleDistance relativeDistanceToCode
+  rw [pairRelativeDistanceSet_encode_eq β p]
+
+/-- Second comparison: `d_A p ≤ D_pair (encode p)`. -/
+theorem admissibleDistance_le_pairDistance_encode
+    (β : BridgeData)
+    (p : AdmissibleWord) :
+    admissibleDistance β p ≤ pairDistance β (encode p) := by
+  unfold pairDistance admissibleDistance relativeDistanceToCode
+  rw [pairRelativeDistanceSet_encode_eq β p]
+
+/-- The two comparison inequalities identify the admissible and paper-pair metrics. -/
+theorem pairDistance_encode_eq_admissibleDistance
+    (β : BridgeData)
+    (p : AdmissibleWord) :
+    pairDistance β (encode p) = admissibleDistance β p :=
+  le_antisymm
+    (pairDistance_encode_le_admissibleDistance β p)
+    (admissibleDistance_le_pairDistance_encode β p)
+
+end PlanePair
 
 /-- The canonical domain's smoothness witness. -/
 theorem smoothDomain_smooth (β : BridgeData) :

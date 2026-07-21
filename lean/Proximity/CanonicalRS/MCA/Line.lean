@@ -92,6 +92,44 @@ theorem point_apply (L : Line) (γ : RSField) (i : Fin length) :
     L.point γ i = L.base i + γ • L.direction i :=
   rfl
 
+/-- Build the canonical MCA line from the two coordinates of one integer plane. -/
+def ofPlaneShadow
+    (p : CochainPlane.PlaneShadow ℤ (Fin length)) :
+    Line :=
+  ofPaperLine (integerPlaneLine p)
+
+/-- The first plane coordinate is the base word after reduction to the field. -/
+@[simp]
+theorem ofPlaneShadow_base_apply
+    (p : CochainPlane.PlaneShadow ℤ (Fin length))
+    (i : Fin length) :
+    (ofPlaneShadow p).base i = ((p i 0 : ℤ) : RSField) :=
+  rfl
+
+/-- The second plane coordinate is the direction word after reduction to the field. -/
+@[simp]
+theorem ofPlaneShadow_direction_apply
+    (p : CochainPlane.PlaneShadow ℤ (Fin length))
+    (i : Fin length) :
+    (ofPlaneShadow p).direction i = ((p i 1 : ℤ) : RSField) :=
+  rfl
+
+/-- The interleaved pair underlying a plane-induced line is the reduced plane. -/
+@[simp]
+theorem pairWord_ofPlaneShadow
+    (p : CochainPlane.PlaneShadow ℤ (Fin length)) :
+    BlockCode.pairWord (ofPlaneShadow p).base (ofPlaneShadow p).direction =
+      reduceIntegerPlane p := by
+  exact pairWord_integerPlaneLine p
+
+/-- Evaluating the plane-induced line is the challenge-indexed plane encoding. -/
+theorem ofPlaneShadow_point
+    (p : CochainPlane.PlaneShadow ℤ (Fin length))
+    (γ : RSField) :
+    (ofPlaneShadow p).point γ =
+      (integerPlaneEncodingAt γ).receivedWord p := by
+  exact (integerPlaneEncodingAt_receivedWord p γ).symm
+
 section ProjectionChain
 
 open GrassmannianPlucker
@@ -113,6 +151,53 @@ def projectionWord
     (W : FrameWitness n r) :
     FinalWord :=
   Γ.receivedWord W
+
+/--
+Canonical MCA line induced by the two coordinates of one projected plane.
+
+Unlike `ofProjection`, this is the concrete bridge from the cochain-plane
+object to the paper pair `(f₁,f₂)`.
+-/
+def ofProjectedPlane
+    (Γ :
+      ProjectionChain.Chain
+        P S L β.rsTarget β.metric E β.planeEncoding pluckerDisagreement)
+    (W : FrameWitness n r) :
+    Line :=
+  ofPlaneShadow (Γ.planeShadow W)
+
+/-- A projected plane line evaluates through the corresponding challenge encoding. -/
+theorem ofProjectedPlane_point
+    (Γ :
+      ProjectionChain.Chain
+        P S L β.rsTarget β.metric E β.planeEncoding pluckerDisagreement)
+    (W : FrameWitness n r)
+    (γ : RSField) :
+    (ofProjectedPlane Γ W).point γ =
+      (β.planeEncodingAt γ).receivedWord (Γ.planeShadow W) := by
+  exact ofPlaneShadow_point (Γ.planeShadow W) γ
+
+/-- At the fixed canonical challenge, the plane line gives the chain's received word. -/
+theorem ofProjectedPlane_point_canonicalMix
+    (Γ :
+      ProjectionChain.Chain
+        P S L β.rsTarget β.metric E β.planeEncoding pluckerDisagreement)
+    (W : FrameWitness n r) :
+    (ofProjectedPlane Γ W).point canonicalMix = Γ.receivedWord W := by
+  rfl
+
+/-- The paper pair of a projected plane line is its reduced plane shadow. -/
+@[simp]
+theorem pairWord_ofProjectedPlane
+    (Γ :
+      ProjectionChain.Chain
+        P S L β.rsTarget β.metric E β.planeEncoding pluckerDisagreement)
+    (W : FrameWitness n r) :
+    BlockCode.pairWord
+        (ofProjectedPlane Γ W).base
+        (ofProjectedPlane Γ W).direction =
+      reduceIntegerPlane (Γ.planeShadow W) := by
+  exact pairWord_ofPlaneShadow (Γ.planeShadow W)
 
 /--
 Canonical MCA line induced by two projected source witnesses.

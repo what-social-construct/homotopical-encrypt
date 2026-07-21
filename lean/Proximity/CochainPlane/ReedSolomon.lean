@@ -91,6 +91,81 @@ def integerCanonical
 
 end PlaneEncoding
 
+/-!
+### The two-coordinate plane as the paper affine-line pair
+
+After the plane coordinates have entered the finite field, a plane shadow is
+already the paper's interleaved pair of words.  The following equivalence makes
+that identification explicit and keeps it separate from evaluation at one
+challenge, which is generally many-to-one.
+-/
+
+namespace PaperPair
+
+/-- Read the two coordinates of a field-valued plane as an affine line. -/
+def toAffineLine
+    (p : CochainPlane.PlaneShadow F ι) :
+    AffineLine F ι F where
+  base := fun i => p i 0
+  direction := fun i => p i 1
+
+/-- Bundle the base and direction of an affine line back into a plane word. -/
+def ofAffineLine
+    (L : AffineLine F ι F) :
+    CochainPlane.PlaneShadow F ι :=
+  BlockCode.pairWord L.base L.direction
+
+omit [Fintype F] [Fintype ι] [DecidableEq F] in
+/-- Converting a field-valued plane to a line and back is identity. -/
+@[simp]
+theorem ofAffineLine_toAffineLine
+    (p : CochainPlane.PlaneShadow F ι) :
+    ofAffineLine (toAffineLine p) = p := by
+  funext i j
+  fin_cases j <;> simp [ofAffineLine, toAffineLine]
+
+omit [Fintype F] [Fintype ι] [DecidableEq F] in
+/-- Converting an affine line to a field-valued plane and back is identity. -/
+@[simp]
+theorem toAffineLine_ofAffineLine
+    (L : AffineLine F ι F) :
+    toAffineLine (ofAffineLine L) = L := by
+  cases L
+  simp [toAffineLine, ofAffineLine]
+
+/-- Field-valued two-coordinate planes are equivalent to paper affine lines. -/
+def planeAffineLineEquiv :
+    CochainPlane.PlaneShadow F ι ≃ AffineLine F ι F where
+  toFun := toAffineLine
+  invFun := ofAffineLine
+  left_inv := ofAffineLine_toAffineLine
+  right_inv := toAffineLine_ofAffineLine
+
+omit [Fintype F] [Fintype ι] [DecidableEq F] in
+/-- The interleaved pair of a plane's affine line is exactly the plane. -/
+@[simp]
+theorem pairWord_toAffineLine
+    (p : CochainPlane.PlaneShadow F ι) :
+    BlockCode.pairWord (toAffineLine p).base (toAffineLine p).direction = p :=
+  ofAffineLine_toAffineLine p
+
+/-- Evaluate a two-coordinate field plane at a public challenge. -/
+def challengeWord
+    (p : CochainPlane.PlaneShadow F ι)
+    (gamma : F) : Word ι F :=
+  fun i => p i 0 + gamma • p i 1
+
+omit [Fintype F] [Fintype ι] [DecidableEq F] in
+/-- Plane challenge evaluation is exactly affine-line point evaluation. -/
+@[simp]
+theorem toAffineLine_point
+    (p : CochainPlane.PlaneShadow F ι)
+    (gamma : F) :
+    (toAffineLine p).point gamma = challengeWord p gamma :=
+  rfl
+
+end PaperPair
+
 /-- The plane target induced by a selected RS target, metric, and plane encoding. -/
 def rsPlaneTarget
     (T : ReedSolomonTarget.Target F ι)

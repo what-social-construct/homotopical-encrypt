@@ -16,6 +16,8 @@
 ### ⚙️ Primitives & Design
 | Doc | Focus |
 |-----|-------|
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Historical Python-led system architecture; archived, not a current specification |
+| [STORAGE.md](STORAGE.md) | Historical Python/RocksDB storage and routing plan; archived, not a current specification |
 | [HOMOTOPICAL_PRIMITIVES.md](HOMOTOPICAL_PRIMITIVES.md) | Commitment (δ), MAC (ker Δ), Threshold, Signatures |
 | [INVARIANT_PHILOSOPHY.md](INVARIANT_PHILOSOPHY.md) | By-construction types vs runtime validation |
 | [WIRE_FORMAT.md](WIRE_FORMAT.md) | Actual bytes, JSON format, message structure |
