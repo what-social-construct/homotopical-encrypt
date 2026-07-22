@@ -210,15 +210,12 @@ The well-formedness boundaries are displayed below as enumerated conditions.
     \item The summands
       \(\mathcal H^1\), \(\image(\delta_0)\), and
       \(\image(\delta_1^\ast)\) are pairwise orthogonal.
-    \item A commitment collision gives an element of the relevant coboundary
-      kernel.
-    \item The commitment hides the witness component specified by the
-      commitment interface.
-    \item The commitment operation is additive with respect to the cochain
-      group law.
   \end{enumerate}
   These clauses correspond to \lean{Axioms.Foundation} and
   \lean{Axioms.FoundationWellFormed}.
+  Commitment authentication, hiding, homomorphism, context binding, and
+  partial-opening soundness belong to the separate commitment-security
+  boundary below; none is inherited merely from this foundation datum.
 \end{definition}
 
 \begin{definition}[Sheaf-coherence assumption boundary]\label{def:sheaf-coherence-assumption-boundary}
@@ -292,8 +289,10 @@ condition for that interpretation.
   The commitment-security boundary holds if and only if all of the following
   hold:
   \begin{enumerate}[label=(\roman*)]
-    \item Binding: a collision requires a nontrivial relation in the relevant
-      coboundary kernel.
+    \item Exact-payload binding: the authenticated payload binds the serialized
+      \(C^1\) value to its topology/instance identifier. If two degree-zero
+      openings produce that value, their difference lies in \(\ker\delta_0\);
+      this is the intended opening equivalence, not a uniqueness theorem.
     \item Hiding: the commitment distribution hides the committed witness
       component.
     \item Homomorphic addition:
@@ -332,9 +331,10 @@ The exact structural invariants are not a separate source of geometry. They
 package the same foundational and sheaf-coherence hypotheses at the point
 where an object is admitted. We use the cellular-sheaf Hodge--Laplacian
 viewpoint of Hansen--Ghrist as background \cite{hansenGhrist2018sheaves}. For
-a finite cell poset \(X\), a cellular sheaf is represented here as
+a finite cell poset \(P_X\), ordered by the face relation, a cellular sheaf is
+represented here in the face-to-coface convention as
 \[
-  X^{\mathrm{op}}\xrightarrow{F}\mathsf{Vect},
+  P_X\xrightarrow{F}\mathsf{Vect}_{\R},
   \qquad
   C^0(X;F)\xrightarrow{\delta_0}C^1(X;F)
   \xrightarrow{\delta_1}C^2(X;F).
@@ -394,7 +394,7 @@ The spectral condition is an object-level admissibility condition. It is not the
 source of HCP hardness, not a reconstruction theorem for the hidden fibration,
 and not introduced here as a consensus rule. In Paper 1 the PoV/Tsirelson
 spectral window is a mathematical condition on candidate
-Hodge--Laplacian data; its use as a protocol-level admissibility rule belongs to
+degree-one Hodge--Laplacian data; its use as a protocol-level admissibility rule belongs to
 the subsequent protocol paper. The terminology is
 Tsirelson-style because the admissible window uses the familiar \(\sqrt 2\)
 scale from Tsirelson's bound \cite{tsirelson1980bell}. For a Hermitian
@@ -805,6 +805,10 @@ their full CS/protocol treatment is deferred to the subsequent protocol paper.
 
 \begin{leanledger}
 The semantic and axiom interfaces in this section correspond to
+\lean{Sheaf.OrientedTwoComplex}, \lean{Sheaf.CellularSheaf},
+\lean{Sheaf.CellularSheaf.delta1_comp_delta0},
+\lean{Sheaf.CellularSheaf.degreeOneLaplacian},
+\lean{Sheaf.CellularSheaf.ker_degreeOneLaplacian},
 \lean{Axioms.HelferFOL}, \lean{Axioms.Fibration},
 \lean{Axioms.PublicClassifierFactorization},
 \lean{Axioms.PublicClassifierFactorization.publicFiber_eq_iUnion_baseFibers},

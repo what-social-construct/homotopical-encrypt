@@ -1,5 +1,33 @@
 # Homotopical-Encrypt Documentation Index
 
+> [!WARNING]
+> **Historical and non-normative archive.** Documents under `docs/archive/`
+> preserve earlier design exploration. They do not establish current theorem
+> status, protocol behavior, security guarantees, wire formats, or implementation
+> status. Start with [`../SEMANTIC_OWNERSHIP.md`](../SEMANTIC_OWNERSHIP.md),
+> [`../TRUST_BOUNDARIES.md`](../TRUST_BOUNDARIES.md), and the active parity queues.
+
+## Historical And Non-Normative Active-Path Retirements
+
+These documents previously occupied active paths. Their active files are now
+status stubs pointing to current sources; the complete earlier bodies are kept
+here solely for provenance.
+
+| Historical document | Active status page | Why retired |
+|---|---|---|
+| [ARCHITECTURE.md](ARCHITECTURE.md) | [active stub](../ARCHITECTURE.md) | Earlier Python-led architecture |
+| [STORAGE.md](STORAGE.md) | [active stub](../STORAGE.md) | Earlier storage and routing plan |
+| [SECURITY.md](SECURITY.md) | [active stub](../SECURITY.md) | Superseded theorem/security narrative |
+| [PRIMITIVES.md](PRIMITIVES.md) | [active stub](../PRIMITIVES.md) | Superseded primitive and binding claims |
+| [GEOMETRY.md](GEOMETRY.md) | [active stub](../GEOMETRY.md) | Superseded spectral/global-section claims |
+| [ORACLE_SECURITY.md](ORACLE_SECURITY.md) | [active stub](../ORACLE_SECURITY.md) | Superseded oracle and consensus model |
+| [WIRE_FORMAT.md](WIRE_FORMAT.md) | [active stub](../WIRE_FORMAT.md) | Illustrative, non-canonical byte layouts |
+| [ROADMAP.md](ROADMAP.md) | [active stub](../ROADMAP.md) | Dated shipping status and milestones |
+| [REFACTOR_PLAN.md](REFACTOR_PLAN.md) | [active stub](../REFACTOR_PLAN.md) | Completed/superseded migration plan |
+| [CATEGORICAL_ARCHITECTURE.md](CATEGORICAL_ARCHITECTURE.md) | [current architecture](../CATEGORICAL_ARCHITECTURE.md) | Mixed categorical narrative predating the typed sheaf/state split |
+| [COMPARISON.md](COMPARISON.md) | [current workbench](../COMPARISON.md) | Comparison notebook with superseded global-section and commitment claims |
+| [CONSENSUS.md](CONSENSUS.md) | [active status page](../CONSENSUS.md) | Spectral-stake and spectral-finality prototype |
+
 ## Quick Navigation
 
 ### 🎯 Start Here
@@ -20,7 +48,7 @@
 | [STORAGE.md](STORAGE.md) | Historical Python/RocksDB storage and routing plan; archived, not a current specification |
 | [HOMOTOPICAL_PRIMITIVES.md](HOMOTOPICAL_PRIMITIVES.md) | Commitment (δ), MAC (ker Δ), Threshold, Signatures |
 | [INVARIANT_PHILOSOPHY.md](INVARIANT_PHILOSOPHY.md) | By-construction types vs runtime validation |
-| [WIRE_FORMAT.md](WIRE_FORMAT.md) | Actual bytes, JSON format, message structure |
+| [WIRE_FORMAT.md](WIRE_FORMAT.md) | Historical illustrative bytes and message structure |
 
 ### ⛓️ Chain Layer
 | Doc | Focus |
@@ -80,8 +108,9 @@ INVARIANT LAYERS:
 3. **Security**: SECURITY_PROOFS.md → SECURITY_VULNERABILITIES.md
 4. **Chain**: CHAIN_ARCHITECTURE.md → PRIVACY_CHAIN_DESIGN.md → PROOF_OF_VALUE.md
 5. **Integration**: SOVEREIGNTY_VISION.md → RBN_INTEGRATION.md
-6. **Implementation**: WIRE_FORMAT.md → CRITIQUE.md
+6. **Historical implementation sketches**: WIRE_FORMAT.md → CRITIQUE.md
 
 ---
 
-*Last updated: January 2026*
+*Archive index updated: July 2026. Historical documents retain their original
+dates and status language for provenance only.*

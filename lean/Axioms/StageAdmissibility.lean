@@ -64,8 +64,7 @@ theorem transaction_bundle_of_wellformed
   ConsensusWellFormed C →
   TransactionCriticalInvariantBundle F C := by
   intro hF hC
-  rcases hF with ⟨hCochain, _hLinear, hLaplacian, hHodge, hOrtho,
-    _hBinding, _hHiding, _hHomomorphic⟩
+  rcases hF with ⟨hCochain, _hLinear, hLaplacian, hHodge, hOrtho⟩
   rcases hC with ⟨hSpectral, hConnected, hFresh, hBalance, hTopos⟩
   exact ⟨hCochain, hLaplacian, hHodge, hOrtho,
     hSpectral, hConnected, hFresh, hBalance, hTopos⟩

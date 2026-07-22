@@ -43,19 +43,27 @@ core mathematics and shared public-artifact boundaries.
 
 ## Status Vocabulary
 
-- **Proved:** Lean theorem over typed mathematical/protocol objects.
-- **Specified:** Lean structure or proposition names the obligation, but no
-  concrete implementation/refinement theorem discharges it.
-- **Implemented:** Production Rust realizes the behavior and has appropriate
-  tests/audit coverage.
-- **Prototype:** Python or legacy Rust contains a research implementation that
-  is not yet the normative production path.
-- **Deprecated candidate:** likely superseded; retain until its surviving
-  semantics/tests have been mapped.
+Track three independent axes:
+
+- **Lean coverage:** Unmapped / Interface-only / Specified / Proved /
+  Runtime-refined.
+- **Semantic verdict:** Preserve / Preserve after rename / Partial / Conflicts
+  with canonical model / Rejected.
+- **Disposition:** Active implementation / Active reference / Test oracle /
+  Quarantine / Deprecation candidate / Archived / Deleted.
+
+“Implemented” may be recorded as runtime evidence, but it is not a substitute
+for a Lean refinement theorem. Likewise, an old semantic claim may be rejected
+without creating a Lean version of the mistake.
 
 ## Priority 1 — Ephemeral Representative And Anonymity Flow
 
 1. **Paper 1 mathematical family**
+   - **Current state:** Lean contains only the supplied abstract path
+     `EphemeralFiberSpec.path`. `EphemeralRepresentativeSpec`, the indexed
+     family, concrete generation, and the lifecycle state machine do not yet
+     exist; `Protocol/Ephemeral.lean` is currently an import-only attachment
+     point.
    - Rename the conceptual object to `EphemeralRepresentativeSpec`; keep
      `EphemeralFiberSpec` as a compatibility alias while references migrate.
    - The generated endpoint is the ephemeral hidden representative. Its path
@@ -85,7 +93,8 @@ core mathematics and shared public-artifact boundaries.
 
 4. **Per-commit active state bus**
    - Initialize a fresh active bus for each commitment/witness.
-   - Bind it to commitment hash, topology hash, projection/parameter-set ID,
+   - Bind it to the exact-cochain commitment hash, canonical
+     `SheafStateSnapshot` root, topology metadata, projection/parameter-set ID,
      and evidence schema version.
    - Each stage checks its own restriction and syndrome naturality equations
      once; later stages consume the certified predecessor.
@@ -94,14 +103,15 @@ core mathematics and shared public-artifact boundaries.
    - Join the witness-local state bus, accepted cochain artifact, plane view,
      calibrated final certificate, and `GateEvidence` database in one Lean
      public-envelope specification.
-   - Prove that the finalized evidence root refers to the same commitment and
-     topology as the sheaf-storage plane view.
+   - Prove that the finalized evidence root refers to the same exact cochain
+     and `SheafStateSnapshot` as the stored plane view.
    - Persist the immutable evidence object in sheaf/content-addressed storage;
      clear the mutable active bus after finalization.
 
 6. **Main-chain anchor**
    - Extend the Paper 2 transaction/state model with an evidence-root handle
-     bound to the commitment, topology, parameters, and schema version.
+     bound to the exact cochain, `SheafStateSnapshot` root, topology metadata,
+     parameters, and schema version.
    - The chain stores the bounded root/handle, not the private path, ephemeral
      representative, transported secret state, or full evidence database.
    - Specify replay, reorganization, retention, and garbage-collection
@@ -115,6 +125,21 @@ core mathematics and shared public-artifact boundaries.
      and transition relations under `Protocol/Consensus`.
    - Retain the proved arithmetic/scoring lemmas in `Consensus/*`, but do not
      present them as an end-to-end consensus proof.
+   - **Initial quorum kernel proved:**
+     `Protocol/Consensus/Committee.lean` defines registered positive integral
+     voting weights and the division-free strict threshold
+     `2 * totalWeight < 3 * supportWeight`;
+     `Protocol/Consensus/Vote.lean` binds authenticated votes to committee,
+     epoch, height, round, phase, block/parent, state, topology, cochain,
+     evidence roots, and the collapsed Heyting judgment; and
+     `Protocol/Consensus/Quorum.lean` prevents duplicate signer weight and
+     proves weighted quorum intersection. Under faulty weight below one third
+     and a non-faulty no-double-vote premise, two certificates have the same
+     target.
+   - **Still pending:** round/phase transitions, locking/unlocking rules,
+     proposal selection, equivocation evidence, finality promotion, liveness,
+     and a Rust refinement theorem. A quorum certificate is therefore not yet
+     presented as a complete consensus or finality proof.
 
 8. **Ledger and key-image state**
    - Move/refine the abstract `Chain.lean` state transitions under
@@ -147,6 +172,10 @@ core mathematics and shared public-artifact boundaries.
 ## Priority 5 — Legacy Rust/Python Inventory
 
 11. **Read-only deprecation map before deletion**
+    - Audit in dependency order: `primitives`, `invariants`, `proofs`,
+      `geometry`, `crypto`, `chain`, `network`, `consensus`, then `oracle`.
+      Finish classification of one layer before treating the next layer as
+      authoritative.
     - Inventory older Python and Rust files without changing production paths.
     - Classify each as **current implementation**, **reference prototype**,
       **test oracle**, **superseded/archive candidate**, or **unknown pending
@@ -157,6 +186,27 @@ core mathematics and shared public-artifact boundaries.
     - Do not delete or archive a file merely because it predates the current
       architecture; wait until its behavior is represented by the new Lean
       protocol contract or intentionally rejected.
+
+    Record each exported object with: source file and symbol, active importers,
+    claimed semantics, canonical Lean owner, Lean coverage, semantic verdict,
+    runtime owner/replacement, tests or fixtures to preserve, paper scope,
+    disposition, blocker, and replacement commit. Coverage, semantic validity,
+    and file disposition are separate axes; one “done” badge is insufficient.
+
+    A file may be archived only when:
+    1. every exported symbol and active importer is inventoried;
+    2. every semantic claim is preserved, corrected, or explicitly rejected;
+    3. preserved mathematics has a Lean owner or explicit runtime-only contract;
+    4. production behavior has a Rust replacement or is declared unnecessary;
+    5. useful fixtures/tests are migrated and parity baselines pass;
+    6. active papers/docs point to canonical owners;
+    7. no active import remains except a documented compatibility shim; and
+    8. the Lean, Rust, and Python checkpoint builds pass.
+
+    Deletion additionally requires no compatibility consumer, a recoverable
+    archive/provenance copy or git checkpoint, and a separate revertible cleanup
+    commit. Archived source must carry a non-normative header naming its
+    replacement and any rejected claims.
 
 12. **Deprecation execution checkpoint**
     - Perform moves/deletions only after a clean Lean protocol checkpoint and

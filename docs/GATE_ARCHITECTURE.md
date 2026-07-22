@@ -41,12 +41,13 @@ Lean proves the classification is correct. Python sends raw values.
 
 | Gate | Raw Value | Who Computes | Who Classifies | Lean Proof |
 |------|-----------|-------------|----------------|------------|
-| Spectral gap | λ₁(Δ) ∈ ℝ | Python | **Oracle** | `decideSpectralJudgment` |
+| Degree-one spectral gap | λ₁⁺(Δ₁) ∈ ℝ | Python | **Oracle** | `decideSpectralJudgment` |
 | Betti consistency | β = (β₀,β₁,β₂) | Python | **Oracle** | `OraclePredicate` |
-| Naturality | topology_hash match | Python | **Oracle** | `verify_naturality` |
+| Naturality | restriction/coboundary square commutes | Python | **Oracle** | `verify_naturality` |
+| Snapshot binding | `SheafStateSnapshot` root matches | Rust | **Node** | runtime/refinement obligation |
 | Commitment non-trivial | id_commit ≠ 0 | Python | **Oracle** | `commitment_nontrivial` |
 
-**Oracle owns classification.** Returns `SpectralJudgment`:
+**Oracle owns spectral-policy classification.** Returns `SpectralJudgment`:
 - `InBounds` → Heyting3.Valid → accept
 - `Boundary` → Heyting3.Undetermined → pending further evidence
 - `OutOfBounds` → Heyting3.Invalid → reject
@@ -77,7 +78,7 @@ Python (wallet)                  Rust (oracle)              Rust (node)
 1. Compute geometry              
    - eigendecomposition          
    - Hodge projection            
-   - spectral gap (raw float)   
+   - degree-one spectral gap (raw float)
    - Betti numbers (exact int)  
                                  
 2. Check EXACT gates locally     
@@ -130,7 +131,15 @@ the consensus gates where genuine measurement uncertainty exists
 
 ---
 
-## Future: Chern Class Anonymity Layer (Grothendieck-Riemann-Roch)
+## Rejected Historical Direction: Chern-Class Anonymity Layer
+
+The outline below is retained only to document an earlier research direction.
+It is not current architecture and must not be implemented from
+`src/primitives/k_theory.py`.  That file's curvature, characteristic-class,
+and characteristic-cycle computations are heuristic rather than a verified
+Chern--Weil/GRR construction, and no Lean owner or anonymity theorem exists.
+Any future K-theoretic layer would require a fresh mathematical specification,
+independent implementation, and explicit leakage/security analysis.
 
 Reference: Burke, "The Grothendieck-Riemann-Roch Theorem" (REU 2021);
 Swan et al., "Categorical Cryptoeconomics" — HoTT blockchain nodes as

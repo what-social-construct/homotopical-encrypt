@@ -104,7 +104,7 @@ surfaces are:
 | Public classes | **Axioms/HomotopyClass.lean** and **Axioms/HelferFOL.lean** define public classifiers, fibers, hidden class-membership witnesses, and non-faithful public collapse. |
 | Infinite candidate geometry | **Ω_1_infinite** and the injective Grassmannian parameter family prove that the hidden harmonic-operator search space contains infinite families under the stated dimension hypotheses. |
 | Spectral caution | **Spectrum_Not_Homotopy_Invariant** proves that equal harmonic dimension does not determine the full spectrum. It should not be read as a theorem about arbitrary homotopy-equivalent fibrations without an additional bridge. |
-| Committed cochains | Sheaf-coherent commitment acceptance binds a payload to an exact one-cochain $\operatorname{dec}_S(c)=\delta_0a$, from which Lean derives $\delta_1\operatorname{dec}_S(c)=0$. |
+| Committed cochains | Sheaf-coherent acceptance identifies the committed mathematical object as an exact one-cochain $\operatorname{dec}_S(c)=\delta_0a$, from which Lean derives $\delta_1\operatorname{dec}_S(c)=0$. The opening $a$ is determined only modulo $\ker\delta_0$. |
 | Proximity | The **Proximity** hierarchy carries frame/Plucker witness data through accepted cochain commitments, plane shadows, finite-field words, and the canonical Reed--Solomon/MCA endpoint, with near preservation and an explicit far-region non-collapse contract. |
 
 CVP hardness itself remains an external complexity assumption. The Lean
@@ -149,6 +149,21 @@ the payload must be bound to $S$ and decode to an exact degree-one cochain.
 Proof-carrying and runtime-facing artifact predicates inherit this semantic
 refinement when an $S$-indexed context is available.
 
+The exact $C^1$ value is the primary committed mathematical object. The raw
+coboundary is not injective:
+
+$$
+\delta_0a=\delta_0a'
+\quad\Longleftrightarrow\quad
+a-a'\in\ker\delta_0.
+$$
+
+Consequently, authentication binds the exact payload bytes and their declared
+context; unique binding of a degree-zero message would need a separate gauge or
+reference anchor. At protocol level, the cochain, projected plane, and evidence
+must bind the same canonical `SheafStateSnapshot` root. A short topology hash
+alone is not a complete state snapshot.
+
 The public artifact stack is:
 
 ~~~
@@ -185,7 +200,7 @@ The broader repository separates four protocol jobs:
 
 | Layer | Intended responsibility |
 |---|---|
-| State | Store private objects and witness material. |
+| State | `SheafState` is the outer state bus; immutable `SheafStateSnapshot` values bind sheaf-relevant context. |
 | Proof | Certify that hidden objects induce valid public state transitions. |
 | Ledger | Commit roots, nullifiers, cochain commitments, public shadows, and accepted proof artifacts. |
 | Transport | Move private objects and proofs while addressing route and metadata privacy. |
@@ -203,18 +218,24 @@ already machine-checked protocol semantics.
 ## Proof Of Value And Consensus
 
 Proof of Value (PoV) is the project’s proposed geometry-aware validity and
-validator-scoring layer. The current direction combines:
+admissibility layer. The current direction combines:
 
 - exact structural gates for cochain, Laplacian, and projection laws;
 - three-valued oracle judgments for spectral boundary cases;
 - Plucker/Grassmannian proximity evidence;
 - proof-carrying cochain artifacts and canonical RS/MCA certificates;
-- a separate slot-assignment, ordering, and fork-control mechanism.
+- a separate authenticated weighted-quorum kernel for agreement work.
 
 The $\sqrt 2$-style spectral window is presently an admissibility interface,
 not a consequence derived solely from the geometry of the diagonal. Protocol
 soundness, liveness, finality, sybil analysis, concrete security, and runtime
 costs are Paper 2 concerns.
+
+Lean now proves the arithmetic core of strict weighted quorum intersection and
+binds votes to the relevant roots and round coordinates. Locking, round change,
+validator admission, finality promotion, and liveness are still explicit open
+protocol obligations; neither Heyting meet nor spectral convergence silently
+supplies them.
 
 See [CONSENSUS](docs/CONSENSUS.md),
 [GATE_ARCHITECTURE](docs/GATE_ARCHITECTURE.md), and the
@@ -266,6 +287,7 @@ The principal Lean areas are:
 | Area | Role |
 |---|---|
 | **lean/Axioms/** | Assumption and semantic interfaces. |
+| **lean/Sheaf/** | Concrete finite cellular-sheaf, cochain, Hodge, and exact-$C^1$ core. |
 | **lean/Laplacian/** | Hodge, projection, spectral, and Grassmannian constructions. |
 | **lean/CVP.lean** | Explicit discrete CVP vocabulary. |
 | **lean/Hardness.lean** | HCP, hidden-operator ambiguity, and the HCP/CVP bridge. |
@@ -273,29 +295,28 @@ The principal Lean areas are:
 | **lean/TCB/** | Proof-carrying artifacts and runtime/observation boundaries. |
 | **lean/Gates/** | Exact, spectral, oracle, and stage-gate façades. |
 | **lean/Consensus/** | Reliability and Proof-of-Value composition. |
+| **lean/Protocol/** | Paper 2 protocol specifications, including the initial authenticated weighted-quorum kernel. |
 
 ## Documentation
 
 | Document | Contents |
 |---|---|
-| [ARCHITECTURE](docs/ARCHITECTURE.md) | Mathematical and system architecture. |
-| [CATEGORICAL_ARCHITECTURE](docs/CATEGORICAL_ARCHITECTURE.md) | Categorical/topos design language and semantic ownership. |
+| [ARCHITECTURE](docs/ARCHITECTURE.md) | Status pointer for the archived Python-led architecture. |
+| [CATEGORICAL_ARCHITECTURE](docs/CATEGORICAL_ARCHITECTURE.md) | Current typed cellular-sheaf, state-snapshot, and task-sheaf architecture. |
 | [PROXIMITY](docs/PROXIMITY.md) | Plucker/cochain/plane/RS projection outline. |
 | [PROXIMITY_ASSUMPTIONS](docs/PROXIMITY_ASSUMPTIONS.md) | Proven facts versus supplied bridge assumptions. |
 | [PROOF_MAP](docs/PROOF_MAP.md) | Lean theorem and implementation correspondence map. |
-| [GEOMETRY](docs/GEOMETRY.md) | Hodge, homotopy, diagonal, and spectral notes. |
-| [PRIMITIVES](docs/PRIMITIVES.md) | Helfer-inspired cochain/fibration foundations. |
-| [SECURITY](docs/SECURITY.md) | Working security arguments and proof sketches. |
-| [CONSENSUS](docs/CONSENSUS.md) | Proof-of-Value and consensus design. |
-| [STORAGE](docs/STORAGE.md) | Sheaf-native storage and routing design. |
-| [ROADMAP](docs/ROADMAP.md) | Implementation roadmap. |
-| [WIRE_FORMAT](docs/WIRE_FORMAT.md) | Network wire-format notes. |
+| [GEOMETRY](docs/GEOMETRY.md) | Status pointer to current Paper 1 geometry and the archived notebook. |
+| [PRIMITIVES](docs/PRIMITIVES.md) | Status pointer to current primitive definitions and the archived notebook. |
+| [SECURITY](docs/SECURITY.md) | Current security claim boundary and archived-history pointer. |
+| [CONSENSUS](docs/CONSENSUS.md) | Current consensus status and open obligations. |
+| [STORAGE](docs/STORAGE.md) | Status pointer for the archived storage prototype. |
+| [ROADMAP](docs/ROADMAP.md) | Status pointer to the active parity queues. |
+| [WIRE_FORMAT](docs/WIRE_FORMAT.md) | Warning that the archived layout is illustrative, not canonical. |
 | [TRUST_BOUNDARIES](docs/TRUST_BOUNDARIES.md) | Lean/Rust/Python ownership split. |
 
-Some documents predate the current Lean audit and may contain stronger or older
-claims. When documentation conflicts, the current Lean definitions and Paper 1
-theorem statements control the mathematical claim; protocol claims should be
-checked against Paper 2 and the runtime code.
+Superseded narratives are retained only under `docs/archive/`, whose contents
+are explicitly historical and non-normative.
 
 ## Verification
 
@@ -303,7 +324,7 @@ Build the principal Lean surfaces:
 
 ~~~sh
 cd lean
-lake build Axioms TCB Chain Gates Proximity
+lake build Sheaf Axioms TCB Chain Gates Proximity Protocol
 ~~~
 
 Build Paper 1 with a full TeX installation:

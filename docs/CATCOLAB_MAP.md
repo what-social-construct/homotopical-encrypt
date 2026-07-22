@@ -42,15 +42,15 @@ These are the main objects we would want to model.
 
 | HCRYPT concept | CatColab-facing object idea | Notes |
 |---------------|-----------------------------|-------|
-| Nerve / site `X` | Base category / directed site | Underlies the presheaf/sheaf story |
+| Finite face poset `P_X` | Base category | Indexes the Paper 1 cellular sheaf |
 | Fibration `F` | Structured object over `X` | Secret geometry |
 | Stalk assignment | Presheaf/sheaf data | Vertex/edge fibers |
-| Restriction maps `R_{v→e}` | Morphisms in the presheaf | Parallel transport / local compatibility |
+| Restriction maps `R_{v→e}` | Face-to-coface sheaf morphisms | Local compatibility data |
 | Cochain groups `C^k(X, F)` | Derived objects from the sheaf | Degreewise data containers |
 | Coboundaries `δ_{k-1}, δ_k` | Morphisms `C^{k-1} → C^k → C^{k+1}` | Fundamental adjacent operators |
 | Adjoints `δ_{k-1}*, δ_k*` | Reverse/adjoint morphisms | Used for Hodge decomposition |
-| Laplacian `Δ_k = δ_{k-1}δ_{k-1}* + δ_k*δ_k` | Derived endomorphism of `C^k` | Built from the secret geometry |
-| Harmonic subspace `ker(Δ_k)` | Distinguished subobject | Message-bearing space |
+| Degree-one Laplacian `Δ_1 = δ_0δ_0* + δ_1*δ_1` | Derived endomorphism of `C^1` | Operative Paper 1 hidden geometry |
+| Harmonic subspace `ker(Δ_1)` | Distinguished subobject | HCP recovery target |
 | Public fingerprint / class | Quotient/projection object | Public shadow of hidden geometry |
 | Oracle stages `F_full`, `F_zk`, `F_hash` | Three related sheaf-like views | Already used in the docs |
 | Ledger / chain state | Colimit/state object | Runtime-side semantic target |
@@ -74,7 +74,7 @@ These are the main objects we would want to model.
 ### 1. Sheaf / Cochain Diagram
 
 ```text
-X^op --F--> Vect
+P_X --F_HCP--> FinVect_R
 
 C^0(X,F) --δ--> C^1(X,F) --δ--> C^2(X,F)
 ```
@@ -85,20 +85,20 @@ rendering because almost everything else is derived from it.
 ### 2. Hodge Diagram
 
 ```text
-C^k(X,F)
-  = ker(Δ_k) ⊕ im(δ_{k-1}) ⊕ im(δ_k*)
+C^1(X,F_HCP)
+  = ker(Δ_1) ⊕ im(δ_0) ⊕ im(δ_1*)
 ```
 
 This is not just crypto flavor text; it is the semantic reason:
 
-- message lives in `ker(Δ_k)`
-- noise lives in `im(δ_{k-1}) ⊕ im(δ_k*)`
+- the HCP target lives in `ker(Δ_1)`
+- Hodge-structured noise lives in `im(δ_0) ⊕ im(δ_1*)`
 - decryption is projection back onto the harmonic part
 
 ### 3. Hidden/Public Projection Diagram
 
 ```text
-hidden fibration / hidden Δ / hidden ker(Δ)
+hidden representative / hidden Δ_1 / hidden ker(Δ_1)
                  |
                  v
         public fingerprint / class / cochain

@@ -107,7 +107,7 @@ Transaction validation is the most important place to keep the split clean.
 | Check transaction shape | Define `TransactionWellFormed` and required fields abstractly | Enforce field presence, dimensions, domain separation tags, chain id | Reference helpers ok |
 | Verify signatures/proofs | Specify soundness assumptions for signature/ZK schemes | Verify signatures, Fiat-Shamir transcripts, challenge domains, proof bytes | Test-vector generation |
 | Key image uniqueness | Prove ledger transition preserves no-double-spend invariant | Check key image against state, reject duplicates atomically | Reference tests only |
-| Commitment/cochain validity | Specify cochain commitment well-formedness and non-triviality | Validate dimensions, commitments, openings/proofs, modulus, canonical field elements | Prototype commitment code ok |
+| Commitment/cochain validity | Specify the accepted exact `C¹` value, opening equivalence modulo `ker δ₀`, and snapshot coherence | Validate dimensions, authenticated payload/context, local openings/proofs, modulus, canonical field elements | Prototype commitment code ok |
 | Ephemeral fibers/transports | Specify path/class semantics and admissible transport within the public homotopy class | Generate fresh per message, enforce single-use, zeroize/drop secret transport, reject malformed hints | Prototype/reference only |
 | Exact geometry gates | Specify structural laws: adjacent coboundary composites vanish, Laplacian construction, projection laws | Eventually enforce consensus-path exact gates or verify signed worker attestations | Currently useful for numerical/reference checks |
 | Oracle judgments | Prove Heyting semantics and stage admissibility | Classify spectral gap, Betti consistency, naturality, boundary/hold/reject policy | Should not bypass oracle on consensus path |
@@ -154,9 +154,12 @@ core object
   → Rust verifier result
 ```
 
-For cochains, the canonical Lean object is `CochainCommitmentData`: modulus,
-declared edge count, edge values in C¹, and topology hash. Public hashes and
-proofs wrap this object; they do not replace it.
+For cochains, the legacy wire-shaped Lean object is `CochainCommitmentData`:
+modulus, declared edge count, edge values in `C¹`, and topology hash. The
+mathematical committed object is the decoded exact `C¹` value. Public hashes
+and proofs wrap it; the stronger protocol envelope must additionally bind the
+same canonical `SheafStateSnapshot` root used by its plane and evidence. A
+topology tag alone is not that full snapshot commitment.
 
 Production privacy adds one more discipline: full cochains are witness or
 intermediate objects by default. A consensus-facing cochain datum should be a
@@ -179,9 +182,9 @@ full private object
 For hcrypt this specializes to:
 
 ```
-encrypted SheafState / private stalk / fibration representative
+private fields of SheafState / stalk data / fibration representative
   -> cochain or homotopy witness
-  -> public shadow: hash, topology hash, root, key image, commitment
+  -> public shadow: snapshot root, topology metadata, key image, exact-C¹ commitment
   -> proof object: "this witness induces this valid transition"
   -> Rust accepts an observed public statement
   -> ledger updates roots, nullifiers, balances, and storage indexes
@@ -195,7 +198,7 @@ bound to a valid witness statement.
 
 | Layer | Meaning | Lean surface | Runtime owner |
 |---|---|---|---|
-| Core object | Semantic payload or mathematical datum | `CochainCommitmentData`, sheaf/coherence predicates | Rust validates bytes into this shape |
+| Core object | Semantic payload or mathematical datum | exact `C¹` cochain, `SheafStateSnapshot`, sheaf/coherence predicates | Rust validates bytes into this shape |
 | Compressed shadow | Bounded public projection of a larger witness/object | `CompressionContract`, proximity/code shadows | Rust owns canonical shadow bytes and size bounds |
 | Hash artifact | Public binding/pointer to a core object | `HashedCommittedCochain` | Rust owns serialization, hash function, domain separation |
 | Proof artifact | Certificate that hidden witness satisfies a statement | `ProofCarryingCommittedCochain`, `ZKP` | Rust verifies proof bytes/transcript |
@@ -224,15 +227,17 @@ This keeps the TCB split small:
 ## Attacker Observation Boundary
 
 The witness/verifier boundary also induces an attacker-observation site: public
-views such as transcripts, roots, topology hashes, key images, commitments, and
+views such as transcripts, snapshot/state/evidence roots, topology metadata,
+key images, exact-cochain commitments, and
 oracle attestations are the only objects exposed to consensus observers. The TCB
 rule is operational:
 
 - Rust owns the canonical bytes, size bounds, domain separation, and replay
   checks for those public views.
 - Lean specifies the predicates those views must satisfy.
-- Security claims about simulatable local views, zero knowledge, and failure to
-  recover private global sections live in `docs/SECURITY.md`.
+- Security claims about simulatable local views and zero knowledge require
+  explicit protocol games; the current status is summarized in
+  `docs/SECURITY.md` and scoped in the Paper 2 README.
 
 This keeps the boundary document focused on authority and implementation
 ownership, while the security document explains the attacker-observation sheaf
@@ -307,7 +312,7 @@ runtime execution.
 | `TransactionWellFormed` | Abstract shape of a valid transaction |
 | `TransactionAccepted` | Abstract transaction shape plus freshness relative to ledger state |
 | `BlockWellFormed` | Per-transaction payload shape inside a block |
-| `BlockCochainTopologyCompatible` | All block cochain payloads share one topology hash |
+| `BlockCochainTopologyCompatible` | Legacy condition: all block cochain payloads share one topology hash; canonical snapshot-root compatibility is still pending |
 | `BlockCochainEdgeCountCompatible` | All block cochain payloads share one edge-vector length |
 | `BlockCochainPayloadsCompatible` | Batch-level cochain compatibility before root accumulation |
 | `BlockAccepted` | Valid PoV block with compatible cochain payloads and fresh key images |

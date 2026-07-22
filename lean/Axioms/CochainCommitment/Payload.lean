@@ -41,8 +41,9 @@ def cochainCommitmentWireLength (n : ℕ) : ℕ :=
   Mirrors the wire format from Python/Rust:
     modulus(4 LE) + n_edges(4 LE) + edge_values(n × 8 i64 LE) + topology_hash(16)
 
-  The edge_values are the commitment in C¹ = δ(m ∥ r) mod q.
-  The topology_hash binds the commitment to a specific simplicial complex.
+  The edge values serialize the public exact `C¹` value `δ₀(a) mod q`.
+  The topology hash is a declared 16-byte context tag. Authentication and the
+  stronger `SheafStateSnapshot` root binding live in outer interfaces.
 -/
 structure CochainCommitmentData where
   /-- Commitment modulus q (default 12289 in Python/Rust). -/
@@ -51,7 +52,7 @@ structure CochainCommitmentData where
   n_edge_values : ℕ
   /-- Actual commitment vector in C¹, represented by serialized edge values. -/
   edge_values : List ℤ
-  /-- Topology hash binding commitment to a specific complex. -/
+  /-- Declared topology tag; cryptographic/context binding is separate. -/
   topology_hash : Fin 16 → UInt8
 
 namespace CochainCommitmentData

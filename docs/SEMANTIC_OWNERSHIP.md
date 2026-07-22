@@ -6,6 +6,45 @@ honest: Lean can prove the algebraic and hardness facts without pretending to
 certify every runtime line, and runtime policy can remain explicit without being
 mistaken for a logical connective.
 
+## Canonical Object Vocabulary
+
+This table separates current Lean identifiers from planned cross-layer
+vocabulary. Historical documents in `docs/archive/` may retain older language.
+
+When an older Python or Rust object overlaps a current Lean object, the Lean
+type and theorem statement take precedence. Runtime code may refine that
+interface or expose a missing obligation, but it does not silently redefine the
+mathematical object.
+
+| Canonical term | Status | Meaning | Must not be conflated with |
+|---|---|---|---|
+| `CellularSheaf` | Current Lean identifier. | Paper 1 finite (0/1/2)-cell sheaf with real-linear stalks and face-to-coface maps. | The mutable chain state or a protocol execution graph. |
+| `SheafState` | Planned protocol term; the current Python class is legacy, not canonical. | Future whole-system state joining topology/sheaf data, commitments, evidence handles, and ledger coordinates. | A global section merely by virtue of storing one value per vertex. |
+| `SheafStateSnapshot` | Current Lean interface object; concrete encoding/hash refinement is pending. | Abstract immutable snapshot handle carrying a 32-byte root, topology tag, and explicit canonical-encoding/root-binding obligations. Exact-cochain binding is specified; evidence binding is pending. | A proved canonical byte encoding, a second state model, or the mutable ledger before/after root. |
+| `CellularSheaf.IsGlobalSection` | Current Lean identifier; overloaded `Proximity.GlobalSection` names remain a migration item. | A degree-zero stalk assignment satisfying every restriction equation, equivalently (delta_0x=0) in the linear model. | An arbitrary vertex assignment, account table, block, or accepted degree-one cochain. |
+| `AcceptedCommittedOneCochain` | Current Lean identifier. | The committed (C^1) payload (b=delta_0a), bound to one `SheafStateSnapshot`; `IsExactOneCochain` names the underlying geometric property. | A degree-zero global section or a uniquely determined opening (a). |
+| `HasPathSpace.Path x y` | Current Lean interface type; no concrete path-space instance yet. | A typed path witness from representative `x` to representative `y`, intended to remain private at the protocol boundary. | A sampled matrix interpolation, equal public classifier values, or equality of a finite invariant tuple. |
+| `PathEquivalent x y` | Current Lean identifier. | Mere inhabitation of `HasPathSpace.Path x y`. | A concrete topological path model or a proved equivalence criterion for runtime objects. |
+| `PublicClassifier` / `PublicFiber` | Current Lean identifiers. | The public classifier map and the fiber over one public class value. | A path component. Lean currently proves path-to-same-class consequences only under an explicit path-respecting hypothesis; it does not prove the converse. |
+| `Proximity.Gates.Projection.StateBus` | Current Lean proof object; runtime reset/finalization is pending. | One witness-local chain of already-checked projection certificates. | Persistent `SheafState` or an already implemented lifecycle state machine. |
+| `TaskSheaf` | Planned Paper 2 term; no Lean definition yet. | A cellular sheaf over a finite execution slice, with stalks of admissible protocol decisions/evidence. | The Paper 1 HCP sheaf, a quorum certificate, or finality by itself. |
+| `degreeOneLaplacian` / (Delta_1) | Current Lean identifier. | The true Hodge operator (delta_0delta_0^ast+delta_1^astdelta_1) on (C^1). | The normalized residual projector or network graph Laplacian. |
+| `kernelNormalizedDegreeOneLaplacian` | Current Lean identifier. | (I-P_{\ker\Delta_1}), sharing (Delta_1)'s kernel but generally not its scale or spectrum. | The true Hodge (Delta_1) without a flat-positive-spectrum hypothesis. |
+| `networkLaplacian0` | Planned protocol term; no Lean definition yet. | Optional degree-zero graph/connectivity operator used by protocol policy. | Paper 1's hidden degree-one Hodge operator. |
+
+The exact (C^1) payload determines a degree-zero opening only modulo
+`ker δ₀`:
+
+\[
+a-a'\in\ker\delta_0
+\quad\Longleftrightarrow\quad
+\delta_0a=\delta_0a'.
+\]
+
+Accordingly, active text must state binding to the exact (C^1) value and its
+snapshot. A claim that the coboundary alone uniquely binds the chosen (C^0)
+message requires an additional gauge/reference anchor.
+
 ## Ownership Layers
 
 | Layer | Meaning | Examples |

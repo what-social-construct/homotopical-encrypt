@@ -7,10 +7,11 @@ whose kernel is the message space is not part of the public input.  In a
 known-lattice closest-vector problem, the lattice is presented before the
 search begins.  In HCP, the recovery target is
 \[
-  h=\pi_H(b)\in\ker(\Delta),
+  h=\pi_H(b)\in\ker(\Delta_1),
 \]
-but the public class does not include the Hodge--Laplacian \(\Delta\), its
-kernel, or the restriction maps from which \(\Delta\) is built.  The private
+but the public class does not include the degree-one Hodge--Laplacian
+\(\Delta_1\), its kernel, or the restriction maps from which \(\Delta_1\) is
+built.  The private
 recovery object is therefore not a scalar secret or a vector in a published
 lattice; it is the harmonic cochain in the kernel of a hidden Hodge operator.
 
@@ -47,9 +48,10 @@ Those artifacts supply concrete sources for the abstract observation
 \((\alpha,b)\): the public classifier supplies the realized class value
 \(\alpha\), while accepted cochain payloads,
 openings, or proof-carrying statements supply the cochain-facing datum \(b\).
-They bind to hidden Hodge data without presenting \(\Delta\) or
-\(\ker(\Delta)\). The fibration ID is the spectral fingerprint
-\(\operatorname{Spec}_{\mathrm{multi}}(\Delta)\), obtained only after the
+When accompanied by the stated topology binding and proof relation, they are
+interpreted relative to hidden Hodge data without presenting \(\Delta_1\) or
+\(\ker(\Delta_1)\). The fibration ID is the spectral fingerprint
+\(\operatorname{Spec}_{\mathrm{multi}}(\Delta_1)\), obtained only after the
 relevant Hodge data has been recovered or certified; it is not part of the
 public classifier value.
 
@@ -68,8 +70,13 @@ a single proposition or construction are defined locally.
     \(\alpha=\pi(x)\in P\) & realized public classifier value \\
     \(A_\alpha=[x]_\pi\) & fiber of hidden representatives with public label \(\alpha\) \\
     \((\alpha,b)\) & public HCP observation \\
+    \(\Delta_A:A\to A\times A\) & diagonal map in the fibrational semantics \\
+    \(P_X\), \(F:P_X\to\mathsf{Vect}_{\R}\) & finite cell poset and its face-to-coface cellular sheaf \\
+    \(a\in C^0,\ c=\delta_0a\in C^1\) & degree-zero opening and committed exact one-cochain \\
     \(\delta_0,\delta_1,\Delta_1\) & adjacent coboundaries and degree-one Hodge--Laplacian \\
     \(\ker(\Delta_1),\ \pi_H\) & harmonic subspace and harmonic projection \\
+    \(\Delta_W=I-P_W\) & kernel-normalized projection operator associated with \(W\) \\
+    \(\mathcal L,\ \ell\) & local syndrome target and affine MCA line, respectively \\
     \hline
   \end{tabular}
   \caption{Core notation used across the semantic and HCP layers.}
@@ -79,7 +86,7 @@ a single proposition or construction are defined locally.
 This paper develops this boundary through the following statements.
 \begin{enumerate}[label=(\roman*)]
   \item The Harmonic Cochain Problem (HCP): recovery of a cochain \(h\) with
-    \(\Delta h=0\) for a hidden Hodge operator \(\Delta\).
+    \(\Delta_1 h=0\) for a hidden degree-one Hodge operator \(\Delta_1\).
   \item A Hodge-structured noise model with cochain decomposition
     \(b = h + e\), where \(h \in \ker(\Delta_1)\) and
     \(e \in \image(\delta_0) \oplus \image(\delta_1^\ast)\).

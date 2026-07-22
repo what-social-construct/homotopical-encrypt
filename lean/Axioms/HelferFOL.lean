@@ -55,6 +55,29 @@ class PathAxioms (A : Type u) extends HasPathSpace A where
   symm : ∀ {x y : A}, Path x y → Path y x
   trans : ∀ {x y z : A}, Path x y → Path y z → Path x z
 
+/--
+One concrete realization of the HFOL path object by a genuine continuous path
+in a topological representative space.
+
+This is intentionally an opt-in adapter rather than a global instance.  The
+HFOL interface also admits categorical, simplicial, and isometric-groupoid path
+witnesses that need not be literal interval-valued curves.
+-/
+abbrev HomotopyPath {A : Type u} [TopologicalSpace A] (x y : A) :=
+  _root_.Path x y
+
+/-- Mathlib continuous paths supply the reflexive/symmetric/transitive HFOL path operations. -/
+def topologicalPathAxioms (A : Type u) [TopologicalSpace A] : PathAxioms A where
+  Path := fun x y => HomotopyPath x y
+  refl := fun x => _root_.Path.refl x
+  symm := fun p => p.symm
+  trans := fun p q => p.trans q
+
+/-- In the continuous realization, inhabited HFOL path equality is Mathlib's `Joined`. -/
+abbrev ContinuouslyPathEquivalent {A : Type u} [TopologicalSpace A]
+    (x y : A) : Prop :=
+  Joined x y
+
 /-- The diagonal statement: equality is interpreted by inhabited path-space. -/
 def EqualityByPaths {A : Type u} [HasPathSpace A] (x y : A) : Prop :=
   Nonempty (HasPathSpace.Path x y)

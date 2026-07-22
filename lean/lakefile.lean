@@ -9,9 +9,11 @@ open Lake DSL
     CVP.lean       — explicit-lattice/CVP problem objects and assumptions
     Tsirelson.lean — Grassmannian Laplacians, Tsirelson bounds, adversary models
     Laplacian.lean — Grassmannian hardness, norm correction, injectivity
+    Sheaf.lean     — finite cellular sheaves, cochains, and Hodge operators
     Proximity.lean — sheaf/cochain proximity projections and Grassmannian gap problems
     Gates.lean     — validation gate façades over axiom/spec modules
     Consensus.lean — Proof-of-Value assembly and scoring contracts
+    Protocol.lean  — Paper 2 protocol-specification import surface
     TCB.lean       — proof-carrying artifacts and runtime-boundary contracts
     Chain.lean     — chain-level protocol and transaction invariants
     Axioms/        — assumption interfaces and mathematical spec contracts
@@ -47,6 +49,10 @@ lean_lib Laplacian where
   srcDir := "."
 
 @[default_target]
+lean_lib Sheaf where
+  srcDir := "."
+
+@[default_target]
 lean_lib Proximity where
   srcDir := "."
 
@@ -56,6 +62,10 @@ lean_lib Gates where
 
 @[default_target]
 lean_lib Consensus where
+  srcDir := "."
+
+@[default_target]
+lean_lib Protocol where
   srcDir := "."
 
 @[default_target]

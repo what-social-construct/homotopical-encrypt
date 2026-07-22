@@ -67,10 +67,11 @@ to this chain, but does not expose the chain.
     \Delta h=0.
   \]
   Thus the harmonic kernel is \(\ker(\Delta)\). In the projection model this
-  agrees with the condition \(h\in W\) when \(\Delta=\Delta_W=I-P_W\).
+  agrees with the condition \(h\in W\) for the kernel-normalized operator
+  \(\Delta_W=I-P_W\).
 \end{definition}
 
-\begin{definition}[Projection Laplacian, harmonic projection, and residual]\label{def:projection-laplacian}
+\begin{definition}[Kernel-normalized operator, harmonic projection, and residual]\label{def:projection-laplacian}
   Let \(V=R^n\) be equipped with its standard inner product, and let
   \(W\subset V\) be a linear subspace. Write
   \[
@@ -78,8 +79,8 @@ to this chain, but does not expose the chain.
     \qquad\text{and}\qquad
     P_{W^\perp}:V\to W^\perp\subset V
   \]
-  for the orthogonal projections. The projection-model Laplacian attached to
-  \(W\) is
+  for the orthogonal projections. The kernel-normalized projection operator
+  attached to \(W\) is
   \[
     \Delta_W = I-P_W.
   \]
@@ -91,6 +92,10 @@ to this chain, but does not expose the chain.
     \rho_W(b)=\|r_W(b)\|.
   \]
   We say that \(b\) is \(W\)-harmonic when \(r_W(b)=0\).
+  This operator records exactly the harmonic kernel and its orthogonal
+  projection. It is not asserted to equal a cellular Hodge--Laplacian
+  \(\delta_0\delta_0^\ast+\delta_1^\ast\delta_1\), or to have the same
+  positive spectrum, without an additional flat-positive-spectrum hypothesis.
 \end{definition}
 
 \begin{proposition}[Projection harmonicity equivalences]\label{prop:projection-harmonicity-equivalences}

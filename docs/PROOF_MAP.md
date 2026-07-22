@@ -194,9 +194,11 @@ same object when `Δ = Delta_W`.
 `BlockCochainPayloadsCompatible`, `BlockAccepted`, and `LedgerState` specify the
 abstract consensus-state facts used by cochain-root aggregation,
 no-double-spend, and block-acceptance reasoning. `BlockCochainPayloadsCompatible`
-bundles the Lean-side requirements that every block cochain payload is
+bundles the current Lean-side requirements that every block cochain payload is
 well-formed and that all payloads share one topology hash and one edge-vector
-length. The preservation lemmas `acceptedTransaction_key_image_fresh`,
+length. This is a legacy batch-compatibility boundary, not yet the stronger
+requirement that every artifact bind the same canonical `SheafStateSnapshot`
+root. The preservation lemmas `acceptedTransaction_key_image_fresh`,
 `blockAccepted_cochainPayloadsCompatible`,
 `blockAccepted_tx_not_previously_spent`, `applyTransaction_marks_key_image`, and
 `applyBlock_marks_tx_key_image` make the cochain-batch and key-image boundaries
@@ -217,16 +219,17 @@ or endpoint behavior. Those remain Rust runtime concerns; see
 
 ```
 ENCRYPT (v3 — Hodge path):
-  1. Build Δ_sheaf from credential's restriction maps     [SheafLaplacian]
-  2. Find ker(Δ_sheaf) via eigendecomposition              [MatrixIsHarmonic / IsHarmonic]
+  1. Build degree-one Δ₁ from adjacent coboundaries        [degreeOneLaplacian]
+  2. Find ker(Δ₁) via eigendecomposition                    [MatrixIsHarmonic / IsHarmonic]
   3. Encode message as coefficients in harmonic basis       [embed_in_harmonic]
-  4. Message embedding IS a global section ∈ ker(Δ_k)      [Hodge_Decomposition_Theorem]
-  5. Add noise in im(δ_{k-1})⊕im(δ_k*)                    [Hodge_Decomposition_Theorem]
+  4. Embedding is a harmonic degree-one cochain in ker(Δ₁) [Hodge_Decomposition_Theorem]
+     (Only degree-zero elements of ker(δ₀)=ker(Δ₀) are global sections.)
+  5. Add noise in im(δ₀)⊕im(δ₁*)                          [Hodge_Decomposition_Theorem]
   6. ciphertext = harmonic_message + orthogonal_noise
 
 DECRYPT (v3 — Hodge path):
   7. Assemble full cochain from vertex blocks
-  8. Project onto ker(Δ_sheaf) via π_H                     [Hodge_Projection_Is_CVP / harmonicProjection_Is_ProjectionHodgeCVPSolution]
+  8. Project onto ker(Δ₁) via π_H                           [Hodge_Projection_Is_CVP / harmonicProjection_Is_ProjectionHodgeCVPSolution]
   9. Extract coefficients from harmonic basis               [extract_from_harmonic]
   10. Decode coefficients → message bytes                   [_decode_harmonic]
 

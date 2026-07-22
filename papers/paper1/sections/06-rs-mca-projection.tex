@@ -1622,12 +1622,12 @@ For the canonical scalar RS endpoint, let
 \]
 A canonical MCA line is
 \[
-  L=(f_1,f_2),\qquad
-  L(\gamma)=f_1+\gamma f_2.
+  \ell=(f_1,f_2),\qquad
+  \ell(\gamma)=f_1+\gamma f_2.
 \]
 The projection chain induces such a line from two source frame witnesses:
 \[
-  L_{\Gamma,\mathcal F_1,\mathcal F_2}
+  \ell_{\Gamma,\mathcal F_1,\mathcal F_2}
   =
   (y_\Gamma(\mathcal F_1),y_\Gamma(\mathcal F_2)).
 \]
@@ -1636,7 +1636,7 @@ The canonical bad-challenge set is
   \operatorname{Bad}_{\Gamma}(\mathcal F_1,\mathcal F_2)
   =
   \operatorname{Bad}_{\mathrm{MCA}}
-  (\operatorname{RS}(a,1024),\delta_J,L_{\Gamma,\mathcal F_1,\mathcal F_2}).
+  (\operatorname{RS}(a,1024),\delta_J,\ell_{\Gamma,\mathcal F_1,\mathcal F_2}).
 \]
 
 The paper-alphabet endpoint \(\mathcal C_{\mathrm{RS}}\subseteq(F^s)^n\) specializes here to
@@ -1662,7 +1662,7 @@ For the canonical \HE{} Reed--Solomon endpoint at radius
 \begin{proof}
 Let
 \[
-  L=L_{\Gamma,\mathcal F_1,\mathcal F_2}
+  \ell=\ell_{\Gamma,\mathcal F_1,\mathcal F_2}
   =
   (y_\Gamma(\mathcal F_1),y_\Gamma(\mathcal F_2)).
 \]
@@ -1671,9 +1671,9 @@ By definition,
   \operatorname{Bad}_{\Gamma}(\mathcal F_1,\mathcal F_2)
   =
   \operatorname{Bad}_{\mathrm{MCA}}
-  (\operatorname{RS}(a,1024),\delta_J,L).
+  (\operatorname{RS}(a,1024),\delta_J,\ell).
 \]
-It remains only to compare the scalar canonical line \(L\) with the paper
+It remains only to compare the scalar canonical line \(\ell\) with the paper
 alphabet at width \(s=1\). The maps
 \[
   F\longrightarrow F^1,\qquad a\longmapsto(\ast\mapsto a),
@@ -1701,7 +1701,7 @@ theorem gives
 \[
   \frac{
     |\operatorname{Bad}_{\mathrm{MCA}}
-      (\operatorname{RS}(a,1024),\delta_J,L)|
+      (\operatorname{RS}(a,1024),\delta_J,\ell)|
   }{|F|}
   \le
   \frac{\tau_{\mathrm{cit}}}{|F|}.

@@ -1,5 +1,11 @@
 """
-Fixed-Point Spectral Gap Bounds — Canonical Source
+DEPRECATED DUPLICATE — USE ``src.proofs.spectral_bounds``.
+
+This file is retained temporarily for provenance only.  It has no active
+importers, is not exported from ``src.primitives``, and its ``accepted`` helper
+conflates a marginal gate judgment with protocol finality.
+
+Fixed-Point Spectral Gap Bounds — Historical Copy
 
 PROBLEM:
   Spectral gaps are computed via float64 eigendecomposition.

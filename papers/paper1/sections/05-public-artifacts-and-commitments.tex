@@ -70,6 +70,19 @@ topology binding, and the serialized \(C^1\)-level commitment values. It does
 not expose the hidden fibration representative, private transport data, the
 operative Hodge--Laplacian, or the harmonic kernel.
 
+The primary committed mathematical object is the resulting exact
+one-cochain, not a uniquely recoverable degree-zero representative. If
+\(a,a'\in C^0\) are two openings, then
+\[
+  \delta_0a=\delta_0a'
+  \quad\Longleftrightarrow\quad
+  a-a'\in\ker(\delta_0).
+\]
+Thus openings are naturally equivalent modulo the degree-zero global-section
+space \(\ker(\delta_0)\). Selecting one distinguished opening would require a
+separate gauge or reference anchor; none is inferred from the raw coboundary
+payload.
+
 \begin{definition}[Commitment well-formedness]\label{def:commitment-well-formedness}
   A cochain commitment payload is well formed when its modulus is the supported
   canonical modulus \(q=12289\), its declared edge count agrees with the actual
@@ -108,9 +121,13 @@ one-cochain is a cocycle by
   an accepted aggregation.
 \end{proof}
 
-The security interface for this commitment layer consists of binding, hiding,
-homomorphic addition, homomorphic scalar multiplication, topology binding, and
-partial-opening soundness. The blinded-commitment, vector-commitment, and
+The security interface for this commitment layer consists of authenticated
+binding of the exact \(C^1\) payload and its topology/instance identifier,
+hiding for any wrapper that claims it, homomorphic addition, homomorphic scalar
+multiplication, and partial-opening soundness. The raw equality
+\(\delta_0a=\delta_0a'\) supplies only the quotient relation
+\(a-a'\in\ker\delta_0\); it is not computational binding of a unique
+degree-zero opening. The blinded-commitment, vector-commitment, and
 cohomological-MAC interfaces are separate axiom records rather than consequences
 silently bundled into the payload shape.
 
@@ -144,8 +161,9 @@ silently bundled into the payload shape.
   \end{enumerate}
 \end{definition}
 
-The distinction between \(a\) and \(s\) is intentional.  The former is the
-degree-zero opening whose coboundary gives the accepted public payload; the
+The distinction between \(a\) and \(s\) is intentional.  The former is a
+degree-zero opening, defined modulo \(\ker\delta_0\), whose coboundary gives
+the accepted public payload; the
 latter scales the topology-derived harmonic direction.  Moreover, the
 serialized exact payload and the associated Hodge-blinded value are related
 objects, not definitionally the same wire object. In particular, the modular
@@ -232,8 +250,10 @@ payload is well formed whenever the declared edge count is positive.
 Topology compatibility is a separate public invariant. Two committed cochains
 can be aggregated only when their moduli, declared edge counts, and topology
 hashes agree. The weaker same-topology relation records equality of topology
-hashes alone. Cryptographic binding and topology-binding claims are supplied by
-the commitment-security axioms, not by the raw payload data.
+hashes alone. Authentication of the exact \(C^1\) value and topology-binding
+claims are supplied by the commitment-security axioms, not by the raw payload
+data; those axioms do not silently upgrade the coboundary to unique
+degree-zero-message binding.
 
 At the artifact level, a hashed committed cochain is a public cochain payload
 together with digest data and a binding assertion. A proof-carrying committed
@@ -450,6 +470,12 @@ following Lean declarations:
     \lean{CochainCommitmentData.edge_values_nonempty_of_wellFormed}, and
     \lean{CochainCommitmentData.modulus_gt_one_of_wellFormed};
   \item sheaf-semantic commitment invariants:
+    \lean{Sheaf.CellularSheaf.SheafStateSnapshot},
+    \lean{Sheaf.CellularSheaf.CochainPayloadInterpretation},
+    \lean{Sheaf.CellularSheaf.AcceptedCommittedOneCochain},
+    \lean{Sheaf.CellularSheaf.openingEquivalent_iff_sub_mem_ker},
+    \lean{Sheaf.CellularSheaf.decoded_isExactOneCochain},
+    \lean{Sheaf.CellularSheaf.decoded_isOneCocycle},
     \lean{Axioms.CommittedCochainWellFormed},
     \lean{CochainCommitmentData.CoherentWith},
     \lean{Axioms.RepresentsExactOneCochain},

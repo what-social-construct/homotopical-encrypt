@@ -1,4 +1,11 @@
 """
+DEPRECATED UNSELECTED RESEARCH METRICS — NOT A HOMOTOPY OR CONSENSUS GATE.
+
+No current Lean or protocol object selects these metrics, and they are no
+longer exported from ``src.primitives``.  See
+``docs/SEMANTIC_PARITY_QUEUE.md`` before reintroducing a narrowly specified
+runtime diagnostic.
+
 Divergence Measures for Homotopical Cryptography
 
 Information-theoretic distance functions for comparing distributions,

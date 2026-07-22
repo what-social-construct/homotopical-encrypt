@@ -49,6 +49,16 @@
   \item[Heyting/oracle public judgment.]
     Section 4; \lean{Axioms.Heyting3}, \lean{Axioms.OracleQuery},
     \lean{Axioms.OracleAnswer}, and \lean{Axioms.OracleEta2}.
+  \item[Concrete finite cellular sheaf and degree-one Hodge operator.]
+    Sections 2 and 4; \lean{Sheaf.OrientedTwoComplex},
+    \lean{Sheaf.CellularSheaf},
+    \lean{Sheaf.CellularSheaf.delta0},
+    \lean{Sheaf.CellularSheaf.delta1}, and
+    \lean{Sheaf.CellularSheaf.degreeOneLaplacian}.
+  \item[Snapshot-bound exact one-cochain.]
+    Sections 4--5; \lean{Sheaf.CellularSheaf.SheafStateSnapshot},
+    \lean{Sheaf.CellularSheaf.CochainPayloadInterpretation}, and
+    \lean{Sheaf.CellularSheaf.AcceptedCommittedOneCochain}.
   \item[Cochain commitment payload.]
     Section 5; \lean{Axioms.CochainCommitmentData},
     \lean{CochainCommitmentData.WellFormed}, and
@@ -125,6 +135,26 @@
   \item[Exact sheaf gates supply \(d^{k+1}d^k=0\) and Laplacian-from-coboundary.]
     \lean{Gates.structural_preconditions_of_sheaf_exact_gates};
     Lean-proved alias/interface.
+  \item[Concrete cellular coboundaries form a complex.]
+    \lean{Sheaf.CellularSheaf.delta1_comp_delta0} and
+    \lean{Sheaf.CellularSheaf.isOneCocycle_of_isExactOneCochain};
+    Lean-proved from the oriented cell incidences and restriction-composition
+    law.
+  \item[Concrete degree-one Hodge characterization and orthogonality.]
+    \lean{Sheaf.CellularSheaf.degreeOneLaplacian_energy},
+    \lean{Sheaf.CellularSheaf.ker_degreeOneLaplacian},
+    \lean{Sheaf.CellularSheaf.exactOneSubspace_isOrtho_harmonicOneSubspace},
+    \lean{Sheaf.CellularSheaf.harmonicOneSubspace_isOrtho_coexactOneSubspace},
+    and \lean{Sheaf.CellularSheaf.exactOneSubspace_isOrtho_coexactOneSubspace};
+    Lean-proved.  The separately defined
+    \lean{Sheaf.CellularSheaf.kernelNormalizedDegreeOneLaplacian} is proved to
+    have the same kernel, not asserted to equal the true Hodge operator or to
+    have its spectrum.
+  \item[Exact payloads determine openings modulo \(\ker\delta_0\).]
+    \lean{Sheaf.CellularSheaf.openingEquivalent_iff_sub_mem_ker},
+    \lean{Sheaf.CellularSheaf.decoded_isExactOneCochain}, and
+    \lean{Sheaf.CellularSheaf.decoded_isOneCocycle};
+    Lean-proved for the concrete cellular-sheaf commitment object.
   \item[Well-formed payloads have nonempty edge data and supported modulus.]
     \lean{CochainCommitmentData.edge_values_nonempty_of_wellFormed} and
     \lean{CochainCommitmentData.modulus_gt_one_of_wellFormed};
@@ -170,7 +200,7 @@ Import-only aggregate files are listed with the files they collect.
   \item[\lean{lakefile.lean}.]
     Build configuration; no mathematical declaration is translated as a
     theorem.
-  \item[\lean{Axioms.lean}, \lean{Gates.lean}, \lean{TCB.lean},
+  \item[\lean{Sheaf.lean}, \lean{Axioms.lean}, \lean{Gates.lean}, \lean{TCB.lean},
     \lean{Consensus.lean}, \lean{Proximity.lean}, and
     \lean{Proximity/CanonicalRS.lean}.]
     Aggregate import surfaces. Their mathematical content is exactly the
@@ -253,11 +283,24 @@ Import-only aggregate files are listed with the files they collect.
 \subsection{Foundational, Sheaf, Spectral, And Judgment Axioms}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
+  \item[\lean{Sheaf/CellComplex.lean}, \lean{Sheaf/Cellular.lean},
+    \lean{Sheaf/Hodge.lean}, and \lean{Sheaf/Commitment.lean}.]
+    Sections 2, 4, and 5 translate the concrete finite oriented two-complex;
+    finite real coordinate stalks and face-to-coface maps; the typed spaces
+    \(C^0,C^1,C^2\); concrete \(\delta_0\) and \(\delta_1\); the proof that
+    \(\delta_1\delta_0=0\); degree-zero global sections, degree-one cocycles,
+    and exact degree-one cochains; the true degree-one Hodge operator
+    \(\delta_0\delta_0^*+\delta_1^*\delta_1\); its energy, kernel, and
+    orthogonality theorems; the distinct kernel-normalized operator; immutable
+    sheaf-state snapshots; snapshot-bound payload interpretation; accepted
+    exact one-cochains; and the quotient of openings by \(\ker\delta_0\).
   \item[\lean{Axioms/Foundation.lean} and \lean{Gates/Exact.lean}.]
     Section 4 translates \lean{Foundation} and
-    \lean{FoundationWellFormed}: finite cochain data, coboundary
-    compatibility, Hodge Laplacian formation, topology connectivity, spectral
-    gap positivity, and public key-image/freshness premises. The exact-gate
+    \lean{FoundationWellFormed}: the cochain-complex premise, coboundary
+    linearity, Hodge--Laplacian formation, Hodge decomposition, and Hodge
+    orthogonality.  Commitment authentication/hiding, topology connectivity,
+    spectral policy, and key-image/freshness conditions are separate
+    interfaces rather than fields of \lean{Foundation}. The exact-gate
     aliases \lean{ExactGateBundle}, \lean{SheafExactGateBundle},
     \lean{FoundationWithSheafExactGates}, and
     \lean{structural_preconditions_of_sheaf_exact_gates} are
@@ -372,10 +415,12 @@ Import-only aggregate files are listed with the files they collect.
     \lean{CochainCommitmentData}, edge-count matching, nonempty edge data,
     supported modulus, well-formedness, commitment sums, common-topology and
     additive compatibility, zero and addition operations, payload lemmas,
-    binding/hiding/additivity/security axioms, the typed exact-payload to
+    exact-payload authentication, wrapper hiding, context binding,
+    additivity/security interfaces, the typed exact-payload to
     Hodge-blinded-value bridge, exact--harmonic orthogonality and decomposition
     theorems, blinded and vector commitment axioms, cohomological MAC axioms,
-    and the canonical commitment construction from foundational data.
+    and the canonical commitment construction from foundational geometry plus
+    separately supplied commitment-specific hypotheses.
   \item[\lean{TCB/ProofCarrying.lean}, \lean{TCB/Runtime.lean},
     \lean{TCB/SNARK.lean}, \lean{TCB/CompressionBoundary.lean},
     \lean{TCB/ObservationBoundary.lean}, and

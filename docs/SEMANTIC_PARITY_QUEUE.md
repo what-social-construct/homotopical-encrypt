@@ -24,6 +24,120 @@ that fails on legacy filenames.
 
 ---
 
+## Audit Order And Classification
+
+The migration audit proceeds in dependency order:
+
+```text
+primitives -> invariants -> proofs -> geometry -> crypto
+           -> chain -> network -> consensus -> oracle
+```
+
+A stage is classified before the next stage is treated as authoritative. This
+is an audit order, not a claim that every old module must survive or be
+formalized.
+
+Current Lean objects and theorem statements are canonical whenever an older
+Python or Rust object overlaps them. A runtime artifact may implement a Lean
+interface, provide numerical test data, or reveal a missing obligation. It may
+not redefine the canonical mathematical semantics.
+
+Use three independent status axes:
+
+- **Lean coverage:** Unmapped / Interface-only / Specified / Proved /
+  Runtime-refined.
+- **Semantic verdict:** Preserve / Preserve after rename / Partial / Conflicts
+  with canonical model / Rejected.
+- **Disposition:** Active reference / Test oracle / Quarantine / Deprecation
+  candidate / Archived / Deleted.
+
+The lifecycle is:
+
+```text
+Discovered -> Classified -> semantics captured or explicitly rejected
+           -> replacement/tests verified -> deprecated -> archived/deleted
+```
+
+Rejecting an old claim is a valid completion of semantic capture. Wrong Python
+behavior must not be translated into Lean merely to obtain nominal parity.
+
+### Pass P0: `src/primitives/`
+
+| Python file | Canonical Lean owner / coverage | Semantic verdict | Current disposition and next action |
+|---|---|---|---|
+| `algebra.py` | Lean-side exterior construction is proved in `Proximity/GrassmannianPlucker.lean`; correspondence with NumPy coordinate order/sign/normalization is Unmapped. | Preserve `wedge`/`wedge_k` as candidate numerical helpers pending parity tests. The generic coboundary-commutation claim is unsupported, and the non-Euclidean `hodge_star` omits the inverse-metric action. | Active reference, but split or reject the non-Euclidean Hodge-star branch and add coordinate/shape/metric tests. |
+| `cochain.py` | `Sheaf/CellComplex.lean` owns cells/incidences, `Sheaf/Cellular.lean` owns typed (C^0 -> C^1 -> C^2), and `Sheaf/Commitment.lean` owns the downstream exact-(C^1) envelope; Python correspondence is Unmapped. | Preserve only as an identity-stalk graph prototype. It implements (delta_0) but not the claimed general (delta_1); its degree-zero Laplacian has no direct new-core counterpart; and its “message is harmonic” language conflicts with the exact-(C^1) model. | Migration-blocked deprecation candidate. Inventory consumers, rename the prototype honestly, and keep only fixtures that refine the Lean types. |
+| `divergence.py` | No mathematical Lean owner; `Axioms/Grassmannian.lean` has only an abstract scalar eligibility divergence. | Unselected research metrics, not homotopy-equivalence criteria. | Deprecated in place and removed from the package export surface; later archive unless Paper 2 selects and specifies one metric. |
+| `grassmann.py` | Search-space and Plucker-side Lean results are Proved; metric/Karcher properties in `Axioms/Grassmannian.lean` are Specified; Python refinement is Unmapped. | Projector, principal-angle, distance, and forward-Plucker routines are candidate numerics only after rank/shape/projector validation. General `from_plucker`, the current “parallel transport,” and exp/log-dependent Karcher claims do not refine the Lean obligations as written. | Active prototype consumed by consensus; quarantine invalid branches and add validation/parity tests before archival decisions. |
+| `homotopy.py` | Abstract paths/classifier fibers are Interface-only in `Axioms/HelferFOL.lean`, `Axioms/HomotopyClass.lean`, and `Axioms/Fibration.lean`; `Axioms/PythonHomotopyRefinement.lean` is an incomplete snapshot shim and is not a path refinement. | Conflicts with Lean where equality of a finite invariant tuple is called homotopy equivalence, or arbitrary matrices plus a hash are called a rotation proof. | Semantic deprecation candidate with active chain/invariant consumers. Migrate consumers to encodings/refinements of the Lean classifier and supplied-path interfaces. |
+| `k_theory.py` | No Lean owner. | Reject as normative mathematics: the curvature, characteristic-class, and characteristic-cycle calculations are heuristic and unused. | Deprecated in place and removed from the package export surface; later archive as explicitly historical research only. |
+| `natural.py` | General sheaf-coherence obligations are Specified in `Axioms/SheafCoherence.lean`; specialized projection-gate composition is Proved in `Proximity/Gates.lean`; Python refinement is Unmapped. | Conflicts as a validator: missing components/restrictions pass vacuously, and pullback/pushforward/composition invent or silently collapse untyped data. | Quarantine as a semantic validator; replace with a typed finite-cell map before migrating active consumers. |
+| `persistence.py` | No Lean owner. | H0 union-find may be a useful experiment, but H1 death times are fabricated and the greedy routine is not bottleneck distance. | Deprecated in place and removed from the package export surface; preserve a narrowly named H0 experiment only if it gains an identified consumer. |
+| `spectral_bounds.py` | `Axioms/SpectralBounds.lean` and `Axioms/OracleModality.lean`; active Python imports use `src/proofs/spectral_bounds.py` instead. | Partial duplicate. It overstates the Lean admissibility field as a derivation and conflates a marginal gate result with final acceptance. | Deprecated in place as a historical duplicate; no active importer or unique legitimate test fixture remains. |
+| `stalk.py` | Stalk/restriction mathematics is Proved in `Sheaf/Cellular.lean`; snapshot and oracle boundaries are Specified in `Sheaf/Commitment.lean` and `Axioms/OracleModality.lean`; Python refinement is Unmapped. | Preserve only after splitting mathematical stalk data, public-classifier projection, and runtime storage. `StalkProjection` changes context at one cell and is not a face-to-coface restriction map; a vertex assignment is not a sheaf/global section; truncation is not the nonlinear classifier; and raw NumPy bytes are not canonical encoding. | Active legacy container; migrate geometry/chain/invariant consumers before deprecation. |
+| `__init__.py` | No independent owner. | Its “foundational primitives” surface currently promotes exploratory and conflicting modules. | Shrink exports after the rows above are migrated or archived. |
+
+Cross-stage blockers discovered in this pass:
+
+- `algebra.py` is consumed by `grassmann.py`, `invariants/algebraic.py`, and
+  the invariants package export surface.
+- `cochain.py` is consumed by geometry, crypto, invariants, chain, and
+  consensus.
+- `grassmann.py` is consumed by consensus.
+- `homotopy.py` is consumed by chain and invariants.
+- `natural.py` is consumed by chain.
+- `stalk.py` is consumed by geometry, chain, and invariants.
+- `k_theory.py`, `persistence.py`, and `divergence.py` have no direct active
+  consumers beyond package re-export.
+- `primitives/spectral_bounds.py` is an orphan duplicate pending the
+  proofs-stage audit.
+
+Deprecation checkpoint: `k_theory.py`, `persistence.py`, and
+`divergence.py` have no direct in-repo consumer beyond 41 names eagerly
+re-exported by `primitives/__init__.py`; `primitives/spectral_bounds.py` has no
+importer.  Their imports and `__all__` entries have now been pruned atomically,
+and all four files carry explicit deprecation headers. Smoke imports succeeded,
+and the focused hardening/math/hardness/roundtrip baseline passed 96/96. The
+files remain in place for provenance until an archive-only cleanup commit.
+
+### Pass I0: `src/invariants/`
+
+This folder does not currently refine the Lean model.  Its reusable content is
+mostly numerical diagnostics; its equivalence and acceptance claims are legacy
+semantic authority.
+
+| Python file | Canonical Lean owner / coverage | Semantic verdict | Current disposition and next action |
+|---|---|---|---|
+| `algebraic.py` | Cup products, Massey products, and cohomology rings are Unmapped; Lean currently carries only abstract Betti/classifier fields. | Rejected as a semantic gate. Cell counts and Betti numbers are conflated, cup rank is estimated, subdivision invariance fails, restriction maps are ignored, and the reported triple product is not a Massey product. | Deprecation candidate. Preserve no acceptance authority; retain a computation only after giving it a mathematically correct, narrow specification. |
+| `cohomology.py` | Cell incidences, coboundaries, square-zero, and degree-one Hodge structure are Proved in `Sheaf/CellComplex.lean`, `Sheaf/Cellular.lean`, and `Sheaf/Hodge.lean`; quotient-cohomology/Betti computation and Python refinement are Unmapped. | Partial. Rank, shape, and square-zero numerics may survive after rewrite. Current code silently accepts missing (delta_1), hardcodes square-zero, hides negative results, mixes simplex counts with sheaf dimensions, and computes degree-zero ratios even for a supplied (Delta_1). | Active diagnostic through `unified.py`; quarantine semantic results and rewrite with explicit degree/coefficient/sheaf hypotheses. |
+| `fibration.py` | `Axioms/Fibration.lean` is Interface-only for transport; cellular restrictions are Proved in `Sheaf/Cellular.lean`; Python refinement is Unmapped. | Preserve `assert_orthogonal` only as a matrix diagnostic. Uniform stalk dimension is not trivial holonomy, orthogonal edge maps need not give identity loop transport, flatness is not global triviality, and the curvature routine is a stub. | Partial deprecation; keep the one active diagnostic under a narrower name and remove inferred fibration/holonomy authority. |
+| `harmonic.py` | The concrete degree-one operator and subspaces are Proved in `Sheaf/Hodge.lean`; generic projection geometry is Proved in `Laplacian/Hodge.lean`; Python refinement is Unmapped. | Partial but architecture-conflicting. Projectors/range checks are useful only with a validated symmetric operator and explicit degree. The decomposition ignores the upper coboundary and labels the residual coexact; active crypto callers use (Delta_0), while Paper 1 uses (Delta_1) and exact committed (C^1). | Security-critical legacy runtime track. Split degree-tagged diagnostics from basis-dependent encryption before any archival move. |
+| `homotopical.py` | Paths, public fibers, and transport are Interface-only in `Axioms/HelferFOL.lean` and `Axioms/HomotopyClass.lean`; all Python algorithms are Unmapped. | Rejected. Betti numbers do not determine truncation level; (ker Delta) is not a path/automorphism space; simplex dimension and (beta_0) are not dependent-sum/product ranks; and matching these outputs does not prove homotopy equivalence. | Deprecation candidate reached through `unified.py`; remove semantic authority and do not translate these algorithms to Lean. |
+| `spectral.py` | Exact spectral equivalence and non-invariance under homotopy are Proved in `Laplacian/Spectral.lean`; the PoV window and boundary policy are Specified in `Axioms/SpectralBounds.lean` and `Axioms/OracleModality.lean`; Python refinement is Unmapped. | Preserve eigensummaries/heat traces as diagnostics only. Spectrum is not a homotopy classifier; the PoV bound is not derived for all sheaf Laplacians; the fingerprint is noncanonical; and the reported Wasserstein metric is padded unnormalized (L^1). | Active through `unified.py`; strip security/equivalence authority and add canonical numeric/serialization contracts where retained. |
+| `unified.py` | Classifier and stage obligations are Specified by `Axioms/HomotopyClass.lean`, `Axioms/StageAdmissibility.lean`, exact/spectral gates, and `Axioms/OracleModality.lean`; `RefinesTransactionCriticalPass` is not discharged. | Conflicts with the canonical model. It upgrades classifier equality to homotopy equivalence, includes exact spectrum despite Lean's non-invariance theorem, ignores `topology_hash` in `.matches()`, uses noncanonical hashing, hardcodes degree zero, and omits key-image/balance/topos obligations. | Highest-priority quarantine/rewrite. Credential keygen and wallet/block consumers prevent removal; replace with a certificate covering the full Lean stage bundle and canonical oracle decision. |
+| `__init__.py` | No Lean owner; intended orchestration counterpart is only Specified. | Rejected as a validator. `StagedValidator()` is not constructible with the current `UnifiedInvariantValidator`, then refers to nonexistent fields; one stage is unconditionally passed. | Deprecation candidate, but prune only after explicit consumers and package re-exports migrate. |
+
+Cross-stage blockers discovered in this pass:
+
+- `harmonic.py` is used by encryption, decryption, the cohomological MAC, fiber
+  transport, and `unified.py`; it cannot be archived wholesale.
+- `unified.py` is used by credential key generation, wallet storage, and block
+  consensus, so its rewrite is a protocol/security prerequisite.
+- `cohomology.py`, `homotopical.py`, and `spectral.py` remain reachable through
+  `unified.py` even where their direct proof-module imports are unused.
+- `fibration.py` has one genuine runtime caller for the orthogonality
+  diagnostic; the inferred holonomy/curvature surface is otherwise dead.
+- The one-way Lean implication is path witness to equal classifier value under
+  an explicit path-respecting hypothesis.  No Python invariant matcher may be
+  presented as the converse.
+
+The concrete `src/geometry/homotopy_path.py` audit belongs to the later geometry
+stage. Lean presently owns only an abstract supplied path witness and its
+classifier consequences; it does not yet refine that numerical matrix-path
+constructor.
+
+---
+
 ## ✅ Resolved
 
 ### R1. Cochain commitment structure: scalar → canonical payload (Lean ↔ Py ↔ Rust)
@@ -34,6 +148,9 @@ that fails on legacy filenames.
   topology hash. `Chain.lean` transactions carry this payload directly as
   `cochain_commitment`, so chain proofs, proximity bridges, and Rust wire
   validation refer to one cochain commitment shape.
+- **Scope correction:** this resolves payload shape only. The short topology
+  hash is not yet a canonical `SheafStateSnapshot` root, and the raw edge
+  vector binds an exact `C¹` value rather than a unique `C⁰` opening.
 
 ### R2. BlindedCommitment / VectorCommitment missing from Rust
 - **Was:** Python had `BlindedCommitment` and `VectorCommitment` in
@@ -43,19 +160,27 @@ that fails on legacy filenames.
   `VectorCommitment` (partial opening via coboundary constraint). Both have
   test coverage.
 
-### R3. Lean axioms missing cochain commitment module
+### R3. Lean cochain-commitment interface module exists
 - **Was:** No dedicated Lean axiom module for cochain commitment properties.
-- **Fix:** `lean/Axioms/CochainCommitment.lean` created with axioms for
-  coboundary linearity, commitment binding (SVP-hard), hiding (lattice-hard),
-  homomorphic addition, blinded commitment orthogonal decomposition, and
-  vector commitment partial-opening soundness. Imported from `lean/Axioms.lean`.
+- **Fix:** `lean/Axioms/CochainCommitment.lean` created with explicit interface
+  fields for coboundary linearity, authenticated payload/context binding, any
+  separately claimed hiding, homomorphic addition, blinded-commitment
+  orthogonal decomposition, and partial-opening soundness. Imported from
+  `lean/Axioms.lean`.
+- **Scope correction:** these are assumption fields, not proofs of an SVP-hard
+  scheme. For the bare map `a ↦ δ₀a`, equal payloads are exactly openings
+  differing by `ker δ₀`; unique-message binding requires a gauge/reference
+  anchor or a separate cryptographic construction.
 
-### R4. Foundation.lean missing commitment axioms
-- **Was:** `Foundation` structure only had 4 fields (CochainComplex,
-  Laplacian, Hodge decomposition/orthogonality).
-- **Fix:** Added `CoboundaryLinearity`, `CommitmentBinding`,
-  `CommitmentHiding`, `CommitmentHomomorphic` fields. Cross-reference table
-  maps each axiom to its Python/Rust implementation.
+### R4. Foundation/commitment ownership split
+- **Was:** commitment binding, hiding, and homomorphism propositions were added
+  directly to `Foundation`, conflating cochain/Hodge structure with a
+  cryptographic wrapper.
+- **Fix:** `Foundation` now contains exactly the structural cochain/Hodge
+  surface: square-zero, coboundary linearity, Laplacian construction, Hodge
+  decomposition, and orthogonality. Authentication of exact payload bytes,
+  wrapper hiding, context/snapshot binding, homomorphism, and partial-opening
+  soundness remain explicit fields of the separate commitment interface.
 
 ### R5. Commitment naming ambiguity (id_commit vs CochainCommitment)
 - **Was:** Python/Rust/Lean all used `commitment` for two distinct concepts:
@@ -91,7 +216,14 @@ that fails on legacy filenames.
   `lean/Axioms.lean` barrel file.
 - **Fix:** Added `import Axioms.OracleModality` to `lean/Axioms.lean`.
 
-### R9. Identity model cleanup: SpectralFingerprint → FiberSecret, .fingerprint → .betti_id
+### R9. Identity model cleanup — regressed; reopened
+
+> **Current-tree regression:** `src/chain/homotopy_transaction.py` still imports
+> `SpectralFingerprint` and uses spectral-fingerprint identity language;
+> `src/crypto/__init__.py` still exports that name; and
+> `src/chain/account.py` still calls the public identity a spectral
+> fingerprint. The historical migration below was real but is incomplete in
+> the present tree.
 - **Was:** ~30 files used `SpectralFingerprint` as a class name and
   `.fingerprint: bytes` as the public identity field on validators, routing
   relays, accounts, and chain types. Docstrings across consensus, crypto,
@@ -115,7 +247,12 @@ that fails on legacy filenames.
   - `PublicIdentity` class and `identity_hash()` method unchanged (already correct).
   - Tests updated: 29 passed, 0 failed after rename.
 
-### R11. Canonical bounds API: all raw float comparisons → gap_in_bounds()
+### R11. Canonical bounds API — regressed; reopened
+
+> **Current-tree regression:** raw `POV_LOWER <= gap <= POV_UPPER` checks remain
+> in `src/geometry/homotopy_path.py` and `src/chain/block.py`. They must be
+> classified during their ordered folder audits; the historical “zero raw
+> comparisons” statement below no longer describes the working tree.
 - **Was:** 4 sites still used raw `POV_LOWER <= gap <= POV_UPPER` float
   comparisons instead of the canonical `gap_in_bounds()` fixed-point API:
   `chain/agents/stabilizer_agent.py`, `chain/homotopy_transaction.py`,
@@ -128,7 +265,12 @@ that fails on legacy filenames.
   Zero raw `POV_LOWER <= gap` comparisons remain in `src/`.
   Tests: 171 Python passed, 0 failures.
 
-### R10. Separation of concerns / documentation staleness audit
+### R10. Separation of concerns / documentation staleness audit — reopened
+
+> The fixes below describe an earlier checkpoint. R9/R11 regressions and the
+> rejected K-theory material formerly presented as active in
+> `GATE_ARCHITECTURE.md` show that this cross-language cleanup is not globally
+> complete in the current tree.
 - **Was:** Four issues found during cross-language consistency audit:
   1. `ARCHITECTURE.md` had 7 stale "spectral fingerprint = identity"
      references (data flow, Panopticon table, Quick Start, deterministic
@@ -365,16 +507,18 @@ that fails on legacy filenames.
      invariants. Runtime code must not reuse an active bus or any stage result
      for a different cochain commitment.
    - Starting a new commitment initializes a fresh active bus keyed by at least
-     the commitment hash, topology hash, and projection/parameter-set ID.
+     the exact-cochain commitment hash, canonical `SheafStateSnapshot` root,
+     topology metadata, and projection/parameter-set ID.
    - Each restriction and syndrome naturality check is evaluated at its owning
      transition exactly once. Later stages consume the certified predecessor;
      the final gate composes stored stage equations and does not rederive them.
    - After successful finalization, discard/reset the mutable active bus and
      persist an immutable certificate/evidence object in sheaf or
      content-addressed storage.
-   - The main chain should store only an evidence-root hash bound to the
-     commitment hash, topology hash, projection/parameter-set ID, and evidence
-     schema/version. A later commitment may link to a previous finalized root
+   - The main chain should store only an evidence-root hash bound to the exact
+     cochain, `SheafStateSnapshot` root, topology metadata,
+     projection/parameter-set ID, and evidence schema/version. A later
+     commitment may link to a previous finalized root
      for history, but must never inherit its current-stage proofs.
    - This is a protocol/storage obligation, not an additional Paper 1
      proximity theorem. Specify serialization, replay protection, garbage

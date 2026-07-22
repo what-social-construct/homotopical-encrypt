@@ -1,4 +1,11 @@
 """
+DEPRECATED RESEARCH PROTOTYPE — NOT A PERSISTENT-HOMOLOGY IMPLEMENTATION.
+
+The H1 death values and the routine named ``bottleneck_distance`` do not
+implement the mathematical objects claimed below.  The module is no longer
+exported from ``src.primitives``.  See ``docs/SEMANTIC_PARITY_QUEUE.md``; only
+the narrowly specified H0/union-find experiment is a preservation candidate.
+
 Persistent Homology for Homotopical Cryptography
 
 Computes persistent homology from the sheaf/Laplacian data.

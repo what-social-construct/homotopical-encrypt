@@ -19,20 +19,9 @@ Cochain-based cryptographic primitives (from HOMOTOPICAL_PRIMITIVES.md):
    - The key invariant: These operations commute with coboundary δ.
    - This ensures transformations preserve cohomology classes.
 
-4. K-THEORY (fine invariants for incentive layer)
-   - Chern/Segre classes: curvature and self-intersection
-   - λ-ring: exterior powers, information density
-   - Adams operations: symmetry detection
-   - Hatcher classes: Stiefel-Whitney, Pontryagin
-   - Characteristic cycles: per-cell activity from restriction maps
-
-5. PERSISTENT HOMOLOGY (topological fingerprinting)
-   - Filtration, barcode computation, bottleneck distance
-   - Persistence landscapes, persistence profiles
-
-6. DIVERGENCE MEASURES (information geometry)
-   - KL, JSD, Hellinger, TV, Wasserstein, Bregman framework
-   - Adaptive selection for stalk comparison in incentive layer
+Exploratory K-theory, persistence, and divergence modules are intentionally not
+part of this public surface.  Their earlier semantic claims are deprecated; see
+``docs/SEMANTIC_PARITY_QUEUE.md`` before reusing any of that code.
 
 """
 
@@ -91,39 +80,6 @@ from .homotopy import (
     verify_equivalence,
 )
 
-# K-Theory (fine invariants for incentive layer)
-from .k_theory import (
-    # Chern / Segre
-    ChernData,
-    SegreData,
-    compute_chern_classes,
-    compute_segre_classes,
-    compute_curvature_from_holonomy,
-    chern_character,
-    # λ-ring / Adams
-    LambdaRingData,
-    compute_lambda_ring,
-    compute_adams_operations,
-    adams_from_lambda,
-    symmetry_ratio,
-    # Hatcher classes
-    HatcherClasses,
-    compute_hatcher_classes,
-    compute_stiefel_whitney,
-    compute_pontryagin_classes,
-    # Characteristic cycles
-    CharacteristicCycle,
-    compute_characteristic_cycle_from_restrictions,
-    compute_characteristic_cycle_from_sheaf,
-    # Profiles
-    KTheoryProfile,
-    ExtendedKTheoryProfile,
-    compute_k_theory_profile,
-    compute_extended_profile,
-    profile_fiber_bundle,
-    profile_sheaf,
-)
-
 # Grassmann manifold (extends exterior algebra with manifold geometry)
 from .grassmann import (
     subspace_projector,
@@ -143,31 +99,6 @@ from .grassmann import (
     grassmann_parallel_transport,
     random_grassmann_point,
     stalk_to_subspace,
-)
-
-# Persistent homology (topological fingerprinting)
-from .persistence import (
-    PersistencePair,
-    PersistenceBarcode,
-    PersistenceProfile,
-    compute_persistent_homology,
-    bottleneck_distance,
-    persistence_landscape,
-    compute_persistence_profile,
-)
-
-# Divergence measures (information geometry for incentive layer)
-from .divergence import (
-    kullback_leibler,
-    jensen_shannon,
-    itakura_saito,
-    mahalanobis,
-    hellinger,
-    total_variation,
-    wasserstein_1d,
-    bregman_divergence,
-    adaptive_divergence,
-    get_divergence,
 )
 
 __all__ = [
@@ -214,31 +145,6 @@ __all__ = [
     "KeyRotation",
     "rotate_within_class",
     "verify_equivalence",
-    # K-Theory
-    "ChernData",
-    "SegreData",
-    "compute_chern_classes",
-    "compute_segre_classes",
-    "compute_curvature_from_holonomy",
-    "chern_character",
-    "LambdaRingData",
-    "compute_lambda_ring",
-    "compute_adams_operations",
-    "adams_from_lambda",
-    "symmetry_ratio",
-    "HatcherClasses",
-    "compute_hatcher_classes",
-    "compute_stiefel_whitney",
-    "compute_pontryagin_classes",
-    "CharacteristicCycle",
-    "compute_characteristic_cycle_from_restrictions",
-    "compute_characteristic_cycle_from_sheaf",
-    "KTheoryProfile",
-    "ExtendedKTheoryProfile",
-    "compute_k_theory_profile",
-    "compute_extended_profile",
-    "profile_fiber_bundle",
-    "profile_sheaf",
     # Grassmann manifold
     "subspace_projector",
     "projector_rank",
@@ -257,23 +163,4 @@ __all__ = [
     "grassmann_parallel_transport",
     "random_grassmann_point",
     "stalk_to_subspace",
-    # Persistent homology
-    "PersistencePair",
-    "PersistenceBarcode",
-    "PersistenceProfile",
-    "compute_persistent_homology",
-    "bottleneck_distance",
-    "persistence_landscape",
-    "compute_persistence_profile",
-    # Divergence measures
-    "kullback_leibler",
-    "jensen_shannon",
-    "itakura_saito",
-    "mahalanobis",
-    "hellinger",
-    "total_variation",
-    "wasserstein_1d",
-    "bregman_divergence",
-    "adaptive_divergence",
-    "get_divergence",
 ]

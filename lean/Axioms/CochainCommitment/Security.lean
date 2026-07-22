@@ -22,22 +22,19 @@ namespace Axioms
   Cochain commitment axioms capturing the security properties
   that Paper 1 treats as interface assumptions.
 
-  A value of `CochainCommitmentAxioms` is the Lean witness that the commitment
-  layer has binding, hiding, homomorphic, topology-binding, and partial-opening
-  properties. This file imports only payload and foundation data; hardness
-  comparisons and chain-level use of homomorphic accumulation are outside this
-  file.
+  A value of `CochainCommitmentAxioms` records explicit assumptions for an
+  authenticated wrapper around the exact `C¹` payload. The bare coboundary
+  supplies none of the cryptographic properties below: its degree-zero
+  openings are defined only modulo `ker δ₀`.
 -/
 structure CochainCommitmentAxioms where
-  /-- BINDING: collision requires finding ker(δ) element.
-      This axiom records the commitment-specific binding boundary; CVP
-      hardness remains an external comparison assumption. -/
-  Binding : Prop
+  /-- Authenticated binding of the serialized exact `C¹` value. This does not
+      assert uniqueness of a degree-zero opening. -/
+  ExactPayloadBinding : Prop
 
-  /-- HIDING: commitment reveals nothing about message.
-      δ(m ∥ r) for uniformly random r is computationally
-      indistinguishable from random in C¹. -/
-  Hiding : Prop
+  /-- Distributional hiding of the witness component claimed by the wrapper.
+      Exactness or kernel ambiguity alone does not prove this property. -/
+  WrapperHiding : Prop
 
   /-- HOMOMORPHIC ADDITION: linearity of δ.
       δ(m₁∥r₁) + δ(m₂∥r₂) = δ((m₁+m₂)∥(r₁+r₂)) mod q.
@@ -49,10 +46,9 @@ structure CochainCommitmentAxioms where
       Follows from linearity of δ. -/
   HomomorphicScalarMult : Prop
 
-  /-- TOPOLOGY BINDING: commitment is bound to a specific
-      simplicial complex via topology_hash.
-      Commitments over different topologies cannot be combined. -/
-  TopologyBinding : Prop
+  /-- Authenticated binding to the declared topology/instance context. Paper 2
+      strengthens this to a canonical `SheafStateSnapshot` root. -/
+  ContextBinding : Prop
 
   /-- PARTIAL OPENING: revealing a subset of vertex values allows
       verification of edges incident to revealed vertices.
@@ -60,11 +56,11 @@ structure CochainCommitmentAxioms where
   PartialOpeningSoundness : Prop
 
 abbrev CochainCommitmentWellFormed (C : CochainCommitmentAxioms) : Prop :=
-  C.Binding
-  ∧ C.Hiding
+  C.ExactPayloadBinding
+  ∧ C.WrapperHiding
   ∧ C.HomomorphicAddition
   ∧ C.HomomorphicScalarMult
-  ∧ C.TopologyBinding
+  ∧ C.ContextBinding
   ∧ C.PartialOpeningSoundness
 
 /--
@@ -80,20 +76,19 @@ structure BlindedCommitmentAxioms where
   /-- Hodge orthogonality: im(δ) and harmonic element H are in
       orthogonal subspaces (Hodge decomposition). -/
   HodgeOrthogonality : Prop
-  /-- Nothing-up-my-sleeve: H is deterministically derived from
-      topology hash (no trusted setup). -/
+  /-- Nothing-up-my-sleeve: H is deterministically derived from the declared
+      public context. -/
   DeterministicBasis : Prop
-  /-- Binding: extracting m requires projecting onto im(δ),
-      which requires knowing the Laplacian. -/
-  Binding : Prop
-  /-- Hiding: blinding factor r makes commitment uniform. -/
-  Hiding : Prop
+  /-- Authenticated binding of the resulting blinded `C¹` value. -/
+  AuthenticatedValueBinding : Prop
+  /-- Separately assumed distributional hiding of the blinded construction. -/
+  DistributionalHiding : Prop
 
 abbrev BlindedCommitmentWellFormed (B : BlindedCommitmentAxioms) : Prop :=
   B.HodgeOrthogonality
   ∧ B.DeterministicBasis
-  ∧ B.Binding
-  ∧ B.Hiding
+  ∧ B.AuthenticatedValueBinding
+  ∧ B.DistributionalHiding
 
 /--
   Vector commitment axioms.
@@ -106,11 +101,12 @@ abbrev BlindedCommitmentWellFormed (B : BlindedCommitmentAxioms) : Prop :=
 structure VectorCommitmentAxioms where
   /-- Completeness: honest opener with correct values always verifies. -/
   Completeness : Prop
-  /-- Soundness: for each revealed edge, the coboundary equation holds.
-      Falsifying requires finding a coboundary collision. -/
+  /-- Soundness: for each revealed edge, the asserted local coboundary
+      equation holds. This is local equation soundness, not uniqueness of the
+      whole degree-zero opening. -/
   Soundness : Prop
-  /-- Position binding: each vertex is bound to its position in
-      the complex (topology hash prevents reindexing attacks). -/
+  /-- Position binding: each vertex is authenticated at its canonical position
+      in the declared context. -/
   PositionBinding : Prop
 
 abbrev VectorCommitmentWellFormed (V : VectorCommitmentAxioms) : Prop :=
@@ -144,51 +140,49 @@ abbrev CohomologicalMACWellFormed (M : CohomologicalMACAxioms) : Prop :=
   ∧ M.Determinism
 
 /--
-  Foundation implies commitment binding preconditions.
+  Foundation supplies the cochain/Hodge geometry consumed by a commitment
+  interface.
 
   CochainComplex + LaplacianFromCoboundary give the cochain/Hodge structure
   used by the commitment-binding interface.
 -/
-theorem foundation_implies_binding_preconditions (F : Foundation) :
+theorem foundation_supplies_commitment_geometry (F : Foundation) :
     FoundationWellFormed F →
     F.CochainComplex ∧ F.LaplacianFromCoboundary := by
   intro h
   exact ⟨h.1, h.2.2.1⟩
 
 /--
-  Homomorphic addition implies balance preservation.
-
-  If commitments are homomorphic under addition (δ is linear),
-  then Σᵢ δ(txᵢ) = δ(Σᵢ txᵢ) and balance can be checked on
-  the accumulated commitment.
+  Well-formedness exposes the separately stated homomorphic-addition field.
+  Ledger balance preservation requires an additional ledger equation and does
+  not follow from linearity alone.
 -/
-theorem homomorphic_implies_balance_law
+theorem homomorphic_addition_of_wellFormed
     (C : CochainCommitmentAxioms)
     (hC : CochainCommitmentWellFormed C) :
     C.HomomorphicAddition := by
   exact hC.2.2.1
 
 /--
-  Canonical CochainCommitmentAxioms instance derived from Foundation
-  and a binding/hiding hypothesis.
+  Canonical `CochainCommitmentAxioms` interface derived from `Foundation`
+  together with the commitment-specific hypotheses that `Foundation` does not
+  carry.
 
-  This lightweight interface instance fills the homomorphic fields with the
-  cochain-complex premise currently carried by `Foundation`. The separate
-  `Foundation.CoboundaryLinearity` field records the stronger mathematical
-  linearity assumption, but this constructor does not use it. Binding, hiding,
-  and partial-opening soundness remain explicit witnesses supplied to the
-  constructor.
+  The homomorphic fields are tied to the declared coboundary-linearity
+  premise.  Topology binding is an explicit input: it is not a consequence of
+  the cochain-complex equation, and it must never be filled with `True` merely
+  to construct the interface record.
 -/
 def CochainCommitmentFromFoundation
     (F : Foundation) (_hF : FoundationWellFormed F)
-    (hBinding : Prop) (hHiding : Prop) (hPartial : Prop) :
+    (hBinding : Prop) (hHiding : Prop) (hTopologyBinding : Prop)
+    (hPartial : Prop) :
     CochainCommitmentAxioms where
-  Binding := hBinding
-  Hiding := hHiding
-  -- Current lightweight interface witness for the homomorphic fields.
-  HomomorphicAddition := F.CochainComplex
-  HomomorphicScalarMult := F.CochainComplex
-  TopologyBinding := True
+  ExactPayloadBinding := hBinding
+  WrapperHiding := hHiding
+  HomomorphicAddition := F.CoboundaryLinearity
+  HomomorphicScalarMult := F.CoboundaryLinearity
+  ContextBinding := hTopologyBinding
   PartialOpeningSoundness := hPartial
 
 /--
@@ -197,11 +191,12 @@ def CochainCommitmentFromFoundation
 -/
 theorem canonical_commitment_wellformed
     (F : Foundation) (hF : FoundationWellFormed F)
-    (hBinding hHiding hPartial : Prop)
-    (hb : hBinding) (hh : hHiding) (hp : hPartial) :
+    (hBinding hHiding hTopologyBinding hPartial : Prop)
+    (hb : hBinding) (hh : hHiding) (ht : hTopologyBinding) (hp : hPartial) :
     CochainCommitmentWellFormed
-      (CochainCommitmentFromFoundation F hF hBinding hHiding hPartial) := by
-  refine ⟨hb, hh, hF.1, hF.1, trivial, hp⟩
+      (CochainCommitmentFromFoundation
+        F hF hBinding hHiding hTopologyBinding hPartial) := by
+  refine ⟨hb, hh, hF.2.1, hF.2.1, ht, hp⟩
 
 end Axioms
 end Hcrypt

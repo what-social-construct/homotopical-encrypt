@@ -1,4 +1,11 @@
 """
+DEPRECATED RESEARCH PROTOTYPE — NOT A MATHEMATICAL OR PROTOCOL AUTHORITY.
+
+The formulas below do not implement a verified Chern--Weil, K-theory, or
+characteristic-cycle construction.  The module is no longer exported from
+``src.primitives``.  See ``docs/SEMANTIC_PARITY_QUEUE.md`` before preserving a
+narrow numerical fixture or moving this file to the source archive.
+
 K-Theory Primitives: λ-Rings, Segre Classes, Adams Operations
 
 Extracts FINER invariants from the sheaf than Betti numbers alone.
