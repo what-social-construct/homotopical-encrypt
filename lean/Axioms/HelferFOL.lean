@@ -1,4 +1,5 @@
 import Mathlib
+import Helfer
 
 /-
   Helfer-oriented first-order homotopical logic interface.
@@ -13,6 +14,15 @@ import Mathlib
   lifting principles. It is a formalization/specification boundary for external
   paper semantics, not a claim that the repo reproves the source paper.
 
+  External provenance split (Joseph Helfer, "First-order homotopical logic"):
+  - equality via a path-space replacement of the diagonal: Section 2;
+  - h=-fibration structure and its dependent logical operations: Definition 4.3;
+  - homotopy invariance of formula interpretations, and of satisfaction for
+    closed formulas: Theorem 12.3 (cited by Paper 1, not proved here).
+
+  The public-classifier/class-witness layer below is an HCP specialization; it
+  is not presented as a theorem of Helfer's paper.
+
   This module is Lean-first specification glue for the core paper semantics:
   - equality interpreted by path space / diagonal semantics,
   - Grothendieck-fibration style lifting assumptions,
@@ -20,14 +30,16 @@ import Mathlib
   - homotopy-invariance of first-order statements.
 
   Role in the hcrypt stack:
+  - importing this file also re-exports the typed `Hcrypt.Helfer` signature,
+    interpretation, homotopy-equivalence, and explicit invariance boundary;
   - this file owns the hidden semantic layer: equality is witnessed by paths,
     not by strict syntactic identity;
   - `Axioms.Heyting` owns the runtime/public truth collapse consumed by the
     protocol;
   - `Axioms.OracleModality` owns the public oracle/sheafification boundary;
-  - `Hardness.lean` uses the resulting representative ambiguity to state why a
-    CVP oracle for an already-presented lattice does not identify the hidden
-    Hodge operator.
+  - `Hardness.lean` factors the HCP classifier through the invariant closed
+    theory, then requires a separate presentation-level kernel-separation
+    witness before deriving the CVP-oracle insufficiency result.
 
   It is intentionally axiomatic (interface-level) so implementation contracts
   in Python/Rust can be tied to explicit logical obligations while deeper
@@ -67,7 +79,8 @@ abbrev HomotopyPath {A : Type u} [TopologicalSpace A] (x y : A) :=
   _root_.Path x y
 
 /-- Mathlib continuous paths supply the reflexive/symmetric/transitive HFOL path operations. -/
-def topologicalPathAxioms (A : Type u) [TopologicalSpace A] : PathAxioms A where
+noncomputable def topologicalPathAxioms
+    (A : Type u) [TopologicalSpace A] : PathAxioms A where
   Path := fun x y => HomotopyPath x y
   refl := fun x => _root_.Path.refl x
   symm := fun p => p.symm

@@ -29,14 +29,14 @@ This module verifies the formal comparison used by the paper:
    `Λ ⊆ W = ker(Δ_W)`, proves the Pythagorean distance decomposition and that
    projecting the target onto `W` preserves the closest lattice vectors
    (`HarmonicCVPBridge.solution_iff_projectedTarget`).
-4. **Hidden-Operator Strictness**: Proves the core separation result intended by
-   the project. In the hidden-fibration / hidden-Laplacian model, a correct CVP
-   oracle for explicitly presented instances is still insufficient to solve HCP
-   from public data alone, because the relevant harmonic kernel `ker(Δ)` is not
-   uniquely determined by the public observation
-   (`CVP_Oracle_Insufficient_For_Public_Hodge_Solving`). This corollary uses
-   the corrected discrete-CVP oracle only as auxiliary information; it does not
-   identify a Hodge kernel with a discrete lattice.
+4. **Typed Helfer/HCP bridge**: Packages a homotopical interpretation, its
+   invariant public classifier, and its presentation-level Hodge extension in
+   `Hcrypt.HCPBridge.Realization`. Helfer's closed-formula invariance boundary
+   proves equality of public classifier values for homotopy-equivalent
+   interpretations. A separate `KernelSeparationWitness` then yields
+   public-compatible kernel ambiguity and rules out a representative-indexed
+   public solver, even with a correct explicit-CVP oracle as auxiliary data
+   (`Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation`).
 
 The formal proofs separate the presented-subspace projection problem, the
 discrete known-lattice CVP problem, and the hidden-operator recovery problem.
@@ -47,10 +47,12 @@ Important scope note:
 - the explicit HCP/CVP bridge starts only after a discrete lattice `Λ` inside
   the harmonic subspace has been supplied; it does not identify the whole real
   kernel with that lattice;
-- the oracle-insufficiency theorems support a strict separation in the hidden-operator model;
-- this is therefore a hardness / complexity inequality in the formal model used here:
-  the public data determines only an equivalence class of compatible hidden
-  fibrations/Laplacians, not a unique operator;
+- the typed oracle-insufficiency theorem is conditional on an explicit HCP
+  realization and a `KernelSeparationWitness`; equivalence alone does not
+  imply kernel disagreement;
+- the theorem is an information-theoretic no-uniform-solver statement for the
+  stated deterministic interface, not by itself an asymptotic complexity
+  lower bound;
 - accordingly, the attacker is not given a canonically presented kernel, but must
   first identify which hidden representative determines the operative subspace
   `ker(Δ)`;
@@ -61,6 +63,7 @@ Important scope note:
 import Mathlib
 import CVP
 import Laplacian.Hodge
+import Axioms.HelferFOL
 
 set_option linter.mathlibStandardSet false
 
@@ -210,10 +213,201 @@ theorem kernelAmbiguous_of_publicCompatibleHodgeAmbiguity
   have hb_harm₂ : MatrixIsHarmonic Δ₂ b := (hsame b).1 hb_harm₁
   exact hb₂ ⟨b, hb_harm₂, rfl⟩
 
--- We define a solver as a function that takes the public-facing observation.
--- In this file, cochain values, commitment-facing data, hashes, and public
--- class handles are abstracted to the observed cochain `b` plus the lossy
--- public projection above. The hidden datum needed to state correctness is `Δ`.
+-- ════════════════════════════════════════════════════════════════════
+-- Typed Helfer semantics / HCP hidden-operator bridge
+-- ═════════════════════════════════════════════════════════════════════
+
+namespace Hcrypt.HCPBridge
+
+open CategoryTheory CategoryTheory.Limits HomotopicalAlgebra
+
+universe u₁ u₂ v₁ v₂ w uRep uAux
+
+/--
+An HCP realization extends a homotopy-invariant Helfer interpretation by
+presentation-level Hodge data.
+
+The semantic interpretation and the hidden Laplacian are separate on purpose.
+If the Laplacian and its harmonicity predicate belonged to the invariant
+first-order signature, closed-formula invariance would obstruct, rather than
+imply, the kernel-separation witness below.
+-/
+structure Realization
+    (C : Type u₂) [Category.{v₂} C]
+    [HasTerminal C] [HasBinaryProducts C] [ModelCategory C]
+    (S : Helfer.Signature.{u₁, v₁})
+    (sem : Helfer.ClosedSemantics (C := C) S)
+    (Rep : Type uRep) (N : Type) [Fintype N]
+    (R : Type) [CommRing R] (P : Type) where
+  /-- Homotopy-invariant semantic core of a hidden representative. -/
+  interpretation : Rep → Helfer.Interpretation C S
+  /-- Operative degree-one Hodge operator attached to the representative. -/
+  laplacian : Rep → Matrix N N R
+  /-- Public classifier on hidden representatives. -/
+  classifier : Axioms.PublicClassifier Rep P
+  /-- Matrix-level public projection used by the existing hardness lemmas. -/
+  publicProjection : _root_.PublicProjection N R P
+  /-- Public classification of a closed first-order theory. -/
+  classifyTheory : Set sem.ClosedFormula → P
+  /-- The representative classifier factors through its invariant theory. -/
+  classifier_factors : ∀ r,
+    classifier.π r = classifyTheory (Helfer.ClosedTheory sem (interpretation r))
+  /-- The matrix projection agrees with the representative classifier on realized operators. -/
+  operator_classifier_factors : ∀ r,
+    publicProjection (laplacian r) = classifier.π r
+
+variable
+    {C : Type u₂} [Category.{v₂} C]
+    [HasTerminal C] [HasBinaryProducts C] [ModelCategory C]
+    {S : Helfer.Signature.{u₁, v₁}}
+    {sem : Helfer.ClosedSemantics (C := C) S}
+    {Rep : Type uRep} {N : Type} [Fintype N]
+    {R : Type} [CommRing R] {P : Type}
+
+/-- Homotopy equivalence of semantic cores gives equality of the factored classifier. -/
+theorem samePublicClass_of_homotopyEquivalent
+    (X : Realization C S sem Rep N R P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    {r s : Rep}
+    (hrs : Helfer.HomotopyEquivalent (X.interpretation r) (X.interpretation s)) :
+    Axioms.SamePublicClass X.classifier r s := by
+  calc
+    X.classifier.π r =
+        X.classifyTheory (Helfer.ClosedTheory sem (X.interpretation r)) :=
+      X.classifier_factors r
+    _ = X.classifyTheory (Helfer.ClosedTheory sem (X.interpretation s)) := by
+      rw [Helfer.closedTheory_eq sem hInv hrs]
+    _ = X.classifier.π s := (X.classifier_factors s).symm
+
+/-- The representative and matrix classifiers agree on realized hidden operators. -/
+theorem publiclyEquivalent_laplacians_of_homotopyEquivalent
+    (X : Realization C S sem Rep N R P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    {r s : Rep}
+    (hrs : Helfer.HomotopyEquivalent (X.interpretation r) (X.interpretation s)) :
+    _root_.PubliclyEquivalent X.publicProjection (X.laplacian r) (X.laplacian s) := by
+  calc
+    X.publicProjection (X.laplacian r) = X.classifier.π r :=
+      X.operator_classifier_factors r
+    _ = X.classifier.π s :=
+      samePublicClass_of_homotopyEquivalent X hInv hrs
+    _ = X.publicProjection (X.laplacian s) :=
+      (X.operator_classifier_factors s).symm
+
+/--
+An independent witness that the presentation-level Hodge extensions of two
+homotopy-equivalent semantic cores disagree on one cochain. The last two
+fields are extra HCP data; kernel disagreement is not inferred from semantic
+equivalence.
+-/
+structure KernelSeparationWitness
+    (X : Realization C S sem Rep N R P) where
+  left : Rep
+  right : Rep
+  input : N → R
+  semanticEquivalence :
+    Helfer.HomotopyEquivalent (X.interpretation left) (X.interpretation right)
+  harmonic_left : _root_.MatrixIsHarmonic (X.laplacian left) input
+  not_harmonic_right : ¬ _root_.MatrixIsHarmonic (X.laplacian right) input
+
+/-- The typed semantic bridge plus Hodge separation yields public-compatible ambiguity. -/
+theorem publicCompatibleHodgeAmbiguity_of_kernelSeparation
+    (X : Realization C S sem Rep N R P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    (witness : KernelSeparationWitness X) :
+    _root_.PublicCompatibleHodgeAmbiguity X.publicProjection := by
+  refine ⟨X.laplacian witness.left, X.laplacian witness.right, witness.input,
+    publiclyEquivalent_laplacians_of_homotopyEquivalent X hInv
+      witness.semanticEquivalence, ?_, ?_⟩
+  · exact ⟨witness.input, witness.harmonic_left, rfl⟩
+  · rintro ⟨h, hh, rfl⟩
+    exact witness.not_harmonic_right hh
+
+/-- The typed bridge packages the existing kernel-ambiguity implication. -/
+theorem kernelAmbiguous_of_kernelSeparation
+    (X : Realization C S sem Rep N R P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    (witness : KernelSeparationWitness X) :
+    _root_.KernelAmbiguous X.publicProjection :=
+  _root_.kernelAmbiguous_of_publicCompatibleHodgeAmbiguity
+    (publicCompatibleHodgeAmbiguity_of_kernelSeparation X hInv witness)
+
+/-- Kernel separation also makes the matrix-level public projection lossy. -/
+theorem lossyPublicProjection_of_kernelSeparation
+    (X : Realization C S sem Rep N R P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    (witness : KernelSeparationWitness X) :
+    _root_.LossyPublicProjection X.publicProjection :=
+  _root_.kernelAmbiguous_implies_lossy
+    (kernelAmbiguous_of_kernelSeparation X hInv witness)
+
+/-- The actual public input seen by a representative-indexed HCP solver. -/
+abbrev Observation (P N R : Type) := P × (N → R)
+
+/-- A solver receives auxiliary information and the public class/cochain pair. -/
+abbrev Solver (Aux : Type uAux) (P N R : Type) :=
+  Aux → Observation P N R → (N → R)
+
+/-- Soundness only for hidden representatives admitted by this realization. -/
+def SolverSoundOn
+    (X : Realization C S sem Rep N R P)
+    {Aux : Type uAux} (solver : Solver Aux P N R) (aux : Aux) : Prop :=
+  ∀ (r : Rep) (b : N → R),
+    _root_.MatrixIsHarmonic (X.laplacian r)
+      (solver aux (X.classifier.π r, b))
+
+/-- Exactness on already-harmonic inputs for admitted representatives. -/
+def SolverExactOnHarmonic
+    (X : Realization C S sem Rep N R P)
+    {Aux : Type uAux} (solver : Solver Aux P N R) (aux : Aux) : Prop :=
+  ∀ (r : Rep) (b : N → R),
+    _root_.MatrixIsHarmonic (X.laplacian r) b →
+      solver aux (X.classifier.π r, b) = b
+
+/-- One ambiguous public observation rules out simultaneous soundness and exactness. -/
+theorem no_solver_on_kernelSeparation
+    (X : Realization C S sem Rep N R P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    (witness : KernelSeparationWitness X)
+    {Aux : Type uAux} {solver : Solver Aux P N R} {aux : Aux}
+    (hsound : SolverSoundOn X solver aux)
+    (hexact : SolverExactOnHarmonic X solver aux) : False := by
+  have hclass : X.classifier.π witness.left = X.classifier.π witness.right :=
+    samePublicClass_of_homotopyEquivalent X hInv witness.semanticEquivalence
+  have hout : solver aux (X.classifier.π witness.left, witness.input) = witness.input :=
+    hexact witness.left witness.input witness.harmonic_left
+  have hright := hsound witness.right witness.input
+  rw [← hclass] at hright
+  rw [hout] at hright
+  exact witness.not_harmonic_right hright
+
+/--
+Even a correct explicit-lattice CVP oracle cannot resolve a supplied HCP
+kernel-separation witness: it is auxiliary data, while the identical public
+observation still fails to select the operative Hodge extension.
+-/
+theorem cvpOracle_insufficient_of_kernelSeparation
+    {N : Type} [Fintype N]
+    (X : Realization C S sem Rep N ℝ P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    (witness : KernelSeparationWitness X)
+    (hOracle : ∃ O : _root_.CVP.Oracle N N, _root_.CVP.OracleCorrect O) :
+    ¬ ∃ solver : Solver (_root_.CVP.Oracle N N) P N ℝ,
+      ∀ O : _root_.CVP.Oracle N N, _root_.CVP.OracleCorrect O →
+        SolverSoundOn X solver O ∧ SolverExactOnHarmonic X solver O := by
+  rintro ⟨solver, hsolver⟩
+  obtain ⟨O, hO⟩ := hOracle
+  exact no_solver_on_kernelSeparation X hInv witness
+    (hsolver O hO).1 (hsolver O hO).2
+
+end Hcrypt.HCPBridge
+
+-- Legacy matrix-wide sanity model.
+--
+-- The solver below receives only a cochain and is required to work for every
+-- matrix of the ambient size. It is retained as a generic contradiction test,
+-- not as the concrete HCP public interface. The representative-indexed solver
+-- consuming `(publicClass, cochain)` is `Hcrypt.HCPBridge.Solver` above.
 
 /-- Correctness surface for a solver that is explicitly given the operator. -/
 def Hodge_Solver_Correct {N : Type} [Fintype N] {R : Type} [CommRing R]
@@ -605,12 +799,11 @@ theorem no_uniform_public_hodge_solver
   exact hb₂ ⟨solver h₁, hsound Δ₂ h₁, heq⟩
 
 /--
-Stronger hidden-operator formulation of the hardness separation.
+Generic matrix-wide oracle-insufficiency sanity theorem.
 
-Even granting a correct oracle for explicit lattices, no solver that sees only
-the public cochain can be uniformly correct on all hidden Hodge instances.
-The proof uses `Hodge_Ambiguity`: the same public cochain can be harmonic for
-one hidden Laplacian and non-harmonic for another.
+This quantifies over every matrix and lets the solver see only the cochain. The
+HCP-faithful theorem, indexed by admitted representatives and the actual public
+class value, is `Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation`.
 -/
 theorem CVP_Oracle_Insufficient_For_Public_Hodge_Solving
   {n : Type} [Fintype n] [DecidableEq n]
@@ -882,8 +1075,15 @@ class GrothendieckFibration (p : E ⥤ B) : Prop where
     ∃ (U : E) (h : p.obj U = X) (f : U ⟶ V),
       p.map f = eqToHom h ≫ α ∧ IsCartesianMorphism p f
 
-/-- Two fibrations are homotopy equivalent. -/
-def HomotopyEquivalent {D : Type u} [Category.{v} D] (p : E ⥤ B) (q : D ⥤ B) : Prop :=
+/--
+The total categories of two fibrations are categorically equivalent through
+functors that commute strictly with the projections to the common base.
+
+This is not Helfer's model-categorical homotopy equivalence of algebraic
+interpretations; that notion is `Hcrypt.Helfer.HomotopyEquivalent`.
+-/
+def CategoricallyEquivalentFibrations
+    {D : Type u} [Category.{v} D] (p : E ⥤ B) (q : D ⥤ B) : Prop :=
   ∃ (F : E ⥤ D) (G : D ⥤ E),
     p = F ⋙ q ∧ q = G ⋙ p ∧
     Nonempty (G ⋙ F ≅ Functor.id D) ∧
@@ -939,8 +1139,9 @@ def FromWrapper (n : ℕ) (E : Type u) [Category.{v} E] : Wrapper n E ⥤ E wher
   map_id := by intro W; rfl
   map_comp := by intro W Y Z f g; rfl
 
-/-- Copies are homotopy equivalent to the original. -/
-lemma copy_equivalent_thm (F : Fibration B) (n : ℕ) : HomotopyEquivalent F.p (FibrationCopy F n).p := by
+/-- A tagged copy has a categorically equivalent total category over the base. -/
+lemma copy_categoricallyEquivalent_thm (F : Fibration B) (n : ℕ) :
+    CategoricallyEquivalentFibrations F.p (FibrationCopy F n).p := by
   refine ⟨ToWrapper n F.E, FromWrapper n F.E, ?_, ?_, ?_, ?_⟩
   · -- F.p = ToWrapper ⋙ (FibrationCopy F n).p
     rfl

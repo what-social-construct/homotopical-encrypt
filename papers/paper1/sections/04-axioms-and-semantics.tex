@@ -2,11 +2,23 @@
 
 \subsection{Fibrational Semantics}
 
-The semantic layer is motivated by Helfer's first-order homotopical logic
-\cite{helfer2019fol}. We use the associated path, fibration, sheaf, and
-internal-logic language for hidden representatives, public bases, and transport
-of witness data; the external foundational results are taken as background
-rather than reproved.
+The path-object and fibrational part of this semantic layer is adapted from
+Helfer's first-order homotopical logic
+\cite[Sections~2--7]{helfer2019fol}. In particular, we use its replacement of
+diagonal equality by a path-space fibration, its Grothendieck-fibrational
+formulation of first-order semantics, and its homotopy-invariance theorem.
+We do not reproduce Helfer's full development of suitable model categories,
+Kan complexes, \(h^{=}\)-fibrations, or two-dimensional fibrations. Instead, we
+extract the semantic obligations consumed by HCP and add the project-specific
+public-classifier and cryptographic layers below. Helfer's external invariance
+theorem is cited as background rather than reproved in Lean.
+Lean does formalize the typed dependency needed to apply that result: a
+multi-sorted algebraic signature, finite-product interpretations, homotopy
+homomorphisms coherent with every function symbol, and componentwise
+homotopy equivalence between cofibrant-fibrant interpretations. The
+closed-formula consequence of Helfer's theorem remains an explicit hypothesis,
+from which the HCP classifier bridge is proved in
+\cref{prop:helfer-hcp-bridge}.
 We use the usual fibrational notation
 \[
   p:E\longrightarrow B,
@@ -46,14 +58,19 @@ admit a unique factor \(\widetilde\psi:W\to U\) with
 \]
 A Grothendieck fibration is then a functor
 with Cartesian lifts for every base arrow. This is the categorical form of the
-transport principle used by the hidden-representative semantics.
+transport principle used by the hidden-representative semantics. Helfer's full
+first-order interface imposes additional fiberwise products, coproducts,
+exponentials, stable indexed sums and products, and equality objects
+\cite[Definition~4.3]{helfer2019fol}; the definition here records only the
+underlying fibration vocabulary needed for the local construction.
 
-\begin{proposition}[Fibration copies preserve hidden semantics]\label{prop:fibration-copy-equivalence}
+\begin{proposition}[Fibration copies preserve the categorical fibration surface]\label{prop:fibration-copy-equivalence}
   Let \(p:E\to B\) be a Grothendieck fibration. For each tag \(n\), let
   \(E^{(n)}\) be a tagged copy of \(E\) and let
   \(p^{(n)}:E^{(n)}\to B\) be the induced fibration. Then
   \(p^{(n)}\) is again a Grothendieck fibration, and \(p\) and \(p^{(n)}\) are
-  homotopy equivalent over \(B\).
+  equivalent as total categories through functors commuting strictly with the
+  projections to \(B\).
 \end{proposition}
 
 \begin{proof}
@@ -62,43 +79,63 @@ transport principle used by the hidden-representative semantics.
   functor \(E\to E^{(n)}\) compose to the identity up to the evident natural
   isomorphisms. Cartesian lifts in \(E^{(n)}\) are transported directly from
   Cartesian lifts in \(E\), so the induced functor remains a Grothendieck
-  fibration. The two functors give the homotopy equivalence over the base
-  \(B\).
+  fibration. The two functors give the stated categorical equivalence over the
+  base \(B\). This tagged-copy equivalence is only a relabelling construction;
+  it is not Helfer's model-categorical homotopy equivalence of algebraic
+  interpretations and does not by itself imply hidden-kernel ambiguity.
 \end{proof}
 
-\subsection{Fibrational Identity Objects}
+\subsection{Path-Object Semantics For Equality}
 
-Let \(\Delta_A:A\to A\times A\) denote the diagonal. In path-object notation,
-evaluation at the endpoints gives
+Following Helfer's homotopical interpretation of intuitionistic first-order
+logic \cite[Section~2 and Definitions~6.3 and~6.6]{helfer2019fol}, let \(A\)
+be a Kan complex, or more generally an object in a suitable model category,
+and choose a path-object factorization
 \[
-  A^I\xrightarrow{(e_0,e_1)}A\times A,
-  \qquad
-  \mathcal P_A(x,y)=(e_0,e_1)^{-1}(x,y).
+  \Delta_A:A\overset{\sim}{\longrightarrow}PA
+  \twoheadrightarrow A\times A.
 \]
-Following the path/diagonal semantics, the identity object over a pair
-\((x,y)\) has fiber \(\mathcal P_A(x,y)\). We therefore regard \(x\) and
-\(y\) as equal for the first-order homotopical semantics exactly when this
-fiber is inhabited:
+In the simplicial realization one may take \(PA=A^I\), with the second map
+given by endpoint evaluation. For points \(x,y\in A\), write
+\[
+  \mathcal P_A(x,y)
+  = PA\times_{A\times A}\{(x,y)\}.
+\]
+The interpretation of the atomic equality formula \(x=y\) is this pullback.
+Its semantic inhabitation condition is therefore
 \[
   x\simeq_A y
   \quad\Longleftrightarrow\quad
   \mathcal P_A(x,y)\neq\varnothing .
 \]
-When path objects carry identity paths, reversal, and concatenation, the
-relation \(\simeq_A\) is reflexive, symmetric, and transitive. For structures
-\(M,N\) in the same homotopical semantic class, the corresponding invariance
-principle is
+As an elementary local consequence, if the chosen path data also carry
+constant paths, reversal, and composition, then \(\simeq_A\) is reflexive,
+symmetric, and transitive. This equivalence-relation observation is not being
+quoted as a separate theorem of Helfer.
+
+Helfer's homotopy-invariance theorem applies under its stated categorical
+hypotheses. Let \(M,N:\sigma\to\mathcal C_{\mathrm f}\) be base
+interpretations of an algebraic signature in a suitable model category, let
+\(\widehat M,\widehat N\) be homotopical interpretations over them, and let
+\(M\simeq N\) be a homotopy equivalence of the base interpretations. Then every
+formula-in-context has homotopy-equivalent interpretation objects over the
+induced context equivalence. In particular,
 \[
   M\simeq N
   \quad\Longrightarrow\quad
   \bigl(M\models\varphi \Longleftrightarrow N\models\varphi\bigr)
   \quad
-  \text{for every first-order formula }\varphi .
+  \text{for every closed first-order formula }\varphi
 \]
-This is the semantic source of the hidden-operator model used in HCP: the
-verifier may receive evidence that two representatives lie in the same
-homotopical identity class without receiving the representative or the path
-witness itself.
+\cite[Definition~7.1 and Theorem~12.3]{helfer2019fol}. We use this external
+theorem as semantic background; the local Lean interface records it as an
+obligation and does not reprove it.
+
+HCP uses this path-equality semantics as motivation for its hidden-
+representative model. The public classifier, the cryptographic hiding of a
+representative or path witness, and the verifier's evidence boundary are
+project-specific additions; they do not follow from Helfer's invariance
+theorem alone.
 
 \subsection{Homotopy Classes}
 
@@ -178,7 +215,7 @@ The relevant interfaces are the following.
 \end{enumerate}
 The well-formedness boundaries are displayed below as enumerated conditions.
 
-\begin{definition}[Helfer semantic boundary]\label{def:helfer-semantic-boundary}
+\begin{definition}[Helfer-derived semantic boundary]\label{def:helfer-semantic-boundary}
   A first-order homotopical semantic datum is admissible if and only if all
   of the following hold:
   \begin{enumerate}[label=(\roman*)]
@@ -192,8 +229,16 @@ The well-formedness boundaries are displayed below as enumerated conditions.
       path-respecting public classifier its public consequence is
       \(\pi(x)=\pi(y)\).
   \end{enumerate}
-  These clauses correspond to \lean{Axioms.HelferFOL} and
-  \lean{Axioms.HelferFOLWellFormed}.
+  Clauses (i)--(iv) extract the portion of Helfer's semantics used here;
+  clause (v) is the HCP public-classifier specialization and is not a theorem
+  stated in Helfer's paper. The path/classifier checklist corresponds to the
+  stable repository interface \lean{Axioms.HelferFOL} and its conjunction
+  \lean{Axioms.HelferFOLWellFormed}. The typed interpretation and equivalence
+  layer is \lean{Hcrypt.Helfer.Signature},
+  \lean{Hcrypt.Helfer.Interpretation}, and
+  \lean{Hcrypt.Helfer.HomotopyEquivalent}; the external closed-formula theorem
+  is exposed as \lean{Hcrypt.Helfer.ClosedFormulaInvariance}. Together these
+  are still not a complete Lean formalization of Helfer's theory.
 \end{definition}
 
 \begin{definition}[Foundation assumption boundary]\label{def:foundation-assumption-boundary}
@@ -745,9 +790,8 @@ The ownership split is:
   q:\Omega\longrightarrow\Omega_3 .
 \end{array}
 \]
-The first line is the Helfer path/diagonal interface, together with the
-usual sheaf-theoretic interpretation of intuitionistic logic
-\cite{helfer2019fol}. The second line is the public classifier interface
+The first line is the Helfer path/diagonal interface
+\cite[Section~2]{helfer2019fol}. The second line is the public classifier interface
 defined above. The third line is the finite public judgment interface. We take
 \[
   \Omega_3=\{\bot,\, ?,\, \top\},
@@ -810,6 +854,10 @@ The semantic and axiom interfaces in this section correspond to
 \lean{Sheaf.CellularSheaf.degreeOneLaplacian},
 \lean{Sheaf.CellularSheaf.ker_degreeOneLaplacian},
 \lean{Axioms.HelferFOL}, \lean{Axioms.Fibration},
+\lean{Hcrypt.Helfer.Signature}, \lean{Hcrypt.Helfer.Interpretation},
+\lean{Hcrypt.Helfer.HomotopyHomomorphism},
+\lean{Hcrypt.Helfer.HomotopyEquivalent},
+\lean{Hcrypt.Helfer.ClosedFormulaInvariance},
 \lean{Axioms.PublicClassifierFactorization},
 \lean{Axioms.PublicClassifierFactorization.publicFiber_eq_iUnion_baseFibers},
 \lean{Axioms.HomotopyClass}, \lean{Axioms.Foundation},
@@ -824,4 +872,11 @@ The semantic and axiom interfaces in this section correspond to
 \lean{Gates.Spectral}, \lean{Axioms.StageAdmissibility},
 \lean{Gates.Stage}, \lean{Axioms.Heyting}, and
 \lean{Axioms.OracleModality}.
+Here \lean{Axioms.HelferFOL} is an extracted specification boundary: Lean
+proves the local reflexivity, symmetry, transitivity, fiber-membership, and
+classifier consequences built from its path interface. The typed Helfer
+modules formalize the algebraic-interpretation equivalence used by HCP, but
+Helfer's general formula-in-context invariance proof remains external; its
+closed-formula consequence is passed explicitly to the Lean bridge rather than
+asserted globally.
 \end{leanledger}

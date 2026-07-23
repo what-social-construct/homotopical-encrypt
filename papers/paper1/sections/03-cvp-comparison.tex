@@ -222,36 +222,40 @@ does not discover the operative hidden subspace from public class data.
 
 \subsection{Oracle Insufficiency}
 
-The oracle-insufficiency direction uses a different contract. A public Hodge solver may
-call an explicit-lattice CVP oracle, but it receives no hidden operator. The
-conditions below require uniform harmonicity with respect to every hidden
-operator and fixedness on inputs already harmonic for that operator.
+The oracle-insufficiency direction uses the typed realization from
+\cref{def:typed-hcp-realization}. A public Hodge solver may call an
+explicit-lattice CVP oracle and receives the actual public observation
+\((\alpha,b)\), but it receives no hidden representative or operative
+Laplacian. Correctness is required only for representatives admitted by the
+realization, rather than for every matrix of the ambient size.
 
 \begin{definition}[Public-data Hodge solver contract]\label{def:public-hodge-solver-contract}
   Let
   \[
-    S:\mathcal O_{\mathrm{CVP}}\times\mathbb R^n\longrightarrow\mathbb R^n,
+    S:\mathcal O_{\mathrm{CVP}}\times
+      (P\times\mathbb R^n)\longrightarrow\mathbb R^n,
   \]
   where \(\mathcal O_{\mathrm{CVP}}\) is the class of explicit-lattice CVP
-  oracles. For \(O\in\mathcal O_{\mathrm{CVP}}\), define
+  oracles. For a realization \(x\mapsto(M_x,\Delta_x)\) and
+  \(O\in\mathcal O_{\mathrm{CVP}}\), define
   \[
   \begin{aligned}
     \mathsf H_O(S)
     &\Longleftrightarrow
-    \forall\text{ linear }L:\mathbb R^n\to\mathbb R^n,\quad
+    \forall x:A,\quad
     \forall b\in\mathbb R^n,\quad
-    L(S(O,b))=0,\\
+    \Delta_x\bigl(S(O,(\pi(x),b))\bigr)=0,\\
     \mathsf F_O(S)
     &\Longleftrightarrow
-    \forall\text{ linear }L:\mathbb R^n\to\mathbb R^n,\quad
+    \forall x:A,\quad
     \forall b\in\mathbb R^n,\quad
-    Lb=0\Rightarrow S(O,b)=b.
+    \Delta_xb=0\Rightarrow S(O,(\pi(x),b))=b.
   \end{aligned}
   \]
   The public-data-only contract is
   \[
     \exists S,\quad
-    \forall O,\ 
+    \forall O,\quad
     \mathsf{CVP}_{\mathrm{corr}}(O)\Rightarrow
     \bigl(
       \mathsf H_O(S)
@@ -261,75 +265,49 @@ operator and fixedness on inputs already harmonic for that operator.
   \]
 \end{definition}
 
-\begin{proposition}[Public ambiguity and CVP oracle insufficiency]\label{prop:cvp-insufficient}
-  Suppose \(n\ge 2\). Then:
-  \begin{enumerate}[label=(\roman*)]
-    \item The constant public projection on hidden linear Hodge operators is
-    public-compatible Hodge ambiguous, hence kernel-ambiguous and lossy.
-    \item If at least one correct explicit-lattice CVP oracle exists, namely
-    \[
-      \exists O,\ \mathsf{CVP}_{\mathrm{corr}}(O),
-    \]
-    then
-    \[
-      \neg\exists S,\quad
-      \forall O,\ 
-      \mathsf{CVP}_{\mathrm{corr}}(O)\Rightarrow
-      \bigl(
-        \mathsf H_O(S)
-        \wedge
-        \mathsf F_O(S)
-      \bigr).
-    \]
-  \end{enumerate}
+\begin{proposition}[Typed HCP ambiguity and CVP oracle insufficiency]\label{prop:cvp-insufficient}
+  Let \(x,y\in A\) be representatives in a typed HCP semantic realization.
+  Suppose that \(M_x\) and \(M_y\) are homotopy equivalent and that some
+  \(b\in\mathbb R^n\) satisfies
+  \[
+    \Delta_xb=0,
+    \qquad
+    \Delta_yb\ne0.
+  \]
+  If at least one correct explicit-lattice CVP oracle exists, then
+  \[
+    \neg\exists S,\quad
+    \forall O,\quad
+    \mathsf{CVP}_{\mathrm{corr}}(O)\Rightarrow
+    \bigl(
+      \mathsf H_O(S)
+      \wedge
+      \mathsf F_O(S)
+    \bigr).
+  \]
   Hence a correct oracle for explicit known-lattice CVP does not by itself
   determine the operative Hodge--Laplacian kernel.
 \end{proposition}
 
 \begin{proof}
-  Assume \(n\ge 2\), and choose an index \(i\). Let
-  \[
-    b=e_i,\qquad
-    L=0,\qquad
-    L'=\operatorname{diag}(1,0,\ldots,0),
-  \]
-  where the nonzero diagonal entry of \(L'\) is placed at \(i\). Then
-  \[
-    Lb=0,
-    \qquad
-    L'b=b\ne 0.
-  \]
-  Both operators are self-adjoint positive-semidefinite projection-model
-  Laplacians: \(L=I-P_{\mathbb R^n}\), while
-  \(L'=I-P_{e_i^\perp}\).
-  Thus \(b\) is harmonic for \(L\) but not harmonic for
-  \(L'\). The constant public projection sends every hidden operator to
-  the same public value, so \(L\) and \(L'\) are publicly
-  equivalent. The same cochain-facing observation \(b\) is therefore compatible
-  with two hidden Hodge operators that disagree about whether \(b\) lies in the
-  harmonic kernel. This gives public-compatible Hodge ambiguity; the implications
-  of \cref{prop:ambiguity-hierarchy} give kernel ambiguity and lossiness.
-
-  Now suppose, in addition, that \(\exists O,\mathsf{CVP}_{\mathrm{corr}}(O)\).
+  By \cref{prop:helfer-hcp-bridge},
+  \(\pi(x)=\pi(y)\). Suppose
+  \(\exists O,\mathsf{CVP}_{\mathrm{corr}}(O)\), and choose such an \(O\).
   Suppose, for contradiction, that \(S\) satisfies the displayed
-  public-data-only contract. Choose \(O\) with
-  \(\mathsf{CVP}_{\mathrm{corr}}(O)\). Then
+  public-data-only contract. Then
   \[
     \mathsf H_O(S)\wedge\mathsf F_O(S).
   \]
-  Since \(Lb=0\), the condition \(\mathsf F_O(S)\), applied to
-  \((L,b)\), gives
+  Since \(\Delta_xb=0\), exactness at \(x\) gives
   \[
-    S(O,b)=b.
+    S(O,(\pi(x),b))=b.
   \]
-  The condition \(\mathsf H_O(S)\), applied to \((L',b)\), gives
+  Soundness at \(y\) gives
   \[
-    L'S(O,b)=0.
+    \Delta_yS(O,(\pi(y),b))=0.
   \]
-  Combining the two equalities gives \(L'b=0\), contradicting the
-  construction of \(b\). Hence no such public-data-only solver exists, even
-  assuming the availability of a correct oracle for explicitly presented CVP
-  instances.
+  Replacing \(\pi(y)\) by \(\pi(x)\) and using the exactness equality yields
+  \(\Delta_yb=0\), contradicting the separation hypothesis.
 \end{proof}
 
 The obstruction is kernel ambiguity: the same public observation may be
@@ -338,6 +316,15 @@ oracle can solve a closest-vector problem after the lattice is presented. The
 bridge in \cref{prop:hodge-projection-is-cvp} applies only after the operative
 harmonic subspace and the lattice inclusion have also been supplied; it does
 not determine which hidden kernel is compatible with the public data.
+
+For every dimension at least two, the Lean development also constructs the
+elementary matrix witness \(L=0\),
+\(L'=\operatorname{diag}(1,0,\ldots,0)\), and \(b=e_i\) under the constant
+projection to a one-point public type. This is a sanity example showing that
+the abstract ambiguity predicates are inhabited. It is not used as evidence
+that a concrete HCP realization admits the required semantic and Hodge
+extension witness; that witness is an explicit hypothesis of
+\cref{prop:cvp-insufficient}.
 
 \subsection*{Lean Cross-Reference}
 
@@ -356,5 +343,8 @@ closest-harmonic and hidden-operator surfaces are
 \lean{Hardness.ClosestHarmonicSolution},
 \lean{Hardness.ProjectionClosestHarmonicSolution},
 \lean{Hardness.matrix_harmonic_iff_projection_isHarmonic},
-\lean{Hardness.no_public_solver_on_ambiguous_input}, and
-\lean{Hardness.CVP_Oracle_Insufficient_For_Public_Hodge_Solving}.
+\lean{Hcrypt.HCPBridge.Observation}, \lean{Hcrypt.HCPBridge.Solver},
+\lean{Hcrypt.HCPBridge.SolverSoundOn},
+\lean{Hcrypt.HCPBridge.SolverExactOnHarmonic},
+\lean{Hcrypt.HCPBridge.no_solver_on_kernelSeparation}, and
+\lean{Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation}.

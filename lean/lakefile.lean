@@ -16,6 +16,7 @@ open Lake DSL
     Protocol.lean  — Paper 2 protocol-specification import surface
     TCB.lean       — proof-carrying artifacts and runtime-boundary contracts
     Chain.lean     — chain-level protocol and transaction invariants
+    Helfer.lean    — typed algebraic interpretations and homotopy invariance boundary
     Axioms/        — assumption interfaces and mathematical spec contracts
 
   Build: cd lean && lake build
@@ -74,6 +75,10 @@ lean_lib TCB where
 
 @[default_target]
 lean_lib Chain where
+  srcDir := "."
+
+@[default_target]
+lean_lib Helfer where
   srcDir := "."
 
 @[default_target]

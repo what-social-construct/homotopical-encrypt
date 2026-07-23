@@ -253,6 +253,84 @@ semantic layer.
   \]
 \end{definition}
 
+\begin{definition}[Typed HCP semantic realization]\label{def:typed-hcp-realization}
+  Fix a multi-sorted algebraic signature \(\sigma\), a suitable model category
+  \(\mathcal C\), and, for each hidden representative \(x\in A\), a base
+  interpretation \(M_x:\sigma\to\mathcal C_{\mathrm f}\) together with
+  homotopical formula semantics over \(M_x\). Write
+  \[
+    \operatorname{Th}(M_x)
+    =\{\varphi\text{ closed}:M_x\vDash\varphi\}
+  \]
+  for its closed first-order theory. A typed HCP semantic realization consists
+  additionally of maps
+  \[
+    x\longmapsto\Delta_x,
+    \qquad
+    \kappa:\{\text{closed theories}\}\longrightarrow P,
+    \qquad
+    \pi_\Delta:\{\text{Hodge operators}\}\longrightarrow P,
+  \]
+  satisfying the two factorization identities
+  \[
+    \pi(x)=\kappa(\operatorname{Th}(M_x)),
+    \qquad
+    \pi_\Delta(\Delta_x)=\pi(x).
+  \]
+  The Laplacian \(\Delta_x\) is presentation-level Hodge data extending the
+  semantic core \(M_x\); it is not silently included among the symbols whose
+  closed theory is asserted to be homotopy invariant.
+\end{definition}
+
+\begin{proposition}[Helfer-to-HCP classifier bridge]\label{prop:helfer-hcp-bridge}
+  Let \(x,y\in A\) belong to a typed HCP semantic realization. If
+  \(M_x\) and \(M_y\) are homotopy equivalent interpretations in the sense of
+  Helfer, then
+  \[
+    \pi(x)=\pi(y)
+    \qquad\text{and}\qquad
+    \pi_\Delta(\Delta_x)=\pi_\Delta(\Delta_y).
+  \]
+  If, independently, there is a cochain \(b\) for which
+  \[
+    \Delta_xb=0,
+    \qquad
+    \Delta_yb\ne0,
+  \]
+  then \(\pi_\Delta\) has public-compatible Hodge ambiguity, and hence is
+  kernel-ambiguous and lossy.
+\end{proposition}
+
+\begin{proof}
+  The closed-formula case of Helfer's homotopy-invariance theorem
+  \cite[Theorem~12.3]{helfer2019fol} gives, for every closed
+  \(\sigma\)-formula \(\varphi\),
+  \[
+    M_x\vDash\varphi
+    \quad\Longleftrightarrow\quad
+    M_y\vDash\varphi.
+  \]
+  Hence \(\operatorname{Th}(M_x)=\operatorname{Th}(M_y)\). Applying
+  \(\kappa\) and then the two factorization identities gives
+  \[
+    \pi(x)=\pi(y),
+    \qquad
+    \pi_\Delta(\Delta_x)=\pi_\Delta(\Delta_y).
+  \]
+  The additional displayed harmonicity and non-harmonicity conditions now
+  exhibit \((\Delta_x,\Delta_y,b)\) as a public-compatible Hodge-ambiguity
+  witness. The ambiguity hierarchy below supplies kernel ambiguity and
+  lossiness.
+\end{proof}
+
+The direction in \cref{prop:helfer-hcp-bridge} is one-way. Homotopy-equivalent
+interpretations have the same factored public value, but equality of public
+values need not reconstruct a homotopy equivalence: a classifier fiber may be
+strictly coarser than an equivalence class. Likewise, the equivalence itself
+does not produce kernel disagreement. If \(\Delta\)-harmonicity were included
+in the invariant first-order signature, Helfer's theorem would instead rule
+out the displayed disagreement.
+
 \begin{proposition}[Ambiguity hierarchy]\label{prop:ambiguity-hierarchy}
   Public-compatible Hodge ambiguity implies kernel ambiguity, and kernel
   ambiguity implies that the public projection is lossy.
@@ -336,4 +414,11 @@ The definitions and theorem surfaces in this section correspond to
 \lean{Hardness.Hodge_Decomposition_Theorem},
 \lean{Hardness.kernelAmbiguous_implies_lossy},
 \lean{Hardness.kernelAmbiguous_of_publicCompatibleHodgeAmbiguity}, and
-\lean{Hardness.Hodge_Ambiguity}.
+\lean{Hardness.Hodge_Ambiguity}. The typed semantic bridge is
+\lean{Hcrypt.Helfer.Signature}, \lean{Hcrypt.Helfer.Interpretation},
+\lean{Hcrypt.Helfer.HomotopyEquivalent},
+\lean{Hcrypt.Helfer.ClosedFormulaInvariance},
+\lean{Hcrypt.HCPBridge.Realization},
+\lean{Hcrypt.HCPBridge.samePublicClass_of_homotopyEquivalent},
+\lean{Hcrypt.HCPBridge.publiclyEquivalent_laplacians_of_homotopyEquivalent},
+and \lean{Hcrypt.HCPBridge.kernelAmbiguous_of_kernelSeparation}.

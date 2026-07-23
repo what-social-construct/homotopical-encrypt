@@ -19,11 +19,11 @@
     \lean{Hardness.KernelAmbiguous},
     \lean{Hardness.PublicCompatibleHodgeAmbiguity}, and
     \lean{Hardness.LossyPublicProjection}.
-  \item[Public-data-only Hodge solvers.]
-    Section 3; \lean{Hardness.PublicHodgeInstance},
-    \lean{Hardness.PublicHodgeSolver},
-    \lean{Hardness.PublicHodgeSolverSound}, and
-    \lean{Hardness.PublicHodgeSolverExactOnHarmonic}.
+  \item[Representative-indexed public HCP solvers.]
+    Section 3; \lean{Hcrypt.HCPBridge.Observation},
+    \lean{Hcrypt.HCPBridge.Solver},
+    \lean{Hcrypt.HCPBridge.SolverSoundOn}, and
+    \lean{Hcrypt.HCPBridge.SolverExactOnHarmonic}.
   \item[Explicit-lattice CVP comparison.]
     Section 3; \lean{CVP.Instance}, \lean{CVP.Solution}, and
     \lean{CVP.OracleCorrect}.
@@ -39,8 +39,15 @@
   \item[Categorical fibration copy surface.]
     Section 4; \lean{Hardness.IsCartesianMorphism},
     \lean{Hardness.GrothendieckFibration},
-    \lean{Hardness.HomotopyEquivalent}, and
+    \lean{Hardness.CategoricallyEquivalentFibrations}, and
     \lean{Hardness.FibrationCopy}.
+  \item[Typed Helfer/HCP bridge.]
+    Sections 2 and 4; \lean{Hcrypt.Helfer.Signature},
+    \lean{Hcrypt.Helfer.Interpretation},
+    \lean{Hcrypt.Helfer.HomotopyHomomorphism},
+    \lean{Hcrypt.Helfer.HomotopyEquivalent},
+    \lean{Hcrypt.Helfer.ClosedFormulaInvariance}, and
+    \lean{Hcrypt.HCPBridge.Realization}.
   \item[Semantic/public equality surface.]
     Section 4; \lean{Axioms.HelferFOL},
     \lean{Axioms.PublicClassifierFactorization},
@@ -92,6 +99,16 @@
   \item[Public-compatible Hodge ambiguity gives kernel ambiguity.]
     \lean{Hardness.kernelAmbiguous_of_publicCompatibleHodgeAmbiguity};
     Lean-proved.
+  \item[Helfer equivalence reaches the HCP public classifier.]
+    \lean{Hcrypt.HCPBridge.samePublicClass_of_homotopyEquivalent} and
+    \lean{Hcrypt.HCPBridge.publiclyEquivalent_laplacians_of_homotopyEquivalent};
+    Lean-proved from the explicit closed-formula invariance and classifier
+    factorization hypotheses.
+  \item[Typed Hodge-extension separation gives kernel ambiguity.]
+    \lean{Hcrypt.HCPBridge.publicCompatibleHodgeAmbiguity_of_kernelSeparation},
+    \lean{Hcrypt.HCPBridge.kernelAmbiguous_of_kernelSeparation}, and
+    \lean{Hcrypt.HCPBridge.lossyPublicProjection_of_kernelSeparation};
+    Lean-proved from an explicit HCP extension-separation witness.
   \item[Concrete Hodge ambiguity exists in nontrivial dimension.]
     \lean{Hardness.Hodge_Ambiguity},
     \lean{Hardness.constantPublicProjection_publicCompatibleHodgeAmbiguity},
@@ -112,12 +129,14 @@
     \lean{Hardness.public_solver_eq_input_of_harmonic} and
     \lean{Hardness.no_public_solver_on_ambiguous_input};
     Lean-proved lemmas.
-  \item[Known-lattice CVP does not select the hidden operator.]
-    \lean{Hardness.CVP_Oracle_Insufficient_For_Public_Hodge_Solving};
-    Lean-proved surface.
-  \item[No uniform public-data Hodge solver.]
-    \lean{Hardness.no_uniform_public_hodge_solver};
-    Lean-proved hidden-operator model theorem.
+  \item[Known-lattice CVP does not select the hidden HCP representative.]
+    \lean{Hcrypt.HCPBridge.no_solver_on_kernelSeparation} and
+    \lean{Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation};
+    Lean-proved for a typed HCP realization with an explicit separation
+    witness. The older matrix-wide theorems
+    \lean{Hardness.no_uniform_public_hodge_solver} and
+    \lean{Hardness.CVP_Oracle_Insufficient_For_Public_Hodge_Solving} remain
+    generic sanity results, not the concrete HCP bridge.
   \item[Projection-model closest-harmonic surface.]
     \lean{Hardness.matrix_harmonic_iff_projection_isHarmonic},
     \lean{Hardness.Hodge_Projection_Is_ClosestHarmonic}, and
@@ -128,8 +147,8 @@
     \lean{Hardness.HarmonicCVPBridge.isClosestLatticeVector_iff_projectedTarget},
     and \lean{Hardness.HarmonicCVPBridge.solution_iff_projectedTarget};
     Lean-proved.
-  \item[Fibration copies preserve the hidden semantic surface.]
-    \lean{Hardness.copy_equivalent_thm} and
+  \item[Fibration copies preserve the categorical fibration surface.]
+    \lean{Hardness.copy_categoricallyEquivalent_thm} and
     \lean{Hardness.FibrationCopy_is_Grothendieck};
     Lean-proved categorical interface.
   \item[Exact sheaf gates supply \(d^{k+1}d^k=0\) and Laplacian-from-coboundary.]
@@ -236,12 +255,11 @@ Import-only aggregate files are listed with the files they collect.
     \lean{Hodge_Decomposition_Theorem} is
     \cref{prop:hodge-decomposition}. The public-solver predicates
     \lean{PublicHodgeInstance}, \lean{PublicHodgeSolver},
-    \lean{PublicHodgeSolverSound},
-    \lean{PublicHodgeSolverExactOnHarmonic},
-    \lean{public_solver_eq_input_of_harmonic},
-    \lean{no_public_solver_on_ambiguous_input},
-    \lean{no_uniform_public_hodge_solver}, and
-    \lean{CVP_Oracle_Insufficient_For_Public_Hodge_Solving} are
+    \lean{Hcrypt.HCPBridge.Observation},
+    \lean{Hcrypt.HCPBridge.SolverSoundOn},
+    \lean{Hcrypt.HCPBridge.SolverExactOnHarmonic},
+    \lean{Hcrypt.HCPBridge.no_solver_on_kernelSeparation}, and
+    \lean{Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation} are
     \cref{prop:cvp-insufficient}. The closest-harmonic predicates
     \lean{ClosestHarmonicSolution}, \lean{ProjectionClosestHarmonicSolution},
     \lean{matrix_harmonic_iff_projection_isHarmonic},
@@ -254,9 +272,9 @@ Import-only aggregate files are listed with the files they collect.
     \lean{HarmonicCVPBridge.solution_iff_projectedTarget} are
     \cref{prop:hodge-projection-is-cvp}. The categorical declarations
     \lean{IsCartesianMorphism}, \lean{GrothendieckFibration},
-    \lean{HomotopyEquivalent}, \lean{Wrapper}, \lean{Fibration},
+    \lean{CategoricallyEquivalentFibrations}, \lean{Wrapper}, \lean{Fibration},
     \lean{FibrationCopy}, \lean{ToWrapper}, \lean{FromWrapper},
-    \lean{copy_equivalent_thm}, and \lean{FibrationCopy_is_Grothendieck}
+    \lean{copy_categoricallyEquivalent_thm}, and \lean{FibrationCopy_is_Grothendieck}
     are \cref{prop:fibration-copy-equivalence}.
   \item[\lean{CVP.lean}.]
     Section 3 translates \lean{AmbientVector}, \lean{ExplicitLattice},
@@ -268,14 +286,22 @@ Import-only aggregate files are listed with the files they collect.
     \lean{HardnessAssumption}, and
     \lean{zero_lattice_oracle_correct} as the known-lattice comparison
     surface.
-  \item[\lean{Axioms/HelferFOL.lean},
+  \item[\lean{Helfer/Signature.lean},
+    \lean{Helfer/HomotopyEquivalence.lean},
+    \lean{Helfer/Invariance.lean}, \lean{Axioms/HelferFOL.lean},
     \lean{Axioms/Fibration.lean}, and
     \lean{Axioms/HomotopyClass.lean}.]
-    Section 4 translates path equality, public classifiers, public fibers,
-    classifier factorization through a base projection, class-membership
-    witnesses, transport, the Helfer semantic
-    well-formedness clauses, fiber systems, ephemeral fiber specifications,
-    and nonfaithful classifiers. The equivalence, symmetry, transitivity,
+    Section 4 formalizes multi-sorted signatures, finite-product
+    interpretations, coherent homotopy homomorphisms, and componentwise
+    homotopy equivalence for cofibrant-fibrant interpretations. It also
+    extracts the Helfer-derived path/diagonal and fibrational interface, then
+    adds the project-specific public classifiers and public fibers, classifier
+    factorization through a base projection, class-membership witnesses,
+    transport, semantic well-formedness clauses, fiber systems, ephemeral
+    fiber specifications, and nonfaithful classifiers. This is not a complete
+    formalization of Helfer's model-categorical construction or
+    formula-in-context invariance proof; the closed-formula consequence of
+    Theorem~12.3 is an explicit Lean hypothesis. The local equivalence, symmetry, transitivity,
     membership, and nonfaithfulness lemmas justify the public fiber language
     used in HCP.
 \end{description}
