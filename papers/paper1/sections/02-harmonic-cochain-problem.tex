@@ -14,10 +14,15 @@ descriptions agree: \(A_\alpha=[x]_\pi\).
 \begin{definition}[Harmonic Cochain Problem]\label{def:hcp}
   The \emph{Harmonic Cochain Problem} (HCP) asks, given public data
   \((\alpha,b)\) consisting of a realized public classifier value
-  \(\alpha\in\image(\pi)\) and a cochain-facing observation \(b\), to recover a
-  cochain \(h\in\ker(\Delta_1)\), where \(\Delta_1\) is the degree-one
-  Hodge--Laplacian induced by some hidden representative
-  \(x\in A_\alpha=\pi^{-1}(\alpha)\).
+  \(\alpha\in\image(\pi)\) and a cochain-facing observation \(b\), to recover
+  the operative harmonic component
+  \[
+    h=P_{\ker(\Delta_1)}b\in\ker(\Delta_1),
+  \]
+  equivalently the harmonic term in the orthogonal Hodge decomposition of
+  \(b\). Here \(\Delta_1\) is the degree-one Hodge--Laplacian induced by the
+  operative hidden representative \(x\in A_\alpha=\pi^{-1}(\alpha)\) bound to
+  the instance by its hidden witness.
 \end{definition}
 
 In the \HE{} public-sample model, the visible cochain has the form
@@ -30,8 +35,9 @@ In the \HE{} public-sample model, the visible cochain has the form
 \]
 Here \(h\) is the degree-one harmonic cochain, equivalently a harmonic
 representative of its degree-one cohomology class, and \(e\) is
-Hodge-structured noise. The hidden-operator condition is that the
-public data does not determine a unique \(\Delta_1\) or \(\ker(\Delta_1)\).
+Hodge-structured noise. The hidden-operator ambiguity studied below is the
+condition that the public data does not determine a unique \(\Delta_1\) or
+\(\ker(\Delta_1)\).
 The algebraic recovery chain is
 \[
   x
@@ -42,7 +48,7 @@ The algebraic recovery chain is
   \longmapsto
   \Delta_1
   \longmapsto
-  \pi_H:C^1\to\ker(\Delta_1),
+  P_H:C^1\to\ker(\Delta_1),
 \]
 where \(x\in A_\alpha\) is a hidden representative, \(R_{v\to e}\) are the restriction
 maps determining the adjacent coboundaries
@@ -55,7 +61,7 @@ and
 \[
   \Delta_1=\delta_0\delta_0^\ast+\delta_1^\ast\delta_1
 \]
-is the induced degree-one Hodge--Laplacian. The map \(\pi_H\) is the
+is the induced degree-one Hodge--Laplacian. The map \(P_H\) is the
 orthogonal projection onto \(\ker(\Delta_1)\). When the degree is fixed, we
 write \(\Delta\) for this operative Laplacian. The public observation may bind
 to this chain, but does not expose the chain.
@@ -163,6 +169,7 @@ to this chain, but does not expose the chain.
   \[
     \langle h,e_1\rangle=\langle h,e_2\rangle=\langle e_1,e_2\rangle=0.
   \]
+  The decomposition is unique.
 \end{proposition}
 
 \begin{proof}
@@ -186,8 +193,83 @@ to this chain, but does not expose the chain.
   hence \(d_{\mathrm{prev}}^\ast h=0\) and \(d_{\mathrm{next}}h=0\). These
   identities give \(\langle h,e_1\rangle=0\) and
   \(\langle h,e_2\rangle=0\), while \(d_{\mathrm{next}}d_{\mathrm{prev}}=0\)
-  gives \(\langle e_1,e_2\rangle=0\).
+  gives \(\langle e_1,e_2\rangle=0\). Hence the harmonic, exact, and
+  coexact subspaces are pairwise orthogonal. Their sum is therefore direct,
+  which makes the three components unique.
 \end{proof}
+
+\subsection{Hodge Encryption And Correctness}
+
+For a hidden representative \(x\), write
+\[
+  \mathcal H_x=\ker(\Delta_x),
+  \qquad
+  \mathcal E_x=\mathcal H_x^\perp.
+\]
+The Hodge decomposition identifies the noise space as the orthogonal direct
+sum
+\[
+  \mathcal E_x
+  =
+  \image(\delta_{0,x})
+  \oplus^\perp
+  \image(\delta_{1,x}^{\ast}),
+\]
+and gives the orthogonal decomposition
+\[
+  C_x^1=\mathcal H_x\oplus^\perp\mathcal E_x.
+\]
+Consequently,
+\[
+\begin{aligned}
+  \operatorname{combine}_x:
+    \mathcal H_x\times\mathcal E_x&\longrightarrow C_x^1,
+  &(h,e)&\longmapsto h+e,\\
+  \operatorname{split}_x:C_x^1&\longrightarrow
+    \mathcal H_x\times\mathcal E_x,
+  &b&\longmapsto
+    \bigl(P_{\mathcal H_x}b,P_{\mathcal E_x}b\bigr)
+\end{aligned}
+\]
+are inverse linear bijections. Orthogonality also gives
+\[
+  \|h+e\|^2=\|h\|^2+\|e\|^2.
+\]
+
+This bijection is the algebraic encryption/decryption construction. Given a
+harmonic message \(h\in\mathcal H_x\), randomized Hodge encryption samples, or
+otherwise chooses, admissible noise \(e\in\mathcal E_x\) and sets
+\[
+  \mathsf{Enc}_x(h;e)=
+  \operatorname{combine}_x(h,e)=h+e.
+\]
+Full coordinate recovery is \(\operatorname{split}_x\); message decryption
+retains its harmonic coordinate:
+\[
+  \mathsf{Dec}_x(b)
+  =
+  \operatorname{pr}_{\mathcal H_x}
+    \bigl(\operatorname{split}_x(b)\bigr)
+  =
+  P_{\mathcal H_x}b.
+\]
+For every admissible noise value,
+\[
+  \mathsf{Dec}_x\bigl(\mathsf{Enc}_x(h;e)\bigr)=h,
+  \qquad
+  \operatorname{split}_x\bigl(\operatorname{combine}_x(h,e)\bigr)=(h,e).
+\]
+Thus the bijection is between the full message--randomness pair and \(C_x^1\).
+After randomness is sampled, \(\mathsf{Enc}_x\) is a randomized procedure and
+\(\mathsf{Dec}_x\) is its message-correct left inverse; this does not assert
+that a randomized map from messages alone is a bijection.
+
+The subscript \(x\) is essential. The hidden representative---and, in a keyed
+instantiation, the private material selecting or opening it---determines
+\(\Delta_x\), the two summands, and the splitting map. The correctness identity
+is pointwise and requires no uniform distribution on an infinite noise space.
+It is not an indistinguishability or one-wayness claim; those require separate
+assumptions about key generation, randomness, and the public view.
 
 \subsection{Public And Hidden Data}
 
@@ -203,12 +285,16 @@ to this chain, but does not expose the chain.
   explicit protocol path exposes them.
 \end{definition}
 
-Thus \((\alpha,b)\) is the protocol-independent abstraction of the concrete
-artifact-and-commitment layer in \cref{sec:public-artifacts-commitments}:
-\(\alpha\) records the public classifier value, while \(b\) records the cochain-level
-datum made available through an accepted payload, commitment, opening, or
-proof-carrying statement. This abstraction is the public datum used in the HCP
-definition and in the hidden-kernel ambiguity comparison.
+Thus \((\alpha,b)\) is the protocol-independent vector-level abstraction of
+the concrete artifact-and-commitment layer in
+\cref{sec:public-artifacts-commitments}: \(\alpha\) records the public
+classifier value, while \(b\) records the cochain-level datum actually made
+available through an accepted payload, opening, or proof-carrying statement.
+A commitment to \(b\) does not by itself expose \(b\). Instantiating the
+vector-level HCP interface from a commitment therefore requires an explicit
+opening, extraction, or verified-evaluation path. This abstraction is the
+public datum used in the HCP definition and in the hidden-kernel ambiguity
+comparison.
 
 The public observation is not the hidden Hodge system. It classifies a public
 equivalence class of possible hidden representatives. Fibrational and
@@ -262,10 +348,11 @@ semantic layer.
     \operatorname{Th}(M_x)
     =\{\varphi\text{ closed}:M_x\vDash\varphi\}
   \]
-  for its closed first-order theory. A typed HCP semantic realization consists
-  additionally of maps
+  for its closed first-order theory. Fix also a common finite-dimensional real
+  inner-product coordinate space \(V\) in which public cochain observations are
+  compared. A typed HCP semantic realization consists additionally of maps
   \[
-    x\longmapsto\Delta_x,
+    x\longmapsto\Delta_x\in\operatorname{End}(V),
     \qquad
     \kappa:\{\text{closed theories}\}\longrightarrow P,
     \qquad
@@ -331,6 +418,41 @@ does not produce kernel disagreement. If \(\Delta\)-harmonicity were included
 in the invariant first-order signature, Helfer's theorem would instead rule
 out the displayed disagreement.
 
+There is a second, geometric distinction. Suppose an equivalence of hidden
+presentations induces degreewise linear isometric equivalences
+\(U_0,U_1,U_2\) satisfying
+\[
+  U_1\delta_{0,x}=\delta_{0,y}U_0,
+  \qquad
+  U_2\delta_{1,x}=\delta_{1,y}U_1.
+\]
+Because the \(U_k\) preserve inner products, the adjoints transport as well,
+and hence
+\[
+  \Delta_yU_1=U_1\Delta_x,
+  \qquad
+  U_1(\ker\Delta_x)=\ker\Delta_y.
+\]
+Thus a transported observation preserves harmonicity:
+\[
+  \Delta_xb=0
+  \quad\Longleftrightarrow\quad
+  \Delta_y(U_1b)=0.
+\]
+The ambiguity witness in \cref{prop:helfer-hcp-bridge} deliberately compares
+the same untransported public coordinate \(b\in V\), not the pair
+\((b,U_1b)\). Under the displayed conjugacy, its extra separation condition is
+equivalently
+\[
+  b\in\ker\Delta_x,
+  \qquad
+  b\notin U_1(\ker\Delta_x).
+\]
+It therefore requires a non-stabilization witness in addition to the
+equivalence, and it models a public view that neither reveals nor applies the
+private transport \(U_1\). If the observation were transported together with
+the hidden presentation, this particular ambiguity would disappear.
+
 \begin{proposition}[Ambiguity hierarchy]\label{prop:ambiguity-hierarchy}
   Public-compatible Hodge ambiguity implies kernel ambiguity, and kernel
   ambiguity implies that the public projection is lossy.
@@ -365,12 +487,13 @@ data may bind to this hidden data through commitments or proof-carrying
 artifacts, but it does not present the operative kernel.
 
 \begin{definition}[HCP solution]\label{def:hcp-solution}
-  A solution to an HCP instance \((\alpha,b)\) is a cochain \(h'\) that is the
-  harmonic component of the operative hidden witness. In the exact
-  recovery form used by the hidden-operator separation, \(h' = h\) for every
-  hidden witness \((\Delta,h,e)\) compatible with the public observation; hence
-  uniform public recovery requires the observation to determine the relevant
-  hidden harmonicity data.
+  Relative to an operative hidden witness \((\Delta,h,e)\), a solution to an
+  HCP instance \((\alpha,b)\) is the cochain
+  \(h'=h=P_{\ker\Delta}b\). A public-data-only solver is \emph{uniformly exact}
+  if the same output has this value for every hidden witness compatible with
+  its public input. The hidden-operator separation concerns this uniform
+  contract; it does not deny that decryption succeeds once the operative
+  private geometry is supplied.
 \end{definition}
 
 \subsection{Recovery Target}

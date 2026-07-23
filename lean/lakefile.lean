@@ -5,7 +5,8 @@ open Lake DSL
   Homotopical-Encrypt Lean Proofs
 
   Consolidated proof modules:
-    Hardness.lean  — Hodge decomposition, CVP comparison, hidden-operator hardness
+    HCP.lean       — HCP definitions, harmonic recovery, and semantic realization
+    Hardness.lean  — Hodge decomposition, CVP comparison, and impossibility theorems
     CVP.lean       — explicit-lattice/CVP problem objects and assumptions
     Tsirelson.lean — Grassmannian Laplacians, Tsirelson bounds, adversary models
     Laplacian.lean — Grassmannian hardness, norm correction, injectivity
@@ -35,6 +36,10 @@ package «homotopical-encrypt-proofs» where
 
 @[default_target]
 lean_lib CVP where
+  srcDir := "."
+
+@[default_target]
+lean_lib HCP where
   srcDir := "."
 
 @[default_target]

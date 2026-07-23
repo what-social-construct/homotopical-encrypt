@@ -137,7 +137,7 @@ representative or path witness, and the verifier's evidence boundary are
 project-specific additions; they do not follow from Helfer's invariance
 theorem alone.
 
-\subsection{Homotopy Classes}
+\subsection{Public Classifier Fibers}
 
 Let \(A\) be a type of hidden representatives and let \(P\) be a type of public
 class data. A public classifier is a map
@@ -160,17 +160,24 @@ The classifier is path-respecting when
   x\simeq_A y\Longrightarrow x\equiv_{\pi}y,
 \]
 and non-faithful when some public fiber contains distinct hidden
-representatives. A hidden class-membership witness is a path
-\(\gamma\in\mathcal P_A(x,y)\); its public consequence is only the equality
-\(\pi(x)=\pi(y)\). At this stage the public datum is only the homotopy-class
-value of the classifier. The finite-code projection and Reed--Solomon/MCA endpoint are
-introduced later in \cref{sec:rs-proximity-projection}.
+representatives. A path \(\gamma\in\mathcal P_A(x,y)\) is a hidden witness
+that \(x\) and \(y\) lie in the same path component; under path-respect, its
+public consequence is the equality \(\pi(x)=\pi(y)\). At this stage the public
+datum is only the classifier value. The finite-code projection and
+Reed--Solomon/MCA endpoint are introduced later in
+\cref{sec:rs-proximity-projection}.
 
 Path-respecting gives only the displayed forward implication. Unless a
 separate completeness condition is imposed, equality of classifier values
 need not imply the existence of a path; a public fiber \(A_\alpha\) may be a
 coarser union of path components. Accordingly, \(\alpha\) denotes the public
 classifier value and \(A_\alpha\) its fiber, not a hidden path witness.
+
+Nor do path-respect and non-faithfulness prove that \(\pi\) hides \(x\):
+non-faithfulness supplies a collision, but it does not imply one-wayness,
+indistinguishability, or the absence of other private information from the
+output. Such privacy is a separate cryptographic property of the chosen
+public-view construction and its distributions.
 
 The fibration projection and public classifier describe compatible but
 distinct levels. When the hidden representatives are the objects of \(E\), a
@@ -703,29 +710,32 @@ operative kernel.
     \operatorname{Spec}_{\mathrm{multi}}(L)
   \]
   of eigenvalues counted with multiplicity. Two Laplacians are spectrally
-  equivalent when these multisets agree. In contrast, the coarse homotopy
-  equivalence surface used here records only harmonic dimension:
+  equivalent when these multisets agree. A separate kernel-rank relation
+  records only harmonic dimension:
   \[
-    L_1\simeq_{\ker}L_2
+    L_1\equiv_{\dim\ker}L_2
     \quad\Longleftrightarrow\quad
     \dim\ker L_1=\dim\ker L_2.
   \]
+  This relation is not Helfer homotopy equivalence and is not a chain-isometric
+  equivalence of hidden presentations.
 \end{definition}
 
 The order of determination is important. The public classifier value
 \(\alpha\) gives the public fiber \(A_\alpha\); it is not itself a fibration
-ID. A hidden representative \(x\in A_\alpha\) determines the operative Hodge--Laplacian
-\(\Delta_x\). Once an HCP witness has selected or certified the hidden Hodge
-data \((\Delta_x,h,e)\), the fibration ID is the spectral fingerprint
+ID. A hidden representative \(x\in A_\alpha\) determines the operative
+Hodge--Laplacian \(\Delta_x\). Once an HCP witness has selected or certified
+the hidden Hodge data \((\Delta_x,h,e)\), write
 \[
   \operatorname{FID}(x):=
   \operatorname{Spec}_{\mathrm{multi}}(\Delta_x).
 \]
-Thus the spectral fingerprint gives the fibration identity in the certified
-Hodge layer, while remaining downstream of harmonic-cochain recovery and not
-part of the public classifier value.
+This is a spectral-class tag in the certified Hodge layer, not an injective
+identifier of \(x\) or of its full presentation. In particular, isometrically
+conjugate Laplacians have the same fingerprint. The tag remains downstream of
+harmonic-cochain recovery and is not part of the public classifier value.
 
-\begin{proposition}[Spectrum is not determined by harmonic dimension]\label{prop:spectrum-not-homotopy-invariant}
+\begin{proposition}[Spectrum is not determined by harmonic dimension]\label{prop:spectrum-not-determined-by-kernel-dimension}
   There exist self-adjoint positive semidefinite Laplacians \(L_1,L_2\) with
   \[
     \dim\ker L_1=\dim\ker L_2
@@ -835,10 +845,10 @@ condition for public identity observations, not a uniqueness or binding theorem
 for cochain commitments.
 Similarly, topological observations such as Betti-number compatibility are
 homotopy-invariant public judgments. Spectral fingerprints are post-recovery
-fibration-identification data: they are not determined by homotopy class alone
-by \cref{prop:spectrum-not-homotopy-invariant}. The oracle interface therefore
-keeps Betti/topology observations, spectral admissibility, identity hashes, and
-cochain commitments as separate public conditions.
+spectral-class tags: they are not determined by harmonic dimension alone by
+\cref{prop:spectrum-not-determined-by-kernel-dimension}. The oracle interface
+therefore keeps Betti/topology observations, spectral admissibility, identity
+hashes, and cochain commitments as separate public conditions.
 
 This modular split is part of the mathematical statement: cryptographic
 assumptions, public classifiers, and Hodge-theoretic claims are not identified.

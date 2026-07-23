@@ -1,6 +1,7 @@
 import Sheaf.CellComplex
 import Sheaf.Cellular
 import Sheaf.Hodge
+import Sheaf.Equivalence
 import Sheaf.Commitment
 
 /-!
