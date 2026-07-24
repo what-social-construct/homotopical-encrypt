@@ -17,7 +17,7 @@ import Axioms.Foundation
 
   IMPLEMENTATIONS:
     Python: src/consensus/coherence.py (CoherenceEngine)
-            src/primitives/grassmann.py (grassmann_distance, karcher_mean)
+            archived Python prototype (grassmann_distance, karcher_mean)
     Rust:   rust/oracle/src/geometry.rs (GrassmannianPoint, karcher_mean,
             sheaf_laplacian_from_stalks)
 
@@ -62,7 +62,8 @@ universe u
   Principal angles: cos(θᵢ) = σᵢ(U_P^T U_Q) where U_P, U_Q are
   orthonormal frames.
 
-  Python: grassmann_distance() in src/primitives/grassmann.py
+  Historical Python: grassmann_distance() in
+  docs/archive/python/src/primitives/grassmann.py
   Rust:   GrassmannianPoint::geodesic_distance() in oracle/geometry.rs
 -/
 structure GrassmannianDistance where
@@ -118,7 +119,8 @@ theorem chordal_leq_geodesic
     3. P ← exp_P(X̄)
     4. Repeat until ‖X̄‖ < ε
 
-  Python: grassmann_karcher_mean() in src/primitives/grassmann.py
+  Historical Python: grassmann_karcher_mean() in
+  docs/archive/python/src/primitives/grassmann.py
           CoherenceEngine.compute_consensus() in coherence.py
   Rust:   karcher_mean() in oracle/geometry.rs
 -/

@@ -1,25 +1,28 @@
-# Lean Proof ↔ Python Implementation Map
+# Lean Proof ↔ Historical Python Map
 
-This document maps the Lean proof workspace to the current Python implementation.
-It is a parity guide, not a verified extraction pipeline: Lean owns the
-mathematical claims, while Python currently provides runtime checks and tests.
+Lean owns the current mathematical claims. The Python geometry and crypto
+folders are suspended legacy prototypes, not verified refinements or a working
+runtime. The file-by-file G0/C0 audit is canonical for their status; see
+[`SEMANTIC_PARITY_QUEUE.md`](SEMANTIC_PARITY_QUEUE.md). This document retains
+the intended correspondences so future implementations can recover useful test
+lineage, but no Python row below establishes a theorem or security claim.
 
 ## Core Structures
 
 | Lean | Python | Status |
 |------|--------|--------|
-| `SheafLaplacian V` (self-adjoint + PSD) | `src/geometry/sheaf_laplacian.py::SheafLaplacian` | ✅ Self-adjoint via `(L+L.T)/2`; PSD via degree-k `Δ_k = δ_{k-1}δ_{k-1}* + δ_k*δ_k` construction |
-| `SpectralFingerprint L` (multiset of eigenvalues) | `src/crypto/credential.py::SpectralFingerprint` | ✅ `.eigenvalues` field = Laplacian spectrum |
-| `SpectrallyEquivalent L1 L2` | `SpectralFingerprint.matches()` | ✅ Compares eigenvalue arrays |
-| `MatrixIsHarmonic Δ h := Δ·h = 0` (`lean/Hardness.lean`) | `src/invariants/harmonic.py::is_harmonic()` | ✅ Abstract hidden-operator harmonicity; runtime checks `‖Δc‖ < tol` |
-| `Hcrypt.Laplacian.IsHarmonic W h` (`lean/Laplacian/Hodge.lean`) | `src/geometry/hodge.py::project_to_harmonic()` / `src/invariants/harmonic.py` | ✅ Structured projection-model harmonicity for `Delta_W = I - P_W`; bridged to `MatrixIsHarmonic (_root_.laplacian W) h` |
-| `CVP_Instance` / `ExplicitLattice` / `CVPOracleCorrect` (`lean/CVP.lean`) | `src/crypto/hardness.py::LatticeInstance` | ✅ Encodes known-lattice problem objects; hardness remains an external assumption |
-| `Hodge_Instance` (`lean/Hardness.lean`) | `src/crypto/hardness.py` Hodge-facing helpers | ✅ Encodes hidden-operator Hodge side |
-| `GrothendieckFibration p` | `src/geometry/fiber_bundle.py::FiberBundle` | ✅ Parallel transport = Cartesian lift |
-| `Fibration B` (bundled fibration) | `src/crypto/credential.py::QuantumSheafFibration` | ✅ Contains sheaf + edge_keys + nerve |
-| `FibrationCopy F n` | `src/crypto/credential.py::rotate_credential()` | ✅ Creates homotopy-equivalent copy |
-| `HomotopyEquivalent p q` | `src/proofs/homotopy.py::prove_homotopy_equivalence()` | ✅ F∘G ≅ id, G∘F ≅ id |
-| `HomotopyEquivalentLaplacians L1 L2` | Same kernel dimension (Betti numbers match) | ✅ Checked via `betti_numbers` comparison |
+| `CellularSheaf.degreeOneLaplacian` | `src/geometry/sheaf_laplacian.py::SheafLaplacian` | ❌ Historical only: the Python degree-one path discards restriction maps/stalk dimensions, while the live cipher uses degree zero |
+| `SpectralFingerprint L` (multiset of eigenvalues) | `src/crypto/credential.py::SpectralFingerprint` | ⚠️ Numerical array container only; raw-float encoding and credential semantics are noncanonical |
+| `SpectrallyEquivalent L1 L2` | `SpectralFingerprint.matches()` | ⚠️ Approximate spectrum comparison only; it is not homotopy equivalence or a classifier proof |
+| `MatrixIsHarmonic Δ h := Δ·h = 0` (`lean/HCP.lean`) | Historical prototype: `docs/archive/python/src/invariants/harmonic.py::is_harmonic()` | ✅ Lean owns abstract hidden-operator harmonicity; the archived tolerance check is not a current runtime refinement |
+| `Hcrypt.Laplacian.IsHarmonic W h` (`lean/Laplacian/Hodge.lean`) | `src/geometry/hodge.py` / archived invariant helpers | ⚠️ Historical numerical lineage; no current runtime refinement |
+| `CVP.Instance` / `ExplicitLattice` / `CVPOracleCorrect` (`lean/CVP.lean`) | `src/crypto/hardness.py::LatticeInstance` | ❌ Different object: the Python class is an LWE-looking floating experiment, not the Lean CVP instance |
+| HCP hidden-operator instance (`lean/HCP.lean`) | `src/crypto/hardness.py` | ❌ Narrative analogy only; it does not implement the Lean realization or reduction hypotheses |
+| `GrothendieckFibration p` | `src/geometry/fiber_bundle.py::FiberBundle` | ❌ A graph of orthogonal matrices is not a Cartesian-lift witness |
+| `Axioms.FiberSystem` / hidden representative | `src/crypto/credential.py::QuantumSheafFibration` | ❌ Legacy degree-zero container; arbitrary real maps are not the claimed quantum channels or a path-space realization |
+| `EphemeralFiberSpec` | `src/crypto/credential.py::rotate_credential()` | ❌ Resampling supplies no path or transport witness |
+| `Helfer.HomotopyEquivalent` | `src/proofs/homotopy.py::prove_homotopy_equivalence()` | ❌ Historical verifier; supplied numerical invariants do not construct the categorical equivalence |
+| Kernel-dimension equality | Python Betti/spectrum comparisons | ⚠️ A coarse numerical predicate only; never identify it with homotopy equivalence |
 
 ## Proximity Projection Proof
 
@@ -107,13 +110,14 @@ the projection Laplacian.
 
 **Python**:
 - `src/geometry/hodge.py::hodge_decomposition()` — full decomposition
-- `src/invariants/harmonic.py::hodge_decompose()` — alternative via projections
-- `src/invariants/harmonic.py::validate_hodge_orthogonality()` — checks pairwise ⊥
-- `src/invariants/harmonic.py::validate_laplacian_construction()` — checks the degree-k Laplacian construction `Δ_k = δ_{k-1}δ_{k-1}* + δ_k*δ_k`
+- Archived `docs/archive/python/src/invariants/harmonic.py::hodge_decompose()` — historical alternative via projections
+- Archived `docs/archive/python/src/invariants/harmonic.py::validate_hodge_orthogonality()` — historical pairwise-orthogonality diagnostic
+- Archived `docs/archive/python/src/invariants/harmonic.py::validate_laplacian_construction()` — historical degree-\(k\) Laplacian diagnostic
 
-**Key precondition**: `d_next * d_prev = 0` (chain complex). Enforced by
-`src/geometry/hodge.py::build_coboundary_operator()` which constructs δ₀, δ₁
-from the nerve such that δ₁∘δ₀ = 0.
+**Key precondition**: `d_next * d_prev = 0` (cochain complex). It is proved for
+the concrete restriction-aware cellular sheaf in `lean/Sheaf/Cellular.lean`.
+`src/geometry/hodge.py::build_coboundary_operator()` is only a historical
+constant-coefficient incidence fixture; it is not the Python sheaf operator.
 
 ### 2. Hodge Hardness Reduction (`Hodge_Hardness_Reduction_Proof`, line 208)
 
@@ -121,23 +125,22 @@ from the nerve such that δ₁∘δ₀ = 0.
 Specifically: for any basis B and target t, construct Δ with ker(Δ) = im(B),
 then solver(t) gives a lattice vector.
 
-**Python**:
-- `src/crypto/hardness.py::LatticeInstance` — wraps the CVP instance
-- `src/crypto/encrypt.py::encrypt()` — Hodge path embeds message in ker(Δ)
-- `src/crypto/decrypt.py::decrypt()` — Hodge path recovers via π_H projection
-- Security claim: without the fibration (restriction maps), recovering the
-  message requires solving CVP on ker(Δ_sheaf).
+**Historical Python intent**:
+- `src/crypto/hardness.py::LatticeInstance` does **not** wrap the Lean CVP
+  object;
+- `src/crypto/encrypt.py` and `decrypt.py` use a degree-zero, floating,
+  basis-dependent prototype; and
+- no cryptographic reduction from that runtime to CVP or HCP is established.
 
 ### 3. Hodge Ambiguity (`Hodge_Ambiguity_Proof`)
 
 **Lean**: ∃ Δ₁, Δ₂, b such that b ∈ ker(Δ₁) but b ∉ ker(Δ₂).
 Same ciphertext, different Laplacians → different meanings.
 
-**Python**:
-- `src/proofs/anonymity.py::prove_class_membership()` — ZK proof that credential
-  is in a homotopy class without revealing which specific fibration
-- `src/crypto/credential.py::rotate_credential()` — creates distinct fibrations
-  in the same public class (each may have different Δ)
+**Historical Python intent**: the old anonymity verifier and
+`rotate_credential()` do not provide a ZK proof, supplied homotopy path, or
+classifier-fiber witness. They must not be cited as realizations of this Lean
+statement.
 
 ### 4. Hidden-Operator Strictness (`PublicCompatibleHodgeAmbiguity`, `KernelAmbiguous`, `CVP_Oracle_Insufficient_For_Public_Hodge_Solving`)
 
@@ -145,9 +148,10 @@ Same ciphertext, different Laplacians → different meanings.
 different harmonic kernels. A CVP oracle solves only CVP on a fixed, presented
 lattice; it does not identify which hidden representative determines ker(Δ).
 
-**Python**: This is the core security argument — the adversary sees the ciphertext
-but doesn't know the fibration (restriction maps). Without the fibration, they
-can't construct Δ_sheaf, so they can't do harmonic projection.
+**Runtime status**: this is a conditional Lean hidden-operator statement, not a
+security theorem for the Python ciphertext format. A future scheme must define
+the adversary view and prove that its public bytes do not reveal or determine
+the operative presentation.
 
 ### 5. Hodge Projection = CVP (`Hodge_Projection_Is_CVP`)
 
@@ -162,9 +166,10 @@ lemma `matrix_harmonic_iff_projection_isHarmonic` keeps both levels tied to the
 same object when `Δ = Delta_W`.
 
 **Python**:
-- `src/invariants/harmonic.py::project_to_harmonic()` — orthogonal projection
+- Archived `docs/archive/python/src/invariants/harmonic.py::project_to_harmonic()` — historical numerical orthogonal projection
   onto ker(Δ), which IS the closest point (by Hilbert space theory)
-- `src/crypto/decrypt.py::projective_measurement()` — the ZK-compatible version
+- `src/crypto/decrypt.py::projective_measurement()` — historical and explicitly
+  **not** ZK-compatible: it returns the harmonic component.
 
 ### 6. Spectrum Not Homotopy Invariant (`Spectrum_Not_Homotopy_Invariant`)
 
@@ -175,18 +180,15 @@ same object when `Δ = Delta_W`.
 - `src/crypto/credential.py` docstring: "eigenvalues are a FINER invariant than
   the homotopy class" — the spectral fingerprint identifies a specific fibration,
   not just its homotopy class
-- This is the anonymity foundation: `|[F]| = ∞` means infinitely many fibrations
-  share the same Betti numbers but have distinct spectra
+- This does not prove that a protocol-relevant classifier fiber is infinite,
+  uniform, or anonymously sampled. Those require separate witnesses.
 
 ### 7. Copy Equivalence (`copy_equivalent_thm`, line 577)
 
 **Lean**: FibrationCopy(F, n) is homotopy equivalent to F for all n.
 
-**Python**:
-- `src/crypto/credential.py::rotate_credential()` — creates a new credential
-  that is homotopy equivalent (same topology, different restriction maps)
-- `src/proofs/homotopy.py::prove_homotopy_equivalence()` — proves two credentials
-  are in the same homotopy class
+**Historical Python status**: neither resampling on the same topology nor the
+old invariant matcher proves the Lean copy/path-equivalence statement.
 
 ### 8. Transaction/Block Validation Boundary (`lean/Chain.lean`)
 
@@ -215,7 +217,12 @@ Lean does not own byte parsing, canonical encodings, allocation bounds, storage,
 or endpoint behavior. Those remain Rust runtime concerns; see
 `docs/TRUST_BOUNDARIES.md`.
 
-## Encryption/Decryption Pipeline (matches Lean Hodge path)
+## Target Encryption/Decryption Shape
+
+The diagram below is the intended degree-one target, not the behavior of the
+current Python v3 files. Those files build \(\Delta_0\), split vertex blocks,
+and encode bits in a recomputed floating eigenbasis. They therefore do not
+match this Lean path and are suspended pending redesign.
 
 ```
 ENCRYPT (v3 — Hodge path):
@@ -242,11 +249,12 @@ SECURITY:
   different hidden Laplacians                                [Hodge_Ambiguity]
 ```
 
-## Version History
+## Historical Python Version Names
 
 - **v1** (deprecated): Discrete Gaussian noise — no formal backing in Lean proof
 - **v2**: Lattice path (fallback when dim(ker(Δ)) < message bits)
-- **v3**: Hodge path (message ∈ ker(Δ), aligned with the Lean proof workspace)
+- **v3**: Claimed Hodge path; the G0/C0 audit found it degree-zero and not
+  aligned with the current Lean degree-one workspace
 
 ## Key Implementation Notes
 
@@ -268,4 +276,4 @@ matrices.
 Files with relative threshold:
 - `src/crypto/encrypt.py` (encrypt kernel detection)
 - `src/crypto/decrypt.py` (decrypt kernel detection)
-- `src/invariants/harmonic.py` (project_to_harmonic, embed_in_harmonic, extract_from_harmonic, validate_harmonic_embedding)
+- Archived `docs/archive/python/src/invariants/harmonic.py` (`project_to_harmonic`, `embed_in_harmonic`, `extract_from_harmonic`, `validate_harmonic_embedding`); no current Python refinement is claimed

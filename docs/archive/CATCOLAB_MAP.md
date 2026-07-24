@@ -1,4 +1,12 @@
-# CatColab Map
+# CatColab Map (Archived)
+
+> [!WARNING]
+> Historical and non-normative. This optional modeling-tool plan mixed current
+> Paper 1 objects with prospective oracle natural transformations and ledger
+> colimits. Its verified organization has been consolidated into
+> [`../CATEGORICAL_ARCHITECTURE.md`](../CATEGORICAL_ARCHITECTURE.md), with
+> object and morphism status owned by
+> [`../SEMANTIC_OWNERSHIP.md`](../SEMANTIC_OWNERSHIP.md).
 
 This document is a **conceptual markdown map** for how homotopical-encrypt
 could later be represented in CatColab or a similar categorical modeling tool.
@@ -142,7 +150,7 @@ If this becomes a real CatColab experiment later, I’d split it into views.
 | View | Scope | Existing doc anchor |
 |------|-------|---------------------|
 | Site / sheaf view | Nerve, stalks, restrictions, cochains | `docs/PRIMITIVES.md`, `docs/GEOMETRY.md` |
-| Hodge / hardness view | `δ`, `δ*`, `Δ`, `ker(Δ)`, hidden/public ambiguity | `docs/SECURITY.md`, `lean/Hardness.lean` |
+| Hodge / hardness view | `δ`, `δ*`, `Δ`, `ker(Δ)`, hidden/public ambiguity | `docs/SECURITY.md`, `lean/HCP.lean`, `lean/Hardness.lean` |
 | Oracle / gate view | `η₁`, `η₂`, public judgments, boundary handling | `docs/GATE_ARCHITECTURE.md`, `docs/TRUST_BOUNDARIES.md` |
 | Ledger / colimit view | Blocks, state transitions, key-image monotonicity | `docs/CONSENSUS.md`, `lean/Chain.lean` |
 | Topos / logic view | Heyting truth collapse, sheaf semantics | `docs/CATEGORICAL_ARCHITECTURE.md`, `lean/Axioms/OracleModality.lean` |

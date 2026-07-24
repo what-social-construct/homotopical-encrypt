@@ -25,8 +25,15 @@ here solely for provenance.
 | [ROADMAP.md](ROADMAP.md) | [active stub](../ROADMAP.md) | Dated shipping status and milestones |
 | [REFACTOR_PLAN.md](REFACTOR_PLAN.md) | [active stub](../REFACTOR_PLAN.md) | Completed/superseded migration plan |
 | [CATEGORICAL_ARCHITECTURE.md](CATEGORICAL_ARCHITECTURE.md) | [current architecture](../CATEGORICAL_ARCHITECTURE.md) | Mixed categorical narrative predating the typed sheaf/state split |
+| [CATCOLAB_MAP.md](CATCOLAB_MAP.md) | [current architecture](../CATEGORICAL_ARCHITECTURE.md) | Optional modeling-tool map that mixed verified Paper 1 data with prospective natural-transformation and colimit claims |
 | [COMPARISON.md](COMPARISON.md) | [current workbench](../COMPARISON.md) | Comparison notebook with superseded global-section and commitment claims |
 | [CONSENSUS.md](CONSENSUS.md) | [active status page](../CONSENSUS.md) | Spectral-stake and spectral-finality prototype |
+
+## Historical Source Archives
+
+| Archive | Status |
+|---|---|
+| [Legacy Python source](python/README.md) | Historical `src/primitives/` and `src/invariants/` layers, retired intact after semantic audit. They are non-normative and intentionally not an executable Python package. |
 
 ## Quick Navigation
 

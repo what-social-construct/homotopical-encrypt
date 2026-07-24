@@ -1,7 +1,8 @@
 \section{CVP Comparison And Kernel Ambiguity}
 
 CVP asks for a closest vector in an explicitly presented lattice. HCP asks for
-the harmonic cochain in the kernel of a hidden Hodge operator. In the \HE{} model,
+the projection of \(b\) into the kernel of the operative hidden Hodge operator.
+In the \HE{} model,
 public data need not determine the corresponding harmonic kernel.
 
 \subsection{Known-Lattice CVP}
@@ -333,16 +334,16 @@ The discrete CVP definitions correspond to \lean{CVP.ExplicitLattice},
 \lean{CVP.squaredEuclideanDistance},
 \lean{CVP.IsClosestLatticeVector}, \lean{CVP.Solution},
 \lean{CVP.OracleCorrect}, and \lean{CVP.HardnessAssumption}. The separate
-field-linear comparison is \lean{Hardness.exists_matrix_ker_eq_range} and
-\lean{Hardness.Hodge_GeneratedSubspace_Reduction_Proof}. The explicit
-harmonic-lattice bridge is \lean{Hardness.HarmonicCVPBridge},
-\lean{Hardness.HarmonicCVPBridge.squaredDistance_projection_decomposition},
-\lean{Hardness.HarmonicCVPBridge.isClosestLatticeVector_iff_projectedTarget},
-and \lean{Hardness.HarmonicCVPBridge.solution_iff_projectedTarget}. The
+field-linear comparison is \lean{exists_matrix_ker_eq_range} and
+\lean{Hodge_GeneratedSubspace_Reduction_Proof}. The explicit
+harmonic-lattice bridge is \lean{HarmonicCVPBridge},
+\lean{HarmonicCVPBridge.squaredDistance_projection_decomposition},
+\lean{HarmonicCVPBridge.isClosestLatticeVector_iff_projectedTarget},
+and \lean{HarmonicCVPBridge.solution_iff_projectedTarget}. The
 closest-harmonic and hidden-operator surfaces are
-\lean{Hardness.ClosestHarmonicSolution},
-\lean{Hardness.ProjectionClosestHarmonicSolution},
-\lean{Hardness.matrix_harmonic_iff_projection_isHarmonic},
+\lean{ClosestHarmonicSolution},
+\lean{ProjectionClosestHarmonicSolution},
+\lean{matrix_harmonic_iff_projection_isHarmonic},
 \lean{Hcrypt.HCPBridge.Observation}, \lean{Hcrypt.HCPBridge.Solver},
 \lean{Hcrypt.HCPBridge.SolverSoundOn},
 \lean{Hcrypt.HCPBridge.SolverExactOnHarmonic},

@@ -1,5 +1,11 @@
 # Gate Architecture: Who Computes What
 
+> **Status:** historical Python-era plan. The current Lean gate surface and
+> Rust TCB boundaries take precedence. The G0/C0 audit in
+> [SEMANTIC_PARITY_QUEUE.md](SEMANTIC_PARITY_QUEUE.md) found that the Python
+> geometry/crypto modules below are suspended and do not currently implement
+> the claimed degree-one or security gates.
+
 Reference: Swan et al., "Categorical Cryptoeconomics" — HoTT blockchains
 where nodes are simplicial sets/fibrations, paths are higher homotopies.
 
@@ -135,7 +141,7 @@ the consensus gates where genuine measurement uncertainty exists
 
 The outline below is retained only to document an earlier research direction.
 It is not current architecture and must not be implemented from
-`src/primitives/k_theory.py`.  That file's curvature, characteristic-class,
+`docs/archive/python/src/primitives/k_theory.py`. That historical file's curvature, characteristic-class,
 and characteristic-cycle computations are heuristic rather than a verified
 Chern--Weil/GRR construction, and no Lean owner or anonymity theorem exists.
 Any future K-theoretic layer would require a fresh mathematical specification,

@@ -287,7 +287,7 @@ theorem lossyPublicProjection_of_kernelSeparation
     (kernelAmbiguous_of_kernelSeparation X hInv witness)
 
 /-- The actual public input seen by a representative-indexed HCP solver. -/
-abbrev Observation (P N R : Type) := P × (N → R)
+abbrev Observation (P N R : Type*) := P × (N → R)
 
 /-- A solver receives auxiliary information and the public class/cochain pair. -/
 abbrev Solver (Aux : Type uAux) (P N R : Type) :=
@@ -439,13 +439,22 @@ theorem operativeHarmonicComponent_eq_self_of_harmonic
   apply (matrixHarmonicSubspace Δ).starProjection_eq_self_iff.mpr
   exact hb
 
+/-- Orthogonal projection onto the operative harmonic kernel is idempotent. -/
+@[simp] theorem operativeHarmonicComponent_idempotent
+    {N : Type} [Fintype N]
+    (Δ : Matrix N N ℝ) (b : CochainSpace N) :
+    operativeHarmonicComponent Δ (operativeHarmonicComponent Δ b) =
+      operativeHarmonicComponent Δ b :=
+  operativeHarmonicComponent_eq_self_of_harmonic Δ _
+    (operativeHarmonicComponent_is_harmonic Δ b)
+
 end Hcrypt.HCP
 
 namespace Hcrypt.HCPBridge
 
 open CategoryTheory CategoryTheory.Limits HomotopicalAlgebra
 
-universe u₁ u₂ v₁ v₂ uRep
+universe u₁ u₂ v₁ v₂ uRep uAux
 
 /--
 A private witness binds a public observation to its operative hidden
@@ -487,6 +496,24 @@ def IsOperativeSolution
     (witness : HiddenHodgeWitness X observation)
     (output : N → ℝ) : Prop :=
   output = operativeTarget X observation witness
+
+/--
+A public solver is exact on the operative HCP target when it returns the
+projection selected by every hidden witness compatible with its observation.
+This is the direct recovery contract; it is stronger than merely returning
+some harmonic vector.
+-/
+def SolverExactOnOperativeTarget
+    {C : Type u₂} [Category.{v₂} C]
+    [HasTerminal C] [HasBinaryProducts C] [ModelCategory C]
+    {S : Helfer.Signature.{u₁, v₁}}
+    {sem : Helfer.ClosedSemantics (C := C) S}
+    {Rep : Type uRep} {N : Type} [Fintype N] {P : Type}
+    (X : Realization C S sem Rep N ℝ P)
+    {Aux : Type uAux} (solver : Solver Aux P N ℝ) (aux : Aux) : Prop :=
+  ∀ (observation : Observation P N ℝ)
+    (witness : HiddenHodgeWitness X observation),
+    IsOperativeSolution X observation witness (solver aux observation)
 
 theorem operativeTarget_is_harmonic
     {C : Type u₂} [Category.{v₂} C]
@@ -545,6 +572,53 @@ theorem harmonic_iff_transport
       rw [← T.laplacian_naturality]
       exact hb
     exact T.transport.injective (by simpa using htransport)
+
+/-- Isometric Laplacian transport maps the source harmonic kernel onto the target one. -/
+theorem map_matrixHarmonicSubspace
+    {C : Type u₂} [Category.{v₂} C]
+    [HasTerminal C] [HasBinaryProducts C] [ModelCategory C]
+    {S : Helfer.Signature.{u₁, v₁}}
+    {sem : Helfer.ClosedSemantics (C := C) S}
+    {Rep : Type uRep} {N : Type} [Fintype N] {P : Type}
+    {X : Realization C S sem Rep N ℝ P} {left right : Rep}
+    (T : IsometricPresentationEquivalence X left right) :
+    Submodule.map T.transport.toLinearEquiv.toLinearMap
+        (HCP.matrixHarmonicSubspace (X.laplacian left)) =
+      HCP.matrixHarmonicSubspace (X.laplacian right) := by
+  ext y
+  rw [Submodule.mem_map_equiv
+    (HCP.matrixHarmonicSubspace (X.laplacian left))]
+  change
+    _root_.MatrixIsHarmonic (X.laplacian left) (T.transport.symm y) ↔
+      _root_.MatrixIsHarmonic (X.laplacian right) y
+  simpa using T.harmonic_iff_transport (T.transport.symm y)
+
+/--
+The operative HCP projection is natural when the cochain and its hidden
+presentation are transported together.
+-/
+theorem operativeHarmonicComponent_naturality
+    {C : Type u₂} [Category.{v₂} C]
+    [HasTerminal C] [HasBinaryProducts C] [ModelCategory C]
+    {S : Helfer.Signature.{u₁, v₁}}
+    {sem : Helfer.ClosedSemantics (C := C) S}
+    {Rep : Type uRep} {N : Type} [Fintype N] {P : Type}
+    {X : Realization C S sem Rep N ℝ P} {left right : Rep}
+    (T : IsometricPresentationEquivalence X left right)
+    (b : HCP.CochainSpace N) :
+    T.transport
+        (HCP.operativeHarmonicComponent (X.laplacian left) b) =
+      HCP.operativeHarmonicComponent
+        (X.laplacian right) (T.transport b) := by
+  change
+    T.transport
+        ((HCP.matrixHarmonicSubspace (X.laplacian left)).starProjection b) =
+      (HCP.matrixHarmonicSubspace (X.laplacian right)).starProjection
+        (T.transport b)
+  rw [← T.map_matrixHarmonicSubspace]
+  simpa using
+    (Submodule.starProjection_map_apply T.transport
+      (HCP.matrixHarmonicSubspace (X.laplacian left)) (T.transport b)).symm
 
 end IsometricPresentationEquivalence
 

@@ -14,7 +14,8 @@ import Axioms.Consensus
   - encode the contract
       "transaction stage critical invariant pass -> consensus admissible"
   - provide a Lean-side refinement boundary for
-      `src/invariants/unified.py::validate_for_stage`
+      the retired prototype
+      `docs/archive/python/src/invariants/unified.py::validate_for_stage`
     while full constructive end-to-end proofs are still being completed.
 -/
 
@@ -98,7 +99,8 @@ theorem stage_admissibility_from_axioms_wellformed
 Python-facing snapshot for stage-gated validation outcomes.
 
 Mirrors high-level output shape of:
-  `src/invariants/unified.py::UnifiedInvariantValidator.validate_for_stage`
+  retired
+  `docs/archive/python/src/invariants/unified.py::UnifiedInvariantValidator.validate_for_stage`
 after projecting to stage tag + pass/fail + critical-failure count.
 -/
 structure PythonStageValidationSnapshot where

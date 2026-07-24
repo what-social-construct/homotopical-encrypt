@@ -5,11 +5,15 @@ runtime system.
 
 The short version:
 
-- Lean proves mathematical invariants and security-model relationships.
+- Lean proves mathematical invariants, protocol transition rules, preservation
+  properties, and security-model relationships.
 - Rust owns adversarial runtime boundaries: bytes, endpoints, storage, consensus,
-  resource limits, and canonical validation.
-- Python remains useful for research, orchestration, reference tests, and
-  numerical experiments, but should not be the long-term consensus boundary.
+  resource limits, canonical validation, and the atomic realization of
+  Lean-specified transitions.
+- Python is currently suspended. Its former primitive and invariant layers are
+  preserved under `docs/archive/python/` for provenance and possible future
+  test-vector recovery, but the remaining Python tree is not a supported
+  runtime.
 
 This is also the right response to trusted-computing-base concerns in formal
 verification: a Lean proof is only a proof of the stated model. It does not
@@ -23,6 +27,7 @@ Use this rule when deciding where code belongs:
 | Question | Owner |
 |---|---|
 | Is this a theorem about all valid objects or all valid transitions? | Lean |
+| Could honest nodes fork because they disagree whether this state transition is allowed? | Lean specifies the deterministic relation; Rust enforces it |
 | Does this parse, store, gossip, or validate adversarial bytes? | Rust |
 | Does this allocate based on untrusted input? | Rust |
 | Does this classify consensus-visible values? | Rust oracle, with Lean semantics |
@@ -40,14 +45,16 @@ Lean
     - Heyting oracle semantics
     - stage admissibility
     - sheaf/cochain/commitment invariants
-    - ledger preservation theorems
+    - ledger/nullifier transition relations and preservation theorems
+    - block/certificate binding, rounds, locks, and finality safety
+    - ephemeral and SheafBlock lifecycle state machines
 
 Rust
   production consensus path:
     - wire parsing and canonical encoding
     - transaction/block validation
     - oracle service and judgments
-    - storage engine and state transitions
+    - storage engine and atomic transition application
     - networking and gossip
     - bounded allocations and DoS resistance
     - fuzz targets and property tests
@@ -63,12 +70,16 @@ Python
 
 ## Python Role In The TCB
 
-Python is allowed to produce candidate evidence, not consensus truth.
+The following is the target role for a future rebuilt Python layer. The current
+legacy Python package is intentionally non-runnable and produces no supported
+evidence.
 
-This distinction matters for the current geometry stack. The Python code can
-compute heavy objects such as Hodge decompositions, Grassmannian projections,
-spectral estimates, cochain witnesses, stalk data, and experimental proximity
-shadows. Those outputs are useful as:
+Python may eventually produce candidate evidence, not consensus truth.
+
+This distinction matters for the geometry stack. A future rebuilt Python layer
+could compute heavy objects such as Hodge decompositions, Grassmannian
+projections, spectral estimates, cochain witnesses, stalk data, and
+experimental proximity shadows. Such outputs would be useful as:
 
 - witness material for a proof or SNARK;
 - inputs to a Rust oracle verifier;
@@ -106,14 +117,14 @@ Transaction validation is the most important place to keep the split clean.
 | Bound resource usage | Usually out of Lean scope, except abstract size limits | Enforce max sizes, counts, recursion depth, allocation caps, timeout policy | May generate tests only |
 | Check transaction shape | Define `TransactionWellFormed` and required fields abstractly | Enforce field presence, dimensions, domain separation tags, chain id | Reference helpers ok |
 | Verify signatures/proofs | Specify soundness assumptions for signature/ZK schemes | Verify signatures, Fiat-Shamir transcripts, challenge domains, proof bytes | Test-vector generation |
-| Key image uniqueness | Prove ledger transition preserves no-double-spend invariant | Check key image against state, reject duplicates atomically | Reference tests only |
+| Nullifier freshness | Specify authorization/derivation obligations and prove ledger transition preserves no-double-consumption | Verify the concrete nullifier proof, check state/batch freshness, insert atomically | Reference tests only |
 | Commitment/cochain validity | Specify the accepted exact `C¹` value, opening equivalence modulo `ker δ₀`, and snapshot coherence | Validate dimensions, authenticated payload/context, local openings/proofs, modulus, canonical field elements | Prototype commitment code ok |
-| Ephemeral fibers/transports | Specify path/class semantics and admissible transport within the public homotopy class | Generate fresh per message, enforce single-use, zeroize/drop secret transport, reject malformed hints | Prototype/reference only |
+| Ephemeral representatives/transports | Specify path/class semantics, admissible transport, and the active/consumed/retired lifecycle with no double consumption | Generate with a CSPRNG, verify lifecycle witnesses, apply transitions atomically, zeroize/drop secrets, reject malformed hints | Prototype/reference only |
 | Exact geometry gates | Specify structural laws: adjacent coboundary composites vanish, Laplacian construction, projection laws | Eventually enforce consensus-path exact gates or verify signed worker attestations | Currently useful for numerical/reference checks |
 | Oracle judgments | Prove Heyting semantics and stage admissibility | Classify spectral gap, Betti consistency, naturality, boundary/hold/reject policy | Should not bypass oracle on consensus path |
 | Hidden-kernel security claim | Prove hidden-operator ambiguity and CVP-oracle insufficiency | Never accept public data as if it canonically determines hidden `ker(Delta)` | Documentation/reference only |
 | State transition | Prove valid transaction preserves ledger/sheaf invariants | Apply transition atomically, update balances/state/key images/storage indexes | E2E tests only |
-| Mempool policy | Not a theorem-critical layer unless promoted to consensus | Rate limiting, spam policy, eviction, replay protection | Optional simulation |
+| Mempool policy | Not theorem-critical unless promoted to consensus; nonce/nullifier replay validity is ledger semantics, not mempool policy | Rate limiting, spam policy, duplicate caching, and eviction; enforce the Lean-owned replay rule at validation | Optional simulation |
 
 The key discipline: Rust may call out to workers/oracles, but the final
 consensus-facing decision must be represented as a bounded, authenticated Rust
@@ -134,7 +145,7 @@ preservation.
 | Cochain-root batch compatibility | Specify `BlockCochainPayloadsCompatible`: every payload is well-formed, shares topology hash, and shares edge-vector length | Reject mixed-topology or mixed-dimension batches before accumulation | Test vectors |
 | PoV / spectral proof | Specify stage admissibility and accepted oracle judgments | Verify oracle attestation, spectral judgment, validator eligibility | Worker/reference computations only |
 | Sheaf storage coherence | Specify restriction-map/cochain coherence invariants | Persist blocks/state atomically, verify indexes, reject corrupted storage proofs | Prototype storage layouts |
-| Fork choice | Specify high-level fork-resolution assumptions/invariants | Enforce deterministic fork-choice rule, finality, rollback bounds | Simulation |
+| Fork choice / finality | Specify the exact deterministic preference/finality relation and prove its safety consequences | Enforce that relation, certified-tip selection, and rollback bounds | Simulation |
 | Resource/DoS controls | Usually runtime-only | Enforce block size, tx count, proof size, validation timeout, cache bounds | Load tests |
 | Ledger preservation | Prove valid block transition preserves supply/key-image/state invariants | Apply block transition atomically and durably | Integration tests |
 
@@ -204,6 +215,13 @@ bound to a valid witness statement.
 | Proof artifact | Certificate that hidden witness satisfies a statement | `ProofCarryingCommittedCochain`, `ZKP` | Rust verifies proof bytes/transcript |
 | State decision | Consensus acceptance/rejection | theorem/spec interfaces | Rust applies state transition atomically |
 
+`TCB.HCPObservation.BoundHCPObservation` is a useful private assembly object:
+it joins the hidden harmonic-lattice message/opening, observed cochain, exact
+payload digest, and sheaf snapshot root. Because it contains the private
+witness, it is not itself a transaction, block leaf, or persisted public
+manifest. The chain consumes only its bounded public artifact/root/evidence
+projection under an explicit transition-binding relation.
+
 Lean currently separates the proof surface by abstraction level:
 
 | Lean area | Role |
@@ -213,7 +231,8 @@ Lean currently separates the proof surface by abstraction level:
 | `lean/Gates/*` | Validation-facing façades: what gets checked or exposed at gate boundaries. |
 | `lean/Consensus/*` | Protocol composition: how gate facts become reliability discounts and Proof-of-Value scores. |
 | `lean/Proximity/*` | Projection/list-decoding/proximity math; imported by gates or consensus when a protocol needs those facts. |
-| `lean/Hardness.lean` | Hidden-operator abstraction and reduction statements. |
+| `lean/HCP.lean` | Hidden-operator abstraction, Hodge cipher, and operative recovery target. |
+| `lean/Hardness.lean` | Impossibility consequences and linear/discrete-CVP comparisons. |
 | `lean/Laplacian/*` | Structured projection/Hodge objects used to instantiate the abstract hardness layer. |
 
 This keeps the TCB split small:
@@ -257,40 +276,56 @@ Current Lean names:
 | Lean/Rust TCB contract scaffold | `lean/TCB/Runtime.lean` |
 | Runtime-observed public statements and proximity decisions | `lean/TCB/ObservationBoundary.lean` |
 | End-to-end witness/verifier envelope | `lean/TCB/WitnessVerifier.lean` |
+| Private HCP observation/payload/snapshot join | `lean/TCB/HCPObservation.lean` |
+| Consensus proposal root tuple and authenticated votes | `lean/Protocol/Consensus/Vote.lean` |
+| Strict weighted quorum certificates | `lean/Protocol/Consensus/Quorum.lean` |
 
-## Ephemeral Fibration Boundary
+## Ephemeral Representative Boundary
 
-Ephemeral fibration/fiber behavior has two owners.
+Ephemeral behavior has three distinct ownership levels.
 
-Lean owns the mathematical class/path statement in `Axioms.Fibration`:
-`EphemeralFiberSpec` gives an ephemeral representative, a path from the base
-representative, and a transport-admissibility obligation. From this, Lean proves
-that a path-respecting classifier gives the same public fingerprint/homotopy
-class.
+The shared/Paper 1 Lean layer owns the mathematical class/path statement in
+`Axioms.Fibration`: `EphemeralFiberSpec` gives an ephemeral representative, a
+path from the base representative, and a transport-admissibility obligation.
+From this, Lean proves that a path-respecting classifier gives the same public
+classifier value.
 
-Rust owns the lifecycle facts in the TCB: fresh per message, single-use,
-zeroize/drop behavior, malformed-byte rejection, endpoint hardening, and the
-rule that Python is not consensus authority. These facts are named by
-`EphemeralRuntimeObligations` and bundled with the Lean math spec in
-`EphemeralFiberTCBContract`, but they are not proved by Lean.
+The Paper 2 Lean layer must own the semantic lifecycle: generated, active,
+consumed, and retired states; the transition that consumes a handle; replay
+exclusion; and the theorem that two accepted transitions cannot consume the
+same handle/nullifier. These are consensus-determinative state-machine facts,
+even though Rust supplies their witnesses and persists the resulting state.
+`Protocol/Ephemeral.lean` is the intended owner.
 
-Do not introduce a second ephemeral-fibration type unless it is a concrete
-instantiation that delegates to this boundary.
+Rust owns the concrete generation entropy, secret-key material, canonical
+handles, proof/signature verification, atomic compare-and-set, malformed-byte
+rejection, endpoint hardening, and physical zeroize/drop behavior. Python is
+not consensus authority.
+
+The current `EphemeralRuntimeObligations` in `Axioms/Fibration.lean`
+provisionally bundles all of these as Rust-owned propositions. During the
+Protocol migration, move the semantic freshness/single-consumption relation
+under `Protocol/Ephemeral`; retain CSPRNG quality, byte validation, memory
+wiping, and endpoint behavior in the runtime contract. Do not introduce a
+competing ephemeral type: the lifecycle should refer to the existing
+mathematical representative/path object through an opaque public handle.
 
 ## Rust Workspace Boundary
 
-The Rust code is the production/runtime side of the Lean contracts. It should be
-read as verifier and state-transition infrastructure, not as a replacement for
-the Lean mathematical definitions.
+The Rust code is the production/runtime side of the Lean contracts. It should
+be read as verifier and state-transition infrastructure, not as a replacement
+for the Lean mathematical definitions. The final column below names the target
+contract; the CH0 audit shows that the current Rust chain is not yet its
+refinement.
 
 | Rust surface | Responsibility | Lean/TCB contract it realizes |
 |---|---|---|
-| `rust/node` | Consensus-facing node: transaction/block parsing, mempool, block storage, key-image checks, PoV block verification, cochain-root checks, networking/RPC. | `Chain.lean`, `Consensus/*`, `Gates/*`, `TCB.RuntimeBoundary` |
-| `rust/node/src/consensus` | Proof-of-Value, VRF/slot checks, worker signatures, block verification, optional geodesic proof checks. | `Axioms.Consensus`, `Axioms.SpectralBounds`, `Axioms.OracleModality`, `Consensus/ProofOfValue.lean` |
-| `rust/node/src/storage` | Durable block/state/key-image storage and indexes. | `Axioms.Ledger`, `Chain.TransactionAccepted`, `Chain.BlockAccepted` |
+| `rust/node` | Consensus-facing node: transaction/block parsing, mempool, validation, nullifier checks, storage, networking/RPC. | `Protocol/Ledger`, `Protocol/Chain`, `Protocol/Consensus`, `Gates/*`, `TCB.RuntimeBoundary` |
+| `rust/node/src/consensus` | Selection-witness checks, authenticated votes/certificates, block verification, rounds/locks/finality realization. | `Protocol/Consensus/*`, `Axioms.OracleModality`, and any selected `Consensus/*` scoring lemmas |
+| `rust/node/src/storage` | Atomic durable block/state/nullifier/artifact storage, indexes, recovery, and reorganization. | `Protocol/Ledger`, `Protocol/Storage`, and the accepted-transition relation |
 | `rust/node/src/crypto` | Wire-facing commitment/proof helpers used by node validation. | `Axioms.CochainCommitment`, `TCB.ProofCarrying`, `TCB.SNARK` |
 | `rust/oracle` | Oracle service and stalk bridge: receives candidate/full-stalk material, computes or checks public commitments, classifies/verifies geometry-facing evidence. | `Axioms.OracleModality`, `Gates.Oracle`, `TCB.ObservationBoundary` |
-| `rust/wallet` | User-side witness/key/material storage and construction path. It can generate witness material but should not be the consensus authority. | `Axioms.Fibration`, `EphemeralFiberTCBContract`, `TCB.RuntimeBoundary` |
+| `rust/wallet` | User-side witness/key/material storage and construction path. It can generate witness material but should not be the consensus authority. | `Axioms.Fibration`, `Protocol/Ephemeral`, and `TCB.RuntimeBoundary` |
 
 The critical split is:
 
@@ -301,40 +336,28 @@ The critical split is:
 - Python can still generate research/reference witnesses, but Rust must convert
   anything consensus-facing into a bounded authenticated validation result.
 
-## Lean Invariants To Prioritize
+## Lean Chain Objects To Prioritize
 
-These are the useful Lean-side objects for transaction/block validation. They
-should be abstract enough that Rust can implement them without depending on Lean
-runtime execution.
+These objects should be abstract enough that Rust can realize them without
+depending on Lean runtime execution. Current `Chain.lean` names are retained
+only where their actual scope is accurate.
 
-| Lean object or theorem | Purpose |
-|---|---|
-| `TransactionWellFormed` | Abstract shape of a valid transaction |
-| `TransactionAccepted` | Abstract transaction shape plus freshness relative to ledger state |
-| `BlockWellFormed` | Per-transaction payload shape inside a block |
-| `BlockCochainTopologyCompatible` | Legacy condition: all block cochain payloads share one topology hash; canonical snapshot-root compatibility is still pending |
-| `BlockCochainEdgeCountCompatible` | All block cochain payloads share one edge-vector length |
-| `BlockCochainPayloadsCompatible` | Batch-level cochain compatibility before root accumulation |
-| `BlockAccepted` | Valid PoV block with compatible cochain payloads and fresh key images |
-| `LedgerState` | Abstract state: balances/commitments/key images/sheaf indexes |
-| `applyTransaction` | State transition relation/function |
-| `applyBlock` | Block transition relation/function |
-| `acceptedTransaction_key_image_fresh` | Accepted transactions do not spend prior key images |
-| `blockAccepted_cochainPayloadsCompatible` | Accepted blocks expose the cochain batch-compatibility fact |
-| `blockAccepted_tx_not_previously_spent` | Accepted blocks contain no transaction spending a prior key image |
-| `applyTransaction_marks_key_image` | Applying a transaction records its key image |
-| `applyBlock_marks_tx_key_image` | Applying a block records every transaction key image in that block |
-| `commitmentCoherencePreserved` | Accepted transactions preserve cochain commitment invariants |
-| `EphemeralFiberSpec` | Ephemeral representative stays in the same public homotopy class under admissible transport |
-| `EphemeralFiberTCBContract` | Records Lean-owned math spec separately from Rust-owned freshness/wipe/runtime obligations |
-| `sheafCoherencePreserved` | Accepted blocks preserve restriction-map/cochain coherence |
-| `acceptedImpliesNotInvalid` | Heyting/oracle bridge: accepted consensus data is not invalid |
-| `stageAdmissibleTransaction` | Transaction stage requires exact and consensus gates |
-| `stageAdmissibleBlock` | Block stage requires oracle-attested consensus gates |
+| Lean surface | Current status | Required role |
+|---|---|---|
+| `TCB.WitnessVerifier.PublicStateUpdate` | Preliminary root envelope with abstract binding propositions. | Refine into a typed committed public state and candidate before/after transition. |
+| `Protocol.Consensus.ProposalRef` | Current root tuple for one epoch/height/round/phase, but it lacks a distinct full sheaf-snapshot root. | Add `snapshotRoot`, keep it distinct from `topologyRoot`, and prove that one complete semantic block/transition binds this exact tuple. |
+| `Committee`, `VoteTarget`, `AuthenticatedVote`, `QuorumCertificate` | Current typed/proved strict weighted-quorum kernel. | Add round/phase transitions, locks, no-double-vote derivation, certified block, and finality. |
+| `TransactionWellFormed` / `TransactionAccepted` in `Chain.lean` | Legacy shape plus prior-nullifier freshness only. | Replace with authorization, exact value flow, state/snapshot/evidence binding, and resulting-state relation under `Protocol/Ledger`. |
+| `LedgerState`, `applyTransaction`, `applyBlock` in `Chain.lean` | Stores only spent `Nat` key images and a block list; proves insertion monotonicity. | Migrate the useful monotonicity lemmas to typed nullifiers and add exact ledger state, roots, and atomic accepted transitions. |
+| `BlockCochain*` predicates | Legacy payload-shape/topology-tag compatibility. | Require one canonical `SheafStateSnapshot`/cochain/evidence context and bind it to the block proposal. |
+| `BlockAccepted` in `Chain.lean` | Legacy PoV predicate plus payload compatibility and prior freshness. | Replace with valid accepted transactions, full root coherence, `Valid` authenticated quorum certificate, and certified state application. |
+| `EphemeralFiberSpec` | Current shared mathematical representative/path object. | Keep it as the math source; add generated/active/consumed/retired protocol state and no-double-consumption under `Protocol/Ephemeral`. |
+| `Proximity.Gates.Projection.StateBus` | Current proof-level projection-stage chain. | Wrap it in a fresh per-commit `SheafState` lifecycle and slot-at-most-once checkpoint relation. |
+| Planned `SheafBlock` | No Lean type yet. | Define open/sealed manifests, common context, artifact/evidence completeness, immutable finalization, and abstract root binding under `Protocol/Storage`. |
+| Oracle/Heyting stage predicates | Current semantic gates and `Valid`/`Undetermined`/`Invalid` separation. | Add authenticated round-bound judgments and retry/re-projection transitions; `Undetermined` cannot finalize. |
 
-Some of these already exist as partial interfaces under `lean/Axioms/*`; the
-next step is to consolidate them into transaction/block-specific structures
-without pretending the runtime implementation is verified extraction.
+The complete ownership and target file split is maintained in
+`PROTOCOL_PARITY_QUEUE.md` under “Chain Ownership Decision.”
 
 ## Rust Runtime Concerns To Prioritize
 
@@ -345,24 +368,25 @@ These are not solved by Lean proofs. They need ordinary production hardening.
 | Canonical encoding | One byte representation per object; reject aliases |
 | Bounded allocation | Never allocate directly from untrusted claimed sizes |
 | Domain separation | Every signature/proof/hash has explicit context tags |
-| Atomic state updates | Key image insertion and balance/state updates are one transition |
-| Replay protection | Chain id, nonce/sequence, epoch, and key image checks |
-| Ephemeral secrets | Fresh per message, single-use, no logs, wipe-on-drop/zeroize secret transport material |
+| Atomic state updates | Realize one Lean-accepted transition: nullifier insertion and every balance/root/index update all commit or none do |
+| Replay protection | Enforce the Lean chain-id, nonce/sequence, epoch, nullifier, and lifecycle predicates atomically |
+| Ephemeral secrets | Generate with secure entropy; verify semantic active/consumed state; keep no logs; wipe secret transport material |
 | Fuzzing | Fuzz wire decoders, tx validator, block validator, oracle request parser |
-| Differential tests | Compare Rust validation against Python reference vectors |
+| Differential tests | Compare Rust against canonical specification fixtures and independent vectors; Python output is never the acceptance oracle |
 | Fault isolation | Oracle/worker failures become hold/reject judgments, not panics |
 | Determinism | Consensus-visible checks must not depend on machine-local floating behavior |
 | Auditability | Validation errors should be explicit and typed |
 
 ## Migration Guidance
 
-1. Keep Python exact/geometry checks as research references while the math is
-   moving.
+1. Recover only narrowly specified numerical routines from the Python archive,
+   after assigning each one a current Lean or runtime contract.
 2. Move consensus-path transaction and block validation into Rust.
 3. Keep Lean proofs about abstract validity and preservation, not concrete byte
    parsing.
 4. Add Rust fuzz targets before exposing any endpoint to public traffic.
-5. Use Python to generate adversarial and golden test vectors for Rust.
+5. Rebuild Python test-vector generation from canonical encodings rather than
+   restoring the archived classifier/equivalence semantics.
 6. Only consider Lean extraction/runtime use after a separate threat model for
    the Lean runtime and generated code.
 
@@ -373,7 +397,8 @@ Public claims should use this phrasing:
 - "Lean machine-checks the mathematical hardness model and validation
   invariants."
 - "Rust implements the production validation boundary."
-- "Python provides research/reference implementations and tests."
+- "The historical Python prototypes are archived; a future Python layer may
+  provide non-authoritative research computations and test vectors."
 
 Avoid this phrasing:
 

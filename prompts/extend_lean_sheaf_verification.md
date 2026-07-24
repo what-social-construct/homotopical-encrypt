@@ -96,7 +96,7 @@ This is more of a specification than a deep theorem, but it formally states the 
 During the audit that produced the existing Lean proofs, we identified four distinct orthogonality properties that the system relies on. The prompt consumer **must not conflate them** — they form a dependency chain (B) → (C) → (A), with (D) independent:
 
 ### A. Hodge Orthogonality (proven in `Hodge_Decomposition_Theorem`)
-The decomposition `b = h + e₁ + e₂` has `⟨h, e₁⟩ = ⟨h, e₂⟩ = ⟨e₁, e₂⟩ = 0`. This is a **consequence** of the Laplacian being self-adjoint. The Python code enforces this via `validate_hodge_orthogonality()` in `src/invariants/harmonic.py`.
+The decomposition `b = h + e₁ + e₂` has `⟨h, e₁⟩ = ⟨h, e₂⟩ = ⟨e₁, e₂⟩ = 0`. This is a **consequence** of the Laplacian being self-adjoint. The retired Python prototype checked this numerically via `validate_hodge_orthogonality()` in `docs/archive/python/src/invariants/harmonic.py`; it is not a current refinement.
 
 ### B. Stalk Fiber Inner Product (foundational — makes δ* well-defined)
 Each stalk F(v) = ℝ^d carries the standard Euclidean inner product. The **total cochain space** C⁰ = ⊕_v F(v) inherits its inner product as a direct sum of stalk inner products. This is what makes the adjoint δ₀* well-defined, which in turn makes Δ = δ₀*δ₀ self-adjoint and PSD. Without this, "harmonic projection" has no meaning. In the code: `Stalk.data` is a numpy array with standard dot product; `sheaf_laplacian.py` builds the Laplacian Δ = δᵀδ where δ is a real matrix and the transpose IS the adjoint with respect to the standard inner product on ⊕_v ℝ^d. The Lean formalization should define the cochain inner product as `⟨c₁, c₂⟩ = Σ_v ⟨c₁(v), c₂(v)⟩_ℝ^d` and prove `⟨δ₀ c, η⟩_C¹ = ⟨c, δ₀* η⟩_C⁰`.

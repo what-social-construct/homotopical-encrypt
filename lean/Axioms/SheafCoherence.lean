@@ -18,10 +18,10 @@ import Axioms.CochainCommitment.Payload
 
   Runtime mapping (current):
     Python:
-      - src/invariants/cohomology.py
+      - retired docs/archive/python/src/invariants/cohomology.py
           * validate_nerve_structure
           * check_cochain_complex_structure (δ₁ ∘ δ₀ = 0)
-      - src/invariants/unified.py
+      - retired docs/archive/python/src/invariants/unified.py
           * UnifiedInvariantValidator._check_cochain_complex
           * UnifiedInvariantValidator._check_laplacian_construction
           * UnifiedInvariantValidator._check_hodge_orthogonality

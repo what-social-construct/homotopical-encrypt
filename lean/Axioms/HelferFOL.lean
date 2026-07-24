@@ -37,9 +37,9 @@ import Helfer
   - `Axioms.Heyting` owns the runtime/public truth collapse consumed by the
     protocol;
   - `Axioms.OracleModality` owns the public oracle/sheafification boundary;
-  - `Hardness.lean` factors the HCP classifier through the invariant closed
-    theory, then requires a separate presentation-level kernel-separation
-    witness before deriving the CVP-oracle insufficiency result.
+  - `HCP.lean` factors the HCP classifier through the invariant closed theory
+    and requires a separate presentation-level kernel-separation witness;
+    `Hardness.lean` derives the solver and CVP-oracle impossibility results.
 
   It is intentionally axiomatic (interface-level) so implementation contracts
   in Python/Rust can be tied to explicit logical obligations while deeper

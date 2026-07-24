@@ -56,9 +56,9 @@ Lean modules define predicates, contracts, and theorem obligations.
 - Consensus-path acceptance still belongs to Rust validation/oracle code; see
   `docs/TRUST_BOUNDARIES.md`.
 - Main surfaces:
-  - `src/invariants/*`
+  - historical `docs/archive/python/src/invariants/*`
   - `src/proofs/*`
-  - `src/primitives/homotopy.py`
+  - historical `docs/archive/python/src/primitives/homotopy.py`
 
 ### Rust owns deterministic consensus-critical enforcement
 
@@ -105,7 +105,7 @@ Rust enforces admissibility deterministically.**
 
 ## Next organizational increments
 
-1. Wire `src/invariants/unified.py` stage outputs to
+1. Replace the retired `docs/archive/python/src/invariants/unified.py` stage outputs with
    `PythonStageValidationSnapshot`/`RefinesTransactionCriticalPass`
    (docs + optional adapter helper).
 2. Add a lightweight theorem/adapter in `lean/Hardness.lean` consuming

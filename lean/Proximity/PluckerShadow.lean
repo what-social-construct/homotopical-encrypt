@@ -6,9 +6,10 @@ import Proximity.Projection
   Paper correspondence:
   - Paper 1 Section 6: Plucker public-shadow interface.
 
-  Python already has a concrete Plucker layer in `src/primitives/grassmann.py`:
+  The retired Python prototype has a concrete Plucker layer in
+  `docs/archive/python/src/primitives/grassmann.py`:
   `to_plucker`, `from_plucker`, `plucker_inner_product`, and
-  `plucker_distance`, built from `wedge_k` in `src/primitives/algebra.py`.
+  `plucker_distance`, built from `wedge_k` in the archived `algebra.py`.
 
   This Lean file does not formalize exterior powers yet. It records the
   algebraic-shadow interface needed to use Plucker coordinates as a candidate

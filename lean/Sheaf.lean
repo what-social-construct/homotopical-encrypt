@@ -1,6 +1,9 @@
 import Sheaf.CellComplex
 import Sheaf.Cellular
+import Sheaf.Morphism
 import Sheaf.Hodge
+import Sheaf.Integral
+import Sheaf.HarmonicLattice
 import Sheaf.Equivalence
 import Sheaf.Commitment
 

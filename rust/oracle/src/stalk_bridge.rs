@@ -17,7 +17,7 @@
 //   or parallel transport. Python computes, Oracle verifies and stores.
 //
 // See: src/geometry/sheaf_laplacian.py, src/geometry/hodge.py,
-//      src/geometry/fiber_bundle.py, src/primitives/stalk.py
+//      src/geometry/fiber_bundle.py and the retired Python stalk prototype
 
 use anyhow::Result;
 use serde::{Deserialize, Serialize};

@@ -136,6 +136,7 @@ operator.
 
 Lean anchors:
 
+- `HCP.lean`
 - `Hardness.lean`
 - `CVP.lean`
 - `Laplacian/*`
@@ -174,7 +175,8 @@ Separate:
 #### 2.3 Intuition
 
 CVP asks for a closest vector in an explicitly presented lattice. HCP asks for
-a harmonic cochain in the operative Hodge kernel, and in the Homotopical
+the projection of the observed cochain into the operative Hodge kernel, and in
+the Homotopical
 Encrypt model that kernel is not explicitly presented by the public data.
 
 ### 3. CVP Comparison And Kernel Ambiguity
@@ -385,7 +387,8 @@ full build against the submission checkpoint.
 Explain the module split:
 
 - `Axioms/*`: semantic and commitment interfaces.
-- `CVP.lean`, `Hardness.lean`: known-lattice comparison and hardness framing.
+- `HCP.lean`: HCP, public fibers, cipher correctness, and operative targets.
+- `CVP.lean`, `Hardness.lean`: known-lattice comparison and impossibility framing.
 - `Gates/*`: aliases and lemmas for object-local exact/oracle/stage
   invariants.
 - `Proximity/*`: projection chain, proximity gates, metrics, RS endpoint.
@@ -458,6 +461,7 @@ Expected scope:
 
 Primary Lean modules:
 
+- `HCP.lean`
 - `CVP.lean`
 - `Hardness.lean`
 - `Laplacian/*`

@@ -40,7 +40,8 @@ References:
   - Goncharov & Nechesov (2023), "Axiomatization of Blockchain Theory"
   - Zhao (2020), "Algebraic Structure of Blockchains"
   - Helfer (2019), "First-order homotopical logic" (arXiv:1908.08944)
-  - lean/Hardness.lean (Paper 1 hidden-operator comparison theorem surface)
+  - lean/HCP.lean (Paper 1 HCP definitions and hidden-operator model)
+  - lean/Hardness.lean (Paper 1 impossibility and CVP-comparison surface)
   - lean/Tsirelson.lean (√2 bound — the consensus axioms)
 -/
 
@@ -567,12 +568,12 @@ theorem eligible_implies_connected (v : Validator) (h : eligible v) :
 -- ═══════════════════════════════════════════════════════════════════════
 
 /-
-  This file does not import `Hardness.lean`. It is a protocol/chain axiomatization
-  surface for Paper 2.
+  This file imports neither `HCP.lean` nor `Hardness.lean`. It is a
+  protocol/chain axiomatization surface for Paper 2.
 
-  `Hardness.lean` is the Paper 1 theorem surface for HCP, hidden-operator
-  ambiguity, and the CVP comparison. Those theorems justify the mathematical
-  recovery problem, but they are not chain axioms and are not used as Lean
+  `HCP.lean` defines the Paper 1 recovery problem and hidden-operator
+  ambiguity; `Hardness.lean` proves its impossibility and CVP-comparison
+  consequences. Those results are not chain axioms and are not used as Lean
   dependencies here.
 
   Axiom 3 (PoV selection):

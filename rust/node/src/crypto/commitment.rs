@@ -29,7 +29,7 @@ pub const DEFAULT_MODULUS: i64 = 12289;
 /// The coboundary δ: C⁰ → C¹ is defined by the edge list:
 ///   δ(c)(e) = c(v) - c(u) for edge e = (u, v)
 ///
-/// Matches Python CochainComplex from src/primitives/cochain.py.
+/// Supersedes the retired Python `CoChainComplex` prototype.
 #[derive(Debug, Clone)]
 pub struct CochainComplex {
     pub n_vertices: usize,

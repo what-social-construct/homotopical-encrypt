@@ -24,7 +24,7 @@ namespace Axioms
 
   | Foundation field        | Python module                   | Rust module                        |
   |-------------------------|---------------------------------|------------------------------------|
-  | CochainComplex          | src/primitives/cochain.py       | rust/node/src/crypto/commitment.rs |
+  | CochainComplex          | archived Python prototype       | rust/node/src/crypto/commitment.rs |
   | CoboundaryLinearity     | CochainComplex.coboundary()     | CochainComplex::apply_coboundary() |
   | LaplacianFromCoboundary | src/geometry/sheaf_laplacian.py  | rust/oracle/src/geometry.rs        |
   | HodgeDecomposition      | src/geometry/hodge.py           | planned: rust/oracle/src/geometry.rs |

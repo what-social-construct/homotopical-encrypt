@@ -264,11 +264,12 @@ publication.
 |---|---|
 | Lean | Mathematical objects, predicates, assumptions, and proofs. |
 | Rust | Intended adversarial runtime boundary: parsing, canonical encoding, resource limits, proof verification, storage, networking, and consensus state transitions. |
-| Python | Research/reference computations, witness generation, experiments, and test vectors; not intended as final consensus authority. |
+| Python | Suspended legacy track. The former primitive and invariant layers are archived for provenance and future test-vector recovery; no current package/runtime checkpoint is claimed. |
 
-The Lean-to-runtime correspondence is not verified extraction. Passing Lean,
-Rust, and Python tests separately does not prove that the runtime implements
-the Lean model. See [TRUST_BOUNDARIES](docs/TRUST_BOUNDARIES.md).
+The Lean-to-runtime correspondence is not verified extraction. Passing Lean
+and Rust tests separately does not prove that the runtime implements the Lean
+model. The remaining Python tree is intentionally non-runnable until its later
+semantic-parity rewrite. See [TRUST_BOUNDARIES](docs/TRUST_BOUNDARIES.md).
 
 ## Repository Map
 
@@ -277,9 +278,10 @@ lean/             Lean specifications and proofs
 papers/paper1/    Paper 1 LaTeX source
 papers/paper2/    Paper 2 scope and working notes
 rust/             Node, oracle, and wallet prototypes
-src/              Python research/reference implementation
-tests/            Python tests and benchmarks
+src/              Suspended legacy Python remainder; not a supported package
+tests/            Historical Python tests and benchmarks
 docs/             Architecture, proof maps, security notes, and roadmaps
+docs/archive/python/  Non-normative archived Python primitives/invariants
 ~~~
 
 The principal Lean areas are:
@@ -290,7 +292,8 @@ The principal Lean areas are:
 | **lean/Sheaf/** | Concrete finite cellular-sheaf, cochain, Hodge, and exact-$C^1$ core. |
 | **lean/Laplacian/** | Hodge, projection, spectral, and Grassmannian constructions. |
 | **lean/CVP.lean** | Explicit discrete CVP vocabulary. |
-| **lean/Hardness.lean** | HCP, hidden-operator ambiguity, and the HCP/CVP bridge. |
+| **lean/HCP.lean** | HCP, Hodge encryption/decryption, public fibers, and operative hidden targets. |
+| **lean/Hardness.lean** | HCP impossibility results, linear/CVP comparisons, and categorical-copy lemmas. |
 | **lean/Proximity/** | Plucker/cochain/plane/RS projection chain and gap interfaces. |
 | **lean/TCB/** | Proof-carrying artifacts and runtime/observation boundaries. |
 | **lean/Gates/** | Exact, spectral, oracle, and stage-gate façades. |
@@ -302,7 +305,8 @@ The principal Lean areas are:
 | Document | Contents |
 |---|---|
 | [ARCHITECTURE](docs/ARCHITECTURE.md) | Status pointer for the archived Python-led architecture. |
-| [CATEGORICAL_ARCHITECTURE](docs/CATEGORICAL_ARCHITECTURE.md) | Current typed cellular-sheaf, state-snapshot, and task-sheaf architecture. |
+| [SEMANTIC_OWNERSHIP](docs/SEMANTIC_OWNERSHIP.md) | Canonical object/morphism vocabulary and formal status. |
+| [CATEGORICAL_ARCHITECTURE](docs/CATEGORICAL_ARCHITECTURE.md) | Verified Paper 1 diagrams plus explicitly prospective categorical packaging. |
 | [PROXIMITY](docs/PROXIMITY.md) | Plucker/cochain/plane/RS projection outline. |
 | [PROXIMITY_ASSUMPTIONS](docs/PROXIMITY_ASSUMPTIONS.md) | Proven facts versus supplied bridge assumptions. |
 | [PROOF_MAP](docs/PROOF_MAP.md) | Lean theorem and implementation correspondence map. |
@@ -334,12 +338,16 @@ cd papers/paper1
 latexmk -pdf main.tex
 ~~~
 
-The prototype suites can be run independently:
+The Rust prototype suite can be run independently:
 
 ~~~sh
 cargo test --workspace
-python -m pytest
 ~~~
+
+The Python suite is not a current verification target: its primitive and
+invariant dependencies were retired to
+[`docs/archive/python/`](docs/archive/python/README.md) pending a Lean-directed
+runtime rewrite.
 
 Avoid treating hard-coded test counts or component-completion percentages as
 stable documentation. The CI configuration and current command results are the

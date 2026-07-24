@@ -108,11 +108,21 @@ CVP comparison, projection chain, RS/MCA endpoint, and Lean theorem surfaces.
   voting/finality is added, it should be presented as a separate network
   agreement layer, not as the PoV validity predicate.
 
-Protocol-facing references:
+Protocol- and architecture-facing references:
 
 The bibliography also records the categorical/Petri-net lineage and the
 foundational consensus sources needed for the redesign. The prose list below
 tracks the initial application-facing reading set.
+
+- Matthieu Faitg, Azat M. Gainutdinov, Christoph Schweigert, and Jan-Ole
+  Willprecht, "Deformations of mixed associators in module categories,"
+  arXiv:2604.00837, 2026. Section 2.2.2 is an organizational analogy for
+  packaging coherent pointwise data as structure on a representation functor;
+  it does not prove the HCP Hodge equivalence or its monoidal refinement.
+- Marc Gerritsma and Suyash Shrestha, "An Approximate Bounded Cochain
+  Projection," arXiv:2607.07457, 2026. This is a later numerical/runtime source
+  for exact-versus-approximate commuting cochain projections, not a dependency
+  of Paper 1's exact finite cellular model.
 
 - Hermann Karcher, "Riemannian center of mass and mollifier smoothing,"
   Communications on Pure and Applied Mathematics 30(5):509-541, 1977.

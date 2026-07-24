@@ -1,7 +1,8 @@
 import Mathlib
 
 /-
-  Future runtime-parity shim for `src/primitives/homotopy.py`.
+  Historical runtime-parity shim for the retired
+  `docs/archive/python/src/primitives/homotopy.py`.
 
   Paper correspondence:
   - Paper 2: runtime parity and implementation refinement surface.

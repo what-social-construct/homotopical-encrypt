@@ -7,40 +7,48 @@
 \subsection{Definitions And Interfaces}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
-  \item[HCP public observation and hidden witness.]
-    Sections 2--3; \lean{Hardness.PublicProjection},
-    \lean{Hardness.HiddenOperatorFiber}, and
-    \lean{Hardness.HiddenOperatorClass}.
+  \item[Matrix-level public projection and fibers.]
+    Sections 2--3; \lean{PublicProjection},
+    \lean{HiddenOperatorFiber}, and
+    \lean{HiddenOperatorClass} in \lean{HCP.lean}.
   \item[Matrix harmonicity and Hodge instances.]
-    Section 2; \lean{Hardness.Hodge_Instance} and
-    \lean{Hardness.MatrixIsHarmonic}.
+    Section 2; \lean{Hodge_Instance} and
+    \lean{MatrixIsHarmonic} in \lean{HCP.lean}.
   \item[Kernel ambiguity and lossy public data.]
-    Sections 2--3; \lean{Hardness.SameKernel},
-    \lean{Hardness.KernelAmbiguous},
-    \lean{Hardness.PublicCompatibleHodgeAmbiguity}, and
-    \lean{Hardness.LossyPublicProjection}.
+    Sections 2--3; \lean{SameKernel},
+    \lean{KernelAmbiguous},
+    \lean{PublicCompatibleHodgeAmbiguity}, and
+    \lean{LossyPublicProjection} in \lean{HCP.lean}.
+  \item[Hodge cipher and operative witness.]
+    Section 2; \lean{Hcrypt.HCP.hodgeDecompositionEquiv},
+    \lean{Hcrypt.HCP.encrypt}, \lean{Hcrypt.HCP.decrypt},
+    \lean{Hcrypt.HCPBridge.Observation},
+    \lean{Hcrypt.HCPBridge.HiddenHodgeWitness},
+    \lean{Hcrypt.HCPBridge.operativeTarget}, and
+    \lean{Hcrypt.HCPBridge.IsOperativeSolution}.
   \item[Representative-indexed public HCP solvers.]
     Section 3; \lean{Hcrypt.HCPBridge.Observation},
     \lean{Hcrypt.HCPBridge.Solver},
     \lean{Hcrypt.HCPBridge.SolverSoundOn}, and
-    \lean{Hcrypt.HCPBridge.SolverExactOnHarmonic}.
+    \lean{Hcrypt.HCPBridge.SolverExactOnHarmonic}. The direct target contract
+    is \lean{Hcrypt.HCPBridge.SolverExactOnOperativeTarget}.
   \item[Explicit-lattice CVP comparison.]
     Section 3; \lean{CVP.Instance}, \lean{CVP.Solution}, and
     \lean{CVP.OracleCorrect}.
   \item[Harmonic-lattice bridge.]
-    Section 3; \lean{Hardness.HarmonicCVPBridge} and
-    \lean{Hardness.HarmonicCVPBridge.projectedTarget}.
+    Section 3; \lean{HarmonicCVPBridge} and
+    \lean{HarmonicCVPBridge.projectedTarget}.
   \item[Closest-harmonic solution predicates.]
-    Section 3; \lean{Hardness.ClosestHarmonicSolution} and
-    \lean{Hardness.ProjectionClosestHarmonicSolution}.
+    Section 3; \lean{ClosestHarmonicSolution} and
+    \lean{ProjectionClosestHarmonicSolution}.
   \item[Hodge projection model.]
     Sections 2--3; \lean{Laplacian.harmonicProjection},
     \lean{Laplacian.residual}, and \lean{Laplacian.IsHarmonic}.
   \item[Categorical fibration copy surface.]
-    Section 4; \lean{Hardness.IsCartesianMorphism},
-    \lean{Hardness.GrothendieckFibration},
-    \lean{Hardness.CategoricallyEquivalentFibrations}, and
-    \lean{Hardness.FibrationCopy}.
+    Section 4; \lean{IsCartesianMorphism},
+    \lean{GrothendieckFibration},
+    \lean{CategoricallyEquivalentFibrations}, and
+    \lean{FibrationCopy}.
   \item[Typed Helfer/HCP bridge.]
     Sections 2 and 4; \lean{Hcrypt.Helfer.Signature},
     \lean{Hcrypt.Helfer.Interpretation},
@@ -62,6 +70,11 @@
     \lean{Sheaf.CellularSheaf.delta0},
     \lean{Sheaf.CellularSheaf.delta1}, and
     \lean{Sheaf.CellularSheaf.degreeOneLaplacian}.
+  \item[Isometric cellular-cochain transport.]
+    Section 2; \lean{Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv},
+    \lean{Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.degreeOneLaplacian_naturality},
+    and
+    \lean{Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.map_ker_degreeOneLaplacian}.
   \item[Snapshot-bound exact one-cochain.]
     Sections 4--5; \lean{Sheaf.CellularSheaf.SheafStateSnapshot},
     \lean{Sheaf.CellularSheaf.CochainPayloadInterpretation}, and
@@ -94,10 +107,10 @@
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[Kernel ambiguity implies lossy public projection.]
-    \lean{Hardness.kernelAmbiguous_implies_lossy};
+    \lean{kernelAmbiguous_implies_lossy};
     Lean-proved.
   \item[Public-compatible Hodge ambiguity gives kernel ambiguity.]
-    \lean{Hardness.kernelAmbiguous_of_publicCompatibleHodgeAmbiguity};
+    \lean{kernelAmbiguous_of_publicCompatibleHodgeAmbiguity};
     Lean-proved.
   \item[Helfer equivalence reaches the HCP public classifier.]
     \lean{Hcrypt.HCPBridge.samePublicClass_of_homotopyEquivalent} and
@@ -109,47 +122,70 @@
     \lean{Hcrypt.HCPBridge.kernelAmbiguous_of_kernelSeparation}, and
     \lean{Hcrypt.HCPBridge.lossyPublicProjection_of_kernelSeparation};
     Lean-proved from an explicit HCP extension-separation witness.
+  \item[Hodge encryption and operative target.]
+    \lean{Hcrypt.HCP.split_encrypt},
+    \lean{Hcrypt.HCP.encrypt_split},
+    \lean{Hcrypt.HCP.decrypt_encrypt},
+    \lean{Hcrypt.HCP.decrypt_coe_eq_harmonicProjection}, and
+    \lean{Hcrypt.HCPBridge.operativeTarget_is_harmonic};
+    Lean-proved. The bundled bijection is
+    \(\mathcal H\times\mathcal H^\perp\simeq C^1\); the paper separately
+    proves the exact/coexact refinement.
+  \item[Isometric transport and fixed-coordinate separation.]
+    \lean{Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.degreeOneLaplacian_naturality},
+    \lean{Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.isHarmonicOneCochain_iff},
+    \lean{Hcrypt.HCPBridge.IsometricPresentationEquivalence.harmonic_iff_transport},
+    \lean{Hcrypt.HCPBridge.IsometricPresentationEquivalence.map_matrixHarmonicSubspace},
+    \lean{Hcrypt.HCPBridge.IsometricPresentationEquivalence.operativeHarmonicComponent_naturality},
+    and
+    \lean{Hcrypt.HCPBridge.kernelSeparationWitness_of_isometricNonstabilization};
+    Lean-proved at the concrete sheaf and abstract HCP interfaces.
   \item[Concrete Hodge ambiguity exists in nontrivial dimension.]
-    \lean{Hardness.Hodge_Ambiguity},
-    \lean{Hardness.constantPublicProjection_publicCompatibleHodgeAmbiguity},
-    \lean{Hardness.constantPublicProjection_kernelAmbiguous}, and
-    \lean{Hardness.constantPublicProjection_lossy};
+    \lean{Hodge_Ambiguity},
+    \lean{constantPublicProjection_publicCompatibleHodgeAmbiguity},
+    \lean{constantPublicProjection_kernelAmbiguous}, and
+    \lean{constantPublicProjection_lossy};
     Lean-proved.
   \item[Every field-linear image can be a Hodge kernel.]
-    \lean{Hardness.exists_matrix_ker_eq_range};
+    \lean{exists_matrix_ker_eq_range};
     Lean-proved linear-algebra construction.
   \item[Kernel realization for presented generated subspaces.]
-    \lean{Hardness.Hodge_GeneratedSubspace_Reduction} and
-    \lean{Hardness.Hodge_GeneratedSubspace_Reduction_Proof};
+    \lean{Hodge_GeneratedSubspace_Reduction} and
+    \lean{Hodge_GeneratedSubspace_Reduction_Proof};
     Lean-proved surface.
   \item[Hodge decomposition into harmonic, exact, and coexact parts.]
-    \lean{Hardness.Hodge_Decomposition_Theorem};
-    Lean-proved theorem surface.
+    \lean{Hodge_Decomposition_Theorem};
+    Lean-proved existence and pairwise orthogonality. The paper derives
+    uniqueness from those orthogonal summands.
   \item[Ambiguous input contradicts public-data-only Hodge solving.]
-    \lean{Hardness.public_solver_eq_input_of_harmonic} and
-    \lean{Hardness.no_public_solver_on_ambiguous_input};
+    \lean{public_solver_eq_input_of_harmonic} and
+    \lean{no_public_solver_on_ambiguous_input};
     Lean-proved lemmas.
   \item[Known-lattice CVP does not select the hidden HCP representative.]
+    \lean{Hcrypt.HCPBridge.operativeTargets_ne_of_kernelSeparation},
+    \lean{Hcrypt.HCPBridge.no_solver_exactOnOperativeTarget_of_kernelSeparation},
+    and \lean{Hcrypt.HCPBridge.cvpOracle_insufficient_for_operativeTarget};
+    Lean-proved for the direct operative-target contract. The soundness plus
+    harmonic-fixed-point formulation is
     \lean{Hcrypt.HCPBridge.no_solver_on_kernelSeparation} and
-    \lean{Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation};
-    Lean-proved for a typed HCP realization with an explicit separation
-    witness. The older matrix-wide theorems
-    \lean{Hardness.no_uniform_public_hodge_solver} and
-    \lean{Hardness.CVP_Oracle_Insufficient_For_Public_Hodge_Solving} remain
+    \lean{Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation}.
+    The older matrix-wide theorems
+    \lean{no_uniform_public_hodge_solver} and
+    \lean{CVP_Oracle_Insufficient_For_Public_Hodge_Solving} remain
     generic sanity results, not the concrete HCP bridge.
   \item[Projection-model closest-harmonic surface.]
-    \lean{Hardness.matrix_harmonic_iff_projection_isHarmonic},
-    \lean{Hardness.Hodge_Projection_Is_ClosestHarmonic}, and
-    \lean{Hardness.harmonicProjection_is_closestHarmonic};
+    \lean{matrix_harmonic_iff_projection_isHarmonic},
+    \lean{Hodge_Projection_Is_ClosestHarmonic}, and
+    \lean{harmonicProjection_is_closestHarmonic};
     Lean-proved.
   \item[Discrete CVP minimizers are preserved by harmonic projection.]
-    \lean{Hardness.HarmonicCVPBridge.squaredDistance_projection_decomposition},
-    \lean{Hardness.HarmonicCVPBridge.isClosestLatticeVector_iff_projectedTarget},
-    and \lean{Hardness.HarmonicCVPBridge.solution_iff_projectedTarget};
+    \lean{HarmonicCVPBridge.squaredDistance_projection_decomposition},
+    \lean{HarmonicCVPBridge.isClosestLatticeVector_iff_projectedTarget},
+    and \lean{HarmonicCVPBridge.solution_iff_projectedTarget};
     Lean-proved.
   \item[Fibration copies preserve the categorical fibration surface.]
-    \lean{Hardness.copy_categoricallyEquivalent_thm} and
-    \lean{Hardness.FibrationCopy_is_Grothendieck};
+    \lean{copy_categoricallyEquivalent_thm} and
+    \lean{FibrationCopy_is_Grothendieck};
     Lean-proved categorical interface.
   \item[Exact sheaf gates supply \(d^{k+1}d^k=0\) and Laplacian-from-coboundary.]
     \lean{Gates.structural_preconditions_of_sheaf_exact_gates};
@@ -229,19 +265,19 @@ Import-only aggregate files are listed with the files they collect.
 \subsection{HCP, CVP, And Fibrational Algebra}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
+  \item[\lean{HCP.lean}.]
+    Section 2 contains the matrix-level HCP vocabulary, public fibers,
+    ambiguity hierarchy, typed Helfer realization, representative-bound
+    observations and witnesses, the Hodge-coordinate cipher, and the unique
+    operative recovery target. It also records isometric presentation
+    transport, harmonic-projection naturality, fixed-coordinate
+    non-stabilization, classifier nonfaithfulness, and the resulting
+    no-exact-representative-decoder theorem. The direct public recovery
+    contract is
+    \lean{Hcrypt.HCPBridge.SolverExactOnOperativeTarget}.
   \item[\lean{Hardness.lean}.]
-    Sections 2--4 translate every declaration into the hidden Hodge-operator
-    algebra. The HCP data are
-    \lean{Hodge_Instance}, \lean{MatrixIsHarmonic},
-    \lean{PublicProjection}, \lean{PubliclyEquivalent},
-    \lean{HiddenOperatorFiber}, and \lean{HiddenOperatorClass}. The ambiguity
-    predicates are \lean{LossyPublicProjection}, \lean{SameKernel},
-    \lean{KernelAmbiguous}, and
-    \lean{PublicCompatibleHodgeAmbiguity}. The elementary closure lemmas
-    \lean{mem_hiddenOperatorClass_self}, \lean{sameKernel_refl},
-    \lean{kernelAmbiguous_implies_lossy}, and
-    \lean{kernelAmbiguous_of_publicCompatibleHodgeAmbiguity} are
-    \cref{prop:ambiguity-hierarchy}. The concrete ambiguity theorems
+    Sections 2--4 contain consequences and comparisons for the HCP interface
+    imported from \lean{HCP.lean}. The concrete ambiguity theorems
     \lean{Hodge_Ambiguity}, \lean{Hodge_Ambiguity_Proof},
     \lean{constantPublicProjection_publicCompatibleHodgeAmbiguity},
     \lean{constantPublicProjection_kernelAmbiguous}, and
@@ -255,9 +291,9 @@ Import-only aggregate files are listed with the files they collect.
     \lean{Hodge_Decomposition_Theorem} is
     \cref{prop:hodge-decomposition}. The public-solver predicates
     \lean{PublicHodgeInstance}, \lean{PublicHodgeSolver},
-    \lean{Hcrypt.HCPBridge.Observation},
-    \lean{Hcrypt.HCPBridge.SolverSoundOn},
-    \lean{Hcrypt.HCPBridge.SolverExactOnHarmonic},
+    \lean{Hcrypt.HCPBridge.operativeTargets_ne_of_kernelSeparation},
+    \lean{Hcrypt.HCPBridge.no_solver_exactOnOperativeTarget_of_kernelSeparation},
+    \lean{Hcrypt.HCPBridge.cvpOracle_insufficient_for_operativeTarget},
     \lean{Hcrypt.HCPBridge.no_solver_on_kernelSeparation}, and
     \lean{Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation} are
     \cref{prop:cvp-insufficient}. The closest-harmonic predicates
@@ -310,14 +346,17 @@ Import-only aggregate files are listed with the files they collect.
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{Sheaf/CellComplex.lean}, \lean{Sheaf/Cellular.lean},
-    \lean{Sheaf/Hodge.lean}, and \lean{Sheaf/Commitment.lean}.]
+    \lean{Sheaf/Hodge.lean}, \lean{Sheaf/Equivalence.lean}, and
+    \lean{Sheaf/Commitment.lean}.]
     Sections 2, 4, and 5 translate the concrete finite oriented two-complex;
     finite real coordinate stalks and face-to-coface maps; the typed spaces
     \(C^0,C^1,C^2\); concrete \(\delta_0\) and \(\delta_1\); the proof that
     \(\delta_1\delta_0=0\); degree-zero global sections, degree-one cocycles,
     and exact degree-one cochains; the true degree-one Hodge operator
     \(\delta_0\delta_0^*+\delta_1^*\delta_1\); its energy, kernel, and
-    orthogonality theorems; the distinct kernel-normalized operator; immutable
+    orthogonality theorems; the distinct kernel-normalized operator;
+    degreewise isometric cochain equivalences and their adjoint, Laplacian,
+    harmonic-subspace, and kernel transport theorems; immutable
     sheaf-state snapshots; snapshot-bound payload interpretation; accepted
     exact one-cochains; and the quotient of openings by \(\ker\delta_0\).
   \item[\lean{Axioms/Foundation.lean} and \lean{Gates/Exact.lean}.]

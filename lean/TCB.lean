@@ -1,4 +1,5 @@
 import TCB.ProofCarrying
+import TCB.HCPObservation
 import TCB.CompressionBoundary
 import TCB.Runtime
 import TCB.SNARK

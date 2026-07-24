@@ -1,10 +1,10 @@
 /-
-Formal verification of the hidden Hodge-operator/HCP comparison setup.
+Formal verification of the HCP impossibility and CVP-comparison layer.
 
 Paper correspondence:
-- Paper 1 Sections 2--3: HCP definition, hidden-kernel ambiguity, the
+- Paper 1 Sections 2--3: consequences of hidden-kernel ambiguity, the
   presented-linear-subspace comparison, and the separate discrete-CVP oracle
-  insufficiency corollary.
+  insufficiency corollary. Core HCP definitions live in `HCP.lean`.
 - Paper 1 appendix ledger: Lean theorem-surface correspondence.
 
 Terminology:
@@ -29,14 +29,10 @@ This module verifies the formal comparison used by the paper:
    `Λ ⊆ W = ker(Δ_W)`, proves the Pythagorean distance decomposition and that
    projecting the target onto `W` preserves the closest lattice vectors
    (`HarmonicCVPBridge.solution_iff_projectedTarget`).
-4. **Typed Helfer/HCP bridge**: Packages a homotopical interpretation, its
-   invariant public classifier, and its presentation-level Hodge extension in
-   `Hcrypt.HCPBridge.Realization`. Helfer's closed-formula invariance boundary
-   proves equality of public classifier values for homotopy-equivalent
-   interpretations. A separate `KernelSeparationWitness` then yields
-   public-compatible kernel ambiguity and rules out a representative-indexed
-   public solver, even with a correct explicit-CVP oracle as auxiliary data
-   (`Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation`).
+4. **Typed Helfer/HCP consequence**: Consumes the realization, classifier, and
+   kernel-separation interfaces from `HCP.lean`. A separation witness yields
+   incompatible operative targets and rules out a public solver, even with a
+   correct explicit-CVP oracle as auxiliary data.
 
 The formal proofs separate the presented-subspace projection problem, the
 discrete known-lattice CVP problem, and the hidden-operator recovery problem.
@@ -63,6 +59,7 @@ Important scope note:
 import Mathlib
 import CVP
 import HCP
+import Sheaf.HarmonicLattice
 
 set_option linter.mathlibStandardSet false
 
@@ -114,6 +111,55 @@ theorem no_solver_on_kernelSeparation
   exact witness.not_harmonic_right hright
 
 /--
+A kernel-separation witness selects two different operative HCP targets for
+one and the same public observation.
+-/
+theorem operativeTargets_ne_of_kernelSeparation
+    (X : Realization C S sem Rep N ℝ P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    (witness : KernelSeparationWitness X) :
+    ∃ (observation : Observation P N ℝ)
+      (leftWitness rightWitness : HiddenHodgeWitness X observation),
+      operativeTarget X observation leftWitness ≠
+        operativeTarget X observation rightWitness := by
+  let observation : Observation P N ℝ :=
+    (X.classifier.π witness.left, witness.input)
+  let leftWitness : HiddenHodgeWitness X observation :=
+    { representative := witness.left
+      class_eq := rfl }
+  let rightWitness : HiddenHodgeWitness X observation :=
+    { representative := witness.right
+      class_eq :=
+        (samePublicClass_of_homotopyEquivalent X hInv
+          witness.semanticEquivalence).symm }
+  have hleftTarget :
+      operativeTarget X observation leftWitness = witness.input := by
+    exact HCP.operativeHarmonicComponent_eq_self_of_harmonic
+      (X.laplacian witness.left) witness.input witness.harmonic_left
+  refine ⟨observation, leftWitness, rightWitness, ?_⟩
+  intro htargets
+  have hrightTarget :
+      operativeTarget X observation rightWitness = witness.input :=
+    htargets.symm.trans hleftTarget
+  have hrightHarmonic :=
+    operativeTarget_is_harmonic X observation rightWitness
+  rw [hrightTarget] at hrightHarmonic
+  exact witness.not_harmonic_right hrightHarmonic
+
+/-- No public solver can be exact on every operative target in an ambiguous fiber. -/
+theorem no_solver_exactOnOperativeTarget_of_kernelSeparation
+    (X : Realization C S sem Rep N ℝ P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    (witness : KernelSeparationWitness X)
+    {Aux : Type uAux} {solver : Solver Aux P N ℝ} {aux : Aux}
+    (hexact : SolverExactOnOperativeTarget X solver aux) : False := by
+  obtain ⟨observation, leftWitness, rightWitness, htargets⟩ :=
+    operativeTargets_ne_of_kernelSeparation X hInv witness
+  exact htargets
+    ((hexact observation leftWitness).symm.trans
+      (hexact observation rightWitness))
+
+/--
 Even a correct explicit-lattice CVP oracle cannot resolve a supplied HCP
 kernel-separation witness: it is auxiliary data, while the identical public
 observation still fails to select the operative Hodge extension.
@@ -131,6 +177,25 @@ theorem cvpOracle_insufficient_of_kernelSeparation
   obtain ⟨O, hO⟩ := hOracle
   exact no_solver_on_kernelSeparation X hInv witness
     (hsolver O hO).1 (hsolver O hO).2
+
+/--
+Direct operative-target form of CVP-oracle insufficiency: a correct
+known-lattice oracle cannot make one public output equal two distinct hidden
+projections selected inside the same public fiber.
+-/
+theorem cvpOracle_insufficient_for_operativeTarget
+    {N : Type} [Fintype N]
+    (X : Realization C S sem Rep N ℝ P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    (witness : KernelSeparationWitness X)
+    (hOracle : ∃ O : _root_.CVP.Oracle N N, _root_.CVP.OracleCorrect O) :
+    ¬ ∃ solver : Solver (_root_.CVP.Oracle N N) P N ℝ,
+      ∀ O : _root_.CVP.Oracle N N, _root_.CVP.OracleCorrect O →
+        SolverExactOnOperativeTarget X solver O := by
+  rintro ⟨solver, hsolver⟩
+  obtain ⟨O, hO⟩ := hOracle
+  exact no_solver_exactOnOperativeTarget_of_kernelSeparation X hInv witness
+    (hsolver O hO)
 
 end Hcrypt.HCPBridge
 
@@ -723,6 +788,42 @@ theorem solution_iff_projectedTarget
   exact H.isClosestLatticeVector_iff_projectedTarget t v
 
 end HarmonicCVPBridge
+
+/--
+Concrete cellular-sheaf HCP/CVP endpoint.
+
+For a sample built from an explicitly presented point of the intrinsic
+harmonic lattice, the genuine discrete CVP solutions are exactly that encoded
+point.  This specializes the generic projection bridge above to the actual
+degree-one sheaf Hodge Laplacian and its integral stalk structure.
+-/
+theorem concreteSheafHCP_CVP_solution_iff_message
+    {Vertex Edge Face Rank : Type*}
+    [Fintype Vertex] [Fintype Edge] [Fintype Face] [Fintype Rank]
+    {X : Hcrypt.Sheaf.OrientedTwoComplex Vertex Edge Face}
+    {F : Hcrypt.Sheaf.CellularSheaf X}
+    {I : Hcrypt.Sheaf.CellularSheaf.IntegralStructure F}
+    (H : Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation I Rank)
+    (z : Rank → ℤ)
+    (opening : Hcrypt.Sheaf.CellularSheaf.HodgeNoise F)
+    (v : _root_.CVP.AmbientVector
+      (Hcrypt.Sheaf.CellularSheaf.TotalCoord Edge F.edgeDim)) :
+    _root_.CVP.Solution (H.cvpInstance (H.encrypt z opening)) v ↔
+      v = (H.point z).1 :=
+  H.solution_cvpInstance_iff_eq_point z opening v
+
+/-- Constructed cellular-sheaf HCP samples have a unique discrete CVP answer. -/
+theorem concreteSheafHCP_CVP_existsUnique
+    {Vertex Edge Face Rank : Type*}
+    [Fintype Vertex] [Fintype Edge] [Fintype Face] [Fintype Rank]
+    {X : Hcrypt.Sheaf.OrientedTwoComplex Vertex Edge Face}
+    {F : Hcrypt.Sheaf.CellularSheaf X}
+    {I : Hcrypt.Sheaf.CellularSheaf.IntegralStructure F}
+    (H : Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation I Rank)
+    (z : Rank → ℤ)
+    (opening : Hcrypt.Sheaf.CellularSheaf.HodgeNoise F) :
+    ∃! v, _root_.CVP.Solution (H.cvpInstance (H.encrypt z opening)) v :=
+  H.existsUnique_solution_cvpInstance z opening
 
 /- Verification of the closest-harmonic comparison surface. -/
 /-- A harmonic vector closest to the input among all harmonic vectors. -/
