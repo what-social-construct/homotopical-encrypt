@@ -1,139 +1,99 @@
-import Mathlib.Data.Fintype.Card
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic
+import ProximityPrize.BlockCode
 
-/-
-  List-decoding vocabulary for finite block-code shadows.
+/-!
+# Compatibility surface for finite block-code vocabulary
 
-  Paper correspondence:
-  - Paper 1 Section 6: finite-code/list-decoding vocabulary for the RS endpoint.
-
-  This module owns the generic Hamming-distance vocabulary. The raw Hamming
-  count is kept as finite combinatorial plumbing; the paper-facing proximity
-  surface is relative/fractional Hamming distance.
+`ProximityPrize.BlockCode` now owns the application-independent definitions and
+proofs. This module preserves the historical `Hcrypt.Proximity` names used by
+Paper 1 and the application bridge. New coding-theory work should import the
+standalone owner directly.
 -/
 
 namespace Hcrypt
 namespace Proximity
 
-/-- A received word over coordinates `ι` and alphabet `α`. -/
-abbrev Word (ι α : Type*) := ι → α
+/-- Compatibility alias for standalone received words. -/
+abbrev Word (ι α : Type*) :=
+  ProximityPrize.Word ι α
 
-/--
-A finite-coordinate block code.
-
-The alphabet is left abstract: later instantiations may use field elements,
-extension-field symbols, folded symbols, or bundled/interleaved symbols.
--/
-structure BlockCode (ι α : Type*) where
-  Codeword : Word ι α → Prop
+/-- Compatibility alias for standalone finite block codes. -/
+abbrev BlockCode (ι α : Type*) :=
+  ProximityPrize.BlockCode ι α
 
 namespace BlockCode
 
 variable {ι α : Type*} [Fintype ι] [DecidableEq α]
 
-/-- Hamming distance between two finite words. -/
 def hammingDistance (u v : Word ι α) : ℕ :=
-  (Finset.univ.filter fun i => u i ≠ v i).card
+  ProximityPrize.BlockCode.hammingDistance u v
 
-/-- Relative Hamming radius for a count radius over the coordinate domain. -/
 noncomputable def relativeRadius (r : ℕ) : ℝ :=
-  (r : ℝ) / (Fintype.card ι : ℝ)
+  ProximityPrize.BlockCode.relativeRadius (ι := ι) r
 
-/-- Relative Hamming distance between two finite words. -/
-noncomputable def relativeHammingDistance (u v : Word ι α) : ℝ :=
-  (hammingDistance u v : ℝ) / (Fintype.card ι : ℝ)
+noncomputable def relativeHammingDistance
+    (u v : Word ι α) : ℝ :=
+  ProximityPrize.BlockCode.relativeHammingDistance u v
 
-/-- A word is within Hamming radius `r` of a codeword. -/
-def Close (C : BlockCode ι α) (r : ℕ) (w : Word ι α) : Prop :=
-  ∃ c : Word ι α, C.Codeword c ∧ hammingDistance c w ≤ r
+abbrev Close (C : BlockCode ι α) (r : ℕ) (w : Word ι α) : Prop :=
+  ProximityPrize.BlockCode.Close C r w
 
-/-- A word is within relative Hamming radius `δ` of a codeword. -/
-def CloseAt (C : BlockCode ι α) (δ : ℝ) (w : Word ι α) : Prop :=
-  ∃ c : Word ι α, C.Codeword c ∧ relativeHammingDistance c w ≤ δ
+abbrev CloseAt (C : BlockCode ι α) (δ : ℝ) (w : Word ι α) : Prop :=
+  ProximityPrize.BlockCode.CloseAt C δ w
 
-/-- The list-decoding ball around a received word. -/
-def Ball (C : BlockCode ι α) (r : ℕ) (w : Word ι α) : Set (Word ι α) :=
-  {c | C.Codeword c ∧ hammingDistance c w ≤ r}
+abbrev Ball
+    (C : BlockCode ι α) (r : ℕ) (w : Word ι α) : Set (Word ι α) :=
+  ProximityPrize.BlockCode.Ball C r w
 
-/-- The relative list-decoding ball around a received word. -/
-def BallAt (C : BlockCode ι α) (δ : ℝ) (w : Word ι α) : Set (Word ι α) :=
-  {c | C.Codeword c ∧ relativeHammingDistance c w ≤ δ}
+abbrev BallAt
+    (C : BlockCode ι α) (δ : ℝ) (w : Word ι α) : Set (Word ι α) :=
+  ProximityPrize.BlockCode.BallAt C δ w
 
-/-- Cardinality of the list-decoding ball. -/
-noncomputable def ballCard (C : BlockCode ι α) (r : ℕ) (w : Word ι α) : ℕ :=
-  Nat.card {c : Word ι α // c ∈ C.Ball r w}
+noncomputable abbrev ballCard
+    (C : BlockCode ι α) (r : ℕ) (w : Word ι α) : ℕ :=
+  ProximityPrize.BlockCode.ballCard C r w
 
-/-- Cardinality of the relative list-decoding ball. -/
-noncomputable def ballCardAt (C : BlockCode ι α) (δ : ℝ) (w : Word ι α) : ℕ :=
-  Nat.card {c : Word ι α // c ∈ C.BallAt δ w}
+noncomputable abbrev ballCardAt
+    (C : BlockCode ι α) (δ : ℝ) (w : Word ι α) : ℕ :=
+  ProximityPrize.BlockCode.ballCardAt C δ w
 
-/--
-Combinatorial list-size bound.
+abbrev ListSizeBound (C : BlockCode ι α) (r L : ℕ) : Prop :=
+  ProximityPrize.BlockCode.ListSizeBound C r L
 
-`ListSizeBound C r L` means every Hamming ball of radius `r` contains at most
-`L` codewords. This is the Lean slot where Johnson, capacity, ERA, or
-interleaved-code bounds can later be plugged in.
--/
-def ListSizeBound (C : BlockCode ι α) (r L : ℕ) : Prop :=
-  ∀ w : Word ι α, C.ballCard r w ≤ L
+abbrev ListSizeBoundAt (C : BlockCode ι α) (δ : ℝ) (L : ℕ) : Prop :=
+  ProximityPrize.BlockCode.ListSizeBoundAt C δ L
 
-/-- Fractional list-size bound at relative Hamming radius `δ`. -/
-def ListSizeBoundAt (C : BlockCode ι α) (δ : ℝ) (L : ℕ) : Prop :=
-  ∀ w : Word ι α, C.ballCardAt δ w ≤ L
-
-/-!
-The next few lemmas connect the finite count API to the relative API. They let
-concrete RS theorems stay count-based internally while exposing fractional
-distance to the projection chain.
--/
-
-/-- Count closeness implies relative closeness at the normalized count radius. -/
 theorem closeAt_of_close
     (C : BlockCode ι α) {r : ℕ} {w : Word ι α}
     (hw : C.Close r w) :
-    C.CloseAt (relativeRadius (ι := ι) r) w := by
-  rcases hw with ⟨c, hc, hd⟩
-  exact ⟨c, hc, by
-    unfold relativeHammingDistance relativeRadius
-    exact div_le_div_of_nonneg_right (by exact_mod_cast hd) (Nat.cast_nonneg _)⟩
+    C.CloseAt (relativeRadius (ι := ι) r) w :=
+  ProximityPrize.BlockCode.closeAt_of_close C hw
 
-/-- Relative radius sends zero to zero. -/
+@[simp]
 theorem relativeRadius_zero :
-    relativeRadius (ι := ι) 0 = 0 := by
-  simp [relativeRadius]
+    relativeRadius (ι := ι) 0 = 0 :=
+  ProximityPrize.BlockCode.relativeRadius_zero
 
-/-- Relative radius is monotone in the underlying Hamming-count radius. -/
 theorem relativeRadius_mono {r s : ℕ} (hrs : r ≤ s) :
-    relativeRadius (ι := ι) r ≤ relativeRadius (ι := ι) s := by
-  unfold relativeRadius
-  exact div_le_div_of_nonneg_right (by exact_mod_cast hrs) (Nat.cast_nonneg _)
+    relativeRadius (ι := ι) r ≤ relativeRadius (ι := ι) s :=
+  ProximityPrize.BlockCode.relativeRadius_mono hrs
 
-/-- Codewords lie in their own radius-zero list ball. -/
 theorem codeword_mem_ball_zero
     (C : BlockCode ι α) {c : Word ι α}
     (hc : C.Codeword c) :
-    c ∈ C.Ball 0 c := by
-  constructor
-  · exact hc
-  · unfold hammingDistance
-    simp
+    c ∈ C.Ball 0 c :=
+  ProximityPrize.BlockCode.codeword_mem_ball_zero C hc
 
-/-- A list-ball member gives a `Close` witness. -/
 theorem close_of_mem_ball
     (C : BlockCode ι α) {r : ℕ} {w c : Word ι α}
     (hc : c ∈ C.Ball r w) :
-    C.Close r w := by
-  exact ⟨c, hc.1, hc.2⟩
+    C.Close r w :=
+  ProximityPrize.BlockCode.close_of_mem_ball C hc
 
-/-- A close word has a codeword in its list-decoding ball. -/
 theorem exists_mem_ball_of_close
     (C : BlockCode ι α) {r : ℕ} {w : Word ι α}
     (hw : C.Close r w) :
-    ∃ c : Word ι α, c ∈ C.Ball r w := by
-  rcases hw with ⟨c, hc, hd⟩
-  exact ⟨c, hc, hd⟩
+    ∃ c : Word ι α, c ∈ C.Ball r w :=
+  ProximityPrize.BlockCode.exists_mem_ball_of_close C hw
 
 end BlockCode
 
@@ -141,57 +101,37 @@ namespace BlockCode
 
 variable {ι α : Type*}
 
-/--
-Interleaving/bundling of a code.
+abbrev interleaved (C : BlockCode ι α) (τ : Type*) :
+    BlockCode ι (τ → α) :=
+  ProximityPrize.BlockCode.interleaved C τ
 
-An interleaved codeword is a word whose every component projection is a
-codeword of the base code.
--/
-def interleaved (C : BlockCode ι α) (τ : Type*) : BlockCode ι (τ → α) where
-  Codeword w := ∀ j : τ, C.Codeword fun i => w i j
-
-/-- Project an interleaved codeword to one component of the base code. -/
 theorem codeword_of_interleaved_component
     (C : BlockCode ι α) {τ : Type*}
     {w : Word ι (τ → α)} (hw : (C.interleaved τ).Codeword w)
     (j : τ) :
     C.Codeword fun i => w i j :=
-  hw j
+  ProximityPrize.BlockCode.codeword_of_interleaved_component C hw j
 
 end BlockCode
 
-/--
-An additive finite-field-style code interface.
-
-This is deliberately algebraic but not RS-specific: it records the closure
-properties needed for public linear challenges `f₁ + γ f₂`.
--/
-structure FAdditiveCode
-    (F ι α : Type*) [Zero α] [Add α] [SMul F α]
-    extends BlockCode ι α where
-  zero_mem : Codeword fun _ => 0
-  add_mem :
-    ∀ {u v : Word ι α},
-      Codeword u → Codeword v → Codeword fun i => u i + v i
-  smul_mem :
-    ∀ (a : F) {u : Word ι α},
-      Codeword u → Codeword fun i => a • u i
+/-- Compatibility alias for the standalone additive-code interface. -/
+abbrev FAdditiveCode
+    (F ι α : Type*) [Zero α] [Add α] [SMul F α] :=
+  ProximityPrize.FAdditiveCode F ι α
 
 namespace FAdditiveCode
 
 variable {F ι α : Type*} [Zero α] [Add α] [SMul F α]
 
-/-- The underlying block code of an additive code. -/
 abbrev asBlockCode (C : FAdditiveCode F ι α) : BlockCode ι α :=
-  C.toBlockCode
+  ProximityPrize.FAdditiveCode.asBlockCode C
 
-/-- A public linear combination of two codewords is again a codeword. -/
 theorem linear_combination_mem
     (C : FAdditiveCode F ι α)
     (a : F) {u v : Word ι α}
     (hu : C.Codeword u) (hv : C.Codeword v) :
     C.Codeword fun i => u i + a • v i :=
-  C.add_mem hu (C.smul_mem a hv)
+  ProximityPrize.FAdditiveCode.linearCombination_mem C a hu hv
 
 end FAdditiveCode
 

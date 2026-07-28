@@ -1,0 +1,49 @@
+\documentclass[11pt]{article}
+
+\input{macros}
+
+\title{Capacity-Radius Proximity for Smooth-Domain Reed--Solomon Codes}
+\author{Chloe van der Vlugt}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We study list decoding and mutual correlated agreement for constant-rate
+Reed--Solomon codes over smooth evaluation domains.  The primary received-word
+space is the two-fold interleaving
+\(\mathcal C^{\equiv 2}\subseteq(\F^2)^n\).  We isolate three layers that are
+often conflated: normalized distance of a received word from the interleaved
+code, worst-case list size at that radius, and the fraction of affine
+challenges for which a scalar projection appears close while its underlying
+pair does not.  A field-valued two-coordinate plane is exactly an arbitrary
+word in \((\F^2)^n\), and it is equivalently the base--direction pair of an
+affine line of scalar received words.  This gives a lossless interface between
+interleaved list decoding and mutual correlated agreement.
+
+The target regime is a strict finite approximation to the list-decoding
+capacity radius \(1-\rho\), with explicit comparison against a security target
+\(\epsstar|\F|\).  At the present draft stage, the capacity-radius list-size
+and mutual-correlated-agreement estimates are stated as proof targets rather
+than completed theorems.  This separation is intentional: representation and
+metric equivalences do not by themselves establish the required quantitative
+coding bounds.
+\end{abstract}
+
+\tableofcontents
+
+\input{sections/01-introduction}
+\input{sections/02-problem-setup}
+\input{sections/03-plane-pair-equivalence}
+\input{sections/04-capacity-regime}
+\input{sections/05-list-decoding-target}
+\input{sections/06-mca-target}
+\input{sections/07-application-interface}
+\input{sections/08-formalization-plan}
+
+\bibliographystyle{alpha}
+\bibliography{references}
+
+\end{document}

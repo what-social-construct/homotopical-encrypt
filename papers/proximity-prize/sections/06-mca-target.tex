@@ -1,0 +1,81 @@
+\section{The Mutual-Correlated-Agreement Target}
+
+\subsection{Bad challenges}
+
+Let \(p=(p_0,p_1)\in(\F^2)^I\), and write
+\[
+  y_\gamma=p_0+\gamma p_1.
+\]
+For \(S\subseteq I\), say that \(S\) is \(\delta\)-large when
+\[
+  \frac{|S|}{n}\ge1-\delta.
+\]
+Define \(\Bad_{\MCA}(\mathcal C,\delta,p)\) to be the set of
+\(\gamma\in\F\) for which there exists a \(\delta\)-large set \(S\) such that:
+\begin{enumerate}[label=(\roman*)]
+  \item \(y_\gamma\) agrees on \(S\) with a codeword of \(\mathcal C\);
+  \item the pair \(p\) does not agree on the same \(S\) with a codeword of
+    \(\Cpair\).
+\end{enumerate}
+The MCA error is
+\[
+  \varepsilon_{\MCA}(\mathcal C,\delta)
+  =
+  \max_{p\in(\F^2)^I}
+  \frac{|\Bad_{\MCA}(\mathcal C,\delta,p)|}{|\F|}.
+\]
+
+\begin{problem}[Capacity-radius MCA bound]
+\label{prob:capacity-mca}
+For a constant-rate smooth-domain Reed--Solomon code, determine an explicit
+bound
+\[
+  B_{\MCA}(\F,n,k)
+\]
+such that
+\[
+  \forall p\in(\F^2)^n,\qquad
+  |\Bad_{\MCA}(\mathcal C,\deltacap,p)|
+  \le B_{\MCA}(\F,n,k),
+\]
+and determine when
+\[
+  \frac{B_{\MCA}(\F,n,k)}{|\F|}\le\epsstar.
+\]
+\end{problem}
+
+\subsection{Distance interpretation}
+
+Let
+\[
+  D_2(p)=\Delta(p,\Cpair),
+  \qquad
+  D_1(y)=\Delta(y,\mathcal C).
+\]
+For a challenge outside the MCA bad set, scalar closeness on a large agreement
+set forces pair closeness on that same set.  In distance language, the desired
+contrapositive has the form
+\[
+  D_2(p)\ge\delta
+  \Longrightarrow
+  D_1(y_\gamma)\ge\delta
+\]
+for every MCA-good \(\gamma\), with the fraction of excluded challenges bounded
+by \(\varepsilon_{\MCA}(\mathcal C,\delta)\).
+
+This is a challenge-indexed statement.  Replacing the sampled challenge by one
+fixed field element would require a separate theorem that the selected element
+is good for every pair, which does not follow from a fractional MCA bound.
+
+\subsection{Commit-then-challenge order}
+
+The mathematical experiment fixes \(p\) before sampling
+\(\gamma\leftarrow\F\).  This ordering prevents the pair from being selected as
+a function of the challenge.  A full protocol implementation must bind \(p\)
+before deriving \(\gamma\), but the coding theorem needs only the resulting
+quantification and probability space; it does not depend on a complete
+blockchain or commitment protocol.
+
+\subsection{Proof status}
+
+\todo{Insert the capacity-radius MCA argument and its explicit field-size bound.}

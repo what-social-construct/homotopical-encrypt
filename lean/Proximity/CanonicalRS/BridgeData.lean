@@ -213,6 +213,7 @@ theorem relativeDistanceSet_bddBelow
   intro d hd
   rcases hd with ⟨c, _hc, rfl⟩
   unfold BlockCode.relativeHammingDistance
+  unfold ProximityPrize.BlockCode.relativeHammingDistance
   positivity
 
 /-- Distance to a code is bounded by distance to any concrete codeword. -/

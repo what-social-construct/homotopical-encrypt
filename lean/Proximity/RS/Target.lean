@@ -163,17 +163,17 @@ namespace RadiusNormalization
 The relative Hamming convention for this target's coordinate domain.
 -/
 noncomputable def relativeHammingRadius (r : ℕ) : ℝ :=
-  Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) r
+  ProximityPrize.BlockCode.relativeRadius (ι := ι) r
 
 /-- Relative Hamming radius sends zero to zero. -/
 theorem relativeHammingRadius_zero :
     relativeHammingRadius (ι := ι) 0 = 0 :=
-  Hcrypt.Proximity.BlockCode.relativeRadius_zero
+  ProximityPrize.BlockCode.relativeRadius_zero
 
 /-- Relative Hamming radius is monotone in the Hamming-count radius. -/
 theorem relativeHammingRadius_mono {r s : ℕ} (hrs : r ≤ s) :
     relativeHammingRadius (ι := ι) r ≤ relativeHammingRadius (ι := ι) s :=
-  Hcrypt.Proximity.BlockCode.relativeRadius_mono (ι := ι) hrs
+  ProximityPrize.BlockCode.relativeRadius_mono (ι := ι) hrs
 
 /--
 Build a radius-normalization witness for a relative Hamming-compatible metric.

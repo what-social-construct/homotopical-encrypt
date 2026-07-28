@@ -1,0 +1,82 @@
+\section{Planes, Pair Words, And Affine Lines}
+
+\subsection{The full ambient pair space}
+
+Define a field-valued two-coordinate plane to be a function
+\[
+  p:I\longrightarrow(\{0,1\}\longrightarrow\F).
+\]
+By reassociating function spaces, the plane carrier is exactly
+\[
+  I\to(\{0,1\}\to\F)
+  \cong
+  (\F^2)^I.
+\]
+Thus the word ``plane'' introduces no restriction on the received-word space.
+
+\begin{proposition}[Plane--pair equivalence]
+\label{prop:plane-pair-equivalence}
+The map sending a plane \(p\) to the vector word
+\[
+  i\longmapsto(p(i,0),p(i,1))
+\]
+is a bijection from field-valued planes to \((\F^2)^I\).  It preserves and
+reflects Hamming distance.
+\end{proposition}
+
+\begin{proof}
+The inverse sends a pair word \(w\) to the function
+\[
+  (i,j)\longmapsto w_i(j).
+\]
+Both composites are pointwise identities.  At coordinate \(i\), the two planes
+are equal exactly when their complete pair symbols are equal, so the Hamming
+disagreement sets coincide.
+\end{proof}
+
+\subsection{Pair words as affine lines}
+
+For a plane \(p\), define its base and direction by
+\[
+  p_0(i)=p(i,0),
+  \qquad
+  p_1(i)=p(i,1).
+\]
+The associated affine line of scalar received words is
+\[
+  \ell_p(\gamma)=p_0+\gamma p_1,
+  \qquad \gamma\in\F.
+\]
+
+\begin{proposition}[Plane--line equivalence]
+\label{prop:plane-line-equivalence}
+The map \(p\mapsto(p_0,p_1)\) is a bijection between field-valued planes and
+affine-line presentations consisting of an arbitrary base word and arbitrary
+direction word in \(\F^I\).
+\end{proposition}
+
+\begin{proof}
+Given an arbitrary pair \((f_0,f_1)\), define
+\[
+  p(i,0)=f_0(i),\qquad p(i,1)=f_1(i).
+\]
+This construction is inverse to taking base and direction.
+\end{proof}
+
+\begin{remark}
+These equivalences discharge the coverage question: a theorem quantified over
+all planes is a theorem over every received word in \((\F^2)^I\) and every
+affine-line presentation.  No surjectivity claim from an application-specific
+frame or commitment space is required.
+\end{remark}
+
+\subsection{Challenge evaluation is lossy}
+
+For fixed \(\gamma\), the map
+\[
+  (p_0,p_1)\longmapsto p_0+\gamma p_1
+\]
+is generally many-to-one.  Consequently, pair-farness cannot be inferred
+deterministically from one fixed challenge without an additional good-challenge
+hypothesis.  MCA supplies a probabilistic statement over a challenge sampled
+after the pair has been fixed.

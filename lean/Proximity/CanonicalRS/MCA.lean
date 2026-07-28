@@ -111,6 +111,7 @@ theorem exists_codeword_relativeHammingDistance_lt_of_metric_lt
   · exact hc
   · have hdiv := (div_lt_iff₀ hlength).2 hdlt
     unfold BlockCode.relativeHammingDistance
+    unfold ProximityPrize.BlockCode.relativeHammingDistance
     rw [Fintype.card_fin]
     unfold hammingDistanceReal at hdiv
     exact hdiv
@@ -290,7 +291,9 @@ theorem pairDistance_lt_of_metric_lt_of_goodChallenge
   have hpartition :
       S.card + BlockCode.hammingDistance c w =
         Fintype.card (Fin length) := by
-    simpa [S, BlockCode.hammingDistance, ne_comm] using
+    unfold BlockCode.hammingDistance
+    unfold ProximityPrize.BlockCode.hammingDistance
+    simpa [S, ne_comm] using
       (Finset.univ.filter_card_add_filter_neg_card_eq_card
         (fun i : Fin length => w i = c i))
   have hlarge : BlockCode.LargeAgreementSetAt δ S := by
@@ -299,12 +302,14 @@ theorem pairDistance_lt_of_metric_lt_of_goodChallenge
         (S.card : ℝ) + (BlockCode.hammingDistance c w : ℝ) =
           (Fintype.card (Fin length) : ℝ) := by
       exact_mod_cast hpartition
+    unfold BlockCode.hammingDistance at hcardReal
     have hcardPos : (0 : ℝ) < (Fintype.card (Fin length) : ℝ) := by
       simp [length]
     have hcomplement :
         1 - BlockCode.relativeHammingDistance c w =
           (S.card : ℝ) / (Fintype.card (Fin length) : ℝ) := by
       unfold BlockCode.relativeHammingDistance
+      unfold ProximityPrize.BlockCode.relativeHammingDistance
       field_simp [ne_of_gt hcardPos]
       linarith
     calc
@@ -325,6 +330,7 @@ theorem pairDistance_lt_of_metric_lt_of_goodChallenge
       BlockCode.hammingDistance cpair (reduceIntegerPlane p) ≤
         BlockCode.hammingDistance c w := by
     unfold BlockCode.hammingDistance
+    unfold ProximityPrize.BlockCode.hammingDistance
     apply Finset.card_le_card
     intro i hi
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hi ⊢
@@ -336,6 +342,7 @@ theorem pairDistance_lt_of_metric_lt_of_goodChallenge
       BlockCode.relativeHammingDistance cpair (reduceIntegerPlane p) ≤
         BlockCode.relativeHammingDistance c w := by
     unfold BlockCode.relativeHammingDistance
+    unfold ProximityPrize.BlockCode.relativeHammingDistance
     exact div_le_div_of_nonneg_right
       (by exact_mod_cast hhamming)
       (Nat.cast_nonneg _)

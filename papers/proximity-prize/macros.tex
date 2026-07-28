@@ -1,0 +1,43 @@
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage[nameinlink,capitalise,noabbrev]{cleveref}
+
+\emergencystretch=6em
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!45!black,
+  citecolor=blue!45!black,
+  urlcolor=blue!45!black
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\RS}{\operatorname{RS}}
+\newcommand{\MCA}{\operatorname{MCA}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\Bad}{\operatorname{Bad}}
+\newcommand{\Ball}{\operatorname{Ball}}
+\newcommand{\List}{\Lambda}
+\newcommand{\epsstar}{\varepsilon^\ast}
+\newcommand{\deltastar}{\delta^\ast}
+\newcommand{\deltacap}{\delta_{\mathrm{cap}}}
+\newcommand{\Cpair}{\mathcal C^{\equiv 2}}
+\newcommand{\Lean}{\textsc{Lean}}
+\newcommand{\lean}[1]{\begingroup\Urlmuskip=0mu plus 1mu\path{#1}\endgroup}
+\newcommand{\todo}[1]{\textcolor{red!65!black}{[TODO: #1]}}

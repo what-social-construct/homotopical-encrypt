@@ -1,163 +1,90 @@
 import Proximity.RS.CorrelatedAgreement
-import Mathlib.Algebra.Polynomial.Basic
+import ProximityPrize.ReedSolomon
 
-/-
-  Reed-Solomon-specific proximity vocabulary.
+/-!
+# Compatibility and application predicates for Reed--Solomon codes
 
-  Paper correspondence:
-  - Paper 1 Section 6: paper-alphabet Reed--Solomon endpoint.
-
-  The generic CA/MCA/list-decoding layer lives in `ListDecoding.lean` and
-  `CorrelatedAgreement.lean`. This file only instantiates the target shape for
-  polynomial-evaluation codes. Bounds such as Johnson, list-decoding capacity,
-  or RS mutual correlated agreement remain explicit assumptions/theorem slots.
+`ProximityPrize.ReedSolomon` owns evaluation domains, scalar/vector codewords,
+and F-additivity. This module preserves their historical `Hcrypt.Proximity`
+names and retains the Paper 1 list/CA/MCA predicate adapters.
 -/
 
 namespace Hcrypt
 namespace Proximity
 namespace ReedSolomon
 
-/-- Paper-style vector symbols `F^s`, represented by coordinates `σ → F`. -/
+/-- Compatibility alias for paper-style vector symbols. -/
 abbrev VectorSymbol (F σ : Type*) :=
-  σ → F
+  ProximityPrize.ReedSolomon.VectorSymbol F σ
 
-/-- Paper-style vector received words `(F^s)^n`. -/
+/-- Compatibility alias for vector received words. -/
 abbrev VectorWord (ι F σ : Type*) :=
-  Word ι (VectorSymbol F σ)
+  ProximityPrize.ReedSolomon.VectorWord ι F σ
 
-/-- A finite evaluation domain for a Reed-Solomon code. -/
-structure EvaluationDomain (F ι : Type*) where
-  point : ι → F
-  injective_point : Function.Injective point
+/-- Compatibility alias for injectively indexed evaluation domains. -/
+abbrev EvaluationDomain (F ι : Type*) :=
+  ProximityPrize.ReedSolomon.EvaluationDomain F ι
 
-/--
-A smooth evaluation domain, in the sense needed by prize-style RS statements.
+/-- Compatibility alias for smooth evaluation domains. -/
+abbrev SmoothEvaluationDomain (F ι : Type*) :=
+  ProximityPrize.ReedSolomon.SmoothEvaluationDomain F ι
 
-The concrete witness may later be a subgroup/coset/power-of-two certificate.
-For now it is kept as a proposition so the RS file names the obligation without
-committing to one field-family implementation.
--/
-structure SmoothEvaluationDomain (F ι : Type*) extends EvaluationDomain F ι where
-  smooth : Prop
-
-/-- Reed-Solomon parameters: evaluation domain plus degree bound. -/
-structure Parameters (F ι : Type*) [Field F] [Fintype ι] where
-  domain : EvaluationDomain F ι
-  degreeBound : ℕ
+/-- Compatibility alias for standalone RS parameters. -/
+abbrev Parameters (F ι : Type*) [Field F] [Fintype ι] :=
+  ProximityPrize.ReedSolomon.Parameters F ι
 
 namespace Parameters
 
 variable {F ι : Type*} [Field F] [Fintype ι]
 
-/-- The block length of the RS instance. -/
-def length (_P : Parameters F ι) : ℕ :=
-  Fintype.card ι
+abbrev length (P : Parameters F ι) : ℕ :=
+  ProximityPrize.ReedSolomon.Parameters.length P
 
-/-- The designed dimension bound of the RS instance. -/
-def dimensionBound (P : Parameters F ι) : ℕ :=
-  P.degreeBound
+abbrev dimensionBound (P : Parameters F ι) : ℕ :=
+  ProximityPrize.ReedSolomon.Parameters.dimensionBound P
 
-/-- A word is an RS codeword when it is the evaluation of a low-degree polynomial. -/
-def Codeword (P : Parameters F ι) (w : Word ι F) : Prop :=
-  ∃ p : Polynomial F,
-    p.natDegree < P.degreeBound ∧
-      ∀ i : ι, w i = Polynomial.eval (P.domain.point i) p
+abbrev Codeword (P : Parameters F ι) (w : Word ι F) : Prop :=
+  ProximityPrize.ReedSolomon.Parameters.Codeword P w
 
-/-- The RS instance as a generic block code. -/
-def toBlockCode (P : Parameters F ι) : BlockCode ι F where
-  Codeword := P.Codeword
+abbrev toBlockCode (P : Parameters F ι) : BlockCode ι F :=
+  ProximityPrize.ReedSolomon.Parameters.toBlockCode P
 
-/--
-The paper-alphabet RS endpoint `C ⊆ (F^s)^n`.
-
-This is the `σ`-fold interleaving of the scalar RS code: a vector word is a
-codeword exactly when every symbol coordinate is a scalar RS codeword.
--/
-def vectorBlockCode (P : Parameters F ι) (σ : Type*) :
+abbrev vectorBlockCode (P : Parameters F ι) (σ : Type*) :
     BlockCode ι (VectorSymbol F σ) :=
-  P.toBlockCode.interleaved σ
+  ProximityPrize.ReedSolomon.Parameters.vectorBlockCode P σ
 
-/-- Codeword predicate for the paper-alphabet endpoint `(F^s)^n`. -/
-def VectorCodeword
+abbrev VectorCodeword
     (P : Parameters F ι)
     (σ : Type*)
     (w : VectorWord ι F σ) : Prop :=
-  (P.vectorBlockCode σ).Codeword w
+  ProximityPrize.ReedSolomon.Parameters.VectorCodeword P σ w
 
-/-- F-additivity/linearity certificate for an RS parameter choice. -/
-structure FAdditive (P : Parameters F ι) : Prop where
-  zero_mem :
-    P.Codeword fun _ => 0
-  add_mem :
-    ∀ {u v : Word ι F},
-      P.Codeword u →
-        P.Codeword v →
-          P.Codeword fun i => u i + v i
-  smul_mem :
-    ∀ (a : F) {u : Word ι F},
-      P.Codeword u →
-        P.Codeword fun i => a • u i
+/-- Compatibility alias for RS F-additivity certificates. -/
+abbrev FAdditive (P : Parameters F ι) :=
+  ProximityPrize.ReedSolomon.Parameters.FAdditive P
 
 namespace FAdditive
 
-/-- View an additive RS parameter choice as the generic additive-code interface. -/
-def toFAdditiveCode
+abbrev toFAdditiveCode
     {P : Parameters F ι}
     (hP : P.FAdditive) :
-    FAdditiveCode F ι F where
-  Codeword := P.Codeword
-  zero_mem := hP.zero_mem
-  add_mem := by
-    intro u v hu hv
-    exact hP.add_mem hu hv
-  smul_mem := by
-    intro a u hu
-    exact hP.smul_mem a hu
+    FAdditiveCode F ι F :=
+  ProximityPrize.ReedSolomon.Parameters.FAdditive.toFAdditiveCode hP
 
-/-- View an additive RS parameter choice as a paper-alphabet additive code. -/
-def toVectorFAdditiveCode
+abbrev toVectorFAdditiveCode
     {P : Parameters F ι}
     (hP : P.FAdditive)
     (σ : Type*) :
-    FAdditiveCode F ι (VectorSymbol F σ) where
-  Codeword := (P.vectorBlockCode σ).Codeword
-  zero_mem := by
-    intro j
-    simpa using hP.zero_mem
-  add_mem := by
-    intro u v hu hv j
-    exact hP.add_mem (hu j) (hv j)
-  smul_mem := by
-    intro a u hu j
-    exact hP.smul_mem a (hu j)
+    FAdditiveCode F ι (VectorSymbol F σ) :=
+  ProximityPrize.ReedSolomon.Parameters.FAdditive.toVectorFAdditiveCode hP σ
 
 end FAdditive
 
-/-- RS codewords are closed under the F-additive operations when the degree bound is positive. -/
-def fAdditive_of_degreeBound_pos
+abbrev fAdditive_of_degreeBound_pos
     (P : Parameters F ι)
     (hDegree : 0 < P.degreeBound) :
-    P.FAdditive where
-  zero_mem := by
-    refine ⟨0, ?_, ?_⟩
-    · simpa using hDegree
-    · intro i
-      simp
-  add_mem := by
-    intro u v hu hv
-    rcases hu with ⟨p, hpdeg, hpu⟩
-    rcases hv with ⟨q, hqdeg, hqv⟩
-    refine ⟨p + q, ?_, ?_⟩
-    · exact (Polynomial.natDegree_add_le p q).trans_lt (max_lt hpdeg hqdeg)
-    · intro i
-      simp [hpu i, hqv i, Polynomial.eval_add]
-  smul_mem := by
-    intro a u hu
-    rcases hu with ⟨p, hpdeg, hpu⟩
-    refine ⟨a • p, ?_, ?_⟩
-    · exact (Polynomial.natDegree_smul_le a p).trans_lt hpdeg
-    · intro i
-      simp [hpu i, Polynomial.eval_smul]
+    P.FAdditive :=
+  ProximityPrize.ReedSolomon.Parameters.fAdditive_of_degreeBound_pos P hDegree
 
 section ListDecoding
 
@@ -288,7 +215,6 @@ theorem correlatedAgreement_of_mutualCorrelatedAgreement
 end CorrelatedAgreement
 
 end Parameters
-
 end ReedSolomon
 end Proximity
 end Hcrypt

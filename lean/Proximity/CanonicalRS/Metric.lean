@@ -114,7 +114,10 @@ theorem hammingDistanceToCode_eq_zero_of_codeword
   apply le_antisymm
   · have hle := hammingDistanceToCode_le_of_codeword D B (w := w) (c := w) hw
     have hdist : hammingDistanceReal w w = 0 := by
-      simp [hammingDistanceReal, BlockCode.hammingDistance]
+      unfold hammingDistanceReal BlockCode.hammingDistance
+      change
+        (((Finset.univ.filter fun i : Fin length => w i ≠ w i).card : ℕ) : ℝ) = 0
+      simp
     simpa [hdist] using hle
   · exact hammingDistanceToCode_nonneg D B w
 
@@ -167,9 +170,10 @@ theorem relativeHammingDistanceToCode_le_of_close
     div_le_div_of_nonneg_right
       (hammingDistanceToCode_le_of_close D B hw)
       (Nat.cast_nonneg length)
-  simpa [relativeHammingDistanceToCode,
-    ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius,
-    BlockCode.relativeRadius] using h
+  unfold relativeHammingDistanceToCode
+  unfold ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius
+  unfold ProximityPrize.BlockCode.relativeRadius
+  simpa only [Fintype.card_fin] using h
 
 /-- Canonical relative Hamming received-word metric. -/
 def relativeHammingMetric

@@ -1,0 +1,63 @@
+\section{The Capacity-Radius Regime}
+
+\subsection{Normalized target}
+
+For rate \(\rho=k/n\), the list-decoding capacity benchmark is
+\[
+  1-\rho.
+\]
+At finite block length we use an explicitly strict integer radius
+\[
+  r_{\mathrm{cap}}<n-k,
+  \qquad
+  \deltacap=\frac{r_{\mathrm{cap}}}{n}<1-\rho.
+\]
+The strict inequality separates the intended capacity regime from endpoint
+rounding questions.
+
+For the running rate-\(1/4\), length-\(4096\) example,
+\[
+  n=4096,\qquad k=1024,\qquad r_{\mathrm{cap}}=3071,
+\]
+and hence
+\[
+  \deltacap=\frac{3071}{4096}<\frac34.
+\]
+This example is a finite parameter checkpoint, not the sufficiently-large-field
+family required for a fixed-bit security claim.
+
+\subsection{Field-size scaling}
+
+Fix a target error fraction \(\epsstar\), such as \(2^{-128}\).  A quantitative
+list or MCA theorem must produce a bound \(B\) satisfying
+\[
+  B\le\epsstar|\F|.
+\]
+For an integer-valued nonempty list, this already forces
+\(|\F|\ge1/\epsstar\).  Therefore a small fixed field cannot instantiate the
+grand list-decoding target at cryptographic \(\epsstar\), regardless of metric
+normalization.
+
+The main theorem must consequently be parameterized by a family
+\[
+  (\F_\lambda,\mathcal L_\lambda,n_\lambda,k_\lambda)
+\]
+with constant rate, smooth evaluation domains, and field size growing
+sufficiently quickly relative to the derived list-size or bad-challenge bound.
+
+\subsection{Largest safe radius}
+
+For fixed \(\mathcal C,m,\epsstar\), define the list-decoding safe-radius set
+\[
+  \mathcal R_{\mathrm{list}}
+  =
+  \left\{
+    \delta\in[0,1]:
+    L_m(\mathcal C,\delta)\le\epsstar|\F|
+  \right\}.
+\]
+A grand-challenge solution must not merely exhibit one member of this set; it
+must determine or tightly characterize its largest element.  The first proof
+milestone in this manuscript is more modest: establish that a strict
+capacity-approaching radius belongs to this set under explicit field-size
+hypotheses.

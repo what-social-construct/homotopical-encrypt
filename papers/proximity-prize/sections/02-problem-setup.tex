@@ -1,0 +1,77 @@
+\section{Problem Setup}
+
+\subsection{Reed--Solomon parameters}
+
+Let \(\F\) be a finite field and let
+\(\mathcal L=(a_i)_{i\in I}\) be an injectively indexed evaluation domain,
+where \(|I|=n\).  For \(1\le k\le n\), define
+\[
+  \mathcal C=\RS[\F,\mathcal L,k]
+  =
+  \left\{
+    (f(a_i))_{i\in I}:
+    f\in\F[X],\ \deg f<k
+  \right\}.
+\]
+The rate is \(\rho=k/n\).  The prize-facing regime takes \(\rho\) from a fixed
+constant set, such as
+\[
+  \left\{\frac12,\frac14,\frac18,\frac1{16}\right\},
+\]
+and requires \(\mathcal L\) to have an appropriate smooth structure.
+
+\subsection{Relative Hamming distance}
+
+For a finite alphabet \(A\) and \(u,v\in A^I\), let
+\[
+  d_H(u,v)=|\{i\in I:u_i\ne v_i\}|,
+  \qquad
+  \Delta(u,v)=\frac{d_H(u,v)}{n}.
+\]
+For a code \(\mathcal D\subseteq A^I\), define
+\[
+  \Delta(w,\mathcal D)
+  =
+  \min_{c\in\mathcal D}\Delta(w,c).
+\]
+All radii in the main theorem statements are relative radii in \([0,1]\).
+Natural-number radii remain useful for finite rounding, but they are not the
+paper-facing metric.
+
+\subsection{Interleaving}
+
+For a positive integer \(m\), define
+\[
+  \mathcal C^{\equiv m}
+  =
+  \left\{
+    p\in(\F^m)^I:
+    \text{for every }j\in\{1,\ldots,m\},
+    \ (p_{i,j})_{i\in I}\in\mathcal C
+  \right\}.
+\]
+Hamming distance on \((\F^m)^I\) counts a coordinate \(i\) as erroneous when
+the complete vector symbol differs.  It does not sum componentwise scalar
+distances.
+
+\subsection{List-decoding balls}
+
+For \(w\in(\F^m)^I\) and \(\delta\in[0,1]\), define
+\[
+  \List(\mathcal C^{\equiv m},w,\delta)
+  =
+  \left\{
+    c\in\mathcal C^{\equiv m}:
+    \Delta(w,c)\le\delta
+  \right\}.
+\]
+The worst-case list size is
+\[
+  L_m(\mathcal C,\delta)
+  =
+  \max_{w\in(\F^m)^I}
+    |\List(\mathcal C^{\equiv m},w,\delta)|.
+\]
+The maximum over received words is essential.  A bound on a structured subset
+of received words is an application result, not the universal list-decoding
+statement.

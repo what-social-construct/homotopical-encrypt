@@ -1,0 +1,50 @@
+\section{Application Interface}
+
+The coding theorem is stated over the complete received-word space and does not
+depend on a particular source of observations.  An application may nevertheless
+inherit the result through a distance-aware map.
+
+Let \(O\) be a type of raw presented observations, let
+\(G\subseteq O\) be the exact/valid locus, and let
+\[
+  \pi:O\longrightarrow(\F^2)^I
+\]
+be the extracted pair word.  A source distance
+\(\rho_O:O\to[0,1]\) is meaningful only when \(O\) includes arbitrary or noisy
+presentations; if every element of \(O\) already contains a validity witness,
+then the proximity problem may collapse to the exact code locus.
+
+The principal application theorem should have one of the forms
+\[
+  D_2(\pi(o))=\rho_O(o),
+\]
+or
+\[
+  \rho_O(o)\ge\delta
+  \Longrightarrow
+  D_2(\pi(o))\ge\delta.
+\]
+Under either comparison, the universal list and MCA theorems apply to
+\(\pi(o)\).
+
+\subsection{Exact witnesses versus raw observations}
+
+The recommended type boundary is:
+\[
+\begin{array}{rcl}
+  \text{raw observation} && \text{arbitrary public presentation},\\
+  \text{exact witness} && \text{certificate of valid structured realization},\\
+  G(o) && \text{there exists an exact witness realizing }o.
+\end{array}
+\]
+An exact witness is evidence for membership in the code locus; it should not be
+the carrier of adversarial received words.
+
+\subsection{Separation from application papers}
+
+Application-specific Plucker coordinates, cochain commitments, hidden
+operators, transcript binding, and runtime verification are intentionally
+outside the proof of \cref{prob:capacity-list,prob:capacity-mca}.  They may cite
+the completed coding theorem through the interface above.  Conversely, the
+coding theorem must remain valid without assuming that every received word
+comes from an application-specific witness space.

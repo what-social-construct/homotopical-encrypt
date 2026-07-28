@@ -1,0 +1,58 @@
+\section{Formalization And Proof Ledger}
+
+\subsection{Standalone hierarchy}
+
+The intended machine-checked development should separate generic coding
+mathematics from application bridges:
+\begin{description}[style=nextline]
+  \item[\lean{ProximityPrize/BlockCode}]
+    Relative distance, balls, and worst-case list size.
+  \item[\lean{ProximityPrize/ReedSolomon}]
+    Smooth-domain RS families and interleaving.
+  \item[\lean{ProximityPrize/PlanePair}]
+    Plane--pair--line equivalences.
+  \item[\lean{ProximityPrize/Parameters}]
+    Explicit \(\epsstar\) and field-size inequalities.
+\end{description}
+Existing generic definitions may be imported or refactored, but the final
+theorem should not depend on HCP, protocol, consensus, or runtime axiom bundles.
+The open capacity-list and capacity-MCA targets are intentionally not declared
+as Lean theorems or axioms at this stage.
+
+\subsection{Status ledger}
+
+\begin{center}
+\begin{tabular}{@{}p{0.42\linewidth}p{0.20\linewidth}p{0.28\linewidth}@{}}
+\toprule
+Obligation & Status & Required endpoint\\
+\midrule
+Relative Hamming normalization & Lean-defined & Values in \([0,1]\)\\
+Plane--pair equivalence & Lean-proved & Bijection and Hamming isometry\\
+Plane--affine-line equivalence & Lean-proved & Formal inverse maps\\
+Smooth large-field family & Open & Explicit domain family\\
+Capacity-radius list bound & Open & Universal list-size theorem\\
+Capacity-radius MCA bound & Open & Universal bad-set theorem\\
+Target-fraction inequality & Open & Bound \(\le\epsstar|\F|\)\\
+Largest-radius or optimality statement & Open & Safe-radius characterization\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Submission boundary}
+
+A completed claim requires:
+\begin{enumerate}[label=(\roman*)]
+  \item no placeholder assumptions for the main list/MCA result;
+  \item an explicit statement of imported literature theorems;
+  \item all field-size and rounding conditions checked;
+  \item a clear separation between proved theorems, computational evidence, and
+    conjectures;
+  \item a reproducible proof artifact and manuscript cross-reference.
+\end{enumerate}
+
+\subsection{Immediate next step}
+
+The next mathematical task is to choose the exact capacity-approaching theorem
+statement for \(m=2\) and a parameterized smooth-domain field family.  Only
+after those choices are fixed should the Lean target signatures and the core
+list-size argument be stabilized.

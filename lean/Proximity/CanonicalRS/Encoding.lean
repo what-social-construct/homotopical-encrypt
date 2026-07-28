@@ -177,6 +177,7 @@ theorem canonicalPlaneWordEquiv_hammingDistance
         (canonicalPlaneWordEquiv iota q) =
       BlockCode.hammingDistance p q := by
   unfold BlockCode.hammingDistance
+  unfold ProximityPrize.BlockCode.hammingDistance
   congr 1
   ext i
   simp [canonicalPlaneWordEquiv]
@@ -189,8 +190,15 @@ theorem canonicalPlaneWordEquiv_relativeHammingDistance
         (canonicalPlaneWordEquiv iota p)
         (canonicalPlaneWordEquiv iota q) =
       BlockCode.relativeHammingDistance p q := by
-  simp [BlockCode.relativeHammingDistance,
-    canonicalPlaneWordEquiv_hammingDistance]
+  have hdist := canonicalPlaneWordEquiv_hammingDistance p q
+  change
+    ProximityPrize.BlockCode.hammingDistance
+        (canonicalPlaneWordEquiv iota p)
+        (canonicalPlaneWordEquiv iota q) =
+      ProximityPrize.BlockCode.hammingDistance p q at hdist
+  unfold BlockCode.relativeHammingDistance
+  unfold ProximityPrize.BlockCode.relativeHammingDistance
+  rw [hdist]
 
 /--
 The canonical integer-plane encoding is not globally injective: shifting the
