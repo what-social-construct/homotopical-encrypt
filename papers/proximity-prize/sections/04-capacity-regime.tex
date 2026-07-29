@@ -1,63 +1,89 @@
 \section{The Capacity-Radius Regime}
 
-\subsection{Normalized target}
+\subsection{The finite Hamming grid}
 
-For rate \(\rho=k/n\), the list-decoding capacity benchmark is
+Let \(1\le k\le n\).  The capacity endpoint is already an attainable
+normalized Hamming radius:
 \[
-  1-\rho.
-\]
-At finite block length we use an explicitly strict integer radius
-\[
-  r_{\mathrm{cap}}<n-k,
+  r_{\mathrm{cap}}=n-k,
   \qquad
-  \deltacap=\frac{r_{\mathrm{cap}}}{n}<1-\rho.
+  \deltacap=\frac{n-k}{n}=1-\rho.
 \]
-The strict inequality separates the intended capacity regime from endpoint
-rounding questions.
-
-For the running rate-\(1/4\), length-\(4096\) example,
+There is therefore no rounding loss at the endpoint.  For example, the
+rate-\(1/4\), length-\(4096\) member has
 \[
-  n=4096,\qquad k=1024,\qquad r_{\mathrm{cap}}=3071,
+  k=1024,\qquad r_{\mathrm{cap}}=3072,\qquad
+  \deltacap=\frac34.
 \]
-and hence
+The previously useful strict checkpoint \(3071/4096\) is subsumed by the
+endpoint theorem below.
+
+There is, however, a distinct granularity issue in the phrase ``largest
+relative radius.''  A closed Hamming ball changes only at
 \[
-  \deltacap=\frac{3071}{4096}<\frac34.
+  \mathcal H_n=\left\{0,\frac1n,\ldots,\frac nn\right\}.
 \]
-This example is a finite parameter checkpoint, not the sufficiently-large-field
-family required for a fixed-bit security claim.
+Consequently, a safe-radius set defined over all real
+\(\delta\in[0,1]\) may be half-open and have no largest element.  We report
+both the largest radius in \(\mathcal H_n\) and the supremum over real radii.
 
-\subsection{Field-size scaling}
+\subsection{An explicit smooth large-field family}
+\label{sec:explicit-family}
 
-Fix a target error fraction \(\epsstar\), such as \(2^{-128}\).  A quantitative
-list or MCA theorem must produce a bound \(B\) satisfying
+For \(u\ge0\), set
 \[
-  B\le\epsstar|\F|.
+  k_u=64\cdot2^u=2^{u+6},
+  \qquad
+  n_u=4k_u=256\cdot2^u=2^{u+8},
+  \qquad
+  q_u=3^{n_u}.
 \]
-For an integer-valued nonempty list, this already forces
-\(|\F|\ge1/\epsstar\).  Therefore a small fixed field cannot instantiate the
-grand list-decoding target at cryptographic \(\epsstar\), regardless of metric
-normalization.
-
-The main theorem must consequently be parameterized by a family
+Let \(\F_u=\mathbb F_{q_u}\).  Since the multiplicative group of a finite
+field is cyclic of order \(q_u-1\), it suffices to check
+\(n_u\mid(q_u-1)\).  Euler's theorem gives this directly:
 \[
-  (\F_\lambda,\mathcal L_\lambda,n_\lambda,k_\lambda)
+  \varphi(n_u)=\frac{n_u}{2},
+  \qquad
+  \gcd(3,n_u)=1,
+  \qquad
+  3^{n_u/2}\equiv1\pmod{n_u}.
 \]
-with constant rate, smooth evaluation domains, and field size growing
-sufficiently quickly relative to the derived list-size or bad-challenge bound.
-
-\subsection{Largest safe radius}
-
-For fixed \(\mathcal C,m,\epsstar\), define the list-decoding safe-radius set
+Squaring yields \(3^{n_u}\equiv1\pmod{n_u}\).  Thus
+\(\F_u^\times\) contains a subgroup \(H_u\) of order \(n_u\).  We take
+\(\mathcal L_u=H_u\) and
 \[
-  \mathcal R_{\mathrm{list}}
-  =
-  \left\{
-    \delta\in[0,1]:
-    L_m(\mathcal C,\delta)\le\epsstar|\F|
-  \right\}.
+  \mathcal C_u=\RS[\F_u,H_u,k_u].
 \]
-A grand-challenge solution must not merely exhibit one member of this set; it
-must determine or tightly characterize its largest element.  The first proof
-milestone in this manuscript is more modest: establish that a strict
-capacity-approaching radius belongs to this set under explicit field-size
-hypotheses.
+The evaluation length and degree bound are powers of two, the domain is a
+multiplicative subgroup, and the rate is exactly \(1/4\).  This is the
+standard smooth-domain condition for FFT-based Reed--Solomon codes
+\cite{arnonChiesaFenziYogev2024}, and it is the explicit family used in the
+quantitative statement.
+
+\subsection{The field-size inequality}
+\label{sec:field-inequality}
+
+Fix \(\epsstar=2^{-128}\).  For the family above,
+\[
+  \binom{n_u}{k_u}\le 2^{n_u}.
+\]
+Moreover \(n_u\) is even and \(n_u/2\ge128\), so
+\[
+\begin{aligned}
+  q_u=3^{n_u}
+  &=(3^2)^{n_u/2}
+    =9^{n_u/2}                                      \\
+  &\ge8^{n_u/2}
+    =2^{3n_u/2}
+    \ge2^{n_u+128}.
+\end{aligned}
+\]
+It follows that
+\[
+  \binom{n_u}{k_u}
+  \le 2^{-128}q_u
+  =\epsstar|\F_u|.
+\]
+The field is exponential in the block length.  This is a valid explicit
+sufficiently-large-field regime, not a claim about practically sized fields
+or about every smooth code supplied to the Grand Challenge.

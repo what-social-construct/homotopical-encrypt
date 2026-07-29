@@ -38,11 +38,13 @@ noncomputable def radius : ℝ :=
 /-- The canonical MCA radius satisfies the paper-domain condition `0 < δ`. -/
 theorem radius_pos : 0 < radius := by
   unfold radius BlockCode.relativeRadius johnsonBelowRadius length
+  unfold ProximityPrize.BlockCode.relativeRadius
   norm_num
 
 /-- The canonical MCA radius satisfies the paper-domain condition `δ < 1`. -/
 theorem radius_lt_one : radius < 1 := by
   unfold radius BlockCode.relativeRadius johnsonBelowRadius length
+  unfold ProximityPrize.BlockCode.relativeRadius
   norm_num
 
 /-- The paper alphabet width for ordinary canonical RS symbols is `s = 1`. -/

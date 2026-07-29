@@ -237,6 +237,7 @@ INPUT /usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc
 OUTPUT main.toc
 INPUT ./sections/01-introduction.tex
 INPUT ./sections/01-introduction.tex
@@ -251,7 +252,6 @@ INPUT ./sections/02-problem-setup.tex
 INPUT ./sections/02-problem-setup.tex
 INPUT ./sections/02-problem-setup.tex
 INPUT sections/02-problem-setup.tex
-INPUT /usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc
 INPUT ./sections/03-plane-pair-equivalence.tex
 INPUT ./sections/03-plane-pair-equivalence.tex
 INPUT ./sections/03-plane-pair-equivalence.tex
@@ -297,6 +297,7 @@ INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx10.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx12.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmex10.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi10.pfb
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi5.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi6.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi7.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi8.pfb

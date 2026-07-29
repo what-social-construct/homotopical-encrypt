@@ -54,9 +54,10 @@ of challenges for which a scalar observation fails to expose pair-farness.
 
 The plane/pair/line identifications below are exact equivalences.  They ensure
 that no received words or affine lines are lost by the chosen presentation.
-They do not prove capacity-radius list decoding or MCA.  Those quantitative
-statements are separately labeled as proof targets until a complete argument
-and its parameter inequalities have been supplied.
+They do not by themselves prove capacity-radius list decoding or MCA.  The
+list theorem is supplied separately by an agreement-set injection, a matching
+endpoint witness, and an explicit field-size inequality.  MCA remains a
+distinct quantitative target.
 
 In particular, a statement of the form
 \[
@@ -68,13 +69,18 @@ explicitly with \(\epsstar|\F|\).
 
 \subsection{Contributions sought}
 
-The completed paper is intended to establish:
+This draft establishes:
 \begin{enumerate}[label=(\roman*)]
-  \item a capacity-radius list-size estimate for
-    \(\mathcal C^{\equiv m}\), with \(m=2\) as the primary plane endpoint;
-  \item a mutual-correlated-agreement estimate at the same normalized radius;
-  \item explicit field-size hypotheses sufficient to obtain a selected
-    \(\epsstar\);
-  \item a machine-checked formalization of the definitions, reductions, and
-    final quantitative theorem.
+  \item the universal capacity-grid equality
+    \(L_m(\mathcal C,(n-k)/n)=\binom nk\);
+  \item the necessary-and-sufficient endpoint criterion
+    \(\binom nk\le\epsstar|\F|\) and the resulting three-regime phase split;
+  \item a next-shell obstruction of size \(|\F|^m\);
+  \item an explicit smooth rate-\(1/4\) family and field-size inequality for
+    \(\epsstar=2^{-128}\);
+  \item machine-checked definitions, reductions, both endpoint inequalities,
+    their exact fractional-target equivalence, and the family arithmetic.
 \end{enumerate}
+The remaining goals are the mutual-correlated-agreement estimate, the
+application calibration theorem, and the optimal sub-endpoint radius in the
+intermediate field-size regime.

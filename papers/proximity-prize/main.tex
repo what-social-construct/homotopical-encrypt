@@ -23,13 +23,21 @@ word in \((\F^2)^n\), and it is equivalently the base--direction pair of an
 affine line of scalar received words.  This gives a lossless interface between
 interleaved list decoding and mutual correlated agreement.
 
-The target regime is a strict finite approximation to the list-decoding
-capacity radius \(1-\rho\), with explicit comparison against a security target
-\(\epsstar|\F|\).  At the present draft stage, the capacity-radius list-size
-and mutual-correlated-agreement estimates are stated as proof targets rather
-than completed theorems.  This separation is intentional: representation and
-metric equivalences do not by themselves establish the required quantitative
-coding bounds.
+At count radius \(n-k\), a direct agreement-set injection and a matching
+received-word construction prove
+\[
+  L_m\!\left(\mathcal C,\frac{n-k}{n}\right)=\binom nk
+\]
+for every positive interleaving width.  Thus
+\(\binom nk\le\varepsilon|\F|\) is necessary and sufficient for the requested
+fractional list target at the capacity endpoint.  A next-shell construction
+then gives a complete three-regime phase split.  We instantiate the safe
+regime with an explicit rate-\(1/4\) smooth family over
+\(\mathbb F_{3^n}\) satisfying \(\binom nk\le2^{-128}|\F|\).  In that regime
+the real safe-radius set is half-open and has a supremum but no largest real
+element.  The optimal sub-capacity radius in the intermediate field-size
+regime and the capacity-radius mutual-correlated-agreement estimate remain
+separate proof targets.
 \end{abstract}
 
 \tableofcontents

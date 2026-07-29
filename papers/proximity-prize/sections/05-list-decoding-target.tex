@@ -1,59 +1,172 @@
-\section{The List-Decoding Target}
+\section{The Capacity-Grid List Theorem}
 
-\begin{problem}[Capacity-radius interleaved list bound]
-\label{prob:capacity-list}
-Let \(\mathcal C=\RS[\F,\mathcal L,k]\) have constant rate and a smooth
-evaluation domain.  For fixed \(m\), determine an explicit bound
+The following argument applies to every injectively indexed Reed--Solomon
+evaluation domain; smoothness enters only when we instantiate the explicit
+family from \cref{sec:explicit-family}.
+
+\begin{theorem}[Universal capacity-grid equality]
+\label{thm:capacity-grid-exact}
+Let \(\mathcal C=\RS[\F,\mathcal L,k]\) have length \(n\), where
+\(1\le k\le n\), and let \(m\ge1\).  Then
 \[
-  L_{\mathrm{cap}}(\F,n,k,m)
+  L_m\left(\mathcal C,\frac{n-k}{n}\right)=\binom nk .
 \]
-such that
+In particular, the worst-case endpoint list size is independent of \(m\).
+\end{theorem}
+
+\begin{proof}
+We first prove the upper bound.  Fix \(w\in(\F^m)^n\).
+Every codeword in the ball agrees with \(w\) on at least \(k\) complete
+vector-symbol coordinates.  Assign to each such codeword one \(k\)-subset of
+its agreement coordinates.  This assignment is injective: if two interleaved
+codewords are assigned the same set \(S\), then they agree with one another on
+\(S\).  In each component, two degree-\(<k\) polynomials agree at the \(k\)
+distinct evaluation points indexed by \(S\), and hence are equal.  The two
+interleaved codewords are therefore equal.  There are exactly \(\binom nk\)
+possible sets \(S\).
+
+For the reverse inequality, choose one of the \(m\) components and define the
+received word
 \[
-  \forall w\in(\F^m)^n,\qquad
-  |\List(\mathcal C^{\equiv m},w,\deltacap)|
-  \le L_{\mathrm{cap}}(\F,n,k,m).
+  w_i^\star=(a_i^k,0,\ldots,0).
 \]
-Determine field-size conditions under which
+For each \(k\)-subset \(S\subseteq I\), put
 \[
-  L_{\mathrm{cap}}(\F,n,k,m)\le\epsstar|\F|.
+  V_S(X)=\prod_{i\in S}(X-a_i),
+  \qquad
+  f_S(X)=X^k-V_S(X).
 \]
-\end{problem}
+The polynomial \(V_S\) is monic of degree \(k\), so its leading term cancels
+that of \(X^k\) and \(\deg f_S<k\).  Use \(f_S\) in the distinguished
+component and zero polynomials in all other components to obtain an
+interleaved codeword \(c_S\).
 
-For the plane endpoint, \(m=2\).  By
-\cref{prop:plane-pair-equivalence}, the universal quantifier may equivalently
-be written over every field-valued plane.  This is a change of presentation,
-not a restriction to a structured image.
+At evaluation coordinate \(i\),
+\[
+  c_{S,i}=w_i^\star
+  \quad\Longleftrightarrow\quad
+  V_S(a_i)=0
+  \quad\Longleftrightarrow\quad
+  i\in S,
+\]
+where the final equivalence uses injectivity of the evaluation points.
+Consequently \(c_S\) has distance exactly \(n-k\) from \(w^\star\), and its
+agreement set recovers \(S\).  The \(\binom nk\) choices of \(S\) therefore
+give distinct codewords in the endpoint ball.  This matches the upper bound.
+\end{proof}
 
-\subsection{What a proof must control}
+\begin{theorem}[Failure on the next Hamming shell]
+\label{thm:next-shell-lower}
+Under the same hypotheses,
+\[
+  \left|
+    \List\left(
+      \mathcal C^{\equiv m},
+      0,
+      \frac{n-k+1}{n}
+    \right)
+  \right|
+  \ge |\F|^m .
+\]
+\end{theorem}
 
-A complete argument must specify:
+\begin{proof}
+Fix \(k-1\) evaluation points \(S\subseteq\mathcal L\) and set
+\[
+  g_S(X)=\prod_{a\in S}(X-a).
+\]
+For every \(\lambda=(\lambda_1,\ldots,\lambda_m)\in\F^m\), the tuple
+\[
+  (\lambda_1g_S,\ldots,\lambda_mg_S)
+\]
+defines an interleaved codeword.  These \(|\F|^m\) codewords are distinct.
+The zero tuple has distance zero from the received word \(0\); every nonzero
+tuple vanishes on \(S\) and is nonzero at every evaluation point outside
+\(S\), so its distance is exactly \(n-k+1\).
+\end{proof}
+
+\begin{theorem}[Fractional-target phase split]
+\label{thm:fractional-phase-split}
+Fix \(0<\epsstar<1\), write \(q=|\F|\), and call a radius \(\delta\)
+safe when
+\[
+  L_m(\mathcal C,\delta)\le\epsstar q.
+\]
+For every \(m\ge1\), exactly one of the following regimes applies:
 \begin{enumerate}[label=(\roman*)]
-  \item the exact strict capacity radius and its finite rounding;
-  \item the dependence of list size on \(n,k,m\), and \(|\F|\);
-  \item the use made of smoothness of the evaluation domain;
-  \item whether the result holds for all such domains or a selected family;
-  \item the field-size threshold needed for the target \(\epsstar\);
-  \item the comparison with Johnson-radius and known proximity-gap results.
-\end{enumerate}
-
-\subsection{Restricted and universal statements}
-
-For a subset \(Y\subseteq(\F^m)^n\), the statement
+  \item If \(\epsstar q<1\), no radius in \([0,1]\) is safe.
+  \item If
+    \(1\le\epsstar q<\binom nk\), radius zero is safe but the capacity
+    endpoint and every larger radius fail.  The optimal sub-endpoint radius is
+    not determined by the present argument.
+  \item If \(\binom nk\le\epsstar q\), the largest safe radius on
+    \(\mathcal H_n\) is
+    \[
+      \deltacap=\frac{n-k}{n}=1-\rho;
+    \]
+    and over real radii the safe set is exactly
+    \[
+      \left[0,\frac{n-k+1}{n}\right),
+    \]
+    so it has no largest element and has supremum
+    \((n-k+1)/n\).
+ \end{enumerate}
+Equivalently, the fractional target holds at the capacity endpoint if and
+only if
 \[
-  \forall w\in Y,\qquad
-  |\List(\mathcal C^{\equiv m},w,\delta)|\le L
+  \binom nk\le\epsstar|\F|.
 \]
-is a restricted-image list bound.  It may be useful for an application, but it
-does not imply \cref{prob:capacity-list} unless every received word reduces to
-an element of \(Y\) while preserving the relevant list.
+\end{theorem}
 
-The plane carrier avoids this issue because \(Y=(\F^2)^n\).  An upstream
-application image, such as words produced by valid geometric witnesses, need
-not and generally will not have the same coverage.
+\begin{proof}
+Every codeword is contained in the radius-zero ball centered at itself, so no
+radius can be safe when \(\epsstar q<1\).  A radius-zero ball contains at most
+one codeword, proving its safety when \(\epsstar q\ge1\).
 
-\subsection{Proof status}
+\Cref{thm:capacity-grid-exact} proves both the failure in the intermediate
+regime and the necessary-and-sufficient endpoint criterion.  In the final
+regime, it and monotonicity of list balls prove safety through count radius
+\(n-k\).  A real radius strictly below
+\((n-k+1)/n\) defines the same ball as some count radius at most \(n-k\).
+At the next grid point, \cref{thm:next-shell-lower} gives a list of size at
+least \(|\F|^m\ge|\F|>\epsstar|\F|\); monotonicity then rules out every
+larger radius.
+\end{proof}
 
-\todo{Insert the capacity-radius list-size argument.}
+\begin{corollary}[The explicit smooth family]
+\label{cor:explicit-family-list}
+For every \(u\ge0\), every \(m\ge1\), and
+\(\mathcal C_u=\RS[\F_u,H_u,k_u]\) from
+\cref{sec:explicit-family}, the conclusions of
+\cref{thm:fractional-phase-split}\textup{(iii)} hold with
+\(\epsstar=2^{-128}\).  In
+particular, the largest safe Hamming-grid radius is \(3/4\).
+\end{corollary}
 
-Until that argument is supplied, no theorem in this paper should assert that
-\(\deltacap\) belongs to \(\mathcal R_{\mathrm{list}}\).
+\begin{proof}
+Apply the inequality proved in \cref{sec:field-inequality}.
+\end{proof}
+
+\subsection{Scope relative to the Grand Challenge}
+
+\Cref{thm:capacity-grid-exact} completely determines the endpoint list size
+for every supplied Reed--Solomon code, smooth or otherwise.  Thus the displayed
+binomial field-size inequality is necessary and sufficient at that endpoint,
+not merely a convenient sufficient hypothesis.
+\Cref{cor:explicit-family-list} supplies a concrete smooth family in the safe
+regime.  The present argument does not determine the largest sub-endpoint
+radius for an arbitrary fixed smooth code in the intermediate regime
+\[
+  1\le2^{-128}|\F|<\binom nk.
+\]
+The exponential alphabet is what places the explicit family in the final
+regime; it is not needed for the universal endpoint equality.
+
+This distinction matters in light of known capacity results.  Generic
+Reed--Solomon evaluation points can achieve list-decoding capacity over
+exponentially large fields with constant list size
+\cite{brakensiekGopiMakam2024}, but generic points do not supply the structured
+smooth domain required here.  Conversely, near-capacity proximity-gap
+behavior can fail for particular smooth prime-field families
+\cite{kambire2026}.  The theorem above imports neither result: it uses only
+polynomial interpolation and an explicit field-size comparison.

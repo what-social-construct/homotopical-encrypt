@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1785252080.08735 "main.aux" "main.bbl" "main" 1785252081.07684 0
-  "./references.bib" 1785207287.05743 815 73c80d3c4c112463b3f44cd699b1f1ed ""
+["bibtex main"] 1785265213.03269 "main.aux" "main.bbl" "main" 1785265213.93858 0
+  "./references.bib" 1785259078.14415 1900 a554ce88fcb06deb267421bdf19ca92e ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/base/alpha.bst" 1292289607 23907 a5f93555796fb564b924339521f10a7c ""
-  "main.aux" 1785252080.77822 5271 db3facf9ce20337d80dd238e1d889c21 "pdflatex"
+  "main.aux" 1785265213.68273 6139 e724d2b0b8ccc4c589c8723a81937103 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1785252080.19678 "main.tex" "main.pdf" "main" 1785252081.07696 0
+["pdflatex"] 1785265213.13511 "main.tex" "main.pdf" "main" 1785265213.9387 0
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
@@ -54,6 +54,7 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx12.pfb" 1255129361 116908 1fca96723793882c2e0160350c192fc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmex10.pfb" 1254269338 23055 2e5b42921de910eaa97b85df04ca4891 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi10.pfb" 1254269338 30388 702fae6a5f0e6e9c48a1d872b442ffcf ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi5.pfb" 1254269338 31443 ba2241b179aa231f73e052863720cb42 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi6.pfb" 1254269338 31113 04b711c9a4c7f8cb4ed784c6fc4cc1c5 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi7.pfb" 1254269338 30789 be3ebdf20b6442cc4aaf81a81e17daf4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi8.pfb" 1254269338 30635 833ec815d446ec453a4913fc26d24cbc ""
@@ -144,19 +145,19 @@
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1774209607 3636776 dc5fa9b6b1453b9d196cd42edf876004 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "macros.tex" 1785207286.83222 1336 2f2c1bb5b431f93f25b89910051a61ad ""
-  "main.aux" 1785252080.77822 5271 db3facf9ce20337d80dd238e1d889c21 "pdflatex"
-  "main.bbl" 1785252080.19416 236 f94d6a701e62488afc707aa7e13ff9a7 "bibtex main"
-  "main.out" 1785252080.78914 5855 d6ff7346dcbba3e44134d52fd62451e9 "pdflatex"
-  "main.tex" 1785207286.94332 1859 7261dd304ffa6c5f4a1f77182414059f ""
-  "main.toc" 1785252080.79302 2939 1b234d87c0e97e3ed3147bf7b535d189 "pdflatex"
-  "sections/01-introduction.tex" 1785207287.24614 2915 281d6a0b494bb260b3678ddf71563c18 ""
+  "main.aux" 1785265213.68273 6139 e724d2b0b8ccc4c589c8723a81937103 "pdflatex"
+  "main.bbl" 1785265213.13304 756 c0909d5de5f260582497bb82e71b5b0d "bibtex main"
+  "main.out" 1785265213.68361 5758 d47b511702946ef027af37e2384bc145 "pdflatex"
+  "main.tex" 1785265122.61161 2206 296ef14f2efe4fa2db382bc51ce146cb ""
+  "main.toc" 1785265213.6839 2812 179ee28823169be07c224dfd8dce7c2f "pdflatex"
+  "sections/01-introduction.tex" 1785265122.72972 3252 50e8b767924d79c6f39cae0498ccfc1e ""
   "sections/02-problem-setup.tex" 1785207287.37298 1921 ccb3aed109996ab996a24b8c78912892 ""
   "sections/03-plane-pair-equivalence.tex" 1785207287.49376 2371 62b54f498c5746f8647b2057e0f1d874 ""
-  "sections/04-capacity-regime.tex" 1785207287.63 1940 89412c75af17592f4d714a2f81169252 ""
-  "sections/05-list-decoding-target.tex" 1785207287.88851 2109 f8ce9ca3e78e04809892f2dbb2474ad4 ""
+  "sections/04-capacity-regime.tex" 1785259078.03492 2582 b3b71cad774fa23f5e6a9df15987b1d1 ""
+  "sections/05-list-decoding-target.tex" 1785265169.62871 6402 f4cb0922b197f7a3d10c2ebcbcf0ee7f ""
   "sections/06-mca-target.tex" 1785207288.01054 2391 337f0e78712d9c8fd905b6563db59253 ""
-  "sections/07-application-interface.tex" 1785207288.15288 1836 1ee8aa258d8b5f80cf31b37d951ff62a ""
-  "sections/08-formalization-plan.tex" 1785208089.82443 2407 5e982ee29820480a5d9b87fd55f14f17 ""
+  "sections/07-application-interface.tex" 1785265188.90792 1964 1b42b17cc348e5fb760456f7adaec0a6 ""
+  "sections/08-formalization-plan.tex" 1785265189.01642 3016 74c318a8c78641cd2d5144dcc2975f88 ""
   (generated)
   "main.aux"
   "main.log"

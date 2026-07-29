@@ -18,10 +18,13 @@ Current status:
 - the problem statements and normalized metrics are specified;
 - the two-coordinate plane is identified with the full ambient word space of
   the two-fold interleaved code;
-- the capacity-radius list-decoding and MCA statements are theorem targets, not
-  completed claims;
-- no fixed `2^-128` claim is made until the list-size or bad-challenge bound is
-  explicitly compared with the field size;
+- the exact capacity-grid equality \(L_m=\binom nk\) is proved by an
+  agreement-set injection and a matching received-word construction;
+- the endpoint fractional target is characterized iff by the field-size
+  inequality, with an obstruction on the next Hamming shell;
+- an explicit smooth rate-`1/4` family is checked against the fixed `2^-128`
+  list-size target;
+- the capacity-radius MCA statement remains a theorem target;
 - the fixed hcrypt runtime modulus `12289` is not treated as the prize field.
 
 Suggested local build:

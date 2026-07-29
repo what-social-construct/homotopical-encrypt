@@ -95,6 +95,43 @@ theorem relativeRadius_mono {r s : ℕ} (hrs : r ≤ s) :
   unfold relativeRadius
   exact div_le_div_of_nonneg_right (by exact_mod_cast hrs) (Nat.cast_nonneg _)
 
+/--
+At positive block length, comparison at a normalized count radius is exactly
+comparison at the underlying Hamming-count radius.
+-/
+theorem relativeHammingDistance_le_relativeRadius_iff
+    {u v : Word ι α} {r : ℕ}
+    (hlength : 0 < Fintype.card ι) :
+    relativeHammingDistance u v ≤ relativeRadius (ι := ι) r ↔
+      hammingDistance u v ≤ r := by
+  have hlength_real : (0 : ℝ) < Fintype.card ι := by
+    exact_mod_cast hlength
+  unfold relativeHammingDistance relativeRadius
+  rw [div_le_div_iff_of_pos_right hlength_real]
+  norm_cast
+
+/-- Relative and count balls coincide at normalized count radii. -/
+theorem ballAt_relativeRadius_eq_ball
+    (C : BlockCode ι α)
+    {r : ℕ}
+    (hlength : 0 < Fintype.card ι)
+    (w : Word ι α) :
+    C.BallAt (relativeRadius (ι := ι) r) w = C.Ball r w := by
+  ext c
+  simp only [BallAt, Ball, Set.mem_setOf_eq, and_congr_right_iff]
+  intro _
+  exact relativeHammingDistance_le_relativeRadius_iff hlength
+
+/-- The corresponding relative and count ball cardinalities coincide. -/
+theorem ballCardAt_relativeRadius_eq_ballCard
+    (C : BlockCode ι α)
+    {r : ℕ}
+    (hlength : 0 < Fintype.card ι)
+    (w : Word ι α) :
+    C.ballCardAt (relativeRadius (ι := ι) r) w = C.ballCard r w := by
+  unfold ballCardAt ballCard
+  rw [ballAt_relativeRadius_eq_ball C hlength w]
+
 /-- Codewords lie in their own radius-zero list ball. -/
 theorem codeword_mem_ball_zero
     (C : BlockCode ι α) {c : Word ι α}

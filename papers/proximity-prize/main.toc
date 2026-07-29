@@ -4,31 +4,29 @@
 \contentsline {subsection}{\numberline {1.3}Contributions sought}{4}{subsection.1.3}%
 \contentsline {section}{\numberline {2}Problem Setup}{4}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Reed--Solomon parameters}{4}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Relative Hamming distance}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.2}Relative Hamming distance}{5}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}Interleaving}{5}{subsection.2.3}%
 \contentsline {subsection}{\numberline {2.4}List-decoding balls}{5}{subsection.2.4}%
-\contentsline {section}{\numberline {3}Planes, Pair Words, And Affine Lines}{5}{section.3}%
-\contentsline {subsection}{\numberline {3.1}The full ambient pair space}{5}{subsection.3.1}%
+\contentsline {section}{\numberline {3}Planes, Pair Words, And Affine Lines}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}The full ambient pair space}{6}{subsection.3.1}%
 \contentsline {subsection}{\numberline {3.2}Pair words as affine lines}{6}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Challenge evaluation is lossy}{6}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.3}Challenge evaluation is lossy}{7}{subsection.3.3}%
 \contentsline {section}{\numberline {4}The Capacity-Radius Regime}{7}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Normalized target}{7}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Field-size scaling}{7}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Largest safe radius}{8}{subsection.4.3}%
-\contentsline {section}{\numberline {5}The List-Decoding Target}{8}{section.5}%
-\contentsline {subsection}{\numberline {5.1}What a proof must control}{8}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Restricted and universal statements}{9}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Proof status}{9}{subsection.5.3}%
-\contentsline {section}{\numberline {6}The Mutual-Correlated-Agreement Target}{9}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Bad challenges}{9}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Distance interpretation}{10}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Commit-then-challenge order}{10}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Proof status}{10}{subsection.6.4}%
-\contentsline {section}{\numberline {7}Application Interface}{11}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Exact witnesses versus raw observations}{11}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Separation from application papers}{11}{subsection.7.2}%
-\contentsline {section}{\numberline {8}Formalization And Proof Ledger}{12}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Standalone hierarchy}{12}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Status ledger}{12}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Submission boundary}{13}{subsection.8.3}%
-\contentsline {subsection}{\numberline {8.4}Immediate next step}{13}{subsection.8.4}%
+\contentsline {subsection}{\numberline {4.1}The finite Hamming grid}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}An explicit smooth large-field family}{8}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}The field-size inequality}{8}{subsection.4.3}%
+\contentsline {section}{\numberline {5}The Capacity-Grid List Theorem}{9}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Scope relative to the Grand Challenge}{11}{subsection.5.1}%
+\contentsline {section}{\numberline {6}The Mutual-Correlated-Agreement Target}{12}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Bad challenges}{12}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Distance interpretation}{12}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Commit-then-challenge order}{13}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Proof status}{13}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Application Interface}{13}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Exact witnesses versus raw observations}{14}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Separation from application papers}{14}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Formalization And Proof Ledger}{14}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Standalone hierarchy}{14}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Status ledger}{15}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Submission boundary}{15}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Immediate next step}{16}{subsection.8.4}%

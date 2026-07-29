@@ -13,11 +13,15 @@ mathematics from application bridges:
     Plane--pair--line equivalences.
   \item[\lean{ProximityPrize/Parameters}]
     Explicit \(\epsstar\) and field-size inequalities.
+  \item[\lean{ProximityPrize/CapacityList}]
+    Agreement-set injection, the matching received-word construction, the
+    universal endpoint equality, and the fractional-target equivalence.
 \end{description}
 Existing generic definitions may be imported or refactored, but the final
 theorem should not depend on HCP, protocol, consensus, or runtime axiom bundles.
-The open capacity-list and capacity-MCA targets are intentionally not declared
-as Lean theorems or axioms at this stage.
+Both directions of the capacity-grid equality and its exact fractional-target
+criterion are theorems, not axioms.  The next-shell lower bound and the
+capacity-MCA target are not declared as Lean theorems or axioms at this stage.
 
 \subsection{Status ledger}
 
@@ -29,11 +33,14 @@ Obligation & Status & Required endpoint\\
 Relative Hamming normalization & Lean-defined & Values in \([0,1]\)\\
 Plane--pair equivalence & Lean-proved & Bijection and Hamming isometry\\
 Plane--affine-line equivalence & Lean-proved & Formal inverse maps\\
-Smooth large-field family & Open & Explicit domain family\\
-Capacity-radius list bound & Open & Universal list-size theorem\\
+Smooth large-field family & Paper-proved & Explicit subgroup family\\
+Capacity-grid list equality & Lean-proved & Universal \(L_m=\binom nk\)\\
+Endpoint fractional criterion & Lean-proved & Target iff
+  \(\binom nk\le\epsstar|\F|\)\\
+Next-shell list lower bound & Paper-proved & Explicit \(|\F|^m\) witness\\
 Capacity-radius MCA bound & Open & Universal bad-set theorem\\
-Target-fraction inequality & Open & Bound \(\le\epsstar|\F|\)\\
-Largest-radius or optimality statement & Open & Safe-radius characterization\\
+Target-fraction inequality & Lean-proved & Bound \(\le\epsstar|\F|\)\\
+Largest grid radius / real supremum & Paper-proved & Exact characterization\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -52,7 +59,12 @@ A completed claim requires:
 
 \subsection{Immediate next step}
 
-The next mathematical task is to choose the exact capacity-approaching theorem
-statement for \(m=2\) and a parameterized smooth-domain field family.  Only
-after those choices are fixed should the Lean target signatures and the core
-list-size argument be stabilized.
+The endpoint list-decoding package is closed.  Two logically separate tasks
+remain.  The application side needs a quantitative non-collapse/calibration
+theorem for an extraction map \(\pi\):
+\[
+  d_{\mathrm{source}}(x,\mathrm{valid})\ge\delta
+  \Longrightarrow
+  \Delta(\pi(x),\mathcal C^{\equiv2})\ge\delta.
+\]
+The remaining prize-facing coding task is the capacity-radius MCA estimate.
