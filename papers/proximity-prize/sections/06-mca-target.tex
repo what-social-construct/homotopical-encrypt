@@ -1,4 +1,4 @@
-\section{The Mutual-Correlated-Agreement Target}
+\section{The Pair Mutual-Correlated-Agreement Theorem}
 
 \subsection{Bad challenges}
 
@@ -25,24 +25,143 @@ The MCA error is
   \frac{|\Bad_{\MCA}(\mathcal C,\delta,p)|}{|\F|}.
 \]
 
-\begin{problem}[Capacity-radius MCA bound]
-\label{prob:capacity-mca}
-For a constant-rate smooth-domain Reed--Solomon code, determine an explicit
-bound
+\begin{theorem}[Uniform pair-MCA certificate bound]
+\label{thm:pair-mca}
+Let \(\mathcal C=\RS[\F,\mathcal L,k]\) have injectively indexed
+evaluation domain of length \(n\), where \(1\le k\le n\).  For every
+\(\delta\in\mathbb R\) and every \(p\in(\F^2)^n\),
 \[
-  B_{\MCA}(\F,n,k)
+  |\Bad_{\MCA}(\mathcal C,\delta,p)|
+  \le \binom n{k+1}.
 \]
-such that
+Consequently,
 \[
-  \forall p\in(\F^2)^n,\qquad
-  |\Bad_{\MCA}(\mathcal C,\deltacap,p)|
-  \le B_{\MCA}(\F,n,k),
+  \varepsilon_{\MCA}(\mathcal C,\delta)
+  \le \frac{\binom n{k+1}}{|\F|}.
 \]
-and determine when
+Smoothness is not required for this bound.
+\end{theorem}
+
+\begin{proof}
+Fix a bad challenge \(\gamma\), and choose a witnessing set \(S\).
+Necessarily \(|S|>k\).  Indeed, when \(|S|\le k\), interpolate each component
+of \(p\) on \(S\) by a polynomial of degree \(<k\); the resulting pair
+codeword agrees with \(p\) on \(S\), contradicting condition~(ii).
+
+Choose a \(k\)-subset \(T\subset S\).  Let \(a_T,b_T\) be the unique
+degree-\(<k\) polynomials interpolating \(p_0,p_1\), respectively, on \(T\).
+Condition~(ii) says that the pair interpolant \((a_T,b_T)\) fails somewhere
+on \(S\). Choose such an \(i\in S\setminus T\), and set
+\(U=T\cup\{i\}\). Condition~(i) remains true after restriction from \(S\) to
+\(U\). The pair still cannot agree with \(\Cpair\) on \(U\): any purported
+pair codeword would agree with \((a_T,b_T)\) on \(T\), hence equal it by
+\(k\)-point determination, contradicting the mismatch at \(i\).
+Thus \(U\) is a \((k+1)\)-coordinate obstruction for \(\gamma\).
+
+A fixed \(U\) obstructs at most one challenge. Suppose distinct
+\(\gamma,\eta\) were both bad on \(U\), with scalar codewords
+\(c_\gamma,c_\eta\) agreeing with
+\(p_0+\gamma p_1,p_0+\eta p_1\), respectively. By linearity,
 \[
-  \frac{B_{\MCA}(\F,n,k)}{|\F|}\le\epsstar.
+  d=\frac{c_\gamma-c_\eta}{\gamma-\eta},
+  \qquad
+  a=c_\gamma-\gamma d
 \]
-\end{problem}
+are codewords. On \(U\), they agree with \(p_1\) and \(p_0\), respectively,
+so \((a,d)\) is a pair codeword agreeing with \(p\) on \(U\), a
+contradiction.
+
+Make the finite choices deterministic. Mapping each bad challenge to its
+unordered obstruction \(U\) is injective, and there are
+\(\binom n{k+1}\) such subsets.
+Dividing by \(|\F|\) proves the error bound.  Notice that the large-set
+inequality is no longer used after the witness is extracted; this is why the
+bound is uniform in \(\delta\).
+\end{proof}
+
+\begin{corollary}[Explicit smooth family at \(2^{-128}\)]
+\label{cor:explicit-family-mca}
+For every member \(\mathcal C_u\) of the family in
+\cref{sec:explicit-family}, every \(\delta\in[0,1]\), and every pair word
+\(p\),
+\[
+  \frac{|\Bad_{\MCA}(\mathcal C_u,\delta,p)|}{|\F_u|}
+  \le 2^{-128}.
+\]
+Thus, for this family and this same-set pair-MCA definition, every normalized
+radius is safe and the largest admissible radius is \(1\).
+\end{corollary}
+
+\begin{proof}
+\Cref{sec:field-inequality} proves
+\[
+  2^{128}\binom{n_u}{k_u+1}\le q_u.
+\]
+Apply \cref{thm:pair-mca}.
+\end{proof}
+
+\subsection{An exact small-radius boundary instance}
+\label{sec:mca-boundary-field}
+
+The uniform certificate bound is sufficient but need not locate the first
+unsafe radius.  Write
+\[
+  B_{\mathcal C}(r)
+  =
+  \max_p|\Bad_{\MCA}(\mathcal C,r/n,p)|
+\]
+for the exact worst bad-challenge count at count radius \(r\).  Consider
+\[
+  q=2^{128}+192513
+   =340282366920938463463374607431768403969.
+\]
+The accompanying Lean development certifies that \(q\) is prime and
+\(q\equiv1\pmod {4096}\).  Hence \(\mathbb F_q^\times\) contains an
+order-\(4096\) subgroup, which we use as the evaluation domain for the smooth
+RS code with \(n=4096\) and \(k=1024\).
+
+\begin{theorem}[Exact 128-bit small-radius transition]
+\label{thm:mca-boundary-threshold}
+For this code,
+\[
+  B_{\mathcal C}(0)=1,
+  \qquad
+  B_{\mathcal C}(1)\ge2.
+\]
+Consequently its greatest safe count radius at 128 bits is \(0\), and its
+first unsafe count radius is \(1\).  For the relative-radius definition over
+all \(\delta\in[0,1]\), the safe set is
+\[
+  \left[0,\frac1{4096}\right),
+\]
+so the real-radius supremum is \(1/4096\) and is not attained.
+\end{theorem}
+
+\begin{proof}
+At count radius zero, every large agreement set is the whole coordinate set.
+A fixed set supports at most one bad challenge, while a unit-spike affine
+line realizes one; hence \(B_{\mathcal C}(0)=1\).  At count radius one, take
+two coordinates outside a \(k\)-point interpolation set.  The affine line
+from the unit spike at the first coordinate to the unit spike at the second
+has distinct bad challenges \(0\) and \(1\), proving
+\(B_{\mathcal C}(1)\ge2\).
+
+The certified field lies in the exact budget window
+\[
+  2^{128}\le q<2^{128}\cdot2.
+\]
+Thus the integer criterion \(2^{128}B_{\mathcal C}(r)\le q\) holds at
+\(r=0\) and fails at \(r=1\).  Monotonicity of the bad-count spectrum gives
+the two grid endpoints.
+
+Finally, if \(0\le\delta<1/n\), the inequality
+\(|S|/n\ge1-\delta>1-1/n\) forces the integer \(|S|\) to equal \(n\).
+The bad sets are therefore exactly those at count radius zero throughout
+that half-open interval.  At \(\delta=1/n\), sets missing one coordinate
+become admissible, and the two-spike line already violates the budget.
+Monotonicity preserves failure for larger radii, proving the real-radius
+claim.
+\end{proof}
 
 \subsection{Distance interpretation}
 
@@ -67,6 +186,26 @@ This is a challenge-indexed statement.  Replacing the sampled challenge by one
 fixed field element would require a separate theorem that the selected element
 is good for every pair, which does not follow from a fractional MCA bound.
 
+\subsection{Endpoint interpretation}
+
+At \(\deltacap=1-k/n\), interpolation on any \(k\) coordinates shows that
+\[
+  D_1(y)\le\deltacap
+  \quad\text{and}\quad
+  D_2(p)\le\deltacap
+\]
+for every scalar word \(y\) and pair word \(p\).  Moreover, on every set
+\(S\) of size at most \(k\), each component of \(p\) extends to a
+degree-\(<k\) polynomial.  Such an \(S\) can therefore never witness an MCA
+failure.  Every bad endpoint challenge must instead have a witness with
+\(|S|\ge k+1\).
+
+Consequently, the endpoint distance implication above is an equality
+non-collapse statement: when \(D_2(p)=\deltacap\), a good challenge must not
+lower the projected distance strictly below \(\deltacap\).
+\Cref{thm:pair-mca} supplies the previously missing quantitative bound on the
+excluded challenges.
+
 \subsection{Commit-then-challenge order}
 
 The mathematical experiment fixes \(p\) before sampling
@@ -76,6 +215,43 @@ before deriving \(\gamma\), but the coding theorem needs only the resulting
 quantification and probability space; it does not depend on a complete
 blockchain or commitment protocol.
 
-\subsection{Proof status}
+\subsection{Scope}
 
-\todo{Insert the capacity-radius MCA argument and its explicit field-size bound.}
+The theorem is universal over pair words and injective RS evaluation domains,
+but its \(2^{-128}\) corollary uses the explicit exponential-size field.
+For a different supplied field, the same certificate proof gives the
+sufficient comparison
+\[
+  \binom n{k+1}\le 2^{-128}|\F|.
+\]
+This improves the ordered-certificate requirement by the exact factor
+\(k+1\), since
+\(\binom nk(n-k)=(k+1)\binom n{k+1}\).
+If that inequality fails, this proof does not determine the optimal radius or
+show that the MCA target is impossible; it only ceases to certify the requested
+error.
+
+For an arbitrary supplied finite code, radius \(r/n\) meets the
+\(2^{-128}\) target exactly when
+\[
+  2^{128}B_{\mathcal C}(r)\le|\F|.
+\]
+This is also the exact formal equivalence: the Lean theorem identifies the
+real-valued operational error predicate at normalized radius \(r/n\) with the
+displayed integer inequality, so no rounding relaxation is hidden here.
+Thus a uniform upper-bound certificate at \(r\), together with one concrete
+affine line exceeding the budget at \(r+1\), pins both the largest safe and
+first unsafe Hamming-grid radii. The remaining middle regime is the
+code-specific problem of proving those matching bounds; smoothness by itself
+does not determine this incidence spectrum.
+
+The result is for the two-coordinate, same-set MCA experiment defined above.
+Broader notions or higher-dimensional challenge families require
+separate statements.
+
+As a separate concrete/application result, the repository also checks the
+canonical runtime field \(q=12289\) with \(n=4096\) and \(k=1024\).  Since
+\(q<2^{128}\) while its radius-zero unit-spike line has one bad challenge,
+that concrete code has no safe count radius at 128-bit MCA security.  This
+runtime-facing fact is not used by the standalone large-field or boundary-field
+theorems above.

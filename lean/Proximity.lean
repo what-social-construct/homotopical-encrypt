@@ -1,23 +1,12 @@
-import Proximity.Projection
-import Proximity.RS
-import Proximity.Problem
-import Proximity.RS.Target
-import Proximity.Grassmannian
-import Proximity.PluckerShadow
-import Proximity.GrassmannianPlucker
-import Proximity.GrassmannianPlucker.Concrete
-import Proximity.CochainBridge
-import Proximity.PluckerCochain
-import Proximity.PluckerCochain.Concrete
-import Proximity.CochainPlane
-import Proximity.CochainReedSolomon
-import Proximity.ProjectionChain
-import Proximity.CanonicalRS
-import Proximity.Gates
-import Proximity.Public
+import Proximity.Core
+import Proximity.Capacity
+import Proximity.ListDecoding
+import Proximity.MCA
+import Proximity.Application
+import Proximity.Concrete
 
 /-
-  Proximity bridge for the homotopical-encrypt Lean workspace.
+  Unified proximity hierarchy for the homotopical-encrypt Lean workspace.
 
   Paper correspondence:
   - Paper 1 Section 6: Plucker/cochain/plane/RS projection chain and MCA
@@ -26,13 +15,14 @@ import Proximity.Public
     proximity.
 
   Provenance/scope label:
-  the projection-chain/gate/certificate architecture is hcrypt-native, while
-  the RS/list-decoding/correlated-agreement/MCA vocabulary formalizes
-  paper-facing coding-theory definitions. Cited RS theorem inputs enter through
-  `Proximity.CanonicalRS.CitedBounds` as an explicit trusted boundary.
+  `Core`, `Capacity`, `ListDecoding`, and `MCA` contain the standalone
+  coding-theory surface. `Application` contains neutral calibration contracts.
+  `Concrete` contains the projection-chain, cochain, canonical-RS, gate, and
+  certificate construction. Cited RS inputs enter through
+  `Proximity.Concrete.CanonicalRS.CitedBounds` as an explicit trusted boundary.
 
-  This file names the hcrypt-native projection/proximity interface:
-  cochains are the finite cellular shadow of a sheaf/fibration, disagreement is
+  The concrete projection/proximity interface interprets
+  cochains as the finite cellular shadow of a sheaf/fibration; disagreement is
   the local obstruction to gluing, and a code/evaluation shadow is a further
   projection of that cochain data.
 

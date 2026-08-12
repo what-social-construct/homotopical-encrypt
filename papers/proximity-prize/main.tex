@@ -33,11 +33,26 @@ for every positive interleaving width.  Thus
 fractional list target at the capacity endpoint.  A next-shell construction
 then gives a complete three-regime phase split.  We instantiate the safe
 regime with an explicit rate-\(1/4\) smooth family over
-\(\mathbb F_{3^n}\) satisfying \(\binom nk\le2^{-128}|\F|\).  In that regime
-the real safe-radius set is half-open and has a supremum but no largest real
-element.  The optimal sub-capacity radius in the intermediate field-size
-regime and the capacity-radius mutual-correlated-agreement estimate remain
-separate proof targets.
+\(\mathbb F_{3^n}\). For pair mutual correlated agreement, an injective
+compressed-certificate map gives the radius-independent bound
+\[
+  |\Bad_{\MCA}|\le\binom n{k+1}.
+\]
+The same explicit family satisfies both
+\(\binom nk\le2^{-128}|\F|\) and
+\(\binom n{k+1}\le2^{-128}|\F|\). Thus its list target holds at the
+capacity endpoint and its pair-MCA error is at most \(2^{-128}\) at every
+normalized radius.  We also define the exact bad-count spectrum
+\(B_{\mathcal C}(r)\) and certify a sharp small-radius transition over the
+following boundary field for 128-bit security:
+\[
+  q=2^{128}+192513\equiv1\pmod {4096},\qquad (n,k)=(4096,1024).
+\]
+For this smooth instance, \(B_{\mathcal C}(0)=1\) and
+\(B_{\mathcal C}(1)\ge2\). Hence its greatest safe count radius at 128 bits is
+zero, its first unsafe count radius is one, and its safe real-radius set has
+supremum \(1/4096\), which is not attained.  The optimal list-decoding radius
+in the intermediate field-size regime remains open.
 \end{abstract}
 
 \tableofcontents

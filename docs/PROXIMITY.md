@@ -1,6 +1,6 @@
 # Proximity
 
-This is the canonical proximity note for hcrypt. It consolidates the proof
+This is the canonical proximity note for the homotopical-encrypt workspace. It consolidates the proof
 outline, combinatorial-Hodge shadow discussion, and Reed-Solomon target status
 into one document.
 
@@ -18,7 +18,7 @@ checked against, see
 
 ## Thesis
 
-The hcrypt sheaf/Hodge proximity problem is projected into a finite
+The concrete sheaf/Hodge proximity problem is projected into a finite
 Reed-Solomon-style target through a chain of public shadows:
 
 ```text
@@ -62,32 +62,34 @@ Also:
 
 | Role | Lean file | Main objects |
 |------|-----------|--------------|
-| Generic projection vocabulary | `lean/Proximity/Projection.lean` | `SheafProximityInstance`, `CodeShadow`, `EvaluationProjection` |
-| Promised gap problem | `lean/Proximity/Problem.lean` | `GapProximityProblem`, `GapReduction`, `EndToEndGapProjection`, `CalibratedEndToEndGapProjection` |
-| Plucker coordinate shadow | `lean/Proximity/PluckerShadow.lean` | `CoordinateSystem`, `InvariantChecklist` |
-| Grassmannian/Plucker witness | `lean/Proximity/GrassmannianPlucker.lean` | `FrameWitness`, `ExteriorCoordinate`, `FramedSystem` |
-| Plucker to cochain | `lean/Proximity/PluckerCochain.lean` | `LocalSyndromeTarget`, `Projection`, `InvariantChecklist` |
-| Concrete Plucker payload bridge | `lean/Proximity/PluckerCochain/Concrete.lean` | `PayloadEncoder`, `CommitmentSumSyndromeInputs`, `commitmentSumLocalSyndromeTarget`, `ProjectionInputs` |
-| Public Plucker/cochain binding | `lean/Proximity/PluckerCochain/PublicBinding.lean` | `HashedPluckerShadow`, `PayloadRealization`, `ObservedFrameBinding` |
-| Cochain to plane | `lean/Proximity/CochainPlane.lean` | `PlaneShadow`, `PlaneExtractionContext`, `Projection`, `InvariantChecklist` |
-| Plane to RS | `lean/Proximity/CochainReedSolomon.lean` | `PlaneEncoding`, `CanonicalField`, `Interpretation`, `InvariantChecklist` |
-| Projection-chain aggregate | `lean/Proximity/ProjectionChain.lean` | Re-exports the map orchestration surface |
-| Projection core orchestrator | `lean/Proximity/ProjectionChain/Core.lean` | `Chain`, `committedCochain`, `planeShadow`, `receivedWord`, `toEvaluationProjection` |
-| Projection stage gates | `lean/Proximity/Gates/Stage.lean` | `StageChecklists`, `PluckerCochainGateCertificate`, `CochainPlaneGateCertificate`, `PlaneRSGateCertificate`, `ProjectionStageGateCertificate`, `ProjectionStageCertificate` |
-| Projection final checks | `lean/Proximity/Gates/Final.lean` | `RadiusCalibration`, `FarNonCollapseWitness`, `CalibratedFinalGateCertificate`, `CalibratedFinalCheck`, `CalibratedEndToEndReady` |
-| Proximity invariant gates | `lean/Proximity/Gates.lean` | `SourceMetricGate`, `PluckerMetricGate`, `PublicShadowRespectGate`, `SemanticAlignmentGate`, `SyndromeAdequacyGate`, `PluckerToCochainNonCollapseGate`, `CochainToRSFarGate`, `FarGatePipeline`, `StructuralBundle`, `Bundle`, `HardGateCertificate`, `CalibratedFinalCertificate` |
-| Proximity gate evidence | `lean/Proximity/GateEvidence.lean` | `EvidenceSlot`, `HardGateSlot`, `EvidenceDatabase`, `HardGateEvidenceRecord`, `CalibratedFinalEvidenceRecord` |
-| Public/storage aggregate | `lean/Proximity/Public.lean` | `CochainPlane.PublicBinding.PlaneView`, public bindings, and evidence records |
-| Canonical RS parameters | `lean/Proximity/CanonicalRS/Parameters.lean` | `RSField`, `length`, `degreeBound`, `johnsonBelowRadius` |
-| Canonical RS power domain | `lean/Proximity/CanonicalRS/PowerDomain.lean` | `FullGenerator`, `PowerRoot`, `PowerRoot.domain`, `candidateGenerator`, `candidateRoot` |
-| Canonical RS encoding | `lean/Proximity/CanonicalRS/Encoding.lean` | `canonicalMix`, `integerPlaneEncoding` |
-| Canonical RS target | `lean/Proximity/CanonicalRS/Target.lean` | `Bounds`, `target` |
-| Canonical RS metric | `lean/Proximity/CanonicalRS/Metric.lean` | `hammingDistanceToCode`, `absoluteHammingMetric`, `absoluteRadiusNormalization` |
-| Canonical RS bridge data | `lean/Proximity/CanonicalRS/BridgeData.lean` | `BridgeData`, `BridgeTheoremSlots`, `BridgeCertificate`, `RSMetricCertificate`, `RSMetricCertificate.calibratedFinalGateCertificate`, `RSMetricCertificate.toCalibratedHcryptToRSBridge` |
-| Canonical RS far separation | `lean/Proximity/CanonicalRS/FarSeparation.lean` | `JohnsonRSFarSeparation`, `JohnsonRSFarSeparation.toRSMetricCertificate`, `JohnsonRSFarSeparation.finalGate`, `JohnsonRSFarSeparation.toBridge` |
-| Canonical RS aggregate | `lean/Proximity/CanonicalRS.lean` | Re-exports the canonical RS modules |
-| RS/code aggregate | `lean/Proximity/RS.lean` | Re-exports list-decoding, correlated-agreement, and RS core modules |
-| RS target | `lean/Proximity/RS/Target.lean` | `Target`, `ReceivedWordMetric`, `RadiusNormalization`, `BridgeObligations`, `HcryptToRSBridge`, `CalibratedHcryptToRSBridge` |
+| Generic projection vocabulary | `lean/Proximity/Application/Projection.lean` | `SheafProximityInstance`, `CodeShadow`, `EvaluationProjection` |
+| Source-to-code calibration | `lean/Proximity/Application/Calibration.lean` | `SourceValidityModel`, `SourceToCodeCalibration`, `sourceFar_implies_targetFar` |
+| Promised gap problem | `lean/Proximity/Application/Problem.lean` | `GapProximityProblem`, `GapReduction`, `EndToEndGapProjection`, `CalibratedEndToEndGapProjection` |
+| Plucker coordinate shadow | `lean/Proximity/Concrete/PluckerShadow.lean` | `CoordinateSystem`, `InvariantChecklist` |
+| Grassmannian/Plucker witness | `lean/Proximity/Concrete/GrassmannianPlucker.lean` | `FrameWitness`, `ExteriorCoordinate`, `FramedSystem` |
+| Plucker to cochain | `lean/Proximity/Concrete/PluckerCochain.lean` | `LocalSyndromeTarget`, `Projection`, `InvariantChecklist` |
+| Concrete Plucker payload bridge | `lean/Proximity/Concrete/PluckerCochain/Concrete.lean` | `PayloadEncoder`, `CommitmentSumSyndromeInputs`, `commitmentSumLocalSyndromeTarget`, `ProjectionInputs` |
+| Public Plucker/cochain binding | `lean/Proximity/Concrete/PluckerCochain/PublicBinding.lean` | `HashedPluckerShadow`, `PayloadRealization`, `ObservedFrameBinding` |
+| Cochain to plane | `lean/Proximity/Concrete/CochainPlane.lean` | `PlaneShadow`, `PlaneExtractionContext`, `Projection`, `InvariantChecklist` |
+| Plane to RS | `lean/Proximity/Concrete/CochainReedSolomon.lean` | `PlaneEncoding`, `CanonicalField`, `Interpretation`, `InvariantChecklist` |
+| Projection-chain aggregate | `lean/Proximity/Concrete/ProjectionChain.lean` | Re-exports the map orchestration surface |
+| Projection core orchestrator | `lean/Proximity/Concrete/ProjectionChain/Core.lean` | `Chain`, `committedCochain`, `planeShadow`, `receivedWord`, `toEvaluationProjection` |
+| Projection stage gates | `lean/Proximity/Concrete/Gates/Stage.lean` | `StageChecklists`, `PluckerCochainGateCertificate`, `CochainPlaneGateCertificate`, `PlaneRSGateCertificate`, `ProjectionStageGateCertificate`, `ProjectionStageCertificate` |
+| Projection final checks | `lean/Proximity/Concrete/Gates/Final.lean` | `RadiusCalibration`, `FarNonCollapseWitness`, `CalibratedFinalGateCertificate`, `CalibratedFinalCheck`, `CalibratedEndToEndReady` |
+| Proximity invariant gates | `lean/Proximity/Concrete/Gates.lean` | `SourceMetricGate`, `PluckerMetricGate`, `PublicShadowRespectGate`, `SemanticAlignmentGate`, `SyndromeAdequacyGate`, `PluckerToCochainNonCollapseGate`, `CochainToRSFarGate`, `FarGatePipeline`, `StructuralBundle`, `Bundle`, `HardGateCertificate`, `CalibratedFinalCertificate` |
+| Proximity gate evidence | `lean/Proximity/Concrete/GateEvidence.lean` | `EvidenceSlot`, `HardGateSlot`, `EvidenceDatabase`, `HardGateEvidenceRecord`, `CalibratedFinalEvidenceRecord` |
+| Public/storage aggregate | `lean/Proximity/Concrete/Public.lean` | `CochainPlane.PublicBinding.PlaneView`, public bindings, and evidence records |
+| Canonical RS parameters | `lean/Proximity/Concrete/CanonicalRS/Parameters.lean` | `RSField`, `length`, `degreeBound`, `johnsonBelowRadius` |
+| Canonical RS power domain | `lean/Proximity/Concrete/CanonicalRS/PowerDomain.lean` | `FullGenerator`, `PowerRoot`, `PowerRoot.domain`, `candidateGenerator`, `candidateRoot` |
+| Canonical RS encoding | `lean/Proximity/Concrete/CanonicalRS/Encoding.lean` | `canonicalMix`, `integerPlaneEncoding` |
+| Canonical RS target | `lean/Proximity/Concrete/CanonicalRS/Target.lean` | `Bounds`, `target` |
+| Canonical RS metric | `lean/Proximity/Concrete/CanonicalRS/Metric.lean` | `hammingDistanceToCode`, `absoluteHammingMetric`, `absoluteRadiusNormalization` |
+| Canonical RS bridge data | `lean/Proximity/Concrete/CanonicalRS/BridgeData.lean` | `BridgeData`, `BridgeTheoremSlots`, `BridgeCertificate`, `RSMetricCertificate`, `RSMetricCertificate.calibratedFinalGateCertificate`, `RSMetricCertificate.toCalibratedHcryptToRSBridge` |
+| Public observation calibration | `lean/Proximity/Concrete/CanonicalRS/PublicCalibration.lean` | `Observation`, `sourceDistanceToValid`, `extractedPair`, `sourceFar_implies_pairFar` |
+| Canonical RS far separation | `lean/Proximity/Concrete/CanonicalRS/FarSeparation.lean` | `JohnsonRSFarSeparation`, `JohnsonRSFarSeparation.toRSMetricCertificate`, `JohnsonRSFarSeparation.finalGate`, `JohnsonRSFarSeparation.toBridge` |
+| Canonical RS aggregate | `lean/Proximity/Concrete/CanonicalRS.lean` | Re-exports the canonical RS modules |
+| RS/code aggregate | `lean/Proximity/Concrete/RS.lean` | Re-exports list-decoding, correlated-agreement, and RS core modules |
+| RS target | `lean/Proximity/Concrete/RS/Target.lean` | `Target`, `ReceivedWordMetric`, `RadiusNormalization`, `BridgeObligations`, `HcryptToRSBridge`, `CalibratedHcryptToRSBridge` |
 
 The formal split is:
 
@@ -567,7 +569,7 @@ Remaining obligations:
 
 1. **Motivation**
 
-   Explain why hcrypt needs a finite public proximity shadow: validators should
+   Explain why the concrete construction needs a finite public proximity shadow: validators should
    verify local/global coherence without learning the hidden fibration or
    harmonic representative.
 

@@ -24,8 +24,34 @@ Current status:
   inequality, with an obstruction on the next Hamming shell;
 - an explicit smooth rate-`1/4` family is checked against the fixed `2^-128`
   list-size target;
-- the capacity-radius MCA statement remains a theorem target;
-- the fixed hcrypt runtime modulus `12289` is not treated as the prize field.
+- the endpoint equality and next-shell obstruction have standalone Lean
+  proofs;
+- the same-set pair-MCA bad-challenge set has the Lean-proved uniform bound
+  `choose(n,k+1)`, improving the ordered-certificate count by a factor
+  `k+1`;
+- the explicit family meets the `2^-128` MCA target at every normalized
+  radius;
+- the exact worst-bad-count spectrum is Lean-defined for arbitrary supplied
+  finite codes, and the real error statement at `r/n` is Lean-proved iff the
+  exact integer budget `2^128 B_C(r) <= |F|` holds;
+- a uniform in-budget upper bound at `r` plus one explicit over-budget affine
+  line at `r+1` Lean-proves the greatest-safe and first-unsafe grid radii;
+- universal unit-spike and two-spike certificates prove `B_C(0) = 1` and
+  `B_C(1) >= 2` for proper RS codes with two coordinates beyond an
+  interpolation set;
+- the prime field `q = 2^128 + 192513`, with `q = 1 mod 4096`, supplies a
+  smooth `[n,k] = [4096,1024]` instance whose greatest safe 128-bit count
+  radius is `0` and first unsafe count radius is `1`;
+- for that boundary-field instance the real safe-radius set is
+  `[0,1/4096)`, so its supremum is `1/4096` but it has no largest real safe
+  radius;
+- the explicit family's greatest safe MCA grid radius is Lean-proved to be
+  the full block length;
+- a generic source-to-pair calibration interface isolates the exact
+  non-collapse inequality required by downstream applications;
+- as a separate concrete/application result, the canonical runtime field
+  `q = 12289` has no safe count radius at 128 bits; it is not treated as the
+  prize-facing boundary or large-field instance.
 
 Suggested local build:
 
@@ -49,6 +75,7 @@ pdflatex main.tex
 pdflatex main.tex
 ```
 
-The standalone Lean companion now lives under `lean/ProximityPrize/`, importing
-only Mathlib and application-independent definitions. Build it with
+The Lean companion is the application-independent surface under
+`lean/Proximity/{Core,Capacity,ListDecoding,MCA,Application}`.  The aggregate
+`lean/ProximityPrize.lean` imports only that surface; build it with
 `cd lean && lake build ProximityPrize`.

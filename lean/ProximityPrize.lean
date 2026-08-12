@@ -1,23 +1,24 @@
-import ProximityPrize.BlockCode
-import ProximityPrize.ReedSolomon
-import ProximityPrize.PlanePair
-import ProximityPrize.Parameters
-import ProximityPrize.CapacityList
+import Proximity.Core
+import Proximity.Capacity
+import Proximity.ListDecoding
+import Proximity.MCA
+import Proximity.Application.Calibration
 
 /-!
 # Capacity-radius proximity: proved infrastructure
 
 This aggregate is the standalone Lean surface for the proximity-prize paper.
 It exports proved definitions, equivalences, arithmetic, and the universal
-capacity-grid list equality with its exact fractional-target criterion.
+capacity-grid list equality with its exact fractional-target criterion. It
+also exports the sharpened uniform pair-MCA certificate theorem
 
-Deliberately absent:
+`|Bad(C, δ, L)| ≤ Nat.choose n (k + 1)`
 
-* a capacity-radius mutual-correlated-agreement theorem;
-* a machine-checked version of the next-shell lower bound;
-* axioms or placeholders asserting either missing target.
-
-Those modules should be added only when their theorem statements and proofs are
-ready. The application-facing `Hcrypt.Proximity` hierarchy remains a separate
-consumer during the staged refactor.
+and the explicit smooth-family `2⁻¹²⁸` corollary, both at every radius.
+For arbitrary supplied finite codes it also exports the exact spectrum
+criterion and the uniform-upper-bound / concrete-next-line threshold
+certificate.  The certified boundary-field instance at
+`|F| = 2^128 + 192513` realizes those certificates with greatest safe count
+radius zero and first unsafe radius one.
+Concrete cochain and runtime modules are not imported by this target.
 -/

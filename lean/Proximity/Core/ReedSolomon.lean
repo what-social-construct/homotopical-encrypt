@@ -1,8 +1,9 @@
-import ProximityPrize.BlockCode
+import Proximity.Core.BlockCode
 import Mathlib.Algebra.Polynomial.Basic
+import Mathlib.LinearAlgebra.Lagrange
 
 /-!
-# Standalone Reed--Solomon foundations
+# Generic Reed--Solomon foundations
 
 This module defines evaluation domains, scalar RS codewords, and interleaved
 RS codewords. It contains no list-decoding-capacity or MCA theorem assumption.
@@ -36,6 +37,8 @@ namespace Parameters
 
 variable {F ι : Type*} [Field F] [Fintype ι]
 
+open CapacityList
+
 /-- Block length. -/
 def length (_P : Parameters F ι) : ℕ :=
   Fintype.card ι
@@ -65,6 +68,44 @@ def VectorCodeword
     (σ : Type*)
     (w : VectorWord ι F σ) : Prop :=
   (P.vectorBlockCode σ).Codeword w
+
+/-- Scalar Reed--Solomon words are determined by any `k` evaluations. -/
+theorem determinedBy_degreeBound
+    (P : ReedSolomon.Parameters F ι) :
+    DeterminedBy P.toBlockCode P.degreeBound := by
+  intro c d hc hd S hS hagree
+  rcases hc with ⟨p, hp, hp_eval⟩
+  rcases hd with ⟨q, hq, hq_eval⟩
+  have hp_degree : p.degree < (S.card : WithBot ℕ) := by
+    rw [hS]
+    exact lt_of_le_of_lt Polynomial.degree_le_natDegree
+      (WithBot.coe_lt_coe.2 hp)
+  have hq_degree : q.degree < (S.card : WithBot ℕ) := by
+    rw [hS]
+    exact lt_of_le_of_lt Polynomial.degree_le_natDegree
+      (WithBot.coe_lt_coe.2 hq)
+  have hpq : p = q := by
+    apply Polynomial.eq_of_degrees_lt_of_eval_index_eq S
+      P.domain.injective_point.injOn hp_degree hq_degree
+    intro i hi
+    rw [← hp_eval i, ← hq_eval i]
+    exact hagree i hi
+  funext i
+  rw [hp_eval i, hq_eval i, hpq]
+
+/-- Every interleaving width retains the same `k`-point determination bound. -/
+theorem vectorDeterminedBy_degreeBound
+    (P : ReedSolomon.Parameters F ι)
+    (σ : Type*) :
+    DeterminedBy (P.vectorBlockCode σ) P.degreeBound := by
+  intro c d hc hd S hS hagree
+  funext i j
+  have hcomponent :
+      (fun i => c i j) = (fun i => d i j) := by
+    apply P.determinedBy_degreeBound (hc j) (hd j) S hS
+    intro a ha
+    exact congrFun (hagree a ha) j
+  exact congrFun hcomponent i
 
 /-- F-additivity certificate for an RS parameter choice. -/
 structure FAdditive (P : Parameters F ι) : Prop where

@@ -14,40 +14,32 @@ be the extracted pair word.  A source distance
 presentations; if every element of \(O\) already contains a validity witness,
 then the proximity problem may collapse to the exact code locus.
 
-The principal application theorem should have one of the forms
+The Lean companion packages this interface as a source validity model and a
+source-to-code calibration.  Its only quantitative field is the pointwise
+inequality
 \[
-  D_2(\pi(o))=\rho_O(o),
+  \rho_O(o)\le D_2(\pi(o)).
 \]
-or
+It yields, uniformly in \(\delta\),
 \[
   \rho_O(o)\ge\delta
   \Longrightarrow
   D_2(\pi(o))\ge\delta.
 \]
-Under either comparison, the proved universal list theorem applies to
-\(\pi(o)\); a future universal MCA theorem would apply through the same
-interface.
 
-\subsection{Exact witnesses versus raw observations}
+Under this comparison, the proved universal list theorem applies to
+\(\pi(o)\); the proved pair-MCA theorem applies through the same interface
+once the application fixes its pair before sampling the challenge.
 
-The recommended type boundary is:
-\[
-\begin{array}{rcl}
-  \text{raw observation} && \text{arbitrary public presentation},\\
-  \text{exact witness} && \text{certificate of valid structured realization},\\
-  G(o) && \text{there exists an exact witness realizing }o.
-\end{array}
-\]
-An exact witness is evidence for membership in the code locus; it should not be
-the carrier of adversarial received words.
+There are two standard ways to discharge the comparison.  Defining
+\(\rho_O=D_2\circ\pi\) makes it reflexive.  A genuinely pre-existing source
+metric instead requires a mathematical proof of
+\(\rho_O\le D_2\circ\pi\).  Exact witnesses may certify membership in \(G\),
+but the carrier \(O\) must still include arbitrary received observations.
 
-\subsection{Separation from application papers}
-
-Application-specific Plucker coordinates, cochain commitments, hidden
-operators, transcript binding, and runtime verification are intentionally
-outside the proof of
-\cref{thm:capacity-grid-exact,thm:next-shell-lower,prob:capacity-mca}.
-They may cite the completed list theorem, and eventually the MCA theorem,
-through the interface above.  Conversely, each coding theorem must remain
-valid without assuming that every received word comes from an
+Protocol-specific observation formats, commitments, and runtime verification
+are intentionally outside the proof of
+\cref{thm:capacity-grid-exact,thm:next-shell-lower,thm:pair-mca}.
+Such developments may cite the two coding theorems through the interface
+above; neither theorem assumes that every received word comes from an
 application-specific witness space.

@@ -5,23 +5,53 @@
 The intended machine-checked development should separate generic coding
 mathematics from application bridges:
 \begin{description}[style=nextline]
-  \item[\lean{ProximityPrize/BlockCode}]
+  \item[\lean{Proximity/Core/BlockCode}]
     Relative distance, balls, and worst-case list size.
-  \item[\lean{ProximityPrize/ReedSolomon}]
+  \item[\lean{Proximity/Core/ReedSolomon}]
     Smooth-domain RS families and interleaving.
-  \item[\lean{ProximityPrize/PlanePair}]
+  \item[\lean{Proximity/Core/PlanePair}]
     Plane--pair--line equivalences.
-  \item[\lean{ProximityPrize/Parameters}]
+  \item[\lean{Proximity/Core/FiniteThreshold}]
+    Safe finite grids, greatest-safe and first-unsafe values, and adjacent
+    safe/unsafe threshold certificates.
+  \item[\lean{Proximity/Capacity/Parameters}]
     Explicit \(\epsstar\) and field-size inequalities.
-  \item[\lean{ProximityPrize/CapacityList}]
+  \item[\lean{Proximity/ListDecoding/Capacity}]
     Agreement-set injection, the matching received-word construction, the
-    universal endpoint equality, and the fractional-target equivalence.
+    universal endpoint equality, the fractional-target equivalence, and the
+    next-shell coefficient-vector injection.
+  \item[\lean{Proximity/MCA/Definitions}]
+    Arbitrary-block-code same-set MCA definitions at count and relative
+    radii.
+  \item[\lean{Proximity/MCA/Threshold}]
+    Exact worst bad-count spectrum and the equivalence between operational
+    real error at \(r/n\) and the integer \(2^{-\lambda}\) budget.
+  \item[\lean{Proximity/MCA/SpectrumCertificate}]
+    Supplied-code grid-threshold pinning from a uniform upper bound at one
+    radius and a concrete over-budget affine line at the next radius.
+  \item[\lean{Proximity/MCA/SmallRadius}]
+    Universal RS unit-spike and two-spike certificates, including
+    \(B_{\mathcal C}(0)=1\) for every proper RS code.
+  \item[\lean{Proximity/MCA/BoundaryField}]
+    Primality, order-\(4096\) smooth domain, and the exact 128-bit radius
+    transition for \(q=2^{128}+192513\).
+  \item[\lean{Proximity/MCA/Pair}]
+    RS compressed interpolation certificates,
+    bad-challenge injection, the uniform cardinality bound, and the
+    explicit-family error corollary.
+  \item[\lean{Proximity/Application/Calibration}]
+    Generic source-validity model, pointwise distance non-collapse, and the
+    uniform source-far to target-far implication.
 \end{description}
 Existing generic definitions may be imported or refactored, but the final
 theorem should not depend on HCP, protocol, consensus, or runtime axiom bundles.
 Both directions of the capacity-grid equality and its exact fractional-target
-criterion are theorems, not axioms.  The next-shell lower bound and the
-capacity-MCA target are not declared as Lean theorems or axioms at this stage.
+criterion are theorems, not axioms.  The next-shell lower bound is also
+machine-checked.  The pair-MCA theorem and its \(2^{-128}\) family
+instantiation are machine-checked as well.
+All source modules in this ledger live under \lean{lean/Proximity};
+\lean{lean/ProximityPrize.lean} is only the standalone aggregate import target,
+not a second source hierarchy.
 
 \subsection{Status ledger}
 
@@ -37,10 +67,25 @@ Smooth large-field family & Paper-proved & Explicit subgroup family\\
 Capacity-grid list equality & Lean-proved & Universal \(L_m=\binom nk\)\\
 Endpoint fractional criterion & Lean-proved & Target iff
   \(\binom nk\le\epsstar|\F|\)\\
-Next-shell list lower bound & Paper-proved & Explicit \(|\F|^m\) witness\\
-Capacity-radius MCA bound & Open & Universal bad-set theorem\\
-Target-fraction inequality & Lean-proved & Bound \(\le\epsstar|\F|\)\\
-Largest grid radius / real supremum & Paper-proved & Exact characterization\\
+Next-shell list lower bound & Lean-proved & Explicit \(|\F|^m\) injection\\
+Pair-MCA certificate bound & Lean-proved &
+  \(|\Bad_{\MCA}|\le\binom n{k+1}\)\\
+MCA target-fraction inequality & Lean-proved &
+  \(\binom n{k+1}\le\epsstar|\F|\) for the explicit family\\
+Exact supplied-code MCA grid API & Lean-proved &
+  Operational target iff \(2^{128}B_{\mathcal C}(r)\le|\F|\), with
+  concrete next-line pinning\\
+Exact RS small-radius certificates & Lean-proved &
+  \(B_{\mathcal C}(0)=1\), and \(B_{\mathcal C}(1)\ge2\) for
+  \(1\le k,\ k+2\le n\)\\
+Smooth boundary-field instance & Lean-proved &
+  Prime \(q=2^{128}+192513\equiv1\pmod {4096}\)\\
+Boundary-field MCA threshold & Lean-proved &
+  Greatest safe count \(0\); first unsafe count \(1\)\\
+Explicit-family MCA greatest radius & Lean-proved &
+  Full count radius \(n\), hence normalized radius \(1\)\\
+Boundary-field real supremum & Paper-proved &
+  \(1/4096\), not attained\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -57,14 +102,18 @@ A completed claim requires:
   \item a reproducible proof artifact and manuscript cross-reference.
 \end{enumerate}
 
-\subsection{Immediate next step}
+\subsection{Remaining interfaces}
 
-The endpoint list-decoding package is closed.  Two logically separate tasks
-remain.  The application side needs a quantitative non-collapse/calibration
-theorem for an extraction map \(\pi\):
+The standalone endpoint list-decoding and pair-MCA packages are closed for the
+explicit large-field family.  The generic source-to-pair calibration
 \[
   d_{\mathrm{source}}(x,\mathrm{valid})\ge\delta
   \Longrightarrow
   \Delta(\pi(x),\mathcal C^{\equiv2})\ge\delta.
 \]
-The remaining prize-facing coding task is the capacity-radius MCA estimate.
+is Lean-proved from its named pointwise non-collapse field.  Pullback distance
+makes that field reflexive; an application choosing a different pre-existing
+source metric supplies one explicit comparison.
+Separately, the intermediate list-decoding regime still requires new ideas if
+one wants an optimal sub-endpoint radius for a supplied field that fails the
+binomial target inequality.

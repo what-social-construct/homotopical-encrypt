@@ -84,6 +84,18 @@ It follows that
   \le 2^{-128}q_u
   =\epsstar|\F_u|.
 \]
+
+The pair-MCA theorem uses the comparison
+\[
+  2^{128}\binom{n_u}{k_u+1}\le q_u.
+\]
+It follows from the same calculation, because
+\(\binom{n_u}{k_u+1}\le2^{n_u}\).
+Compared with the ordered certificate count, this removes a factor \(k_u+1\):
+\[
+  \binom{n_u}{k_u}(n_u-k_u)
+  =(k_u+1)\binom{n_u}{k_u+1}.
+\]
 The field is exponential in the block length.  This is a valid explicit
 sufficiently-large-field regime, not a claim about practically sized fields
 or about every smooth code supplied to the Grand Challenge.

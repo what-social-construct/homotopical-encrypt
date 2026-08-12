@@ -1,11 +1,12 @@
-import ProximityPrize.BlockCode
+import Proximity.Core.BlockCode
 import Mathlib.Data.Nat.Choose.Bounds
 
 /-!
 # Capacity-radius bookkeeping
 
 This module records normalization and the finite arithmetic used by the
-capacity-grid list theorem. It does not assert a capacity-radius MCA bound.
+capacity-grid list theorem and the pair-MCA certificate budget.  The coding
+theorems themselves live in their dedicated modules.
 -/
 
 namespace ProximityPrize
@@ -160,6 +161,51 @@ theorem two_pow_security_mul_two_pow_length_le_fieldCard :
               simp [fieldCard, length_succ, two_mul, pow_add]
 
 /--
+The stronger raw field inequality needed by the pair-MCA certificate count.
+The extra factor `length u` pays for the outside-coordinate component of a
+certificate.
+-/
+theorem two_pow_security_mul_length_mul_two_pow_length_le_fieldCard :
+    ∀ u : ℕ,
+      2 ^ 128 * length u * 2 ^ length u ≤ fieldCard u
+  | 0 => by
+      norm_num [length, fieldCard]
+  | u + 1 => by
+      have ih :=
+        two_pow_security_mul_length_mul_two_pow_length_le_fieldCard u
+      have hlength : 1 ≤ length u := by
+        unfold length
+        calc
+          1 ≤ 256 := by norm_num
+          _ = 256 * 1 := by norm_num
+          _ ≤ 256 * 2 ^ u :=
+            Nat.mul_le_mul_left 256 (Nat.one_le_pow u 2 (by norm_num))
+      have hfactor :
+          2 * (2 ^ 128 * length u) ≤
+            (2 ^ 128 * length u) * (2 ^ 128 * length u) := by
+        apply Nat.mul_le_mul_right (2 ^ 128 * length u)
+        calc
+          2 ≤ 2 ^ 128 := by norm_num
+          _ = 2 ^ 128 * 1 := by simp
+          _ ≤ 2 ^ 128 * length u :=
+            Nat.mul_le_mul_left (2 ^ 128) hlength
+      calc
+        2 ^ 128 * length (u + 1) * 2 ^ length (u + 1) =
+            (2 * (2 ^ 128 * length u)) *
+              (2 ^ length u * 2 ^ length u) := by
+                rw [length_succ, two_mul, pow_add]
+                ring
+        _ ≤ ((2 ^ 128 * length u) * (2 ^ 128 * length u)) *
+              (2 ^ length u * 2 ^ length u) :=
+                Nat.mul_le_mul_right _ hfactor
+        _ = (2 ^ 128 * length u * 2 ^ length u) *
+              (2 ^ 128 * length u * 2 ^ length u) := by ring
+        _ ≤ fieldCard u * fieldCard u :=
+              Nat.mul_le_mul ih ih
+        _ = fieldCard (u + 1) := by
+              simp [fieldCard, length_succ, two_mul, pow_add]
+
+/--
 Explicit `2^-128` field-size inequality for the binomial capacity-grid list
 bound.
 -/
@@ -168,6 +214,56 @@ theorem choose_target (u : ℕ) :
   exact (Nat.mul_le_mul_left (2 ^ 128)
     (Nat.choose_le_two_pow (length u) (degreeBound u))).trans
       (two_pow_security_mul_two_pow_length_le_fieldCard u)
+
+/--
+Explicit `2^-128` field-size inequality for the complete pair-MCA certificate
+space: choose the `k` interpolation coordinates and one coordinate outside
+them.
+-/
+theorem pair_mca_certificate_target (u : ℕ) :
+    2 ^ 128 *
+        (Nat.choose (length u) (degreeBound u) *
+          (length u - degreeBound u)) ≤
+      fieldCard u := by
+  calc
+    2 ^ 128 *
+          (Nat.choose (length u) (degreeBound u) *
+            (length u - degreeBound u)) ≤
+        2 ^ 128 * (2 ^ length u * length u) := by
+          apply Nat.mul_le_mul_left
+          exact Nat.mul_le_mul
+            (Nat.choose_le_two_pow (length u) (degreeBound u))
+            (Nat.sub_le (length u) (degreeBound u))
+    _ = 2 ^ 128 * length u * 2 ^ length u := by ring
+    _ ≤ fieldCard u :=
+      two_pow_security_mul_length_mul_two_pow_length_le_fieldCard u
+
+/--
+Sharper `2^-128` field-size inequality for unordered `(k+1)`-coordinate MCA
+obstructions.
+-/
+theorem compressed_pair_mca_certificate_target (u : ℕ) :
+    2 ^ 128 *
+        Nat.choose (length u) (degreeBound u + 1) ≤
+      fieldCard u := by
+  have hfactor :
+      Nat.choose (length u) (degreeBound u + 1) ≤
+        Nat.choose (length u) (degreeBound u + 1) *
+          (degreeBound u + 1) := by
+    simpa using Nat.mul_le_mul_left
+      (Nat.choose (length u) (degreeBound u + 1))
+      (Nat.succ_le_succ (Nat.zero_le (degreeBound u)))
+  calc
+    2 ^ 128 * Nat.choose (length u) (degreeBound u + 1) ≤
+        2 ^ 128 *
+          (Nat.choose (length u) (degreeBound u + 1) *
+            (degreeBound u + 1)) :=
+      Nat.mul_le_mul_left (2 ^ 128) hfactor
+    _ = 2 ^ 128 *
+          (Nat.choose (length u) (degreeBound u) *
+            (length u - degreeBound u)) := by
+      rw [Nat.choose_succ_right_eq]
+    _ ≤ fieldCard u := pair_mca_certificate_target u
 
 /-- The first family member satisfies the subgroup-order divisibility check. -/
 theorem base_length_dvd_fieldCard_sub_one :

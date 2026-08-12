@@ -1,4 +1,4 @@
-import ProximityPrize.ReedSolomon
+import Proximity.Core.ReedSolomon
 import Mathlib.Data.Fintype.Powerset
 import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
 import Mathlib.Algebra.Polynomial.Roots
@@ -8,12 +8,13 @@ import Mathlib.LinearAlgebra.Lagrange
 # The capacity-grid list bound
 
 This module proves the elementary counting theorem used by the standalone
-paper.  A code that is determined by its values on any `k` coordinates has at
+proximity target. A code determined by its values on any `k` coordinates has at
 most `Nat.choose n k` codewords in every Hamming ball of radius `n - k`.
 For Reed--Solomon codes this bound is attained by the received word whose
 distinguished component is the evaluation of `X ^ k`.  Hence the endpoint
 worst-case list size is exactly `Nat.choose n k`, independently of the
-interleaving width.
+interleaving width.  The module also constructs `|F| ^ m` distinct codewords
+in the next Hamming shell around zero.
 -/
 
 namespace ProximityPrize
@@ -34,16 +35,6 @@ theorem agreement_card_add_hammingDistance (u v : Word ι α) :
   simpa only [agreementSet, hammingDistance] using
     Finset.filter_card_add_filter_neg_card_eq_card
       (s := (Finset.univ : Finset ι)) (p := fun i => u i = v i)
-
-/-- Any two codewords agreeing on `k` coordinates are equal. -/
-def DeterminedBy (C : BlockCode ι α) (k : ℕ) : Prop :=
-  ∀ ⦃c d : Word ι α⦄,
-    C.Codeword c →
-    C.Codeword d →
-    ∀ S : Finset ι,
-      S.card = k →
-      (∀ i ∈ S, c i = d i) →
-      c = d
 
 /--
 The paper's fractional list target: every relative ball contains at most
@@ -185,44 +176,6 @@ open scoped BigOperators
 
 variable {F ι : Type*} [Field F] [Fintype ι]
 
-/-- Scalar Reed--Solomon words are determined by any `k` evaluations. -/
-theorem determinedBy_degreeBound
-    (P : ReedSolomon.Parameters F ι) :
-    DeterminedBy P.toBlockCode P.degreeBound := by
-  intro c d hc hd S hS hagree
-  rcases hc with ⟨p, hp, hp_eval⟩
-  rcases hd with ⟨q, hq, hq_eval⟩
-  have hp_degree : p.degree < (S.card : WithBot ℕ) := by
-    rw [hS]
-    exact lt_of_le_of_lt Polynomial.degree_le_natDegree
-      (WithBot.coe_lt_coe.2 hp)
-  have hq_degree : q.degree < (S.card : WithBot ℕ) := by
-    rw [hS]
-    exact lt_of_le_of_lt Polynomial.degree_le_natDegree
-      (WithBot.coe_lt_coe.2 hq)
-  have hpq : p = q := by
-    apply Polynomial.eq_of_degrees_lt_of_eval_index_eq S
-      P.domain.injective_point.injOn hp_degree hq_degree
-    intro i hi
-    rw [← hp_eval i, ← hq_eval i]
-    exact hagree i hi
-  funext i
-  rw [hp_eval i, hq_eval i, hpq]
-
-/-- Every interleaving width retains the same `k`-point determination bound. -/
-theorem vectorDeterminedBy_degreeBound
-    (P : ReedSolomon.Parameters F ι)
-    (σ : Type*) :
-    DeterminedBy (P.vectorBlockCode σ) P.degreeBound := by
-  intro c d hc hd S hS hagree
-  funext i j
-  have hcomponent :
-      (fun i => c i j) = (fun i => d i j) := by
-    apply P.determinedBy_degreeBound (hc j) (hd j) S hS
-    intro a ha
-    exact congrFun (hagree a ha) j
-  exact congrFun hcomponent i
-
 /-- The monic polynomial vanishing on the evaluation points indexed by `S`. -/
 noncomputable def capacityVanishingPolynomial
     (P : ReedSolomon.Parameters F ι)
@@ -274,6 +227,13 @@ theorem eval_capacityVanishingPolynomial_eq_zero_iff
   · intro hi
     exact ⟨i, hi, rfl⟩
 
+@[simp]
+theorem capacityVanishingPolynomial_natDegree
+    (P : ReedSolomon.Parameters F ι)
+    (S : Finset ι) :
+    (P.capacityVanishingPolynomial S).natDegree = S.card := by
+  simp [capacityVanishingPolynomial]
+
 theorem eval_capacityInterpolationPolynomial_eq_power_iff
     (P : ReedSolomon.Parameters F ι)
     (S : Finset ι)
@@ -284,6 +244,143 @@ theorem eval_capacityInterpolationPolynomial_eq_power_iff
     i ∈ S := by
   simpa [capacityInterpolationPolynomial] using
     P.eval_capacityVanishingPolynomial_eq_zero_iff S i
+
+/--
+The next-shell family indexed by a coefficient vector `λ : σ → F`.
+Every component is a scalar multiple of the polynomial vanishing on `S`.
+-/
+noncomputable def nextShellWord
+    (P : ReedSolomon.Parameters F ι)
+    {σ : Type*}
+    (S : Finset ι)
+    (coeffs : σ → F) :
+    ReedSolomon.VectorWord ι F σ :=
+  fun i j =>
+    coeffs j * Polynomial.eval (P.domain.point i)
+      (P.capacityVanishingPolynomial S)
+
+theorem nextShellWord_codeword
+    (P : ReedSolomon.Parameters F ι)
+    {σ : Type*}
+    (hDegree : 0 < P.degreeBound)
+    {S : Finset ι}
+    (hS : S.card = P.degreeBound - 1)
+    (coeffs : σ → F) :
+    (P.vectorBlockCode σ).Codeword (P.nextShellWord S coeffs) := by
+  intro j
+  refine ⟨Polynomial.C (coeffs j) * P.capacityVanishingPolynomial S, ?_, ?_⟩
+  · calc
+      (Polynomial.C (coeffs j) *
+          P.capacityVanishingPolynomial S).natDegree ≤
+          (P.capacityVanishingPolynomial S).natDegree :=
+        Polynomial.natDegree_C_mul_le _ _
+      _ = S.card := P.capacityVanishingPolynomial_natDegree S
+      _ = P.degreeBound - 1 := hS
+      _ < P.degreeBound := by omega
+  · intro i
+    simp [nextShellWord, Polynomial.eval_mul]
+
+theorem nextShellSubset_subset_agreementSet_zero
+    (P : ReedSolomon.Parameters F ι)
+    {σ : Type*}
+    [Fintype σ]
+    [DecidableEq F]
+    (S : Finset ι)
+    (coeffs : σ → F) :
+    S ⊆ agreementSet (P.nextShellWord S coeffs) 0 := by
+  classical
+  intro i hi
+  simp only [agreementSet, Finset.mem_filter, Finset.mem_univ, true_and]
+  funext j
+  simp [nextShellWord,
+    (P.eval_capacityVanishingPolynomial_eq_zero_iff S i).2 hi]
+
+theorem nextShellWord_mem_ball
+    (P : ReedSolomon.Parameters F ι)
+    {σ : Type*}
+    [Fintype σ]
+    [DecidableEq F]
+    (hDegree : 0 < P.degreeBound)
+    (hk : P.degreeBound ≤ Fintype.card ι)
+    {S : Finset ι}
+    (hS : S.card = P.degreeBound - 1)
+    (coeffs : σ → F) :
+    P.nextShellWord S coeffs ∈
+      (P.vectorBlockCode σ).Ball
+        (Fintype.card ι - P.degreeBound + 1) 0 := by
+  constructor
+  · exact P.nextShellWord_codeword hDegree hS coeffs
+  · have hpartition :=
+      agreement_card_add_hammingDistance (P.nextShellWord S coeffs) 0
+    have hcard :
+        S.card ≤ (agreementSet (P.nextShellWord S coeffs) 0).card :=
+      Finset.card_le_card
+        (P.nextShellSubset_subset_agreementSet_zero S coeffs)
+    rw [hS] at hcard
+    omega
+
+theorem nextShellWord_injective
+    (P : ReedSolomon.Parameters F ι)
+    {σ : Type*}
+    [Fintype σ]
+    [DecidableEq F]
+    (hDegree : 0 < P.degreeBound)
+    (hk : P.degreeBound ≤ Fintype.card ι)
+    {S : Finset ι}
+    (hS : S.card = P.degreeBound - 1) :
+    Function.Injective (P.nextShellWord (σ := σ) S) := by
+  have hScard : S.card < Fintype.card ι := by
+    rw [hS]
+    omega
+  have hi : ∃ i : ι, i ∉ S := by
+    by_contra h
+    push_neg at h
+    have hSuniv : S = Finset.univ :=
+      Finset.eq_univ_of_forall h
+    rw [hSuniv, Finset.card_univ] at hScard
+    omega
+  obtain ⟨i, hi⟩ := hi
+  have heval :
+      Polynomial.eval (P.domain.point i)
+          (P.capacityVanishingPolynomial S) ≠ 0 := by
+    intro hz
+    exact hi ((P.eval_capacityVanishingPolynomial_eq_zero_iff S i).1 hz)
+  intro coeffs otherCoeffs hwords
+  funext j
+  apply mul_right_cancel₀ heval
+  simpa only [nextShellWord] using congrFun (congrFun hwords i) j
+
+/-- A coefficient vector as an element of the next-shell ball around zero. -/
+noncomputable def nextShellBallElement
+    (P : ReedSolomon.Parameters F ι)
+    {σ : Type*}
+    [Fintype σ]
+    [DecidableEq F]
+    (hDegree : 0 < P.degreeBound)
+    (hk : P.degreeBound ≤ Fintype.card ι)
+    (S : Finset ι)
+    (hS : S.card = P.degreeBound - 1) :
+    (σ → F) →
+      {c : ReedSolomon.VectorWord ι F σ //
+        c ∈ (P.vectorBlockCode σ).Ball
+          (Fintype.card ι - P.degreeBound + 1) 0} :=
+  fun coeffs => ⟨P.nextShellWord S coeffs,
+    P.nextShellWord_mem_ball hDegree hk hS coeffs⟩
+
+theorem nextShellBallElement_injective
+    (P : ReedSolomon.Parameters F ι)
+    {σ : Type*}
+    [Fintype σ]
+    [DecidableEq F]
+    (hDegree : 0 < P.degreeBound)
+    (hk : P.degreeBound ≤ Fintype.card ι)
+    (S : Finset ι)
+    (hS : S.card = P.degreeBound - 1) :
+    Function.Injective
+      (P.nextShellBallElement (σ := σ) hDegree hk S hS) := by
+  intro coeffs otherCoeffs hcoeffs
+  apply P.nextShellWord_injective hDegree hk hS
+  exact congrArg Subtype.val hcoeffs
 
 /-- The endpoint received word: `X^k` in one component and zero elsewhere. -/
 def capacityReceivedWord
@@ -460,6 +557,59 @@ theorem choose_le_capacityReceived_ballCard
   exact Fintype.card_le_of_injective
     (P.capacityBallElement j₀ hDegree hk)
     (P.capacityBallElement_injective j₀ hDegree hk)
+
+/--
+The next Hamming shell around zero contains at least `|F| ^ |σ|`
+interleaved Reed--Solomon codewords.
+-/
+theorem fieldCard_pow_le_nextShell_ballCard
+    (P : ReedSolomon.Parameters F ι)
+    (σ : Type*)
+    [Fintype F]
+    [DecidableEq F]
+    [Fintype σ]
+    [DecidableEq σ]
+    (hDegree : 0 < P.degreeBound)
+    (hk : P.degreeBound ≤ Fintype.card ι) :
+    Fintype.card F ^ Fintype.card σ ≤
+      (P.vectorBlockCode σ).ballCard
+        (Fintype.card ι - P.degreeBound + 1) 0 := by
+  classical
+  have hsubsetCard :
+      P.degreeBound - 1 ≤
+        (Finset.univ : Finset ι).card := by
+    simpa using (Nat.sub_le P.degreeBound 1).trans hk
+  obtain ⟨S, _hSuniv, hS⟩ :=
+    Finset.exists_subset_card_eq hsubsetCard
+  letI : Fintype
+      {c : ReedSolomon.VectorWord ι F σ //
+        c ∈ (P.vectorBlockCode σ).Ball
+          (Fintype.card ι - P.degreeBound + 1) 0} :=
+    Fintype.ofFinite _
+  unfold BlockCode.ballCard
+  rw [Nat.card_eq_fintype_card, ← Fintype.card_fun]
+  exact Fintype.card_le_of_injective
+    (P.nextShellBallElement hDegree hk S hS)
+    (P.nextShellBallElement_injective hDegree hk S hS)
+
+/-- Normalized form of the next-shell lower bound. -/
+theorem fieldCard_pow_le_nextShell_ballCardAt
+    (P : ReedSolomon.Parameters F ι)
+    (σ : Type*)
+    [Fintype F]
+    [DecidableEq F]
+    [Fintype σ]
+    [DecidableEq σ]
+    (hDegree : 0 < P.degreeBound)
+    (hlength : 0 < Fintype.card ι)
+    (hk : P.degreeBound ≤ Fintype.card ι) :
+    Fintype.card F ^ Fintype.card σ ≤
+      (P.vectorBlockCode σ).ballCardAt
+        (BlockCode.relativeRadius (ι := ι)
+          (Fintype.card ι - P.degreeBound + 1)) 0 := by
+  rw [(P.vectorBlockCode σ).ballCardAt_relativeRadius_eq_ballCard
+    hlength 0]
+  exact P.fieldCard_pow_le_nextShell_ballCard σ hDegree hk
 
 /--
 Universal interleaved Reed--Solomon list bound at the capacity-grid radius.

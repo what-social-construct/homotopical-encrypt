@@ -1,4 +1,4 @@
-import ProximityPrize.BlockCode
+import Proximity.Core.BlockCode
 
 /-!
 # Planes, pair words, and affine-line presentations

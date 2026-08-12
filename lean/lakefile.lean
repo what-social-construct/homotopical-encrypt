@@ -12,7 +12,7 @@ open Lake DSL
     Laplacian.lean — Grassmannian hardness, norm correction, injectivity
     Sheaf.lean     — finite cellular sheaves, cochains, and Hodge operators
     Proximity.lean — sheaf/cochain proximity projections and Grassmannian gap problems
-    ProximityPrize.lean — standalone finite-code and plane/RS mathematics
+    ProximityPrize.lean — paper-facing aggregate over the Proximity/ hierarchy
     Gates.lean     — validation gate façades over axiom/spec modules
     Consensus.lean — Proof-of-Value assembly and scoring contracts
     Protocol.lean  — Paper 2 protocol-specification import surface

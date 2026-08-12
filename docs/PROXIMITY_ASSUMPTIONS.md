@@ -1,6 +1,6 @@
 # Proximity Assumption Inventory
 
-This inventory records the current assumption surface for the hcrypt proximity
+This inventory records the current assumption surface for the concrete proximity
 projection stack:
 
 ```text
@@ -42,30 +42,33 @@ Current audit facts:
 
 | Area | Lean surface | Status | Notes |
 |------|--------------|--------|-------|
-| Generic projection near-side preservation | `Proximity/Projection.lean` | Lean-proved | `EvaluationProjection.distanceControlled` gives `projected_near_code_of_disagreement_le`. |
-| Gap-reduction plumbing | `Proximity/Problem.lean` | Lean-proved | `GapReduction.pullbackSolverCorrect` and calibrated pullback theorems are proved once near/far fields are supplied. |
-| Stage certificate accumulation | `Proximity/Gates/Stage.lean` | Lean-proved | `PluckerCochainGateCertificate`, `CochainPlaneGateCertificate`, `PlaneRSGateCertificate`, and `ProjectionStageGateCertificate` accumulate stage checks without recomputation. |
-| Plucker decomposability from frame | `Proximity/GrassmannianPlucker.lean` | Lean-proved | `FrameWitness.toExterior_decomposable` follows from the exterior-product construction. |
-| Frame membership/span facts | `Proximity/GrassmannianPlucker.lean` | Lean-proved from witness fields | `frame_mem_hodgeSubmodule` and `span_eq_hodgeSubmodule` expose the witness data. |
-| Projective Plucker quotient | `Proximity/GrassmannianPlucker/Concrete.lean` | Lean-proved | `ProjectivelyEquivalent` is a setoid for nonzero scalar/unit rescaling; `ProjectiveShadow` is the quotient. |
-| Projective normalization invariance | `Proximity/GrassmannianPlucker/Concrete.lean` | Lean-proved | Projectively equivalent exterior coordinates have the same public projective shadow. |
-| Canonical modulus/length/rate arithmetic | `Proximity/CanonicalRS/Parameters.lean` | Lean-proved by computation | Prime field fact, `length = 4096`, `degreeBound = 1024`, rate `1/4`, and Johnson/capacity-below integer inequalities are proved. |
-| Certified power domain | `Proximity/CanonicalRS/PowerDomain.lean` | Lean-proved | `candidateGenerator = 11` has order `12288`; cubing gives an order-`4096` root; evaluation points are injective. |
-| Canonical smoothness | `Proximity/CanonicalRS/PowerDomain.lean` | Lean-proved | `canonicalSmoothDomain.smooth` follows from `4096 | 12289 - 1`. |
-| Canonical integer plane encoding object | `Proximity/CanonicalRS/Encoding.lean` | Constructed | `canonicalMix = candidateRoot`; distance/non-collapse properties are intentionally downstream obligations. |
-| Canonical RS distance-to-code metric | `Proximity/CanonicalRS/Metric.lean` | Lean-proved | Defines distance as `sInf` over Hamming distances to RS codewords; proves nonnegativity, zero on codewords, and close-implies-bounded-distance. |
-| Absolute radius normalization | `Proximity/CanonicalRS/Metric.lean` | Lean-proved | `absoluteRadiusNormalization` discharges radius conversion for the canonical absolute-Hamming metric. |
-| Canonical bridge endpoint facts | `Proximity/CanonicalRS/BridgeData.lean` | Lean-proved | Domain cardinality, smoothness, evaluation-point compatibility, metric normalization, and radius parameter agreement are proved for `BridgeData`. |
-| Certificate plumbing to final bridge | `Proximity/CanonicalRS/BridgeData.lean` | Lean-proved | `RSMetricCertificate` converts hard gates plus far separation into a completed calibrated RS bridge. |
-| Paper-style RS endpoint | `Proximity/RS/ReedSolomon.lean` | Lean-defined | `vectorBlockCode P σ` represents `C ⊆ (F^s)^n` as an interleaving of scalar RS codewords. |
-| Definition 4.3 MCA surface | `Proximity/RS/CorrelatedAgreement.lean` | Lean-defined | Fractional MCA bad-challenge sets use shared agreement sets `S` and challenge fractions. |
-| Canonical `s = 1` MCA endpoint | `Proximity/CanonicalRS/MCA/Concrete.lean` | Lean-proved | Width-one scalar/vector equivalences culminate in `widthOneBadChallengeSet_eq` and `paperMCAStatement_iff_widthOneTarget`. |
-| Cited RS bounds package | `Proximity/CanonicalRS/CitedBounds.lean` | External theorem boundary packaged in Lean | `CitedBounds.bounds` supplies named/cited Johnson list-decoding and BCHKS MCA inputs for the canonical endpoint. |
+| Generic projection near-side preservation | `Proximity/Application/Projection.lean` | Lean-proved | `EvaluationProjection.distanceControlled` gives `projected_near_code_of_disagreement_le`. |
+| Generic source-to-code far calibration | `Proximity/Application/Calibration.lean` | Lean-proved from calibration data | `SourceToCodeCalibration.sourceFar_implies_targetFar` turns the pointwise lower bound into the all-radius implication. |
+| Gap-reduction plumbing | `Proximity/Application/Problem.lean` | Lean-proved | `GapReduction.pullbackSolverCorrect` and calibrated pullback theorems are proved once near/far fields are supplied. |
+| Stage certificate accumulation | `Proximity/Concrete/Gates/Stage.lean` | Lean-proved | `PluckerCochainGateCertificate`, `CochainPlaneGateCertificate`, `PlaneRSGateCertificate`, and `ProjectionStageGateCertificate` accumulate stage checks without recomputation. |
+| Plucker decomposability from frame | `Proximity/Concrete/GrassmannianPlucker.lean` | Lean-proved | `FrameWitness.toExterior_decomposable` follows from the exterior-product construction. |
+| Frame membership/span facts | `Proximity/Concrete/GrassmannianPlucker.lean` | Lean-proved from witness fields | `frame_mem_hodgeSubmodule` and `span_eq_hodgeSubmodule` expose the witness data. |
+| Projective Plucker quotient | `Proximity/Concrete/GrassmannianPlucker/Concrete.lean` | Lean-proved | `ProjectivelyEquivalent` is a setoid for nonzero scalar/unit rescaling; `ProjectiveShadow` is the quotient. |
+| Projective normalization invariance | `Proximity/Concrete/GrassmannianPlucker/Concrete.lean` | Lean-proved | Projectively equivalent exterior coordinates have the same public projective shadow. |
+| Canonical modulus/length/rate arithmetic | `Proximity/Concrete/CanonicalRS/Parameters.lean` | Lean-proved by computation | Prime field fact, `length = 4096`, `degreeBound = 1024`, rate `1/4`, and Johnson/capacity-below integer inequalities are proved. |
+| Certified power domain | `Proximity/Concrete/CanonicalRS/PowerDomain.lean` | Lean-proved | `candidateGenerator = 11` has order `12288`; cubing gives an order-`4096` root; evaluation points are injective. |
+| Canonical smoothness | `Proximity/Concrete/CanonicalRS/PowerDomain.lean` | Lean-proved | `canonicalSmoothDomain.smooth` follows from `4096 | 12289 - 1`. |
+| Canonical integer plane encoding object | `Proximity/Concrete/CanonicalRS/Encoding.lean` | Constructed | `canonicalMix = candidateRoot`; distance/non-collapse properties are intentionally downstream obligations. |
+| Canonical RS distance-to-code metric | `Proximity/Concrete/CanonicalRS/Metric.lean` | Lean-proved | Defines distance as `sInf` over Hamming distances to RS codewords; proves nonnegativity, zero on codewords, and close-implies-bounded-distance. |
+| Absolute radius normalization | `Proximity/Concrete/CanonicalRS/Metric.lean` | Lean-proved | `absoluteRadiusNormalization` discharges radius conversion for the canonical absolute-Hamming metric. |
+| Canonical bridge endpoint facts | `Proximity/Concrete/CanonicalRS/BridgeData.lean` | Lean-proved | Domain cardinality, smoothness, evaluation-point compatibility, metric normalization, and radius parameter agreement are proved for `BridgeData`. |
+| Canonical plane-to-pair calibration | `Proximity/Concrete/CanonicalRS/BridgeData.lean` | Lean-proved | The full canonical-region integer-plane carrier is Hamming-isometric to the paper pair carrier; source and pair distances to the transported code are equal, yielding `admissibleSourceFar_implies_pairFar`. |
+| Public observation-to-pair calibration | `Proximity/Concrete/CanonicalRS/PublicCalibration.lean` | Lean-proved | Runtime-accepted cochain artifacts with authenticated canonical plane views pull validity and distance back from the plane model; `sourceFar_implies_pairFar` closes the all-radius public path. |
+| Certificate plumbing to final bridge | `Proximity/Concrete/CanonicalRS/BridgeData.lean` | Lean-proved | `RSMetricCertificate` converts hard gates plus far separation into a completed calibrated RS bridge. |
+| Paper-style RS endpoint | `Proximity/Concrete/RS/ReedSolomon.lean` | Lean-defined | `vectorBlockCode P σ` represents `C ⊆ (F^s)^n` as an interleaving of scalar RS codewords. |
+| Definition 4.3 MCA surface | `Proximity/Concrete/RS/CorrelatedAgreement.lean` | Lean-defined | Fractional MCA bad-challenge sets use shared agreement sets `S` and challenge fractions. |
+| Canonical `s = 1` MCA endpoint | `Proximity/Concrete/CanonicalRS/MCA/Concrete.lean` | Lean-proved | Width-one scalar/vector equivalences culminate in `widthOneBadChallengeSet_eq` and `paperMCAStatement_iff_widthOneTarget`. |
+| Cited RS bounds package | `Proximity/Concrete/CanonicalRS/CitedBounds.lean` | External theorem boundary packaged in Lean | `CitedBounds.bounds` supplies named/cited Johnson list-decoding and BCHKS MCA inputs for the canonical endpoint. |
 
 ## Construction Interfaces Still To Instantiate
 
 These are not necessarily external assumptions; they are typed construction
-interfaces. A concrete hcrypt instantiation must provide them.
+interfaces. A concrete instantiation must provide them.
 
 | Object | Required fields | Owner | Status |
 |--------|-----------------|-------|--------|
@@ -102,8 +105,8 @@ interfaces. A concrete hcrypt instantiation must provide them.
 
 ## Bridge Obligations
 
-`Proximity/RS/Target.lean` names the generic bridge obligations. For the
-canonical bridge, `Proximity/CanonicalRS/BridgeData.lean` fills the concrete
+`Proximity/Concrete/RS/Target.lean` names the generic bridge obligations. For the
+canonical bridge, `Proximity/Concrete/CanonicalRS/BridgeData.lean` fills the concrete
 endpoint facts and leaves only the projection-chain facts to the ordered
 certificate.
 
@@ -139,7 +142,7 @@ Hard gates and quantitative far gates are deliberately separated.
 | `RSMetricCertificate` | Explicit final certificate | Extends hard gates with `RadiusCalibration` and final RS far separation. |
 
 Hard-gate traceability is separate from the mathematical gate proof. The Lean
-surface is `Proximity/GateEvidence.lean`:
+surface is `Proximity/Concrete/GateEvidence.lean`:
 
 | Trace object | Status | Meaning |
 |--------------|--------|---------|
@@ -160,7 +163,7 @@ contracts named by Lean and owned by Rust/proof-verifier/runtime.
 | Byte parsing and allocation | `TCB.RuntimeBoundary` | canonical encoding, bounded allocation, domain separation |
 | Hash/proof public artifact | `TCB.RuntimeBoundary`, `Gates.RuntimeBindingGate` | hash binding verified, proof verification sound |
 | Plucker shadow hash binding | `PluckerCochain.PublicBinding.HashedPluckerShadow` | canonical public-shadow bytes, digest binding, transcript/domain separation |
-| Proximity evidence database | `Proximity/GateEvidence.lean` | fixed-position evidence digest array, root digest, slot/root binding, inclusion proofs, canonical encoding |
+| Proximity evidence database | `Proximity/Concrete/GateEvidence.lean` | fixed-position evidence digest array, root digest, slot/root binding, inclusion proofs, canonical encoding |
 | Oracle/public attestations | `TCB.RuntimeBoundary` | oracle attestation verified |
 | Consensus state update | `TCB.RuntimeBoundary` | atomic state transition, no Python consensus authority |
 | Commitment security | `Axioms.CochainCommitmentAxioms` | authentication of the exact C¹ bytes and snapshot/topology context, any separately claimed hiding, homomorphic addition/scalar multiplication, and partial-opening soundness; not injectivity of δ₀ or uniqueness of a C⁰ opening |

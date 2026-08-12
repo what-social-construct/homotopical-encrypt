@@ -1,86 +1,53 @@
 \section{Introduction}
 
-Reed--Solomon proximity questions connect three quantitatively different
-objects:
-\begin{enumerate}[label=(\roman*)]
-  \item the relative distance of a received word from a code;
-  \item the number of codewords in a ball at that radius;
-  \item the fraction of affine challenges that conceal distance of an
-    underlying tuple of received words.
-\end{enumerate}
 The Grand List Decoding and Grand Mutual Correlated Agreement challenges ask
-for sharp forms of the latter two quantities for constant-rate Reed--Solomon
-codes over smooth evaluation domains \cite{arnonBonehFenzi2026}.
-
-This paper treats the coding problem independently of any protocol or
-application-specific source of received words.  Its universal statements
-quantify over every word in the ambient alphabet and every affine line.  A
-later application may map structured observations into this ambient space, but
-that map is not part of the coding theorem.
-
-\subsection{Central organization}
-
-Let
+for quantitative proximity guarantees for constant-rate Reed--Solomon codes
+over smooth evaluation domains \cite{arnonBonehFenzi2026}.  We work with the
+two-fold interleaving
+\(\Cpair\subseteq(\F^2)^n\).  Every received pair
+\(p=(p_0,p_1)\) determines the scalar affine line
 \[
-  \mathcal C=\RS[\F,\mathcal L,k]\subseteq\F^n,
-  \qquad n=|\mathcal L|,
-  \qquad \rho=\frac{k}{n}.
+  p\in(\F^2)^n
+  \quad\longmapsto\quad
+  y_\gamma=p_0+\gamma p_1\in\F^n .
 \]
-The two-fold interleaving is
+List decoding controls the ambiguity of the full pair, while mutual correlated
+agreement controls the fraction of challenges for which \(y_\gamma\) conceals
+pair-farness.
+
+At the capacity-grid radius \((n-k)/n\), we prove the exact universal list
+size
 \[
-  \Cpair\subseteq(\F^2)^n.
+  L_m\!\left(\mathcal C,\frac{n-k}{n}\right)=\binom nk
 \]
-Every pair word \(p\in(\F^2)^n\) determines an affine line
+for every positive interleaving width.  A matching next-shell construction
+gives the resulting three-regime field-size phase split. For pair MCA, an
+injective compressed-certificate map proves the radius-independent bound
 \[
-  y_\gamma(p)=p_0+\gamma p_1\in\F^n,
-  \qquad \gamma\in\F.
+  |\Bad_{\MCA}|\le\binom n{k+1}.
 \]
-The intended proof architecture is therefore
+An explicit smooth rate-\(1/4\) family over \(\mathbb F_{3^n}\) meets both
+requested \(2^{-128}\) targets.  The endpoint constructions, MCA certificate
+bound, numerical inequalities, and generic source-to-pair calibration
+implication are machine-checked in Lean.
+
+To resolve the first nontrivial MCA transition rather than only give a
+uniform sufficient bound, we define the exact spectrum
 \[
-\begin{array}{c}
-  p\in(\F^2)^n \\[2mm]
-  \text{distance and list size relative to }\Cpair
-\end{array}
-\quad\xrightarrow{\ \gamma\in\F\ }\quad
-\begin{array}{c}
-  y_\gamma(p)\in\F^n \\[2mm]
-  \text{distance relative to }\mathcal C .
-\end{array}
+  B_{\mathcal C}(r)=\max_p
+  |\Bad_{\MCA}(\mathcal C,r/n,p)|.
 \]
-List decoding controls ambiguity of the full pair; MCA controls the fraction
-of challenges for which a scalar observation fails to expose pair-farness.
+For the certified smooth prime-field instance
+\(q=2^{128}+192513\equiv1\pmod {4096}\), \(n=4096\), and \(k=1024\), we prove
+\(B_{\mathcal C}(0)=1\) and \(B_{\mathcal C}(1)\ge2\).  It follows that zero
+is the greatest safe count radius and one the first unsafe count radius at
+128 bits.  Over real radii the safe interval is instead
+\([0,1/4096)\), so its supremum is \(1/4096\) and is not itself safe.
 
-\subsection{Claim discipline}
-
-The plane/pair/line identifications below are exact equivalences.  They ensure
-that no received words or affine lines are lost by the chosen presentation.
-They do not by themselves prove capacity-radius list decoding or MCA.  The
-list theorem is supplied separately by an agreement-set injection, a matching
-endpoint witness, and an explicit field-size inequality.  MCA remains a
-distinct quantitative target.
-
-In particular, a statement of the form
-\[
-  \dist(p,\Cpair)\ge\delta
-\]
-is not a list-size bound, and neither fact alone implies a security estimate
-of \(2^{-128}\).  The required list size or bad-challenge count must be compared
-explicitly with \(\epsstar|\F|\).
-
-\subsection{Contributions sought}
-
-This draft establishes:
-\begin{enumerate}[label=(\roman*)]
-  \item the universal capacity-grid equality
-    \(L_m(\mathcal C,(n-k)/n)=\binom nk\);
-  \item the necessary-and-sufficient endpoint criterion
-    \(\binom nk\le\epsstar|\F|\) and the resulting three-regime phase split;
-  \item a next-shell obstruction of size \(|\F|^m\);
-  \item an explicit smooth rate-\(1/4\) family and field-size inequality for
-    \(\epsstar=2^{-128}\);
-  \item machine-checked definitions, reductions, both endpoint inequalities,
-    their exact fractional-target equivalence, and the family arithmetic.
-\end{enumerate}
-The remaining goals are the mutual-correlated-agreement estimate, the
-application calibration theorem, and the optimal sub-endpoint radius in the
-intermediate field-size regime.
+The coding theorems quantify over the complete ambient received-word and
+affine-line spaces.  Their \(2^{-128}\) instantiation uses the displayed
+exponential-size field and is not a claim about every supplied smooth code.
+For an application whose observations lie upstream of the pair carrier, its
+source metric may be defined by pullback along the extraction map.
+Applications retaining a different source metric must provide one explicit
+comparison to the pair-code distance.

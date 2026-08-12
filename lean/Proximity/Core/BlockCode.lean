@@ -4,11 +4,11 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
 /-!
-# Standalone finite block-code vocabulary
+# Generic finite block-code vocabulary
 
 This module is the dependency root for the capacity-radius proximity paper.
 It deliberately imports only Mathlib. In particular, it does not import the
-HCP, protocol, consensus, runtime, or application-facing `Proximity` trees.
+protocol, consensus, runtime, or concrete application modules.
 
 The natural-number Hamming count is finite proof plumbing. Paper-facing
 statements use `relativeHammingDistance`, `BallAt`, and `ListSizeBoundAt`.
@@ -211,5 +211,22 @@ theorem linearCombination_mem
   C.add_mem hu (C.smul_mem a hv)
 
 end FAdditiveCode
+
+namespace CapacityList
+
+/-- Any two codewords agreeing on `k` coordinates are equal. -/
+def DeterminedBy
+    {ι α : Type*}
+    (C : BlockCode ι α)
+    (k : ℕ) : Prop :=
+  ∀ ⦃c d : Word ι α⦄,
+    C.Codeword c →
+    C.Codeword d →
+    ∀ S : Finset ι,
+      S.card = k →
+      (∀ i ∈ S, c i = d i) →
+      c = d
+
+end CapacityList
 
 end ProximityPrize
