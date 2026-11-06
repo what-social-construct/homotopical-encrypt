@@ -207,7 +207,7 @@ in T01--T20 of the linked detailed register.
 |---|---|---|---|
 | HT01 | Hodge encryption correctness and unique operative target | `HCP.decrypt_encrypt`, `decrypt_coe_eq_harmonicProjection`, `HCPBridge.operativeTarget` | **exact** algebraic correctness. Separate key/noise distributions and security games. |
 | HT02 | Helfer equivalence implies public equality | `HCPBridge.samePublicClass_of_homotopyEquivalent`; `CochainModel.closedTestInvariance`, `HCP.AxisFamily.theory_zero_eq_one` | **Generic conditional theorem and actual finite instantiation.** The homological fragment discharges its invariance premise. Full Helfer formula-in-context invariance remains separate. |
-| HT03 | Public ambiguity defeats uniformly exact HCP recovery, including a fixed CVP oracle | `HCPBridge.no_solver_exactOnOperativeTarget_of_kernelSeparation`, `cvpOracle_insufficient_for_operativeTarget` | **exact conditional** impossibility. A concrete typed separation witness is still supplied; no average-case hardness theorem follows. |
+| HT03 | Public ambiguity defeats uniformly exact HCP recovery, including a fixed CVP oracle | `HCPBridge.no_solver_exactOnOperativeTarget_of_kernelSeparation`, `cvpOracle_insufficient_for_operativeTarget` | **Exact conditional** impossibility, instantiated by the constructed typed axis-family witness. The generic theorem retains its separation premise and the oracle result its explicit oracle-existence premise; no average-case hardness theorem follows. |
 | HT04 | Linear kernel realization and discrete projection bridge | `exists_matrix_ker_eq_range`; `HarmonicCVPBridge.isClosestLatticeVector_iff_projectedTarget` | **exact** distinct comparisons. Neither statement solves the remaining discrete lattice search. |
 | HT05 | Accepted exact commitments are cocycles | `Sheaf.CellularSheaf.decoded_isOneCocycle`; `Axioms.oneCocycle_of_committedCochainWellFormed` | **exact** under supplied interpretation/coherence. Resolve D01 and D06 for a concrete HCP observation. |
 | HT06 | Stage maps compose and final certificate yields calibrated gap projection | `ProjectionChain.Chain.toEvaluationProjection`; `Gates.CalibratedFinalCertificate.toCalibratedEndToEndReady` | **exact conditional** composition; concrete encoder, distance control, and far-separation inputs remain **parameterized**. Resolve D03's boundary convention. |
@@ -224,7 +224,7 @@ counting theorems of Paper 3.
 
 | Issue | Existing progress | Completion decision / endpoint | Owner |
 |---|---|---|---|
-| D01 | Integral harmonic cipher, exact-component/full-sample record, and harmonic recovery | Present the existing join; instantiate the public binding/encoding path and its semantic witness if claiming a concrete HCP scheme. | Paper 1 interface; Paper 2 realization |
+| D01 | Integral harmonic cipher, exact-component/full-sample record, harmonic recovery and the constructed finite semantic family | The mathematical `(class,b)` realization is constructed. Instantiate the larger released artifact's encoding, decoder and binding contracts if claiming a concrete public-storage HCP scheme. | Paper 1 interface; Paper 2 realization |
 | D02 | Coordinate versus digest/proof distinction is explicit | Fix the public view and state whether its subspace is the operative kernel. | Papers 1--2 |
 | D03 | Conditional solver pullback, exact overlap criterion and strict-gap view are proved; §6.1 states the boundary condition. | Instantiate disjoint promises for the selected profile through strict gaps or an empty-shell proof; an alternative half-open convention would require an explicit synchronized change. | Paper 1/application interface |
 | D05 | Correct Euclidean likelihood and local identities | Define a recovery experiment and its success event, or retain only likelihood-score claims. | Paper 1 quantitative layer; Paper 2 security model |
@@ -233,7 +233,7 @@ counting theorems of Paper 3.
 | D08 | Algebraic ambiguity/oracle obstruction | Supply encoded families, distributions, input/security size, algorithm model and success criterion for a computational-hardness claim. | Paper 1 refinement; Paper 2 concrete scheme |
 | D25 | Actual cochain model, invariant homological tests and finite theory classifier | Full Helfer fibrational/first-order semantics and a general admissible quotient remain separate from the proved fragment. | Paper 1 |
 | D26 | Actual cellular/HCP realization and generic/concrete original-observation adapters | Apply the explicit artifact/classifier contracts; specify richer released-view equality/factorization and runtime bytes. | Papers 1--2 |
-| D27 | Hodge noise, integral-message type and isometric covariance | Construct allowed samples and cross-presentation plaintext/lattice laws; distinguish fixed-view ambiguity from rotation migration. | Papers 1--2 |
+| D27 | Actual finite coexact samples, weighted integer encodings and isometric covariance | Generalize the finite examples to a declared generated family and prove semantic plaintext/lattice transport for authorized rotation; distinguish fixed-view ambiguity from migration. | Papers 1--2 |
 | D28 | One supplied ephemeral endpoint/path and recovered family plan | Construct indexed generation/transport/lifecycle and the specified finite/asymptotic privacy experiment. | Paper 1 family; Paper 2 security |
 
 Paper 2's bounded first endpoint and its required joins are in
@@ -259,17 +259,17 @@ completion or an instantiation of the commitment-specific application.
 | Q06: real boundary transition | **Complete:** `[0,1/4096)`, supremum and nonattainment in `MCA.RealThreshold`, using shared count/real shell semantics. | Retain the closed-ball endpoint convention and recorded arithmetic trust dependencies. | None |
 | Q07: standalone distance packaging | **Complete:** attained minima, closeness interpretation, covering and good-challenge consequences in `Core.Distance` and `Application.DistanceCalibration`. The optional storage adapter also proves equality with the existing canonical real-infimum pair distance. | A generic distance API does not instantiate the independent source codec/comparison. | None |
 | Q09: publication artifact | Native-metric manuscript/Lean validation is preserved as the dated P229 baseline. The new semantic implementation and Paper 1 exposition are a separate follow-up; Paper 2 remains Markdown draft text. | Current source/build/audit/PDF outcomes belong to P236 and the central validation record. Regenerate any review package from the final checkpoint; publication, immutable release and Palomar protected comparison remain separate. | None |
-| Novelty / related work | The primary-source comparison records the established same-set MCA event, sharper positive-gap regimes, elementary endpoint/deep-hole context and the random-linear average-radius benchmark; actual commitment and storage maps are traced. | A selected concrete source relation and quantitative theorem are still needed to assess commitment-specific novelty. Random-code guarantees do not instantiate the fixed smooth RS family. A map or formalization alone establishes neither priority nor a new cryptographic scheme. | Needs the bounded shared profile for the commitment-specific comparison. |
+| Novelty / related work | The primary-source comparison records the established same-set MCA event, sharper positive-gap regimes, elementary endpoint/deep-hole context and the random-linear average-radius benchmark; actual commitment and storage maps are traced. The selected native modular source relation and quantitative comparison are now constructed in Q08. | Finish the claim-by-claim comparison using that actual profile and its hypotheses. Random-code guarantees do not instantiate the fixed smooth RS family. A map or formalization alone establishes neither priority nor a new cryptographic scheme. | Uses the bounded shared profile for the commitment-specific comparison; no full protocol is required. |
 | Q08: selected actual commitment projection | **Complete for the explicit native modular profile:** actual integral cellular coboundary validity, same original payload/full layout, global three-metric calibration, a payload with all three distances `3/4`, original-artifact joins and canonical diagonal fixed-mix goodness. Expanded validation passes. | This is a raw received-context proximity profile, not a nonempty accepted-far gate. No identification with an arbitrary old HCP/frame geometry, unrestricted Euclidean capacity radius, universal fixed-mix preservation or cryptographic security is asserted. Those need their own profile/statement; two relevant global comparisons are refuted. | Paper 2 owns source/observation contracts; Paper 3 owns quantitative analysis. Full ledger/consensus/Rust is not required. |
 
 The arbitrary supplied-code intermediate optimum, further exact MCA
 transitions and broader challenge families (Q10--Q12) are new research beyond
 this bounded paper. They are not missing wrappers. The standalone generic
-mathematics is formalized; the intended commitment-specific claim additionally
-requires Q08's actual source/codec profile and its quantitative theorem.
+mathematics is formalized; the selected commitment-specific claim uses Q08's
+now-constructed native modular source/codec profile and quantitative theorem.
 
-For the selected commitment-specific contribution, Q08 is additional required
-work. On the accepted exact-frame carrier alone the chain maps every element
+The completed Q08 result does not extend to every proposed source model.
+On the accepted exact-frame carrier alone the chain maps every element
 to an RS codeword, so positive farness needs a larger raw/noisy source. A fixed
 scalar mix also has a nontrivial kernel even for canonical representatives.
 Neither problem is resolved by running Rust. Rust is useful for wire-format

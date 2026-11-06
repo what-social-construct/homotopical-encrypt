@@ -8,8 +8,10 @@ statement.
 
 The supported framing is an elementary, formally verified endpoint/certificate
 development, explicit smooth instances, and a checked connection to the existing
-cochain payload. A new commitment-specific geometric radius guarantee still needs
-a concrete codec and source comparison.
+cochain payload. The native modular profile now has a concrete codec and proved
+source comparison. A stronger original-HCP/Euclidean geometric radius guarantee
+still needs its own restricted profile and comparison theorem; the constructed
+modular bridge alone establishes no novelty or cryptographic advantage.
 
 ## Claims and their present status
 
@@ -20,7 +22,7 @@ a concrete codec and source comparison.
 | Same-set pair MCA count `≤ choose(n,k+1)` at every radius | The same bad event is already studied by BCHKS; sharper radius-dependent bounds exist in their regime. | A short unordered-obstruction injection, uniform over radii and characteristics. The factor `k+1` saving is relative to `choose(n,k)(n-k)`, the ordered certificate count, rather than a proved uniform improvement over prior MCA results. |
 | Smooth family `n=2^(u+8)`, `k=n/4`, `q=3^n` meeting both fractional budgets | Cyclic finite-field units, power-of-two divisibility, and `choose(n,j) ≤ 2^n` supply the construction and comparison. | A realized order-`n` subgroup and all-`u` field/domain/parameter proofs, followed by the exact grid/real-radius conclusions. The exponential alphabet pays for the exponentially large allowable list; no efficient list decoder or polynomial list bound follows. |
 | Prime instance `q=2^128+192513`, `n=4096`, `k=1024` has MCA transition at count radii `0/1` | A full-set obstruction has at most one challenge; a two-spike line witnesses two challenges once one omission is allowed. | A certified smooth prime-field case with integer error budget `floor(q/2^128)=1`, `B(0)=1`, `B(1)≥2`, hence the half-open real safe interval. It does not determine the complete MCA spectrum. |
-| Committed-cochain application | Position binding, openings of linear maps, and constrained-RS proximity are established interfaces. | The actual payload, decoder, snapshot binding, plane extraction, state bus, and artifact/checkpoint identities can be traced. A new radius/security/cost advantage for this commitment is not yet supplied merely by those identities. |
+| Committed-cochain application | Position binding, openings of linear maps, and constrained-RS proximity are established interfaces. | The actual payload, decoder, snapshot binding, plane extraction, state bus, and artifact/checkpoint identities are traced. The explicit modular profile has actual coboundary validity and the quantitative bridge `d_C ≤ d_P = D_RS ≤ 2d_C`, with a capacity-far original payload. These constructions still require a claim-by-claim comparison before advertising a new radius/security/cost advantage. |
 
 ## Exact overlap with MCA literature
 

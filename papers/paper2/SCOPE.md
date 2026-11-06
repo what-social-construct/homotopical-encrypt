@@ -1,6 +1,6 @@
 # Paper 2: recommended scope and completion criteria
 
-Status: **recommended first publishable scope**, reviewed 2026-11-05.
+Status: **recommended first publishable scope**, reviewed 2026-11-06.
 The [initial manuscript text](DRAFT.md) records the object and metric contracts;
 this scope map retains the wider completion criteria.
 This is a planning recommendation, not a settled protocol specification or a
@@ -18,17 +18,22 @@ use exactly `propext`, `Classical.choice` and `Quot.sound`. The
 split and preserved baselines. This result predates the new Plucker,
 systematic-code and native-metric additions.
 
-Current focused checks establish the generic modular source profile and its
+The native-metric baseline of 2026-11-05 established the generic modular source profile and its
 three native metrics, the canonical-lift obstruction, Plucker reconstruction,
 the coarse Euclidean no-wrap example and the stated challenge profiles.
 The [draft proof ledger](DRAFT.md#7-proof-ledger-and-remaining-protocol-work)
 lists the source owners and actual dependency reports. Canonical native-metric/fixed-challenge and existing-interface adapters pass
-their focused builds and selected dependency probes. The expanded aggregate
-and literal default build pass **9,253/9,248 jobs**. The consolidated public-facade
-probe passes for 139 distinct new endpoints, matching individual sets exactly:
+their focused builds and selected dependency probes. That baseline's expanded aggregate
+and literal default build passed **9,253/9,248 jobs**. Its consolidated public-facade
+probe passed for 139 distinct selected endpoints, matching individual sets exactly:
 103 standard-only and 36 with existing native certificates; none uses cited-bound
 axioms or `sorryAx`. PDF/artifact details remain centrally recorded. None of these proofs claims
 a new secure commitment scheme or a capacity-scale Euclidean Hodge theorem.
+The subsequent actual cellular HCP family and observation adapters are checked
+in the [current validation record](../../docs/MATH_STORAGE_VALIDATION.md#current-cellular-hcp-implementation--2026-11-06):
+expanded/default builds pass **9,258/9,253 jobs**, with 235 selected dependency
+reports, including 96 new standard-only reports. The older native-metric
+counts above remain a dated baseline.
 The later sheaf-storage source adds a raw snapshot-bound context, typed
 projection/gate prefixes and a local append/seal/receipt/consume lifecycle.
 Its current validation is recorded separately in that register; source
@@ -126,7 +131,7 @@ transfer fixture exercises this kernel without claiming production security.
 | Existing source | What is present | What it does not yet supply |
 |---|---|---|
 | `lean/Sheaf/Integral.lean` | Restriction-preserving stalk lattices; integral coboundary preservation. | Canonical modular encoding/decoding or a public wire realization. |
-| `lean/Sheaf/HarmonicLattice.lean` | `b = h + delta_0 a + delta_1* c`, with harmonic recovery proved. | A sampled key/noise distribution, nonzero-message instance, or secrecy theorem. |
+| `lean/Sheaf/HarmonicLattice.lean`; `Sheaf/HCPAxisFamily.lean`; `HCP/AxisFamily.lean` | The abstract harmonic-lattice module proves recovery from `b = h + delta_0 a + delta_1* c`. The finite axis family now constructs actual nonzero integral messages, allowed coexact noise, lattice presentations and unique CVP answers. Its weighted encodings have coefficients two/one at one selected HCP observation. | A sampled key/noise distribution, general generated family, complete public-storage-view hiding or secrecy theorem. The finite exact-recovery obstruction does not supply those experiments. |
 | `lean/Sheaf/Distance.lean`; `Sheaf/CochainSemantics.lean` | Decoded Euclidean distance to `im delta_0`, zero-distance/exactness and perturbation bounds; operator/decoder/snapshot-compatible transport to the existing legacy coherence interface, with derived acceptance equivalence. | A metric identification with RS Hamming distance, or proofs of independently supplied legacy shape/Hodge/nerve gates. Carrier equivalence alone does not preserve a norm. |
 | `lean/Sheaf/ObservationQuotient.lean` | With a nonzero coexact direction, an unbounded family in the existing unrestricted `HodgeEncryptedCochain` carrier has the same zero exact component but growing kernel-normalized residual. This obstructs a positive far theorem on that carrier through an exact-component-only extraction whose zero image has distance zero. | Does not rule out an authenticated/noise-bounded profile; that profile's source/codec comparison remains to be constructed. This is distinct from decoded exact-payload distance. |
 | `lean/TCB/HCPObservation.lean` | `BoundHCPObservation` joins the full sample to an accepted exact component, leaf digest, snapshot, and supplied `Binds` relation. | Construction of that binding relation, public extraction, or cryptographic enforcement. The full record contains private witness data. |
@@ -250,7 +255,7 @@ protocol. Build and theorem-dependency outcomes are recorded separately.
 | Priority | Deliverable and completion criterion | Source owner / target | Current status |
 |---|---|---|---|
 | P0 | Select public observation, encoding, exact commitment and actual resource/asset/authorization/nullifier profile. Record primitive assumptions and distributions. | Paper 1 interfaces; Paper 2 `Policy`; bounded fixture in `Ledger/Examples.lean`. | Partial: abstract core and positive-value fixture present; production interpretation and security profile open. |
-| P0 | Instantiate the exact-component/full-sample relation and bounded public projection of the private witness stack. | `TCB/HCPObservation.lean`; `Storage/HCP.lean`; `Sheaf/ObservationQuotient.lean`. | The same accepted exact artifact/snapshot is reused in the storage context. Concrete public realization remains open; the unrestricted full-residual obstruction is separate and must guide profile selection. |
+| P0 | Instantiate the exact-component/full-sample relation and bounded public projection of the private witness stack. | `TCB/HCPObservation.lean`; `TCB/{HCPRealization,HCPAxisFamily}.lean`; `Storage/HCP.lean`; `Sheaf/ObservationQuotient.lean`. | The same accepted exact artifact/snapshot is reused. Actual operator/classifier alignment now derives the original sample's operative-message and CVP agreement; the finite family instantiates the operator and actual spectral gate and retains a supplied artifact. Acceptance, decoder, snapshot/envelope bindings and richer public-view equality or factorization remain explicit profile inputs. The unrestricted full-residual obstruction remains separate. |
 | P0 | State/action/candidate, computed after-state and context/root joins. | `Protocol/Ledger/{State,Transition,Sheaf}.lean`; `Consensus/Vote.lean`. | Mathematical source implemented; concrete root/decoder/profile instantiation remains open. |
 | P0 | Candidate-validity-indexed evidence, same artifact and proposal, distinct enclosing root bindings. | `Protocol/Evidence/Transition.lean`; `Ledger/Certified.lean`; existing TCB envelope. | Mathematical adapter implemented; hash/inclusion/authentication/verifier refinement remains open. |
 | P0 | Actual-update conservation, fresh duplicate-free consumption, replay exclusion and connected-history preservation. | `Ledger/{ValueFlow,Nullifier,Transition}.lean`. | Proof endpoints implemented and focused builds pass; see the shared theorem-dependency record. Nullifier derivation/security is not supplied by these proofs. |
@@ -260,7 +265,7 @@ protocol. Build and theorem-dependency outcomes are recorded separately.
 | P1 | Preserve the independent Euclidean source metric where claimed. | `Sheaf/Distance.lean`; `Storage/{Calibration,NoWrapCalibration,CanonicalSystematic}.lean`. | Controlled-lift criterion and explicit no-wrap first-shell profile are checked. Fifteen canonical endpoints retain existing native arithmetic trust. No capacity-scale Euclidean or full-HCP radius theorem is claimed. |
 | P1 | Algorithms, correctness, threat model, security experiments, assumptions/reductions and claim inventory. | Paper 2 manuscript, which does not yet have a TeX bundle. | Open; the kernel does not establish primitive security. |
 | P1 | One bounded runtime verification path with canonical bytes, malformed-input rejection and reproducible fixtures. | Rust runtime; `docs/PROTOCOL_PARITY_QUEUE.md`. | Open; distinguish runtime tests from formal refinement. |
-| P1 | Build selected Lean targets, inspect theorem axioms, compile/render manuscript, reproduce claimed costs. | Pinned Lean/Mathlib; paper build and validation record. | The pre-addition 4.35 build and 68 reports are preserved. New focused generic reports are standard-only; canonical systematic/native and interface reports retain explicitly counted existing arithmetic trust. Expanded aggregate/default builds (9,253/9,248 jobs) and the consolidated 139-declaration probe pass. Current manuscript/artifact details are recorded centrally. Paper 2 currently has a Markdown draft, no TeX/PDF bundle or cost reproduction. |
+| P1 | Build selected Lean targets, inspect theorem axioms, compile/render manuscript, reproduce claimed costs. | Pinned Lean/Mathlib; paper build and validation record. | The pre-addition 4.35 build/68 reports and 2026-11-05 native-metric build (9,253/9,248 jobs)/139 reports are preserved baselines. The current 2026-11-06 expanded/default builds pass 9,258/9,253 jobs; 235 selected reports include 199 standard-only and 36 with existing native certificates, with all 96 new reports standard-only. Current manuscript/artifact details are [recorded centrally](../../docs/MATH_STORAGE_VALIDATION.md). Paper 2 still has a Markdown draft, no TeX/PDF bundle or cost reproduction. |
 
 For a conditional protocol/specification paper, name concrete primitive
 interfaces and state precisely which implementations are assumed. For a

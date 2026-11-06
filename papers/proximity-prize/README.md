@@ -107,11 +107,14 @@ decoder with nonexact image. No capacity-scale unrestricted geometric theorem
 is claimed. Accepted exact contexts have zero native distance under the stated
 decoder contract; positive-far payloads are raw proximity/rejection inputs.
 
-The Lean/Mathlib 4.35 aggregate and default builds pass 9,253 and 9,248 jobs.
-The fresh consolidated audit has 139 selected declarations: 103 standard-only
-and 36 with existing native arithmetic certificates; none depends on the
-seven cited-bound axioms or `sorryAx`. Papers 1 and 3 have 97 and 28 reviewed
-pages. The [shared validation record](../../SEMANTIC-PARITY.md)
+The current Lean/Mathlib 4.35 aggregate and default builds pass 9,258 and
+9,253 jobs. The consolidated audit has 235 selected declarations: 199
+standard-only and 36 with existing native arithmetic certificates; none
+depends on the seven cited-bound axioms or `sorryAx`. The 96 new cellular/HCP
+reports are all standard-only. Paper 1 has 99 reviewed pages; Paper 3 is
+unchanged at 28 reviewed pages. The preceding native-metric milestone had
+9,253/9,248 jobs, 139 selected reports and 97/28 pages. The
+[shared validation record](../../SEMANTIC-PARITY.md)
 and [reproduction guide](../../docs/MATH_STORAGE_VALIDATION.md) retain the
 exact scopes, probes and separately dated earlier results.
 
