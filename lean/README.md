@@ -19,6 +19,7 @@ The project [MIT license](../LICENSE) is included at the package root.
 | Paper 2: bounded protocol core | [Protocol/Core.lean](Protocol/Core.lean), [core guide](Protocol/README.md) | A conservative finite-resource transition, computed successor, conservation/replay endpoints, candidate-indexed evidence and same-proposal quorum attachment, under explicit valuation, authorization, snapshot and authentication profiles. See the [current validation record](../SEMANTIC-PARITY.md#current-protocol-validation). [Protocol.lean](Protocol.lean) retains the broader compatibility surface. |
 | Sheaf storage and projection gates | [Protocol/Storage/Core.lean](Protocol/Storage/Core.lean), [storage guide](Protocol/Storage/README.md) | One original snapshot/cochain context, six typed projection/evidence levels, exact manifests/receipts, and the same-candidate history anchor with actual gate-database inclusion. Authentication/codec profiles remain explicit; anchoring does not supply a far witness. |
 | Recipient recovery and rotation | [Protocol/Ephemeral.lean](Protocol/Ephemeral.lean), [actual axis rotation](HCP/AxisRotation.lean) | Integral Hodge/sample transport and same-integer-coefficient recovery by either target or retained base key. Private delivery receipts and original bound-sample migration keep channel, authorization and decoder contracts explicit; no efficient codec, secure channel or lifecycle/privacy theorem is inferred. |
+| Conditional owned-resource transfer | [Protocol/Transfer.lean](Protocol/Transfer.lean) | Fixed-snapshot unit resource transfer, public input-derived nullifier and exact metadata/intent checks. Primitive results at the trusted decoder derive the existing update, with typed acyclic roots and original artifact/manifest/history joins. No new secure primitive, Rust refinement or consensus finality is claimed. |
 | Public artifact and verification contracts | [TCB.lean](TCB.lean), [Axioms.lean](Axioms.lean) | Existing payload/artifact/observation interfaces and their conditional consequences. Concrete bytes, hashing, proof/signature verification and runtime refinement are separate obligations. |
 | Legacy chain model | [Chain.lean](Chain.lean) | Retained compatibility model. Its spectral validator identity, cumulative-gap fork choice and raw cochain-sum balance are not the semantics or security claims of the new bounded core. |
 
@@ -42,7 +43,7 @@ Install elan, then run from the package root:
 cd lean
 lake exe cache get
 lake build
-lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP
+lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer
 ```
 
 The cache command retrieves the pinned Mathlib build cache; it avoids a

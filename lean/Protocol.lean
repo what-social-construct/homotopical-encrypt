@@ -7,6 +7,7 @@ public import Protocol.Consensus
 public import Protocol.Coregulator
 public import Protocol.Ledger
 public import Protocol.Storage
+public import Protocol.Transfer
 
 @[expose] public section
 

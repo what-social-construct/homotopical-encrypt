@@ -20,8 +20,9 @@ independent coding theorems and the quantitative analysis of a declared applicat
 profile. Definitions are shared across the papers; a citation does not create
 a second commitment or discharge its compatibility conditions.
 
-The first protocol endpoint is one conservative, snapshot-bound transition
-with candidate-indexed evidence and an attached matching acceptance quorum.
+The first protocol endpoint is the conservative, snapshot-bound owned-resource
+transition of §6.2, with candidate-indexed evidence and an optional matching
+acceptance quorum.
 Consensus finality, cryptographic security games and backend durability are
 additional obligations. Section 6.1 specifies mathematical recipient recovery
 and rotation; authenticated delivery, lifecycle enforcement and bytes remain
@@ -123,7 +124,8 @@ The base and manifest views are not a completed adversary transcript. A proof,
 selective response, state root or other
 released extension must be included in the view used by its security
 experiment. Access to private recipient material is not assumed from this
-table; authenticated delivery and rotation are subsequent protocol work.
+table; authenticated delivery and rotation lifecycle enforcement remain
+additional protocol work.
 
 The named HCP disclosure is a semantic observation of real cochain
 coordinates. Its existence in Lean supplies no finite wire codec or access
@@ -497,6 +499,137 @@ is needed to preserve any cochain/plane/RS Hamming profile under a chosen
 migration. The base complex is fixed; topology-changing migration is outside
 this construction.
 
+#### 6.2. One checked owned-resource transition
+
+The [owned-resource profile](../../lean/Protocol/Ledger/OwnedResource.lean)
+fixes an actual catalogue assigning each resource ID an owner, an asset and a
+positive integer amount. A finite marking records resource multiplicities.
+One action consumes a single input ID and produces a distinct output ID with
+the same asset and amount. Checks require the input to occur exactly once,
+the output to be absent, both IDs to be unspent, and the stated signer to be
+the input's catalogue owner. The nullifier list is exactly `[inputId]`; it is
+derived from the consumed resource rather than supplied independently.
+
+These IDs and the selected owner-authorization subject are public in this
+bounded profile. This supplies neither an anonymous nullifier construction nor
+a production account/UTXO architecture. Catalogue amounts are ledger asset
+units, not harmonic-message coefficients or sums of serialized cochain edges.
+The inventory is committed by the state-content root; no equation identifies
+it with the cochain's decoded coordinates. The actual configured catalogue is
+trusted profile data; matching a policy
+identifier alone does not authenticate its interpretation.
+
+The mechanical fixture transfers positive amount seven between distinct
+owners while retaining a supplied state header. It proves structural checks
+and inventory/value consequences without constructing a signature, payload
+proof, runtime or hash-security instance.
+
+The [checked transfer](../../lean/Protocol/Transfer/Owned.lean) retains the
+original `Storage.Context`, payload interpretation, snapshot and artifact.
+`Config.intentFor` constructs the expected public subject from those objects,
+the chosen transfer and actual before-state. `CheckedTransfer.candidate`
+constructs the existing `Ledger.Candidate` with that same payload and snapshot;
+its successor is the existing computed `Candidate.after`. No independently
+supplied after-state is accepted. The action keeps the epoch, snapshot and
+topology fixed. The private rotation/recovery objects of §6.1 can supply an
+original context, but this ledger action does not implement geometry or key-
+epoch migration.
+
+The [typed transcript](../../lean/Protocol/Evidence/TransferTranscript.lean)
+uses the following acyclic preparation order:
+
+1. Seal the original input payload and artifact digest in the
+   [input manifest](../../lean/Protocol/Storage/TransferManifest.lean). Its
+   root preimage is the existing base public view and one-entry slot/digest
+   directory. The leaf contains no current candidate, proof packet or enclosing
+   manifest root. This is an input-only manifest, not the six-stage projection
+   manifest or a certificate that all projection gates have been completed.
+2. Compute source and successor **content** roots and the pre-proof proposal
+   draft. `StateContent` retains the marking, spent IDs, height, epoch, snapshot,
+   topology and cochain root. It omits the current tip and evidence root.
+   The actual source tip is the draft's parent digest, and the source evidence
+   root is an explicit `Intent.beforeEvidenceRoot`. Thus these source
+   coordinates remain in the owner-authorized subject.
+3. Construct the exact intent containing the transfer, original public
+   payload/context view, manifest root, proposal draft, schema version,
+   statement identifier and policy identifier. The owner authorizes this
+   pre-proof intent, rather than the later completed proposal.
+4. Form the actual proof packet with that intent, owner-signature bytes, payload
+   proof bytes and full metadata: schema, statement, policy, proof-system and
+   verifier identifiers. Hashing this complete typed packet computes the
+   evidence root. Its preimage contains neither that root nor a block digest.
+5. Hash the block preimage containing the same draft, evidence root, intent
+   digest and manifest root. The block preimage omits its own block digest.
+   These two later digests complete the existing `ProposalRef`.
+
+The supplied hash suite operates on these explicit typed preimages. Canonical
+hash bytes, domain separation and cryptographic binding remain implementation
+contracts. No global hash injectivity or inversion of a digest is assumed.
+State content is not silently identified with the full state: reconstruction
+lemmas require the omitted tip and evidence coordinates. For the successor,
+those coordinates are the completed proposal's block and evidence digests;
+for the source, they are the intent's parent and source-evidence fields.
+This reconstruction is relative to the configured before-state and does not
+establish that state's chain origin or consensus finality.
+
+The [packet checker](../../lean/Protocol/Evidence/TransferVerifier.lean)
+parses actual bytes, requires their canonical re-encoding, and checks equality
+with the full expected metadata and intent before the selected primitive
+Boolean verifiers. Equality of two Lean validity propositions does not bind
+these data. The signature soundness contract authorizes the exact intent.
+The payload verifier is indexed by the **actual trusted payload
+interpretation**; its soundness law requires the original context's
+interpretation equality and public-input equality before deriving exact
+payload acceptance. It does not quantify over arbitrary decoders sharing
+public labels. Codecs, primitive implementations and their indexed soundness
+remain supplied contracts; the checker is a classical Boolean specification,
+without a claimed efficient Rust implementation or new proof-system security
+theorem.
+
+`CheckedTransfer` stores the structural prechecks and actual checked packet.
+It does not assume candidate validity. Resource checks derive availability,
+same-asset conservation, and the fixed nonempty, duplicate-free, fresh spend
+list. Signature and payload soundness supply their respective facts; original
+snapshot/topology alignment supplies the context checks. Together these prove
+the existing `Candidate.Valid` and hence `AcceptedUpdate`. The input's
+resulting multiplicity is zero and the output's is one; asset value is
+preserved. If the initial inventory has at most one copy per ID and no spent
+ID present, the result preserves that invariant. A consumed input cannot be
+replayed with new proposal metadata or an independently changed nullifier,
+and an already spent ID cannot be resurrected as an output.
+
+The [anchored endpoint](../../lean/Protocol/Transfer/Anchored.lean) separately
+records the complete proof packet as the evidence-root preimage. It retains
+the original artifact, interpretation, exact input seal and computed
+candidate/successor through the existing evidence and `TransitionAnchor`
+interfaces. The generic legacy artifact-only inclusion relation is not
+treated as authentication of arbitrary proof bytes. For this profile, the
+[semantic TCB adapter](../../lean/Protocol/Evidence/TransferEnvelope.lean)
+packages already derived validity and the actual check fact, using the real
+candidate/transfer pair as its private witness and the typed intent as its
+shadow. It adds no `True` runtime assumption or unit/always-valid witness.
+An externally supplied acceptance quorum may be attached only when it names
+the same complete proposal. Packet acceptance creates no quorum or finality
+proof. Durability likewise needs a receipt for the exact input manifest under
+the supplied backend relation.
+
+This closes the bounded mathematical transition under its stated setup,
+authorization, proof, topology and runtime contracts. It does not instantiate
+secure channels, hashing/codecs, signatures, payload proofs, authenticated
+before-state origin, atomic application/persistence, reorganization handling
+or consensus. The one-entry seal supplies no further proximity radius or
+projection-gate theorem.
+
+The correctness statement in this section uses exact primitive soundness
+contracts. It supplies no computational or statistical failure bound for a
+deployed signature or proof system. Such an instantiation needs its own
+adversary model, good-event conditions and error analysis; matching verifier
+labels alone does not discharge them.
+
+The packet's schema version and the original snapshot's schema version are
+separate coordinates. Both enter the typed intent in their respective
+locations; the construction does not identify them.
+
 ### 7. Proof ledger and remaining protocol work
 
 The successful Lean 4.35 builds of 9,233 aggregate/integration jobs and 9,228
@@ -533,6 +666,11 @@ the earlier counts are not validation of the added modules.
 | [Presented recipient profile](../../lean/Protocol/Ephemeral/Rotation.lean), [delivery](../../lean/Protocol/Ephemeral/Delivery.lean) and [axis receipt](../../lean/Protocol/Ephemeral/Examples.lean) | Both recipient routes preserve plaintext; original contexts, recipient, epoch labels, actual private material and envelope index explicit authorization/delivery relations. Scope rejection supplies neither caller authentication nor replay prevention. |
 | [Original bound-sample migration](../../lean/Protocol/Ephemeral/HCP.lean) | Actual transported sample equality derives the decoder/payload migration law from existing exact-component bindings. Both routes recover the source coefficients under its presented-point equality. Target construction retains the original supplied artifact and binding/acceptance contracts. |
 | [Existing transition kernel](../../lean/Protocol/Ledger/Transition.lean), [candidate evidence](../../lean/Protocol/Evidence/Transition.lean) and [history anchor](../../lean/Protocol/Storage/Anchor.lean) | Baseline checked conservation, replay exclusion and same-object/context joins under explicit authentication, policy and backend relations. These do not instantiate a production protocol. |
+| [Owned-resource kernel](../../lean/Protocol/Ledger/OwnedResource.lean) | A positive owner/asset/amount catalogue, one-input/one-output action, source-derived public spend identifier and actual inventory-coordinate laws. Structural checks derive conservation and freshness; inventory preservation retains its initial invariant hypothesis. The positive mechanical fixture constructs no runtime, hash or owner-authorization proof. |
+| [Acyclic transcript](../../lean/Protocol/Evidence/TransferTranscript.lean) and [input manifest](../../lean/Protocol/Storage/TransferManifest.lean) | Explicit content/draft/intent/packet/block preimages and reconstruction of omitted metadata. The exact one-entry original-payload seal is prepared independently of later packet/block digests. Typed hashing supplies no injectivity, canonical-byte implementation or six-stage gate completeness. |
+| [Operational packet verifier](../../lean/Protocol/Evidence/TransferVerifier.lean) | Parsing, canonical bytes and complete metadata/intent equality guard actual Boolean signature/payload verification. Indexed soundness derives authorization and payload exactness under the actual trusted interpretation, not arbitrary same-named decoders. Candidate validity is not stored in `CheckedPacket`. |
+| [Checked owned transfer](../../lean/Protocol/Transfer/Owned.lean) and [anchored endpoint](../../lean/Protocol/Transfer/Anchored.lean) | Concrete local prechecks and primitive soundness derive the existing candidate's validity and computed update. The complete packet, original artifact/context and exact input manifest are joined; value/inventory preservation and spent-input rejection reuse those actual objects. A matching whole-proposal quorum remains an external input. |
+| [Semantic evidence compatibility](../../lean/Protocol/Evidence/TransferEnvelope.lean) | Packages independently derived validity/check facts in the existing TCB envelope, with the actual candidate/transfer witness and public intent shadow. Its root/inclusion and runtime facts are supplied or proved by the selected profile; it is not an additional operational verifier or security proof. |
 | [Plucker reconstruction](../../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) and [operative-target adapter](../../lean/TCB/PluckerObservation.lean) | Eight reconstruction endpoints and the observation endpoints in the 27-declaration root probe are standard-only. Recovery consumes full exact-real shadow data and an explicit operative-kernel identification; digest-only visibility is a separate profile. |
 | [Canonical-lift obstruction](../../lean/Sheaf/CanonicalLiftObstruction.lean) | Thirteen core/sheaf endpoints are standard-only. A nontrivial real-linear decoder cannot have a global zero-defect comparison against unrestricted canonical RS distance. |
 | [Systematic cellular realization](../../lean/Sheaf/SystematicCode.lean) and [integer/field checks](../../lean/Proximity/Core/Systematic.lean) | Six representative generic endpoints are standard-only. The actual coboundary realizes the selected integer-lifted generator; it is not an identification of an arbitrary HCP sheaf. |
@@ -544,7 +682,7 @@ the earlier counts are not validation of the added modules.
 | [Canonical systematic profile](../../lean/Protocol/Storage/CanonicalSystematic.lean) | Fifteen selected concrete endpoints inherit the existing canonical primality/root-order native certificates. They include the original payload codec and a positive no-wrap Euclidean example; native arithmetic trust remains explicit. |
 | [Canonical native-metric and challenge adapter](../../lean/Protocol/Storage/CanonicalThreeLevel.lean) | The focused build passes (3,432 jobs). Sixteen selected reports retain existing canonical arithmetic trust. The original well-formed payload has all three native distances `3/4`; observed-artifact joins, accepted-to-native-zero, raw-far rejection and the stated canonical diagonal challenge are checked. Expanded aggregate and consolidated public-facade dependency checks pass; artifact details remain centrally recorded. |
 | [Existing calibration and near interfaces](../../lean/Protocol/Storage/CanonicalCalibration.lean) | The focused build passes (3,430 jobs). Nine selected reports split into four generic standard-only and five concrete reports with existing native certificates. Actual original-payload extraction instantiates `SourceToSourceCalibration`, `SourceToCodeCalibration.transCode` and `EvaluationProjection` with the explicit `2*d_C` near score; no metric inequality is assumed. |
-| Paper 2 security and runtime realization | Preserve the three inherited visibility levels while selecting concrete bytes, access and proof outputs; specify authorized recipient key delivery, persistence, dynamic geometry/key rotation and retirement. Cryptographic games, actual hashing, backend realization, consensus finality and runtime refinement remain construction or implementation obligations. |
+| Paper 2 security and runtime realization | Preserve the selected public, recipient and owned-transfer profiles while instantiating actual codecs, access, proof/verifier and authorization implementations. Cryptographic games, authenticated setup and state origin, secure delivery, persistence, dynamic geometry/key rotation, retirement, finality and runtime refinement remain obligations. |
 
 “Standard-only” means that the actual axiom report uses no dependencies beyond
 `propext`, `Classical.choice` and `Quot.sound`; some elementary identities use

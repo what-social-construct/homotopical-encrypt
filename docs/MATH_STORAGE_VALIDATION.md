@@ -8,7 +8,243 @@ not certify a concrete cryptographic scheme, an uninstantiated source-radius
 profile, an efficient gap solver or a storage backend.
 
 
+
+## Current owned-resource transition — 2026-11-06
+
+The conditional first Paper 2 transition is now implemented through
+[Protocol.Transfer](../lean/Protocol/Transfer.lean). It transfers one whole
+owned resource to a distinct absent/unspent identifier of the same asset and
+positive catalog value, with the consumed ID as its public nullifier. The
+snapshot and epoch stay fixed. Catalog units are not cochain coefficients,
+edge sums, Hodge energies or proximity distances; splitting, fee outputs,
+mint/burn and anonymous nullifiers are other profiles.
+
+The eight-module surface retains original objects and explicit assumptions:
+
+| Source | Constructed endpoint and boundary |
+|---|---|
+| [OwnedResource](../lean/Protocol/Ledger/OwnedResource.lean) | Actual owner/asset/value interpretation, unit flow, input-derived nullifier, availability/conservation/update/inventory proofs and spent-input/output rejection. A distinct-owner mechanical fixture transfers value seven using supplied headers, without cryptographic/runtime fixtures. |
+| [TransferTranscript](../lean/Protocol/Evidence/TransferTranscript.lean) | Typed signing-domain intent, complete metadata and packet, state-content projection/reconstruction and separate leaf/cochain/manifest/evidence/block preimages. Source historical evidence is explicit in the intent; parent names its tip. Final proposal supplies target tip/evidence. No preimage contains its own digest and no global hash injectivity is assumed. |
+| [TransferVerifier](../lean/Protocol/Evidence/TransferVerifier.lean) | Actual parsing/canonical-byte/metadata/intent checks followed by selected signature and payload Boolean verifiers. Soundness indexes the trusted actual interpretation, with equality required for the original context; it does not quantify over arbitrary decoders sharing names. Primitive implementations and their indexed soundness remain inputs. |
+| [TransferManifest](../lean/Protocol/Storage/TransferManifest.lean) | Exact seal of one original input payload/leaf digest, prepared before current proof/block data. Hash preimage and public directory retain the same context. This is separate from the six-stage projection manifest; persistence requires a real matching receipt. |
+| [TransferEnvelope](../lean/Protocol/Evidence/TransferEnvelope.lean) | Represents already-derived validity and exact joins in the old semantic TCB using the actual candidate/transfer witness and projected-intent existential shadow. It creates no `True` runtime, unit witness or new verifier-soundness result. |
+| [Owned](../lean/Protocol/Transfer/Owned.lean) | Structural checks plus actual checked packet derive `Candidate.Valid` and `check_implies_accepted_update`. Parser identity fixes one candidate/successor. Value, input consumption, output creation, conditional unit inventory and replay consequences follow from the actual existing update. Boolean specification is noncomputable, not a Rust refinement. |
+| [Anchored](../lean/Protocol/Transfer/Anchored.lean) | Entire packet metadata/signature/proof bytes determine the evidence preimage; exact input manifest enters block construction. Existing evidence/history anchors retain the actual candidate, artifact, context and computed successor. A supplied acceptance quorum must match the complete final proposal. |
+| [Facade](../lean/Protocol/Transfer.lean) | Separate focused entry for this profile; the lower-level `Protocol.Core` and standalone coding target retain their scopes. |
+
+The owner authorizes the pre-proof intent, not a recursively self-containing
+final header. Hash and codec implementations, metadata-to-catalog/verifier
+interpretation, topology authentication, signature/proof security, authentic
+prior-state origin, allocation/byte bounds, atomic backend behavior and
+consensus finality remain explicit contracts. Receipt or quorum existence is
+not manufactured. S2 private rotation can supply a context but does not turn
+this fixed-snapshot update into ledger geometry or epoch migration. Papers 1
+and 3 and their reviewed PDFs are unchanged; Paper 2 §6.2 carries the account.
+
+### Owned-transfer validation
+
+The expanded union passes **9,274 jobs** and literal default passes **9,267**
+on the unchanged Lean/Mathlib 4.35 pins. Focused builds pass for resources
+(3,151), transcript (3,404), trusted-interpretation verifier (3,405), input
+manifest (3,405), TCB representation (3,409), checked update (3,408) and the
+complete facade (3,417). All added modules have no local warning or error;
+upstream linter/deprecation warnings are replayed separately.
+
+The fresh public-facade probe passes **500 distinct selected declarations**:
+**464 standard-only** (429 exactly the usual three and 35 subsets), plus
+**36 retaining existing native arithmetic certificates**. All **145 added
+reports are standard-only**: 123 exactly the three, 19 axiom-free and three
+proper nonempty subsets. All 355 preceding dependency sets match exactly.
+No selected cited-bound axiom or `sorryAx` occurs. These dependency reports
+do not discharge the explicit primitive/profile assumptions.
+
+| Added selected group | Reports |
+|---|---:|
+| Owned-resource semantics and mechanical fixture | 32 |
+| Typed transcript/preimage/proposal construction | 34 |
+| Operational codec/signature/trusted-decoder checks | 13 |
+| Original input manifest and receipt consequence | 12 |
+| Existing TCB/evidence representation | 12 |
+| Checked candidate/update and determinism | 25 |
+| Exact roots, history and optional quorum | 17 |
+
+The static scan covers **255 public source modules / 256 Lean files** including
+Lake configuration, with no active holes, unresolved imports or cycles and
+the same seven isolated cited-bound axioms. All **28** recorded focused
+closures exclude legacy `Chain` and `CitedBounds`. New closure sizes are
+resources 13, transcript 46, verifier 47, manifest 47, envelope 51, checked
+transfer 50, anchored transfer 58 and facade 59. The preceding twenty closures
+are unchanged.
+
+Local artifacts under `output/validation/` are
+`transfer-{full,default}-build.log`, `transfer-{all,new}-axioms.lean`,
+`transfer-all-axioms.log`, `transfer-axiom-summary.json` and
+`transfer-source-audit.json`, plus the module-specific focused logs.
+Reproduce the added public entry/probe from `lean/`:
+
+```sh
+LEAN_NUM_THREADS=4 lake build
+LEAN_NUM_THREADS=4 lake build Protocol.Transfer Protocol.Core \
+  Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples \
+  Protocol.Storage.Core Protocol.Storage.AnchorExamples \
+  Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration \
+  Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP
+cat > /tmp/transfer-new-axioms.lean <<'LEAN'
+import Protocol.Transfer
+
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Catalog
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Transfer
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.values
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.value_single
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Transfer.flow
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Transfer.action
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Transfer.nullifiers_nonempty
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Transfer.nullifiers_nodup
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.InventoryInvariant
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.enabled
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.conserves
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.fresh
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.flow_input
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.flow_output
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.flow_other
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.after_input
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.after_output
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.after_other
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.preserves_inventory
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.input_spent_after
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.reused_input_rejected
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.reused_output_rejected
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.catalog
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.transfer
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.before
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.checks
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.inventory
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.candidate
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.after_marking
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.before_value
+#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.after_value
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.ofState
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.restore
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.reconstruct
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.ofState_restore
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.afterFor
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.ofState_after
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProposalDraft
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProposalDraft.ofProposal
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProposalDraft.complete
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProposalDraft.reconstruct
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProposalDraft.ofProposal_complete
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.Intent
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProofMetadata
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProofMetadata.ext
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProofMetadata.eq_iff
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProofPacket
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ManifestPreimage
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ManifestPreimage.ofView
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ManifestPreimage.toView
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ManifestPreimage.reconstruct
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.BlockPreimage
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.blockPreimage
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_draft
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_evidenceRoot
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_blockDigest
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_parentDigest
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_beforeStateRoot
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_afterStateRoot
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_snapshotRoot
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_topologyRoot
+#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_cochainRoot
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.Authorization
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.PayloadVerifier
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.PacketCodec
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.PacketCodec.encode_injective
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.check
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.check_sound
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.ofCheck
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.check_true
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.authorized
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.accepted
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.check_true_iff
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.reject_malformed
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.inputItem
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.preimage
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.scheme
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_items
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_root
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_publicView
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_publicView_base
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_publicView_root
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_publicView_directory
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_publicView_preimage
+#print axioms Hcrypt.Protocol.Storage.TransferManifest.persisted_of_receipt
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.compression
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.compressed
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.proof
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.proof_wellFormed
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.observation
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.envelope
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence_artifact
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence_witness
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence_shadow
+#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.toAcceptedUpdate
+#print axioms Hcrypt.Protocol.Transfer.Owned.Config
+#print axioms Hcrypt.Protocol.Transfer.Owned.Config.manifest
+#print axioms Hcrypt.Protocol.Transfer.Owned.Config.cochainRoot
+#print axioms Hcrypt.Protocol.Transfer.Owned.Config.draftFor
+#print axioms Hcrypt.Protocol.Transfer.Owned.Config.intentFor
+#print axioms Hcrypt.Protocol.Transfer.Owned.Config.subject
+#print axioms Hcrypt.Protocol.Transfer.Owned.Config.policy
+#print axioms Hcrypt.Protocol.Transfer.Owned.Prechecks
+#print axioms Hcrypt.Protocol.Transfer.Owned.check
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.ofCheck
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.check_true
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.candidate
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.candidate_eq
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.successor_eq
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.draft_eq
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.subject_eq
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.valid
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.accepted_update
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.value_preserved
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.input_consumed
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.output_created
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.inventory_preserved
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.replay_rejected
+#print axioms Hcrypt.Protocol.Transfer.Owned.check_implies_accepted_update
+#print axioms Hcrypt.Protocol.Transfer.Owned.Config.bindings
+#print axioms Hcrypt.Protocol.Transfer.Owned.Config.history
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.packet_transfer
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.packet_metadata
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.packet_included
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.source_reconstruct
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.successor_reconstruct
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.before_root_bound
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.after_root_bound
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.transition_bound
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.cochain_included
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.artifact_included
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.derivation
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.evidence
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.anchor
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.anchored_update
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.certified
+LEAN
+LEAN_NUM_THREADS=2 lake env lean /tmp/transfer-new-axioms.lean
+```
+
 ## Current recipient recovery and rotation — 2026-11-06
+
+This preceding rotation/recovery milestone is retained as a baseline; the
+owned-transfer profile above records the subsequent source and checks.
 
 The bounded rotation profile preserves a declared integer coefficient vector,
 not equality of its ambient coordinates. Seven new modules retain the existing

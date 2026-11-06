@@ -3,9 +3,10 @@
 Status: **recommended first publishable scope**, reviewed 2026-11-06.
 The [initial manuscript text](DRAFT.md) records the object and metric contracts;
 this scope map retains the wider completion criteria.
-This is a planning recommendation, not a settled protocol specification or a
-claim that the proposed construction or security theorem is complete.
-The bounded conservative kernel and its proof endpoints are now implemented.
+This scope map retains the wider completion criteria. A bounded conditional
+owned-resource profile is now defined below; it is not a complete secure
+protocol or a claim that the supplied cryptographic/runtime contracts are
+implemented. The conservative kernel and its proof endpoints are implemented.
 The **pre-addition Lean 4.35 baseline** aggregate/integration union passed **9,233 jobs**,
 covering all fifteen default roots and additional ledger, evidence, storage,
 anchor and canonical-adapter targets; the literal default build passed
@@ -48,6 +49,15 @@ original-sample/payload joins and scoped recipient delivery receipts. It retains
 explicit authorization/delivery and artifact-binding contracts. Its current
 build and dependency evidence belongs to the same central record; it proves
 neither a secure channel nor a rotation runtime.
+The subsequent owned-resource step selects a concrete bounded interpretation:
+public natural-number resource IDs have an owner, asset and positive amount;
+one input ID is consumed and one absent, unspent ID of equal value is created.
+Its input-ID nullifier is derived rather than chosen independently. An actual
+packet checker, typed pre-proof owner intent, complete metadata/proof packet,
+acyclic hash inputs and the original one-input manifest lead to the computed
+accepted update under explicit primitive contracts. Source and current checks
+are in the same central record; this does not instantiate production crypto,
+wire codecs, a backend or consensus finality.
 The later sheaf-storage source adds a raw snapshot-bound context, typed
 projection/gate prefixes and a local append/seal/receipt/consume lifecycle.
 Its current validation is recorded separately in that register; source
@@ -117,28 +127,56 @@ identifications, and all cryptographic games, remain separate obligations.
 The generic tasks Q04--Q07 are complete; Q08 tracks this concrete adapter and
 scope/validation closure rather than restarting those coding proofs.
 
-## Proposed central claim
+## Selected bounded central claim
 
-Complete one end-to-end proof-carrying transition: from a committed public
-state and one fully bound candidate to its computed accepted after-state.
+The first concrete endpoint is one conservative owned-resource transition
+from the original before-state and trusted sheaf interpretation to its computed
+successor. The [owned-resource kernel](../../lean/Protocol/Ledger/OwnedResource.lean)
+fixes a catalog of natural-number IDs, owners, assets and strictly positive
+amounts. It consumes one unit of an input ID, creates one unit of a distinct
+absent and unspent output ID of the same asset/amount, and uses `[inputId]` as
+its nullifier list. Unit multiplicities and absence of active spent IDs are
+preserved; the consumed ID cannot be spent again or resurrected as a later
+output. The positive mechanical fixture has value seven and retains supplied
+header coordinates, without fake authentication facts.
 
-The proposed theorem schema is: under the explicitly stated authentication,
-hash/commitment, and proof-system assumptions, verifier acceptance for that
-candidate implies the specified valid transition, with matching context and
-roots, exact value-flow conservation, and fresh nullifiers consumed once.
-Cryptographic error and adversary access must be part of the statement.
-Acceptance here is local transition validity; finality requires a separate
-consensus theorem. The conditional mathematical core of this schema now has
-typed state/action, candidate-indexed TCB evidence, conservation/replay
-endpoints and a same-proposal quorum adapter. The secure-protocol claim still
-requires a concrete profile, security games and runtime refinement.
+[Transfer.Owned](../../lean/Protocol/Transfer/Owned.lean) constructs the actual
+action, snapshot and proposal from these data and the original storage context.
+Successful structural and packet checking derives `Candidate.Valid` and
+`AcceptedUpdate`; candidate validity is not a premise of the operational
+checker. The signature verifier and exact-payload proof verifier have supplied
+indexed soundness contracts. The latter is bound to the actual trusted payload
+interpretation, not every decoder sharing a public tag. Catalog/policy and
+metadata identifiers select trusted meanings; their names alone prove no
+arithmetization, cryptographic or context correctness.
 
-Resources, assets and nullifiers remain abstract. The first action uses finite
-nonnegative resource markings and an explicit additive asset valuation,
-choosing neither accounts nor UTXOs. It is conservative; fees may be included
-among produced resources. Mint/burn, ownership/authorization and cryptographic
-nullifier derivation need their own selected profile. A small positive-value
-transfer fixture exercises this kernel without claiming production security.
+The owner authorizes the pre-proof [typed intent](../../lean/Protocol/Evidence/TransferTranscript.lean),
+including its signing domain, transfer, original public context, prepared draft
+and manifest root. Actual metadata, owner-signature bytes and proof bytes are
+included in the complete evidence packet. State-content hashing excludes the
+current tip/evidence coordinates; the original before-evidence root is included
+explicitly in the intent, alongside the parent-tip coordinate. Later
+proposal/block/evidence coordinates complete the state and are bound by the
+final complete signed proposal. This acyclic typed construction proves no
+global hash injectivity or new cryptographic security theorem.
+
+The [semantic envelope adapter](../../lean/Protocol/Evidence/TransferEnvelope.lean)
+packages independently derived validity using the actual candidate/transfer
+witness, public intent and original artifact. It does not derive new verifier
+soundness from TCB statement equality. The [anchored adapter](../../lean/Protocol/Transfer/Anchored.lean)
+reuses the same candidate, payload interpretation, artifact and exact
+[one-input manifest](../../lean/Protocol/Storage/TransferManifest.lean).
+A supplied matching acceptance quorum signs the same final proposal; it is a
+conditional certification endpoint, not finality. Backend persistence still
+requires an actual matching receipt.
+
+This action holds the ledger snapshot and epoch fixed. It is not a ledger
+rotation, topology migration, atomic backend update or six-stage proximity-gate
+completion. The generic resource kernel remains available independently of
+this bounded public-ID profile; no global account/UTXO architecture, anonymous
+nullifier construction, mint/burn policy or new commitment/MAC primitive is
+selected. Production codecs/hashes/signatures/proofs, state-origin security,
+adversary/error games and runtime refinement remain separate work.
 
 ## Existing progress and its limits
 
@@ -153,6 +191,9 @@ transfer fixture exercises this kernel without claiming production security.
 | `lean/Sheaf/Commitment.lean`; `lean/Axioms/CochainCommitment/` | Exact-payload semantics, openings modulo `ker delta_0`, blinding geometry, and explicit security interfaces. | A complete concrete commitment or MAC scheme and its security games. |
 | `lean/Protocol/Consensus/{Committee,Vote,Quorum}.lean` | Typed authenticated targets, strict weighted-quorum intersection, conditional target equality. | Admission, sortition, round/lock discipline, finality, or liveness. |
 | `lean/Protocol/Ledger/{State,Transition,ValueFlow,Nullifier}.lean` | Typed state/action/candidate, computed resource update, conservative value and spent-set preservation, same-action replay exclusion, and connected `Execution`. | Concrete ownership, resource/asset interpretation, nullifier derivation/security, mint/burn or a runtime refinement theorem. |
+| [OwnedResource](../../lean/Protocol/Ledger/OwnedResource.lean) | Concrete owner/asset/positive-amount catalog; one-input/output flow; derived input-ID nullifier; structural validity, unit-inventory preservation, replay/output-resurrection rejection and positive value-seven fixture. | Cryptographic ownership verification, anonymous nullifiers, global architecture or a production state-origin argument. |
+| [TransferTranscript](../../lean/Protocol/Evidence/TransferTranscript.lean); [TransferVerifier](../../lean/Protocol/Evidence/TransferVerifier.lean); [TransferEnvelope](../../lean/Protocol/Evidence/TransferEnvelope.lean) | Actual canonical-packet/metadata/intent/signature/proof checks; independently derived validity; acyclic typed content/intent/evidence/block inputs and original-witness TCB packaging. | Concrete canonical byte implementation, hash/domain security, signature/proof soundness implementation or a computational security game. Exact-payload soundness is indexed by the actual trusted interpretation. |
+| [Transfer.Owned](../../lean/Protocol/Transfer/Owned.lean); [Transfer.Anchored](../../lean/Protocol/Transfer/Anchored.lean); [TransferManifest](../../lean/Protocol/Storage/TransferManifest.lean) | Same actual candidate, source/context/artifact and computed update; complete packet inclusion and a pre-proof one-input manifest; conditional evidence/history/quorum joins. | Secure state initialization, deployed backend/primitive refinement, finality, ledger epoch/geometry migration or completion of the separate six-stage projection manifest. |
 | `lean/Protocol/Ledger/Sheaf.lean` | Adapter over the existing payload interpretation/snapshot, preserving accepted exact payload and decoded cocycle consequences. | A concrete encoding/decoder and topology-root realization; no replacement commitment or snapshot is introduced. |
 | `lean/Protocol/Evidence/Transition.lean`; `Ledger/Certified.lean` | Existing TCB envelope joined to the actual candidate, payload and roots; acceptance quorum attached to that same proposal, excluding hold/rejection. | Concrete hash/inclusion/authentication implementations, security games, rounds/locks, or finality. |
 | `lean/Protocol/Storage/{Context,HCP}.lean` | One original interpretation/snapshot/artifact context; raw binding is separate from `Context.Accepted`. The HCP adapter reuses the same accepted exact component and leaf/snapshot names from `BoundHCPObservation`. | A concrete bounded public encoding/binding, a selected full-observation radius theorem or global run freshness. Private full-HCP witness data remains outside public storage. |
@@ -192,19 +233,16 @@ consensus, presentation and oracle lifecycles.
 | [Ephemeral rotation](../../lean/Protocol/Ephemeral/Rotation.lean), [original-sample join](../../lean/Protocol/Ephemeral/HCP.lean) and [delivery](../../lean/Protocol/Ephemeral/Delivery.lean) | Actual encoding-compatible rotation, direct/base recovery, decoder-level payload migration and recipient/context-scoped receipts are constructed. The original path object can carry the actual typed transport. | Instantiate channel/authentication and artifact-binding implementations, generation and global lifecycle/retirement. Epochs are labels here, not authenticated ledger epochs. |
 | Oracle/coregulator surfaces | Existing attachment/import points are retained. | Their selected lifecycle/state-machine endpoints remain open. |
 
-The mathematical joins previously missing from the first-action core now
-have source implementations. Their assumptions remain visible: `Policy`
-supplies authorization, additive valuation and snapshot interpretation;
-`RootBindings` supplies authentication/inclusion relations on the actual
-objects; its evidence-root relation currently includes the public hashed
-cochain artifact, not the full serialized proof or verifier metadata.
-Full proof-evidence inclusion remains profile work. A concrete root scheme
-must also specify an acyclic preimage order: the computed successor includes
-the block digest and proposal roots, so hashing the entire proposal and
-successor into one another is not an implementation of these relations.
-TCB acceptance uses its stated verification contracts. The replay
-endpoint excludes reuse of the same nonempty action list, not every alternate
-encoding of a spend without a nullifier-derivation theorem.
+The generic first-action core retains its explicit `Policy`, snapshot and
+root/inclusion interfaces. Its original `artifactIncluded` relation covers the
+public hashed cochain artifact, not the entire proof packet. The selected
+owned-resource profile now supplies a separate full-packet evidence hash and
+acyclic typed inputs, derives the existing candidate validity from structural
+checks and indexed primitive soundness, and only then packages that result in
+the TCB envelope. No global hash injectivity, executable Rust refinement or
+new primitive security follows. Its fixed input-ID nullifier and action shape
+close alternate-nullifier spends for this public-ID profile; broader nullifier
+and anonymous-resource interpretations retain their own obligations.
 
 The storage objects likewise retain explicit assumptions. Their context fixes
 the original sheaf interpretation, snapshot, payload and artifact; roots name
@@ -218,10 +256,12 @@ The new `TransitionAnchor` source reuses the candidate's actual snapshot and
 original public artifact by equality, then authenticates its exact sealed list
 and manifest root through `HistoryBindings`. `ProjectionAnchor` retains the
 existing final nested prefix and joins its actual gate database to the
-candidate's evidence root under a separate supplied inclusion relation. This
-does not replace the open serialized-proof/verifier metadata inclusion work.
-The wire profile can bind the manifest in an authenticated block body or add a
-dedicated root coordinate; neither encoding is selected by this adapter.
+candidate's evidence root under a separate supplied inclusion relation. That
+generic adapter does not itself supply serialized-proof/verifier metadata
+inclusion. The bounded transfer profile separately hashes the complete packet
+and binds its one-input manifest through staged intent/block preimages.
+Concrete bytes and cryptographic security remain implementation contracts;
+the generic six-stage projection anchor supports other selected root layouts.
 `AnchorExamples` exercises a positive transfer, matching quorum and persistence
 receipt, with rejected run/snapshot/nonexact-input substitutions. Their Lean 4.35
 builds and selected standard-only theorem-dependency audits pass; see the shared register. All these adapters
@@ -276,11 +316,11 @@ protocol. Build and theorem-dependency outcomes are recorded separately.
 
 | Priority | Deliverable and completion criterion | Source owner / target | Current status |
 |---|---|---|---|
-| P0 | Select public observation, encoding, exact commitment and actual resource/asset/authorization/nullifier profile. Record primitive assumptions and distributions. | Paper 1 interfaces; `Storage/PublicView.lean`; Paper 2 `Policy`; bounded fixture in `Ledger/Examples.lean`. | The first public values and disclosure paths are specified and constructed: original payload/context header, sealed root/directory and explicit same-sample HCP disclosure. Concrete codecs/access, resource/authorization/nullifier interpretation, primitive assumptions and security distributions remain open. |
+| P0 | Select public observation, encoding, exact commitment and actual resource/asset/authorization/nullifier profile. Record primitive assumptions and distributions. | Paper 1 interfaces; `Storage/PublicView.lean`; `Ledger/OwnedResource.lean`; `Transfer/Owned.lean`. | The first public values and bounded owned-resource profile are defined: positive catalog value, actual owner label, one input/output and derived public input-ID nullifier. The operational checker verifies exact metadata/intent, signature and payload proof under supplied trusted implementations/soundness. Production codecs/access, primitive security, state-origin argument and adversary distributions remain open. |
 | P0 | Instantiate the exact-component/full-sample relation and bounded public projection of the private witness stack. | `TCB/HCPObservation.lean`; `TCB/{HCPRealization,HCPAxisFamily}.lean`; `Storage/{HCP,PublicView}.lean`; `Sheaf/ObservationQuotient.lean`. | The same accepted exact artifact/snapshot is reused. Actual operator/classifier alignment derives operative-message and CVP agreement; the finite family instantiates its operator and actual spectral gate. The public projection and optional same-sample HCP disclosure now retain the actual payload and identifiers. Acceptance, decoder, snapshot/envelope binding implementations and richer released-view equality or factorization remain explicit. The unrestricted full-residual obstruction remains separate. |
-| P0 | State/action/candidate, computed after-state and context/root joins. | `Protocol/Ledger/{State,Transition,Sheaf}.lean`; `Consensus/Vote.lean`. | Mathematical source implemented; concrete root/decoder/profile instantiation remains open. |
-| P0 | Candidate-validity-indexed evidence, same artifact and proposal, distinct enclosing root bindings. | `Protocol/Evidence/Transition.lean`; `Ledger/Certified.lean`; existing TCB envelope. | Mathematical adapter implemented; hash/inclusion/authentication/verifier refinement remains open. |
-| P0 | Actual-update conservation, fresh duplicate-free consumption, replay exclusion and connected-history preservation. | `Ledger/{ValueFlow,Nullifier,Transition}.lean`. | Proof endpoints implemented and focused builds pass; see the shared theorem-dependency record. Nullifier derivation/security is not supplied by these proofs. |
+| P0 | State/action/candidate, computed after-state and context/root joins. | `Protocol/Ledger/{State,Transition,OwnedResource}.lean`; `Transfer/{Owned,Anchored}.lean`. | The bounded profile constructs the candidate and derives its actual computed accepted update in a fixed snapshot/epoch. Typed content/intent/evidence/block inputs and reconstruction laws name late coordinates separately. Canonical cryptographic/runtime refinement and state-origin security remain open. |
+| P0 | Candidate-validity-indexed evidence, same artifact and proposal, distinct enclosing root bindings. | `Evidence/{TransferTranscript,TransferVerifier,TransferEnvelope}.lean`; `Transfer/Anchored.lean`; existing TCB envelope. | The exact complete packet is checked independently of validity and included under its evidence hash; owner authorization signs the pre-proof intent. The same candidate/artifact/context/input manifest is joined to existing evidence and a supplied same-proposal quorum. Signature/proof/hash security, authenticated codecs and runtime refinement remain explicit. |
+| P0 | Actual-update conservation, fresh duplicate-free consumption, replay exclusion and connected-history preservation. | `Ledger/{ValueFlow,Nullifier,Transition,OwnedResource}.lean`; `Transfer/Owned.lean`. | Generic conservation/spent preservation and bounded public-ID profile proofs are implemented: derived singleton nullifier, positive value, unit multiplicities, reused-input and output-resurrection rejection. This is not a cryptographic or anonymous nullifier scheme. |
 | P1 | Initialization, stage advancement, complete sealing and receipt-indexed local consumption. | `Protocol/Storage/{Context,Checkpoint,Projection}.lean`; `Storage/Core.lean`. | Mathematical source implemented; see central validation. Global run freshness/replay, real backend authentication/durability, atomic advancement/seal/cleanup and physical erasure remain open. Rejection/hold/retry policy is separate. |
 | P1 | Preserve semantic plaintext under actual rotation and bind recipient recovery to its original contexts. | `Sheaf/{CoefficientRecovery,Rotation}.lean`; `HCP/AxisRotation.lean`; `Protocol/Ephemeral/{Rotation,HCP,Delivery,Examples}.lean`. | Bounded mathematical construction present: unique partial decoding, integral sample transport, same-coefficient encoding, direct/base recovery, original bound-sample/payload joins and scoped delivery receipts. Current checks are recorded centrally. Authorization/delivery and artifact binding are explicit contracts; secure generation/channel, authenticated epoch advancement, replay, atomic migration and retirement remain open. No Hamming preservation or privacy is inferred. |
 | P1 | Join one history entry and matching quorum to the original snapshot/artifact, exact sealed manifest, final projection prefix and actual gate database. | `Protocol/Storage/{Anchor,ProjectionAnchor,AnchorExamples}.lean`. | The pre-addition baseline and standard-only anchor reports pass. History/gate inclusion, wire/root layout and backend refinement remain profile obligations. Actual same-base sample rotation is separate from atomic retained-history migration; anchor equality alone supplies no new metric or radius theorem. |

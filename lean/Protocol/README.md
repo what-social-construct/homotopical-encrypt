@@ -18,6 +18,7 @@ existing authenticated proposal and quorum types.
 | `Ledger/Examples`, `Ledger/EvidenceExamples` | A positive-value transfer and accepted evidence/quorum fixture; rejection checks for overspending, imbalance, replay, duplicate/empty nullifiers and substituted context. |
 | `Storage/Anchor`, `Storage/ProjectionAnchor` | Join the same candidate evidence to the original snapshot/artifact and exact sealed projection manifest, with explicit history authentication and actual gate-database inclusion. Derive payload acceptance and retain the matching quorum/RS-word endpoints. |
 | `Ephemeral/Rotation`, `Ephemeral/Delivery`, `Ephemeral/HCP` | Separately imported actual integral/presented rotation, coefficient-preserving recipient recovery, original bound-sample/payload migration and scoped delivery receipts. Channel/authentication, generation and lifecycle enforcement remain explicit. |
+| `Transfer` | Focused conditional owned-resource profile: actual catalog and public input-ID nullifier, typed canonical packet checks, trusted-decoder proof result, derived candidate/update, staged hash inputs and original input-manifest/evidence/history joins. Secure primitives and runtime/state-origin/finality contracts remain explicit. |
 
 `Protocol.Core` is the focused review entry point. `Protocol.Ledger` is the
 broader compatibility aggregate. Its legacy `Chain` import remains for
@@ -33,6 +34,16 @@ and prevents no repeated valid request. Actual delivery, epoch/state binding
 and lifecycle security remain supplied channel/policy obligations. The
 [axis fixture](Ephemeral/Examples.lean) constructs the rotation and encoding
 law without fabricating contexts, envelopes or authorization proofs.
+
+`Protocol.Transfer` selects one whole-resource transfer in the fixed current
+snapshot and epoch. Catalog ownership, assets and positive amounts give its
+inventory a value independent of cochain coordinates. It derives validity
+from local resource checks and actual packet verification under signature and
+trusted-interpretation proof contracts. Owner authorization covers a typed
+pre-proof intent; the full packet determines evidence before the complete
+block proposal is constructed. Its retained manifest has the original input
+payload in one slot, separate from the six-stage projection manifest. The
+raw Boolean specification is noncomputable; it verifies no Rust implementation.
 
 ## Exact endpoint and assumptions
 

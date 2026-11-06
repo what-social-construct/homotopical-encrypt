@@ -71,6 +71,41 @@ from class equality. These results keep the base complex fixed and prove no
 secure-channel construction, random generation, global lifecycle/retirement,
 physical erasure, privacy or Hamming-distance preservation theorem.
 
+The bounded transition construction is the
+[owned-resource transition](DRAFT.md#62-one-checked-owned-resource-transition).
+An actual catalogue fixes each resource ID's owner, asset and positive amount.
+One input is consumed and one distinct absent, unspent output is produced with
+the same asset and amount. The public nullifier is exactly the consumed ID;
+this is not an anonymous nullifier scheme or a production account/UTXO choice.
+Ledger asset amounts are separate from harmonic-message coefficients and
+serialized cochain sums; no inventory/cochain-coordinate identification is
+claimed.
+
+[OwnedResource](../../lean/Protocol/Ledger/OwnedResource.lean) derives concrete
+availability, conservation and inventory laws. The
+[checked transfer](../../lean/Protocol/Transfer/Owned.lean) constructs the
+existing candidate from its original payload/context, fixed epoch/snapshot
+and actual before-state. Structural checks plus indexed owner-signature and
+payload-proof soundness derive validity and the computed update; validity is
+not assumed by the operational acceptance record. The payload verifier is
+indexed by the actual trusted interpretation, excluding arbitrary same-named
+decoders from that soundness claim.
+
+The [transcript](../../lean/Protocol/Evidence/TransferTranscript.lean) gives an
+acyclic order: original input manifest and content roots, exact domain-bound
+intent, signature/proof bytes and complete metadata packet, evidence digest,
+then a block preimage without its own digest and the completed proposal.
+Source tip/evidence coordinates remain explicit in the intent; omitted
+successor coordinates come from the final proposal. The
+[anchored endpoint](../../lean/Protocol/Transfer/Anchored.lean) retains the
+original artifact, exact input seal and actual computed update through the
+existing evidence/history interfaces. Its input-only manifest is not the
+six-stage projection manifest or a gate-completeness certificate. A matching
+complete-proposal quorum, backend receipt and runtime contracts remain inputs.
+No global hash injectivity, secure primitive implementation, authenticated
+before-state origin, finality, ledger epoch/geometry migration or anonymous
+transfer theorem is inferred. Current checks remain recorded centrally.
+
 The shared mathematical wiring is owned by Paper 1:
 [actual cochain model and invariant homological tests](../../lean/Helfer/CochainModel.lean),
 [integral cellular axis family](../../lean/Sheaf/HCPAxisFamily.lean),
