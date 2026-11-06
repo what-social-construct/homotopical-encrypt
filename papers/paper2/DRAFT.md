@@ -22,9 +22,11 @@ a second commitment or discharge its compatibility conditions.
 
 The first protocol endpoint is one conservative, snapshot-bound transition
 with candidate-indexed evidence and an attached matching acceptance quorum.
-Consensus finality, cryptographic security games, backend durability and key
-rotation are additional obligations. The existing proofs state their
-authentication and implementation contracts explicitly.
+Consensus finality, cryptographic security games and backend durability are
+additional obligations. Section 6.1 specifies mathematical recipient recovery
+and rotation; authenticated delivery, lifecycle enforcement and bytes remain
+explicit contracts. The existing proofs state their authentication and
+implementation contracts explicitly.
 
 ### 2. Maintained geometry, temporary processing and retained artifacts
 
@@ -377,8 +379,9 @@ exact/coexact noise, the full sample, commitments, gates and retained artifacts
 representative in the same class with a hidden path/transport, then publish
 only the selected artifact and evidence view. Class preservation for one
 supplied representative is proved under an explicitly path-respecting
-classifier; indexed generation, transported state,
-rotation migration and an anonymity game remain separate obligations.
+classifier. Actual integral transport and recipient recovery are specified
+below; indexed generation, lifecycle enforcement and an anonymity game remain
+separate obligations.
 
 Rotation correctness must name the semantic plaintext and its cross-presentation
 encoding: transporting harmonic coordinates can preserve the same plaintext.
@@ -390,12 +393,109 @@ Representative privacy, plaintext hiding, sender anonymity, unlinkability and
 forward secrecy are distinct experiments. This draft selects none of them
 implicitly from a large classifier fiber or the name of a gate.
 
-Paper 2 must also specify how an authorized recipient holds or derives the
-ephemeral presentation or transport needed for recovery, and which delivery
-hints an outsider sees. That key-delivery profile must use the same semantic
-plaintext, public view and lifecycle as the stored artifacts. A Hodge noise
-opening or a supplied class-membership path is not a key-exchange,
-encapsulation or recipient-recovery construction.
+The recipient profile below keeps the base lattice/Hodge key and uses an
+actual private transport for recovery. Its delivery receipt names the same
+semantic plaintext convention and original source/target contexts. Any
+released delivery hints or envelope bytes extend the §2.1 observation view.
+A noise opening or class-membership path alone supplies neither that recovery
+material nor a key-exchange or encapsulation algorithm.
+
+#### 6.1. Recipient recovery and coefficient-preserving rotation
+
+Let \(H_0,H_1\) be explicit harmonic-lattice presentations with the same
+integer coefficient type \(\mathbb Z^r\). The semantic plaintext is \(z\),
+with ambient encodings \(H_0(z)\) and \(H_1(z)\). An actual degreewise chain
+isometry \(U=(U_0,U_1,U_2)\) transports the coboundaries and adjoints. For
+arbitrary intrinsic integral harmonic messages it additionally preserves the
+chosen degree-one integral lattices in both directions. This integral law
+does not follow from a real isometry. The selected encodings satisfy the
+separate law
+
+\[
+U_1H_0(z)=H_1(z)\qquad\text{for every }z\in\mathbb Z^r.
+\]
+
+[Integral Hodge transport](../../lean/Sheaf/Rotation.lean) carries the actual
+message and opening coordinates together:
+
+\[
+(h,a,v,b)\longmapsto(U_1h,U_0a,U_2v,U_1b),
+\qquad b=h+\delta_0a+\delta_1^*v.
+\]
+
+The observed-cochain equation, harmonic-projector covariance, inverse law
+and successive-rotation composition are proved from the chain isometry.
+The opening coordinates remain real-valued. No integral-noise sampler or
+distributional guarantee is inferred.
+
+The [coefficient decoder](../../lean/Sheaf/CoefficientRecovery.lean) takes
+only the actual observed cochain and the selected private presentation. It
+projects to the harmonic subspace and returns the unique integer coefficient
+vector when that point lies in the presented lattice, otherwise `none`.
+Full real span alone does not cover every intrinsic integral harmonic point.
+This is an exact classical, noncomputable decoder, without a claimed
+efficient finite-byte algorithm. It never reads a sample's hidden message
+field as its input.
+
+[PresentedRotation](../../lean/Protocol/Ephemeral/Rotation.lean) retains the
+actual integral isometry and encoding law. Both recipient routes recover the
+same plaintext from a rotated valid encryption:
+
+\[
+\operatorname{decode}_{H_1}(U_1b)=\operatorname{some}(z),\qquad
+\operatorname{decode}_{H_0}(U_1^{-1}(U_1b))=\operatorname{some}(z).
+\]
+
+The second route lets the recipient retain the base recovery key and use the
+delivered private transport. It is a correctness theorem, not a construction
+of a confidential delivery channel.
+
+The [delivery receipt](../../lean/Protocol/Ephemeral/Delivery.lean) is indexed
+by the actual recipient, source and target epoch labels, context keys derived from
+the original source and target storage objects, actual rotation material and
+an actual envelope. Authorization and authenticated delivery are explicit
+application relations on those objects. Epoch labels are separate from the
+context keys and must be bound to the actual protocol state by those
+relations; a schema version is not an epoch. Recovery checks the entire request
+scope; a changed recipient label, epoch or context key returns `none`.
+Matching public labels alone do not authenticate a caller, distinguish
+semantic contexts with colliding names, or prevent replay of the same valid
+request. Epoch monotonicity, fresh generation, secure delivery and retirement
+remain policy/channel/lifecycle obligations. The receipt is private semantic
+evidence and is not serialized wholesale into public history.
+
+A `PayloadRotation` additionally requires the actual decoder equation
+\(\operatorname{dec}_{F_1}(c_1)=U_1\operatorname{dec}_{F_0}(c_0)\).
+It then derives target exact acceptance from source exact acceptance using
+the coboundary square. Original payloads and snapshots are retained; public
+roots are not forced equal, and atomic storage replacement or deletion is
+not inferred. The existing `EphemeralFiberSpec` can be joined to an actual
+`PresentedRotation` with the same endpoints. Class preservation still uses
+its path-respecting classifier law; a path or class label does not produce
+the integral map or encoding law. Generation of such paths/rotations is
+separate from this typed join.
+
+The [bound-sample adapter](../../lean/Protocol/Ephemeral/HCP.lean) makes the
+original HCP objects explicit. A `BoundSampleRotation` relates the two actual
+`BoundHCPObservation` records by transport of their full encrypted samples.
+Their existing decoded-exact-component equations then derive the
+`PayloadRotation` decoder law for their original storage contexts. Target
+coefficient recovery and retained-base-key recovery follow when the actual
+source message is the selected point \(H_0(z)\). A constructor may retain a
+supplied target artifact, decoder equation and observation-binding proofs;
+it creates no hash, snapshot or authentication fact. This join asserts no
+equality of class labels or released records.
+
+The [actual axis-family rotation](../../lean/HCP/AxisRotation.lean) constructs
+the integral map and encoding law for every integer coefficient. Rotating
+the weighted source sample changes \(b=(1,2)\) to \((2,1)\) and recovers
+coefficient \(2\) by either recipient route. The fixed-observation target
+sample at \((1,2)\), which encodes \(1\), is a different sample. Thus
+rotation correctness and fixed-input ambiguity use different observations.
+These laws preserve Euclidean geometry; a separate coordinate/codec theorem
+is needed to preserve any cochain/plane/RS Hamming profile under a chosen
+migration. The base complex is fixed; topology-changing migration is outside
+this construction.
 
 ### 7. Proof ledger and remaining protocol work
 
@@ -428,6 +528,10 @@ the earlier counts are not validation of the added modules.
 | [Actual HCP realization](../../lean/HCP/AxisFamily.lean) | The focused integration build passes for the stated endpoints. Actual matrices and the homological closed theories form `HCPBridge.Realization`, with a common `(class,b)` observation and distinct nonzero operative targets. Existing no-recovery/CVP-oracle results and positive discrete CVP recovery are reused. Coordinate-target ambiguity alone does not distinguish semantic plaintexts or supply a privacy game or equality of the full storage view; current dependency outcomes are recorded centrally. |
 | [Original bound-observation adapter](../../lean/TCB/HCPRealization.lean) | The focused adapter build passes. Operator-action and classifier alignment retain the original bound sample, payload, interpretation and artifact; kernel/projector/operative-message agreement and the stated discrete CVP comparison are derived. A richer view inherits no-recovery only under its explicit factorization hypothesis. The adapter does not manufacture snapshot, hash or verification contracts. |
 | [Concrete artifact-bound family adapter](../../lean/TCB/HCPAxisFamily.lean) | The final focused glue build passes. Actual operator alignment and the computed positive spectral gap one instantiate the declared spectral gate/window. `bindSample` retains an existing artifact and derives the same operative-target/CVP join. Acceptance, hash/snapshot binding, decoding of the zero exact component and the snapshot-classifier equality remain application inputs; the adapter does not construct a dummy artifact or equality of full public views. |
+| [Presented-coefficient recovery](../../lean/Sheaf/CoefficientRecovery.lean) | Integer encoding is injective; the exact partial decoder reads the observed cochain and private presentation. Valid encoded inputs recover their original coefficients. Full intrinsic-lattice coverage and an efficient byte algorithm are not inferred. |
+| [Integral Hodge rotation](../../lean/Sheaf/Rotation.lean) and [actual axis rotation](../../lean/HCP/AxisRotation.lean) | Actual message and exact/coexact noise transport, projector naturality, inverse and composition; an explicit integral law and all-coefficient encoding law. The concrete weighted rotation preserves two while changing the observation to `(2,1)`. |
+| [Presented recipient profile](../../lean/Protocol/Ephemeral/Rotation.lean), [delivery](../../lean/Protocol/Ephemeral/Delivery.lean) and [axis receipt](../../lean/Protocol/Ephemeral/Examples.lean) | Both recipient routes preserve plaintext; original contexts, recipient, epoch labels, actual private material and envelope index explicit authorization/delivery relations. Scope rejection supplies neither caller authentication nor replay prevention. |
+| [Original bound-sample migration](../../lean/Protocol/Ephemeral/HCP.lean) | Actual transported sample equality derives the decoder/payload migration law from existing exact-component bindings. Both routes recover the source coefficients under its presented-point equality. Target construction retains the original supplied artifact and binding/acceptance contracts. |
 | [Existing transition kernel](../../lean/Protocol/Ledger/Transition.lean), [candidate evidence](../../lean/Protocol/Evidence/Transition.lean) and [history anchor](../../lean/Protocol/Storage/Anchor.lean) | Baseline checked conservation, replay exclusion and same-object/context joins under explicit authentication, policy and backend relations. These do not instantiate a production protocol. |
 | [Plucker reconstruction](../../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) and [operative-target adapter](../../lean/TCB/PluckerObservation.lean) | Eight reconstruction endpoints and the observation endpoints in the 27-declaration root probe are standard-only. Recovery consumes full exact-real shadow data and an explicit operative-kernel identification; digest-only visibility is a separate profile. |
 | [Canonical-lift obstruction](../../lean/Sheaf/CanonicalLiftObstruction.lean) | Thirteen core/sheaf endpoints are standard-only. A nontrivial real-linear decoder cannot have a global zero-defect comparison against unrestricted canonical RS distance. |

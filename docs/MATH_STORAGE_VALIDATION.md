@@ -7,7 +7,182 @@ source coverage, checked proof statements and theorem dependencies. It does
 not certify a concrete cryptographic scheme, an uninstantiated source-radius
 profile, an efficient gap solver or a storage backend.
 
+
+## Current recipient recovery and rotation — 2026-11-06
+
+The bounded rotation profile preserves a declared integer coefficient vector,
+not equality of its ambient coordinates. Seven new modules retain the existing
+cellular sheaf, integral structure, harmonic-lattice presentation, Hodge sample,
+bound HCP observation and storage context objects:
+
+| Module | Constructed endpoint and explicit boundary |
+|---|---|
+| [CoefficientRecovery](../lean/Sheaf/CoefficientRecovery.lean) | Integer encoding injectivity and a partial classical decoder from the actual observed cochain. It projects with the private Hodge key and returns coefficients exactly on the chosen presented range; no efficient codec or arbitrary CVP solver is supplied. |
+| [Integral rotation](../lean/Sheaf/Rotation.lean) | Actual chain-isometry identity/inverse/composition, projector naturality, an explicit integral-one lattice law, derived harmonic-lattice equivalence and actual message/noise/sample transport with roundtrip/composition. Isometry alone proves no integrality or native Hamming preservation. |
+| [Actual axis rotation](../lean/HCP/AxisRotation.lean) | Constructs integral coordinate exchange and proves the encoding law for every integer input. Weighted `(1,2)` becomes `(2,1)` and retains coefficient two; the old fixed-input right sample instead decodes to one. |
+| [Presented rotation](../lean/Protocol/Ephemeral/Rotation.lean) | Actual integral geometry plus the chosen encoding law proves direct target-key and retained-base/inverse-key recovery of the same plaintext. A decoder/transport equation transfers exact-payload acceptance. The legacy ephemeral path is joined to actual family endpoints and separate rotation data, not used to generate that data. |
+| [Scoped delivery](../lean/Protocol/Ephemeral/Delivery.lean) | Original recipient, epoch labels, context identifiers, actual private rotation and envelope index supplied authorization/channel relations. Whole-scope mismatch returns `none`. Matching labels authenticate no caller and prevent no replay; epoch labels still need authenticated state binding. |
+| [Original bound-sample join](../lean/Protocol/Ephemeral/HCP.lean) | Actual full-sample transport between existing bound HCP records derives the original payload decoder equation from their existing decoded-exact-component fields. Both recipient routes require actual source message membership in the chosen presented lattice. The constructor retains supplied target artifact/acceptance/binding proofs. |
+| [Recipient axis fixture](../lean/Protocol/Ephemeral/Examples.lean) | Instantiates the actual rotation and encoding law and derives coefficient-two recovery through the scoped receipt, retaining original contexts/envelopes and channel proofs as inputs. No dummy hashes or authorization/channel facts are constructed. |
+
+Paper 2 §6.1 states these results and their scope. The base complex is fixed;
+fresh generation, authenticated channel implementation, lifecycle/retirement,
+atomic storage updates, physical erasure, privacy games and any further
+coordinate/metric or topology-change comparisons remain separate obligations.
+The decoder is noncomputable. Source/target classifiers may differ in the
+bound-sample adapter; no equality of class labels, roots or released views is
+inferred there. Papers 1 and 3 and their reviewed PDFs are unchanged.
+
+
+### Rotation/recovery validation
+
+The expanded union of all fifteen default roots and explicit integration
+entries passes **9,266 jobs**; the literal default passes **9,259 jobs** on the
+unchanged Lean/Mathlib 4.35 pins. Focused checks pass for the coefficient leaf
+(3,335), integral rotation (3,336), actual axis rotation (3,584), presented
+rotation (3,395), scoped delivery/recipient fixture (3,611) and original bound
+HCP adapter (3,401). Replayed upstream linter/deprecation warnings remain;
+these added modules have no local warning or error.
+
+The fresh public-facade probe passes **355 distinct selected declarations**:
+**319 standard-only** (306 exactly the three logical axioms and thirteen
+subsets), plus **36 retaining existing native arithmetic certificates**.
+All **87 added reports are standard-only**: 86 exactly the three and one
+axiom-free (`DeliveryScope`). All 268 preceding dependency sets match exactly.
+No selected result depends on a cited-bound axiom or `sorryAx`.
+
+| New selected group | Reports |
+|---|---:|
+| Presented-coefficient recovery | 5 |
+| Integral chain/noise/sample transport | 25 |
+| Actual same-coefficient axis rotation | 15 |
+| Presented rotation, payload law and legacy path endpoint join | 18 |
+| Private recipient delivery scope/receipt | 13 |
+| Original bound HCP sample/payload migration | 8 |
+| Actual recipient axis fixture | 3 |
+
+The static source scan covers **247 public source modules / 248 Lean files**
+including Lake configuration, with no active holes, unresolved imports or
+local cycles and the same seven isolated cited-bound axioms. All twenty
+recorded focused closures exclude `Chain` and `CitedBounds`. The seven added
+closures (including each entry) are coefficient recovery 7, integral rotation
+8, axis rotation 22, presented rotation 37, delivery 38, bound-HCP rotation 43
+and recipient axis fixture 47. All thirteen earlier closures are unchanged.
+
+Local evidence is under `output/validation/`: `rotation-{full,default}-build.log`,
+`rotation-{all,new}-axioms.lean`, `rotation-all-axioms.log`,
+`rotation-axiom-summary.json` and `rotation-source-audit.json`; focused build
+logs retain their module-specific names. These are selected dependency and
+source checks, not a claim that channel or primitive assumptions have been
+instantiated. No new project axiom or native arithmetic certificate is added.
+
+Reproduce the added checks from `lean/`:
+
+```sh
+LEAN_NUM_THREADS=4 lake build
+LEAN_NUM_THREADS=4 lake build Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP \
+  Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples \
+  Protocol.Storage.Core Protocol.Storage.AnchorExamples \
+  Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration
+cat > /tmp/rotation-new-axioms.lean <<'LEAN'
+import Protocol.Ephemeral
+import Protocol.Ephemeral.Examples
+
+#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.point_injective
+#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients
+#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_eq_some_iff
+#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_eq_none_iff
+#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt
+#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.refl
+#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.symm
+#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.trans
+#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.harmonicOneProjection_naturality
+#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise
+#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_exactComponent
+#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_coexactComponent
+#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_value
+#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_refl
+#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_symm
+#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_trans
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.refl
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.symm
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.trans
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.harmonicOne_iff
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.harmonicLatticeEquiv
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_message
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_opening
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_observed
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_projection
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_refl
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_symm
+#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_trans
+#print axioms Hcrypt.HCP.AxisRotation.integralOne_iff
+#print axioms Hcrypt.HCP.AxisRotation.integralAxisSwap
+#print axioms Hcrypt.HCP.AxisRotation.point_naturality
+#print axioms Hcrypt.HCP.AxisRotation.transport_encrypt_eq_encrypt
+#print axioms Hcrypt.HCP.AxisRotation.decode_rotated_encrypt
+#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample
+#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_observed
+#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_coordinates
+#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_message
+#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_decode
+#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_pullback
+#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_pullback_decode
+#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_coefficient_two
+#print axioms Hcrypt.HCP.AxisRotation.fixedWeightedSample_decode_one
+#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_ne_fixedSample
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.rotateObserved
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.recoverWithBase
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.pullback_rotateObserved
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.transport_encrypt
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.decode_rotated_encrypt
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.recoverWithBase_rotated_encrypt
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.recovery_routes_agree
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.refl
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.symm
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.trans
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.rotateObserved_trans
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.rotateObserved_symm
+#print axioms Hcrypt.Protocol.Ephemeral.PayloadRotation
+#print axioms Hcrypt.Protocol.Ephemeral.PayloadRotation.target_accepted
+#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation
+#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.samePublicFingerprint
+#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.recover_rotated_encrypt
+#print axioms Hcrypt.Protocol.Ephemeral.DeliveryScope
+#print axioms Hcrypt.Protocol.Ephemeral.DeliveryScope.forContexts
+#print axioms Hcrypt.Protocol.Ephemeral.DeliveryContract
+#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery
+#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.scope
+#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor
+#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_rotated_encrypt
+#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_eq_none_of_scope_ne
+#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_recipient
+#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_sourceEpoch
+#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_targetEpoch
+#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_sourceKey
+#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_targetKey
+#print axioms Hcrypt.Protocol.Ephemeral.BoundSampleRotation
+#print axioms Hcrypt.Protocol.Ephemeral.BoundSampleRotation.cochainObject_eq
+#print axioms Hcrypt.Protocol.Ephemeral.BoundSampleRotation.payloadRotation
+#print axioms Hcrypt.Protocol.Ephemeral.BoundSampleRotation.decode_target
+#print axioms Hcrypt.Protocol.Ephemeral.BoundSampleRotation.recover_with_base
+#print axioms Hcrypt.Protocol.Ephemeral.bindRotatedSample
+#print axioms Hcrypt.Protocol.Ephemeral.bindRotatedSample_artifact
+#print axioms Hcrypt.Protocol.Ephemeral.boundSampleRotation_bindRotatedSample
+#print axioms Hcrypt.Protocol.Ephemeral.Examples.axisPresentedRotation
+#print axioms Hcrypt.Protocol.Ephemeral.Examples.receipt_recovers_weighted_two
+#print axioms Hcrypt.Protocol.Ephemeral.Examples.receipt_rejects_other_epoch
+LEAN
+LEAN_NUM_THREADS=2 lake env lean /tmp/rotation-new-axioms.lean
+```
+
 ## Current public-observation profile — 2026-11-06
+
+This preceding public-input milestone is retained as a baseline; the recipient
+rotation follow-up above records the subsequent source and checks.
 
 The first Paper 2 public-input profile is now implemented in
 [PublicView](../lean/Protocol/Storage/PublicView.lean), exported through

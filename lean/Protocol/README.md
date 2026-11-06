@@ -17,11 +17,22 @@ existing authenticated proposal and quorum types.
 | `Ledger/Certified` | Attaches the existing acceptance quorum to the same complete proposal, including snapshot root; derives validity and excludes hold/rejection certificates. |
 | `Ledger/Examples`, `Ledger/EvidenceExamples` | A positive-value transfer and accepted evidence/quorum fixture; rejection checks for overspending, imbalance, replay, duplicate/empty nullifiers and substituted context. |
 | `Storage/Anchor`, `Storage/ProjectionAnchor` | Join the same candidate evidence to the original snapshot/artifact and exact sealed projection manifest, with explicit history authentication and actual gate-database inclusion. Derive payload acceptance and retain the matching quorum/RS-word endpoints. |
+| `Ephemeral/Rotation`, `Ephemeral/Delivery`, `Ephemeral/HCP` | Separately imported actual integral/presented rotation, coefficient-preserving recipient recovery, original bound-sample/payload migration and scoped delivery receipts. Channel/authentication, generation and lifecycle enforcement remain explicit. |
 
 `Protocol.Core` is the focused review entry point. `Protocol.Ledger` is the
 broader compatibility aggregate. Its legacy `Chain` import remains for
 compatibility; the new leaf modules do not use spectral validator identities,
 cumulative-gap fork choice or raw edge sums as ledger semantics.
+
+`Protocol.Ephemeral` is the separate recovery/rotation facade. The actual
+message is a declared integer lattice coefficient vector; both target-key
+decoding and retained-base-key inverse transport recover it. Its delivery
+scope contains recipient and epoch labels plus identifiers derived from the
+original source/target contexts. Scope equality alone authenticates no caller
+and prevents no repeated valid request. Actual delivery, epoch/state binding
+and lifecycle security remain supplied channel/policy obligations. The
+[axis fixture](Ephemeral/Examples.lean) constructs the rotation and encoding
+law without fabricating contexts, envelopes or authorization proofs.
 
 ## Exact endpoint and assumptions
 

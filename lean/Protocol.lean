@@ -20,7 +20,9 @@ public import Protocol.Storage
   Ledger resource transitions, candidate-indexed TCB evidence, and authenticated
   quorum attachment now have typed definitions and preservation theorems.
   Sheaf storage additionally has snapshot/payload contexts, typed stage prefixes,
-  exact manifests and a receipt-indexed local consumption lifecycle. The other
-  protocol surfaces remain attachment points. Concrete codec/lift instantiation,
+  exact manifests and a receipt-indexed local consumption lifecycle. Ephemeral
+  recovery has integral/encoded rotation laws and recipient-bound delivery
+  receipts under explicit channel contracts. Oracle/coregulator surfaces remain
+  attachment points. Concrete codec/lift instantiation,
   round/lock/finality and Rust refinement remain separate completion tasks.
 -/

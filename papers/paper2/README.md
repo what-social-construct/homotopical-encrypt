@@ -31,9 +31,45 @@ hiding theorem. Public roots, tags, proof outputs and released extensions must
 all appear in the eventual adversary view. The base profile excludes full
 operative-kernel Plücker coordinates; a digest-only extension needs an explicit
 digest projection and binding contract. Canonical bytes, selective access,
-proof/verifier formats and cryptographic guarantees remain separate. Recipient
-delivery and rotation are the next protocol objects to specify; current
+proof/verifier formats and cryptographic guarantees remain separate. The
+subsequent bounded recipient/rotation construction is described below; current
 validation is recorded [centrally](../../docs/MATH_STORAGE_VALIDATION.md).
+
+The [coefficient recovery module](../../lean/Sheaf/CoefficientRecovery.lean)
+now projects an observed cochain using the chosen Hodge presentation and
+partially decodes its unique integer lattice coefficients. This decoder reads
+the observed vector, not the sample's message field. It is classical and
+noncomputable, and its domain is the chosen presented sublattice.
+[Actual rotation](../../lean/Sheaf/Rotation.lean) transports the integral
+harmonic message and both real noise openings, with inverse/composition laws.
+Integrality is an additional lattice law; it does not follow from isometry.
+
+[PresentedRotation](../../lean/Protocol/Ephemeral/Rotation.lean) retains that
+actual transport and the law preserving the selected integer encoding. Both
+direct target-key recovery and inverse transport with the retained base key
+return the same coefficients. The
+[axis fixture](../../lean/HCP/AxisRotation.lean) constructs these laws for the
+actual cellular sheaves: rotating `(1,2)` produces `(2,1)` and keeps coefficient
+two. The existing fixed-input right sample at `(1,2)` instead encodes one.
+
+The [original-sample adapter](../../lean/Protocol/Ephemeral/HCP.lean) joins two
+existing `BoundHCPObservation` objects by actual full-sample transport. Their
+existing exact-component bindings derive transport of the original payload
+decoders. With the explicit source-message equation `message = H.point z`,
+both recovery routes return that same `z`. Its
+constructor retains a supplied target artifact and its acceptance, decoder and
+envelope contracts; it manufactures no root or hash binding.
+
+The [delivery receipt](../../lean/Protocol/Ephemeral/Delivery.lean) is indexed
+by the actual recipient, source/target epoch labels, original context keys,
+rotation and envelope. Authorization and delivery remain explicit channel
+contracts. The scoped recovery map rejects changed request labels; matching
+labels alone authenticate no caller and prevent no replay. The
+[ephemeral wrapper](../../lean/Protocol/Ephemeral/Rotation.lean) connects actual
+typed family endpoints to the existing path object without deriving transport
+from class equality. These results keep the base complex fixed and prove no
+secure-channel construction, random generation, global lifecycle/retirement,
+physical erasure, privacy or Hamming-distance preservation theorem.
 
 The shared mathematical wiring is owned by Paper 1:
 [actual cochain model and invariant homological tests](../../lean/Helfer/CochainModel.lean),
@@ -46,7 +82,7 @@ The fragment is not full Helfer first-order semantics. The
 [draft ledger](DRAFT.md#7-proof-ledger-and-remaining-protocol-work) and
 [central validation record](../../docs/MATH_STORAGE_VALIDATION.md) distinguish
 checked endpoints from integration work. These mathematical joins do not
-construct a privacy game, recipient key-delivery scheme or rotation runtime.
+construct a privacy game, secure recipient channel or rotation runtime.
 
 The current mathematical profile keeps three native metrics:
 scalar-coordinate cochain edits normalized by `2n`, whole integer-plane pair

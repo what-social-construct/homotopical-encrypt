@@ -19,6 +19,16 @@ uses coefficient `1` in each transported basis; the weighted variant explicitly
 separates encoded integers as well as ambient harmonic vectors. Both results
 are finite exact-recovery statements, without a sampling/security game.
 
+[AxisRotation](AxisRotation.lean) separately constructs the actual integral
+axis swap and proves same-coefficient encoding for every integer input.
+Rotating the weighted source moves `(1,2)` to `(2,1)` and retains coefficient
+two; both direct target-key and inverse/base-key recovery return that same
+integer. The fixed-input right sample at `(1,2)` instead encodes one.
+This distinguishes rotation correctness from the recovery obstruction.
+The [protocol fixture](../Protocol/Ephemeral/Examples.lean) uses that actual
+rotation with recipient/epoch/context-bound delivery receipts, retaining
+authorization and channel proofs as explicit inputs.
+
 The semantic interpretation is the actual cellular complex in Mathlib's
 bounded-below real cochain Quillen model. A concrete chain isometry gives a
 typed Helfer equivalence. Invariance of the explicitly chosen homological

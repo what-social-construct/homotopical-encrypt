@@ -103,7 +103,7 @@ explicit application-profile work. Mint/burn policies are outside this kernel.
 | Open/sealed `SheafBlock` | Actual typed payload/digest leaves, one common context, slot-at-most-once append, required-slot completeness and an exact sealed list/root. | `Storage/Checkpoint.lean` supplies `OpenManifest`, `SealedManifest` and `PersistenceReceipt`; `Storage/Projection.lean` joins a seal to one final nested prefix. `Storage/Anchor.lean` supplies the mathematical history join under a selected inclusion relation. These modules pass the Lean 4.35 aggregate/integration build. Canonical public bytes, SHA-256/inclusion security and durable backend implementation remain open. |
 | History entry to original storage | Same candidate, payload interpretation, public artifact, exact sealed list/root and actual projection gate database. | `Storage/{Anchor,ProjectionAnchor}.lean` derives accepted-context, payload/snapshot and manifest joins from the existing transition evidence plus object-indexed authentication relations. Quorum endpoints retain the same signed proposal; `AnchorExamples.lean` supplies positive-value and substitution fixtures. Lean 4.35 builds and all nineteen selected standard-only anchor audits pass; see the shared record. Concrete block-body inclusion or a dedicated root coordinate, public bytes and cryptographic verification remain profile work. |
 | Source geometry and existing semantic interfaces | The same decoded cellular cochain, its exactness residual, and operator-compatible transport to the legacy coherence interface. | `Sheaf/{Distance,CochainSemantics}.lean` supplies zero-distance/exactness and actual coboundary/decoder/binding joins; acceptance equivalence is derived under explicit ambient coherence. `Storage/Calibration.lean` derives a scaled source-to-pair comparison from controlled exact lifts. A selected codec/lift profile remains open; no metric is supplied by storage roots. |
-| Ephemeral presentation lifecycle | Base/public handle, fresh representative handle, private path/transport evidence interface, active/consumed/retired state, rotation authorization, and no double consumption. | `Protocol/Ephemeral.lean` is an attachment point; the path mathematics remains in the Paper 1/shared layer. |
+| Ephemeral presentation lifecycle | Actual integral/presented rotation, same-message recovery, original bound-sample migration and scoped recipient receipts are implemented. | Indexed fresh generation, active/consumed/retired states, authenticated delivery implementation and no double consumption remain open. The path interface remains in the shared layer and does not generate a rotation by itself. |
 | Account/topology update, if selected | Authorization for registration, bilateral connection changes, presentation replacement, and preservation of the well-formed topology/sheaf context. | Do not port `account.py`; define this only after choosing the public account/presentation model. |
 | Bonding and slashing, if consensus-critical | Exact bonded balances, eligibility, unbond delay, authenticated equivocation/fault evidence, conservative slashing destination, and preservation theorems. | Conditional Paper 2 module. Preserve the `Vault` vocabulary only if validator selection actually depends on it. |
 | Coregulator transition, if consensus-critical | Typed observation, deterministic proposal/update relation, admissibility, delay/hold behavior, and any proved stability property. | `Protocol/Coregulator.lean` is an attachment point. Python economic agents are not its semantics. |
@@ -256,11 +256,14 @@ without creating a Lean version of the mistake.
      CVP comparisons, and a weighted exact integer-recovery counterexample.
      This supplies a concrete seed example for the argument; it does not yet
      construct the indexed ephemeral generation/transport/lifecycle below.
-   - **Current state:** Lean contains only the supplied abstract path
-     `EphemeralFiberSpec.path`. `EphemeralRepresentativeSpec`, the indexed
-     family, concrete generation, and the lifecycle state machine do not yet
-     exist; `Protocol/Ephemeral.lean` is currently an import-only attachment
-     point.
+   - **Current state:** the supplied abstract `EphemeralFiberSpec.path` is
+     retained. `Sheaf.Rotation` and `Protocol.Ephemeral` now provide actual
+     integral/presented rotation, both recipient recovery routes, original
+     bound-HCP sample/payload joins and scoped delivery receipts. The actual
+     axis swap preserves every integer coefficient. `EphemeralRotation`
+     joins supplied path endpoints to actual rotation data; it does not
+     derive that data from a path. The indexed family, concrete fresh
+     generation and active/consumed/retired lifecycle remain unimplemented.
    - Rename the conceptual object to `EphemeralRepresentativeSpec`; keep
      `EphemeralFiberSpec` as a compatibility alias while references migrate.
    - The generated endpoint is the ephemeral hidden representative. Its path
