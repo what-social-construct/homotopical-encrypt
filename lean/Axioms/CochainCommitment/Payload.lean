@@ -1,6 +1,10 @@
-import Mathlib.Data.Int.Basic
-import Mathlib.Data.UInt
-import Mathlib.Tactic
+module
+
+public import Mathlib.Data.Int.Basic
+public import Mathlib.Data.UInt
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-
   Cochain commitment payload.

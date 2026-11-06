@@ -1,9 +1,13 @@
-import Axioms.Foundation
-import Axioms.Consensus
-import Axioms.Ledger
-import Axioms.SheafCoherence
-import Axioms.OracleModality
-import TCB.ProofCarrying
+module
+
+public import Axioms.Foundation
+public import Axioms.Consensus
+public import Axioms.Ledger
+public import Axioms.SheafCoherence
+public import Axioms.OracleModality
+public import TCB.ProofCarrying
+
+@[expose] public section
 
 /-
   Trusted computing base boundary.

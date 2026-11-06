@@ -1,4 +1,8 @@
-import Proximity.Concrete.CochainPlane.Core
+module
+
+public import Proximity.Concrete.CochainPlane.Core
+
+@[expose] public section
 
 /- Paper correspondence: Paper 1 Section 6, committed-cochain to plane-shadow projection. -/
 

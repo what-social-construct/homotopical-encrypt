@@ -1,4 +1,8 @@
-import Proximity.Concrete.CanonicalRS.MCA.Concrete
+module
+
+public import Proximity.Concrete.CanonicalRS.MCA.Concrete
+
+@[expose] public section
 
 /-
   Literature-imported bounds for the canonical RS endpoint.

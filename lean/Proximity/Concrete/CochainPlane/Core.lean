@@ -1,5 +1,9 @@
-import Proximity.Concrete.PluckerCochain
-import Proximity.Application.Problem
+module
+
+public import Proximity.Concrete.PluckerCochain
+public import Proximity.Application.Problem
+
+@[expose] public section
 
 /-
   Committed-cochain to plane-shadow projection.

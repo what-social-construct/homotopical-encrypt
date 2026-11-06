@@ -1,4 +1,4 @@
-\section{Axioms And Semantics}\label{sec:mathematical-framework}
+\section{Axioms and Semantics}\label{sec:mathematical-framework}
 
 \subsection{Fibrational Semantics}
 
@@ -85,7 +85,7 @@ underlying fibration vocabulary needed for the local construction.
   interpretations and does not by itself imply hidden-kernel ambiguity.
 \end{proof}
 
-\subsection{Path-Object Semantics For Equality}
+\subsection{Path-Object Semantics for Equality}
 
 Following Helfer's homotopical interpretation of intuitionistic first-order
 logic \cite[Section~2 and Definitions~6.3 and~6.6]{helfer2019fol}, let \(A\)
@@ -124,9 +124,8 @@ induced context equivalence. In particular,
   M\simeq N
   \quad\Longrightarrow\quad
   \bigl(M\models\varphi \Longleftrightarrow N\models\varphi\bigr)
-  \quad
-  \text{for every closed first-order formula }\varphi
 \]
+for every closed first-order formula \(\varphi\)
 \cite[Definition~7.1 and Theorem~12.3]{helfer2019fol}. We use this external
 theorem as semantic background; the local Lean interface records it as an
 obligation and does not reprove it.
@@ -159,7 +158,7 @@ The classifier is path-respecting when
 \[
   x\simeq_A y\Longrightarrow x\equiv_{\pi}y,
 \]
-and non-faithful when some public fiber contains distinct hidden
+and nonfaithful when some public fiber contains distinct hidden
 representatives. A path \(\gamma\in\mathcal P_A(x,y)\) is a hidden witness
 that \(x\) and \(y\) lie in the same path component; under path-respect, its
 public consequence is the equality \(\pi(x)=\pi(y)\). At this stage the public
@@ -173,8 +172,8 @@ need not imply the existence of a path; a public fiber \(A_\alpha\) may be a
 coarser union of path components. Accordingly, \(\alpha\) denotes the public
 classifier value and \(A_\alpha\) its fiber, not a hidden path witness.
 
-Nor do path-respect and non-faithfulness prove that \(\pi\) hides \(x\):
-non-faithfulness supplies a collision, but it does not imply one-wayness,
+Nor do path-respect and nonfaithfulness prove that \(\pi\) hides \(x\):
+nonfaithfulness supplies a collision, but it does not imply one-wayness,
 indistinguishability, or the absence of other private information from the
 output. Such privacy is a separate cryptographic property of the chosen
 public-view construction and its distributions.
@@ -427,7 +426,7 @@ or consensus execution.
   \[
     d^{k+1}d^k=0
     \qquad\text{and}\qquad
-    \Delta_k=d^{k-1}(d^{k-1})^\ast+(d^k)^\ast d^k .
+    \Delta_k=d^{k-1}(d^{k-1})^\ast+(d^k)^\ast d^k
   \]
   for the cochain complex under discussion.
 \end{proposition}
@@ -444,7 +443,8 @@ or consensus execution.
 
 The spectral condition is an object-level admissibility condition. It is not the
 source of HCP hardness, not a reconstruction theorem for the hidden fibration,
-and not introduced here as a consensus rule. In Paper 1 the PoV/Tsirelson
+and not introduced here as a consensus rule. In this paper, the
+Proof-of-Value (PoV)/Tsirelson
 spectral window is a mathematical condition on candidate
 degree-one Hodge--Laplacian data; its use as a protocol-level admissibility rule belongs to
 the subsequent protocol paper. The terminology is
@@ -545,7 +545,7 @@ and a \((k-1)\)-dimensional subspace \(W_0\) disjoint from
 Then \(W(t)\) has dimension \(k\), and varying \(t\) gives a corresponding
 family
 \[
-  \Delta_{W_t}=I-P_{W_t}.
+  \Delta_{W(t)}=I-P_{W(t)}.
 \]
 
 \begin{proposition}[Parametric Laplacian search space]\label{prop:parametric-laplacian-search-space}
@@ -583,8 +583,8 @@ family
   \(\Delta_W=I-P_W=P_{W^\perp}\) has spectrum contained in \(\{0,1\}\).
   Its kernel is \(W\), its image is \(W^\perp\), and, if
   \(W\ne R^n\), its least nonzero eigenvalue and largest eigenvalue are both
-  \(1\). Thus the relative spectral gap of the Grassmannian projection family
-  is \(1\).
+  \(1\). Thus the relative spectral gap is \(1\) for the Grassmannian
+  projection family with \(k<n\).
 \end{proposition}
 
 \begin{proof}
@@ -598,15 +598,16 @@ family
 
 The likelihood surface records the corresponding adversary vocabulary. A
 classical adversary is a map from an observation \(b\) to a guessed Laplacian;
-a quantum adversary is a probability density on candidate Laplacians. For a
-noise scale \(\sigma\), the Gaussian likelihood of a candidate \(A\) at
+the density-based interface assigns a probability density to candidate
+Laplacians. For a
+noise scale \(\sigma>0\), the Gaussian likelihood of a candidate \(A\) at
 observation \(b\) is written abstractly as
 \[
   L_\sigma(b,A)
   =
   \exp\left(-\frac{\|A b\|_2^2}{2\sigma^2}\right),
 \]
-with normalized classical and quantum success probabilities obtained by
+with normalized classical and density-based likelihood scores obtained by
 integrating or maximizing this likelihood over the chosen family
 \(\Omega_k\). These likelihood objects are comparison surfaces for quantitative
 security statements; they are not assumptions used to prove the hidden-operator
@@ -617,14 +618,16 @@ separation in \cref{prop:cvp-insufficient}.
   \[
     \mathcal A_{\mathrm{cl}}:R^n\to M_n(R)
   \]
-  from an observation to a guessed Laplacian. A quantum adversary on a
-  candidate family \(\Omega_k\) is a nonnegative density
+  from an observation to a guessed Laplacian. The interface called a
+  \emph{quantum adversary} in the Lean development is a nonnegative density
+  on a candidate family \(\Omega_k\):
   \[
-    \mathcal A_{\mathrm q}:R^n\times\Omega_k\to R_{\ge 0}
+    \mathcal A_{\mathrm q}:R^n\times\Omega_k\to R_{\ge 0}.
   \]
-  whose integral over \(\Omega_k\) is \(1\) for each observation. With the
-  standard Gaussian prior on observations, the corresponding normalized
-  success quantities are obtained from
+  Its integral over \(\Omega_k\), with respect to a chosen measure \(\mu\),
+  is \(1\) for each observation. With the standard Gaussian prior on
+  observations, the corresponding normalized likelihood scores are obtained
+  from
   \[
     \int_{R^n}
       L_\sigma\bigl(b,\mathcal A_{\mathrm{cl}}(b)\bigr)
@@ -635,12 +638,16 @@ separation in \cref{prop:cvp-insufficient}.
     \int_{R^n}
       \left(
         \int_{\Omega_k}
-          \mathcal A_{\mathrm q}(b,A)L_\sigma(b,A)\,dA
+          \mathcal A_{\mathrm q}(b,A)L_\sigma(b,A)\,d\mu(A)
       \right)
       e^{-\|b\|_2^2/2}\,db
   \]
   in the quantum-density case, up to the usual Gaussian normalization factor.
 \end{definition}
+
+These scores measure consistency with an observation. They do not by
+themselves measure recovery of the operative hidden operator or formalize a
+quantum computation model.
 
 The likelihood is written with the Euclidean norm. The norm-convention check is
 that the default function-space norm may be the supremum norm, so the Euclidean
@@ -678,11 +685,9 @@ mathematical surface used here is the corrected Euclidean one.
   \(L_\sigma(b,\Delta_{W_b})=\exp(0)=1\).
 \end{proof}
 
-This proposition is deliberately local: it concerns one observation \(b\) and
-the candidate subspace generated by that same observation. It does not collapse
-the HCP search problem, because the hardness comparison ranges over the whole
-hidden Grassmannian family and over public observations that do not reveal the
-operative kernel.
+This candidate achieves maximum consistency with each observation, but it
+need not be the operative hidden kernel. Likelihood maximization alone
+therefore does not recover the HCP target.
 
 \begin{proposition}[Gaussian prior factorization]\label{prop:gaussian-prior-factorization}
   For \(x=(x_i)_{i=1}^n\in R^n\),
@@ -703,9 +708,9 @@ operative kernel.
 \end{proof}
 
 \begin{definition}[Spectral fingerprint]\label{def:spectral-fingerprint}
-  A finite-dimensional sheaf Laplacian is a self-adjoint positive
-  semidefinite linear operator \(L:V\to V\). Its spectral fingerprint is the
-  multiset
+  Let \(L:V\to V\) be a self-adjoint positive semidefinite operator on a
+  finite-dimensional inner-product space, such as a cellular sheaf Laplacian.
+  Its spectral fingerprint is the multiset
   \[
     \operatorname{Spec}_{\mathrm{multi}}(L)
   \]
@@ -787,9 +792,9 @@ classical and quantum adversary-bound forms are spectral-statistical targets,
 not HCP hardness assumptions. The corresponding empty-family statements are
 only boundary checks; they are not nontrivial hardness bounds.
 
-\subsection{Heyting And Oracle Judgment Surface}
+\subsection{Heyting and Oracle Judgment Surface}
 
-The ownership split is:
+Let \(\Omega\) be the carrier of hidden truth values. The ownership split is:
 \[
 \begin{array}{rcl}
 \text{hidden equality} &:&
@@ -815,7 +820,7 @@ is the residuated operation characterized by
   \quad\Longleftrightarrow\quad
   a\wedge c\le b.
 \]
-The quotient map \(q\) is not assumed faithful:
+We assume that the public collapse \(q\) is nonfaithful, in the sense that
 \[
   \exists\,\omega_1\ne\omega_2
   \quad\text{with}\quad
@@ -853,7 +858,8 @@ hashes, and cochain commitments as separate public conditions.
 This modular split is part of the mathematical statement: cryptographic
 assumptions, public classifiers, and Hodge-theoretic claims are not identified.
 Exact and oracle invariants are used here as mathematical acceptance conditions;
-their full CS/protocol treatment is deferred to the subsequent protocol paper.
+their full computational and protocol treatment is deferred to the subsequent
+protocol paper.
 
 \subsection*{Lean Cross-Reference}
 

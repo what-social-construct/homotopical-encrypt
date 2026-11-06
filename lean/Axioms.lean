@@ -1,18 +1,22 @@
-import Axioms.Foundation
-import Axioms.Consensus
-import Axioms.CochainCommitment
-import Axioms.Coregulator
-import Axioms.Fibration
-import Axioms.Grassmannian
-import Axioms.SheafCoherence
-import Axioms.Ledger
-import Axioms.ZKP
-import Axioms.HelferFOL
-import Axioms.HomotopyClass
-import Axioms.Heyting
-import Axioms.SpectralBounds
-import Axioms.OracleModality
-import Axioms.StageAdmissibility
+module
+
+public import Axioms.Foundation
+public import Axioms.Consensus
+public import Axioms.CochainCommitment
+public import Axioms.Coregulator
+public import Axioms.Fibration
+public import Axioms.Grassmannian
+public import Axioms.SheafCoherence
+public import Axioms.Ledger
+public import Axioms.ZKP
+public import Axioms.HelferFOL
+public import Axioms.HomotopyClass
+public import Axioms.Heyting
+public import Axioms.SpectralBounds
+public import Axioms.OracleModality
+public import Axioms.StageAdmissibility
+
+@[expose] public section
 
 /-
   Paper correspondence:

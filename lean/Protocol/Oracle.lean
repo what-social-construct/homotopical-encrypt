@@ -1,5 +1,9 @@
-import Gates.Oracle
-import TCB.ObservationBoundary
+module
+
+public import Gates.Oracle
+public import TCB.ObservationBoundary
+
+@[expose] public section
 
 /-!
   Protocol consumption of authenticated oracle judgments.

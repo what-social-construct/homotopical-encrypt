@@ -1,5 +1,9 @@
-import TCB.CompressionBoundary
-import TCB.ObservationBoundary
+module
+
+public import TCB.CompressionBoundary
+public import TCB.ObservationBoundary
+
+@[expose] public section
 
 /-
   Witness/verifier pattern.

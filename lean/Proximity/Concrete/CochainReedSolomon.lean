@@ -1,4 +1,8 @@
-import Proximity.Concrete.CochainPlane.ReedSolomon
+module
+
+public import Proximity.Concrete.CochainPlane.ReedSolomon
+
+@[expose] public section
 
 /- Paper correspondence: Paper 1 Section 6, cochain-plane to Reed--Solomon stage. -/
 

@@ -1,5 +1,9 @@
-import Proximity.Concrete.CanonicalRS.BridgeData
-import Proximity.Concrete.Public
+module
+
+public import Proximity.Concrete.CanonicalRS.BridgeData
+public import Proximity.Concrete.Public
+
+@[expose] public section
 
 /-!
 # Public-observation to canonical-pair calibration

@@ -1,8 +1,12 @@
-import Proximity.Core.ReedSolomon
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.LinearAlgebra.Lagrange
+module
+
+public import Proximity.Core.ReedSolomon
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.LinearAlgebra.Lagrange
+
+@[expose] public section
 
 /-!
 # The capacity-grid list bound
@@ -32,8 +36,8 @@ def agreementSet (u v : Word ι α) : Finset ι :=
 theorem agreement_card_add_hammingDistance (u v : Word ι α) :
     (agreementSet u v).card + hammingDistance u v = Fintype.card ι := by
   classical
-  simpa only [agreementSet, hammingDistance] using
-    Finset.filter_card_add_filter_neg_card_eq_card
+  simpa only [agreementSet, hammingDistance, Finset.card_univ] using
+    Finset.card_filter_add_card_filter_not
       (s := (Finset.univ : Finset ι)) (p := fun i => u i = v i)
 
 /--
@@ -141,7 +145,7 @@ theorem listSizeBound_capacityGrid
       (Nat.choose (Fintype.card ι) k) := by
   intro w
   classical
-  letI : Fintype
+  let : Fintype
       {c : Word ι α // c ∈ C.Ball (Fintype.card ι - k) w} :=
     Fintype.ofFinite _
   unfold BlockCode.ballCard
@@ -334,7 +338,7 @@ theorem nextShellWord_injective
     omega
   have hi : ∃ i : ι, i ∉ S := by
     by_contra h
-    push_neg at h
+    push Not at h
     have hSuniv : S = Finset.univ :=
       Finset.eq_univ_of_forall h
     rw [hSuniv, Finset.card_univ] at hScard
@@ -444,7 +448,7 @@ theorem capacitySubsetWord_eq_received_iff
     funext j
     by_cases hj : j = j₀
     · subst j
-      simp only [capacitySubsetWord, capacityReceivedWord, if_pos]
+      simp only [capacitySubsetWord, capacityReceivedWord, ite_eq_left]
       exact (P.eval_capacityInterpolationPolynomial_eq_power_iff S i).2 hi
     · simp [capacitySubsetWord, capacityReceivedWord, hj]
 
@@ -546,7 +550,7 @@ theorem choose_le_capacityReceived_ballCard
         (Fintype.card ι - P.degreeBound)
         (P.capacityReceivedWord j₀) := by
   classical
-  letI : Fintype
+  let : Fintype
       {c : ReedSolomon.VectorWord ι F σ //
         c ∈ (P.vectorBlockCode σ).Ball
           (Fintype.card ι - P.degreeBound)
@@ -581,7 +585,7 @@ theorem fieldCard_pow_le_nextShell_ballCard
     simpa using (Nat.sub_le P.degreeBound 1).trans hk
   obtain ⟨S, _hSuniv, hS⟩ :=
     Finset.exists_subset_card_eq hsubsetCard
-  letI : Fintype
+  let : Fintype
       {c : ReedSolomon.VectorWord ι F σ //
         c ∈ (P.vectorBlockCode σ).Ball
           (Fintype.card ι - P.degreeBound + 1) 0} :=

@@ -3,7 +3,9 @@
 This document is the high-level publication plan for the Lean-backed
 Homotopical Encryption work. It explains how the hardness story, semantic
 foundations, proximity projection, and runtime trust boundary are staged across
-the current three-paper plan.
+the current three-paper plan: Paper 1 is HCP foundations, Paper 2 is the
+protocol/commitment layer, and Paper 3 is the standalone capacity-radius
+coding manuscript in `papers/proximity-prize/`.
 
 ## Current Status And Source Of Truth
 
@@ -35,7 +37,7 @@ four editorial improvements:
   four-item summary here;
 - the five detailed future-work categories were compressed into protocol and
   complexity-theoretic boundaries, with product/runtime details assigned to
-  Papers 2 and 3.
+  Paper 2 and unnumbered future product work.
 
 Accordingly, use this document for thesis, scope, and paper-split decisions.
 Use the LaTeX manuscript for present section order and theorem placement.
@@ -514,22 +516,46 @@ Primary Lean/docs surfaces:
 - `docs/GATE_ARCHITECTURE.md`
 - `docs/CONSENSUS.md`
 
-This should wait until the math/formalization paper is stable.
+The bounded first endpoint is now recorded in
+[`papers/paper2/SCOPE.md`](../papers/paper2/SCOPE.md): one proof-carrying
+accepted transition. Broader consensus and control topics above are deferred
+unless that scope is expanded. The smaller commitment/extraction/metric
+profile shared with Paper 3 can be fixed before the whole protocol is complete.
 
-### Paper 3: Whitepaper And Product Paper
+### Paper 3: Capacity-Radius Proximity
 
-Paper 3 is the later system-facing account. It should explain the product
-story, user model, deployment posture, and comparisons without enlarging the
-claim surface of Papers 1 or 2.
+Paper 3 is *Capacity-Radius Proximity for Smooth-Domain Reed--Solomon Codes*,
+with its manuscript in `papers/proximity-prize/` and standalone Lean target
+`ProximityPrize`.
 
-Expected scope:
+Its scope is universal list decoding and pair mutual correlated agreement,
+the exact capacity-grid list equality and next-shell obstruction, the
+large-field smooth family, a selected exact small-radius MCA transition,
+and a source-to-code calibration interface. The selected application target
+is the actual cochain commitment and projection already in Lean, not a new
+commitment carrier; see the
+[object trace](COCHAIN_PROXIMITY_TRACE.md). Its counting theorems do not depend
+on finishing Paper 2's protocol. Its commitment-specific radius theorem needs
+one bounded shared profile and an original-source metric comparison.
 
-- high-level Homotopical Encryption and Vertra narrative;
-- user-facing privacy, identity, storage, and payment model;
-- product and ecosystem positioning;
-- deployment assumptions and operational roadmap;
-- comparisons with existing privacy, proof, consensus, and post-quantum
-  systems, checked against their then-current specifications.
+The remaining formal-parity work is the all-parameter smooth-family
+realization, complete list phase split/real interval, boundary-field real
+supremum, and standalone general distance interpretation. The concrete
+canonical plane/pair distance equality and public-observation pullback
+calibration already exist outside the standalone target. The detailed queue is
+[`papers/proximity-prize/SEMANTIC_PARITY.md`](../papers/proximity-prize/SEMANTIC_PARITY.md).
+The selected application still supplies a meaningful original-source metric,
+a nonempty actual far region, and the quantitative source-to-plane/pair
+comparison. Its challenge experiment must either sample after the pair is
+fixed or prove the chosen fixed mix good. Rust experiments are useful for
+implementation parity and counterexamples, not required to prove the radius.
+
+### Unnumbered Future Product / Whitepaper Material
+
+Product narrative, deployment assumptions, privacy/identity/storage/payment
+flows, ecosystem comparisons, and operational positioning are future work.
+They are not Paper 3 and do not enlarge the claim surface of the three
+manuscripts above.
 
 ## Recommended First Preprint
 

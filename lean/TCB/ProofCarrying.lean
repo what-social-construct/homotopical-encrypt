@@ -1,6 +1,10 @@
-import Axioms.CochainCommitment.Payload
-import Axioms.SheafCoherence
-import Axioms.ZKP
+module
+
+public import Axioms.CochainCommitment.Payload
+public import Axioms.SheafCoherence
+public import Axioms.ZKP
+
+@[expose] public section
 
 /-
   Proof-carrying public artifacts.

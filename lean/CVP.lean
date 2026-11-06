@@ -1,4 +1,10 @@
-import Mathlib
+module
+
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-
   Discrete Euclidean Closest Vector Problem (CVP) vocabulary.

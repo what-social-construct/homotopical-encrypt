@@ -1,9 +1,13 @@
-import Proximity.Core
-import Proximity.Capacity
-import Proximity.ListDecoding
-import Proximity.MCA
-import Proximity.Application
-import Proximity.Concrete
+module
+
+public import Proximity.Core
+public import Proximity.Capacity
+public import Proximity.ListDecoding
+public import Proximity.MCA
+public import Proximity.Application
+public import Proximity.Concrete
+
+@[expose] public section
 
 /-
   Unified proximity hierarchy for the homotopical-encrypt Lean workspace.
@@ -29,9 +33,9 @@ import Proximity.Concrete
   Scope:
     * It is the internal bridge needed to compare sheaf/Grassmannian proximity
       with code-style proximity questions later.
-    * List decoding, correlated agreement, and mutual correlated agreement are
-      formalized as finite combinatorial targets, with no RS/ERA theorem
-      assumed by this import surface.
+    * The standalone coding proofs are independent of cited RS-bound axioms.
+      This broader aggregate also imports the concrete application and its
+      explicitly named literature-bound assumptions.
     * Concrete Grassmannian/Laplacian families live in `Tsirelson.lean` and
       `Laplacian/Grassmannian.lean`.
     * Plucker coordinates and RS targets live here as stages of the proximity

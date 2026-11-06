@@ -1,5 +1,9 @@
-import Mathlib
-import Helfer
+module
+
+public import Mathlib.Topology.Connected.PathConnected
+public import Helfer
+
+@[expose] public section
 
 /-
   Helfer-oriented first-order homotopical logic interface.

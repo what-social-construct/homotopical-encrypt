@@ -6,53 +6,51 @@
 \author{Chloe van der Vlugt}
 \date{}
 
+\hypersetup{
+  pdftitle={Capacity-Radius Proximity for Smooth-Domain Reed--Solomon Codes},
+  pdfauthor={Chloe van der Vlugt}
+}
+
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
 We study list decoding and mutual correlated agreement for constant-rate
-Reed--Solomon codes over smooth evaluation domains.  The primary received-word
-space is the two-fold interleaving
-\(\mathcal C^{\equiv 2}\subseteq(\F^2)^n\).  We isolate three layers that are
-often conflated: normalized distance of a received word from the interleaved
-code, worst-case list size at that radius, and the fraction of affine
-challenges for which a scalar projection appears close while its underlying
-pair does not.  A field-valued two-coordinate plane is exactly an arbitrary
-word in \((\F^2)^n\), and it is equivalently the base--direction pair of an
-affine line of scalar received words.  This gives a lossless interface between
-interleaved list decoding and mutual correlated agreement.
+Reed--Solomon codes over smooth evaluation domains. A field-valued
+two-coordinate plane is exactly a word in \((\F^2)^n\), equivalently the
+base--direction pair of an affine line of scalar received words. This
+lossless identification separates pair-code distance, list size, and
+scalar-projection error.
 
 At count radius \(n-k\), a direct agreement-set injection and a matching
 received-word construction prove
 \[
   L_m\!\left(\mathcal C,\frac{n-k}{n}\right)=\binom nk
 \]
-for every positive interleaving width.  Thus
-\(\binom nk\le\varepsilon|\F|\) is necessary and sufficient for the requested
-fractional list target at the capacity endpoint.  A next-shell construction
-then gives a complete three-regime phase split.  We instantiate the safe
-regime with an explicit rate-\(1/4\) smooth family over
-\(\mathbb F_{3^n}\). For pair mutual correlated agreement, an injective
+for \(1\le k\le n\) and every positive interleaving width. Thus
+\(\binom nk\le\varepsilon|\F|\) is necessary and sufficient for the
+fractional list target at this endpoint. A next-shell construction gives a
+three-regime phase split. For same-set pair mutual correlated agreement, an injective
 compressed-certificate map gives the radius-independent bound
 \[
   |\Bad_{\MCA}|\le\binom n{k+1}.
 \]
-The same explicit family satisfies both
+An explicit rate-\(1/4\) smooth family over \(\mathbb F_{3^n}\) satisfies both
 \(\binom nk\le2^{-128}|\F|\) and
 \(\binom n{k+1}\le2^{-128}|\F|\). Thus its list target holds at the
 capacity endpoint and its pair-MCA error is at most \(2^{-128}\) at every
-normalized radius.  We also define the exact bad-count spectrum
-\(B_{\mathcal C}(r)\) and certify a sharp small-radius transition over the
-following boundary field for 128-bit security:
+normalized radius. We define the exact bad-count spectrum
+\(B_{\mathcal C}(r)\) and certify a sharp transition for the same error target over
 \[
   q=2^{128}+192513\equiv1\pmod {4096},\qquad (n,k)=(4096,1024).
 \]
-For this smooth instance, \(B_{\mathcal C}(0)=1\) and
-\(B_{\mathcal C}(1)\ge2\). Hence its greatest safe count radius at 128 bits is
-zero, its first unsafe count radius is one, and its safe real-radius set has
-supremum \(1/4096\), which is not attained.  The optimal list-decoding radius
-in the intermediate field-size regime remains open.
+Here \(B_{\mathcal C}(0)=1\) and \(B_{\mathcal C}(1)\ge2\): the greatest safe
+count radius is zero, the first unsafe count radius is one, and the safe
+real-radius set is \([0,1/4096)\). The intermediate field-size list-decoding
+optimum remains open. We also trace the existing committed-cochain
+projection to the pair-code interface and identify the upstream metric
+comparison required for a commitment-specific radius theorem.
 \end{abstract}
 
 \tableofcontents

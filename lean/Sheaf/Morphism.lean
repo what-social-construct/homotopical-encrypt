@@ -1,4 +1,8 @@
-import Sheaf.Cellular
+module
+
+public import Sheaf.Cellular
+
+@[expose] public section
 
 /-!
 # Morphisms of finite cellular sheaves
@@ -133,7 +137,8 @@ theorem mapC1_delta0 (η : Morphism F G) :
     η.mapC1.comp F.delta0 = G.delta0.comp η.mapC0 := by
   apply LinearMap.ext
   intro x
-  funext p
+  apply PiLp.ext
+  intro p
   rcases p with ⟨e, i⟩
   simp only [mapC1, mapC0, delta0, assemble, delta0At, component,
     LinearMap.comp_apply, LinearMap.sum_apply, LinearMap.smul_apply]
@@ -155,7 +160,8 @@ theorem mapC2_delta1 (η : Morphism F G) :
     η.mapC2.comp F.delta1 = G.delta1.comp η.mapC1 := by
   apply LinearMap.ext
   intro x
-  funext p
+  apply PiLp.ext
+  intro p
   rcases p with ⟨f, i⟩
   simp only [mapC2, mapC1, delta1, assemble, delta1At, component,
     LinearMap.comp_apply, LinearMap.sum_apply, LinearMap.smul_apply]

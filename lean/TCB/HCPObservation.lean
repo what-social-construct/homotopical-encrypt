@@ -1,7 +1,11 @@
-import HCP
-import Sheaf.HarmonicLattice
-import Sheaf.Commitment
-import TCB.ProofCarrying
+module
+
+public import HCP
+public import Sheaf.HarmonicLattice
+public import Sheaf.Commitment
+public import TCB.ProofCarrying
+
+@[expose] public section
 
 /-!
 # Bound lattice/cochain/hash observations for HCP

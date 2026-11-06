@@ -1,6 +1,9 @@
-import Mathlib
-import Axioms.Foundation
-import Axioms.CochainCommitment.Payload
+module
+
+public import Axioms.Foundation
+public import Axioms.CochainCommitment.Payload
+
+@[expose] public section
 
 /-
   Sheaf Coherence Axioms

@@ -1,4 +1,8 @@
-import Proximity.Concrete.CochainPlane.Core
+module
+
+public import Proximity.Concrete.CochainPlane.Core
+
+@[expose] public section
 
 /-
   Concrete committed-cochain to plane-shadow extraction inputs.

@@ -1,8 +1,12 @@
-import Proximity.Core.ReedSolomon
-import Proximity.Capacity.Parameters
-import Proximity.MCA.Threshold
-import Mathlib.Data.Fintype.Sigma
-import Mathlib.LinearAlgebra.Lagrange
+module
+
+public import Proximity.Core.ReedSolomon
+public import Proximity.Capacity.Parameters
+public import Proximity.MCA.Threshold
+public import Mathlib.Data.Fintype.Sigma
+public import Mathlib.LinearAlgebra.Lagrange
+
+@[expose] public section
 
 /-!
 # Pair mutual correlated agreement
@@ -257,8 +261,8 @@ theorem pairCloseOnSet_of_closeOnSet_two_challenges
   refine ⟨fun i j => if j = 0 then baseWord i else directionWord i, ?_, ?_⟩
   · intro j
     fin_cases j
-    · simpa using hbase
-    · simpa using hdirection
+    · simpa [ReedSolomon.Parameters.toBlockCode] using hbase
+    · simpa [ReedSolomon.Parameters.toBlockCode] using hdirection
   · intro i hi
     funext j
     fin_cases j
@@ -354,7 +358,7 @@ theorem exists_mismatch_outside_certificate
         P.interpolatePair
           (P.certificateSubset δ L hDegree hk γ) L i := by
   by_contra h
-  push_neg at h
+  push Not at h
   exact (P.witnessSet_spec δ L γ).2.2
     ⟨P.interpolatePair (P.certificateSubset δ L hDegree hk γ) L,
       P.interpolatePair_codeword hDegree
@@ -646,8 +650,6 @@ theorem card_certificate
             apply Finset.sum_congr rfl
             intro T _hT
             rw [Fintype.card_subtype_compl]
-            change Fintype.card ι - Fintype.card T.1 =
-              Fintype.card ι - k
             rw [Fintype.card_coe, T.2]
     _ = Fintype.card {T : Finset ι // T.card = k} *
           (Fintype.card ι - k) := by simp

@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib.Init
+
+@[expose] public section
 
 /-
   Heyting collapse interface for runtime consensus truth values.

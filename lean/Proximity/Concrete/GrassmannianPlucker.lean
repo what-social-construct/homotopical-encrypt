@@ -1,6 +1,10 @@
-import Proximity.Concrete.Grassmannian
-import Laplacian.Grassmannian.SearchSpace
-import Mathlib.LinearAlgebra.ExteriorPower.Basic
+module
+
+public import Proximity.Concrete.Grassmannian
+public import Laplacian.Grassmannian.SearchSpace
+public import Mathlib.LinearAlgebra.ExteriorPower.Basic
+
+@[expose] public section
 
 /-
   Grassmannian-to-Plucker bridge.
@@ -21,7 +25,7 @@ namespace Proximity
 namespace GrassmannianPlucker
 
 open scoped BigOperators Real Nat Classical Pointwise
-open Matrix Real InnerProductSpace MeasureTheory
+open Matrix Real InnerProductSpace
 
 set_option linter.mathlibStandardSet false
 set_option linter.unusedSectionVars false

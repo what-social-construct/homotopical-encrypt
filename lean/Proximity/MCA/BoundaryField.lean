@@ -1,7 +1,12 @@
-import Proximity.Core.ReedSolomon
-import Proximity.MCA.SmallRadius
-import Mathlib.GroupTheory.OrderOfElement
-import Mathlib.NumberTheory.LucasPrimality
+module
+
+public import Proximity.Core.ReedSolomon
+public import Proximity.MCA.SmallRadius
+public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.NumberTheory.LucasPrimality
+public meta import Mathlib.Algebra.Field.ZMod
+
+@[expose] public section
 
 /-!
 # A smooth boundary-field Reed--Solomon instance at 128-bit security
@@ -323,7 +328,7 @@ theorem parameters_degreeBound : parameters.degreeBound = 1024 :=
 
 @[simp]
 theorem parameters_length : parameters.length = 4096 := by
-  simp [ReedSolomon.Parameters.length, length]
+  exact Fintype.card_fin length
 
 /-! ## Exact 128-bit small-radius MCA spectrum -/
 

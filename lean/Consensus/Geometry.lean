@@ -1,4 +1,8 @@
-import Axioms.Grassmannian
+module
+
+public import Axioms.Grassmannian
+
+@[expose] public section
 
 /-
   Consensus geometry façade.

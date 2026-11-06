@@ -1,6 +1,10 @@
-import Proximity.Concrete.RS.ListDecoding
-import Proximity.Concrete.RS.CorrelatedAgreement
-import Proximity.Concrete.RS.ReedSolomon
+module
+
+public import Proximity.Concrete.RS.ListDecoding
+public import Proximity.Concrete.RS.CorrelatedAgreement
+public import Proximity.Concrete.RS.ReedSolomon
+
+@[expose] public section
 
 /-
   Reed-Solomon/code-theory core layer for the proximity pipeline.

@@ -1,3 +1,5 @@
+module
+
 /-
 Tsirelson-bound formalization for the homotopical-encrypt Lean workspace.
 
@@ -18,8 +20,10 @@ Role in the architecture:
   gate policy, and harden endpoints.
 -/
 
-import Mathlib
-import Axioms.SpectralBounds
+public import Mathlib
+public import Axioms.SpectralBounds
+
+@[expose] public section
 
 set_option linter.mathlibStandardSet false
 
@@ -117,10 +121,30 @@ theorem infinite_lines {n : Type} [Fintype n] {R : Type} [RCLike R] [DecidableEq
   have h_infinite_subspaces : Set.Infinite { W : Submodule R (EuclideanSpace R n) | ∃ x : EuclideanSpace R n, x ≠ 0 ∧ W = Submodule.span R {x} } := by
     obtain ⟨i, j, hij⟩ : ∃ i j : n, i ≠ j := by
       exact Fintype.one_lt_card_iff.1 h_dim;
-    refine' Set.infinite_of_injective_forall_mem ( fun x y hxy => _ ) fun x => ⟨ fun k => if k = i then 1 else x, _, rfl ⟩;
-    · have := Submodule.mem_span_singleton.mp ( hxy.symm ▸ Submodule.subset_span ( Set.mem_singleton _ ) );
-      obtain ⟨ a, ha ⟩ := this; have := congr_fun ha i; have := congr_fun ha j; aesop;
-    · exact fun h => by simpa using congr_fun h i;
+    let v : R → EuclideanSpace R n :=
+      fun x => WithLp.toLp 2 (fun k => if k = i then 1 else x)
+    have hv_i (x : R) : v x i = 1 := by
+      simp [v, PiLp.toLp_apply]
+    have hv_j (x : R) : v x j = x := by
+      simp [v, PiLp.toLp_apply, Ne.symm hij]
+    refine Set.infinite_of_injective_forall_mem
+      (f := fun x : R => Submodule.span R {v x}) ?_ ?_
+    · intro x y hxy
+      change Submodule.span R {v x} = Submodule.span R {v y} at hxy
+      have hxmem : v x ∈ Submodule.span R {v y} := by
+        rw [← hxy]
+        exact Submodule.subset_span (by simp)
+      obtain ⟨a, ha⟩ := Submodule.mem_span_singleton.mp hxmem
+      have hi := congrArg (fun z : EuclideanSpace R n => z i) ha
+      have hj := congrArg (fun z : EuclideanSpace R n => z j) ha
+      simp only [PiLp.smul_apply, hv_i, smul_eq_mul, mul_one] at hi
+      simp only [PiLp.smul_apply, hv_j, smul_eq_mul] at hj
+      simpa [hi] using hj.symm
+    · intro x
+      refine ⟨v x, ?_, rfl⟩
+      intro h
+      have hi := congrArg (fun z : EuclideanSpace R n => z i) h
+      simpa [hv_i] using hi
   refine h_infinite_subspaces.mono ?_;
   intro W hW
   obtain ⟨x, hx_ne_zero, hx_span⟩ := hW
@@ -191,7 +215,7 @@ theorem laplacian_injective {n : Type} [Fintype n] {R : Type} [RCLike R] [Decida
       intro W₁ W₂ h_eq
       have h_proj : projector_map W₁ = projector_map W₂ := by
         simp +zetaDelta at *;
-        convert h_eq using 1;
+        simpa [projector_map] using h_eq
       apply projector_injective h_proj
 
 /-
@@ -199,9 +223,8 @@ The set Ω_1 is infinite because it is the image of an infinite set under an inj
 -/
 theorem Ω_1_infinite {n : Type} [Fintype n] {R : Type} [RCLike R] [DecidableEq n] (h_dim : Fintype.card n ≥ 2) :
   Set.Infinite (@Ω_1 n _ R _ _) := by
-    convert Set.Infinite.image ?_ ( infinite_lines h_dim ) using 1;
-    intro W hW W' hW' h_eq;
-    apply laplacian_injective; aesop;
+    unfold Ω_1
+    exact Set.Infinite.image laplacian_injective.injOn (infinite_lines h_dim)
 
 /-
 The Laplacian constructed from a 1-dimensional subspace W is Hermitian, positive semi-definite, and has a kernel of dimension 1.
@@ -229,7 +252,7 @@ theorem laplacian_properties {n : Type} [Fintype n] {R : Type} [RCLike R] [Decid
         rw [ ← sub_eq_zero, ← inner_sub_left ];
         aesop;
       convert congr_arg ( fun x : R => RCLike.re x ) ( h_inner ( WithLp.toLp 2 x ) ) using 1 <;> simp +decide [ inner ];
-      ac_rfl;
+      simp only [add_comm, mul_comm]
     have h_inner : (RCLike.re (star (W.starProjection (WithLp.toLp 2 x)) ⬝ᵥ (W.starProjection (WithLp.toLp 2 x)))) ≤ (RCLike.re (star (WithLp.toLp 2 x) ⬝ᵥ (WithLp.toLp 2 x))) := by
       have h_inner : ∀ (v : EuclideanSpace R n), (RCLike.re (star (W.starProjection v) ⬝ᵥ (W.starProjection v))) ≤ (RCLike.re (star v ⬝ᵥ v)) := by
         intro v
@@ -256,9 +279,11 @@ theorem laplacian_properties {n : Type} [Fintype n] {R : Type} [RCLike R] [Decid
       ext; simp [LinearMap.mem_ker];
       rw [ sub_eq_zero ];
       constructor <;> intro h;
-      · exact Submodule.starProjection_eq_self_iff.mp (id (Eq.symm h))
-      · rw [ Submodule.starProjection_eq_self_iff.mpr ] ; aesop;
-        exact h;
+      · apply Submodule.starProjection_eq_self_iff.mp
+        simpa only [WithLp.toLp_ofLp] using
+          (congrArg (WithLp.toLp 2) h).symm
+      · exact (congrArg WithLp.ofLp
+          (Submodule.starProjection_eq_self_iff.mpr h)).symm
     convert hW using 1;
     rw [ h_kernel ];
     convert LinearEquiv.finrank_map_eq _ _
@@ -366,10 +391,7 @@ theorem Ω_1_subset_LaplacianSpace_explicit {n : Type} [instN : Fintype n] {R : 
   let iso := WithLp.linearEquiv 2 R (n → R)
   -- 1. Hermitian
   have h_herm : (LinearMap.toMatrix' (iso.toLinearMap ∘ₗ P_perp ∘ₗ iso.symm.toLinearMap)).IsHermitian := by
-    rw [Matrix.IsHermitian]
-    ext i j
-    simp [LinearMap.toMatrix', Matrix.conjTranspose]
-    convert ( laplacian_is_hermitian W ) |> fun h => h.apply _ _ using 1
+    exact laplacian_is_hermitian W
   -- 2. PSD
   have h_psd : ∀ x : n → R, 0 ≤ RCLike.re (star x ⬝ᵥ (LinearMap.toMatrix' (iso.toLinearMap ∘ₗ P_perp ∘ₗ iso.symm.toLinearMap)).mulVec x) := by
     intro x
@@ -386,7 +408,11 @@ theorem Ω_1_Nonempty {n : Type} [instN : Fintype n] {R : Type} [instR : RCLike 
   (@Ω_1 n instN R instR instDec).Nonempty := by
     -- Since n is nonempty, there exists at least one non-zero vector in R^n. Let's pick any such vector, say v.
     obtain ⟨v, hv⟩ : ∃ v : EuclideanSpace R n, v ≠ 0 := by
-      exact ⟨ fun _ => 1, fun h => by simpa using congr_fun h ( Classical.choose ( Finset.card_pos.mp h_dim ) ) ⟩;
+      refine ⟨WithLp.toLp 2 (fun _ => (1 : R)), ?_⟩
+      intro h
+      have hi := congrArg (fun z : EuclideanSpace R n =>
+        z (Classical.choose (Finset.card_pos.mp h_dim))) h
+      simpa [PiLp.toLp_apply] using hi
     refine' ⟨ _, ⟨ Submodule.span R { v }, _, rfl ⟩ ⟩;
     rw [ Set.mem_setOf_eq, finrank_span_singleton ] ; aesop
 

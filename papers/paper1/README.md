@@ -3,6 +3,13 @@
 This folder is the LaTeX source of truth for Paper 1: the math/formalization
 paper for Homotopical Encryption.
 
+The shared [manuscript parity register](../../SEMANTIC-PARITY.md) records
+paper ownership, definitions, notation, and outstanding proofreading issues.
+This manuscript owns the HCP foundations and the application-specific
+projection bridge. The separate [proximity manuscript](../proximity-prize/README.md)
+owns the universal coding results; it is independent of HCP assumptions.
+The planned protocol paper in `papers/paper2/` is a different manuscript.
+
 Suggested local build:
 
 ```sh

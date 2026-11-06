@@ -1,6 +1,10 @@
-import Mathlib
-import Axioms.Foundation
-import Axioms.Consensus
+module
+
+public import Mathlib.Init
+public import Axioms.Foundation
+public import Axioms.Consensus
+
+@[expose] public section
 
 /-
   Stage-level admissibility interface.

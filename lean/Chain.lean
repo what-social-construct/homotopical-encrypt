@@ -1,3 +1,5 @@
+module
+
 /-
 Chain Axiomatization (Swan Table 1 #9 — Goncharov)
 
@@ -45,9 +47,11 @@ References:
   - lean/Tsirelson.lean (√2 bound — the consensus axioms)
 -/
 
-import Mathlib
-import Axioms.CochainCommitment.Payload
-import Axioms.SheafCoherence
+public import Mathlib
+public import Axioms.CochainCommitment.Payload
+public import Axioms.SheafCoherence
+
+@[expose] public section
 
 set_option linter.mathlibStandardSet false
 

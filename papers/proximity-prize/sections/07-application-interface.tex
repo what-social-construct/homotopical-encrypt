@@ -31,9 +31,9 @@ Under this comparison, the proved universal list theorem applies to
 \(\pi(o)\); the proved pair-MCA theorem applies through the same interface
 once the application fixes its pair before sampling the challenge.
 
-There are two standard ways to discharge the comparison.  Defining
-\(\rho_O=D_2\circ\pi\) makes it reflexive.  A genuinely pre-existing source
-metric instead requires a mathematical proof of
+There are two standard ways to discharge the comparison. Defining
+\(\rho_O=D_2\circ\pi\) makes it reflexive. A pre-existing source
+metric requires a mathematical proof of
 \(\rho_O\le D_2\circ\pi\).  Exact witnesses may certify membership in \(G\),
 but the carrier \(O\) must still include arbitrary received observations.
 
@@ -43,3 +43,284 @@ are intentionally outside the proof of
 Such developments may cite the two coding theorems through the interface
 above; neither theorem assumes that every received word comes from an
 application-specific witness space.
+
+\subsection{The existing committed-cochain projection}
+
+The project-specific application starts with the commitment payload of the
+companion HCP manuscript \cite{vanDerVlugt2026hcp},
+\[
+  c=(q,N,\mathbf c,\tau).
+\]
+Here \(\mathbf c\) is the serialized integer edge-value list. The Lean
+carrier \lean{CommittedCochain} is an abbreviation for the same
+\lean{CochainCommitmentData} used by the commitment and artifact
+layers. A proof-carrying observation exposes that payload; it does not
+replace it with a second commitment object.
+
+Fix an extraction context consisting of an expected edge count, selected
+indices \(\iota(i,j)\), and a coefficient interpretation
+\(a:\mathbb Z\to\mathbb Z\). For an aligned payload, the actual plane
+projection is
+\[
+  p_c(i,j)=a(\mathbf c_{\iota(i,j)}),
+  \qquad j\in\{0,1\}.
+\]
+Alignment ensures that every selected index is in bounds. The public
+plane-view certificate records equality with this extraction from the
+observed payload. The canonical instantiation reduces both coordinates
+modulo \(q=12289\), with RS length \(n=4096\) and degree bound \(k=1024\):
+\[
+  \bar p_c(i,j)=p_c(i,j)\bmod q,
+  \qquad
+  y_\gamma(i)=\bar p_c(i,0)+\gamma\bar p_c(i,1).
+\]
+Thus one observed commitment supplies the full pair before the challenge is
+evaluated. The \lean{PublicCalibration} module implements this extraction
+and proves its equality with the observed-payload projection.
+
+On integer planes whose coordinates lie in \([0,q)\), coordinatewise
+reduction is a bijection onto the field-pair space. It preserves whole-pair
+Hamming distance. Let \(\mathcal C_A\) be the pair code pulled back to
+this canonical integer alphabet, and let \(D_A\) be relative Hamming
+distance to \(\mathcal C_A\). The existing Lean development proves
+\[
+  D_A(p_c)=D_2(\bar p_c).
+\]
+The public-observation calibration uses \(D_A(p_c)\) as its source score,
+so its all-radius farness implication is already proved. Its observation
+carrier requires aligned, canonical-region payload views without requiring
+pair-codeword membership.
+
+An application retaining an independently chosen cochain, Hodge, or
+Pl\"ucker disagreement \(\rho_c\) still needs a quantitative comparison,
+for example
+\[
+  \rho_c(c)\ge r_S
+  \quad\Longrightarrow\quad
+  D_A(p_c)\ge r_T.
+\]
+The equality above does not prove this upstream comparison. In particular,
+changing unselected edge values leaves \(p_c\) unchanged; any source metric
+sensitive to those values needs an admissible-family restriction or a
+separate control theorem.
+
+The storage interface now fixes the same snapshot, payload interpretation
+and public artifact in one context, while keeping exact acceptance separate
+from raw context binding. For its decoded cochain, one independent geometric
+score is
+\[
+  \rho_{\mathrm{ex}}(c)
+   =\|P_{(\image\delta_0)^\perp}\operatorname{dec}_S(c)\|.
+\]
+It vanishes exactly on accepted exact payloads once the context and shape
+conditions hold. A sufficient comparison criterion is an exact comparison cochain
+\(\lambda(z)\in\image\delta_0\) for every target pair-codeword \(z\),
+together with a constant \(A>0\) and the bound
+\[
+  \|\operatorname{dec}_S(c)-\lambda(z)\|
+    \le A\,\delta_H(z,\bar p_c).
+\]
+Choosing an attained nearest codeword and applying orthogonal-projection
+contractivity gives
+\[
+  \rho_{\mathrm{ex}}(c)\le A D_2(\bar p_c),
+  \qquad
+  \rho_{\mathrm{ex}}(c)\ge r_S
+    \Longrightarrow D_2(\bar p_c)\ge r_S/A.
+\]
+The storage calibration module proves this implication from the lift and
+decoder bounds. It does not construct those application-specific inputs.
+The canonical storage adapter identifies the real-infimum pair distance
+with the attained generic minimum and joins both comparisons to the actual
+observed artifact.
+
+\subsection{A canonical-lift obstruction and a no-wrap profile}
+
+Canonical representatives alone do not make a finite-field RS code into a
+proper real-linear exact-cochain locus. Suppose \(q\) is prime, the evaluation
+points are distinct and \(k\ge2\). For a scalar field word \(w\), write
+\(\ell(w)\in\mathbb R^I\) for its canonical coordinate lift. The lifts of
+the affine RS words already span \(\mathbb R^I\). Indeed, for each coordinate
+\(i\), put \(v_j=a_j-a_i\). Canonical representatives satisfy
+\[
+ \mathbf1-\ell(v)+\ell(v-\mathbf1)=q e_i.
+\]
+Only the \(i\)-th coordinate wraps at zero. Both affine words and the
+constant word belong to RS, so every coordinate vector belongs to the real
+span of the lifted codewords. Applying this argument separately to both
+columns proves the corresponding assertion in \(\mathbb R^{I\times\{0,1\}}\).
+
+Consequently, if a real-linear decoder \(T\) has any nonexact output, there
+is no constant \(A\) for which
+\[
+ \operatorname{dist}(T\ell(w),\image\delta_0)\le A D_2(w)
+ \quad\text{for every field-pair word }w.
+\]
+Such a bound would make all lifted pair-codewords exact, hence make the
+decoder's entire image exact. This obstruction concerns a global comparison
+with no additive loss. It leaves restricted profiles, additive defects and
+separately justified threshold implications open.
+
+One explicit restricted profile retains the original Euclidean source metric.
+Choose an information set \(S\) of size \(k\) and let \(A_{i,s}\in\mathbb F_q\)
+be the actual systematic RS interpolation coefficients. Lift them to integers
+\(\widetilde A_{i,s}\in[0,q)\), and define the real generator and integer check
+by
+\[
+ (G_{\mathbb R}u)_i=\sum_{s\in S}\widetilde A_{i,s}u_s,
+ \qquad (Hz)_i=z_i-\sum_{s\in S}\widetilde A_{i,s}z_s.
+\]
+Use both columns and a complete coordinate layout with coefficient map the
+identity. A two-vertex, one-edge cellular sheaf realizes
+\(\image\delta_0=\image(G_{\mathbb R}\oplus G_{\mathbb R})\); this equality is
+proved from its restriction maps. The decoder reads the same original
+integer payload into its real edge coordinates.
+
+Assume \(|z_{i,j}|\le B\), \(B>0\), and the integer-syndrome condition
+\(|(Hz_{\cdot,j})_i|<q\) for all \(i,j\). If the reduced pair is a codeword,
+every integer check is divisible by \(q\); the syndrome bound forces it to
+vanish. Thus codeword validity reflects geometric exactness. If the source is
+nonexact, its extracted pair has distance at least \(1/n\). Since
+\(\rho_{\mathrm{ex}}(z)\le\|z\|\le B\sqrt{2n}\), these facts give
+\[
+ \rho_{\mathrm{ex}}(z)\le Bn\sqrt{2n}\,D_2(\bar z),
+ \qquad
+ \rho_{\mathrm{ex}}(z)\ge r
+ \Longrightarrow D_2(\bar z)\ge\frac{r}{Bn\sqrt{2n}}.
+\]
+The source score remains Euclidean distance to exact cochains. The no-wrap
+condition bounds the integer syndrome, not just individual representatives.
+An outside-information-coordinate unit error in one column has nonzero real
+syndrome, satisfies this profile and gives a positive source distance.
+
+This construction is a coarse positive-radius example. For a nonempty source
+far region its certified target radius is at most \(1/n\); it does not supply
+a capacity- or Johnson-scale geometric application theorem. Positive decoded
+farness concerns raw received payloads and excludes already accepted exact
+anchors. The constructed systematic sheaf is an explicit application model,
+not an automatic identification with an arbitrary HCP presentation, and no
+encryption-security claim follows from this construction.
+
+\subsection{Three native metrics for modular cochains}
+
+The same cellular construction has a global comparison in its native modular
+metrics. Here the cochain valid locus is defined intrinsically by an actual
+integral opening and integer carry:
+\[
+ \delta_0a=z+qm.
+\]
+This is modular exactness, distinct from real decoded exactness. Reducing the
+actual integer interpolation coefficients proves that modular exactness is
+equivalent to the original RS pair-code predicate. No no-wrap condition is
+needed for this modular statement.
+
+Let \(d_C(z)\) be scalar-coordinate edit distance to these modularly exact
+cochains, normalized by \(2n\). Let \(d_P(z)\) be whole-pair edit distance
+to modularly exact integer planes, normalized by \(n\). The RS distance is
+\(D_2(\bar z)\). For two words, their mismatch counts satisfy
+\(h_P\le h_C\le2h_P\). Taking attained nearest codewords gives
+\[
+ d_C(z)\le d_P(z)\le2d_C(z).
+\]
+The plane/RS distance equality is also a theorem. Reduction cannot create a
+mismatch. Conversely, lift a field codeword pair by retaining each already
+matching received integer pair, and using canonical representatives at the
+remaining positions. The lifted word is modularly exact and has exactly the
+field word's mismatched positions. Thus
+\[
+ \boxed{\ d_C(z)\le d_P(z)=D_2(\bar z)\le2d_C(z)\ }.
+\]
+The scalar representative-lifting argument also identifies \(d_C\) with
+the corresponding flattened finite-field code distance. These independently
+defined native distances are compared through the actual maps. A unit-scale
+near contract must use the explicitly scaled local score \(2d_C\); the
+far implication uses \(d_C\le D_2\).
+
+There is a nonempty capacity-scale family in these modular metrics. For
+\(0<k<n\), take \(u_i=a_i^k\) and both pair columns equal to \(u\).
+A polynomial of degree below \(k\) agrees with \(u\) on at most \(k\)
+positions, while interpolation supplies a codeword agreeing on any chosen
+\(k\) positions. Applying this separately to both columns, and to their
+common interpolation, proves
+\[
+ d_C(z)=d_P(z)=D_2(\bar z)=\frac{n-k}{n}.
+\]
+Canonical representatives of these two columns serialize into the original
+commitment payload in the declared complete layout. In the current canonical
+instance all three distances are \(3/4\). This is a native modular source
+statement, not a capacity-scale Euclidean Hodge-distance theorem.
+
+For this diagonal pair, the challenged word is \((1+\gamma)u\). Every
+\(\gamma\ne-1\) preserves the scalar capacity distance and is MCA-good;
+\(\gamma=-1\) collapses to zero. At every nonnegative tested radius its bad
+set is exactly \(\{-1\}\), with uniform fraction \(1/q\). The existing
+canonical mix is noncancelling because its order is \(4096>2\).
+
+The restriction to the stated line profile is essential. For an arbitrary
+fixed nonzero \(\gamma_0\), the pair
+\(\bigl(u,-\gamma_0^{-1}u\bigr)\) has scalar-coordinate and pair distance
+\((n-k)/n\), but its challenge at \(\gamma_0\) is zero. A global fixed-mix
+far-preservation claim therefore fails even on capacity-far pairs. The
+general protocol must bind the pair before sampling its challenge or prove
+goodness for its actual restricted line profile.
+
+The full HCP sample \(b=h+\delta_0a+\delta_1^*v\) has a different
+residual. The companion manuscript's exact-component obstruction
+\cite{vanDerVlugt2026hcp} shows that, when a nonzero coexact direction is
+allowed, this full residual need not descend to an exact-component-only
+view. Such a view needs a justified quotient or restricted source profile
+before it can support a full-HCP far-region claim. This does not establish
+factorization of a particular raw serializer through that decoded view.
+
+For scalar transfer, the pair must remain fixed before a random challenge is
+sampled, or a chosen fixed challenge must be proved MCA-good. The canonical
+fixed mix \(g=1331\) is a different assertion from a bound on the fraction
+of bad random challenges. Restricting integer representatives makes the
+pair faithful; it does not make one scalar evaluation injective.
+
+The current canonical field is also distinct from the sufficiently large
+family of Section~4. For the full canonical pair space, the existing
+small-radius certificate already exceeds the \(2^{-128}\) budget at count
+radius zero because \(12289<2^{128}\). This does not determine the spectrum
+on a restricted commitment image. Adopting \(\mathbb F_{3^{n_u}}\) would
+require its own field-element encoding: ordinary integer casts reach only
+the prime subfield, and the current wire-modulus convention is unchanged.
+
+\subsection{Scope of the instantiated application}
+
+The systematic modular profile fixes a concrete cellular model, full layout,
+identity integer coefficient map, raw payload carrier and intrinsic modular
+valid locus. Its three independently defined native metrics have a proved
+comparison, a nonempty capacity-far original-payload family and an explicit
+challenge analysis. The calibration is packaged through the existing
+source-to-source and source-to-code interfaces; the existing near projection
+uses the declared local scale \(2d_C\). The public-observation adapter retains
+the original artifact and its actual extracted pair.
+
+An application to a different maintained sheaf must prove the corresponding
+source and coefficient identifications. An independently chosen HCP/frame
+score needs its own upstream comparison; the native modular theorem does not
+identify that score with edit distance. The global canonical-lift and
+fixed-challenge obstructions constrain such stronger claims. The restricted
+Euclidean theorem and the diagonal fixed-mix example retain their stated
+profiles.
+
+This is a bounded mathematical dependency on the commitment/projection
+profile. It does not require the full Paper 2 ledger, consensus protocol, or
+Rust implementation. The universal coding theorems remain independent of
+that instantiation. A claim that the commitment-specific projection gives a
+new radius guarantee requires this concrete theorem and a comparison with
+position-binding vector commitments \cite{catalanoFiore2011}, committed
+linear maps \cite{campanelliEtAl2022}, and RS proximity applications such as
+WHIR \cite{arnonChiesaFenziYogev2024}. The distinctive question is what the
+cochain source relation and its proved metric comparison add to those
+interfaces.
+The explicit modular-coboundary and metric relations make that comparison
+concrete. They do not establish a new binding or hiding primitive, a security
+reduction, or a priority claim.
+In particular, the generic coefficient interpretation \(a\) is arbitrary.
+Its linearity and compatibility with the selected field reduction must be
+proved for the actual profile before making a linear-map commitment
+comparison. The storage and same-payload joins alone establish neither a new
+cryptographic binding game nor a radius or cost improvement over those
+interfaces.

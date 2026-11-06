@@ -1,6 +1,10 @@
-import Proximity.Concrete.GrassmannianPlucker
-import Proximity.Concrete.CochainBridge
-import Proximity.Application.Problem
+module
+
+public import Proximity.Concrete.GrassmannianPlucker
+public import Proximity.Concrete.CochainBridge
+public import Proximity.Application.Problem
+
+@[expose] public section
 
 /-
   Plucker-to-cochain proximity bridge.

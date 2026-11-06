@@ -1,8 +1,12 @@
-import Proximity.Concrete.PluckerCochain.PublicBinding
-import Proximity.Concrete.CochainPlane.Core
-import Proximity.Concrete.GateEvidence
-import TCB.CompressionBoundary
-import TCB.ObservationBoundary
+module
+
+public import Proximity.Concrete.PluckerCochain.PublicBinding
+public import Proximity.Concrete.CochainPlane.Core
+public import Proximity.Concrete.GateEvidence
+public import TCB.CompressionBoundary
+public import TCB.ObservationBoundary
+
+@[expose] public section
 
 /-!
   Public/storage boundary for the proximity bridge.

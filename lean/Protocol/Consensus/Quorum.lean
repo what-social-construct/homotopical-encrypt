@@ -1,4 +1,8 @@
-import Protocol.Consensus.Vote
+module
+
+public import Protocol.Consensus.Vote
+
+@[expose] public section
 
 /-!
   Authenticated weighted quorum certificates.

@@ -1,4 +1,8 @@
-import Proximity.MCA.Threshold
+module
+
+public import Proximity.MCA.Threshold
+
+@[expose] public section
 
 /-!
 # Code-specific MCA spectrum certificates

@@ -1,4 +1,8 @@
-import Proximity.Core.PlanePair
+module
+
+public import Proximity.Core.PlanePair
+
+@[expose] public section
 
 /-!
 # Generic mutual-correlated-agreement definitions

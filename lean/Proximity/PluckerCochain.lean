@@ -1,2 +1,6 @@
+module
+
 /- Compatibility import; use `Proximity.Concrete.PluckerCochain`. -/
-import Proximity.Concrete.PluckerCochain
+public import Proximity.Concrete.PluckerCochain
+
+@[expose] public section

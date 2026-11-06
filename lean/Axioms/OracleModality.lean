@@ -1,9 +1,13 @@
-import Mathlib
-import Axioms.Foundation
-import Axioms.Heyting
-import Axioms.ZKP
-import Axioms.SpectralBounds
-import Axioms.StageAdmissibility
+module
+
+public import Mathlib.Tactic
+public import Axioms.Foundation
+public import Axioms.Heyting
+public import Axioms.ZKP
+public import Axioms.SpectralBounds
+public import Axioms.StageAdmissibility
+
+@[expose] public section
 
 /-
   Oracle Modality Interface

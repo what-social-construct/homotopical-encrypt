@@ -1,6 +1,10 @@
-import Axioms.CochainCommitment.Payload
-import Axioms.CochainCommitment.Blinded
-import Axioms.Foundation
+module
+
+public import Axioms.CochainCommitment.Payload
+public import Axioms.CochainCommitment.Blinded
+public import Axioms.Foundation
+
+@[expose] public section
 
 /-
   Cochain commitment security interfaces.

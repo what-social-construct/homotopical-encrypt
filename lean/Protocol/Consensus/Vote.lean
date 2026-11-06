@@ -1,12 +1,16 @@
-import Axioms.Heyting
-import Protocol.Consensus.Committee
+module
+
+public import Axioms.Heyting
+public import Protocol.Consensus.Committee
+
+@[expose] public section
 
 /-!
   Consensus vote messages and authentication boundary.
 
   A vote signs one complete `VoteTarget`. In particular, a signature is bound
   to the committee and epoch, block and parent digests, height and round,
-  before/after state roots, topology/cochain/evidence roots, and the collapsed
+  before/after state roots, snapshot/topology/cochain/evidence roots, and the collapsed
   Heyting judgment. Reusing a signature across any of those coordinates is
   therefore outside the Lean verification predicate.
 
@@ -33,6 +37,8 @@ structure ProposalRef where
   parentDigest : TCB.Hash32
   beforeStateRoot : TCB.Hash32
   afterStateRoot : TCB.Hash32
+  /-- The immutable sheaf snapshot, distinct from topology and cochain roots. -/
+  snapshotRoot : TCB.Hash32
   topologyRoot : TCB.Hash32
   cochainRoot : TCB.Hash32
   evidenceRoot : TCB.Hash32

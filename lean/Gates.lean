@@ -1,7 +1,11 @@
-import Gates.Exact
-import Gates.Spectral
-import Gates.Oracle
-import Gates.Stage
+module
+
+public import Gates.Exact
+public import Gates.Spectral
+public import Gates.Oracle
+public import Gates.Stage
+
+@[expose] public section
 
 /-
   Gate-facing import surface.

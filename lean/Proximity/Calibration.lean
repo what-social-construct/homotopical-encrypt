@@ -1,3 +1,5 @@
+module
+
 /-
 Compatibility aliases for the former calibration module.
 
@@ -6,7 +8,9 @@ New code should import `Proximity.Application.Calibration` and use the neutral
 concrete bridge source-compatible while the project name remains unsettled.
 -/
 
-import Proximity.Application.Calibration
+public import Proximity.Application.Calibration
+
+@[expose] public section
 
 namespace Hcrypt
 namespace Proximity

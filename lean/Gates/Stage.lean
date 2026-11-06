@@ -1,4 +1,8 @@
-import Axioms.StageAdmissibility
+module
+
+public import Axioms.StageAdmissibility
+
+@[expose] public section
 
 /-
   Stage gates.

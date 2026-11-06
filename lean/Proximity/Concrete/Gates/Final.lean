@@ -1,4 +1,8 @@
-import Proximity.Concrete.Gates.Stage
+module
+
+public import Proximity.Concrete.Gates.Stage
+
+@[expose] public section
 
 /-
   Final proximity checks for an already-orchestrated projection chain.

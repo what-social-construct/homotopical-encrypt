@@ -1,2 +1,6 @@
+module
+
 /- Compatibility import; use `Proximity.Concrete.RS.CorrelatedAgreement`. -/
-import Proximity.Concrete.RS.CorrelatedAgreement
+public import Proximity.Concrete.RS.CorrelatedAgreement
+
+@[expose] public section

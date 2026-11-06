@@ -1,6 +1,10 @@
-import TCB.Runtime
-import TCB.SNARK
-import Proximity.Problem
+module
+
+public import TCB.Runtime
+public import TCB.SNARK
+public import Proximity.Problem
+
+@[expose] public section
 
 /-
   Runtime observation boundary.

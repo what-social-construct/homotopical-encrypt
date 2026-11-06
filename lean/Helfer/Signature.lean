@@ -1,4 +1,8 @@
-import Mathlib.CategoryTheory.Limits.Shapes.FiniteProducts
+module
+
+public import Mathlib.CategoryTheory.Limits.Shapes.FiniteProducts
+
+@[expose] public section
 
 /-!
 # Multi-sorted algebraic signatures and interpretations

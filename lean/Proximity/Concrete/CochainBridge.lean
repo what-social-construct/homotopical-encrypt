@@ -1,6 +1,10 @@
-import Proximity.Application.Projection
-import Axioms.CochainCommitment.Payload
-import Axioms.SheafCoherence
+module
+
+public import Proximity.Application.Projection
+public import Axioms.CochainCommitment.Payload
+public import Axioms.SheafCoherence
+
+@[expose] public section
 
 /-
   Cochain/sheaf bridge for proximity.

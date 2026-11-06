@@ -1,4 +1,8 @@
-import Helfer.HomotopyEquivalence
+module
+
+public import Helfer.HomotopyEquivalence
+
+@[expose] public section
 
 /-!
 # Closed-formula homotopy-invariance boundary

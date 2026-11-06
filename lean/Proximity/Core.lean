@@ -1,7 +1,13 @@
-import Proximity.Core.BlockCode
-import Proximity.Core.ReedSolomon
-import Proximity.Core.PlanePair
-import Proximity.Core.FiniteThreshold
+module
+
+public import Proximity.Core.BlockCode
+public import Proximity.Core.ReedSolomon
+public import Proximity.Core.PlanePair
+public import Proximity.Core.FiniteThreshold
+public import Proximity.Core.Distance
+public import Proximity.Core.RadiusShell
+
+@[expose] public section
 
 /-!
 # Proximity coding core

@@ -1,4 +1,8 @@
-import TCB.ProofCarrying
+module
+
+public import TCB.ProofCarrying
+
+@[expose] public section
 
 /-
   Compression boundary.

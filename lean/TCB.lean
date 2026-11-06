@@ -1,10 +1,15 @@
-import TCB.ProofCarrying
-import TCB.HCPObservation
-import TCB.CompressionBoundary
-import TCB.Runtime
-import TCB.SNARK
-import TCB.ObservationBoundary
-import TCB.WitnessVerifier
+module
+
+public import TCB.ProofCarrying
+public import TCB.HCPObservation
+public import TCB.PluckerObservation
+public import TCB.CompressionBoundary
+public import TCB.Runtime
+public import TCB.SNARK
+public import TCB.ObservationBoundary
+public import TCB.WitnessVerifier
+
+@[expose] public section
 
 /-
   Trusted computing base surfaces.

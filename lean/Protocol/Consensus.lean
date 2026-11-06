@@ -1,10 +1,14 @@
-import Consensus
-import Axioms.Consensus
-import Protocol.Evidence
-import Protocol.Oracle
-import Protocol.Consensus.Committee
-import Protocol.Consensus.Vote
-import Protocol.Consensus.Quorum
+module
+
+public import Consensus
+public import Axioms.Consensus
+public import Protocol.Evidence
+public import Protocol.Oracle
+public import Protocol.Consensus.Committee
+public import Protocol.Consensus.Vote
+public import Protocol.Consensus.Quorum
+
+@[expose] public section
 
 /-!
   Agreement and finality layer.

@@ -1,5 +1,8 @@
-import Mathlib
-import Axioms.HelferFOL
+module
+
+public import Axioms.HelferFOL
+
+@[expose] public section
 
 /-
   Lean-native homotopy-class interface.

@@ -1,4 +1,8 @@
-import Proximity.Core.BlockCode
+module
+
+public import Proximity.Core.BlockCode
+
+@[expose] public section
 
 /-!
 # Compatibility surface for finite block-code vocabulary

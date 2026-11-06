@@ -1,4 +1,8 @@
-import Axioms.SpectralBounds
+module
+
+public import Axioms.SpectralBounds
+
+@[expose] public section
 
 /-
   Spectral gate.

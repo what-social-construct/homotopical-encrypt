@@ -1,4 +1,11 @@
-\section{Reed--Solomon Projection And Proximity}\label{sec:rs-proximity-projection}
+\section{Reed--Solomon Projection and Proximity}\label{sec:rs-proximity-projection}
+
+This section develops the HCP-specific application bridge. The companion
+coding paper \cite{vanDerVlugt2026proximity} treats universal list decoding
+and pair MCA over the full ambient word space. We retain the coding
+definitions needed to state the bridge and its cited endpoint bound here;
+the companion's capacity-grid and large-field results are separate from this
+section's fixed-field instantiation.
 
 The staged projection maps are
 \[
@@ -30,7 +37,7 @@ and the near-side metric handoff
 \]
 while a supplied final far-region theorem gives the calibrated non-collapse
 implication needed for a gap reduction. Once both directions have been proved,
-they yield the end-to-end proximity statement. The projective Plucker
+they yield the end-to-end proximity statement. The projective Pl\"ucker
 coordinate is the geometric handoff: a private frame determines
 \(\operatorname{Pl}(\mathcal F)\), and the encoder \(E\) produces the chain
 cochain \(c\). At the public boundary, the relational form \(\mathcal R\)
@@ -41,7 +48,7 @@ At the projection-chain level, the private source datum is the frame witness
 layers of \cref{sec:mathematical-framework,sec:public-artifacts-commitments}, that
 frame may be accompanied by fibration data, paths, and commitment openings.
 The verifier-facing mathematical data then consist of the accepted cochain
-commitment, the Plucker coordinate bound to it, the plane projection, and the
+commitment, the Pl\"ucker coordinate bound to it, the plane projection, and the
 finite received word. Hashes and roots are compressed handles for canonical
 bytes of those data, not replacements for the mathematical objects.
 
@@ -70,7 +77,7 @@ concrete stages below.  A source proximity datum is the three-field record
 where \(X\) is the source carrier, \(G_X\subseteq X\) is its exact or valid
 locus, and \(\rho_X:X\to\mathbb R\) is its disagreement score.  End to end,
 these are respectively the frame-witness carrier, the valid-frame locus, and
-the Plucker disagreement.  At an intermediate stage the same interface may be
+the Pl\"ucker disagreement.  At an intermediate stage the same interface may be
 instantiated by committed cochains and their local syndrome distance.  A
 code-side proximity datum is the three-field record
 \[
@@ -116,6 +123,13 @@ on the promise when
   \qquad
   x\in P_{\mathrm{far}}\Rightarrow A(x)=\operatorname{reject}.
 \]
+These closed promises are disjoint when
+\(r_{\mathrm{near}}<r_{\mathrm{far}}\). If the radii coincide at \(r\), a
+correct accept/reject solver can exist only when the boundary shell
+\(\{x:s(x)=r\}\) is empty: an attained boundary would require both decisions.
+The solver pullbacks below are conditional on a correct target solver; they
+do not assert the existence of an efficient solver.
+
 A gap reduction \(f:P\to Q\) preserves near instances and far instances. Hence
 any correct solver for \(Q\) pulls back to a correct solver for \(P\).
 
@@ -191,7 +205,7 @@ The ordinary same-radius projection is the special case
 \(r^X_{\mathrm{near}}=r^Y_{\mathrm{near}}\) and
 \(r^X_{\mathrm{far}}=r^Y_{\mathrm{far}}\).
 
-\subsection{Grassmannian Source And Plucker Quotient}
+\subsection{Grassmannian Source and Pl\"ucker Quotient}
 
 The first Grassmannian context scores an ambient observation against one fixed
 harmonic subspace. Let \(W\le \mathbb R^n\) be a Grassmannian point with
@@ -276,7 +290,7 @@ Its exterior coordinate is
   x_{\mathcal F}=w_1\wedge\cdots\wedge w_r
   \in \bigwedge^r\mathbb R^n.
 \]
-The raw Plucker validity conditions are
+The raw Pl\"ucker validity conditions are
 \[
   x_{\mathcal F}\ne 0,\qquad
   x_{\mathcal F}\text{ is decomposable},\qquad
@@ -294,7 +308,7 @@ In the concrete projective instantiation,
   \Longleftrightarrow
   \exists u\in\mathbb R^\times,\ y=u x,
 \]
-and the Plucker coordinate is the projective class
+and the Pl\"ucker coordinate is the projective class
 \[
   \operatorname{Pl}(\mathcal F)=[x_{\mathcal F}]
   \in \mathbb P\!\left(\bigwedge^r\mathbb R^n\right).
@@ -311,10 +325,10 @@ The soundness conditions are:
 \end{gathered}
 \]
 Thus changing the private frame for the same Grassmannian point does not change
-the projective Plucker coordinate.
+the projective Pl\"ucker coordinate.
 
-\begin{proposition}[Projective Plucker invariance]\label{prop:plucker-invariance}
-Assume the displayed Plucker soundness conditions. If two frame witnesses
+\begin{proposition}[Projective Pl\"ucker invariance]\label{prop:plucker-invariance}
+Assume the displayed Pl\"ucker soundness conditions. If two frame witnesses
 \(\mathcal F=(W;w_1,\ldots,w_r)\) and
 \(\mathcal G=(W;v_1,\ldots,v_r)\) present the same Grassmannian point, then
 \[
@@ -337,6 +351,44 @@ The quotient map to projective space identifies nonzero scalar multiples; hence
 \([x_{\mathcal F}]=[x_{\mathcal G}]\).
 \end{proof}
 
+For the concrete exterior-power quotient these algebraic soundness inputs are
+now proved, rather than left as additional hypotheses. Independent frames have
+nonzero exterior product, and two bases of the same rank-\(r\) subspace give
+nonzero elements of its one-dimensional top exterior power, hence differ by
+a nonzero scalar.
+
+\begin{proposition}[Recovery from the full projective point]
+\label{prop:plucker-recovery}
+Let \(w_1,\ldots,w_r\) be an independent frame for \(W\subseteq\mathbb R^n\),
+and let \(c=w_1\wedge\cdots\wedge w_r\). Then
+\[
+ W=\{x\in\mathbb R^n:x\wedge c=0\}.
+\]
+This reconstruction depends only on \([c]\). Consequently, two genuine
+rank-\(r\) frame witnesses have the same full projective point if and only
+if they present the same subspace. At the fixed ambient inner product, the
+full point determines \(P_W\) and \(I-P_W\).
+\end{proposition}
+\begin{proof}
+If \(x\in W\), the frame with \(x\) adjoined is dependent, so its exterior
+product vanishes. If \(x\notin W\), the adjoined frame is independent and its
+exterior product is nonzero. Multiplication of \(c\) by a nonzero scalar
+does not change its annihilator. The projector is then the unique orthogonal
+projection onto the reconstructed subspace.
+\end{proof}
+
+The Lean construction \lean{Concrete.recoverSubspace} descends this
+annihilator through the existing projective quotient;
+\lean{recoverHarmonicProjector} reconstructs its orthogonal projector.
+The raw quotient also contains the zero orbit, whose annihilator is the whole
+ambient space; the recovery proposition is indexed by genuine frame witnesses.
+If \(W=\ker\Delta_x\), full projective data together with \(b\) determine
+the operative target \(P_Wb\). This is mathematical recovery on exact real
+coordinates, with no claim of an efficient finite-encoding algorithm. A
+digest-only public value is a different observation and requires its own
+binding and visibility analysis. The full point does not determine the
+positive spectrum of the original \(\Delta_x\).
+
 The source metric gate states
 \[
   0\le \rho(\mathcal F),\qquad
@@ -344,7 +396,7 @@ The source metric gate states
   \Longrightarrow
   \rho(\mathcal F)=\rho(\mathcal G).
 \]
-The Plucker metric gate fixes the admissible projective chart and a projective
+The Pl\"ucker metric gate fixes the admissible projective chart and a projective
 distance \(d_{\mathrm{Pl}}\) satisfying
 \[
   0\le d_{\mathrm{Pl}}(\mathcal F,\mathcal G),
@@ -355,7 +407,7 @@ distance \(d_{\mathrm{Pl}}\) satisfying
   =d_{\mathrm{Pl}}(\mathcal F',\mathcal G).
 \]
 
-\subsection{Committed Cochains And Local Syndrome}
+\subsection{Committed Cochains and Local Syndrome}
 
 The committed-cochain carrier in the proximity bridge is exactly the cochain
 commitment payload of \cref{sec:public-artifacts-commitments}. Write
@@ -432,9 +484,9 @@ The induced code-side proximity space has word carrier
 \(\mathcal C_{\mathrm{com}}\), code \(\mathcal C_L\), and distance \(d_L\).
 Hence every accepted committed cocycle lies in the local code.
 
-\begin{definition}[Plucker-to-cochain projection]\label{def:plucker-cochain-projection}
-Let \(P_{\mathrm{Pl}}\) be the projective Plucker quotient. A
-Plucker-to-cochain projection is a map
+\begin{definition}[Pl\"ucker-to-cochain projection]\label{def:plucker-cochain-projection}
+Let \(P_{\mathrm{Pl}}\) be the projective Pl\"ucker quotient. A
+Pl\"ucker-to-cochain projection is a map
 \[
   E:P_{\mathrm{Pl}}\longrightarrow \mathcal C_{\mathrm{com}}
 \]
@@ -462,7 +514,7 @@ and, for valid frames,
   n_{\mathrm{edge}}(E(\operatorname{Pl}(\mathcal F)))=N_{\mathrm{edge}}.
 \]
 Thus the encoded edge vector has length \(N_{\mathrm{edge}}\). Since the
-encoder consumes the projective coordinate, equality of Plucker coordinates
+encoder consumes the projective coordinate, equality of Pl\"ucker coordinates
 gives equality of the encoded committed cochain.
 
 The storage-native statement is relational. A payload realization is a relation
@@ -478,7 +530,7 @@ such that
   \Longrightarrow
   (\xi',c)\in\mathcal R.
 \]
-An observed frame binding consists of a hashed Plucker coordinate, an observed
+An observed frame binding consists of a hashed Pl\"ucker coordinate, an observed
 proof-carrying cochain artifact, a valid frame, and a public statement proving
 \[
   (\operatorname{Pl}(\mathcal F),c)\in\mathcal R.
@@ -490,7 +542,7 @@ It yields
   c\in\mathcal C_L.
 \]
 
-\begin{proposition}[Observed Plucker binding gives a local codeword]
+\begin{proposition}[Observed Pl\"ucker binding gives a local codeword]
 \label{prop:observed-binding-codeword}
 Let an observed frame binding relative to \(S\) prove
 \[
@@ -566,7 +618,7 @@ with binary residual
 \]
 Global candidates have zero commitment-sum residual.
 
-\subsection{Plane Extraction And RS Encoding}
+\subsection{Plane Extraction and RS Encoding}
 
 Let \(I\) be the finite evaluation-index type. A two-coordinate plane word is
 \[
@@ -615,6 +667,20 @@ The associated invariants are local nondegeneracy, alignment,
 well-formedness, expected edge count, selected-index bounds, codeword
 preservation, and distance control.
 
+The projection also carries the naturality data used by the stage
+certificates below. Write \(\mathsf r_C\) and \(\mathsf r_P\) for the
+chosen restriction maps on committed cochains and plane words, respectively.
+For a plane-syndrome carrier \(\Sigma_P\), it supplies maps
+\(s_P:\{\text{plane words}\}\to\Sigma_P\) and
+\(u:\Sigma\to\Sigma_P\) satisfying
+\[
+  p_{\mathsf r_C(c)}=\mathsf r_P(p_c),
+  \qquad
+  s_P(p_c)=u(\sigma(c)).
+\]
+These equations and local nondegeneracy are supplied fields of the
+projection, as in the Lean definition.
+
 Now let \(F\) be a finite field. A plane encoding is
 \[
   \Phi:(\operatorname{Fin}(2)\to R)\to F.
@@ -634,6 +700,15 @@ conditions
   \qquad
   D(\Phi_\ast(p))\le d_{\mathcal P}(p).
 \]
+It also supplies a received-word restriction \(\mathsf r_T\), a syndrome
+map \(s_T:F^I\to\Sigma_T\), and a map
+\(v:\Sigma_P\to\Sigma_T\), with
+\[
+  \Phi_\ast(\mathsf r_P(p))=\mathsf r_T(\Phi_\ast(p)),
+  \qquad
+  s_T(\Phi_\ast(p))=v(s_P(p)).
+\]
+These are the later-stage restriction and syndrome naturality equations.
 It therefore exposes an evaluation projection from the local syndrome space
 to the RS code space, with
 \[
@@ -694,13 +769,13 @@ Composing this inequality with
 \(d_{\mathcal P}(p_c)\le d_L(c)\) gives the metric conclusion.
 \end{proof}
 
-\subsection{Composed Chain, Gates, And Evidence}
+\subsection{Composed Chain, Gates, and Evidence}
 
 A concrete projection chain is a pair
 \[
   \Gamma=(\pi_{\mathrm{Pl}\to c},\pi_{c\to \mathrm{RS}})
 \]
-consisting of the Plucker-to-cochain projection and the plane-to-RS
+consisting of the Pl\"ucker-to-cochain projection and the plane-to-RS
 interpretation. For a frame witness \(\mathcal F\), define
 \[
 \begin{aligned}
@@ -725,7 +800,7 @@ Its metric handoff is the chain of inequalities
 \]
 
 \begin{proposition}[Composed projection chain]\label{prop:composed-chain}
-If \(\mathcal F\) is a valid Plucker frame, then
+If \(\mathcal F\) is a valid Pl\"ucker frame, then
 \[
   y_\Gamma(\mathcal F)\in T.
 \]
@@ -736,7 +811,7 @@ For every frame witness \(\mathcal F\),
 \end{proposition}
 
 \begin{proof}
-For a valid frame, the Plucker-to-cochain projection gives
+For a valid frame, the Pl\"ucker-to-cochain projection gives
 \[
   c_\Gamma(\mathcal F)\in G_S.
 \]
@@ -758,7 +833,7 @@ the cochain-to-plane projection gives
   d_{\mathcal P}(p_\Gamma(\mathcal F))
   \le d_L(c_\Gamma(\mathcal F)),
 \]
-and the Plucker-to-cochain projection gives
+and the Pl\"ucker-to-cochain projection gives
 \[
   d_L(c_\Gamma(\mathcal F))\le \rho(\mathcal F).
 \]
@@ -766,7 +841,7 @@ The desired inequality follows by transitivity.
 \end{proof}
 
 For one witness, the state bus is nested in the same order as the projection:
-the Plucker/cochain state stores \(c_\Gamma(\mathcal F)\) and
+the Pl\"ucker/cochain state stores \(c_\Gamma(\mathcal F)\) and
 \(d_L(c_\Gamma(\mathcal F))\le\rho(\mathcal F)\); the cochain/plane state
 stores that predecessor together with \(p_\Gamma(\mathcal F)\) and
 \(d_{\mathcal P}(p_\Gamma(\mathcal F))\le d_L(c_\Gamma(\mathcal F))\); and
@@ -790,7 +865,7 @@ The accumulated stage certificate is ordered:
   \chi_{\mathrm{stage}}.
 \]
 The final stage certificate is equivalent to the three explicit invariant
-conditions for the Plucker/cochain, cochain/plane, and plane/RS stages.
+conditions for the Pl\"ucker/cochain, cochain/plane, and plane/RS stages.
 
 \begin{definition}[Stage certificates]\label{def:stage-certificates}
 For a chain \(\Gamma\), let
@@ -850,7 +925,7 @@ Every projection chain \(\Gamma\) satisfying the preceding definitions carries
 \end{proposition}
 
 \begin{proof}
-The Plucker-to-cochain projection supplies exactly the first and third clauses
+The Pl\"ucker-to-cochain projection supplies exactly the first and third clauses
 of \(\chi_{\mathrm{Pl}\to c}\). The second follows because an accepted
 committed cocycle is a local codeword by the defining implication
 \[
@@ -867,24 +942,23 @@ Taking these three conjunctions gives \(\chi_{\mathrm{stage}}(\Gamma)\).
 \end{proof}
 
 The structural hard-gate bundle consists of the following four gates:
-\[
-\begin{array}{ll}
-\text{source metric:}
-  & 0\le \rho(\mathcal F)\text{ and }\rho\text{ is Plucker-quotient invariant},\\[2pt]
-\text{Plucker metric:}
-  & \text{valid frames lie in the selected projective chart and }
-    d_{\mathrm{Pl}}\text{ is quotient invariant},\\[2pt]
-\text{quotient respect:}
-  & \operatorname{Pl}(\mathcal F)=\operatorname{Pl}(\mathcal G)
-    \Rightarrow
-    c_\Gamma(\mathcal F)=c_\Gamma(\mathcal G),\
-    p_\Gamma(\mathcal F)=p_\Gamma(\mathcal G),\
-    y_\Gamma(\mathcal F)=y_\Gamma(\mathcal G),\\[2pt]
-\text{semantic alignment:}
-  & \text{valid frames give aligned cochains, and the plane and RS words}\\
-  & \text{are exactly the extraction and encoding outputs}.
-\end{array}
-\]
+\begin{enumerate}[label=(\roman*)]
+  \item Source metric: \(0\le\rho(\mathcal F)\), and \(\rho\) is
+    Pl\"ucker-quotient invariant.
+  \item Pl\"ucker metric: valid frames lie in the selected projective chart,
+    and \(d_{\mathrm{Pl}}\) is quotient invariant.
+  \item Quotient respect: if
+    \(\operatorname{Pl}(\mathcal F)=\operatorname{Pl}(\mathcal G)\), then
+    \[
+    \begin{aligned}
+      c_\Gamma(\mathcal F)&=c_\Gamma(\mathcal G),\\
+      p_\Gamma(\mathcal F)&=p_\Gamma(\mathcal G),\\
+      y_\Gamma(\mathcal F)&=y_\Gamma(\mathcal G).
+    \end{aligned}
+    \]
+  \item Semantic alignment: valid frames give aligned cochains, and the
+    plane and RS words are exactly the extraction and encoding outputs.
+\end{enumerate}
 
 Commitment acceptance has already established \(c\in G_S\) before the
 projection chain begins.  Thus no converse inference from a local syndrome to
@@ -906,7 +980,7 @@ A hard-gate certificate for \(\Gamma\) is the tuple
   \bigr),
 \]
 where the four \(\gamma\)-terms are respectively the source metric gate,
-Plucker metric/chart gate, Plucker-quotient respect gate, and
+Pl\"ucker metric/chart gate, Pl\"ucker-quotient respect gate, and
 semantic-alignment gate.
 \end{definition}
 
@@ -936,7 +1010,7 @@ squares.
 \begin{proof}
 The structural statements are projections from the displayed tuple. The
 quotient-respect entry contains equality of the downstream received
-words whenever the Plucker coordinates agree, which is the displayed
+words whenever the Pl\"ucker coordinates agree, which is the displayed
 conclusion.  For naturality, first apply the cochain-to-plane restriction
 square and then the plane-to-RS restriction square; functoriality of
 \(\Phi_\ast\) gives the whole-chain restriction equation.  Likewise, first
@@ -1067,8 +1141,8 @@ The evidence database has seven fixed slots:
 \begin{array}{c|l}
 0 & \text{accumulated stage certificate}\\
 1 & \text{source metric gate}\\
-2 & \text{Plucker metric/chart gate}\\
-3 & \text{Plucker-quotient respect gate}\\
+2 & \text{Pl\"ucker metric/chart gate}\\
+3 & \text{Pl\"ucker-quotient respect gate}\\
 4 & \text{semantic-alignment gate}\\
 5 & \text{assembled restriction/syndrome naturality gate}\\
 6 & \text{calibrated final far-region witness}.
@@ -1164,7 +1238,7 @@ Finally, well-formedness of the observed proof-carrying artifact includes the
 digest-binding assertion \(\beta_c\).
 \end{proof}
 
-\subsection{Finite Codes, RS Targets, And MCA}
+\subsection{Finite Codes, RS Targets, and MCA}
 
 For a finite coordinate type \(I\) and alphabet \(A\), a word is a function
 \[
@@ -1219,19 +1293,19 @@ For \(S\subseteq I\), write
   \Longleftrightarrow
   |S|/|I|\ge 1-\delta.
 \]
-The paper Definition~4.3 MCA bad challenges are
+The MCA bad challenges of \cite[Definition~4.3]{proximityPrize2026} are
 \[
 \begin{aligned}
   \operatorname{Bad}_{\mathrm{MCA}}(\mathcal C,\delta,\ell)
   =
-  \{\gamma\in F:\ &\exists S\subseteq I,\
-    S\text{ is }\delta\text{-large}\wedge
-    \ell(\gamma)\text{ agrees on }S\text{ with some }c\in \mathcal C\\
-  &{}\wedge
-    (f_1,f_2)\text{ does not agree on }S
-    \text{ with }\mathcal C^{\oplus 2}\}.
+  \{\gamma\in F:\ &\exists S\subseteq I\text{ such that}\\
+  &S\text{ is }\delta\text{-large},\\
+  &\ell(\gamma)|_S\in\mathcal C|_S,\\
+  &(f_1,f_2)|_S\notin\mathcal C^{\oplus 2}|_S\}.
 \end{aligned}
 \]
+Here \(\mathcal C|_S\) denotes the set of restrictions of codewords to
+\(S\); the pair condition uses that same coordinate set.
 The paper-facing MCA error bound is
 \[
   \forall \ell,\qquad
@@ -1287,22 +1361,11 @@ scalar code. RS target data consist of the parameters, \(F\)-additivity, a
 smooth-regime condition, list radius and list size, point and line radii, MCA
 threshold, list-decoding bounds, MCA bounds, the paper Definition~4.3 MCA
 bound, a received-word metric, radius normalization, and bridge conditions.
-The bridge conditions are
-\[
-\begin{gathered}
-  \text{domain cardinality},\quad
-  \text{smooth domain},\quad
-  \text{evaluation-point compatibility},\\
-  \text{restriction naturality},\quad
-  \text{coboundary/syndrome naturality},\quad
-  \text{global sections map to RS codewords},\\
-  \text{projection equals the received word},\quad
-  \text{metric normalization},\quad
-  \text{near-distance compatibility},\quad
-  \text{far non-collapse},\quad
-  \text{radius-parameter matching}.
-\end{gathered}
-\]
+The bridge conditions specify the domain cardinality, smoothness, and
+evaluation-point compatibility; restriction and coboundary/syndrome
+naturality; preservation of global sections as RS codewords; equality of the
+projection with the received word; metric normalization; near-distance
+compatibility; far non-collapse; and radius-parameter matching.
 These conditions give the calibrated hcrypt-to-RS bridge, and a correct
 RS gap solver pulls back to a correct source-side gap solver.
 
@@ -1388,11 +1451,11 @@ so \(i\equiv j\pmod{\operatorname{ord}(g)}\), hence
 The representatives \(i,j\) already lie in \(\{0,\ldots,4095\}\), so \(i=j\).
 \end{proof}
 
-The conservative Johnson-below radius is
+The conservative radius below the Johnson bound is
 \[
   r_J=2047,\qquad 2r_J<4096,
 \]
-and the strict capacity-below radius recorded separately is
+and the radius strictly below capacity, recorded separately, is
 \[
   r_{\mathrm{cap}}=3071,\qquad
   4r_{\mathrm{cap}}<3\cdot4096.
@@ -1450,17 +1513,10 @@ The canonical bridge data are
 \]
 where \(\Phi(x_0,x_1)=x_0+g x_1\). The endpoint proves the concrete
 domain, smoothness, evaluation-point, metric-normalization, and radius-matching
-facts. The remaining semantic theorem slots are:
-\[
-\begin{gathered}
-  \text{restriction naturality},\quad
-  \text{coboundary/syndrome naturality},\quad
-  \text{global sections map to RS codewords},\\
-  \text{projection equals the received word},\quad
-  \text{near-distance compatibility},\quad
-  \text{far non-collapse}.
-\end{gathered}
-\]
+facts. The remaining semantic theorem slots are restriction naturality,
+coboundary/syndrome naturality, preservation of global sections as RS
+codewords, equality of the projection with the received word, near-distance
+compatibility, and far non-collapse.
 
 \begin{definition}[Canonical bridge certificate]\label{def:canonical-bridge-certificate}
 For a canonical chain \(\Gamma\), let \(\Theta_\Gamma\) be the six-tuple of
@@ -1650,7 +1706,8 @@ and the scalar canonical bad-challenge set agrees with the paper's
 bound yields the scalar canonical bound.
 
 \begin{theorem}[Canonical RS MCA bound]\label{thm:canonical-rs-mca}
-For the canonical \HE{} Reed--Solomon endpoint at radius
+Assume the cited canonical list/MCA bound above. For the canonical \HE{}
+Reed--Solomon endpoint at radius
 \(\delta_J=2047/4096\), every projection-induced final affine line satisfies
 \[
   \frac{|\operatorname{Bad}_{\Gamma}(\mathcal F_1,\mathcal F_2)|}{|F|}
@@ -1710,13 +1767,14 @@ Substituting the displayed equality of bad-challenge sets gives the theorem.
 \end{proof}
 
 \begin{corollary}[Verifier-facing RS/MCA projection]\label{cor:verifier-rs-mca}
-Given an accepted hidden/geometric witness, a certified
-Plucker-to-cochain-to-plane-to-RS projection chain, hard projection-gate
+Assume the cited canonical list/MCA bound above. Given an accepted
+hidden/geometric witness, a certified
+Pl\"ucker-to-cochain-to-plane-to-RS projection chain, hard projection-gate
 evidence extended through assembled naturality, and a canonical
 Johnson-radius far-separation witness, the public verifier obtains a finite
-Reed--Solomon received word whose canonical MCA bad-challenge fraction is
-bounded by the cited threshold
-\(\tau_{\mathrm{cit}}/|F|\).
+Reed--Solomon received word. For any second projected witness, the resulting
+affine line has canonical MCA bad-challenge fraction bounded by the cited
+threshold \(\tau_{\mathrm{cit}}/|F|\).
 \end{corollary}
 
 \begin{proof}
@@ -1755,9 +1813,10 @@ hardness.
 
 \subsection*{Lean Cross-Reference}
 
+\begin{leanledger}
 The end-to-end projection and gap vocabulary corresponds to
 \lean{Proximity.Projection} and \lean{Proximity.Problem}. The Grassmannian and
-Plucker source stages correspond to \lean{Proximity.Grassmannian},
+Pl\"ucker source stages correspond to \lean{Proximity.Grassmannian},
 \lean{Proximity.GrassmannianPlucker}, and
 \lean{Proximity.GrassmannianPlucker.Concrete}. The committed-cochain and
 local-syndrome stages correspond to \lean{Proximity.CochainBridge},
@@ -1793,3 +1852,4 @@ to \lean{Proximity.CanonicalRS.Parameters},
 \lean{Proximity.CanonicalRS.MCA.Line}, \lean{Proximity.CanonicalRS.MCA},
 \lean{Proximity.CanonicalRS.MCA.Concrete},
 \lean{Proximity.CanonicalRS.CitedBounds}, and \lean{Proximity.CanonicalRS}.
+\end{leanledger}

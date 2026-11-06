@@ -1,10 +1,14 @@
-import Protocol.Evidence
-import Protocol.Ephemeral
-import Protocol.Oracle
-import Protocol.Consensus
-import Protocol.Coregulator
-import Protocol.Ledger
-import Protocol.Storage
+module
+
+public import Protocol.Evidence
+public import Protocol.Ephemeral
+public import Protocol.Oracle
+public import Protocol.Consensus
+public import Protocol.Coregulator
+public import Protocol.Ledger
+public import Protocol.Storage
+
+@[expose] public section
 
 /-!
   Protocol-facing import surface.
@@ -13,8 +17,10 @@ import Protocol.Storage
   HCP, proximity, gate, and proof-carrying mathematics; those core modules
   must not import `Protocol`.
 
-  The modules below are initially compatibility facades over the current
-  locations. Typed protocol state machines and preservation theorems should be
-  introduced here incrementally before old import paths are replaced by
-  re-export shims.
+  Ledger resource transitions, candidate-indexed TCB evidence, and authenticated
+  quorum attachment now have typed definitions and preservation theorems.
+  Sheaf storage additionally has snapshot/payload contexts, typed stage prefixes,
+  exact manifests and a receipt-indexed local consumption lifecycle. The other
+  protocol surfaces remain attachment points. Concrete codec/lift instantiation,
+  round/lock/finality and Rust refinement remain separate completion tasks.
 -/

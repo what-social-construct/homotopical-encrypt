@@ -8,7 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  LEAN_TOOLCHAIN: leanprover/lean4:v4.24.0
+  LEAN_TOOLCHAIN: leanprover/lean4:v4.35.0
 
 jobs:
   # ─── Rust ────────────────────────────────────────────────────
@@ -93,13 +93,21 @@ jobs:
           path: |
             lean/.lake
             ~/.elan/toolchains
-          key: ${{ runner.os }}-lean-${{ hashFiles('lean/lean-toolchain', 'lean/lakefile.lean') }}
+          key: ${{ runner.os }}-lean-${{ hashFiles('lean/lean-toolchain', 'lean/lakefile.lean', 'lean/lake-manifest.json') }}
           restore-keys: ${{ runner.os }}-lean-
+
+      - name: Fetch pinned Mathlib cache
+        working-directory: lean
+        run: lake exe cache get
 
       - name: Build Lean proofs
         working-directory: lean
         run: lake build
         # HARD GATE: Lean proofs must build. If Mathlib is missing, fix lakefile.lean.
+
+      - name: Check protocol transition examples
+        working-directory: lean
+        run: lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration
 
   # ─── Integration ─────────────────────────────────────────────
   integration:

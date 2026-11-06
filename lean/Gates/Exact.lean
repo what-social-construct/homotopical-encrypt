@@ -1,5 +1,9 @@
-import Axioms.Foundation
-import Axioms.SheafCoherence
+module
+
+public import Axioms.Foundation
+public import Axioms.SheafCoherence
+
+@[expose] public section
 
 /-
   Exact gates.

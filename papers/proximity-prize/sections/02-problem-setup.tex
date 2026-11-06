@@ -28,15 +28,16 @@ For a finite alphabet \(A\) and \(u,v\in A^I\), let
   \qquad
   \Delta(u,v)=\frac{d_H(u,v)}{n}.
 \]
-For a code \(\mathcal D\subseteq A^I\), define
+For a nonempty code \(\mathcal D\subseteq A^I\), define
 \[
   \Delta(w,\mathcal D)
   =
   \min_{c\in\mathcal D}\Delta(w,c).
 \]
-All radii in the main theorem statements are relative radii in \([0,1]\).
-Natural-number radii remain useful for finite rounding, but they are not the
-paper-facing metric.
+Unless stated otherwise, radii are relative radii in \([0,1]\).
+The uniform MCA bound also allows arbitrary real values of its radius
+parameter. Natural-number radii describe the finite Hamming grid and its
+rounding; distances in the main statements are normalized by \(n\).
 
 \subsection{Interleaving}
 

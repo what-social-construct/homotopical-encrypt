@@ -1,4 +1,8 @@
-import Proximity.Concrete.ProjectionChain.Core
+module
+
+public import Proximity.Concrete.ProjectionChain.Core
+
+@[expose] public section
 
 /-!
   Projection-chain import surface.

@@ -1,6 +1,12 @@
-import Proximity.Application.Projection
-import Proximity.Application.Problem
-import Proximity.Application.Calibration
+module
+
+public import Proximity.Application.Projection
+public import Proximity.Application.Problem
+public import Proximity.Application.Calibration
+public import Proximity.Application.DistanceCalibration
+public import Proximity.Application.GapBoundary
+
+@[expose] public section
 
 /-!
 # Generic proximity application interfaces

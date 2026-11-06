@@ -1,4 +1,8 @@
-import Sheaf.Hodge
+module
+
+public import Sheaf.Hodge
+
+@[expose] public section
 
 /-!
 # Isometric equivalences of finite cellular cochain complexes

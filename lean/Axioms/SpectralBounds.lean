@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib.Analysis.Real.Sqrt
+
+@[expose] public section
 
 namespace Hcrypt
 namespace Axioms

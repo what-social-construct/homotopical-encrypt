@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 /-
   Paper correspondence:
@@ -62,15 +66,13 @@ lemma scalar_map_eigenvalue_unique (c μ : ℝ) (h : Module.End.HasEigenvalue (c
   μ = c := by
     simp_all +decide [ Module.End.HasUnifEigenvalue ];
     simp_all +decide [ Submodule.eq_bot_iff ];
-    grind
 
 /-- The 0-th eigenvalue of the scalar Laplacian on ℝ is c. -/
 lemma ScalarLaplacian_eigenvalue_zero (c : ℝ) (hc : 0 ≤ c) :
   (ScalarLaplacian c hc).is_self_adjoint.eigenvalues (Module.finrank_self ℝ) 0 = c := by
-    have h_eigenvalue : ∀ (μ : ℝ), Module.End.HasEigenvalue (c • LinearMap.id : ℝ →ₗ[ℝ] ℝ) μ → μ = c := by
-      exact fun μ a => scalar_map_eigenvalue_unique c μ a
-    convert h_eigenvalue _ _;
-    convert LinearMap.IsSymmetric.hasEigenvalue_eigenvalues _ _ _
+    exact scalar_map_eigenvalue_unique c _
+      ((ScalarLaplacian c hc).is_self_adjoint.hasEigenvalue_eigenvalues
+        (Module.finrank_self ℝ) 0)
 
 /-- The spectral fingerprint of a scalar Laplacian is the singleton {c}. -/
 lemma ScalarLaplacian_fingerprint (c : ℝ) (hc : 0 ≤ c) :

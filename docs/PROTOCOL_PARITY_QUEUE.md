@@ -23,6 +23,46 @@ The long-term refinement target is:
 > Every Rust-accepted protocol transition realizes the corresponding Lean
 > transition relation.
 
+Current source update (2026-11-05): the first **bounded conservative
+transition core** is implemented under `Protocol/Ledger`, with candidate-indexed
+TCB evidence and a same-proposal quorum adapter. On Lean 4.35.0 and Mathlib
+`56a005855ea17e0b0958f73ec801ae140b0a1679`, the default build passes 9,228 jobs
+and the union of all fifteen default roots with the additional ledger,
+evidence, storage, anchor and canonical-adapter targets passes 9,233 jobs.
+The [shared validation record](MATH_STORAGE_VALIDATION.md) tracks these builds
+and theorem dependencies. This is a mathematical
+kernel under explicit profile/boundary assumptions, not a complete secure
+protocol, concrete Rust refinement, or finality result.
+
+The subsequent storage source now adds one original sheaf/snapshot/artifact
+context, typed projection prefixes, append-once manifests, sealing and
+receipt-indexed local consumption under `Protocol/Storage`. The
+[shared validation record](MATH_STORAGE_VALIDATION.md)
+includes these modules and their explicit integration fixtures in the current
+Lean 4.35 union build. Concrete backend atomicity,
+durability, global run freshness and physical erasure remain runtime/profile
+work.
+
+The new `Storage/{Anchor,ProjectionAnchor}.lean` source joins that same
+candidate, original interpretation/artifact and exact sealed manifest to one
+history entry under explicit authentication relations. The projection adapter
+also names the actual gate database included under the candidate's evidence
+root. `Storage/AnchorExamples.lean` supplies positive and transplant fixtures.
+All nineteen selected anchor endpoints pass fresh dependency audits with
+exactly `propext`, `Classical.choice` and `Quot.sound`. Across the three fresh
+audit groups, all 68 distinct reports pass: 64 standard-only and the same
+four boundary/canonical endpoints retaining native arithmetic certificate
+dependencies. Lean 4.35 prints those as generated
+`_native.native_decide.ax_*` constants; the older `Lean.ofReduceBool` and
+`Lean.trustCompiler` names describe the historical reports. No selected report
+uses a cited-bound axiom or `sorryAx`.
+
+These additions also passed the preserved Lean 4.24.0 baseline: the focused
+build completed 7,417 jobs, the full default build completed 7,532 jobs, and
+the 19 selected endpoint audits report only `propext`, `Classical.choice` and
+`Quot.sound`. Those counts remain historical evidence, separate from the
+successful Lean 4.35 validation above.
+
 ## Chain Ownership Decision
 
 Paper scope and implementation language are independent. The chain is Paper 2,
@@ -37,27 +77,32 @@ The practical test is:
 > the rule in Lean. If the question is how to parse, authenticate, persist, or
 > execute the rule safely, implement it in Rust behind a Lean-owned interface.
 
-The first transition kernel should be parameterized over identifiers, assets,
-nullifiers, and action payloads. It need not prematurely choose an
-account-based or UTXO-style concrete ledger, and no legacy Python container
-gets to make that choice implicitly.
+The first transition kernel is parameterized over resources, assets,
+nullifiers and the existing snapshot carrier. It uses finite nonnegative
+resource markings with an additive asset valuation; this chooses neither an
+account model nor a UTXO model. Its first action conserves the declared value,
+with fees included among produced resources. Ownership/authorization,
+nullifier derivation and the intended resource/asset interpretation remain
+explicit application-profile work. Mint/burn policies are outside this kernel.
 
 ### Must be typed or proved in Lean
 
 | Chain object | Lean-owned content | Current status / target owner |
 |---|---|---|
-| Committed public state | The semantic coordinates named by one state root: ledger/nullifier state, topology and accepted-cochain context, finalized artifact/evidence roots, and protocol epoch. The concrete root remains abstract. | `TCB.WitnessVerifier.PublicStateUpdate` contains only a preliminary before/after-root envelope. Define the real state under `Protocol/Ledger`. |
-| Candidate transition | Typed proposed action, explicit before/after state, transition digest, public statement/evidence references, and the relation saying the proposed after-state follows from the before-state. | Missing. Define before concrete transaction/block acceptance so all later gates share one target. |
-| Typed transition evidence | Evidence indexed by the actual candidate-transition validity proposition, with explicit equality between its database/artifact roots and the roots named by that candidate. | Existing proof/evidence envelopes can carry unrelated propositions unless joined by application-specific fields. Add the typed join under `Protocol/Evidence`. |
-| Accepted transaction | Authorization fact, replay/nonce/nullifier freshness, exact value-flow validity, accepted exact \(C^1\) and snapshot binding where required, evidence binding, and the resulting state transition. | `Chain.TransactionAccepted` is too weak. Replace under `Protocol/Ledger`; do not translate `HomotopyTransaction` verbatim. |
-| Nullifier state | Abstract nullifier type, authorization/derivation relation, prior freshness, duplicate-free batch use, monotone insertion, single consumption, and explicit rollback/reorganization semantics. | Only freshness and monotonicity over `Nat` exist in `Chain.lean`. Add `Protocol/Ledger/Nullifier.lean`. |
-| Exact ledger flow | Exact asset quantities, nonnegativity, conservation or explicitly authorized mint/burn, fee destination, and atomic multi-input/multi-output application. | `Axioms.Ledger` is proposition-only and `Chain.balance_preserved` is not an asset conservation theorem. Add typed state and preservation theorems. |
-| Block body and proposal binding | Ordered batch of candidate/accepted transitions; parent, height, epoch and round; before/after roots; snapshot/topology/cochain/evidence roots; and a theorem that the semantic block binds the complete `ProposalRef`. | `Protocol.Consensus.Vote.ProposalRef` has most of the root tuple but no actual block/body object and no distinct `snapshotRoot`. Add that coordinate and `Protocol/Chain/Block.lean`; do not identify it with `topologyRoot`. |
-| Certified block / chain extension | A block plus an acceptance quorum certificate for exactly its proposal and `Valid` judgment; extension/application relation; no `Hold` or `Invalid` finalization. | Quorum arithmetic is proved, but the certificate-to-block and block-to-ledger bridges are missing. |
+| Committed public state | Semantic coordinates named by a state root: resource/nullifier state, tip/height/epoch, snapshot/topology/cochain/evidence context. | Implemented in `Protocol/Ledger/State.lean`. `PublicStateUpdate` remains the reused hash envelope; object-indexed `Evidence.RootBindings` links its roots to actual states. Concrete encodings/root schemes remain open. |
+| Candidate transition | Action body, before-state, snapshot, complete proposal, computed successor, and a validity predicate for that exact candidate. | Implemented in `Protocol/Ledger/Transition.lean`: `after` applies the body's actual flow and nullifier list; `Valid` checks conservation, availability, freshness and context. The result is not an independently supplied after-state. |
+| Typed transition evidence | Evidence indexed by actual candidate validity, with the same payload/artifact and before/after/root bindings. | Implemented in `Protocol/Evidence/Transition.lean`, reusing `WitnessVerifierEnvelope`. It derives `candidate.Valid P` from the matching observed statement; root/inclusion relations are supplied on the actual objects. Leaf digest is distinct from cochain and evidence roots. |
+| Accepted transaction | Authorization, freshness, conservative flow, accepted payload/snapshot context, and computed application. | Bounded `AcceptedUpdate` and preservation theorems implemented under `Protocol/Ledger`; `Ledger/Sheaf.lean` reuses the existing exact-payload interpretation. Concrete ownership/authorization and cryptographic security remain profile obligations. Legacy `Chain.TransactionAccepted` is not silently strengthened or migrated. |
+| Nullifier state | Abstract identifiers, body-list binding, freshness, duplicate-free use, monotone consumption and replay exclusion. | Implemented in `Ledger/Nullifier.lean` and `Candidate.Valid`: nonempty/Nodup/Fresh are checked on the actual body list, which the update consumes. Replay with that same list is excluded even with new proposal metadata. Derivation/linkability security, ephemeral-handle linkage and reorganization semantics remain open. |
+| Exact ledger flow | Finite nonnegative quantities, availability and conservative multi-resource application. | `Ledger/ValueFlow.lean` uses mathlib finite markings and an explicit additive asset valuation. Enabled conservative flow preserves value; connected `Execution` preserves value and spent-set monotonicity. Fees may be produced resources. Mint/burn and concrete resource/asset semantics remain open; edge sums are not the conservation theorem. |
+| Block body and proposal binding | Ordered batch, proposal context and root coordinates, plus semantic block binding. | The one-action candidate/evidence join is implemented, and `ProposalRef` now has a distinct signed `snapshotRoot`. A batched block/body object and its binding remain future `Protocol/Chain/Block.lean` work. Snapshot root is not topology root. |
+| Certified block / chain extension | Acceptance certificate for the exact proposal and `Valid` judgment, joined to application. | `Ledger/Certified.lean` now attaches quorum evidence to the same candidate proposal, derives accepted update, and excludes hold/rejection certificates. Batched certified blocks, round/lock discipline, finality and liveness remain open. |
 | Consensus rounds and finality | Phase/round transitions, locks and unlock conditions, non-faulty no-double-vote invariant, equivocation evidence, finality promotion, and agreement/safety theorems. | `Committee`, `Vote`, and `Quorum` provide the initial kernel. Add round/lock/finality modules under `Protocol/Consensus`. |
 | Oracle judgment lifecycle | Authenticated judgment target, `Undetermined -> Hold`, retry/re-projection transition, and the conditions for a later `Valid` or `Invalid` result. | `Protocol/Oracle.lean` is an attachment point. Concrete signatures and endpoints remain Rust-owned. |
-| `SheafState` lifecycle | Fresh initialization from one accepted exact \(C^1\)/snapshot context, typed stage advancement, no cross-commit certificate reuse, final consumption, and abstract wipe/retirement state. | Planned under `Protocol/Storage`; the mathematical projection-stage bus already exists in `Proximity/Gates`. |
-| Open/sealed `SheafBlock` | Typed manifest leaves, one common context, slot-at-most-once construction, final evidence completeness, immutable sealing, and the relation binding a sealed manifest to its public root. | Missing. Add `Protocol/Storage/SheafBlock.lean`; concrete SHA-256 and canonical manifest bytes remain Rust-owned. |
+| `SheafState` lifecycle | One fixed original sheaf interpretation, snapshot and artifact; typed projection/gate advancement and local receipt-indexed consumption. | Mathematical source under `Storage/{Context,Checkpoint,Projection}.lean` reuses the existing nested state bus. Raw snapshot-bound context is separate from `Context.Accepted`; noisy inputs remain available. Connected execution makes consumption terminal. Global run-ID freshness, replay policy across independent histories, backend atomicity and erasure remain open. |
+| Open/sealed `SheafBlock` | Actual typed payload/digest leaves, one common context, slot-at-most-once append, required-slot completeness and an exact sealed list/root. | `Storage/Checkpoint.lean` supplies `OpenManifest`, `SealedManifest` and `PersistenceReceipt`; `Storage/Projection.lean` joins a seal to one final nested prefix. `Storage/Anchor.lean` supplies the mathematical history join under a selected inclusion relation. These modules pass the Lean 4.35 aggregate/integration build. Canonical public bytes, SHA-256/inclusion security and durable backend implementation remain open. |
+| History entry to original storage | Same candidate, payload interpretation, public artifact, exact sealed list/root and actual projection gate database. | `Storage/{Anchor,ProjectionAnchor}.lean` derives accepted-context, payload/snapshot and manifest joins from the existing transition evidence plus object-indexed authentication relations. Quorum endpoints retain the same signed proposal; `AnchorExamples.lean` supplies positive-value and substitution fixtures. Lean 4.35 builds and all nineteen selected standard-only anchor audits pass; see the shared record. Concrete block-body inclusion or a dedicated root coordinate, public bytes and cryptographic verification remain profile work. |
+| Source geometry and existing semantic interfaces | The same decoded cellular cochain, its exactness residual, and operator-compatible transport to the legacy coherence interface. | `Sheaf/{Distance,CochainSemantics}.lean` supplies zero-distance/exactness and actual coboundary/decoder/binding joins; acceptance equivalence is derived under explicit ambient coherence. `Storage/Calibration.lean` derives a scaled source-to-pair comparison from controlled exact lifts. A selected codec/lift profile remains open; no metric is supplied by storage roots. |
 | Ephemeral presentation lifecycle | Base/public handle, fresh representative handle, private path/transport evidence interface, active/consumed/retired state, rotation authorization, and no double consumption. | `Protocol/Ephemeral.lean` is an attachment point; the path mathematics remains in the Paper 1/shared layer. |
 | Account/topology update, if selected | Authorization for registration, bilateral connection changes, presentation replacement, and preservation of the well-formed topology/sheaf context. | Do not port `account.py`; define this only after choosing the public account/presentation model. |
 | Bonding and slashing, if consensus-critical | Exact bonded balances, eligibility, unbond delay, authenticated equivocation/fault evidence, conservative slashing destination, and preservation theorems. | Conditional Paper 2 module. Preserve the `Vault` vocabulary only if validator selection actually depends on it. |
@@ -75,6 +120,7 @@ produces/checks the concrete witnesses:
 | Nullifier security | Authorized derivation/linkability/uniqueness obligations and the state-machine consequences of freshness. | Concrete PRF/commitment/proof construction and constant-time verification. |
 | Proof/oracle soundness | The public statement implied by successful verification and its state/evidence context. | Transcript parsing, proof backend, worker signatures, endpoint policy. |
 | Atomic application | One accepted transition changes all semantic coordinates together or none. | RocksDB transaction/write batch, locking, fsync, crash recovery, reorg journal. |
+| Checkpoint persistence | A receipt refers to the exact sealed context, ordered payload/digest list and manifest root; local consumption requires that receipt. | Durable writes, authenticated loads, atomic checkpoint/seal/cleanup and receipt verification for the selected backend. |
 | Random/leader selection | Distribution-independent eligibility relation and safety consequences of a valid selection witness. | CSPRNG/VRF implementation, key custody, canonical input bytes. |
 | Secret lifecycle | Fresh/active/consumed/retired semantics and non-reuse consequences. | Secure randomness, AEAD wallet storage, zeroization and memory policy. |
 
@@ -112,37 +158,59 @@ that time. Untrusted strategy code should only propose a typed
 
 ### Lean file migration target
 
-The minimum non-circular split is:
+The implemented leaf split, followed by the still-planned extensions, is:
 
 ```text
 Protocol/
   Ledger/
-    State.lean
-    Nullifier.lean
-    Transition.lean
-  Chain/
+    ValueFlow.lean    # implemented finite conservative resource flow
+    Nullifier.lean    # implemented body-list freshness/consumption
+    State.lean       # implemented typed state and snapshot interface
+    Transition.lean  # implemented candidate, Valid, update, Execution
+    Sheaf.lean       # adapter to existing payload/snapshot interpretation
+    Certified.lean   # same-proposal acceptance quorum attachment
+  Evidence/
+    Transition.lean  # existing TCB envelope joined to actual candidate
+  Chain/             # planned batched chain objects
     Transaction.lean
     Block.lean
     CertifiedBlock.lean
   Storage/
-    SheafBlock.lean
-    Lifecycle.lean
+    Context.lean     # original interpretation/snapshot/artifact; raw vs accepted
+    Checkpoint.lean  # typed leaves, append/seal/receipt/consume lifecycle
+    Projection.lean  # exact nested projection/gate prefixes and coherent seal
+    Anchor.lean      # same candidate/context/artifact/exact manifest in history
+    ProjectionAnchor.lean # final prefix and actual gate database under that entry
+    AnchorExamples.lean   # positive transfer and substitution fixtures; Lean 4.35 validated
+    Calibration.lean # controlled exact lifts prove decoded-source comparison
+    HCP.lean         # reuse the original bound HCP exact-component artifact
+    CanonicalRS.lean # optional actual-public-observation and metric join
+    Core.lean        # focused mathematical storage aggregate
   Consensus/
     Committee.lean
     Vote.lean
     Quorum.lean
-    Round.lean
-    Lock.lean
-    Finality.lean
+    Round.lean       # planned
+    Lock.lean        # planned
+    Finality.lean    # planned
 ```
 
-`Chain.lean` should become a temporary compatibility surface while its useful
-freshness/monotonicity lemmas migrate. Its spectral validator identity,
+`Protocol/Ledger.lean` retains `Chain.lean` as a compatibility import; no old
+type or caller has automatically migrated. Useful freshness/monotonicity
+invariants are represented in the new typed kernel. `Chain.lean`'s spectral validator identity,
 cumulative-gap fork choice, scalar edge-sum balance predicate, and quadratic
 split policy are not dependencies of the new kernel. Its current
 `block_extends` accepts a separately supplied tip hash, `tx_compose` adds
 nullifiers and truncating `zipWith` payloads, and `zero_tx_n` supplies a zero
 topology tag; none of those operations should survive as chain semantics.
+
+The storage layer imports the mathematical owners rather than duplicating
+them: `Sheaf/Distance.lean` owns decoded distance to exactness,
+`Sheaf/CochainSemantics.lean` owns the operator/decoder/snapshot transport, and
+`Sheaf/ObservationQuotient.lean` owns the distinct full-HCP observation
+obstruction. `Storage/CanonicalRS.lean` is optional; its `BridgeData` bounds
+stay explicit and its public observation is joined by the full original
+artifact, with no equality forced between its leaf, snapshot and storage roots.
 
 ## Lean Workspace Layout
 
@@ -214,50 +282,71 @@ without creating a Lean version of the mistake.
 
 ## Priority 2 — Proximity Evidence And Sheaf Storage
 
-4. **Volatile per-commit `SheafState` and open `SheafBlock`**
-   - After the exact cochain has been accepted, initialize one fresh active
-     `SheafState` and one empty/open `SheafBlock` for that
-     commitment/witness. Both are bound to the same fixed context. The cochain
-     commitment precedes the projection chain; the first projection stage
-     consumes it rather than recommitting or rederiving it.
-   - Bind the active state to the exact-cochain commitment hash, canonical
-     `SheafStateSnapshot` root, topology metadata, projection/parameter-set ID,
-     and evidence schema version.
-   - Follow the existing typed order:
-     `PluckerCochainState -> CochainPlaneState -> StateBus`, followed by hard
-     gates, assembled-projection naturality, and final far-region evidence.
-   - At each checkpoint, advance the volatile bus and atomically append that
-     stage's public artifact and certificate to the open block. A transition
-     may fill its own stage-labelled slot once; it may neither overwrite an
-     earlier slot nor borrow a slot from another cochain's state.
-   - Each stage checks its own restriction and syndrome naturality equations
-     once; later stages consume the certified predecessor. Runtime persistence
-     records the existing certificate rather than rerunning the mathematical
-     gate.
+4. **Original context and typed projection checkpoints**
+   - **Mathematical source implemented:** `Storage.Context` retains the actual
+     `CochainPayloadInterpretation`, snapshot and public artifact. Its key
+     derives the run ID, schema version, snapshot root, cochain leaf digest,
+     topology tag and parameter-set ID. A raw snapshot-bound context does not
+     assert decoded exactness; `Context.Accepted` is a separate predicate.
+     This keeps noisy/invalid inputs available to a proximity test.
+   - `Sheaf.CochainSemantics` identifies the existing carriers and intertwines
+     their actual coboundaries, decoder and snapshot-binding predicates.
+     Exactness, cocyclehood and acceptance transport are derived; remaining
+     legacy ambient-coherence gates are explicit inputs. No norm preservation
+     is inferred from a carrier equivalence.
+   - `Storage.Projection.Prefix` follows the existing typed order
+     `PluckerCochainState -> CochainPlaneState -> StateBus`, then hard gates,
+     assembled-projection naturality and final far-region evidence. Each step
+     retains its actual certified predecessor. Its manifest items contain
+     those exact typed payloads and supplied digests, with distinct slots.
+   - `OpenManifest.append` requires a fresh slot and preserves prior entries.
+     Turning a projection prefix into a manifest requires the selected
+     scheme's authentication relation for each actual context/slot/payload.
+     Runtime advance-plus-append atomicity and concrete verification remain
+     separate refinement work.
+   - Run IDs are supplied. An empty manifest can be initialized again; the
+     local lifecycle does not establish global run freshness or prevent
+     cloning across independently initialized histories. Select those
+     authorization/replay rules before claiming global one-use storage.
 
-5. **Seal the completed `SheafBlock`, then wipe `SheafState`**
-   - The open block is a persistent checkpoint construction and is not yet a
-     full/anchorable block. Once every required stage is present, seal it as
-     one immutable block containing the accepted cochain context, projection
-     artifacts, calibrated final certificate, and `GateEvidence` database.
-   - Give the sealed block one canonical SHA-256 content address:
+5. **Seal, obtain a matching persistence receipt, then consume**
+   - **Mathematical source implemented:** `SealedManifest` fixes one complete
+     append-once manifest and its supplied root-binding proof. A
+     `PersistenceReceipt` is indexed by that exact sealed context, ordered
+     item list and root. Local `Checkpoint.Step` permits consumption only
+     with such a receipt; a consumed checkpoint is terminal throughout every
+     connected execution. Sealing alone does not assert durable storage.
+   - `SealedProjection` identifies the manifest's exact item list with one
+     final nested projection/gate prefix. It recovers the existing final
+     certificate and retains the original cochain/received-word identities.
+     Its far theorem consumes the supplied mathematical far-region witness;
+     a storage root does not prove that witness.
+   - **Concrete profile still required:** give the sealed public encoding one
+     canonical SHA-256 content address, for example the planned
      `SHA256("HCRYPT:SHEAF-BLOCK:v1" || canonical_manifest_bytes)`.
      The manifest's child coordinates must include the
-     `SheafStateSnapshot` root, accepted exact-cochain digest, Plucker-shadow
+     `SheafStateSnapshot` root, original cochain leaf digest, Plucker-shadow
      digest, plane view, canonical RS derivation/received-target binding,
      evidence root, parameter-set ID, and schema version.
    - The existing `GateEvidence.EvidenceDatabase.rootDigest` is the
      certificate/evidence subtree root, not the whole-block address. The
-     stage-artifact subtree and evidence subtree are both authenticated by the
-     final block manifest.
+     selected public profile must authenticate the stage-artifact and evidence
+     subtrees through the final manifest. `ProjectionAnchor.gateIncluded`
+     separately names the actual gate database under the candidate's evidence
+     root; that enclosing root may also authenticate other evidence.
    - “One surface hash” means that the final SHA-256 address authenticates the
      distinct child digests. Do not set the snapshot, cochain, Plucker, plane,
      RS, and evidence digests equal to one another.
-   - Prove that the finalized evidence root refers to the same exact cochain
-     and `SheafStateSnapshot` as the stored Plucker shadow, plane view, and RS
-     derivation. If a derived object is not persisted, bind the canonical
-     derivation and all inputs needed to reproduce it.
-   - Persist and seal the immutable block in content-addressed storage, verify
+   - **Mathematical source join implemented; Lean 4.35 validation passed:**
+     `Storage.ProjectionAnchor` uses the existing `SealedProjection` and
+     `TransitionAnchor` to identify the accepted action's payload with the
+     stored cochain, plane-derived RS word and exact final typed prefix. Its
+     gate inclusion relation takes the actual evidence database, candidate
+     and evidence root. Instantiate these authentication relations with the
+     concrete encoding/hash/proof scheme. If a derived object is not persisted,
+     bind the canonical derivation and all inputs needed to reproduce it.
+   - **Backend work remains:** persist and seal the immutable block in
+     content-addressed storage, verify
      the hash again on load, and wipe the volatile `SheafState` only after the
      final checkpoint and seal commit atomically. Failed/incomplete blocks are
      recoverable construction records but are not eligible for anchoring.
@@ -265,16 +354,57 @@ without creating a Lean version of the mistake.
      path, opening, and transported secret state off the public chain. The
      manifest may carry only opaque public handles or ciphertext digests for
      those private objects.
+   - `Storage.HCP` reuses the accepted exact-component artifact of the existing
+     `BoundHCPObservation`; its decoded exactness residual is zero. The full
+     encrypted observation remains a separate object. With a nonzero coexact
+     direction, `Sheaf.ObservationQuotient` proves that the full
+     kernel-normalized Hodge residual can grow without changing the exact
+     component, excluding an unrestricted positive far-region theorem for an
+     extraction that sees only that component and sends zero to distance zero.
+     The ray lives in the existing unrestricted `HodgeEncryptedCochain`
+     carrier. Authenticated or noise-bounded profiles require their own stated
+     comparison.
+   - `Storage.Calibration.LiftControl` provides a constructive local criterion:
+     exact target-codeword lifts with decoder-error bounds imply the scaled
+     decoded-cochain-to-pair comparison. The optional canonical adapter joins
+     the existing public observation by the same artifact and identifies its
+     legacy real-infimum distance with the attained generic minimum. Actual
+     codec/layout/lift construction and any fixed-challenge goodness proof
+     remain profile work.
 
 6. **Main-chain anchor**
-   - Extend the Paper 2 transaction/state model with the finalized
-     `sheafBlockRoot : Hash32`. This SHA-256 address resolves to and
-     reauthenticates the entire immutable block.
+   - Specify eligibility separately from storage completion. A raw
+     snapshot-bound diagnostic checkpoint can be complete and persisted
+     without an accepted exact payload. A seal or persistence receipt alone
+     is not a ledger-acceptance certificate.
+   - **Mathematical source implemented; Lean 4.35 validation passed:** `Storage.TransitionAnchor` joins the existing candidate evidence
+     to the exact payload interpretation, original public artifact and sealed
+     manifest. It derives accepted exactness, the candidate/context payload and
+     snapshot identities, and the existing cochain/evidence-root inclusions.
+     A matching quorum names that same snapshot and the block digest
+     authenticating the manifest. Persistence still requires its own receipt.
+   - `HistoryBindings.manifestIncluded` names the actual candidate, context,
+     ordered item list, manifest root and block digest. The wire choice remains
+     open: authenticate the manifest through the block body under its existing
+     digest, or select a dedicated `sheafBlockRoot : Hash32` coordinate with
+     matching authentication. The generic join supports either choice; it
+     does not require adding a field or identify the two digests. Specify the
+     canonical preimage order, domain separation and inclusion verification.
+   - `Storage.AnchorExamples` joins the existing concrete sheaf fixture and
+     sealed receipt to a positive conservative transfer and matching quorum.
+     It rejects a substituted run or snapshot and a persisted nonexact input.
+     These equality-based authentication/backend fixtures pass the Lean 4.35
+     build and selected standard-only audits; production cryptography and disk
+     durability remain open.
    - The chain stores this bounded root/handle, not the private path,
      ephemeral representative, transported secret state, full artifact stack,
      or evidence database.
    - Specify replay, reorganization, retention, and garbage-collection
      behavior before production implementation.
+   - These adapters fix the original cell complex `X` and cellular sheaf `F`.
+     Authorized changes of topology, stalks or restriction maps and their
+     snapshot/geometry migration are not implemented. Anchoring changes
+     neither the open Q08 source-metric/far-image profile nor its hypotheses.
 
 ## Priority 3 — Consensus, Ledger, And Coregulator
 
@@ -289,24 +419,46 @@ without creating a Lean version of the mistake.
      voting weights and the division-free strict threshold
      `2 * totalWeight < 3 * supportWeight`;
      `Protocol/Consensus/Vote.lean` binds authenticated votes to committee,
-     epoch, height, round, phase, block/parent, state, topology, cochain,
+     epoch, height, round, phase, block/parent, state, snapshot, topology, cochain,
      evidence roots, and the collapsed Heyting judgment; and
      `Protocol/Consensus/Quorum.lean` prevents duplicate signer weight and
      proves weighted quorum intersection. Under faulty weight below one third
      and a non-faulty no-double-vote premise, two certificates have the same
      target.
+   - **Candidate attachment implemented:** `Ledger.CertifiedTransition` joins
+     that quorum's exact proposal and acceptance judgment to candidate-indexed
+     TCB evidence. Hold/rejection cannot furnish its acceptance certificate.
+     Focused builds pass; theorem dependencies are tracked in the shared
+     validation record. The adapter does not establish finality.
    - **Still pending:** round/phase transitions, locking/unlocking rules,
      proposal selection, equivocation evidence, finality promotion, liveness,
      and a Rust refinement theorem. A quorum certificate is therefore not yet
      presented as a complete consensus or finality proof.
 
 8. **Ledger and key-image state**
-   - Move/refine the abstract `Chain.lean` state transitions under
-     `Protocol/Ledger` and `Protocol/Chain`.
-   - Tie key-image freshness to the ephemeral consumption state and prove
-     monotonic spent-set/no-double-consumption results.
-   - Add commitment/evidence-root coherence to transaction and block
-     acceptance.
+   - **Implemented bounded kernel:** `State`, `Action`, `Candidate`, `Policy`,
+     computed `after`, `Valid`, `AcceptedUpdate` and connected `Execution`
+     under `Protocol/Ledger`. The proof endpoints give exact conservative
+     value preservation, spent-set monotonicity and same-action replay
+     exclusion. Focused builds pass; see the shared validation record for
+     aggregate and theorem-dependency outcomes.
+   - `Ledger.Sheaf` supplies `SnapshotModel.ofSheaf` over the existing
+     `CochainPayloadInterpretation F`, retaining its actual root, accepted
+     exact payload and decoded cocycle consequences. Its 16-byte topology
+     tag is not identified with the separately bound 32-byte topology root.
+   - `Evidence.Transition` binds the same candidate, payload and public hashed artifact
+     through object-indexed state-root, transition-digest and inclusion
+     relations. Root/hash/byte verification is not derived from those names.
+     Evidence-root inclusion of the full serialized proof/verifier metadata
+     remains open. The concrete root scheme must specify an acyclic preimage
+     order for block digest and successor state/roots; the legacy Rust header
+     does not instantiate this new proposal profile.
+   - **Still pending:** concrete authorization/resource/value interpretation,
+     nullifier derivation and ephemeral linkage, security games, runtime
+     realization, storage backend/global-run policy, and any batched block/reorganization
+     model. Legacy `Chain` callers remain compatibility consumers.
+   - This full protocol work is not a prerequisite for Paper 3's bounded
+     commitment/projection radius analysis.
 
 9. **Coregulator model**
    - `Axioms.Coregulator` currently names four proposition-only obligations.
@@ -319,7 +471,9 @@ without creating a Lean version of the mistake.
 ## Priority 4 — Folder Migration
 
 10. **Create protocol import surfaces**
-    - Add `Protocol.lean`, `Paper1.lean`, and `Paper2.lean` aggregate imports.
+    - `Protocol.lean` exists and imports the new bounded kernel and evidence
+      leaves through its aggregates. `Paper1.lean` and `Paper2.lean` remain
+      proposed publication import surfaces.
     - Move protocol-only modules incrementally, using temporary re-export
       shims so file movement is reviewable separately from theorem changes.
     - Split mixed modules rather than moving them wholesale. In particular:

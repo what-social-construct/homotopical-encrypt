@@ -1,5 +1,9 @@
-import Proximity.Concrete.PluckerCochain.Concrete
-import TCB.ObservationBoundary
+module
+
+public import Proximity.Concrete.PluckerCochain.Concrete
+public import TCB.ObservationBoundary
+
+@[expose] public section
 
 /-
   Public/storage-layer binding between Plucker shadows and cochain payloads.

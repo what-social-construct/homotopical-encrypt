@@ -1,9 +1,16 @@
-import Proximity.MCA.Definitions
-import Proximity.MCA.Threshold
-import Proximity.MCA.SpectrumCertificate
-import Proximity.MCA.Pair
-import Proximity.MCA.SmallRadius
-import Proximity.MCA.BoundaryField
+module
+
+public import Proximity.MCA.Definitions
+public import Proximity.MCA.Threshold
+public import Proximity.MCA.SpectrumCertificate
+public import Proximity.MCA.Pair
+public import Proximity.MCA.SmallRadius
+public import Proximity.MCA.BoundaryField
+public import Proximity.MCA.RealThreshold
+public import Proximity.MCA.ZeroDirection
+public import Proximity.MCA.Diagonal
+
+@[expose] public section
 
 /-!
 Generic definitions, the exact bad-count spectrum, code-specific threshold

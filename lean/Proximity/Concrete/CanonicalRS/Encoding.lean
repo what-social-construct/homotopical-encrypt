@@ -1,5 +1,9 @@
-import Proximity.Concrete.CanonicalRS.PowerDomain
-import Proximity.Concrete.CochainPlane.ReedSolomon
+module
+
+public import Proximity.Concrete.CanonicalRS.PowerDomain
+public import Proximity.Concrete.CochainPlane.ReedSolomon
+
+@[expose] public section
 
 /-
   Concrete plane-to-field encoding choices for the canonical RS regime.

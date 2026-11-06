@@ -1,5 +1,9 @@
-import Sheaf.Cellular
-import Axioms.CochainCommitment.Payload
+module
+
+public import Sheaf.Cellular
+public import Axioms.CochainCommitment.Payload
+
+@[expose] public section
 
 /-!
 # Exact one-cochain commitments for a concrete cellular sheaf

@@ -1,4 +1,8 @@
-import Laplacian.Projection
+module
+
+public import Laplacian.Projection
+
+@[expose] public section
 
 /-
   Grassmannian Laplacian search space.
@@ -26,7 +30,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-open Matrix Real InnerProductSpace MeasureTheory
+open Matrix Real InnerProductSpace
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -97,8 +101,8 @@ lemma exists_subspace_dim_k (k : ℕ) (hk : k ≤ Fintype.card n) :
     refine' ⟨ Submodule.span ℝ ( Set.range ( fun i : s => EuclideanSpace.single ( i : n ) ( 1 : ℝ ) ) ), _ ⟩;
     rw [ finrank_span_eq_card ] ; aesop;
     refine' Fintype.linearIndependent_iff.2 _;
-    intro g hg i; replace hg := congr_fun hg i; simp_all +decide;
-    rw [ Finset.sum_apply, Finset.sum_eq_single i ] at hg <;> aesop
+    intro g hg i; replace hg := congrArg (fun b : EuclideanSpace ℝ n => b i) hg; simp_all +decide;
+    rw [ Finset.sum_eq_single i ] at hg <;> aesop
 
 /-- Ω k is nonempty if k ≤ n.
     Python: grassmannian_laplacians(d, k) always returns results when k ≤ d. -/

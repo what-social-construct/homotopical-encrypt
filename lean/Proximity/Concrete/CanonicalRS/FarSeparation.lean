@@ -1,4 +1,8 @@
-import Proximity.Concrete.CanonicalRS.BridgeCertificate
+module
+
+public import Proximity.Concrete.CanonicalRS.BridgeCertificate
+
+@[expose] public section
 
 /-
   Canonical Johnson RS far-separation aggregate.

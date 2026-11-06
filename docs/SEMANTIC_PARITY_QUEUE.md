@@ -1,11 +1,37 @@
 # Semantic Parity Queue (Lean ↔ Python ↔ Rust)
 
+The [manuscript parity register](../SEMANTIC-PARITY.md) separately records
+paper ownership, shared definitions and notation, and manuscript issues. This
+queue tracks cross-language implementation refinement.
+
 This queue tracks implementation mismatches that should be resolved after the
 proof-status/axioms split.
 
 Canonical mathematical object and morphism status is owned by the verified
 register in [`SEMANTIC_OWNERSHIP.md`](SEMANTIC_OWNERSHIP.md). This queue tracks
 cross-language refinement and disposition; it does not redefine those objects.
+
+## Current reconciliation — 2026-11-05
+
+The rows below preserve earlier audit identifiers and findings. The following
+table supersedes stale completion language and earlier runtime-profile choices;
+it does not reclassify every legacy implementation as a refinement.
+
+| Surface | Current mathematical/source status | Remaining refinement or application work |
+|---|---|---|
+| Validation and main toolchain | Lean 4.35.0 and Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679` pass the full aggregate/integration union: 9,233 jobs covering all fifteen default roots and additional ledger/evidence/storage/anchor/canonical targets. All 68 distinct endpoint audits pass: 64 standard-only and the same four boundary/canonical endpoints with native certificates; all nineteen anchor and nine HCP/CVP endpoints are standard-only. | Keep the earlier Lean 4.24 baseline separate. The four native reports now name generated `_native.native_decide.ax_*` constants; their trust boundary remains. Use the [shared baseline/current record](../SEMANTIC-PARITY.md#history-anchor-validation-and-pre-upgrade-baseline) and [validation guide](MATH_STORAGE_VALIDATION.md). This is neither a concrete runtime refinement nor a Palomar comparison. |
+| `Axioms/` versus concrete mathematics | Interfaces state supplied propositions/maps and prove their stated consequences. Concrete `Sheaf/` definitions supply the actual cellular coboundaries, degree-one Hodge operator, projections and exact-subspace distance. | Instantiate the intended mathematical and security profiles and prove runtime refinement. An interface field, a conditional theorem and a concrete algorithm have different status. The seven cited-bound axiom declarations remain separate. |
+| Bounded Paper 2 transition and quorum | `Protocol/Ledger` computes the successor and proves conservative flow, nullifier preservation/replay exclusion, candidate-indexed evidence and same-proposal acceptance-quorum attachment. | Resource/authorization/nullifier/root/signature implementations remain profile inputs. Geometry or epoch migration, rounds/locks, finality and liveness are additional work. |
+| Storage-to-history join | `Storage/Anchor.lean` joins the actual interpretation and whole artifact to an exact sealed manifest under an object-indexed history-inclusion relation. `ProjectionAnchor.lean` retains the final typed prefix, the same received word and actual gate database. `AnchorExamples.lean` exercises transfer/quorum/receipt and substitution rejection. These modules pass the Lean 4.35 aggregate/integration build, with all nineteen selected anchor endpoints standard-only. | Implement canonical authentication and backend contracts, public/private serialization and retrieval. The semantic join chooses neither a new manifest-root wire field nor a concrete hash preimage. No concrete Rust/Python realization is claimed. |
+| Temporary bus and retained context | `Context` is snapshot-bound with exact acceptance separate. `StateBus` is an immutable witness-local projection record; the checkpoint engine requires an exact-seal persistence receipt before local consumption. | Earlier per-commit allocation/reset wording is a proposed profile, not settled runtime granularity. Global run freshness, replay across independent histories, atomicity and physical erasure remain explicit. |
+| Operators and source scores | Harmonic recovery uses `P_H`; the true operator is `Delta_1`; the kernel-normalized residual uses `I-P_H`; decoded exactness distance is `‖P_{(im δ₀)⊥} b‖`. | These are distinct maps/scores. A selected source-to-coding comparison and nonempty far family remain Q08; neither storage anchoring nor a pullback definition supplies them. |
+| Plucker and public hash views | The raw projective quotient includes the zero orbit and imposes no decomposability predicate; `ValidRawCoordinate` imposes nonzero/decomposable/selected-relation validity. `HashedPluckerShadow` carries the actual mathematical shadow plus a binding proposition. | Construct the selected admissible chart, public encoding and hiding/verification profile where needed. A raw quotient or digest does not construct a moduli stack or conceal a valid harmonic-subspace coordinate. |
+
+See the [categorical architecture](CATEGORICAL_ARCHITECTURE.md) for the
+distinction between application cells, public history references and the peer
+network. `docs/CHAIN_NETWORK_OBJECT_REVIEW.md` is a local working source for
+the historical object review and is outside the public bundle. The historical
+runtime inventories below retain their own audit scope.
 
 ## Reference Policy (Lean-first naming hygiene)
 
@@ -328,9 +354,9 @@ captured separately below so that archival does not erase the design intent.
 | `block_producer.py` | Partial overlap with `Protocol/Consensus/{Committee,Vote,Quorum}.lean`; round/lock/finality and accepted ledger application are unfinished. | Rejected. Mempool admission skips transaction verification, spectral failure falls back to the admissible value `1.0`, the proof fallback is structural, historical nullifiers are not supplied, `Undetermined` can be committed, and coalition/coregulator failures are swallowed. Mutations are not atomic. | Archive the single-node simulator; do not port its acceptance behavior. |
 | `block_section.py` | No direct owner. The intended replacement belongs to `Protocol/Storage.lean` and must bind `Sheaf/Commitment.lean` artifacts. | It is not a cellular-sheaf section: there is no base sheaf or restriction compatibility. “Coherence” compares one scalar and checks that a root is nonzero; the alleged private stalk is plaintext byte packing; the \(C^1\) values are neither populated nor serialized. | Archive. Preserve only the idea of typed artifact slots, rebuilt as a canonical tagged `SheafBlock` manifest rather than a “section.” |
 | `chain_store.py` | `Protocol/Storage.lean` is an attachment surface only. | Rejected as authoritative storage. Blocks, indexes, section files, state snapshots, and nullifiers are written independently; loads do not revalidate hashes; private material is plaintext; indexes can become stale; and the saved audit chain is not recomputed. | Archive Python storage. Rust needs one atomic accepted-transition batch, recovery/rebuild checks, content addressing, and a separate encrypted secret store. |
-| `clmm.py` | No current Lean owner. | It is a constant-product pool, not concentrated liquidity. Integer rounding can decrease \(k\); there are no fees, slippage bounds, account debits/credits, authorization, or atomic ledger effects. | Archive as an unselected Paper 2/3 tokenomics experiment. Recover an AMM invariant only if the protocol later selects an economic model. |
+| `clmm.py` | No current Lean owner. | It is a constant-product pool, not concentrated liquidity. Integer rounding can decrease \(k\); there are no fees, slippage bounds, account debits/credits, authorization, or atomic ledger effects. | Archive as an unselected protocol/product tokenomics experiment. Recover an AMM invariant only if the protocol later selects an economic model. |
 | `homotopy_transaction.py` | Partial `Chain.Transaction`; future `Protocol/{Ledger,Ephemeral,Evidence}.lean`. No concrete proof or wire refinement exists. | Security-critical rejection. The transaction hash and serialization omit state-affecting fields, including `transfer_amount` and proof data; a round trip can therefore change the transition without changing the hash. Spectral/class proofs verify self-supplied claims, range proof and MAC are optional/structural, naturality returns true on the live fast path, and an out-of-range status falls through. | Archive the schema/verifier. Redesign a fully hashed canonical transaction whose authorization, nullifier, exact value flow, public class coordinate, cochain artifact, evidence, and state context are one bound statement. |
-| `incentives.py` | At most a loose policy analogy to `Consensus/Reliability.lean`; no refinement. | The event-sourced policy idea is separable, but this implementation keys reputation to a linkable spectral fingerprint, accepts unauthenticated/replayable events, uses wall-clock time and floats, and calls scalar graph diffusion a trust sheaf. | Archive or Paper 3 research quarantine. If selected later, define committed evidence, deterministic fixed-point arithmetic, epoch-scoped pseudonyms, and privacy/Sybil policy first. |
+| `incentives.py` | At most a loose policy analogy to `Consensus/Reliability.lean`; no refinement. | The event-sourced policy idea is separable, but this implementation keys reputation to a linkable spectral fingerprint, accepts unauthenticated/replayable events, uses wall-clock time and floats, and calls scalar graph diffusion a trust sheaf. | Archive or unnumbered product-research quarantine. If selected later, define committed evidence, deterministic fixed-point arithmetic, epoch-scoped pseudonyms, and privacy/Sybil policy first. |
 | `key_image.py` | `Chain.lean` proves only freshness and monotone spent-set facts. Derivation, ownership, linkability, and unforgeability are absent. | The spent-set abstraction is useful; both constructors are unsuitable. The live eigenvalue hash is public and one-per-credential, while the path-based image can be varied to evade replay detection. Neither is secret/output-bound, and Python storage is noncanonical and non-atomic. | Archive the constructors/store; recover a typed per-spend nullifier interface plus atomic compare-and-set and reorg semantics. |
 | `sheaf_state.py` | The immutable `SheafStateSnapshot` in `Sheaf/Commitment.lean` is a different object. Planned owners are `Protocol/{Ledger,Storage,Evidence}.lean`. | The original checkpoint-bus idea is useful, but the class became a mixed mutable ledger/economics/topology cache. Its `HashChain` never recomputes payload hashes; its `HashCommitment` is raw metadata; its “Čech nerve,” “global section,” and “natural transformation” claims do not instantiate those notions. `apply_block` can partially mutate nullifiers/balances, mint on unknown senders or negative/NaN values, and move the tip without enforcing acceptance. | Archive the implementation. Recover a fresh per-commit volatile `SheafState` that checkpoints into a separate open `SheafBlock`; seal atomically, then wipe the bus. Split ledger, topology, and node state. |
 | `treasury.py` | `Axioms/Ledger.lean` names conservation only as an assumption; no selected tokenomics owner. | The conservative-flow idea is useful, but arbitrary/negative/NaN weights, ignored credit failures, pre-emptive balance clearing, implicit asset conversion, float percentages, and unauthenticated history break it. | Archive the concrete economics. Recover an exact typed value-flow/Petri transition only if Paper 2 selects these assets and fee rules. |
@@ -339,7 +365,7 @@ captured separately below so that archival does not erase the design intent.
 | `agents/__init__.py` | No current owner. | `AgentProposal` contains a potentially useful candidate-action/evidence shape, but its “Grassmannian belief” is an arbitrary vector and its reserve/slippage predicate compares unlike assets. The facade exports a nonexistent `ProfitAgent`. | Archive the agent package surface; recover only a typed `CandidateTransition` plus evidence and deterministic admissibility predicate if selected. |
 | `agents/feedback.py` | No current owner; it does not refine the sheaf/Hodge or consensus layers. | Rejected. It is already broken by archived imports, pairs agents and validators by unrelated map order, substitutes Laplacian block magnitude for gluing quality, computes no stated harmonic/tangent update, and adapts consensus parameters locally. | Archive as historical research. |
 | `agents/hedge_agent.py` | No current owner. | Principal-angle numerics may be a test fixture after validation, but Grassmannian distance is relabeled as impermanent loss without a proved economic bridge. Its principal actions are not executable by the orchestrator. | Archive the strategy; retain no protocol authority. |
-| `agents/stabilizer_agent.py` | No current owner. | A return-jump statistic is called persistent homology; token-price policy is coupled to spectral gap through arbitrary thresholds; wall-clock/external-price/floating mutable state would make validators diverge; rate limits do not record accepted use. | Archive or keep as an explicitly off-chain Paper 3 experiment. |
+| `agents/stabilizer_agent.py` | No current owner. | A return-jump statistic is called persistent homology; token-price policy is coupled to spectral gap through arbitrary thresholds; wall-clock/external-price/floating mutable state would make validators diverge; rate limits do not record accepted use. | Archive or keep as an explicitly off-chain product experiment. |
 | `agents/treasury_agent.py` | No current owner. | The abstract “proposal -> invariant gate -> atomic transition” shape is worth recovering. The implementation makes its \(k\)-check tautological, debits before fallible swaps, discards outputs, mints liquidity legs, and leaves several proposed actions unresolved. It is not the protocol coregulator. | Archive the strategy/orchestrator; recover the typed transition architecture under a neutral name such as `TransitionExecutor`. |
 
 #### Useful objects hidden in the legacy chain
@@ -511,7 +537,7 @@ described as though they were that object, but none has the required coverage.
 | `crypto/credential.py`: `QuantumSheafFibration`, `FibrationCredential`, `HomotopyClass` | The older concrete credential/master/rotation model. Sampling with matching Betti data is called uniform sampling from a homotopy class, which is not established. | Protocol/runtime reference only. Split useful generation mechanics from the rejected spectral/Betti equivalence claims; refine a future Lean identity-presentation family rather than translating this API verbatim. |
 | `crypto/commitment.py`: `CochainCommitment`, `BlindedCommitment`, `VectorCommitment` | Standalone cochain/partial-opening prototypes with their own topology hash. They do not bind a `SheafStateSnapshot`, Plucker shadow, plane, RS object, or evidence root. | Preserve as candidate runtime cryptography subject to canonical-byte, soundness, and Lean-refinement work. It supplies a leaf artifact, not the outer block root. |
 | `chain/sheaf_state.py`: `NerveStateSnapshot` | A deterministic hash of the account nerve only. It omits stalk dimensions, restriction maps, incidences beyond the nerve payload, coefficient/operator data, accepted cochain, parameters, and evidence. | Preserve after rename to `TopologySnapshot`; it is not the Lean `SheafStateSnapshot`. |
-| `chain/sheaf_state.py`: `SheafState`, `HashChain`, `HashCommitment` | The name preserves the useful original idea of a checkpointed cross-layer state bus, but the implementation became a mutable account/ledger/economics container with a JSON/time-dependent audit chain and legacy spectral/Betti summary. A balance assignment is called a global section, and a projection is called natural without restriction-square data. | Recover `SheafState` as the volatile typed per-commit bus that writes checkpoint artifacts into a separate persistent open `SheafBlock`, then is wiped after sealing. Split the current fields into Paper 2 ledger/node state, topology cache, and audit log; deprecate the sheaf/global-section/colimit/natural-transformation claims. None of its current hashes is the final block address. |
+| `chain/sheaf_state.py`: `SheafState`, `HashChain`, `HashCommitment` | The name preserves the useful original idea of a checkpointed cross-layer state bus, but the implementation became a mutable account/ledger/economics container with a JSON/time-dependent audit chain and legacy spectral/Betti summary. A balance assignment is called a global section, and a projection is called natural without restriction-square data. | Recover the volatile typed bus over a fixed context and separate persistent checkpoints; runtime allocation/retirement granularity is still open, as clarified on 2026-11-05 below. Split the current fields into Paper 2 ledger/node state, topology cache, and audit log; deprecate the sheaf/global-section/colimit/natural-transformation claims. None of its current hashes is the final block address. |
 | `chain/block_section.py`: `BlockSection`, `ChainSectionBundle` | Packs a spectral scalar and assorted proof/hash bytes into fixed float arrays, calls a block a global section, and calls `prev_hash` a restriction map. “Coherence” is only equality of one scalar plus a nonzero cochain root. | Semantic deprecation candidate. Do not translate to Lean. Preserve only ordinary parent-hash and serialization fixtures while replacing this structure with a typed storage manifest. |
 | `chain/block.py`: `BlockHeader`, `cochain_root` | A conventional block hash plus transaction and legacy cochain/spectral fields. The Python cochain root aggregates transaction amount commitments; it is not the digest of the Lean accepted exact \(C^1\) artifact. | Preserve the generic header/serialization idea, but replace the root schema. It lacks snapshot, Plucker/plane, RS/parameter, evidence, and presentation-handle coordinates. |
 | `chain/chain_store.py`: section storage | Mutable filesystem directories that write the fabricated public/private stalks and cochain root under a height. The private float array is written in plaintext. | Reject as the privacy-preserving sheaf store. Retain ordinary I/O patterns only after introducing immutable content addressing, encrypted private objects, canonical manifests, and atomic verification. |
@@ -530,10 +556,19 @@ The competing Python hash coordinates are therefore distinct:
 | `BlockHeader.cochain_root` | Legacy transaction amount-commitment aggregation | Different object from the accepted exact \(C^1\) artifact. |
 | `SpectralFingerprint.fingerprint_hash()` | Legacy spectral fingerprint | Not a homotopy classifier or storage-envelope root. |
 
+**2026-11-05 profile clarification:** earlier per-commit/reset language in this
+inventory describes one proposed runtime profile. The current Lean context
+admits raw snapshot-bound inputs, with exact acceptance checked separately;
+the runtime bus's lifecycle granularity remains a design choice. The
+history-anchor adapters described below are conditional semantic joins, not
+an implementation of the Python object graph.
+
 The intended replacement recovers the original state-bus idea as a volatile
 `SheafState` plus a separate persistent open `SheafBlock`. At every checkpoint,
 the bus advances and writes its new artifact/certificate to the open block.
-After the final write, the block is sealed and the bus is wiped. The sealed
+The runtime proposal seals and persists the final block and obtains its exact
+receipt before retiring the bus; Lean proves local consumption, not physical
+erasure. The sealed
 block uses one **outer SHA-256 manifest root** (the earlier “surface hash”
 intuition) with domain-separated child digests. “Under the same hash” means
 authenticated by that one manifest root; it does not mean assigning the same
@@ -541,12 +576,12 @@ digest value to every child:
 
 ```text
 volatile SheafState       persistent open SheafBlock
-  accepted exact-C1 + snapshot context
+  original C1 artifact + fixed snapshot context; acceptance separate
   advance ----------------> write Plucker/cochain artifact + certificate
   advance ----------------> write plane artifact + certificate
   advance ----------------> write RS artifact + certificate
   advance ----------------> write hard/naturality/final evidence
-  wipe <------------------- seal
+  retire <----------------- seal + exact persistence receipt
 sealed SheafBlock
   schema and parameter-set identifiers
   cellular-sheaf snapshot root and topology tag
@@ -568,21 +603,31 @@ is canonically derived rather than stored, the manifest must bind the input
 digest, parameter-set identifier, and derivation version that make the result
 unique.
 
-Lean already owns several child objects, but not this join:
+Lean owns the child objects and the following bounded joins:
 
 - `Sheaf/Commitment.lean` owns the cellular-sheaf snapshot and accepted exact
   \(C^1\) binding;
-- `Proximity/PluckerCochain/PublicBinding.lean` relates the public Plucker
+- `Proximity/Concrete/PluckerCochain/PublicBinding.lean` relates the public Plucker
   shadow to an observed cochain artifact;
-- `Proximity/Public.lean` owns a plane view under an abstract storage root;
-- `Proximity/GateEvidence.lean` owns a finalized evidence database/root; and
-- `Protocol/Consensus/Vote.lean` names snapshot/cochain/evidence coordinates.
+- `Proximity/Concrete/Public.lean` owns a plane view under an abstract storage root;
+- `Proximity/Concrete/GateEvidence.lean` owns a finalized evidence database/root;
+- `Protocol/Storage/{Context,Checkpoint,Projection}.lean` retains the same
+  original interpretation/artifact and seals the exact final typed prefix;
+- `Protocol/Storage/Anchor.lean` derives same-payload acceptance and snapshot
+  naming from existing candidate evidence and actual-object equalities;
+- `Protocol/Storage/ProjectionAnchor.lean` authenticates that prefix and its
+  actual gate database under supplied history/evidence inclusion profiles; and
+- `Protocol/Consensus/Vote.lean` names the matching proposal coordinates, with
+  quorum adapters carrying the same manifest and snapshot references.
 
-No theorem currently identifies or cross-authenticates all of those roots.
-`Protocol/Storage.lean` and `Protocol/Evidence.lean` remain attachment
-surfaces. The next migration step is therefore to define the joined Lean
-artifact first, then rewrite Python/Rust as refinements of its public manifest;
-the legacy Python object graph should not dictate the Lean type.
+These conditional joins preserve distinct roots rather than identifying their
+values. `HistoryBindings.manifestIncluded` receives the actual candidate,
+context, ordered manifest and root; concrete hashes/inclusion checks and
+backend guarantees remain to be instantiated. `PlaneView.storageRoot` is not
+automatically the sealed manifest root. The Lean 4.35 aggregate/integration
+build and all nineteen selected standard-only anchor audits pass, as recorded
+above. Runtime work should refine these
+existing objects rather than infer mathematical validity from a surface hash.
 
 #### Dependency cut for the replacement `SheafState`
 
@@ -1028,7 +1073,7 @@ The current `sheaf_state.py` dependency graph also shows what must be removed:
      stale.
    - Classify each substantive section or diagram into one of five outcomes:
      **retain as context**, **promote to Paper 1**, **formalize or bridge in
-     Lean**, **move to Paper 2/3**, or **delete as obsolete/duplicated**.
+     Lean**, **move to Paper 2 or unnumbered product work**, or **delete as obsolete/duplicated**.
    - Cross-reference every mathematical claim against the current Lean
      theorem/axiom surface and Paper 1. In particular, distinguish actual
      homotopy-class semantics from spectral identity claims, degree-zero global
@@ -1041,7 +1086,7 @@ The current `sheaf_state.py` dependency graph also shows what must be removed:
      explicitly whether the gap is:
      1. a missing mathematical definition/theorem that belongs in Lean;
      2. a protocol/runtime obligation for Paper 2;
-     3. a product/positioning idea for Paper 3; or
+     3. an unnumbered future product/positioning idea; or
      4. an obsolete idea that should not be implemented.
    - Update links from the main README only after this classification, so the
      README can continue to point to useful architecture context without
@@ -1077,25 +1122,34 @@ The current `sheaf_state.py` dependency graph also shows what must be removed:
 
 ## Priority 6 — Projection Evidence Lifecycle (Paper 2 / Runtime)
 
-10. **Reset `SheafState` per commitment; checkpoint artifacts and anchor only a finalized block**
+10. **Checkpoint one fixed context and authenticate its sealed manifest**
+   - **Current clarification (2026-11-05):** the previous per-commit/reset
+     allocation was a proposed runtime profile, not a theorem or a settled
+     granularity choice. Raw context binding and accepted exactness are separate.
    - The Lean `ProjectionStage.StateBus` is a proof-level, per-witness chain of
      invariants. Runtime code must not reuse an active bus or any stage result
      for a different cochain commitment.
-   - Once a cochain commitment is accepted, initialize a fresh volatile
-     `SheafState` and separate persistent open `SheafBlock`, both keyed by at
-     least its exact-cochain digest, canonical `SheafStateSnapshot` root,
-     topology metadata, and projection/parameter-set ID.
-   - Each restriction and syndrome naturality check is evaluated at its owning
-     transition exactly once. Later stages consume the certified predecessor;
-     the final gate composes stored stage equations and does not rederive them.
-   - At every checkpoint, advance the state bus and atomically append the new
-     stage artifact and its certificate to the open block. An append may create
+   - Reuse `Storage.Context` for the original interpretation/artifact and
+     derived snapshot/digest/parameter names. A raw diagnostic checkpoint may
+     be complete and persisted without being eligible for a ledger anchor.
+   - The existing typed prefix retains each selected projection/gate result
+     and its exact certified predecessor. The mathematical storage adapter
+     does not recompute those checks or establish a runtime execution count.
+     The optional syndrome adequacy gate is not silently added to the accepted
+     commitment chain's hard gates.
+   - Implement atomic advance-and-append for the selected runtime profile;
+     the mathematical manifest already preserves prior typed leaves. An append may create
      a new intermediate revision root, but incomplete revisions are never
      main-chain anchors.
-   - After successful finalization, seal and persist the immutable
-     content-addressed `SheafBlock`, then wipe the volatile state bus.
-   - The main chain should store only the finalized SHA-256 `sheafBlockRoot`,
-     whose manifest binds the exact cochain, `SheafStateSnapshot` root,
+   - After successful finalization, seal and persist the immutable manifest;
+     local consumption requires its exact receipt. Real durability, recovery
+     and private-memory erasure remain runtime obligations.
+   - Use `TransitionAnchor` and `ProjectionAnchor` to join the same original
+     objects, final prefix and gate database to accepted candidate evidence.
+     Instantiate the supplied history inclusion relation with the selected
+     authenticated body/root scheme; a dedicated `sheafBlockRoot` field has
+     not been chosen. The public manifest should bind the original cochain,
+     `SheafStateSnapshot` root,
      topology metadata, stage-artifact root, evidence root,
      projection/parameter-set ID, and schema/version. A later commitment may
      link to a previous finalized root

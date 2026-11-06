@@ -2,7 +2,39 @@
 
 Working title for Paper 2.
 
-Placeholder for the subsequent CS/protocol paper.
+The [initial manuscript text](DRAFT.md) now records the shared chain objects,
+real versus modular validity, three native metric levels, geometric comparison
+boundaries and evidence contracts. It is an early working draft; no Paper 2
+TeX/PDF manuscript or complete security argument is claimed.
+
+The current mathematical profile keeps three native metrics:
+scalar-coordinate cochain edits normalized by `2n`, whole integer-plane pair
+edits normalized by `n`, and whole-pair RS distance after reduction. Actual
+integral cellular coboundaries modulo `q` define the source valid locus.
+Explicit matching representative lifts prove
+`d_cochain ≤ d_plane = d_RS ≤ 2*d_cochain` for all integer representatives.
+The near contract can consume the calibrated score `2*d_cochain`; the far
+contract uses the native unit lower bound. Neither definition is replaced by
+a target-distance pullback.
+
+The [draft proof ledger](DRAFT.md#7-proof-ledger-and-remaining-protocol-work)
+records focused builds and actual theorem dependencies. Canonical payload
+and existing-interface specializations pass their focused builds and selected
+reports. The expanded aggregate/default builds pass **9,253/9,248 jobs**.
+The consolidated public-facade probe passes for 139 distinct new endpoints
+(103 standard-only, 36 with existing native arithmetic trust), matching the
+individual reports. The earlier 9,233-job/68-endpoint result is a pre-addition
+baseline. A capacity-scale native modular result is separate from the coarse no-wrap
+Euclidean example and from the full HCP residual. Positive far inputs are raw
+rejection candidates; accepted exact anchors have zero source distance under
+the declared compatible interpretation. Cryptographic security remains open.
+
+Paper 3 is the independent
+[capacity-radius coding manuscript](../proximity-prize/README.md), not the
+previously planned product whitepaper. The
+[recommended first-submission scope](SCOPE.md) narrows the initial Paper 2
+claim to one proof-carrying state transition and records which commitment,
+encoding, evidence, and runtime obligations remain.
 
 This README is a scope map, not a settled protocol specification. In
 particular, the consensus and Proof-of-Value design is under re-audit before
@@ -10,7 +42,7 @@ it is promoted into a claim surface. The machine-readable working bibliography
 is [references.bib](references.bib); inclusion there records a relevant source,
 not adoption of its protocol or transfer of its security theorem.
 
-Expected scope:
+Wider planned scope, beyond the bounded first endpoint:
 
 - proof-carrying verification;
 - gate certificates as protocol evidence;
@@ -92,6 +124,16 @@ CVP comparison, projection chain, RS/MCA endpoint, and Lean theorem surfaces.
   FrameWitness -> HashedPluckerShadow -> CochainCommitmentData
     -> PlaneShadow -> RS received word -> MCA-bound certificate
   ```
+- The full Plucker shadow now has a checked subspace/projector reconstruction.
+  If it names the operative kernel, it also determines the operative harmonic
+  target on an observed vector. The current semantic hashed-shadow record
+  contains both the shadow and a digest; a digest-only wire view is a separate
+  construction. State that visibility choice before making a privacy claim.
+- A pair must be bound before a sampled challenge, or its fixed challenge must
+  be proved good for the authenticated line profile. The diagonal power-word
+  profile has exactly the cancelling challenge `-1`; arbitrary fixed nonzero
+  mixes admit capacity-far cancelling pairs. The particular diagonal witness
+  does not establish a global deterministic far-preservation theorem.
 - Rust is the consensus-facing runtime boundary: canonical byte parsing,
   resource bounds, proof and oracle-attestation verification, VRF checks,
   key-image checks, state-root/cochain-root recomputation, fork choice, and

@@ -1,6 +1,10 @@
-import Consensus.Geometry
-import Consensus.Reliability
-import Consensus.ProofOfValue
+module
+
+public import Consensus.Geometry
+public import Consensus.Reliability
+public import Consensus.ProofOfValue
+
+@[expose] public section
 
 /-
   Consensus-facing import surface.

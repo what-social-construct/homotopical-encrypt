@@ -1,6 +1,10 @@
-import Axioms.CochainCommitment.Payload
-import Axioms.CochainCommitment.Security
-import Axioms.SheafCoherence
+module
+
+public import Axioms.CochainCommitment.Payload
+public import Axioms.CochainCommitment.Security
+public import Axioms.SheafCoherence
+
+@[expose] public section
 
 /-
   Public import surface for cochain commitment payloads, security axioms, and

@@ -1,4 +1,8 @@
-import Proximity.Concrete.GrassmannianPlucker
+module
+
+public import Proximity.Concrete.GrassmannianPlucker
+
+@[expose] public section
 
 /-
   Concrete projective Plucker instantiation.
@@ -23,7 +27,7 @@ namespace GrassmannianPlucker
 namespace Concrete
 
 open scoped BigOperators Real Nat Classical Pointwise
-open Matrix Real InnerProductSpace MeasureTheory
+open Matrix Real InnerProductSpace
 
 set_option linter.mathlibStandardSet false
 set_option linter.unusedSectionVars false

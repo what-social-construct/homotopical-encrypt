@@ -1,5 +1,9 @@
-import Proximity.MCA.Definitions
-import Proximity.Core.FiniteThreshold
+module
+
+public import Proximity.MCA.Definitions
+public import Proximity.Core.FiniteThreshold
+
+@[expose] public section
 
 /-!
 # Exact finite-grid thresholds for mutual correlated agreement

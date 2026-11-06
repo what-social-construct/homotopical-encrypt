@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib.Init
+
+@[expose] public section
 
 /-
   Historical runtime-parity shim for the retired

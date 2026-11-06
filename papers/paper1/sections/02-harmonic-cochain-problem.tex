@@ -36,13 +36,13 @@ In the \HE{} public-sample model, the visible cochain has the form
 Here \(h\) is the degree-one harmonic cochain, equivalently a harmonic
 representative of its degree-one cohomology class, and \(e\) is
 Hodge-structured noise. The hidden-operator ambiguity studied below is the
-condition that the public data does not determine a unique \(\Delta_1\) or
+condition that the public data do not determine a unique \(\Delta_1\) or
 \(\ker(\Delta_1)\).
 The algebraic recovery chain is
 \[
   x
   \longmapsto
-  \{R_{v\to e}\}
+  \{R_{\sigma\to\tau}\}_{\sigma\prec\tau}
   \longmapsto
   (\delta_0,\delta_1)
   \longmapsto
@@ -50,8 +50,9 @@ The algebraic recovery chain is
   \longmapsto
   P_H:C^1\to\ker(\Delta_1),
 \]
-where \(x\in A_\alpha\) is a hidden representative, \(R_{v\to e}\) are the restriction
-maps determining the adjacent coboundaries
+where \(x\in A_\alpha\) is a hidden representative and
+\(R_{\sigma\to\tau}\) are the face-to-coface restriction maps, including
+vertex-to-edge and edge-to-face maps, that determine the adjacent coboundaries
 \[
   \delta_0:C^0\to C^1,
   \qquad
@@ -201,7 +202,7 @@ chain without revealing the restriction maps or the induced operator.
   which makes the three components unique.
 \end{proof}
 
-\subsection{Hodge Encryption And Correctness}
+\subsection{Hodge Encryption and Correctness}
 
 For a hidden representative \(x\), write
 \[
@@ -282,7 +283,41 @@ finite-dimensional real inner-product space \(V\). Operators denoted
 operators. The charts are comparison data; they are not asserted to be
 recoverable from the public classifier.
 
-\subsection{Public And Hidden Data}
+\begin{proposition}[Exact-component obstruction]
+\label{prop:exact-component-obstruction}
+  Suppose \(v\in C^2\) and \(\delta_1^*v\ne0\). On the unrestricted
+  Hodge-noise carrier, the samples
+  \[
+    b_t=t\delta_1^*v,\qquad t\in\mathbb R,
+  \]
+  have zero harmonic message and zero exact component, while
+  \[
+    \|P_{\mathcal H^\perp}b_t\|
+      =|t|\,\|\delta_1^*v\|.
+  \]
+  Thus this full-observation residual does not factor through the exact
+  component. If an extraction depends only on that component and its zero
+  image has target distance zero, it cannot preserve any positive target
+  far radius uniformly on this unrestricted carrier, at any source radius.
+\end{proposition}
+\begin{proof}
+  A coexact vector is orthogonal to \(\mathcal H\), so its orthogonal
+  projection onto \(\mathcal H^\perp\) is itself. Homogeneity gives the
+  displayed norm. The exact-component view is constantly zero, whereas
+  this norm is zero at \(t=0\) and positive at \(t=1\), proving
+  nonfactorization. For any fixed source radius, choose positive \(t\)
+  large enough to exceed it. The extracted value still has distance zero,
+  contradicting every positive target far radius.
+\end{proof}
+
+This statement concerns a map factoring through the decoded exact
+component. Equal decoded components do not by themselves imply equal raw
+payload bytes for an arbitrary decoder. A restricted noise or authenticated
+realization profile may exclude this family; a theorem about such a profile
+requires its explicit hypotheses. The statement does not identify distance
+to exactness with the full HCP residual.
+
+\subsection{Public and Hidden Data}
 
 \begin{definition}[Public observation]\label{def:public-observation}
   A public observation is the data exposed to a verifier or adversary without
@@ -473,7 +508,7 @@ equivalently
   \qquad
   b\notin U_1(\ker\Delta_x).
 \]
-It therefore requires a non-stabilization witness in addition to the
+It therefore requires a nonstabilization witness in addition to the
 equivalence, and it models a public view that neither reveals nor applies the
 private transport \(U_1\). If the observation were transported together with
 the hidden presentation, this particular ambiguity would disappear.
@@ -512,7 +547,7 @@ the hidden presentation, this particular ambiguity would disappear.
   \]
 \end{definition}
 
-The hidden data includes the fibration representative, restriction maps, the
+The hidden data include the fibration representative, restriction maps, the
 induced Laplacian, its harmonic kernel, and private witness/cochain data. Public
 data may bind to this hidden data through commitments or proof-carrying
 artifacts, but it does not present the operative kernel.
@@ -562,7 +597,7 @@ subsequent protocol paper.
 
 \subsection*{Lean Cross-Reference}
 
-\begin{sloppypar}
+\begin{leanledger}
 
 The matrix-level HCP definitions and ambiguity hierarchy are
 \lean{MatrixIsHarmonic}, \lean{PublicProjection},
@@ -597,4 +632,4 @@ in \lean{Sheaf/Equivalence.lean}. The three-part decomposition and concrete
 ambiguity example remain \lean{Hodge_Decomposition_Theorem} and
 \lean{Hodge_Ambiguity} in \lean{Hardness.lean}.
 
-\end{sloppypar}
+\end{leanledger}

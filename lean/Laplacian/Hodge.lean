@@ -1,4 +1,8 @@
-import Laplacian.Projection
+module
+
+public import Laplacian.Projection
+
+@[expose] public section
 
 /-
   Hodge-facing Laplacian interface.
@@ -23,7 +27,7 @@ namespace Hcrypt
 namespace Laplacian
 
 open scoped BigOperators Real Nat Classical Pointwise
-open Matrix Real InnerProductSpace MeasureTheory
+open Matrix Real InnerProductSpace
 
 set_option linter.mathlibStandardSet false
 set_option linter.unusedSectionVars false
@@ -57,7 +61,7 @@ def residualVector
     [W.HasOrthogonalProjection]
     (b : EuclideanSpace ℝ n) :
     EuclideanSpace ℝ n :=
-  _root_.laplacian W *ᵥ b
+  WithLp.toLp 2 (_root_.laplacian W *ᵥ b)
 
 /-- The Hodge/Laplacian disagreement score. -/
 def residual
@@ -80,7 +84,8 @@ theorem residualVector_eq_orthogonalProjection
     (b : EuclideanSpace ℝ n) :
     residualVector W b = (Submodule.orthogonalProjection W.orthogonal) b := by
   unfold residualVector
-  exact laplacian_apply W b
+  simpa only [WithLp.toLp_ofLp] using
+    congrArg (WithLp.toLp 2) (laplacian_apply W b)
 
 /-- The residual score is the norm of the orthogonal component. -/
 theorem residual_eq_orthogonalProjection_norm

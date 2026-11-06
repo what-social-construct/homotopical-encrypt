@@ -1,7 +1,12 @@
-import Proximity.Concrete.CochainPlane.Core
-import Proximity.Concrete.RS.Target
-import Axioms.CochainCommitment.Payload
-import Mathlib.Data.ZMod.Basic
+module
+
+public import Proximity.Concrete.CochainPlane.Core
+public import Proximity.Concrete.RS.Target
+public import Axioms.CochainCommitment.Payload
+public meta import Axioms.CochainCommitment.Payload
+public import Mathlib.Data.ZMod.Basic
+
+@[expose] public section
 
 /-
   Reed-Solomon interpretation of cochain plane shadows.

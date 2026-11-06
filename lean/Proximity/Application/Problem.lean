@@ -1,4 +1,8 @@
-import Proximity.Application.Projection
+module
+
+public import Proximity.Application.Projection
+
+@[expose] public section
 
 /-
   Gap-proximity problem vocabulary.

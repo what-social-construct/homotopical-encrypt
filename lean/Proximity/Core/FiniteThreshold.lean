@@ -1,5 +1,9 @@
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Finset.Range
+module
+
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Finset.Range
+
+@[expose] public section
 
 /-!
 # Finite threshold grids

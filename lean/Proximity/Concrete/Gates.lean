@@ -1,5 +1,9 @@
-import Proximity.Concrete.Gates.Final
-import TCB.Runtime
+module
+
+public import Proximity.Concrete.Gates.Final
+public import TCB.Runtime
+
+@[expose] public section
 
 /-
   Proximity-specific gate certificates.

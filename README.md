@@ -245,12 +245,32 @@ See [CONSENSUS](docs/CONSENSUS.md),
 
 1. [Paper 1](papers/paper1/README.md) is the core mathematics and
    formalization paper: HCP, hidden operators, the discrete-CVP comparison,
-   cochain/public-artifact semantics, and the full proximity projection.
+   cochain/public-artifact semantics, and the conditional source-to-RS
+   projection bridge.
 2. [Paper 2](papers/paper2/README.md) is the protocol and computer-science
    paper: proof-carrying verification, trust boundaries, consensus, security
    games, runtime behavior, and concrete costs.
-3. Paper 3 is the later whitepaper/product paper: system positioning, user
-   model, deployment story, and product-level comparisons.
+3. [Paper 3](papers/proximity-prize/README.md) is the standalone coding paper,
+   *Capacity-Radius Proximity for Smooth-Domain Reed--Solomon Codes*: universal
+   list/MCA results, explicit coding instances, and radius analysis for the
+   existing committed-cochain projection.
+
+Paper 3's universal coding results are independent of the HCP protocol.
+Paper 1 retains the
+application-specific projection bridge; the [shared manuscript parity register](SEMANTIC-PARITY.md)
+records ownership, common notation, and definition issues across the split.
+The [cochain-to-proximity trace](docs/COCHAIN_PROXIMITY_TRACE.md) follows the
+same commitment payload through the actual projection and records the metric
+comparison needed for the commitment-specific radius result.
+The [storage and gate guide](lean/Protocol/Storage/README.md) records the same
+snapshot/cochain context, incremental typed stages and local checkpoint
+lifecycle. The nine generic coding statements have Lean endpoints; the
+selected modular profile now has a proved three-level comparison and a capacity-far
+payload. Stronger Euclidean/HCP comparisons retain their own scope.
+Paper 2's [recommended first-submission scope](papers/paper2/SCOPE.md) centers
+on one proof-carrying state transition; its [initial manuscript](papers/paper2/DRAFT.md)
+records the shared validity and metric contracts. Product/whitepaper material is
+unnumbered future work, outside these three manuscripts.
 
 Detailed comparisons with other privacy, proof, consensus, and
 post-quantum systems are working notes in
@@ -276,7 +296,8 @@ semantic-parity rewrite. See [TRUST_BOUNDARIES](docs/TRUST_BOUNDARIES.md).
 ~~~
 lean/             Lean specifications and proofs
 papers/paper1/    Paper 1 LaTeX source
-papers/paper2/    Paper 2 scope and working notes
+papers/paper2/    Paper 2 initial manuscript, scope and working notes
+papers/proximity-prize/  Paper 3 coding manuscript and semantic parity register
 rust/             Node, oracle, and wallet prototypes
 src/              Suspended legacy Python remainder; not a supported package
 tests/            Historical Python tests and benchmarks
@@ -298,7 +319,7 @@ The principal Lean areas are:
 | **lean/TCB/** | Proof-carrying artifacts and runtime/observation boundaries. |
 | **lean/Gates/** | Exact, spectral, oracle, and stage-gate façades. |
 | **lean/Consensus/** | Reliability and Proof-of-Value composition. |
-| **lean/Protocol/** | Paper 2 protocol specifications, including the initial authenticated weighted-quorum kernel. |
+| **lean/Protocol/** | Paper 2's conservative transition kernel, candidate/evidence/quorum joins, and typed sheaf-storage/projection lifecycle. Concrete profiles, backend refinement and consensus finality remain separate obligations. |
 
 ## Documentation
 
@@ -306,6 +327,7 @@ The principal Lean areas are:
 |---|---|
 | [ARCHITECTURE](docs/ARCHITECTURE.md) | Status pointer for the archived Python-led architecture. |
 | [SEMANTIC_OWNERSHIP](docs/SEMANTIC_OWNERSHIP.md) | Canonical object/morphism vocabulary and formal status. |
+| [Manuscript parity](SEMANTIC-PARITY.md) | HCP/proximity paper ownership, notation dictionary, and proofreading issue table. |
 | [CATEGORICAL_ARCHITECTURE](docs/CATEGORICAL_ARCHITECTURE.md) | Verified Paper 1 diagrams plus explicitly prospective categorical packaging. |
 | [PROXIMITY](docs/PROXIMITY.md) | Plucker/cochain/plane/RS projection outline. |
 | [PROXIMITY_ASSUMPTIONS](docs/PROXIMITY_ASSUMPTIONS.md) | Proven facts versus supplied bridge assumptions. |

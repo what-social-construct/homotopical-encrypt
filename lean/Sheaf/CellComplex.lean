@@ -1,4 +1,10 @@
-import Mathlib
+module
+
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+
+@[expose] public section
 
 /-!
 # Finite oriented cell complexes through degree two
@@ -81,7 +87,8 @@ theorem boundarySqZero_real (v : Vertex) (f : Face) :
     (Finset.univ : Finset Edge).sum
       (fun e => X.incidence01Real v e * X.incidence12Real e f) = 0 := by
   simp only [incidence01Real, incidence12Real]
-  exact_mod_cast X.boundarySqZero v f
+  have h := congrArg (fun z : ℤ => (z : ℝ)) (X.boundarySqZero v f)
+  simpa only [Int.cast_sum, Int.cast_mul, Int.cast_zero] using h
 
 end OrientedTwoComplex
 

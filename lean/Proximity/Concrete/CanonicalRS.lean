@@ -1,18 +1,22 @@
-import Proximity.Concrete.CanonicalRS.Parameters
-import Proximity.Concrete.CanonicalRS.PowerDomain
-import Proximity.Concrete.CanonicalRS.Encoding
-import Proximity.Concrete.CanonicalRS.Target
-import Proximity.Concrete.CanonicalRS.Metric
-import Proximity.Concrete.CanonicalRS.BridgeData
-import Proximity.Concrete.CanonicalRS.PublicCalibration
-import Proximity.Concrete.CanonicalRS.BridgeWitness
-import Proximity.Concrete.CanonicalRS.BridgeCertificate
-import Proximity.Concrete.CanonicalRS.FarSeparation
-import Proximity.Concrete.CanonicalRS.MCA.Line
-import Proximity.Concrete.CanonicalRS.MCA
-import Proximity.Concrete.CanonicalRS.MCA.Concrete
-import Proximity.Concrete.CanonicalRS.MCA.Spectrum
-import Proximity.Concrete.CanonicalRS.CitedBounds
+module
+
+public import Proximity.Concrete.CanonicalRS.Parameters
+public import Proximity.Concrete.CanonicalRS.PowerDomain
+public import Proximity.Concrete.CanonicalRS.Encoding
+public import Proximity.Concrete.CanonicalRS.Target
+public import Proximity.Concrete.CanonicalRS.Metric
+public import Proximity.Concrete.CanonicalRS.BridgeData
+public import Proximity.Concrete.CanonicalRS.PublicCalibration
+public import Proximity.Concrete.CanonicalRS.BridgeWitness
+public import Proximity.Concrete.CanonicalRS.BridgeCertificate
+public import Proximity.Concrete.CanonicalRS.FarSeparation
+public import Proximity.Concrete.CanonicalRS.MCA.Line
+public import Proximity.Concrete.CanonicalRS.MCA
+public import Proximity.Concrete.CanonicalRS.MCA.Concrete
+public import Proximity.Concrete.CanonicalRS.MCA.Spectrum
+public import Proximity.Concrete.CanonicalRS.CitedBounds
+
+@[expose] public section
 
 /-
   Canonical Reed-Solomon parameter regime for the concrete proximity bridge.

@@ -1,4 +1,8 @@
-import Mathlib.Data.Real.Basic
+module
+
+public import Mathlib.Basic.Real.Basic
+
+@[expose] public section
 
 /-!
 # Source-to-code distance calibration

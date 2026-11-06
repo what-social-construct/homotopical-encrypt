@@ -1,5 +1,9 @@
-import Proximity.Core.BlockCode
-import Mathlib.Data.Nat.Choose.Bounds
+module
+
+public import Proximity.Core.BlockCode
+public import Mathlib.Data.Nat.Choose.Bounds
+
+@[expose] public section
 
 /-!
 # Capacity-radius bookkeeping

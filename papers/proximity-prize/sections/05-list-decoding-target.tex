@@ -163,10 +163,20 @@ The exponential alphabet is what places the explicit family in the final
 regime; it is not needed for the universal endpoint equality.
 
 This distinction matters in light of known capacity results.  Generic
-Reed--Solomon evaluation points can achieve list-decoding capacity over
-exponentially large fields with constant list size
-\cite{brakensiekGopiMakam2024}, but generic points do not supply the structured
-smooth domain required here.  Conversely, near-capacity proximity-gap
+Reed--Solomon evaluation points can, for every fixed positive gap
+\(\epsilon\), achieve radius \(1-\rho-\epsilon\) over exponentially large
+fields with a list size bounded in terms of \(\epsilon\)
+\cite{brakensiekGopiMakam2024}. This positive-gap statement differs from the
+exact endpoint equality above, and generic points do not supply the
+structured smooth domain required here. Conversely, near-capacity proximity-gap
 behavior can fail for particular smooth prime-field families
 \cite{kambire2026}.  The theorem above imports neither result: it uses only
 polynomial interpolation and an explicit field-size comparison.
+
+Recent work of Dao, Kominers, and Thaler \cite{daoKominersThaler2026}
+gives quantitative list-decoding and MCA bounds on prescribed evaluation
+domains, including beyond-Johnson bounds under sufficiently large
+characteristic. Those positive-gap results require a separate parameter
+comparison with the exact endpoint and the characteristic-three family
+studied here. The present binomial bounds are not asserted to improve the
+sharper radius-dependent estimates in that literature.

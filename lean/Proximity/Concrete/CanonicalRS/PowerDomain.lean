@@ -1,5 +1,10 @@
-import Proximity.Concrete.CanonicalRS.Parameters
-import Mathlib.GroupTheory.OrderOfElement
+module
+
+public import Proximity.Concrete.CanonicalRS.Parameters
+public meta import Proximity.Concrete.CanonicalRS.Parameters
+public import Mathlib.GroupTheory.OrderOfElement
+
+@[expose] public section
 
 /-
   Certified power-domain construction for the canonical RS regime.

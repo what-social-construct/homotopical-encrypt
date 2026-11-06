@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib.Init
+
+@[expose] public section
 
 /-
   Foundational assumptions for the cochain/Hodge surface.

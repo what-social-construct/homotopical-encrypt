@@ -1,6 +1,6 @@
 \section{Introduction}
 
-\subsection{Motivation And Contributions}
+\subsection{Motivation and Contributions}
 
 \HE{} studies recovery from public homotopy-class data when the Hodge operator
 whose kernel is the message space is not part of the public input.  In a
@@ -16,18 +16,18 @@ recovery object is therefore not a scalar secret or a vector in a published
 lattice; it is the harmonic cochain in the kernel of a hidden Hodge operator.
 
 The operator dependence can be summarized as follows. A hidden representative
-determines the restriction data, which determines the adjacent
+determines the restriction data, which determine the adjacent
 coboundaries and hence the degree-one Hodge operator:
 \[
   x
   \longmapsto
-  \{R_{v\to e}^{x}\}
+  \{R_{\sigma\to\tau}^{x}\}_{\sigma\prec\tau}
   \longmapsto
   (\delta_{0,x},\delta_{1,x})
   \longmapsto
   \Delta_{1,x}
   \longmapsto
-  \bigl(\ker\Delta_{1,x},\pi_{H_x}\bigr).
+  \bigl(\ker\Delta_{1,x},P_{H_x}\bigr).
 \]
 The recovery operation is Hodge-theoretic; ``homotopical'' describes the
 framework in which multiple hidden representatives may occupy the same public
@@ -52,7 +52,7 @@ When accompanied by the stated topology binding and proof relation, they are
 interpreted relative to hidden Hodge data without presenting \(\Delta_1\) or
 \(\ker(\Delta_1)\). The fibration ID is the spectral fingerprint
 \(\operatorname{Spec}_{\mathrm{multi}}(\Delta_1)\), obtained only after the
-relevant Hodge data has been recovered or certified; it is not part of the
+relevant Hodge data have been recovered or certified; it is not part of the
 public classifier value.
 
 The principal notation is fixed globally as follows. Symbols used only inside
@@ -100,10 +100,17 @@ This paper develops this boundary through the following statements.
   \item The supporting formal framework:
     fibrational identity, homotopy classes, exact Hodge/cochain invariants,
     spectral/Tsirelson admissibility, and Heyting-style public judgments.
-  \item A projection chain through Plucker coordinates and cochain commitments to a
+  \item A projection chain through Pl\"ucker coordinates and cochain commitments to a
     canonical Reed--Solomon endpoint, with a conditional far-separation gate and
     an MCA bad-challenge bound imported at an explicit cited theorem boundary.
 \end{enumerate}
+
+The companion manuscript \emph{Capacity-Radius Proximity for Smooth-Domain
+Reed--Solomon Codes} \cite{vanDerVlugt2026proximity} develops the universal
+list-decoding and MCA results independently of HCP. The present paper supplies
+the HCP foundations and the application-specific projection interface. Shared
+coding definitions connect the two papers; the companion's coding theorems do
+not supply the source-to-code far-separation witness required here.
 
 The corresponding Lean definitions, reductions, gates, theorem boundaries,
 paper-to-Lean cross-reference, and file-by-file source coverage are recorded in

@@ -1,4 +1,8 @@
-import Proximity.Concrete.CochainPlane.ReedSolomon
+module
+
+public import Proximity.Concrete.CochainPlane.ReedSolomon
+
+@[expose] public section
 
 /-
   Core projection-chain orchestrator.

@@ -1,2 +1,6 @@
+module
+
 /- Compatibility import; use `Proximity.Concrete.PluckerShadow`. -/
-import Proximity.Concrete.PluckerShadow
+public import Proximity.Concrete.PluckerShadow
+
+@[expose] public section

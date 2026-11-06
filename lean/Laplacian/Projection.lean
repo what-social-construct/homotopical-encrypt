@@ -1,4 +1,9 @@
-import Mathlib
+module
+
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-
   Projection-model Laplacian.
@@ -24,7 +29,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-open Matrix Real InnerProductSpace MeasureTheory
+open Matrix Real InnerProductSpace
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -48,9 +53,17 @@ lemma laplacian_apply (W : Submodule ℝ (EuclideanSpace ℝ n)) [W.HasOrthogona
     simp +decide [ LinearMap.toMatrix_apply ];
     have h_star_proj : W.starProjection b i = ∑ x, W.starProjection (EuclideanSpace.single x 1) i * b x := by
       have h_star_proj : W.starProjection b = ∑ x, b x • W.starProjection (EuclideanSpace.single x 1) := by
-        convert ( W.starProjection ).pi_apply_eq_sum_univ b;
-        aesop;
-      rw [ h_star_proj, Finset.sum_apply, Finset.sum_congr rfl ] ; intros ; simp +decide [ mul_comm ];
+        have h_expand : b = ∑ x, b x • EuclideanSpace.single x 1 := by
+          simpa only [EuclideanSpace.basisFun_repr, EuclideanSpace.basisFun_apply] using
+            ((EuclideanSpace.basisFun n ℝ).sum_repr b).symm
+        calc
+          W.starProjection b = W.starProjection (∑ x, b x • EuclideanSpace.single x 1) :=
+            congrArg W.starProjection h_expand
+          _ = ∑ x, b x • W.starProjection (EuclideanSpace.single x 1) := by
+            simp only [map_sum, map_smul]
+      rw [h_star_proj]
+      simp only [WithLp.ofLp_sum, Finset.sum_apply, WithLp.ofLp_smul,
+        Pi.smul_apply, smul_eq_mul, mul_comm]
     simp +decide [ h_star_proj, sub_mul, Finset.sum_sub_distrib ]
 
 end

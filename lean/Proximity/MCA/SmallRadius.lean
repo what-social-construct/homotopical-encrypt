@@ -1,5 +1,9 @@
-import Proximity.MCA.Pair
-import Proximity.MCA.SpectrumCertificate
+module
+
+public import Proximity.MCA.Pair
+public import Proximity.MCA.SpectrumCertificate
+
+@[expose] public section
 
 /-!
 # Exact small-radius MCA certificates for Reed--Solomon codes

@@ -1,7 +1,11 @@
-import Mathlib.Data.Fintype.Card
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Generic finite block-code vocabulary
@@ -118,7 +122,7 @@ theorem ballAt_relativeRadius_eq_ball
     (w : Word ι α) :
     C.BallAt (relativeRadius (ι := ι) r) w = C.Ball r w := by
   ext c
-  simp only [BallAt, Ball, Set.mem_setOf_eq, and_congr_right_iff]
+  simp only [BallAt, Ball, Set.mem_ofPred_eq, and_congr_right_iff]
   intro _
   exact relativeHammingDistance_le_relativeRadius_iff hlength
 

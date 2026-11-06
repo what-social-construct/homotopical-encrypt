@@ -1,4 +1,8 @@
-import Proximity.Concrete.CanonicalRS.MCA.Line
+module
+
+public import Proximity.Concrete.CanonicalRS.MCA.Line
+
+@[expose] public section
 
 /-
   Concrete paper-facing MCA surface for the canonical RS endpoint.
@@ -293,9 +297,10 @@ theorem pairDistance_lt_of_metric_lt_of_goodChallenge
         Fintype.card (Fin length) := by
     unfold BlockCode.hammingDistance
     unfold ProximityPrize.BlockCode.hammingDistance
-    simpa [S, ne_comm] using
-      (Finset.univ.filter_card_add_filter_neg_card_eq_card
-        (fun i : Fin length => w i = c i))
+    simpa only [S, ne_comm, Finset.card_univ] using
+      (Finset.card_filter_add_card_filter_not
+        (s := (Finset.univ : Finset (Fin length)))
+        (fun i => w i = c i))
   have hlarge : BlockCode.LargeAgreementSetAt δ S := by
     unfold BlockCode.LargeAgreementSetAt BlockCode.coordinateFraction
     have hcardReal :
@@ -304,7 +309,8 @@ theorem pairDistance_lt_of_metric_lt_of_goodChallenge
       exact_mod_cast hpartition
     unfold BlockCode.hammingDistance at hcardReal
     have hcardPos : (0 : ℝ) < (Fintype.card (Fin length) : ℝ) := by
-      simp [length]
+      rw [Fintype.card_fin]
+      norm_num [length]
     have hcomplement :
         1 - BlockCode.relativeHammingDistance c w =
           (S.card : ℝ) / (Fintype.card (Fin length) : ℝ) := by

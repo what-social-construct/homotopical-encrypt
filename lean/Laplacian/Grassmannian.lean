@@ -1,3 +1,5 @@
+module
+
 /-
   Public import surface for the Grassmannian Laplacian proof stack.
 
@@ -20,6 +22,8 @@
   Downstream files can continue to `import Laplacian.Grassmannian`.
 -/
 
-import Laplacian.Grassmannian.SearchSpace
-import Laplacian.Grassmannian.ParametricFamily
-import Laplacian.Grassmannian.Injectivity
+public import Laplacian.Grassmannian.SearchSpace
+public import Laplacian.Grassmannian.ParametricFamily
+public import Laplacian.Grassmannian.Injectivity
+
+@[expose] public section

@@ -1,4 +1,8 @@
-import Proximity.Concrete.RS.ListDecoding
+module
+
+public import Proximity.Concrete.RS.ListDecoding
+
+@[expose] public section
 
 /-
   Correlated agreement and mutual correlated agreement.

@@ -1,4 +1,8 @@
-import Proximity.Concrete.PluckerCochain
+module
+
+public import Proximity.Concrete.PluckerCochain
+
+@[expose] public section
 
 /-
   Concrete Plucker-to-committed-cochain bridge.

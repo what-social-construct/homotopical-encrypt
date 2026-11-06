@@ -181,5 +181,8 @@ cython_debug/
 .cursorindexingignore
 
 # Lean/Lake local build artifacts and dependency cache
-lean/.lake/build/
-lean/.lake/packages/
+lean/.lake/
+.DS_Store
+
+# Generated validation, PDF exports and local review packages
+output/

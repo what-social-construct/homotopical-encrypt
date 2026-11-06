@@ -1,6 +1,10 @@
-import Consensus.Reliability
-import Gates.Spectral
-import Proximity.Projection
+module
+
+public import Consensus.Reliability
+public import Gates.Spectral
+public import Proximity.Projection
+
+@[expose] public section
 
 /-
   Proof of Value scoring contract.

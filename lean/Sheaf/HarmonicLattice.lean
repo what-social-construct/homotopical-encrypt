@@ -1,4 +1,8 @@
-import Sheaf.Integral
+module
+
+public import Sheaf.Integral
+
+@[expose] public section
 
 /-!
 # Harmonic-lattice messages and Hodge-structured cochains
@@ -130,9 +134,11 @@ structure HarmonicLatticePresentation
   lattice : CVP.ExplicitLattice (TotalCoord Edge F.edgeDim) Rank
   latticeVector_mem :
     ∀ z : Rank → ℤ,
-      CVP.latticeVector lattice z ∈ I.harmonicOneLattice
+      WithLp.toLp 2 (CVP.latticeVector lattice z) ∈ I.harmonicOneLattice
   realSpan_eq_harmonic :
-    LinearMap.range (Matrix.mulVecLin lattice.basis) =
+    LinearMap.range
+        ((WithLp.linearEquiv 2 ℝ (TotalCoord Edge F.edgeDim → ℝ)).symm.toLinearMap.comp
+          (Matrix.mulVecLin lattice.basis)) =
       F.harmonicOneSubspace
 
 namespace HarmonicLatticePresentation
@@ -146,7 +152,7 @@ def point
     (H : HarmonicLatticePresentation I Rank)
     (z : Rank → ℤ) :
     I.harmonicOneLattice :=
-  ⟨CVP.latticeVector H.lattice z, H.latticeVector_mem z⟩
+  ⟨WithLp.toLp 2 (CVP.latticeVector H.lattice z), H.latticeVector_mem z⟩
 
 /-- Build a Hodge-encrypted cochain from explicit lattice coefficients. -/
 def encrypt
@@ -200,12 +206,15 @@ theorem squaredDistance_observed_decomposition
       CVP.squaredEuclideanDistance E.observed E.message.1 +
         CVP.squaredEuclideanDistance E.message.1 v := by
   rcases hv with ⟨w, rfl⟩
+  let v : F.C1 := WithLp.toLp 2 (CVP.latticeVector H.lattice w)
+  change CVP.squaredEuclideanDistance E.observed v =
+    CVP.squaredEuclideanDistance E.observed E.message.1 +
+      CVP.squaredEuclideanDistance E.message.1 v
   rw [squaredEuclideanDistance_eq_norm_sq,
     squaredEuclideanDistance_eq_norm_sq,
     squaredEuclideanDistance_eq_norm_sq]
   let h : F.C1 := E.message.1
   let e : F.C1 := E.opening.value
-  let v : F.C1 := CVP.latticeVector H.lattice w
   change ‖h + e - v‖ ^ 2 = ‖h + e - h‖ ^ 2 + ‖h - v‖ ^ 2
   have hvHarmonic : v ∈ F.harmonicOneSubspace :=
     I.harmonic_of_mem_harmonicOneLattice (H.latticeVector_mem w)
@@ -290,7 +299,7 @@ theorem isClosest_observed_iff_eq_point
     have hdist :
         CVP.squaredEuclideanDistance (H.point z).1 v = 0 :=
       le_antisymm hdist_le hdist_nonneg
-    let vE : F.C1 := fun i => v i
+    let vE : F.C1 := WithLp.toLp 2 v
     have hdistE :
         CVP.squaredEuclideanDistance (H.point z).1 vE = 0 := by
       exact hdist
@@ -302,7 +311,7 @@ theorem isClosest_observed_iff_eq_point
     have heq : (H.point z).1 = vE :=
       sub_eq_zero.mp hsub
     funext i
-    exact (congrFun heq i).symm
+    exact (congrArg (fun b : F.C1 => b i) heq).symm
   · rintro rfl
     exact H.point_isClosest_observed z opening
 

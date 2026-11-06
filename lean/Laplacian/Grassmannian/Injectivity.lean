@@ -1,4 +1,8 @@
-import Laplacian.Projection
+module
+
+public import Laplacian.Projection
+
+@[expose] public section
 
 /-
   Injectivity of the Grassmannian Laplacian map.
@@ -25,7 +29,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-open Matrix Real InnerProductSpace MeasureTheory
+open Matrix Real InnerProductSpace
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

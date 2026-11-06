@@ -1,5 +1,11 @@
-import Mathlib
-import Axioms.Foundation
+module
+
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.Tactic
+public import Axioms.Foundation
+
+@[expose] public section
 
 /-
   Grassmannian Consensus Geometry Axioms

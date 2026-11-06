@@ -1,4 +1,9 @@
-import Sheaf.Cellular
+module
+
+public import Sheaf.Cellular
+public import Mathlib.Analysis.InnerProductSpace.Positive
+
+@[expose] public section
 
 /-!
 # Degree-one Hodge operators for the finite cellular-sheaf core

@@ -1,4 +1,8 @@
-import Axioms.Fibration
+module
+
+public import Axioms.Fibration
+
+@[expose] public section
 
 /-!
   Protocol lifecycle for ephemeral representatives.

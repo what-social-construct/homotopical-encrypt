@@ -6,39 +6,39 @@
 \author{Chloe van der Vlugt}
 \date{}
 
+\hypersetup{
+  pdftitle={Homotopical Encryption: Hidden Hodge Operators and the Harmonic Cochain Problem},
+  pdfauthor={Chloe van der Vlugt}
+}
+
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-We introduce:
-(i) the Harmonic Cochain Problem (HCP), the problem of recovering
-the operative component \(h=P_{\ker(\Delta_1)}b\) from public data
-\((\alpha,b)\), where
-\(\Delta_1\) is the degree-one Hodge--Laplacian induced by some hidden
-representative \(x\in A_\alpha=\pi^{-1}(\alpha)\) of the public classifier
-value \(\alpha\).
-This gives adjacent coboundaries \(\delta_0,\delta_1\), the degree-one
-Hodge--Laplacian \(\Delta_1\), the Hodge projection \(P_H\), and the
-Hodge-structured decomposition
-\(b=h+e\) with \(e\in\image(\delta_0)\oplus\image(\delta_1^\ast)\);
-(ii) a CVP comparison that separates the field-linear image
-\(\mathcal V_B(R)=\{Bx:x\in R^n\}\) from the discrete lattice
-\(\Lambda_B=B\mathbb Z^n\): the former can be realized as a linear kernel,
-while for an explicitly supplied inclusion \(\Lambda_B\subseteq W\),
+We introduce the Harmonic Cochain Problem (HCP): recovering the operative
+harmonic component \(h=P_{\ker(\Delta_1)}b\) from public data
+\((\alpha,b)\). The degree-one Hodge--Laplacian \(\Delta_1\) is induced by
+an operative hidden representative \(x\in A_\alpha=\pi^{-1}(\alpha)\) of
+the public classifier value \(\alpha\). Its adjacent coboundaries
+\(\delta_0,\delta_1\) determine the Hodge decomposition \(b=h+e\), with
+\(e\in\image(\delta_0)\oplus\image(\delta_1^\ast)\).
+We compare HCP with the closest-vector problem (CVP), distinguishing the
+field-linear image \(\mathcal V_B(R)=\{Bx:x\in R^n\}\) from the discrete
+lattice \(\Lambda_B=B\mathbb Z^n\). The former can be realized as a linear
+kernel. For an explicitly supplied inclusion \(\Lambda_B\subseteq W\),
 orthogonal projection onto the harmonic subspace \(W\) preserves the closest
-lattice vectors;
-(iii) a hidden-operator separation: a correct known-lattice CVP oracle does not
-uniformly solve public-data HCP when publicly equivalent hidden operators may
-disagree on harmonicity;
-(iv) the supporting formal framework, including
-fibrational identity data, public classifier fibers, exact Hodge/cochain invariants,
-spectral/Tsirelson admissibility, and Heyting-style oracle judgments; and
-(v) a public projection chain through Plucker coordinates and cochain commitments
-to a Reed--Solomon mutual-correlated-agreement endpoint, conditional on an
-explicit far-separation witness and a cited coding-theory bound. The definitions,
-theorem boundaries, and Lean formalization are explicitly indexed in the
-appendices.
+lattice vectors. We then prove a hidden-operator separation: if publicly
+equivalent hidden operators disagree on harmonicity, a correct known-lattice
+CVP oracle cannot supply a uniformly exact public-data HCP solver.
+
+The supporting formal framework includes fibrational identity data, public
+classifier fibers, exact Hodge/cochain invariants, spectral/Tsirelson
+admissibility, and Heyting-style oracle judgments. A public projection chain
+passes through Pl\"ucker coordinates and cochain commitments to a Reed--Solomon
+mutual correlated agreement (MCA) endpoint, conditional on an explicit
+far-separation witness and a cited coding-theory bound. The appendices index
+the definitions, theorem boundaries, and Lean formalization.
 \end{abstract}
 
 \tableofcontents

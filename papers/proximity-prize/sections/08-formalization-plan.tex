@@ -1,25 +1,35 @@
-\section{Formalization And Proof Ledger}
+\section{Formalization and Proof Ledger}
 
 \subsection{Standalone hierarchy}
 
-The intended machine-checked development should separate generic coding
-mathematics from application bridges:
+The machine-checked development separates generic coding mathematics from
+application bridges:
+\begin{leanledger}
 \begin{description}[style=nextline]
   \item[\lean{Proximity/Core/BlockCode}]
-    Relative distance, balls, and worst-case list size.
+    Relative distance, balls, and universal list-bound predicates.
   \item[\lean{Proximity/Core/ReedSolomon}]
-    Smooth-domain RS families and interleaving.
+    Evaluation-domain definitions, RS codes, and interleaving.
   \item[\lean{Proximity/Core/PlanePair}]
     Plane--pair--line equivalences.
   \item[\lean{Proximity/Core/FiniteThreshold}]
     Safe finite grids, greatest-safe and first-unsafe values, and adjacent
     safe/unsafe threshold certificates.
+  \item[\lean{Proximity/Core/Distance} and \lean{Proximity/Core/RadiusShell}]
+    Attained minimum distances, closed and strict nearness, and the exact
+    half-open real intervals between consecutive Hamming-count shells.
   \item[\lean{Proximity/Capacity/Parameters}]
     Explicit \(\epsstar\) and field-size inequalities.
+  \item[\lean{Proximity/Capacity/Realization} and \lean{Proximity/Capacity/ListPhase}]
+    Actual Galois fields, exact-order subgroup domains for every family
+    member, and instantiated list/MCA grid and real-radius conclusions.
   \item[\lean{Proximity/ListDecoding/Capacity}]
     Agreement-set injection, the matching received-word construction, the
     universal endpoint equality, the fractional-target equivalence, and the
     next-shell coefficient-vector injection.
+  \item[\lean{Proximity/ListDecoding/PhaseSplit}]
+    All three fractional-target regimes, the exact endpoint-safe real
+    interval, its excluded supremum, and the largest safe grid count.
   \item[\lean{Proximity/MCA/Definitions}]
     Arbitrary-block-code same-set MCA definitions at count and relative
     radii.
@@ -35,6 +45,9 @@ mathematics from application bridges:
   \item[\lean{Proximity/MCA/BoundaryField}]
     Primality, order-\(4096\) smooth domain, and the exact 128-bit radius
     transition for \(q=2^{128}+192513\).
+  \item[\lean{Proximity/MCA/RealThreshold}]
+    Count/real same-set event correspondence and the boundary-field safe
+    interval \([0,1/4096)\), including supremum and nonattainment.
   \item[\lean{Proximity/MCA/Pair}]
     RS compressed interpolation certificates,
     bad-challenge injection, the uniform cardinality bound, and the
@@ -42,32 +55,67 @@ mathematics from application bridges:
   \item[\lean{Proximity/Application/Calibration}]
     Generic source-validity model, pointwise distance non-collapse, and the
     uniform source-far to target-far implication.
+  \item[\lean{Proximity/Application/DistanceCalibration}]
+    Identification with attained scalar/pair code distance, interpolation
+    covering bounds, and good-challenge farness with its exact boundary.
+  \item[\lean{Proximity/Core/CanonicalLift} and \lean{Proximity/Core/Systematic}]
+    Canonical real-lift spanning, actual systematic interpolation and
+    integer/real syndrome compatibility. These are proved algebraic facts.
+  \item[\lean{Proximity/Core/InterleavedMetric}]
+    Native scalar-coordinate and whole-pair Hamming comparisons, retaining
+    their different normalizations.
+  \item[\lean{Proximity/Core/DeepHole} and \lean{Proximity/Core/FixedChallenge}]
+    Exact scalar/pair/flattened capacity distances for monomial received words,
+    and capacity-far counterexamples to arbitrary fixed-challenge compression.
+  \item[\lean{Proximity/MCA/ZeroDirection} and \lean{Proximity/MCA/Diagonal}]
+    Explicit all-good and single-cancelling-challenge profiles, with their
+    exact same-set bad events.
 \end{description}
-Existing generic definitions may be imported or refactored, but the final
-theorem should not depend on HCP, protocol, consensus, or runtime axiom bundles.
+\end{leanledger}
+The standalone import closure does not depend on HCP, protocol, consensus, or
+runtime axiom bundles.
 Both directions of the capacity-grid equality and its exact fractional-target
 criterion are theorems, not axioms.  The next-shell lower bound is also
 machine-checked.  The pair-MCA theorem and its \(2^{-128}\) family
 instantiation are machine-checked as well.
+The generic family corollaries retain their parameterized forms. The
+realization module additionally constructs \(\mathbb F_{3^{n_u}}\), an
+exact-order \(n_u\) root, and its injectively indexed subgroup for every
+\(u\), and instantiates those corollaries without a realization hypothesis.
 All source modules in this ledger live under \lean{lean/Proximity};
 \lean{lean/ProximityPrize.lean} is only the standalone aggregate import target,
 not a second source hierarchy.
+The detailed object dictionary, theorem correspondence, and remaining-work
+queue are maintained in
+\lean{papers/proximity-prize/SEMANTIC_PARITY.md}.
 
 \subsection{Status ledger}
 
-\begin{center}
-\begin{tabular}{@{}p{0.42\linewidth}p{0.20\linewidth}p{0.28\linewidth}@{}}
+\begingroup
+\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.42\linewidth}
+  >{\raggedright\arraybackslash}p{0.20\linewidth}
+  >{\raggedright\arraybackslash}p{0.28\linewidth}@{}}
 \toprule
 Obligation & Status & Required endpoint\\
 \midrule
-Relative Hamming normalization & Lean-defined & Values in \([0,1]\)\\
+\endfirsthead
+\toprule
+Obligation & Status & Required endpoint\\
+\midrule
+\endhead
+Count/relative ball correspondence & Lean-proved & Equality at \(r/n\),
+  for \(n>0\)\\
 Plane--pair equivalence & Lean-proved & Bijection and Hamming isometry\\
 Plane--affine-line equivalence & Lean-proved & Formal inverse maps\\
-Smooth large-field family & Paper-proved & Explicit subgroup family\\
+Smooth large-field family & Lean-proved & Actual fields and subgroup domains\\
 Capacity-grid list equality & Lean-proved & Universal \(L_m=\binom nk\)\\
 Endpoint fractional criterion & Lean-proved & Target iff
   \(\binom nk\le\epsstar|\F|\)\\
 Next-shell list lower bound & Lean-proved & Explicit \(|\F|^m\) injection\\
+Complete list phase split & Lean-proved & Three regimes and exact real interval\\
+Generic minimum-distance interpretation & Lean-proved & Attained minima,
+  covering and good-challenge farness\\
 Pair-MCA certificate bound & Lean-proved &
   \(|\Bad_{\MCA}|\le\binom n{k+1}\)\\
 MCA target-fraction inequality & Lean-proved &
@@ -83,12 +131,30 @@ Smooth boundary-field instance & Lean-proved &
 Boundary-field MCA threshold & Lean-proved &
   Greatest safe count \(0\); first unsafe count \(1\)\\
 Explicit-family MCA greatest radius & Lean-proved &
-  Full count radius \(n\), hence normalized radius \(1\)\\
-Boundary-field real supremum & Paper-proved &
+  Full count radius \(n\) for the constructed family\\
+Boundary-field real supremum & Lean-proved &
   \(1/4096\), not attained\\
+Native scalar/pair metric comparison & Lean-proved &
+  \(d_C\le d_P\le2d_C\)\\
+Monomial capacity far family & Lean-proved &
+  Scalar, pair and flattened distances \((n-k)/n\)\\
+Explicit challenge profiles & Lean-proved &
+  All-good zero direction; diagonal bad set \(\{-1\}\)\\
+Arbitrary fixed-mix obstruction & Lean-proved &
+  Capacity-far pair with challenged word zero\\
 \bottomrule
-\end{tabular}
-\end{center}
+\end{longtable}
+\endgroup
+
+The generic counting and calibration proofs use the standard Lean axioms
+\lean{propext}, \lean{Classical.choice}, and \lean{Quot.sound}. The
+boundary-field primality, root-order, and threshold certificates additionally
+use \lean{native_decide}; on Lean 4.35 their reports include generated native
+certificate axioms with names containing \mbox{\lean{native_decide.ax_}}.
+The older 4.24 reports
+used \lean{Lean.ofReduceBool} and \lean{Lean.trustCompiler}. These arithmetic
+certificates therefore have a different trust footprint from the generic
+counting arguments.
 
 \subsection{Submission boundary}
 
@@ -104,16 +170,46 @@ A completed claim requires:
 
 \subsection{Remaining interfaces}
 
-The standalone endpoint list-decoding and pair-MCA packages are closed for the
-explicit large-field family.  The generic source-to-pair calibration
+The nine named standalone coding statements now have complete Lean
+endpoints, including the all-parameter smooth-family realization, complete
+list phase split, real safe intervals and their excluded suprema, and the
+generic minimum-distance interpretation. The generic source-to-pair calibration implication
 \[
   d_{\mathrm{source}}(x,\mathrm{valid})\ge\delta
   \Longrightarrow
-  \Delta(\pi(x),\mathcal C^{\equiv2})\ge\delta.
+  \Delta(\pi(x),\mathcal C^{\equiv2})\ge\delta
 \]
-is Lean-proved from its named pointwise non-collapse field.  Pullback distance
+is Lean-proved for an abstract distance model from its named pointwise
+non-collapse field. The distance-calibration module identifies the target
+model with the generic attained pair-code minimum. Pullback distance
 makes that field reflexive; an application choosing a different pre-existing
 source metric supplies one explicit comparison.
 Separately, the intermediate list-decoding regime still requires new ideas if
 one wants an optimal sub-endpoint radius for a supplied field that fails the
 binomial target inequality.
+
+The existing commitment-to-plane extraction, canonical plane/pair Hamming
+isometry, exact transported-code distance equality, and public-observation
+pullback calibration live in the concrete application hierarchy. They are
+described in Section~7 and are outside the standalone
+\lean{ProximityPrize} import closure. Section~7 supplies an explicit modular
+instance of those interfaces. Comparison with an independently chosen HCP or
+frame score remains a separate mathematical question.
+
+The explicit source realization lives in the \lean{Sheaf/SystematicCode}
+modules, including \lean{Modular}. Their actual integral cellular coboundary
+is proved compatible with RS reduction. The storage modules
+\lean{CoordinateCodec}, \lean{NoWrapCalibration} and \lean{ThreeLevelMetrics}
+retain the original payload and separate the restricted Euclidean comparison
+from the global native-metric comparison. The canonical specialization and
+public-observation joins are in \lean{CanonicalSystematic} and
+\lean{CanonicalThreeLevel}; \lean{CanonicalCalibration} composes the existing
+interfaces with their declared near/far scales. These modules live under
+\lean{Protocol/Storage}. Paper 2 records the shared source/observation
+contracts in its initial manuscript text.
+
+These explicit profiles do not identify arbitrary old HCP presentations or
+their frame scores with native modular edit distance. A stronger upstream
+geometric comparison, or a different challenge/observation profile, needs its
+own theorem. Such obligations remain separate from the completed generic
+coding results and do not require Paper~2 consensus or Rust.

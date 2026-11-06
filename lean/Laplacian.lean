@@ -1,3 +1,5 @@
+module
+
 /-
 Grassmannian Laplacian Hardness Proof
 
@@ -21,8 +23,10 @@ The actual formalization is split by concern:
 Downstream files can continue to `import Laplacian`.
 -/
 
-import Laplacian.Projection
-import Laplacian.Hodge
-import Laplacian.Grassmannian
-import Laplacian.Likelihood
-import Laplacian.Spectral
+public import Laplacian.Projection
+public import Laplacian.Hodge
+public import Laplacian.Grassmannian
+public import Laplacian.Likelihood
+public import Laplacian.Spectral
+
+@[expose] public section

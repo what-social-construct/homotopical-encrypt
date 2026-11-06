@@ -1,6 +1,10 @@
-import Proximity.Concrete.CanonicalRS.Encoding
-import Proximity.Concrete.CanonicalRS.Metric
-import Proximity.Application.Calibration
+module
+
+public import Proximity.Concrete.CanonicalRS.Encoding
+public import Proximity.Concrete.CanonicalRS.Metric
+public import Proximity.Application.Calibration
+
+@[expose] public section
 
 /-
   Canonical RS bridge data.
@@ -99,7 +103,8 @@ theorem listDecodingBoundAt (β : BridgeData) :
       β.johnsonRadiusReal
       β.rsTarget.listSize := by
   simpa [rsTarget, target, johnsonRadiusReal,
-    ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius]
+    ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius,
+    Hcrypt.Proximity.BlockCode.relativeRadius]
     using β.bounds.listDecodingBoundAt
 
 /-- The canonical RS endpoint carries the fractional MCA error bound. -/
@@ -109,7 +114,8 @@ theorem mutualCorrelatedAgreementErrorBound (β : BridgeData) :
       β.johnsonRadiusReal
       ((β.rsTarget.threshold : ℝ) / (Fintype.card RSField : ℝ)) := by
   simpa [rsTarget, target, johnsonRadiusReal,
-    ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius]
+    ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius,
+    Hcrypt.Proximity.BlockCode.relativeRadius]
     using β.bounds.mutualCorrelatedAgreementErrorBound
 
 /-- The canonical RS endpoint carries the paper Definition 4.3 MCA bound. -/
@@ -118,7 +124,8 @@ theorem paperMutualCorrelatedAgreementErrorBound (β : BridgeData) :
       β.johnsonRadiusReal
       ((β.rsTarget.threshold : ℝ) / (Fintype.card RSField : ℝ)) := by
   simpa [rsTarget, target, johnsonRadiusReal,
-    ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius]
+    ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius,
+    Hcrypt.Proximity.BlockCode.relativeRadius]
     using β.bounds.paperMutualCorrelatedAgreementErrorBound
 
 /-!

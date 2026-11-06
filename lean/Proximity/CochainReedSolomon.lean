@@ -1,2 +1,6 @@
+module
+
 /- Compatibility import; use `Proximity.Concrete.CochainReedSolomon`. -/
-import Proximity.Concrete.CochainReedSolomon
+public import Proximity.Concrete.CochainReedSolomon
+
+@[expose] public section

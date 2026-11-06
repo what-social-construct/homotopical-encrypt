@@ -1,3 +1,5 @@
+module
+
 /-
 Formal verification of the HCP impossibility and CVP-comparison layer.
 
@@ -56,10 +58,13 @@ Important scope note:
   resolve two hidden operators that are compatible with the same public input;
 -/
 
-import Mathlib
-import CVP
-import HCP
-import Sheaf.HarmonicLattice
+public import Mathlib.CategoryTheory.Category.Basic
+public import Mathlib.Analysis.Matrix.Spectrum
+public import CVP
+public import HCP
+public import Sheaf.HarmonicLattice
+
+@[expose] public section
 
 set_option linter.mathlibStandardSet false
 
@@ -134,8 +139,9 @@ theorem operativeTargets_ne_of_kernelSeparation
           witness.semanticEquivalence).symm }
   have hleftTarget :
       operativeTarget X observation leftWitness = witness.input := by
-    exact HCP.operativeHarmonicComponent_eq_self_of_harmonic
-      (X.laplacian witness.left) witness.input witness.harmonic_left
+    exact congrArg WithLp.ofLp
+      (HCP.operativeHarmonicComponent_eq_self_of_harmonic
+        (X.laplacian witness.left) (WithLp.toLp 2 witness.input) witness.harmonic_left)
   refine ⟨observation, leftWitness, rightWitness, ?_⟩
   intro htargets
   have hrightTarget :
@@ -274,7 +280,7 @@ theorem Hodge_GeneratedSubspace_Reduction
         ∀ v, Matrix.mulVec Δ v = 0 ↔ ∃ x, Matrix.mulVec B x = v := by
       intro v
       have hv := SetLike.ext_iff.mp hΔ v
-      simpa only [LinearMap.mem_ker, LinearMap.mem_range] using hv
+      simpa only [LinearMap.mem_ker, LinearMap.mem_range, Matrix.mulVecLin_apply] using hv
     refine ⟨Δ, hΔ_pointwise, ?_⟩
     exact (hΔ_pointwise (solver Δ t)).mp (h_solver Δ t)
 
@@ -447,35 +453,58 @@ theorem Hodge_Decomposition_Theorem
       have h_decomp : x ∈ LinearMap.ker (Matrix.mulVecLin Δ) ⊔ (LinearMap.range (Matrix.mulVecLin Δ)) := by
         have h_decomp : LinearMap.ker (Matrix.mulVecLin Δ) ⊔ LinearMap.range (Matrix.mulVecLin Δ) = ⊤ := by
           have h_self_adjoint : Matrix.IsHermitian Δ := by
-            simp +zetaDelta at *;
-            simp +decide [ Matrix.IsHermitian, Matrix.transpose_mul ]
+            change (d_prev * d_prev.transpose + d_next.transpose * d_next).IsHermitian
+            simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
+              (Matrix.isHermitian_mul_conjTranspose_self d_prev).add
+                (Matrix.isHermitian_conjTranspose_mul_self d_next)
           have h_decomp : ∀ x : m → ℝ, x ∈ LinearMap.ker (Matrix.mulVecLin Δ) ⊔ LinearMap.range (Matrix.mulVecLin Δ) := by
             intro x
-            have h_decomp : x = ∑ i, (h_self_adjoint.eigenvectorBasis.repr x i) • h_self_adjoint.eigenvectorBasis i := by
-              simpa using (h_self_adjoint.eigenvectorBasis.sum_repr x).symm
+            have h_decomp : x = ∑ i,
+                (h_self_adjoint.eigenvectorBasis.repr (WithLp.toLp 2 x) i) •
+                  (h_self_adjoint.eigenvectorBasis i).ofLp := by
+              have hcoords := congrArg (fun y : EuclideanSpace ℝ m => y.ofLp)
+                (h_self_adjoint.eigenvectorBasis.sum_repr (WithLp.toLp 2 x))
+              simpa only [WithLp.ofLp_sum, WithLp.ofLp_smul, WithLp.ofLp_toLp] using
+                hcoords.symm
             rw [ h_decomp ];
             refine' Submodule.sum_mem _ fun i _ => _;
             by_cases hi : h_self_adjoint.eigenvalues i = 0;
             · have h_eigenvalue_zero : Δ.mulVec (h_self_adjoint.eigenvectorBasis i) = 0 := by
                 have := h_self_adjoint.mulVec_eigenvectorBasis i; simp +decide [ hi ] at this; exact this;
-              exact Submodule.mem_sup_left (by simp [h_eigenvalue_zero]);
+              exact Submodule.mem_sup_left
+                (by simp [Matrix.mulVecLin_apply, Matrix.mulVec_smul, h_eigenvalue_zero]);
             · have h_eigenvalue : Δ.mulVec (h_self_adjoint.eigenvectorBasis i) = h_self_adjoint.eigenvalues i • h_self_adjoint.eigenvectorBasis i := by
                 convert h_self_adjoint.mulVec_eigenvectorBasis i using 1;
-              have h_eigenvalue : h_self_adjoint.eigenvectorBasis i ∈ LinearMap.range (Matrix.mulVecLin Δ) := by
-                use (1 / h_self_adjoint.eigenvalues i) • h_self_adjoint.eigenvectorBasis i;
-                simp +decide [ hi, h_eigenvalue ];
+              have h_eigenvalue : (h_self_adjoint.eigenvectorBasis i).ofLp ∈
+                  LinearMap.range (Matrix.mulVecLin Δ) := by
+                use (1 / h_self_adjoint.eigenvalues i) •
+                  (h_self_adjoint.eigenvectorBasis i).ofLp
+                simp [Matrix.mulVecLin_apply, Matrix.mulVec_smul, hi, h_eigenvalue,
+                  smul_smul]
               exact Submodule.mem_sup_right ( Submodule.smul_mem _ _ h_eigenvalue );
           exact eq_top_iff.mpr fun x hx => h_decomp x;
         aesop;
-      refine' Submodule.mem_sup.mpr _;
-      rw [ Submodule.mem_sup ] at h_decomp;
-      obtain ⟨ y, hy, z, hz, rfl ⟩ := h_decomp;
-      refine' ⟨ y, hy, z, _, rfl ⟩;
-      obtain ⟨ w, rfl ⟩ := hz;
-      simp +zetaDelta at *;
-      exact Submodule.mem_sup.mpr ⟨ _, ⟨ Matrix.vecMul w d_prev, rfl ⟩, _, ⟨ Matrix.vecMul ( Matrix.mulVec d_next w ) 1, by aesop ⟩, by aesop ⟩;
-    simp_all +decide [ Submodule.eq_top_iff', Submodule.mem_sup ];
-    obtain ⟨ y, hy, a, b, rfl ⟩ := h_kernel b; exact ⟨ y, d_prev.mulVec a, d_next_adj.mulVec b, by ring, ⟨ a, rfl ⟩, ⟨ b, rfl ⟩, hy ⟩ ;
+      obtain ⟨y, hy, z, hz, hyz⟩ := Submodule.mem_sup.mp h_decomp
+      refine Submodule.mem_sup.mpr ⟨y, hy, z, ?_, hyz⟩
+      obtain ⟨w, rfl⟩ := hz
+      apply Submodule.mem_sup.mpr
+      refine ⟨d_prev.mulVec (d_prev_adj.mulVec w), ?_,
+        d_next_adj.mulVec (d_next.mulVec w), ?_, ?_⟩
+      · exact Submodule.mem_map.mpr ⟨d_prev_adj.mulVec w, trivial, rfl⟩
+      · exact Submodule.mem_map.mpr ⟨d_next.mulVec w, trivial, rfl⟩
+      · simp only [Δ, Matrix.mulVecLin_apply, Matrix.add_mulVec, Matrix.mulVec_mulVec]
+    have hb : b ∈ LinearMap.ker (Matrix.mulVecLin Δ) ⊔
+        (Submodule.map (Matrix.mulVecLin d_prev) ⊤ +
+          Submodule.map (Matrix.mulVecLin d_next_adj) ⊤) := by
+      rw [h_kernel]
+      trivial
+    obtain ⟨h, hh, e, he, hhe⟩ := Submodule.mem_sup.mp hb
+    obtain ⟨e1, he1, e2, he2, he12⟩ := Submodule.mem_sup.mp he
+    refine ⟨h, e1, e2, ?_, he1, he2, hh⟩
+    calc
+      b = h + e := hhe.symm
+      _ = h + (e1 + e2) := congrArg (fun y => h + y) he12.symm
+      _ = h + e1 + e2 := (add_assoc _ _ _).symm
   refine' ⟨ h, e1, e2, he1, _, _, _, _ ⟩ <;> simp_all +decide [ MatrixIsHarmonic ];
   · tauto;
   · grind;
@@ -629,7 +658,7 @@ theorem CVP_Oracle_Insufficient_For_Public_Hodge_Solving
 def cvpVectorAsEuclidean
     {m : Type} [Fintype m]
     (v : _root_.CVP.AmbientVector m) : EuclideanSpace ℝ m :=
-  v
+  WithLp.toLp 2 v
 
 /-- Forget the Euclidean norm structure while retaining the coordinates. -/
 def cvpVectorOfEuclidean
@@ -646,6 +675,14 @@ theorem cvp_squaredEuclideanDistance_eq_norm_sq
   rw [EuclideanSpace.norm_sq_eq]
   simp [_root_.CVP.squaredEuclideanDistance, cvpVectorAsEuclidean,
     Real.norm_eq_abs, sq_abs]
+
+private theorem matrix_harmonic_iff_projection_isHarmonic_coordinates
+    {n : Type} [Fintype n] [DecidableEq n]
+    (W : Submodule ℝ (EuclideanSpace ℝ n)) [W.HasOrthogonalProjection]
+    (h : EuclideanSpace ℝ n) :
+    MatrixIsHarmonic (_root_.laplacian W) h ↔ Hcrypt.Laplacian.IsHarmonic W h := by
+  simp only [MatrixIsHarmonic, Hcrypt.Laplacian.IsHarmonic,
+    Hcrypt.Laplacian.residualVector, WithLp.toLp_eq_zero]
 
 /--
 The data needed to compare Hodge projection with genuine discrete CVP.
@@ -690,10 +727,9 @@ theorem latticeVector_isHarmonic
     (z : n → ℤ) :
     MatrixIsHarmonic (_root_.laplacian H.harmonicSubspace)
       (_root_.CVP.latticeVector H.lattice z) := by
-  change Hcrypt.Laplacian.IsHarmonic H.harmonicSubspace
-    (cvpVectorAsEuclidean (_root_.CVP.latticeVector H.lattice z))
-  exact Hcrypt.Laplacian.isHarmonic_of_mem H.harmonicSubspace
-    (H.latticeVector_mem z)
+  exact (matrix_harmonic_iff_projection_isHarmonic_coordinates H.harmonicSubspace
+    (cvpVectorAsEuclidean (_root_.CVP.latticeVector H.lattice z))).2
+    (Hcrypt.Laplacian.isHarmonic_of_mem H.harmonicSubspace (H.latticeVector_mem z))
 
 /-- The projected CVP target is the harmonic projection for `Δ_W`. -/
 theorem projectedTarget_isHarmonic
@@ -703,10 +739,10 @@ theorem projectedTarget_isHarmonic
     (t : _root_.CVP.AmbientVector m) :
     MatrixIsHarmonic (_root_.laplacian H.harmonicSubspace)
       (H.projectedTarget t) := by
-  change Hcrypt.Laplacian.IsHarmonic H.harmonicSubspace
-    (H.harmonicSubspace.starProjection (cvpVectorAsEuclidean t))
-  exact Hcrypt.Laplacian.harmonicProjection_isHarmonic H.harmonicSubspace
-    (cvpVectorAsEuclidean t)
+  exact (matrix_harmonic_iff_projection_isHarmonic_coordinates H.harmonicSubspace
+    (H.harmonicSubspace.starProjection (cvpVectorAsEuclidean t))).2
+    (Hcrypt.Laplacian.harmonicProjection_isHarmonic H.harmonicSubspace
+      (cvpVectorAsEuclidean t))
 
 /--
 Pythagorean bridge for a lattice point `v ∈ Λ ⊆ W`:
@@ -775,7 +811,8 @@ theorem isClosestLatticeVector_iff_projectedTarget
     have hvd := H.squaredDistance_projection_decomposition t v hv
     have hwd := H.squaredDistance_projection_decomposition t w hw
     rw [hvd, hwd]
-    exact add_le_add_left (hmin w hw) _
+    have h := hmin w hw
+    linarith
 
 /-- Instance-level form of the explicit HCP/CVP bridge. -/
 theorem solution_iff_projectedTarget
@@ -854,7 +891,7 @@ theorem matrix_harmonic_iff_projection_isHarmonic
   (h : EuclideanSpace ℝ n) :
   MatrixIsHarmonic (_root_.laplacian W) h ↔
     Hcrypt.Laplacian.IsHarmonic W h := by
-  rfl
+  exact matrix_harmonic_iff_projection_isHarmonic_coordinates W h
 
 theorem Hodge_Projection_Is_ClosestHarmonic
   {n : Type} [Fintype n] [DecidableEq n]
@@ -926,11 +963,27 @@ def CategoricallyEquivalentFibrations
 structure Wrapper (n : ℕ) (E : Type u) where
   val : E
 
-instance (n : ℕ) (E : Type u) [Category.{v} E] : Category (Wrapper n E) :=
-  InducedCategory.category Wrapper.val
+/-- The tagged copy retains the original category's actual morphisms. -/
+instance (n : ℕ) (E : Type u) [Category.{v} E] : Category.{v} (Wrapper n E) where
+  Hom X Y := X.val ⟶ Y.val
+  id X := 𝟙 X.val
+  comp f g := f ≫ g
+  id_comp f := Category.id_comp f
+  comp_id f := Category.comp_id f
+  assoc f g h := Category.assoc f g h
 
-instance (n : ℕ) (E : Type u) [Category.{v} E] : Category.{v} (Wrapper n E) :=
-  InducedCategory.category Wrapper.val
+/-- Functors between a category and its tagged copy. -/
+def ToWrapper (n : ℕ) (E : Type u) [Category.{v} E] : E ⥤ Wrapper n E where
+  obj X := ⟨X⟩
+  map f := f
+  map_id := by intro X; rfl
+  map_comp := by intro X Y Z f g; rfl
+
+def FromWrapper (n : ℕ) (E : Type u) [Category.{v} E] : Wrapper n E ⥤ E where
+  obj W := W.val
+  map f := f
+  map_id := by intro W; rfl
+  map_comp := by intro W Y Z f g; rfl
 
 /-- Bundled Grothendieck fibration over B. -/
 structure Fibration (B : Type u) [Category.{v} B] where
@@ -944,7 +997,7 @@ attribute [instance] Fibration.str Fibration.is_fib
 /-- Construct a copy of a fibration tagged with a natural number. -/
 def FibrationCopy (F : Fibration B) (n : ℕ) : Fibration B :=
   let E' := Wrapper n F.E
-  let p' : E' ⥤ B := CategoryTheory.inducedFunctor Wrapper.val ⋙ F.p
+  let p' : E' ⥤ B := FromWrapper n F.E ⋙ F.p
   {
     E := E'
     p := p'
@@ -956,25 +1009,14 @@ def FibrationCopy (F : Fibration B) (n : ℕ) : Fibration B :=
       exact f;
       · exact hf;
       · intro W g h hg
-        simpa using (hf' W.val g h hg)
+        change ∃! k : W.val ⟶ U, F.p.map k = h ∧ k ≫ f = g
+        exact hf' W.val g h hg
   }
-
-/-- Functors between a category and its wrapper. -/
-def ToWrapper (n : ℕ) (E : Type u) [Category.{v} E] : E ⥤ Wrapper n E where
-  obj X := ⟨X⟩
-  map f := f
-  map_id := by intro X; rfl
-  map_comp := by intro X Y Z f g; rfl
-
-def FromWrapper (n : ℕ) (E : Type u) [Category.{v} E] : Wrapper n E ⥤ E where
-  obj W := W.val
-  map f := f
-  map_id := by intro W; rfl
-  map_comp := by intro W Y Z f g; rfl
 
 /-- A tagged copy has a categorically equivalent total category over the base. -/
 lemma copy_categoricallyEquivalent_thm (F : Fibration B) (n : ℕ) :
     CategoricallyEquivalentFibrations F.p (FibrationCopy F n).p := by
+  change CategoricallyEquivalentFibrations F.p (FromWrapper n F.E ⋙ F.p)
   refine ⟨ToWrapper n F.E, FromWrapper n F.E, ?_, ?_, ?_, ?_⟩
   · -- F.p = ToWrapper ⋙ (FibrationCopy F n).p
     rfl
@@ -982,20 +1024,15 @@ lemma copy_categoricallyEquivalent_thm (F : Fibration B) (n : ℕ) :
     rfl
   · refine ⟨NatIso.ofComponents (fun X => Iso.refl X) ?_⟩
     intro X Y f
-    calc
-      (ToWrapper n F.E).map ((FromWrapper n F.E).map f) ≫ 𝟙 Y
-          = f ≫ 𝟙 Y := by rfl
-      _ = f := by simp
-      _ = 𝟙 X ≫ f := by simp
+    change f ≫ 𝟙 Y.val = 𝟙 X.val ≫ f
+    exact (Category.comp_id (show X.val ⟶ Y.val from f)).trans
+      (Category.id_comp (show X.val ⟶ Y.val from f)).symm
   · refine ⟨NatIso.ofComponents (fun X => Iso.refl X) ?_⟩
     intro X Y f
-    calc
-      (FromWrapper n F.E).map ((ToWrapper n F.E).map f) ≫ 𝟙 Y
-          = f ≫ 𝟙 Y := by rfl
-      _ = f := by simp
-      _ = 𝟙 X ≫ f := by simp
+    change f ≫ 𝟙 Y = 𝟙 X ≫ f
+    simp
 
 /-- The induced functor composition is a Grothendieck fibration. -/
 lemma FibrationCopy_is_Grothendieck (F : Fibration B) (n : ℕ) :
-  GrothendieckFibration (CategoryTheory.inducedFunctor (Wrapper.val : Wrapper n F.E → F.E) ⋙ F.p) := by
+  GrothendieckFibration (FromWrapper n F.E ⋙ F.p) := by
     apply FibrationCopy F n |>.is_fib

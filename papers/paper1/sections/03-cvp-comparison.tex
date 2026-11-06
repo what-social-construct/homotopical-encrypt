@@ -1,4 +1,4 @@
-\section{CVP Comparison And Kernel Ambiguity}
+\section{CVP Comparison and Kernel Ambiguity}
 
 CVP asks for a closest vector in an explicitly presented lattice. HCP asks for
 the projection of \(b\) into the kernel of the operative hidden Hodge operator.
@@ -55,7 +55,7 @@ verifier-facing artifacts unless extra hidden-operator information is supplied.
 
 \subsection{Presented Linear Images}
 
-The field-linear image of \(B\) is a different object:
+Let \(R\) be a field. The field-linear image of \(B\) is a different object:
 \[
   \mathcal V_B(R)=BR^n=\{Bx:x\in R^n\}.
 \]
@@ -86,11 +86,11 @@ returns \(S(\Delta,t)\in\mathcal V_B(R)\).
 \begin{proof}
   Let \(B\in R^{n\times n}\) be an explicit generator matrix over a field
   \(R\), set
-	  \[
-	    \mathcal V_B(R)=\{Bx:x\in R^n\}\subseteq R^n,
-	  \]
-	  and let \(t\in R^n\) be the solver input. We construct a matrix \(\Delta\)
-	  with
+    \[
+      \mathcal V_B(R)=\{Bx:x\in R^n\}\subseteq R^n,
+    \]
+    and let \(t\in R^n\) be the solver input. We construct a matrix \(\Delta\)
+    with
   \[
     \ker(\Delta)=\mathcal V_B(R).
   \]
@@ -144,13 +144,13 @@ returns \(S(\Delta,t)\in\mathcal V_B(R)\).
     \exists x,\ Bx=y .
   \]
 
-	  Let \(S:R^{n\times n}\times R^n\to R^n\) be a presented-operator Hodge
+    Let \(S:R^{n\times n}\times R^n\to R^n\) be a presented-operator Hodge
   solver satisfying
   \[
     \forall \Delta\, b,\qquad
     \Delta(S(\Delta,b))=0.
   \]
-	  Applying this to the \(\Delta\) constructed above and \(b=t\) gives
+    Applying this to the \(\Delta\) constructed above and \(b=t\) gives
   \[
     \Delta(S(\Delta,t))=0.
   \]
@@ -158,7 +158,7 @@ returns \(S(\Delta,t)\in\mathcal V_B(R)\).
   \[
     Bx=S(\Delta,t).
   \]
-	  Hence \(S(\Delta,t)\in\mathcal V_B(R)\).
+    Hence \(S(\Delta,t)\in\mathcal V_B(R)\).
 \end{proof}
 
 When \(R=\mathbb R\), if a presented-operator solver additionally minimizes
@@ -320,7 +320,7 @@ not determine which hidden kernel is compatible with the public data.
 
 For every dimension at least two, the Lean development also constructs the
 elementary matrix witness \(L=0\),
-\(L'=\operatorname{diag}(1,0,\ldots,0)\), and \(b=e_i\) under the constant
+\(L'=\operatorname{diag}(1,0,\ldots,0)\), and \(b=e_1\) under the constant
 projection to a one-point public type. This is a sanity example showing that
 the abstract ambiguity predicates are inhabited. It is not used as evidence
 that a concrete HCP realization admits the required semantic and Hodge
@@ -329,6 +329,7 @@ extension witness; that witness is an explicit hypothesis of
 
 \subsection*{Lean Cross-Reference}
 
+\begin{leanledger}
 The discrete CVP definitions correspond to \lean{CVP.ExplicitLattice},
 \lean{CVP.Instance}, \lean{CVP.InExplicitLattice},
 \lean{CVP.squaredEuclideanDistance},
@@ -349,3 +350,4 @@ closest-harmonic and hidden-operator surfaces are
 \lean{Hcrypt.HCPBridge.SolverExactOnHarmonic},
 \lean{Hcrypt.HCPBridge.no_solver_on_kernelSeparation}, and
 \lean{Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation}.
+\end{leanledger}

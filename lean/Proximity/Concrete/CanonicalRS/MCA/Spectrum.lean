@@ -1,5 +1,10 @@
-import Proximity.Concrete.CanonicalRS.PowerDomain
-import Proximity.MCA.SmallRadius
+module
+
+public import Proximity.Concrete.CanonicalRS.PowerDomain
+public meta import Proximity.Concrete.CanonicalRS.PowerDomain
+public import Proximity.MCA.SmallRadius
+
+@[expose] public section
 
 /-!
 # Exact small-radius MCA spectrum for the canonical Reed--Solomon code

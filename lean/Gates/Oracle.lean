@@ -1,4 +1,8 @@
-import Axioms.OracleModality
+module
+
+public import Axioms.OracleModality
+
+@[expose] public section
 
 /-
   Oracle gate.

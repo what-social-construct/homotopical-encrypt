@@ -1,4 +1,8 @@
-import Proximity.Core.BlockCode
+module
+
+public import Proximity.Core.BlockCode
+
+@[expose] public section
 
 /-!
 # Planes, pair words, and affine-line presentations

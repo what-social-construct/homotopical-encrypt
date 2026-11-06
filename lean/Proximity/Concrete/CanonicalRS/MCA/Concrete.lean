@@ -1,4 +1,8 @@
-import Proximity.Concrete.CanonicalRS.MCA
+module
+
+public import Proximity.Concrete.CanonicalRS.MCA
+
+@[expose] public section
 
 /-
   Concrete canonical MCA instance.
@@ -183,11 +187,12 @@ theorem widthOneCodeword_iff
     widthOneBlockCode.Codeword w ↔ blockCode.Codeword (ofWidthOneWord w) := by
   constructor
   · intro hw
-    simpa [widthOneBlockCode, ofWidthOneWord, ofWidthOneSymbol]
-      using hw ⟨0, by decide⟩
+    unfold blockCode ofWidthOneWord ofWidthOneSymbol
+    exact hw ⟨0, by decide⟩
   · intro hw j
     fin_cases j
-    simpa [widthOneBlockCode, ofWidthOneWord, ofWidthOneSymbol] using hw
+    unfold blockCode ofWidthOneWord ofWidthOneSymbol at hw
+    exact hw
 
 /--
 Closeness on a coordinate set is unchanged by passing between scalar canonical
@@ -254,7 +259,9 @@ theorem widthOneInterleavedCloseOnSet_iff
     refine ⟨fun i k => toWidthOneSymbol (c i k), ?_, ?_⟩
     · intro k
       exact (widthOneCodeword_iff (fun i => toWidthOneSymbol (c i k))).2
-        (by simpa [ofWidthOneWord, ofWidthOneSymbol, toWidthOneSymbol] using hc k)
+        (by
+          unfold ofWidthOneWord ofWidthOneSymbol toWidthOneSymbol
+          exact hc k)
     · intro i hi
       funext k j
       let hk := congrFun (hagree i hi) k

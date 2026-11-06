@@ -1,4 +1,8 @@
-import Proximity.Capacity.Parameters
+module
+
+public import Proximity.Capacity.Parameters
+
+@[expose] public section
 
 /-!
 # Shared capacity regime

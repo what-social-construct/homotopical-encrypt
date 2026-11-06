@@ -1,4 +1,4 @@
-\section{Cochain Commitments: Private Witnesses And Public Artifacts}\label{sec:public-artifacts-commitments}
+\section{Cochain Commitments: Private Witnesses and Public Artifacts}\label{sec:public-artifacts-commitments}
 
 This section treats cochain commitments at the boundary between private witness
 data and public-facing artifacts. In this section, ``artifact'' means
@@ -11,16 +11,17 @@ These public-facing objects are the scaffolding for transparency in action and
 anonymity in identity: actions are exposed through auditable public artifacts,
 while identities remain inside hidden representatives and public equivalence
 classes.
-This section realizes the abstract public observation \((\alpha,b)\) of
-\cref{def:public-observation}: the public classifier value is \(\alpha\), while
-accepted cochain payloads, specified partial openings, and proof-carrying
-statements supply the cochain-facing datum \(b\) without presenting the hidden
-representative, Hodge--Laplacian, or harmonic kernel.
+This section describes the artifact layer from which an instantiation may
+obtain the abstract public observation \((\alpha,b)\) of
+\cref{def:public-observation}. The public classifier supplies \(\alpha\).
+Obtaining the vector \(b\) from a payload, partial opening, or proof-carrying
+statement requires an explicit opening, extraction, or verified-evaluation
+path, as specified there.
 
 \subsection{Cochain Commitments}
 
-Cochain commitment payloads provide the public handle on hidden cochain data. The
-cochain data itself lives at three different visibility levels. Fix a hidden
+Cochain commitment payloads provide the public handle on hidden cochain data.
+These data have three visibility levels. Fix a hidden
 representative \(x\in A_\alpha\), with induced cochain complex \(C_x^\bullet\),
 coboundaries \(\delta_0,\delta_1\), and Hodge--Laplacian \(\Delta_x\).
 \begin{enumerate}[label=(\roman*)]
@@ -50,6 +51,13 @@ statement; the commitment payload records the public residue edge vector
 path explicitly exposes a specified part of it. The canonical payload is a
 mathematical object with a modulus, public residue edge values, declared edge
 count, and topology hash.
+
+The exact commitment payload and the HCP sample \(b=h+e\) have distinct
+roles. In the same Hodge system,
+\(P_H\operatorname{dec}_S(c)=P_H\delta_0a=0\). Thus a decoded exact payload
+alone cannot represent an HCP sample with a nonzero harmonic message. An
+instantiation relating the two must specify the additional observation or
+witness relation.
 
 \begin{definition}[Cochain commitment payload]\label{def:cochain-commitment-payload}
   A cochain commitment payload is a tuple
@@ -197,7 +205,8 @@ space with the quotient \(C^1/qC^1\).
       \[
         \operatorname{Ver}_\tau(c,S,o_S)=1,
       \]
-      then every revealed incidence satisfies the same coboundary equation
+      then every edge \(e=(u,v)\) with both endpoints in \(S\) satisfies
+      the same coboundary equation
       \(c_e=R_{v\to e}a'_v-R_{u\to e}a'_u\).
     \item Position binding: the public topology hash fixes the vertex and edge
       positions with respect to which openings are interpreted.
@@ -205,7 +214,8 @@ space with the quotient \(C^1/qC^1\).
 \end{definition}
 
 \begin{definition}[Cohomological MAC boundary]\label{def:cohomological-mac-boundary}
-  A cohomological MAC boundary is well formed if and only if all of the
+  A cohomological message authentication code (MAC) boundary is well formed
+  if and only if all of the
   following hold:
   \begin{enumerate}[label=(\roman*)]
     \item The key determines a Hodge--Laplacian \(\Delta\) and harmonic
@@ -228,8 +238,9 @@ space with the quotient \(C^1/qC^1\).
       \[
         \operatorname{Ver}_\Delta(m,\nu,T_{\Delta,\nu}(m))=1.
       \]
-    \item Unforgeability: producing a verifying tag without the key is exactly
-      the stated hidden-Hodge projection condition for this interface.
+    \item Unforgeability: resistance to producing a verifying tag without the
+      key is a separate cryptographic assumption; the displayed projection
+      equation specifies tag validity.
     \item Key binding: accepted tags are bound to the chosen
       Hodge--Laplacian key.
     \item Determinism: the same key, message, and nonce determine the same tag.
@@ -337,7 +348,7 @@ root commits to a batch or storage view; a transcript hash domain-separates a
 proof statement. None of these hashes asserts validity by itself. Validity
 comes from the condition or proof attached to the hashed object.
 
-\subsection{Lossy Projection And Preserved Structure}
+\subsection{Lossy Projection and Preserved Structure}
 
 Storage roots, topology hashes, cochain roots, nullifiers, and proof objects are
 public artifacts in the stack. Full sheaf, cochain, and fibration data remain
@@ -383,16 +394,17 @@ by the presence of a hash, root, or commitment payload.
 
 Byte parsing, allocation bounds, canonical encoding, concrete hash functions,
 domain separation, storage inclusion proofs, proof verification, state updates,
-and ephemeral-fiber lifecycle properties are TCB requirements. They are boundary
+and ephemeral-fiber lifecycle properties are trusted computing base (TCB)
+requirements. They are boundary
 conditions, not part of the mathematical cochain commitment payload.
 
 For HCP, the concrete sources for the abstract observation \((\alpha,b)\) are:
 \(\alpha\) is the public classifier value, and \(b\) is the cochain-facing datum
 supplied by an accepted cochain payload, opening, or proof-carrying statement.
-For \(x\in A_\alpha\), private restriction data determines \(C_x^\bullet\),
+For \(x\in A_\alpha\), private restriction data determine \(C_x^\bullet\),
 \(\delta_0,\delta_1\), \(\Delta_x\), and the recovery target
 \[
-  h=\pi_{H_x}(b)\in\ker(\Delta_x),
+  h=P_{H_x}(b)\in\ker(\Delta_x),
 \]
 when \(b\in C_x^1\).
 
@@ -404,7 +416,7 @@ certified the hidden Hodge data, the fibration ID is
   \operatorname{FID}(x)=\operatorname{Spec}_{\mathrm{multi}}(\Delta_x).
 \]
 
-\subsection{Plucker Coordinates}
+\subsection{Pl\"ucker Coordinates}
 
 Let \(V\) be a finite-dimensional vector space over a field \(K\), and let
 \(1\le r\le \dim V\). A private rank-\(r\) frame
@@ -415,29 +427,33 @@ spans an \(r\)-plane
 \[
   W=\langle w_1,\ldots,w_r\rangle\in \operatorname{Gr}(r,V).
 \]
-The Plucker embedding sends this Grassmannian point to
+The Pl\"ucker embedding sends this Grassmannian point to
 \[
   \operatorname{Pl}(W)
   =
   [w_1\wedge\cdots\wedge w_r]
   \in \mathbb P(\bigwedge^r V).
 \]
-A Plucker coordinate is the public geometric datum obtained from such a private
+A Pl\"ucker coordinate is the public geometric datum obtained from such a private
 frame: a representative of \(\operatorname{Pl}(W)\), or a digest-bound
 canonical encoding of such a representative, equipped with the relevant
 projective well-formedness conditions. It is required to respect projective
-rescaling and the Plucker relations; changing the private frame for the same
-Grassmannian point does not change the normalized Plucker coordinate.
-This is the Plucker coordinate used by the proximity projection, not the HCP
+rescaling and the Pl\"ucker relations; changing the private frame for the same
+Grassmannian point does not change the normalized Pl\"ucker coordinate.
+This is the Pl\"ucker coordinate used by the proximity projection, not the HCP
 public class label \(\alpha\) fixed above.
 
-Thus the frame \(\mathcal F\) is witness material, while the Plucker coordinate is the
+Thus the frame \(\mathcal F\) is witness material, while the Pl\"ucker coordinate is the
 verifier-facing projective datum. It is not itself the witness. It can be bound
 by a hash, root, or proof-carrying statement, but the actual witness remains
 the hidden frame or representative.
 
+The full projective coordinate determines \(W\), although it forgets the
+choice of frame. Disclosing that coordinate therefore has a different
+visibility consequence from disclosing only a digest or a proof about it.
+
 In the proximity specialization of \cref{sec:rs-proximity-projection}, the cochain
-commitment remains the public committed payload. The Plucker coordinate enters
+commitment remains the public committed payload. The Pl\"ucker coordinate enters
 as witness geometry for a public-binding statement
 \[
   \bigl(\operatorname{Pl}(\mathcal F),c\bigr)\in\mathcal R.
@@ -451,7 +467,7 @@ For the functional encoder, the projection direction is
   \text{plane/RS/MCA verifier data}.
 \]
 A proof-carrying binding relation asserts that the accepted cochain commitment
-realizes the Plucker coordinate.
+realizes the Pl\"ucker coordinate.
 
 \subsection*{Lean Cross-Reference}
 
@@ -459,7 +475,7 @@ The public artifact and commitment interfaces in this section correspond to the
 following Lean declarations:
 \begin{leanledger}
 \begin{itemize}
-  \item Plucker coordinates and public binding:
+  \item Pl\"ucker coordinates and public binding:
     \lean{Proximity.GrassmannianPlucker},
     \lean{Proximity.GrassmannianPlucker.Concrete}, and
     \lean{Proximity.PluckerCochain.PublicBinding};

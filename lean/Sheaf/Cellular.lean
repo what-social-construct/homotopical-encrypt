@@ -1,4 +1,10 @@
-import Sheaf.CellComplex
+module
+
+public import Sheaf.CellComplex
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Data.Fintype.Sigma
+
+@[expose] public section
 
 /-!
 # Finite coordinate cellular sheaves
@@ -83,7 +89,7 @@ def component
     {Cell : Type*} [Fintype Cell]
     (dim : Cell → ℕ) (c : Cell) :
     Cochain Cell dim →ₗ[ℝ] Coord (dim c) where
-  toFun x i := x ⟨c, i⟩
+  toFun x := WithLp.toLp 2 (fun i => x ⟨c, i⟩)
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
@@ -94,12 +100,14 @@ def assemble
     (dim : Cell → ℕ)
     (L : ∀ c, A →ₗ[ℝ] Coord (dim c)) :
     A →ₗ[ℝ] Cochain Cell dim where
-  toFun x p := L p.1 x p.2
+  toFun x := WithLp.toLp 2 (fun p : TotalCoord Cell dim => L p.1 x p.2)
   map_add' x y := by
-    funext p
+    apply PiLp.ext
+    intro p
     simp
   map_smul' a x := by
-    funext p
+    apply PiLp.ext
+    intro p
     simp
 
 /-- One target-edge block row of the degree-zero coboundary. -/
@@ -171,9 +179,10 @@ theorem delta1_comp_delta0 (F : CellularSheaf X) :
     F.delta1.comp F.delta0 = 0 := by
   apply LinearMap.ext
   intro x
-  funext p
+  apply PiLp.ext
+  intro p
   rcases p with ⟨f, i⟩
-  exact congrFun (F.delta1_delta0_at x f) i
+  exact congrArg (fun y : Coord (F.faceDim f) => y i) (F.delta1_delta0_at x f)
 
 /-- A degree-zero global section is a compatible vertex assignment. -/
 def IsGlobalSection (F : CellularSheaf X) (x : F.C0) : Prop :=

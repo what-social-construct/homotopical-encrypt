@@ -15,8 +15,8 @@ rate-\(1/4\), length-\(4096\) member has
   k=1024,\qquad r_{\mathrm{cap}}=3072,\qquad
   \deltacap=\frac34.
 \]
-The previously useful strict checkpoint \(3071/4096\) is subsumed by the
-endpoint theorem below.
+The endpoint theorem below includes the strictly smaller radius
+\(3071/4096\).
 
 There is, however, a distinct granularity issue in the phrase ``largest
 relative radius.''  A closed Hamming ball changes only at
@@ -30,7 +30,7 @@ both the largest radius in \(\mathcal H_n\) and the supremum over real radii.
 \subsection{An explicit smooth large-field family}
 \label{sec:explicit-family}
 
-For \(u\ge0\), set
+For \(u\in\mathbb N\), set
 \[
   k_u=64\cdot2^u=2^{u+6},
   \qquad
@@ -72,7 +72,7 @@ Moreover \(n_u\) is even and \(n_u/2\ge128\), so
 \begin{aligned}
   q_u=3^{n_u}
   &=(3^2)^{n_u/2}
-    =9^{n_u/2}                                      \\
+    =9^{n_u/2} \\
   &\ge8^{n_u/2}
     =2^{3n_u/2}
     \ge2^{n_u+128}.

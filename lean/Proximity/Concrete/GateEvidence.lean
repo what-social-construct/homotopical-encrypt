@@ -1,5 +1,9 @@
-import Proximity.Concrete.Gates
-import TCB.ProofCarrying
+module
+
+public import Proximity.Concrete.Gates
+public import TCB.ProofCarrying
+
+@[expose] public section
 
 /-
   Traceable hard-gate evidence records.
@@ -66,31 +70,31 @@ namespace EvidenceSlot
 
 /-- Slot 0: accumulated stage certificate. -/
 def stageCertificate : EvidenceSlot :=
-  ⟨0, by native_decide⟩
+  ⟨0, by decide⟩
 
 /-- Slot 1: source metric/disagreement gate. -/
 def sourceMetric : EvidenceSlot :=
-  ⟨1, by native_decide⟩
+  ⟨1, by decide⟩
 
 /-- Slot 2: Plucker metric/chart gate. -/
 def pluckerMetric : EvidenceSlot :=
-  ⟨2, by native_decide⟩
+  ⟨2, by decide⟩
 
 /-- Slot 3: public-shadow respect gate. -/
 def publicShadowRespect : EvidenceSlot :=
-  ⟨3, by native_decide⟩
+  ⟨3, by decide⟩
 
 /-- Slot 4: semantic-alignment gate. -/
 def semanticAlignment : EvidenceSlot :=
-  ⟨4, by native_decide⟩
+  ⟨4, by decide⟩
 
 /-- Slot 5: final structural naturality gate for the assembled projection. -/
 def projectionNaturality : EvidenceSlot :=
-  ⟨5, by native_decide⟩
+  ⟨5, by decide⟩
 
 /-- Slot 6: calibrated final far-region witness. -/
 def finalFarRegion : EvidenceSlot :=
-  ⟨6, by native_decide⟩
+  ⟨6, by decide⟩
 
 end EvidenceSlot
 
@@ -98,27 +102,27 @@ namespace HardGateSlot
 
 /-- Embed a hard-gate slot into the full evidence slot schema. -/
 def toEvidenceSlot (slot : HardGateSlot) : EvidenceSlot :=
-  ⟨slot.val, Nat.lt_trans slot.isLt (by native_decide)⟩
+  ⟨slot.val, Nat.lt_trans slot.isLt (by decide)⟩
 
 /-- Slot 0: accumulated stage certificate. -/
 def stageCertificate : HardGateSlot :=
-  ⟨0, by native_decide⟩
+  ⟨0, by decide⟩
 
 /-- Slot 1: source metric/disagreement gate. -/
 def sourceMetric : HardGateSlot :=
-  ⟨1, by native_decide⟩
+  ⟨1, by decide⟩
 
 /-- Slot 2: Plucker metric/chart gate. -/
 def pluckerMetric : HardGateSlot :=
-  ⟨2, by native_decide⟩
+  ⟨2, by decide⟩
 
 /-- Slot 3: public-shadow respect gate. -/
 def publicShadowRespect : HardGateSlot :=
-  ⟨3, by native_decide⟩
+  ⟨3, by decide⟩
 
 /-- Slot 4: semantic-alignment gate. -/
 def semanticAlignment : HardGateSlot :=
-  ⟨4, by native_decide⟩
+  ⟨4, by decide⟩
 
 end HardGateSlot
 

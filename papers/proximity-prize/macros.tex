@@ -3,9 +3,13 @@
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{aliascnt}
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xurl}
 \usepackage{hyperref}
 \usepackage[nameinlink,capitalise,noabbrev]{cleveref}
 
@@ -19,18 +23,40 @@
 }
 
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{conjecture}[theorem]{Conjecture}
-\newtheorem{problem}[theorem]{Problem}
-\newtheorem{remark}[theorem]{Remark}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{conjecture}{theorem}
+\newtheorem{conjecture}[conjecture]{Conjecture}
+\aliascntresetthe{conjecture}
+\newaliascnt{problem}{theorem}
+\newtheorem{problem}[problem]{Problem}
+\aliascntresetthe{problem}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{proposition}{Proposition}{Propositions}
+\crefname{corollary}{Corollary}{Corollaries}
+\crefname{definition}{Definition}{Definitions}
+\crefname{conjecture}{Conjecture}{Conjectures}
+\crefname{problem}{Problem}{Problems}
+\crefname{remark}{Remark}{Remarks}
 
 \newcommand{\F}{\mathbb{F}}
 \newcommand{\RS}{\operatorname{RS}}
 \newcommand{\MCA}{\operatorname{MCA}}
 \newcommand{\dist}{\operatorname{dist}}
+\newcommand{\image}{\operatorname{im}}
 \newcommand{\Bad}{\operatorname{Bad}}
 \newcommand{\Ball}{\operatorname{Ball}}
 \newcommand{\List}{\Lambda}
@@ -40,4 +66,5 @@
 \newcommand{\Cpair}{\mathcal C^{\equiv 2}}
 \newcommand{\Lean}{\textsc{Lean}}
 \newcommand{\lean}[1]{\begingroup\Urlmuskip=0mu plus 1mu\path{#1}\endgroup}
+\newenvironment{leanledger}{\small\raggedright}{\par}
 \newcommand{\todo}[1]{\textcolor{red!65!black}{[TODO: #1]}}

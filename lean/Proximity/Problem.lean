@@ -1,3 +1,7 @@
+module
+
 /- Compatibility import; use `Proximity.Application.Problem`. -/
 
-import Proximity.Application.Problem
+public import Proximity.Application.Problem
+
+@[expose] public section

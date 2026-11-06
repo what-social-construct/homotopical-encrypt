@@ -1,6 +1,11 @@
-import Proximity.Concrete.RS.ReedSolomon
-import Axioms.CochainCommitment.Payload
-import Mathlib.Data.ZMod.Basic
+module
+
+public import Proximity.Concrete.RS.ReedSolomon
+public import Axioms.CochainCommitment.Payload
+public meta import Axioms.CochainCommitment.Payload
+public import Mathlib.Data.ZMod.Basic
+
+@[expose] public section
 
 /-
   Lightweight canonical Reed-Solomon parameters for the concrete proximity bridge.

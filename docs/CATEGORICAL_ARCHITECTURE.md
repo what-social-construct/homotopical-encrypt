@@ -142,6 +142,43 @@ fixed while varying a hidden representative in one public fiber. Naturality
 therefore does not remove the separate fixed-coordinate non-stabilization
 obligation.
 
+## The central harmonic projector and the different residuals
+
+The harmonic projection `P_H`, with `H = ker Delta1`, connects the geometry,
+encryption and recovery problem. It is an idempotent retraction onto the
+harmonic subspace. The full Hodge-coordinate splitting retains both the
+harmonic and orthogonal coordinates; its invertibility does not make the
+single-coordinate projection invertible.
+
+| Operator or quantity | Actual role | Source owner |
+|---|---|---|
+| `Delta1 = delta0 delta0* + delta1* delta1` | True degree-one Hodge operator, with its actual positive spectrum. | `Sheaf/Hodge.lean` |
+| `P_H` | Harmonic recovery of an encrypted sample; the operative HCP target for the chosen hidden presentation; transported naturally under the stated isometries. | `Sheaf/HarmonicLattice.lean`, `HCP.lean`, `Sheaf/Equivalence.lean` |
+| `I - P_H` | Kernel-normalized residual operator. Its norm measures the full sample's orthogonal noise; it shares the Hodge kernel but not generally its spectrum or scale. | `Sheaf/Hodge.lean`, `Sheaf/ObservationQuotient.lean` |
+| Distance to `im delta0` | Exact-payload acceptance residual, using the exact-subspace projection. Its zero locus is accepted decoded cochains. | `Sheaf/Distance.lean`, `Protocol/Storage/Context.lean` |
+| Pair Hamming distance | Distance of the actual extracted/reduced pair to the target code. | `Proximity/Core/Distance.lean`, `Protocol/Storage/Calibration.lean` |
+
+For the existing HCP observation adapter these identities concern different
+objects:
+
+```text
+b = h + delta0 a + delta1* u
+P_H b = h
+(I - P_H) b = delta0 a + delta1* u
+decode(committed payload) = delta0 a
+```
+
+Consequently, the accepted exact-component payload has zero distance to
+`im delta0`, while the full sample can have nonzero harmonic message and
+nonzero HCP residual. Their common snapshot and supplied observation binding
+do not identify those distances. A public profile must state what it reveals
+or certifies about the full sample and its harmonic projection.
+
+The Grassmannian/Plucker description below locates the harmonic subspace.
+A future presentation-groupoid description could organize the projector's
+equivariance, after constructing the required objects/maps. Neither
+description alone supplies the metric comparison to the extracted code.
+
 ## Public classifier, fiber, and operative target
 
 An HCP realization contains a commuting classifier triangle:
@@ -166,6 +203,48 @@ No quotient universal property is assumed. Distinct same-fiber
 representatives can produce distinct operative targets; this is the
 hidden-operator obstruction used in `Hardness.lean`.
 
+## Grassmannian, Plucker coordinates and a possible moduli layer
+
+At fixed ambient dimension and harmonic rank, `ker Delta1` is a Grassmannian
+point. The classical Plucker embedding realizes that Grassmannian as a
+projective variety; the actual full projective coordinate determines the
+subspace ([Grassmann-code comparison, Section 7](https://arxiv.org/html/0911.1298)).
+With a fixed Euclidean inner product, that subspace determines its orthogonal
+projector. It does not determine the true Hodge operator's positive spectrum.
+Thus publishing the full coordinate can reveal the operative harmonic
+projection even when other presentation data remains hidden.
+
+The current concrete Lean
+[`ProjectiveShadow`](../lean/Proximity/Concrete/GrassmannianPlucker/Concrete.lean)
+is a quotient of exterior coordinates by nonzero real rescaling. Its raw
+carrier also contains the zero orbit. The intended Grassmannian locus uses
+nonzero decomposable coordinates and the frame/soundness conditions; the
+quotient type alone is not a bundled projective variety. The new
+[Reconstruction module](../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean)
+constructs both concrete soundness inputs, recovers the actual subspace and
+projector, and proves full-shadow equality exactly when genuine ranked points
+agree. [PluckerObservation](../lean/TCB/PluckerObservation.lean) identifies
+recovery with the operative HCP target when that subspace is the operative
+kernel. This is mathematical exact-real recovery, not a digest inversion or
+efficient finite-encoding algorithm.
+
+| Layer | Object and retained information | Metric/structure boundary |
+|---|---|---|
+| Presentation | Cellular sheaf, coordinate/basis conventions, inner products, optional integral structure and cochain. | An arbitrary change of basis requires transport of these structures; the current Hodge transport theorem assumes degreewise isometry. |
+| Grassmannian/Plucker | Harmonic subspace and its full projective exterior coordinate. | Projective rescaling forgets the frame's scalar, not the subspace. It does not supply a geometric-to-Hamming distance comparison. |
+| Public observation and authentication | Selected shadow, cochain artifact, digest, proof and manifest. `HashedPluckerShadow` retains both the mathematical shadow and digest as semantic fields. | Which fields are actually public is an encoding/profile choice. A digest is not automatically a recoverable projective coordinate or a distance-preserving map. |
+
+A moduli-groupoid or stack organization is a possible later layer: retain
+presentations together with their actual equivalences and automorphisms.
+This is a design interpretation, not a construction already present in Lean.
+It requires choosing the base/site, allowed morphisms, transport and descent;
+an algebraic-stack claim needs the relevant geometric hypotheses, as in the
+[Stacks Project's smooth-groupoid quotient theorem](https://stacks.math.columbia.edu/tag/04TK).
+General linear changes with transported metrics and isometries of a fixed
+metric have different roles. Lattice preservation adds another condition.
+Neither a public classifier fiber nor an ordinary set quotient by itself
+supplies this stack structure.
+
 ## Prospective block-sum structure
 
 External orthogonal direct sum, equivalently block sum in matrix coordinates,
@@ -189,16 +268,86 @@ collected into natural or monoidal structure. Their result concerns mixed
 associators for module categories; it does not supply this Hodge decomposition,
 projection naturality, or HCP hardness theorem.
 
+## History, snapshots and the cellular base
+
+The working organization separates the public directed block/event history
+from the application cellular complex. A history entry authenticates references
+to a snapshot-bound context and its retained artifact manifest. That context
+fixes the application complex `X`, sheaf `F`, payload interpretation and
+original cochain artifact for the projection run:
+
+```text
+public block/event history
+  -> authenticated snapshot/context reference -> application geometry (X, F)
+  -> authenticated sealed artifact-manifest reference
+
+temporary StateBus, using that fixed context
+  -> typed projection outputs and certificates -> retained manifest
+```
+
+This is the agreed working separation of roles. The new
+[history anchor](../lean/Protocol/Storage/Anchor.lean) and
+[projection anchor](../lean/Protocol/Storage/ProjectionAnchor.lean) implement
+the semantic join under explicit authentication profiles; they do not define a
+generic history graph or a concrete hash/encoding scheme. The expanded 4.35
+aggregate and selected theorem audits pass; see
+[the validation record](MATH_STORAGE_VALIDATION.md) for their exact scope. Access to the underlying geometry still needs an
+availability and visibility profile. The public history may expose bounded
+names while the geometry or private witnesses remain encrypted.
+
+The application cells may follow the recovered account/validator proposals;
+their precise meaning and any relationship to physical peers remain open.
+Block heights were also proposed as vertices of a history complex. Identifying
+that history complex with the operative HCP base would require an additional
+construction. The three information layers `F_full -> F_zk -> F_hash` and the
+cellular degrees `C0/C1/C2` have separate meanings.
+
+`TransitionAnchor` joins an existing evidence-bearing candidate to the actual
+storage interpretation, original public artifact and exact sealed manifest.
+Its inputs identify the policy's snapshot model with `SnapshotModel.ofSheaf F`,
+the candidate snapshot with the context's interpretation, and the proof's
+public artifact with the context's artifact. Candidate validity then derives
+the same payload, accepted exactness, snapshot-root equality and existing root
+inclusions. `HistoryBindings.manifestIncluded` explicitly authenticates the
+actual candidate, context, ordered leaves and manifest root under that
+candidate's block digest. A matching quorum signs that same block digest and
+snapshot coordinate; the supplied inclusion relation authenticates the manifest
+through that digest. This supplies no round/lock/finality theorem.
+
+`ProjectionAnchor` specializes this join to an existing `SealedProjection`.
+Its exact-prefix theorems use `itemsMatch`, not generic slot completeness. An
+additional relation includes the actual gate database under the candidate's
+evidence root without equating that root with the manifest or database root.
+The stored payload and RS word remain the original projection outputs. The
+existing far theorem still requires its source-farness premise and does not
+select a metric or instantiate the remaining codec/lift profile.
+
+`ProposalRef` has no distinct storage-manifest-root field. Concrete inclusion
+under an authenticated body or a new coordinate, canonical bytes, digest
+verification and retrieval remain open. The adapter fixes `X` and `F`; the
+current conservative ledger transition preserves snapshot, topology and epoch.
+Geometry updates and rotation need separately specified transitions.
+
 ## State and content addressing
 
-The original useful role of `SheafState` is a **volatile per-commit projection
-state bus**. It carries the current typed payload/certificate chain for one
-accepted cochain and one witness-local projection run. The current Python class
-is legacy because it later accumulated accounts, economics, mempool, and
-audit-log duties that belong in separate ledger/node state.
+The mathematical input is one [storage context](../lean/Protocol/Storage/Context.lean):
+the original cochain artifact, its payload interpretation, immutable sheaf
+snapshot, parameter-set identifier and run identifier. Its key derives the
+schema, snapshot root, artifact leaf digest and topology tag from those
+objects. The context retains shape and snapshot binding; exact-payload
+acceptance is a separate predicate. Raw nonexact observations therefore
+remain available for proximity analysis.
+
+The recovered useful role of `SheafState` is a **volatile projection state
+bus**. The current checkpoint core uses a typed payload/certificate prefix
+for one fixed context; the runtime bus's lifecycle granularity remains a
+design choice. In particular, the one-bus-per-commit proposal is not imposed
+by the immutable Lean `StateBus` record. The Python class also accumulated
+accounts, economics, mempool and audit-log duties; those are legacy node/ledger
+responsibilities, separate from the typed checkpoint lifecycle.
 
 `SheafStateSnapshot` is the immutable input context fixed before the projection
-chain starts. It carries the accepted cochain's sheaf context plus explicit
+chain starts. It carries the cochain's sheaf context plus explicit
 canonical-encoding and root-binding obligations. A concrete refinement of
 those obligations is still pending. Its content root must bind at least:
 
@@ -208,31 +357,59 @@ those obligations is still pending. Its content root must bind at least:
 - stalk dimensions and restriction-map commitments;
 - the operator degree/family and public parameter set.
 
-After the exact `C^1` commitment is accepted and bound to that snapshot, the
-protocol initializes both a fresh volatile `SheafState` and an empty/open
-`SheafBlock` bound to the same context. Each projection checkpoint advances
-the state bus and atomically writes its newly derived public artifact and
-already-proved certificate into the appropriate stage-labelled block slot
-exactly once:
+The [checkpoint engine](../lean/Protocol/Storage/Checkpoint.lean) initializes
+an empty manifest for that fixed context. Entries retain their actual typed
+payload and digest, with an object-indexed binding relation. Each append
+requires an unused slot. Exact acceptance can already be available from the
+HCP stack, or supplied as a separately checked result; it is not a condition
+restricting the general observation carrier to valid inputs.
+
+For a selected projection run, the
+[concrete adapter](../lean/Protocol/Storage/Projection.lean) advances through
+the existing mathematical states and evidence records. Each step retains its
+exact predecessor and appends one leaf:
 
 ```text
-accepted exact C1 + snapshot
-  -> initialize volatile SheafState + open SheafBlock
+snapshot-bound original C1 artifact
+  -> fixed Context + collecting manifest
   -> write Plucker/cochain binding
   -> write projected plane
-  -> write canonical RS received word/target
+  -> write the chain's RS received word/target
   -> write hard-gate evidence
   -> write assembled-projection naturality
   -> write far-region witness
-  -> seal SheafBlock
-  -> wipe SheafState
+  -> seal the exact complete manifest
+  -> obtain persistence receipt for that context/list/root
+  -> consume the volatile run
 ```
 
 This protocol layer follows the nested Paper 1 proof objects
 `PluckerCochainState -> CochainPlaneState -> StateBus` and then
 `HardGateEvidenceRecord -> NaturalityGateEvidenceRecord ->
 CalibratedFinalEvidenceRecord`. It stores those outputs; it does not recompute
-their mathematical checks.
+their mathematical checks. The adapter's final seal requires the exact leaf
+list from one final typed prefix, not just presence of six labels. The generic
+engine alone proves slot uniqueness and local lifecycle properties; the
+projection adapter supplies the predecessor/certificate joins.
+
+`Sheaf/CochainSemantics.lean` connects the concrete snapshot interpretation
+to the legacy coherence interface through actual carrier equivalences,
+coboundary and decoder equations, and snapshot-binding equivalence. It
+derives acceptance/cocycle transport. It does not identify geometric norms
+with coding distances or supply the remaining ambient topology gates.
+
+An accepted exact payload has zero distance to `im delta0`. The full HCP
+sample `b = h + delta0 a + delta1* c` is a distinct object, retained by the
+existing bound-observation stack. Its kernel-normalized harmonic residual
+contains both exact and coexact noise. `Storage/HCP.lean` reuses that stack's
+exact artifact and snapshot, and derives the run name from its actual
+lifecycle context through a supplied identification function.
+
+`Storage/Calibration.lean` derives an independent decoded-source comparison
+from controlled exact codeword lifts. `Storage/CanonicalRS.lean` joins this
+criterion and the existing public pullback calibration to the same observed
+artifact/pair. Neither context binding nor checkpoint completion constructs
+those lifts, proves fixed-challenge goodness, or evaluates a security budget.
 
 An open `SheafBlock` is a persistent checkpoint target, but is not yet a
 complete or anchorable block. Its sealed form is immutable. The Paper 2 content
@@ -246,8 +423,11 @@ where the canonical manifest authenticates the snapshot/cochain coordinates,
 stage-artifact subtree, certificate/evidence subtree, schema, and parameter
 set. Child artifacts retain distinct domain-separated digests. During
 construction, the open block may have successive revision roots; only the
-sealed final SHA-256 root is eligible for the main-chain anchor. `SheafState`
-is wiped only after the final block write and seal succeed atomically.
+sealed final SHA-256 root is eligible for the main-chain anchor. The Lean
+lifecycle permits consumption only with a persistence receipt indexed by the
+exact sealed object. Backend atomicity, crash recovery and memory erasure
+remain refinement obligations. Run identifiers are supplied: no global
+freshness or anti-cloning theorem is inferred from an empty local manifest.
 
 A topology hash may be useful metadata, but it is not by itself a full
 snapshot commitment. Storage realizes canonical bytes, content lookup,
@@ -257,19 +437,23 @@ naturality square.
 
 ## Paper 2 and protocol separation
 
-The safe one-way dependency is
+The source dependencies and remaining runtime boundaries are
 
 ```text
 Paper 1 cellular/Hodge mathematics
-        -> exact C^1 and projection evidence
-        -> immutable SheafStateSnapshot input binding
-        -> volatile checkpointed SheafState
-        -> persistent open SheafBlock checkpoint writes
-        -> sealed SHA-256-addressed SheafBlock
-        -> SheafState wipe
-        -> Paper 2 validity/admissibility transition
-        -> authenticated weighted quorum machinery
-        -> locking, finality, and liveness (separate obligations).
+        -> snapshot/artifact Context + typed projection prefix
+        -> exact sealed manifest
+
+candidate-bound accepted evidence + same interpretation/artifact
+        + explicit inclusion of that manifest under the candidate digest
+        -> TransitionAnchor
+        -> same-proposal authenticated quorum attachment
+
+exact sealed manifest + matching persistence receipt
+        -> local consumed checkpoint
+
+canonical bytes, backend writes, runtime bus retirement,
+geometry migration, locking, finality and liveness remain separate obligations.
 ```
 
 A future task sheaf may live over a finite execution slice of local process

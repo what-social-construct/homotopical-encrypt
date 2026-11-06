@@ -1,5 +1,10 @@
-import Proximity.Concrete.CanonicalRS.Parameters
-import Proximity.Concrete.RS.Target
+module
+
+public import Proximity.Concrete.CanonicalRS.Parameters
+public meta import Proximity.Concrete.CanonicalRS.Parameters
+public import Proximity.Concrete.RS.Target
+
+@[expose] public section
 
 /-
   Target packaging for the canonical RS regime.
@@ -51,7 +56,7 @@ namespace Bounds
 variable {D : SmoothDomain}
 
 /-- The canonical RS parameter object is F-additive by polynomial closure. -/
-def fAdditive (D : SmoothDomain) :
+theorem fAdditive (D : SmoothDomain) :
     D.parameters.FAdditive :=
   ReedSolomon.Parameters.fAdditive_of_degreeBound_pos
     D.parameters

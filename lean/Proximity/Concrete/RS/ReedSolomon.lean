@@ -1,5 +1,9 @@
-import Proximity.Concrete.RS.CorrelatedAgreement
-import Proximity.Core.ReedSolomon
+module
+
+public import Proximity.Concrete.RS.CorrelatedAgreement
+public import Proximity.Core.ReedSolomon
+
+@[expose] public section
 
 /-!
 # Compatibility and application predicates for Reed--Solomon codes

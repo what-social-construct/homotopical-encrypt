@@ -3,8 +3,11 @@
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{aliascnt}
 \usepackage{enumitem}
+\usepackage{needspace}
 \usepackage{xcolor}
+\usepackage{xurl}
 \usepackage{hyperref}
 \usepackage[nameinlink,capitalise,noabbrev]{cleveref}
 
@@ -18,12 +21,30 @@
 }
 
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{assumption}[theorem]{Assumption}
-\newtheorem{remark}[theorem]{Remark}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{assumption}{theorem}
+\newtheorem{assumption}[assumption]{Assumption}
+\aliascntresetthe{assumption}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{proposition}{Proposition}{Propositions}
+\crefname{corollary}{Corollary}{Corollaries}
+\crefname{definition}{Definition}{Definitions}
+\crefname{assumption}{Assumption}{Assumptions}
+\crefname{remark}{Remark}{Remarks}
 
 \newcommand{\HE}{Homotopical Encryption}
 \newcommand{\HCP}{\mathrm{HCP}}
@@ -43,5 +64,6 @@
 \newcommand{\Hidden}{\mathsf{Hidden}}
 \newcommand{\Lean}{\textsc{Lean}}
 \newcommand{\lean}[1]{\begingroup\Urlmuskip=0mu plus 1mu\path{#1}\endgroup}
-\newenvironment{leanledger}{\small\sloppy}{\par}
+\newcommand{\leanOmega}[1]{\ensuremath{\Omega}\lean{#1}}
+\newenvironment{leanledger}{\small\raggedright}{\par}
 \newcommand{\todo}[1]{\textcolor{red!65!black}{[TODO: #1]}}

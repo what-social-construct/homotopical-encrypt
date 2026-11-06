@@ -1,4 +1,8 @@
-import Laplacian.Grassmannian.SearchSpace
+module
+
+public import Laplacian.Grassmannian.SearchSpace
+
+@[expose] public section
 
 /-
   Parametric Grassmannian families.
@@ -26,7 +30,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-open Matrix Real InnerProductSpace MeasureTheory
+open Matrix Real InnerProductSpace
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -94,8 +98,9 @@ lemma subspace_construction_dim
     by_cases hu : u + t • v = 0 <;> simp_all +decide;
     · have := Fintype.linearIndependent_iff.mp h_indep;
       specialize this ( fun i => if i = 0 then 1 else t ) ; simp_all +decide [ Fin.forall_fin_two ];
-    · convert h_dim_sum using 1;
-      rw [ finrank_span_singleton ] <;> aesop
+    · change Module.finrank ℝ ↥(Submodule.span ℝ {u + t • v} ⊔ W) = k
+      rw [h_dim_sum, finrank_span_singleton hu]
+      omega
 
 /-- The subspace construction t ↦ W(t) is injective.
     CONSEQUENCE: Ω_k contains uncountably many distinct Laplacians.
@@ -116,13 +121,13 @@ lemma subspace_construction_injective
       have hz_zero : z ∈ Submodule.span ℝ (Set.range ![u, v]) := by
         rw [ Submodule.mem_span_singleton ] at hy;
         obtain ⟨ a, rfl ⟩ := hy;
-        rw [ show z = ( 1 - a ) • u + ( t1 - a * t2 ) • v by ext x; have := congr_fun h_eq x; norm_num at *; linarith ];
+        rw [ show z = ( 1 - a ) • u + ( t1 - a * t2 ) • v by ext x; have := congrArg (fun b : EuclideanSpace ℝ n => b x) h_eq; norm_num at *; linarith ];
         exact Submodule.add_mem _ ( Submodule.smul_mem _ _ ( Submodule.subset_span ( Set.mem_range_self 0 ) ) ) ( Submodule.smul_mem _ _ ( Submodule.subset_span ( Set.mem_range_self 1 ) ) );
       exact h_disj.le_bot ⟨ hz_zero, hz ⟩;
     rw [ Submodule.mem_span_singleton ] at hy;
     rw [ Fintype.linearIndependent_iff ] at h_indep;
     specialize h_indep ( fun i => if i = 0 then hy.choose - 1 else hy.choose * t2 - t1 ) ; simp_all +decide [ Fin.forall_fin_two, sub_eq_iff_eq_add ];
     have := hy.choose_spec; simp_all +decide [ ← eq_sub_iff_add_eq', smul_smul ] ;
-    have := h_indep ( by ext x; have := congr_fun this x; norm_num at *; linarith ) ; aesop;
+    have := h_indep ( by ext x; have := congrArg (fun b : EuclideanSpace ℝ n => b x) this; norm_num at *; linarith ) ; aesop;
 
 end

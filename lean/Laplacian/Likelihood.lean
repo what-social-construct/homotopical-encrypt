@@ -1,4 +1,9 @@
-import Laplacian.Projection
+module
+
+public import Laplacian.Projection
+public import Mathlib
+
+@[expose] public section
 
 /-
   Paper correspondence:

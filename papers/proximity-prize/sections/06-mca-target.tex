@@ -1,4 +1,4 @@
-\section{The Pair Mutual-Correlated-Agreement Theorem}
+\section{Pair Mutual Correlated Agreement}
 
 \subsection{Bad challenges}
 
@@ -24,6 +24,13 @@ The MCA error is
   \max_{p\in(\F^2)^I}
   \frac{|\Bad_{\MCA}(\mathcal C,\delta,p)|}{|\F|}.
 \]
+
+This is the two-word same-set event appearing in
+\cite[Theorem~4.6, full version]{benSassonCarmonHabockKoppartySaraf2026}.
+That source uses polynomials of degree at most its parameter, so its
+parameter is \(k-1\) in the degree-\(<k\) convention used here.
+Our bound below is uniform in the radius; the cited literature gives
+sharper radius-dependent bounds in its stated regimes.
 
 \begin{theorem}[Uniform pair-MCA certificate bound]
 \label{thm:pair-mca}
@@ -128,8 +135,9 @@ For this code,
   \qquad
   B_{\mathcal C}(1)\ge2.
 \]
-Consequently its greatest safe count radius at 128 bits is \(0\), and its
-first unsafe count radius is \(1\).  For the relative-radius definition over
+Consequently, for the \(2^{-128}\) MCA error target, its greatest safe count
+radius is \(0\) and its first unsafe count radius is \(1\).
+For the relative-radius definition over
 all \(\delta\in[0,1]\), the safe set is
 \[
   \left[0,\frac1{4096}\right),
@@ -172,8 +180,8 @@ Let
   D_1(y)=\Delta(y,\mathcal C).
 \]
 For a challenge outside the MCA bad set, scalar closeness on a large agreement
-set forces pair closeness on that same set.  In distance language, the desired
-contrapositive has the form
+set forces pair closeness on that same set. For \(\delta\in[0,1]\), this
+gives the distance implication
 \[
   D_2(p)\ge\delta
   \Longrightarrow
@@ -181,6 +189,15 @@ contrapositive has the form
 \]
 for every MCA-good \(\gamma\), with the fraction of excluded challenges bounded
 by \(\varepsilon_{\MCA}(\mathcal C,\delta)\).
+
+To see the boundary convention explicitly, suppose that
+\(D_1(y_\gamma)<\delta\), and choose a closest scalar codeword \(c\).
+Let \(S=\{i:y_\gamma(i)=c(i)\}\). Then
+\(|S|/n=1-D_1(y_\gamma)>1-\delta\), so \(S\) is \(\delta\)-large.
+Since \(\gamma\) is MCA-good, a pair codeword agrees with \(p\) on
+\(S\). Hence \(D_2(p)\le D_1(y_\gamma)<\delta\). Taking the
+contrapositive proves the displayed implication, including its non-strict
+\(\ge\) boundary.
 
 This is a challenge-indexed statement.  Replacing the sampled challenge by one
 fixed field element would require a separate theorem that the selected element
@@ -203,7 +220,7 @@ failure.  Every bad endpoint challenge must instead have a witness with
 Consequently, the endpoint distance implication above is an equality
 non-collapse statement: when \(D_2(p)=\deltacap\), a good challenge must not
 lower the projected distance strictly below \(\deltacap\).
-\Cref{thm:pair-mca} supplies the previously missing quantitative bound on the
+\Cref{thm:pair-mca} supplies a uniform quantitative bound on the
 excluded challenges.
 
 \subsection{Commit-then-challenge order}
@@ -252,6 +269,7 @@ separate statements.
 As a separate concrete/application result, the repository also checks the
 canonical runtime field \(q=12289\) with \(n=4096\) and \(k=1024\).  Since
 \(q<2^{128}\) while its radius-zero unit-spike line has one bad challenge,
-that concrete code has no safe count radius at 128-bit MCA security.  This
+that concrete code has no safe count radius for the \(2^{-128}\) MCA error
+target. This
 runtime-facing fact is not used by the standalone large-field or boundary-field
 theorems above.

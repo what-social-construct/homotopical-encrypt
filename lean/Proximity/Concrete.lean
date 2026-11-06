@@ -1,17 +1,22 @@
-import Proximity.Concrete.RS
-import Proximity.Concrete.Grassmannian
-import Proximity.Concrete.PluckerShadow
-import Proximity.Concrete.GrassmannianPlucker
-import Proximity.Concrete.GrassmannianPlucker.Concrete
-import Proximity.Concrete.CochainBridge
-import Proximity.Concrete.PluckerCochain
-import Proximity.Concrete.PluckerCochain.Concrete
-import Proximity.Concrete.CochainPlane
-import Proximity.Concrete.CochainReedSolomon
-import Proximity.Concrete.ProjectionChain
-import Proximity.Concrete.CanonicalRS
-import Proximity.Concrete.Gates
-import Proximity.Concrete.Public
+module
+
+public import Proximity.Concrete.RS
+public import Proximity.Concrete.Grassmannian
+public import Proximity.Concrete.PluckerShadow
+public import Proximity.Concrete.GrassmannianPlucker
+public import Proximity.Concrete.GrassmannianPlucker.Concrete
+public import Proximity.Concrete.GrassmannianPlucker.Reconstruction
+public import Proximity.Concrete.CochainBridge
+public import Proximity.Concrete.PluckerCochain
+public import Proximity.Concrete.PluckerCochain.Concrete
+public import Proximity.Concrete.CochainPlane
+public import Proximity.Concrete.CochainReedSolomon
+public import Proximity.Concrete.ProjectionChain
+public import Proximity.Concrete.CanonicalRS
+public import Proximity.Concrete.Gates
+public import Proximity.Concrete.Public
+
+@[expose] public section
 
 /-!
 # Concrete proximity application

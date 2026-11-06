@@ -1,4 +1,8 @@
-import Axioms.SheafCoherence
+module
+
+public import Axioms.SheafCoherence
+
+@[expose] public section
 
 /-
   Typed exact-to-Hodge-blinded commitment bridge.

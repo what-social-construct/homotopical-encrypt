@@ -1,5 +1,9 @@
-import Proximity.Concrete.CanonicalRS.BridgeWitness
-import Proximity.Concrete.Gates
+module
+
+public import Proximity.Concrete.CanonicalRS.BridgeWitness
+public import Proximity.Concrete.Gates
+
+@[expose] public section
 
 /-
   Canonical RS bridge certificates.

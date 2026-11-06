@@ -12,8 +12,8 @@ two-fold interleaving
   y_\gamma=p_0+\gamma p_1\in\F^n .
 \]
 List decoding controls the ambiguity of the full pair, while mutual correlated
-agreement controls the fraction of challenges for which \(y_\gamma\) conceals
-pair-farness.
+agreement bounds the fraction of challenges for which scalar agreement fails
+to extend to pair agreement on the same coordinate set.
 
 At the capacity-grid radius \((n-k)/n\), we prove the exact universal list
 size
@@ -27,9 +27,12 @@ injective compressed-certificate map proves the radius-independent bound
   |\Bad_{\MCA}|\le\binom n{k+1}.
 \]
 An explicit smooth rate-\(1/4\) family over \(\mathbb F_{3^n}\) meets both
-requested \(2^{-128}\) targets.  The endpoint constructions, MCA certificate
-bound, numerical inequalities, and generic source-to-pair calibration
-implication are machine-checked in Lean.
+\(2^{-128}\) fractional targets. Its actual field/subgroup realization,
+endpoint constructions, MCA certificate bound, complete phase split, real
+safe intervals and generic distance/calibration endpoints are machine-checked
+in Lean. The endpoint arguments are elementary interpolation; the exponential
+alphabet and allowable lists do not establish an efficient decoder or a
+polynomial-list improvement.
 
 To resolve the first nontrivial MCA transition rather than only give a
 uniform sufficient bound, we define the exact spectrum
@@ -41,7 +44,7 @@ For the certified smooth prime-field instance
 \(q=2^{128}+192513\equiv1\pmod {4096}\), \(n=4096\), and \(k=1024\), we prove
 \(B_{\mathcal C}(0)=1\) and \(B_{\mathcal C}(1)\ge2\).  It follows that zero
 is the greatest safe count radius and one the first unsafe count radius at
-128 bits.  Over real radii the safe interval is instead
+the \(2^{-128}\) MCA error target. Over real radii the safe interval is
 \([0,1/4096)\), so its supremum is \(1/4096\) and is not itself safe.
 
 The coding theorems quantify over the complete ambient received-word and
@@ -51,3 +54,14 @@ For an application whose observations lie upstream of the pair carrier, its
 source metric may be defined by pullback along the extraction map.
 Applications retaining a different source metric must provide one explicit
 comparison to the pair-code distance.
+
+This is Paper 3 of the Homotopical Encryption program. Paper 1 develops the
+HCP foundations and its application-specific projection bridge; Paper 2
+addresses protocol evidence, commitments, and runtime verification. The
+coding theorems here do not require either paper's hidden geometry or
+commitment construction. A protocol using them must enforce the
+fixed-pair, later-challenge order described in Section~6.
+Section~7 traces the existing committed-cochain object through the actual
+plane extraction and field-pair calibration. The commitment-specific
+contribution to complete is a concrete radius theorem for that projection,
+with its source metric and remaining comparison stated explicitly.

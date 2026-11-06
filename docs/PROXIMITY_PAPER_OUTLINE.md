@@ -1,19 +1,22 @@
 # Proximity Section Design Outline
 
-This is the detailed design outline for Section 6 of Paper 1, not a separate
-paper in the current publication plan. It guides the Lean proximity hierarchy
-and preserves the finer-grained reasoning that was compressed into the
-manuscript section.
+This is the detailed design outline for Section 6 of Paper 1. It preserves the
+application projection reasoning compressed into that manuscript section.
+The separate standalone coding paper now lives in
+[`papers/proximity-prize`](../papers/proximity-prize/README.md); its scope,
+Lean correspondence, and remaining work are tracked in its
+[`SEMANTIC_PARITY.md`](../papers/proximity-prize/SEMANTIC_PARITY.md).
 
 For the whole-paper narrative, including the hardness-first introduction and
 the three-paper scope split, see [`PAPER_OUTLINE.md`](PAPER_OUTLINE.md). This
 file is the Section 6 component outline.
 
-The manuscript source of truth is
+The application manuscript source of truth is
 `papers/paper1/sections/06-rs-mca-projection.tex`. It presents the formal
 projection architecture, canonical Reed--Solomon endpoint, paper-facing MCA
 surface, and trusted-boundary inventory as the verifier-facing part of the HCP
-paper. There is no separate proximity paper in the current publication plan.
+paper. Its source-to-RS bridge obligations are distinct from the standalone
+paper's universal coding results.
 
 ## Current Section 6 Crosswalk
 

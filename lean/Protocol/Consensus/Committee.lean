@@ -1,5 +1,10 @@
-import Mathlib
-import TCB.ProofCarrying
+module
+
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Tactic.NormNum
+public import TCB.ProofCarrying
+
+@[expose] public section
 
 /-!
   Registered weighted committees and strict Byzantine quorums.

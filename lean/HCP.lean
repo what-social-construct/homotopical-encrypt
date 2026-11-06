@@ -1,3 +1,5 @@
+module
+
 /-
 Core formalization of the Harmonic Cochain Problem (HCP).
 
@@ -6,9 +8,11 @@ realization, and public solver contracts. CVP comparison and impossibility
 theorems remain in `Hardness.lean`.
 -/
 
-import Mathlib
-import Laplacian.Hodge
-import Axioms.HelferFOL
+public import Mathlib.Tactic
+public import Laplacian.Hodge
+public import Axioms.HelferFOL
+
+@[expose] public section
 
 set_option linter.mathlibStandardSet false
 
@@ -336,7 +340,7 @@ noncomputable def hodgeDecompositionEquiv
     (W : Submodule ℝ (CochainSpace N)) [W.HasOrthogonalProjection] :
     (W × W.orthogonal) ≃ₗ[ℝ] CochainSpace N :=
   W.prodEquivOfIsCompl W.orthogonal
-    W.isCompl_orthogonal_of_hasOrthogonalProjection
+    W.isCompl_orthogonal
 
 /-- Encrypt a harmonic plaintext by adding an orthogonal Hodge-noise component. -/
 noncomputable def encrypt
@@ -392,12 +396,11 @@ theorem decrypt_eq_orthogonalProjection
     {N : Type} [Fintype N]
     (W : Submodule ℝ (CochainSpace N)) [W.HasOrthogonalProjection]
     (b : CochainSpace N) :
-    decrypt W b = W.orthogonalProjection b := by
+    decrypt W b = W.orthogonalProjectionOnto b := by
   change
-    W.linearProjOfIsCompl W.orthogonal
-        W.isCompl_orthogonal_of_hasOrthogonalProjection b =
-      W.orthogonalProjection b
-  exact (W.orthogonalProjection_eq_linearProjOfIsCompl b).symm
+    W.projectionOnto W.orthogonal W.isCompl_orthogonal b =
+      W.orthogonalProjectionOnto b
+  exact (W.orthogonalProjectionOnto_apply_eq_projectionOnto b).symm
 
 /-- The HCP decryption map is the existing harmonic projection. -/
 theorem decrypt_coe_eq_harmonicProjection
@@ -413,7 +416,8 @@ theorem decrypt_coe_eq_harmonicProjection
 def matrixHarmonicSubspace
     {N : Type} [Fintype N]
     (Δ : Matrix N N ℝ) : Submodule ℝ (CochainSpace N) :=
-  LinearMap.ker (Matrix.mulVecLin Δ)
+  LinearMap.ker ((Matrix.mulVecLin Δ).comp
+    (WithLp.linearEquiv 2 ℝ (N → ℝ)).toLinearMap)
 
 /--
 The unique operative HCP target: the harmonic component of `b` for the
@@ -482,7 +486,7 @@ noncomputable def operativeTarget
     (observation : Observation P N ℝ)
     (witness : HiddenHodgeWitness X observation) : N → ℝ :=
   HCP.operativeHarmonicComponent
-    (X.laplacian witness.representative) observation.2
+    (X.laplacian witness.representative) (WithLp.toLp 2 observation.2)
 
 /-- A proposed answer solves the particular operative witnessed HCP instance. -/
 def IsOperativeSolution
@@ -546,7 +550,7 @@ structure IsometricPresentationEquivalence
   transport : HCP.CochainSpace N ≃ₗᵢ[ℝ] HCP.CochainSpace N
   laplacian_naturality : ∀ b,
     Matrix.mulVec (X.laplacian right) (transport b) =
-      transport (Matrix.mulVec (X.laplacian left) b)
+      transport (WithLp.toLp 2 (Matrix.mulVec (X.laplacian left) b))
 
 namespace IsometricPresentationEquivalence
 
@@ -560,7 +564,7 @@ theorem harmonic_iff_transport
     (T : IsometricPresentationEquivalence X left right)
     (b : N → ℝ) :
     _root_.MatrixIsHarmonic (X.laplacian left) b ↔
-      _root_.MatrixIsHarmonic (X.laplacian right) (T.transport b) := by
+      _root_.MatrixIsHarmonic (X.laplacian right) (T.transport (WithLp.toLp 2 b)) := by
   constructor
   · intro hb
     rw [_root_.MatrixIsHarmonic, T.laplacian_naturality, hb]
@@ -568,10 +572,13 @@ theorem harmonic_iff_transport
   · intro hb
     rw [_root_.MatrixIsHarmonic] at hb ⊢
     have htransport :
-        T.transport (Matrix.mulVec (X.laplacian left) b) = 0 := by
+        T.transport (WithLp.toLp 2 (Matrix.mulVec (X.laplacian left) b)) = 0 := by
+      apply WithLp.ofLp_injective
       rw [← T.laplacian_naturality]
       exact hb
-    exact T.transport.injective (by simpa using htransport)
+    have hz : WithLp.toLp 2 (Matrix.mulVec (X.laplacian left) b) = 0 :=
+      T.transport.injective (by simpa using htransport)
+    simpa using congrArg WithLp.ofLp hz
 
 /-- Isometric Laplacian transport maps the source harmonic kernel onto the target one. -/
 theorem map_matrixHarmonicSubspace
@@ -640,7 +647,7 @@ structure FixedCoordinateNonstabilization
     _root_.MatrixIsHarmonic (X.laplacian left) input
   preimage_not_harmonic_left :
     ¬ _root_.MatrixIsHarmonic (X.laplacian left)
-      (T.transport.symm input)
+      (T.transport.symm (WithLp.toLp 2 input))
 
 /-- Chain-isometric transport plus fixed-coordinate non-stabilization constructs HCP separation. -/
 def kernelSeparationWitness_of_isometricNonstabilization
@@ -661,7 +668,8 @@ def kernelSeparationWitness_of_isometricNonstabilization
   not_harmonic_right := by
     intro hright
     apply hfixed.preimage_not_harmonic_left
-    apply (T.harmonic_iff_transport (T.transport.symm hfixed.input)).2
+    apply (T.harmonic_iff_transport
+      (T.transport.symm (WithLp.toLp 2 hfixed.input))).2
     simpa using hright
 
 theorem kernelSeparation_left_ne_right

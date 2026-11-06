@@ -1,6 +1,10 @@
-import Axioms.Coregulator
-import Consensus.Geometry
-import Protocol.Oracle
+module
+
+public import Axioms.Coregulator
+public import Consensus.Geometry
+public import Protocol.Oracle
+
+@[expose] public section
 
 /-!
   Typed coregulator and reconciliation attachment point.

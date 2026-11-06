@@ -1,5 +1,9 @@
-import CVP
-import Sheaf.Hodge
+module
+
+public import CVP
+public import Sheaf.Hodge
+
+@[expose] public section
 
 /-!
 # Integral structures on finite cellular sheaves
@@ -45,18 +49,21 @@ def carrier {n : ℕ} (L : StalkLattice n) : AddSubgroup (Coord n) where
     funext i
     simp [CVP.latticeVector, Matrix.mulVec, dotProduct]
   add_mem' := by
-    rintro x y ⟨a, rfl⟩ ⟨b, rfl⟩
+    rintro x y ⟨a, ha⟩ ⟨b, hb⟩
     refine ⟨a + b, ?_⟩
     funext i
     change
       (∑ j, L.presentation.basis i j * ((a j + b j : ℤ) : ℝ)) =
-        (∑ j, L.presentation.basis i j * (a j : ℝ)) +
-          ∑ j, L.presentation.basis i j * (b j : ℝ)
-    simp only [Int.cast_add, mul_add, Finset.sum_add_distrib]
+        x i + y i
+    rw [← congrFun ha i, ← congrFun hb i]
+    simp only [CVP.latticeVector, Matrix.mulVec, dotProduct,
+      Int.cast_add, mul_add, Finset.sum_add_distrib]
   neg_mem' := by
-    rintro x ⟨a, rfl⟩
+    rintro x ⟨a, ha⟩
     refine ⟨-a, ?_⟩
     funext i
+    change (∑ j, L.presentation.basis i j * ((-a j : ℤ) : ℝ)) = -x i
+    rw [← congrFun ha i]
     simp [CVP.latticeVector, Matrix.mulVec, dotProduct]
 
 /-- A real stalk vector belongs to the chosen integral lattice. -/

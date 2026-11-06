@@ -1,5 +1,8 @@
-import Mathlib
-import Axioms.HomotopyClass
+module
+
+public import Axioms.HomotopyClass
+
+@[expose] public section
 
 /-
   Fibration and ephemeral-fiber interface.

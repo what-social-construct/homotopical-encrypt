@@ -1,5 +1,9 @@
-import Proximity.Application.Problem
-import Laplacian.Hodge
+module
+
+public import Proximity.Application.Problem
+public import Laplacian.Hodge
+
+@[expose] public section
 
 /-
   Grassmannian proximity instance.
@@ -23,7 +27,7 @@ namespace Proximity
 namespace Grassmannian
 
 open scoped BigOperators Real Nat Classical Pointwise
-open Matrix Real InnerProductSpace MeasureTheory
+open Matrix Real InnerProductSpace
 
 set_option linter.mathlibStandardSet false
 set_option linter.unusedSectionVars false
@@ -55,7 +59,7 @@ def disagreement
     (W : Submodule ℝ (EuclideanSpace ℝ n))
     [W.HasOrthogonalProjection]
     (b : GrassmannianCochain n) : ℝ :=
-  ‖(Submodule.orthogonalProjection W.orthogonal) b‖
+  ‖(Submodule.orthogonalProjectionOnto W.orthogonal) b‖
 
 /-- The proximity disagreement is exactly the Hodge/Laplacian residual. -/
 theorem disagreement_eq_laplacian_residual
@@ -75,7 +79,7 @@ theorem disagreement_eq_zero_of_globalSection
     (hb : GlobalSection W b) :
     disagreement W b = 0 := by
   unfold disagreement GlobalSection at *
-  rw [Submodule.orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero]
+  rw [Submodule.orthogonalProjectionOnto_apply_of_mem_orthogonal]
   · simp
   · simpa [Submodule.orthogonal_orthogonal] using hb
 

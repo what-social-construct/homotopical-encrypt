@@ -1,5 +1,9 @@
-import Proximity.Concrete.CanonicalRS.BridgeData
-import Proximity.Concrete.ProjectionChain.Core
+module
+
+public import Proximity.Concrete.CanonicalRS.BridgeData
+public import Proximity.Concrete.ProjectionChain.Core
+
+@[expose] public section
 
 /-
   Canonical MCA affine lines.

@@ -1,5 +1,9 @@
-import Helfer.Signature
-import Mathlib.AlgebraicTopology.ModelCategory.Homotopy
+module
+
+public import Helfer.Signature
+public import Mathlib.AlgebraicTopology.ModelCategory.Homotopy
+
+@[expose] public section
 
 /-!
 # Homotopy equivalence of algebraic interpretations

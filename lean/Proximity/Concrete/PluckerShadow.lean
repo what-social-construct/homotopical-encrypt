@@ -1,4 +1,8 @@
-import Proximity.Application.Projection
+module
+
+public import Proximity.Application.Projection
+
+@[expose] public section
 
 /-
   Plucker-coordinate shadow candidates.
@@ -138,7 +142,7 @@ structure InvariantChecklist (P : CoordinateSystem) : Prop where
       P.ProjectivelyEquivalent c d → P.normalize c = P.normalize d
 
 /-- A sound coordinate system supplies the granular invariant checklist. -/
-def invariantChecklist_of_sound
+theorem invariantChecklist_of_sound
     {P : CoordinateSystem}
     (hP : P.Sound) :
     P.InvariantChecklist where

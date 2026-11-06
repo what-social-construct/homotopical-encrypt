@@ -9,6 +9,10 @@ The historical document is preserved at
 
 Current references:
 
+- [`CHAIN_NETWORK_OBJECT_REVIEW.md`](CHAIN_NETWORK_OBJECT_REVIEW.md) — working
+  review of the retained cellular sheaf, temporary StateBus, competing plans
+  and source readings; lifecycle granularity and application profile remain
+  open;
 - [`PROTOCOL_PARITY_QUEUE.md`](PROTOCOL_PARITY_QUEUE.md) — Paper 2 storage,
   evidence-lifecycle, and chain-anchor plan;
 - [`SEMANTIC_PARITY_QUEUE.md`](SEMANTIC_PARITY_QUEUE.md) — known lifecycle and

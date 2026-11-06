@@ -1,5 +1,9 @@
-import Proximity.Concrete.CanonicalRS.MCA
-import Proximity.Concrete.Gates.Final
+module
+
+public import Proximity.Concrete.CanonicalRS.MCA
+public import Proximity.Concrete.Gates.Final
+
+@[expose] public section
 
 /-
   Canonical RS bridge witnesses.

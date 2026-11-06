@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib.Init
+
+@[expose] public section
 
 /-
   Consensus-level assumptions used by PoV + Topos implementations.

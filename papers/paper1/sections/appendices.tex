@@ -2,9 +2,14 @@
 
 \section{Paper--Lean Cross-Reference}
 
+The shared manuscript ownership, notation, and issue register is maintained
+in \lean{SEMANTIC-PARITY.md}. The companion coding paper's detailed object
+and theorem ledger is \lean{papers/proximity-prize/SEMANTIC_PARITY.md}.
+The appendices below record the HCP paper's own declaration and file coverage.
+
 \begin{leanledger}
 
-\subsection{Definitions And Interfaces}
+\subsection{Definitions and Interfaces}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[Matrix-level public projection and fibers.]
@@ -79,6 +84,17 @@
     Sections 4--5; \lean{Sheaf.CellularSheaf.SheafStateSnapshot},
     \lean{Sheaf.CellularSheaf.CochainPayloadInterpretation}, and
     \lean{Sheaf.CellularSheaf.AcceptedCommittedOneCochain}.
+  \item[Integral sheaf and harmonic message lattice.]
+    Sections 2--3; \lean{Sheaf.CellularSheaf.StalkLattice},
+    \lean{Sheaf.CellularSheaf.IntegralStructure}, and
+    \lean{Sheaf.CellularSheaf.IntegralStructure.harmonicOneLattice}.
+    The restriction-preserving integral structure is supplied explicitly.
+  \item[Structured Hodge sample and presented harmonic sublattice.]
+    Sections 2--3; \lean{Sheaf.CellularSheaf.HodgeNoise},
+    \lean{Sheaf.CellularSheaf.HodgeEncryptedCochain}, and
+    \lean{Sheaf.CellularSheaf.HarmonicLatticePresentation}.
+    A presented full-span sublattice is additional data, not an automatic
+    identification of a real harmonic subspace with a discrete lattice.
   \item[Cochain commitment payload.]
     Section 5; \lean{Axioms.CochainCommitmentData},
     \lean{CochainCommitmentData.WellFormed}, and
@@ -88,6 +104,12 @@
   \item[Proof-carrying public artifact.]
     Section 5; \lean{TCB.HashedCommittedCochain} and
     \lean{TCB.ProofCarryingCommittedCochain}.
+  \item[Bound full-sample/exact-payload observation.]
+    Sections 2 and 5; \lean{TCB.HCPStackBinding},
+    \lean{TCB.BoundHCPObservation}, and
+    \lean{TCB.BoundHCPObservation.toObservation}.
+    This witness-side record retains the message/opening and a supplied
+    context-indexed binding relation; it is not itself a public wire format.
   \item[Projection chain.]
     Section 6; \lean{ProjectionChain.Chain} and
     \lean{ProjectionChain.Chain.toEvaluationProjection}.
@@ -103,7 +125,7 @@
     and \lean{CanonicalRS.MCA.badChallengeFraction}.
 \end{description}
 
-\subsection{Theorems And Status}
+\subsection{Theorems and Status}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[Kernel ambiguity implies lossy public projection.]
@@ -146,7 +168,7 @@
     \lean{constantPublicProjection_kernelAmbiguous}, and
     \lean{constantPublicProjection_lossy};
     Lean-proved.
-  \item[Every field-linear image can be a Hodge kernel.]
+  \item[Every field-linear image can be a linear kernel.]
     \lean{exists_matrix_ker_eq_range};
     Lean-proved linear-algebra construction.
   \item[Kernel realization for presented generated subspaces.]
@@ -210,6 +232,32 @@
     \lean{Sheaf.CellularSheaf.decoded_isExactOneCochain}, and
     \lean{Sheaf.CellularSheaf.decoded_isOneCocycle};
     Lean-proved for the concrete cellular-sheaf commitment object.
+  \item[Cellular coboundaries preserve the supplied integral structure.]
+    \lean{Sheaf.CellularSheaf.IntegralStructure.delta0_mem_integralOneCochains}
+    and
+    \lean{Sheaf.CellularSheaf.IntegralStructure.delta1_mem_integralTwoCochains};
+    Lean-proved from the stalk-lattice restriction-preservation fields.
+  \item[Structured samples recover their integral harmonic message.]
+    \lean{Sheaf.CellularSheaf.HodgeNoise.value_mem_harmonic_orthogonal} and
+    \lean{Sheaf.CellularSheaf.HodgeEncryptedCochain.harmonicOneProjection_observed};
+    Lean-proved for the supplied integral sheaf and exact/coexact opening.
+    The ambient observed sample is not asserted to be integral or exact.
+  \item[Presented harmonic-lattice samples have the encoded point as unique CVP solution.]
+    \lean{Sheaf.CellularSheaf.HarmonicLatticePresentation.squaredDistance_observed_decomposition},
+    \lean{Sheaf.CellularSheaf.HarmonicLatticePresentation.solution_cvpInstance_iff_eq_point},
+    and
+    \lean{Sheaf.CellularSheaf.HarmonicLatticePresentation.existsUnique_solution_cvpInstance};
+    conditional on an explicit harmonic-lattice presentation and a sample
+    constructed from one of its lattice points. This does not supply a
+    general CVP algorithm or derive the presentation from public data.
+  \item[The bound observation retains payload/snapshot identity and harmonic recovery.]
+    \lean{TCB.BoundHCPObservation.artifact_wellFormed},
+    \lean{TCB.BoundHCPObservation.payload_boundToSnapshot}, and
+    \lean{TCB.BoundHCPObservation.harmonicProjection_cochainObject};
+    Lean-proved from the record's accepted exact component, artifact binding,
+    decoded-component equality, and supplied observation-binding relation.
+    No modular serializer or concrete public semantic realization follows
+    from constructing this conditional record.
   \item[Well-formed payloads have nonempty edge data and supported modulus.]
     \lean{CochainCommitmentData.edge_values_nonempty_of_wellFormed} and
     \lean{CochainCommitmentData.modulus_gt_one_of_wellFormed};
@@ -240,7 +288,7 @@
 
 \end{leanledger}
 
-\section{Lean Source Coverage By File}
+\section{Lean Source Coverage by File}
 
 This appendix is the file-by-file coverage audit for the translation. The body
 of the paper gives the mathematical definitions and proofs; this appendix
@@ -249,7 +297,7 @@ Import-only aggregate files are listed with the files they collect.
 
 \begin{leanledger}
 
-\subsection{Build And Aggregate Files}
+\subsection{Build and Aggregate Files}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{lakefile.lean}.]
@@ -262,7 +310,7 @@ Import-only aggregate files are listed with the files they collect.
     union of the component files listed below.
 \end{description}
 
-\subsection{HCP, CVP, And Fibrational Algebra}
+\subsection{HCP, CVP, and Fibrational Algebra}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{HCP.lean}.]
@@ -271,7 +319,7 @@ Import-only aggregate files are listed with the files they collect.
     observations and witnesses, the Hodge-coordinate cipher, and the unique
     operative recovery target. It also records isometric presentation
     transport, harmonic-projection naturality, fixed-coordinate
-    non-stabilization, classifier nonfaithfulness, and the resulting
+    nonstabilization, classifier nonfaithfulness, and the resulting
     no-exact-representative-decoder theorem. The direct public recovery
     contract is
     \lean{Hcrypt.HCPBridge.SolverExactOnOperativeTarget}.
@@ -281,8 +329,9 @@ Import-only aggregate files are listed with the files they collect.
     \lean{Hodge_Ambiguity}, \lean{Hodge_Ambiguity_Proof},
     \lean{constantPublicProjection_publicCompatibleHodgeAmbiguity},
     \lean{constantPublicProjection_kernelAmbiguous}, and
-    \lean{constantPublicProjection_lossy} are
-    \cref{prop:cvp-insufficient}. The presented-linear-image comparison
+    \lean{constantPublicProjection_lossy} supply the matrix sanity example
+    discussed after \cref{prop:cvp-insufficient}, rather than a concrete typed
+    HCP separation witness. The presented-linear-image comparison
     declarations \lean{Hodge_Solver_Correct},
     \lean{exists_matrix_ker_eq_range},
     \lean{Hodge_GeneratedSubspace_Reduction}, and
@@ -342,7 +391,7 @@ Import-only aggregate files are listed with the files they collect.
     used in HCP.
 \end{description}
 
-\subsection{Foundational, Sheaf, Spectral, And Judgment Axioms}
+\subsection{Foundational, Sheaf, Spectral, and Judgment Axioms}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{Sheaf/CellComplex.lean}, \lean{Sheaf/Cellular.lean},
@@ -359,6 +408,41 @@ Import-only aggregate files are listed with the files they collect.
     harmonic-subspace, and kernel transport theorems; immutable
     sheaf-state snapshots; snapshot-bound payload interpretation; accepted
     exact one-cochains; and the quotient of openings by \(\ker\delta_0\).
+  \item[\lean{Sheaf/Integral.lean}.]
+    Sections 2--3 and 5 use \lean{StalkLattice}, its additive carrier and
+    \lean{Preserves} predicate, and \lean{IntegralStructure}. The latter
+    selects integral stalk lattices preserved by the cellular restrictions.
+    The induced \lean{integralZeroCochains}, \lean{integralOneCochains}, and
+    \lean{integralTwoCochains} are additive subgroups;
+    \lean{harmonicOneLattice} is the integral degree-one subgroup intersected
+    with the harmonic subspace. The two integral-coboundary preservation
+    theorems are proved for this supplied structure. No canonical modular
+    encoding/decoding is constructed here.
+  \item[\lean{Sheaf/Distance.lean} and \lean{Sheaf/CochainSemantics.lean}.]
+    Distance to the actual exact subspace is nonnegative, vanishes exactly
+    on exact cochains, and is stable under Euclidean perturbations. The
+    semantics adapter intertwines the actual cochain operators and decoder,
+    identifies snapshot binding, and derives exactness, cocycle and acceptance
+    transport. Other legacy ambient gates remain explicit. The carrier
+    equivalence is not asserted to preserve norms.
+  \item[\lean{Sheaf/HarmonicLattice.lean}.]
+    Sections 2--3 use \lean{HodgeNoise}, \lean{HodgeEncryptedCochain},
+    \lean{observed}, and harmonic projection recovery for
+    \(b=h+\delta_0a+\delta_1^*c\).
+    \lean{HarmonicLatticePresentation} additionally supplies an explicit
+    full-span harmonic sublattice, membership proofs and its real-span
+    equality. Its \lean{point}, \lean{encrypt}, and \lean{cvpInstance}
+    constructions lead to the squared-distance decomposition and unique
+    closest-point result for those encoded samples. The presentation need
+    not contain every integral harmonic cochain. Noise sampling, a secrecy
+    game and modular wire realization remain separate obligations.
+  \item[\lean{Sheaf/ObservationQuotient.lean}.]
+    The full kernel-normalized residual equals the Hodge-noise value.
+    \Cref{prop:exact-component-obstruction} is formalized by the coexact-ray,
+    residual-nonfactorization and far-preservation obstruction theorems.
+    Their source carrier is unrestricted Hodge noise, and the extraction
+    must factor through its decoded exact component; no raw-byte
+    factorization or unrestricted production-profile claim is inferred.
   \item[\lean{Axioms/Foundation.lean} and \lean{Gates/Exact.lean}.]
     Section 4 translates \lean{Foundation} and
     \lean{FoundationWellFormed}: the cochain-complex premise, coboundary
@@ -398,22 +482,22 @@ Import-only aggregate files are listed with the files they collect.
     \lean{byConstruction_passes_spectral_gate}.
   \item[\lean{Tsirelson.lean}.]
     Section 4 translates the Grassmannian/Laplacian family
-    \lean{Grassmannian_Laplacians}, \lean{Ω_G},
-    \lean{LaplacianSpace}, \lean{SpectralGap}, \lean{Ω_1},
+    \lean{Grassmannian_Laplacians}, \leanOmega{_G},
+    \lean{LaplacianSpace}, \lean{SpectralGap}, \leanOmega{_1},
     \lean{projector_map}, \lean{Classical_Strategy},
     \lean{Quantum_Strategy}, and \lean{MaxEigenvalue}; the infinitude and
     injectivity results \lean{R_infinite}, \lean{infinite_lines},
     \lean{Grassmannian_Laplacian_injective},
     \lean{projector_injective}, \lean{laplacian_injective},
-    \lean{Ω_1_infinite}, \lean{R_uncountable},
-    \lean{Ω_1_infinite_v2}, and \lean{Ω_1_Nonempty}; the Laplacian-space
+    \leanOmega{_1_infinite}, \lean{R_uncountable},
+    \leanOmega{_1_infinite_v2}, and \leanOmega{_1_Nonempty}; the Laplacian-space
     inclusions \lean{laplacian_properties},
     \lean{laplacian_is_hermitian},
-    \lean{Ω_1_subset_LaplacianSpace},
-    \lean{Ω_1_subset_LaplacianSpace_v3},
-    \lean{Ω_1_subset_LaplacianSpace_v5},
-    \lean{Ω_1_subset_LaplacianSpace_explicit_v2}, and
-    \lean{Ω_1_subset_LaplacianSpace_explicit}; the classical/quantum
+    \leanOmega{_1_subset_LaplacianSpace},
+    \leanOmega{_1_subset_LaplacianSpace_v3},
+    \leanOmega{_1_subset_LaplacianSpace_v5},
+    \leanOmega{_1_subset_LaplacianSpace_explicit_v2}, and
+    \leanOmega{_1_subset_LaplacianSpace_explicit}; the classical/quantum
     statement forms \lean{Classical_Bound_Statement} and
     \lean{Quantum_Bound_Statement}; and the empty-family sanity checks
     \lean{Classical_Bound_empty_family} and
@@ -428,6 +512,7 @@ Import-only aggregate files are listed with the files they collect.
     \(\eta_1/\eta_2\) oracle modalities, Lawvere--Tierney idempotence,
     boundary judgment behavior, canonical consensus admissibility, oracle
     pipelines, and the oracle/consensus bridge theorems.
+  \Needspace{6\baselineskip}
   \item[\lean{Axioms/StageAdmissibility.lean},
     \lean{Gates/Stage.lean}, and \lean{Gates/Oracle.lean}.]
     This appendix records the stage and oracle aliases: pipeline stages, stage
@@ -436,7 +521,7 @@ Import-only aggregate files are listed with the files they collect.
     transaction-critical pass is admissible.
 \end{description}
 
-\subsection{Laplacian Geometry And Search Spaces}
+\subsection{Laplacian Geometry and Search Spaces}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{Laplacian/Hodge.lean} and \lean{Laplacian.lean}.]
@@ -469,7 +554,7 @@ Import-only aggregate files are listed with the files they collect.
     \(k\)-planes.
 \end{description}
 
-\subsection{Commitments, Public Artifacts, And TCB Boundary}
+\subsection{Commitments, Public Artifacts, and TCB Boundary}
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{Axioms/CochainCommitment/Payload.lean},
@@ -496,12 +581,37 @@ Import-only aggregate files are listed with the files they collect.
     compressed public data, observation boundaries, gap-decision certificates,
     witness-compression envelopes, public state updates, and theorems stating
     that accepted artifacts expose well-formed cochain and oracle predicates.
+  \item[\lean{TCB/HCPObservation.lean}.]
+    Sections 2 and 5 use \lean{HCPStackBinding} and
+    \lean{BoundHCPObservation} to join the full Hodge sample to its accepted
+    exact committed component, artifact leaf digest, immutable snapshot root
+    and lifecycle context. The \lean{latticeObject}, \lean{cochainObject},
+    \lean{hashObject}, \lean{snapshotRoot}, and \lean{toObservation} accessors
+    retain those same objects. Artifact well-formedness, snapshot binding and
+    harmonic recovery are proved from the explicit record fields. The
+    classifier, decoder and observation-binding relation are supplied;
+    constructing the record does not instantiate their public realization.
+    The record contains private witness data and is not a serialization or
+    public disclosure prescription.
   \item[\lean{Axioms/ZKP.lean}.]
     Section 5 records the zero-knowledge proof object and its well-formedness
     predicate as an assumed proof-carrying artifact interface.
 \end{description}
 
-\subsection{Projection Chain, Proximity Gates, And RS/MCA Endpoint}
+\subsection{Projection Chain, Proximity Gates, and RS/MCA Endpoint}
+
+The universal standalone coding results are owned by the companion Paper 3
+and its detailed source ledger. Its completed generic distance, real-shell,
+phase-split and all-parameter family constructions reside in
+\lean{Proximity/Core/Distance.lean},
+\lean{Proximity/Core/RadiusShell.lean},
+\lean{Proximity/Capacity/Realization.lean},
+\lean{Proximity/Capacity/ListPhase.lean},
+\lean{Proximity/ListDecoding/PhaseSplit.lean},
+\lean{Proximity/MCA/RealThreshold.lean}, and
+\lean{Proximity/Application/DistanceCalibration.lean}.
+This appendix records their HCP-specific consumers without repeating the
+standalone coding proofs.
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{Proximity/Problem.lean}, \lean{Proximity/Public.lean},
@@ -509,25 +619,39 @@ Import-only aggregate files are listed with the files they collect.
     \lean{Proximity/GrassmannianPlucker.lean}, and
     \lean{Proximity/PluckerCochain/PublicBinding.lean}.]
     Section 6 records the problem-facing public projection vocabulary, the
-    abstract Plucker coordinate-system and public-shadow contracts, and the
-    interfaces that prepare the concrete Plucker coordinate and finite-code
+    abstract Pl\"ucker coordinate-system and public-shadow contracts, and the
+    interfaces that prepare the concrete Pl\"ucker coordinate and finite-code
     datum.
+  \item[\lean{Proximity/Application/GapBoundary.lean}.]
+    Section 6.1 formalizes disjointness of the closed promises under a strict
+    gap, the equal-radius boundary obstruction, and strict-gap views retaining
+    the existing carrier, score and radii. The classical specification solver
+    characterizes logical consistency; it supplies neither an executable or
+    efficient solver nor a concrete application profile.
   \item[\lean{Proximity/Grassmannian.lean},
     \lean{Proximity/GrassmannianPlucker.lean}, and
     \lean{Proximity/GrassmannianPlucker/Concrete.lean}.]
     Section 6 translates harmonic Grassmannian points, exterior coordinates,
     frame witnesses, decomposability, framed systems, raw and normalized
-    Plucker coordinates, soundness, projective equivalence, projective
+    Pl\"ucker coordinates, soundness, projective equivalence, projective
     normalization, projective framed systems, and projective sound inputs.
+  \item[\lean{Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean}
+    and \lean{TCB/PluckerObservation.lean}.]
+    Section 6 proves both concrete exterior-algebra soundness inputs,
+    reconstructs the operative subspace and harmonic projector from a genuine
+    full projective point, and proves full-shadow equality exactly when the
+    ranked points agree. Identification with \(\ker\Delta_x\) gives the
+    operative harmonic target; digest inversion and efficient real-coordinate
+    algorithms are outside these results.
   \item[\lean{Proximity/CochainBridge.lean},
     \lean{Proximity/PluckerCochain.lean},
     \lean{Proximity/PluckerCochain/Concrete.lean}, and
     \lean{Proximity/PluckerCochain/PublicBinding.lean}.]
-    Section 6 translates valid frames, Plucker-to-cochain instances, local
+    Section 6 translates valid frames, Pl\"ucker-to-cochain instances, local
     syndrome targets, codeword predicates, evaluation projections, invariant
     checklists, payload encoders, commitment-sum residuals, payload
-    realizations, hashed Plucker coordinates, observed frame bindings, and the
-    theorems that valid Plucker coordinates bind to sheaf-coherent exact
+    realizations, hashed Pl\"ucker coordinates, observed frame bindings, and the
+    theorems that valid Pl\"ucker coordinates bind to sheaf-coherent exact
     one-cochains, hence to accepted committed cocycles and local codewords.
   \item[\lean{Proximity/CochainPlane.lean},
     \lean{Proximity/CochainPlane/Core.lean},
@@ -549,7 +673,7 @@ Import-only aggregate files are listed with the files they collect.
   \item[\lean{Proximity/Gates.lean}, \lean{Proximity/Gates/Stage.lean},
     \lean{Proximity/Gates/Final.lean}, and
     \lean{Proximity/GateEvidence.lean}.]
-    Section 6 translates only proximity gates: source metric, Plucker metric,
+    Section 6 translates only proximity gates: source metric, Pl\"ucker metric,
     semantic alignment, optional syndrome adequacy, projective-coordinate
     respect, three-stage noncollapse through cochain and plane radii,
     far-region separation, runtime binding, structural bundles, hard-gate and
@@ -588,7 +712,14 @@ Import-only aggregate files are listed with the files they collect.
     and the bound on the projected bad-challenge fraction.
 \end{description}
 
-\subsection{Subsequent Protocol And Implementation Boundary}
+\newpage
+\subsection{Subsequent Protocol and Implementation Boundary}
+
+The bounded state/transition, candidate-indexed evidence and typed storage
+modules under \lean{Protocol/Ledger/}, \lean{Protocol/Evidence/}, and
+\lean{Protocol/Storage/} belong to Paper 2;
+their completion status is recorded in \lean{papers/paper2/SCOPE.md}.
+They are downstream consumers of the mathematical objects above.
 
 \begin{description}[leftmargin=2.4em,style=nextline]
   \item[\lean{Axioms/Consensus.lean}, \lean{Axioms/Ledger.lean},
@@ -601,7 +732,7 @@ Import-only aggregate files are listed with the files they collect.
   \item[\lean{Consensus/Geometry.lean},
     \lean{Consensus/Reliability.lean}, and
     \lean{Consensus/ProofOfValue.lean}.]
-    This appendix records Plucker eligibility and consensus geometry aliases,
+    This appendix records Pl\"ucker eligibility and consensus geometry aliases,
     reliability evidence and bounded reliability scores, proximity quality,
     Proof-of-Value gates, Proof-of-Value inputs, scores with and without
     reliability/proximity, and the score bounds. These are protocol-facing

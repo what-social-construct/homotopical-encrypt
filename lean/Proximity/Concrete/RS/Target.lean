@@ -1,5 +1,9 @@
-import Proximity.Concrete.RS.ReedSolomon
-import Proximity.Application.Problem
+module
+
+public import Proximity.Concrete.RS.ReedSolomon
+public import Proximity.Application.Problem
+
+@[expose] public section
 
 /- Paper correspondence: Paper 1 Section 6, RS target interface for proximity. -/
 

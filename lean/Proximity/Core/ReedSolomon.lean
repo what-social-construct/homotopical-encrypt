@@ -1,6 +1,10 @@
-import Proximity.Core.BlockCode
-import Mathlib.Algebra.Polynomial.Basic
-import Mathlib.LinearAlgebra.Lagrange
+module
+
+public import Proximity.Core.BlockCode
+public import Mathlib.Algebra.Polynomial.Basic
+public import Mathlib.LinearAlgebra.Lagrange
+
+@[expose] public section
 
 /-!
 # Generic Reed--Solomon foundations
@@ -139,7 +143,7 @@ def toVectorFAdditiveCode
   Codeword := (P.vectorBlockCode σ).Codeword
   zero_mem := by
     intro j
-    simpa using hP.zero_mem
+    simpa [toBlockCode] using hP.zero_mem
   add_mem := by
     intro u v hu hv j
     exact hP.add_mem (hu j) (hv j)
@@ -150,7 +154,7 @@ def toVectorFAdditiveCode
 end FAdditive
 
 /-- Positive-degree-bound RS codes are closed under field-linear operations. -/
-def fAdditive_of_degreeBound_pos
+theorem fAdditive_of_degreeBound_pos
     (P : Parameters F ι)
     (hDegree : 0 < P.degreeBound) :
     P.FAdditive where

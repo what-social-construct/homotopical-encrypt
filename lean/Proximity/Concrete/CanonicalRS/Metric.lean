@@ -1,5 +1,9 @@
-import Proximity.Concrete.CanonicalRS.Target
-import Mathlib.Data.Real.Archimedean
+module
+
+public import Proximity.Concrete.CanonicalRS.Target
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+
+@[expose] public section
 
 /-
   Canonical received-word metric and radius normalization.
