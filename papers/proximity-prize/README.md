@@ -107,16 +107,14 @@ decoder with nonexact image. No capacity-scale unrestricted geometric theorem
 is claimed. Accepted exact contexts have zero native distance under the stated
 decoder contract; positive-far payloads are raw proximity/rejection inputs.
 
-The current Lean/Mathlib 4.35 aggregate and default builds pass 9,258 and
-9,253 jobs. The consolidated audit has 235 selected declarations: 199
-standard-only and 36 with existing native arithmetic certificates; none
-depends on the seven cited-bound axioms or `sorryAx`. The 96 new cellular/HCP
-reports are all standard-only. Paper 1 has 99 reviewed pages; Paper 3 is
-unchanged at 28 reviewed pages. The preceding native-metric milestone had
-9,253/9,248 jobs, 139 selected reports and 97/28 pages. The
-[shared validation record](../../SEMANTIC-PARITY.md)
-and [reproduction guide](../../docs/MATH_STORAGE_VALIDATION.md) retain the
-exact scopes, probes and separately dated earlier results.
+The [shared validation record](../../SEMANTIC-PARITY.md) and
+[reproduction guide](../../docs/MATH_STORAGE_VALIDATION.md) record current
+Lean/Mathlib 4.35 full/default builds, selected dependency reports and source
+scans, separately from earlier milestones. Some canonical application results
+retain existing native arithmetic certificates; the selected reports use no
+cited-bound axiom or `sorryAx`. Paper 1 has 99 reviewed pages; Paper 3 is
+unchanged at 28 reviewed pages. Later Paper 2 public-observation work does not
+change this manuscript or its standalone coding statements.
 
 The full Hodge sample is a separate source. With a nonzero coexact direction,
 `Sheaf/ObservationQuotient.lean` proves an obstruction on the unrestricted

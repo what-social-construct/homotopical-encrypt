@@ -155,6 +155,30 @@ variable
   {N : Type} [Fintype N] {P : Type}
   (R : HCPBridge.Realization C S sem Rep N ℝ P)
 
+/-- Two actual released views with distinct operative targets exclude one
+decoder that is exact on both examples. The selected HCP observations may
+themselves differ: equality is required only for the views actually released.
+This theorem does not supply that equality or assert hiding of any field. -/
+theorem no_exact_view_decoder_of_same_view
+    {View : Type*}
+    (observe : (observation : HCPBridge.Observation P N ℝ) →
+      HCPBridge.HiddenHodgeWitness R observation → View)
+    (leftObservation rightObservation : HCPBridge.Observation P N ℝ)
+    (leftWitness : HCPBridge.HiddenHodgeWitness R leftObservation)
+    (rightWitness : HCPBridge.HiddenHodgeWitness R rightObservation)
+    (sameView : observe leftObservation leftWitness =
+      observe rightObservation rightWitness)
+    (targets_ne : HCPBridge.operativeTarget R leftObservation leftWitness ≠
+      HCPBridge.operativeTarget R rightObservation rightWitness) :
+    ¬ ∃ solve : View → (N → ℝ),
+      solve (observe leftObservation leftWitness) =
+        HCPBridge.operativeTarget R leftObservation leftWitness ∧
+      solve (observe rightObservation rightWitness) =
+        HCPBridge.operativeTarget R rightObservation rightWitness := by
+  rintro ⟨solve, hleft, hright⟩
+  exact targets_ne
+    (hleft.symm.trans ((congrArg solve sameView).trans hright))
+
 /-- Reuse the existing impossibility proof for an explicitly selected view
 whose value is determined by the HCP observation. Storage roots, proofs and
 payloads need their own factorization proof before this theorem applies. -/

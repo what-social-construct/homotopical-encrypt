@@ -7,7 +7,115 @@ source coverage, checked proof statements and theorem dependencies. It does
 not certify a concrete cryptographic scheme, an uninstantiated source-radius
 profile, an efficient gap solver or a storage backend.
 
+## Current public-observation profile — 2026-11-06
+
+The first Paper 2 public-input profile is now implemented in
+[PublicView](../lean/Protocol/Storage/PublicView.lean), exported through
+`Protocol.Storage.Core`:
+
+- `Context.publicView` releases the same original cochain payload and all six
+  derived context-key coordinates. Snapshot/run/parameter substitutions are
+  observable; equality requires both the header and original payload.
+- `SealedManifest.publicView` retains that base input, the actual sealed root
+  and ordered slot/digest directory. The directory preserves the original
+  slot order and uniqueness, while omitting dependent checkpoint witnesses.
+- `hcpDisclosure` adds the existing `(class,b)` observation from the same
+  bound sample. Equality of HCP pairs alone does not imply equality of these
+  larger releases. A public class announcement without `b` is the separate
+  tuple of the base view and that snapshot's classifier value.
+- `TCB.HCPRealization.no_exact_view_decoder_of_same_view` requires only
+  pairwise equality of the actual released views and different operative
+  targets to exclude one decoder exact on both. It supplies neither equality
+  of storage records nor cryptographic hiding. The earlier global
+  factorization criterion is retained.
+
+Paper 2 §2.1 fixes the data/access boundary. Canonical bytes, authenticated
+opening requests, proof/verifier metadata, released history extensions and
+their cryptographic binding remain explicit contracts. No new serializer,
+hash implementation, key rotation or privacy experiment is claimed. Papers
+1 and 3 and their reviewed PDFs are unchanged in this step.
+
+
+### Public-observation validation
+
+The expanded union of all fifteen default roots and explicit integration
+entries passes **9,259 jobs**; the literal default passes **9,254 jobs** on
+the unchanged Lean/Mathlib 4.35 pins. The new leaf's focused build passes
+3,396 jobs and the pairwise adapter's focused build passes 3,383 jobs. Replayed
+upstream linter/deprecation warnings remain; the added code has no local
+warning or error.
+
+A fresh public-facade probe passes **268 distinct selected declarations**:
+**232 standard-only** (220 exactly the usual three axioms and twelve subsets),
+and **36 retaining existing native arithmetic certificates**. All **33 new
+reports** are standard-only: 26 use exactly the three, seven use no axioms.
+All 235 preceding dependency sets match exactly. No selected result depends
+on a cited-bound axiom or `sorryAx`.
+
+The static scan covers **240 public source modules / 241 Lean files** including
+Lake configuration, with no active holes, unresolved imports or local cycles,
+and the same seven isolated cited-bound axioms. The new public-view closure
+has 38 modules; `Protocol.Storage.Core` now has 80. The other eleven recorded
+closures are unchanged. All thirteen exclude `Chain` and `CitedBounds`.
+The local artifacts are `public-observation-{full,default}-build.log`,
+`public-observation-{all,new}-axioms.lean`, `public-observation-all-axioms.log`,
+`public-observation-axiom-summary.json` and
+`public-observation-source-audit.json` under `output/validation/`.
+These are selected dependency reports, not a security or runtime certificate.
+
+To reproduce the added checks from `lean/`:
+
+```sh
+LEAN_NUM_THREADS=4 lake build
+LEAN_NUM_THREADS=4 lake build Protocol.Storage.PublicView Protocol.Storage.Core \
+  TCB.HCPRealization Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples \
+  Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalThreeLevel \
+  Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily
+cat > /tmp/public-observation-new-axioms.lean <<'LEAN'
+import Protocol.Storage
+import TCB
+
+#print axioms Hcrypt.Protocol.Storage.PublicPayloadView
+#print axioms Hcrypt.Protocol.Storage.PublicPayloadView.ext
+#print axioms Hcrypt.Protocol.Storage.PublicPayloadView.eq_iff
+#print axioms Hcrypt.Protocol.Storage.PublicPayloadView.ne_of_key_ne
+#print axioms Hcrypt.Protocol.Storage.Context.publicView
+#print axioms Hcrypt.Protocol.Storage.Context.publicView_eq_iff
+#print axioms Hcrypt.Protocol.Storage.Context.publicView_topologyTag_matches
+#print axioms Hcrypt.Protocol.Storage.Context.publicView_ne_of_key_ne
+#print axioms Hcrypt.Protocol.Storage.Context.publicView_ne_of_snapshot_ne
+#print axioms Hcrypt.Protocol.Storage.Context.publicView_ne_of_runId_ne
+#print axioms Hcrypt.Protocol.Storage.Context.publicView_ne_of_parameters_ne
+#print axioms Hcrypt.Protocol.Storage.PublicManifestView
+#print axioms Hcrypt.Protocol.Storage.PublicManifestView.ext
+#print axioms Hcrypt.Protocol.Storage.PublicManifestView.eq_iff
+#print axioms Hcrypt.Protocol.Storage.SealedManifest.publicView
+#print axioms Hcrypt.Protocol.Storage.SealedManifest.publicView_base
+#print axioms Hcrypt.Protocol.Storage.SealedManifest.publicView_directory_slots
+#print axioms Hcrypt.Protocol.Storage.SealedManifest.publicView_directory_slots_nodup
+#print axioms Hcrypt.Protocol.Storage.HCPDisclosure
+#print axioms Hcrypt.Protocol.Storage.HCPDisclosure.forget
+#print axioms Hcrypt.Protocol.Storage.HCPDisclosure.ext
+#print axioms Hcrypt.Protocol.Storage.HCPDisclosure.eq_iff
+#print axioms Hcrypt.Protocol.Storage.HCPDisclosure.ne_of_base_ne
+#print axioms Hcrypt.Protocol.Storage.hcpDisclosure
+#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_forget
+#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_cochain
+#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_leafDigest
+#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_snapshotRoot
+#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_runId
+#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_observation
+#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_eq_iff
+#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_same_observation_distinct_parameters
+#print axioms Hcrypt.TCB.HCPRealization.no_exact_view_decoder_of_same_view
+LEAN
+LEAN_NUM_THREADS=2 lake env lean /tmp/public-observation-new-axioms.lean
+```
+
 ## Current cellular HCP implementation — 2026-11-06
+
+This preceding construction/validation milestone is retained as a baseline;
+the public-observation profile above is its subsequent follow-up.
 
 The five-module follow-up constructs an actual finite integral cellular HCP
 family in a proved homological fragment of the typed Helfer interface. It

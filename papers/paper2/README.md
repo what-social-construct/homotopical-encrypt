@@ -16,6 +16,25 @@ mathematical HCP theorem uses the existing `(class,b)` observation. A richer
 storage or full-Plucker view needs its own compatibility conditions; the
 visibility levels themselves are not being reopened.
 
+The first public-data profile is now specified in
+[Draft §2.1](DRAFT.md#21-base-public-input-and-declared-disclosures) and
+implemented by [Storage.PublicView](../../lean/Protocol/Storage/PublicView.lean).
+Its base record contains the existing six-coordinate context key and the
+same original cochain payload. The retained manifest view adds the actual
+sealed root and ordered `(slot,digest)` directory, without publishing semantic
+checkpoint payloads. A separately named `HCPDisclosure` adds the existing
+`(class,b)` observation from that same bound sample. The residue payload does
+not implicitly disclose this pair.
+
+These records fix the public values, not a complete wire transcript or a
+hiding theorem. Public roots, tags, proof outputs and released extensions must
+all appear in the eventual adversary view. The base profile excludes full
+operative-kernel Plücker coordinates; a digest-only extension needs an explicit
+digest projection and binding contract. Canonical bytes, selective access,
+proof/verifier formats and cryptographic guarantees remain separate. Recipient
+delivery and rotation are the next protocol objects to specify; current
+validation is recorded [centrally](../../docs/MATH_STORAGE_VALIDATION.md).
+
 The shared mathematical wiring is owned by Paper 1:
 [actual cochain model and invariant homological tests](../../lean/Helfer/CochainModel.lean),
 [integral cellular axis family](../../lean/Sheaf/HCPAxisFamily.lean),

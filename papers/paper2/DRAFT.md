@@ -67,11 +67,79 @@ Paper 2 preserves that separation while specifying its concrete protocol paths:
 | Public payload | The serialized residue edge vector \(\bar c=\delta_0a\bmod q\), modulus, declared edge count and topology tag; public artifact handles and root bindings refer to the selected objects. This payload is not the full Hodge sample or a presentation of its operator. |
 | Selective opening/proof | Only the declared local values, conditions or verified statements are exposed. An opening or proof does not make every field of its semantic witness record public. |
 
-This settles the level of each object. The concrete byte encoding, recipient
-and verifier access, permitted proof outputs, and full-Plucker versus
-digest-only profile still need their selected contracts. A semantic
-`BoundHCPObservation` retains a message and openings for proofs and must not be
-serialized wholesale into public history.
+#### 2.1. Base public input and declared disclosures
+
+The first storage-facing profile publishes the original payload together with
+the header already derived by `Storage.Context.key`. For a context \(C\), set
+
+\[
+V_{\mathrm{base}}(C)=(K(C),c(C)),
+\]
+
+where the six coordinates of \(K(C)\) are `runId`, `schemaVersion`,
+`snapshotRoot`, `cochainDigest`, `topologyTag` and `parameterSet`. Here
+
+\[
+c(C)=C.\mathrm{artifact}.\mathrm{cochain}=(q,N,\mathbf z,\tau).
+\]
+
+The digest in the header is the original artifact's leaf digest. The header's
+topology tag equals the original payload's tag by the context's existing
+snapshot-binding contract. It is not a second topology description. The
+[public-view adapter](../../lean/Protocol/Storage/PublicView.lean) names this
+record `PublicPayloadView` and constructs it as `Context.publicView`. Its
+carrier contains no sheaf, decoder, harmonic message, opening or semantic
+`Prop` field. Equality of two base views requires equality of both their
+complete headers and their original payloads.
+
+A separately announced public class label can accompany the base input
+without disclosing the cochain: its view is
+\((V_{\mathrm{base}}(C),\alpha)\), with \(\alpha\) supplied by the same
+snapshot classifier. The label remains public in any experiment that
+announces it. Publishing it does not authorize publishing \(b\), and a stable
+class label may link repeated uses.
+
+For retained storage, `PublicManifestView Slot` adds the actual sealed manifest
+root and its ordered directory of `(slot,digest)` entries to that same base
+view. `SealedManifest.publicView` derives the directory from the original
+manifest items, omitting their semantic checkpoint payloads. The manifest
+root does not replace the proposal, state, evidence or block roots; those
+remain separately named public extensions wherever the history releases them.
+
+| Object or path | Reader and released data | Binding and limit |
+|---|---|---|
+| Base public input | Every public reader receives \(V_{\mathrm{base}}\), including the residue vector and all six header coordinates. | Reuses the original artifact and context. Public identifiers are observable and may distinguish presentations. |
+| Private interpretation and witness | The witness holder retains the actual sheaf, decoder, operative Hodge data, full sample, harmonic message and openings. | Their omission as record fields does not prove secrecy against public tags, roots or other released data. |
+| Public class announcement | A declared class-announcement path publishes the base record and the same snapshot's classifier value \(\alpha\), while keeping \(b\) outside that view. | This is distinct from publishing the full HCP pair. Its classifier value and any repeated-use linkability remain part of the observable data. |
+| Explicit HCP disclosure | A path that declares disclosure of the selected HCP input adds the same sample's classifier/cochain pair \((\alpha,b)\). Its designated reader receives that pair. | `HCPDisclosure` retains the base record, and `hcpDisclosure` obtains the pair from the same `BoundHCPObservation.toObservation`. This is no extraction of \(b\) from the residue vector. |
+| Plücker handle | The base profile contains no full operative-kernel Plücker coordinates. An extension may release an explicitly bound digest as an additional observable field. | `HashedPluckerShadow` contains both a shadow and digest and is not a digest-only release. Digest binding and hiding are different requirements. |
+| Selective local opening | An authorized reader receives only the declared indices and opening values, together with their verification material. | The policy must bind the query and answers to this payload and context. Authorization, boundary-edge data and the response codec remain explicit contracts. |
+| Public proof or verified statement | The declared reader receives the released statement/instance identifiers, proof-system and verifier identifiers, public inputs and proof bytes. | The encoding and verifier relation must bind those actual fields to the same candidate and context. A semantic `Prop` or proof-system record is not their wire format. |
+| Retained manifest and projection evidence | The selected retained view publishes the sealed root and ordered `(slot,digest)` directory with the same base input. Released leaf openings and evidence bytes extend this view. | The directory is derived from the actual items. Their semantic checkpoint payloads and projection prefixes remain private unless separately disclosed; retaining them in Lean does not authorize publishing every witness field. |
+
+The base and manifest views are not a completed adversary transcript. A proof,
+selective response, state root or other
+released extension must be included in the view used by its security
+experiment. Access to private recipient material is not assumed from this
+table; authenticated delivery and rotation are subsequent protocol work.
+
+The named HCP disclosure is a semantic observation of real cochain
+coordinates. Its existence in Lean supplies no finite wire codec or access
+control implementation. No claim that the base residue bytes reveal that
+observation is made. A semantic `BoundHCPObservation` itself retains the
+message and openings and is never the public serialization target.
+
+Snapshot roots, topology tags, run identifiers and parameter handles remain
+visible even when raw Hodge coordinates are withheld. A snapshot may bind a
+different cellular presentation, and a public lookup may reveal further
+information. Neither identical class labels nor equal exact components imply
+equal headers, payloads or proof transcripts. In particular, the finite HCP
+axis example does not construct two equal complete public storage records.
+
+This fixes the first profile's data and access boundaries. Canonical bytes,
+hash domain separation, concrete proof/verifier formats, authenticated opening
+requests and the binding of released history extensions remain implementation
+or cryptographic contracts. No hiding theorem follows from this projection.
 
 ### 3. One payload and distinct validity predicates
 
@@ -122,7 +190,20 @@ pair \((\alpha,b)\). This is an explicit observation experiment, rather than
 an assertion that every residue payload publishes \(b\). Any protocol path
 obtaining that datum from a payload, selective opening or verified evaluation
 must identify it with the same sample. Extending the theorem to a richer
-storage view requires a separate comparison of the released fields.
+storage view requires a separate comparison of the released fields. For two
+actual witnesses, equality of their entire selected released views and
+inequality of their operative targets rule out a decoder exact on both;
+`TCB.HCPRealization.no_exact_view_decoder_of_same_view` records this pairwise
+criterion. The existing global factorization theorem is another sufficient
+criterion, not a property automatically enjoyed by public roots or proofs.
+
+Full genuine Plücker coordinates of the operative kernel give the opposite
+boundary: with the same \(b\) and fixed inner product, they determine the
+operative target, as proved in
+[PluckerObservation](../../lean/TCB/PluckerObservation.lean). A profile that
+releases those coordinates cannot also claim distinct targets under that
+identical full view. A digest-only extension requires its own analysis and
+does not inherit this exact-coordinate recovery theorem or a hiding theorem.
 
 ### 4. Three native metric levels
 

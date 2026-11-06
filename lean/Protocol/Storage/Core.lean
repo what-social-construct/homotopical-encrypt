@@ -6,6 +6,7 @@ public import Protocol.Storage.Projection
 public import Protocol.Storage.Calibration
 public import Protocol.Storage.CoordinateCodec
 public import Protocol.Storage.HCP
+public import Protocol.Storage.PublicView
 public import Protocol.Storage.Anchor
 public import Protocol.Storage.ProjectionAnchor
 
