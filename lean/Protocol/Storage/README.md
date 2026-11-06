@@ -7,12 +7,21 @@ and retain those objects; storage roots and persistence receipts do not
 construct their proofs.
 
 Current Lean/Mathlib 4.35 validation passes the full aggregate and explicit
-integration targets (**9,253 jobs**), including the native application;
-the literal default passes **9,248 jobs**. The consolidated probe covers
-139 endpoints: 103 use only standard Lean axioms and 36 retain existing
+integration targets (**9,258 jobs**), including the native application;
+the literal default passes **9,253 jobs**. The consolidated probe covers
+235 endpoints: 199 use only standard Lean axioms and 36 retain existing
 native arithmetic certificates. Explicit theorem/profile hypotheses remain.
 See the [validation guide](../../../docs/MATH_STORAGE_VALIDATION.md) for the
 exact declarations, source scan and separately dated earlier baselines.
+
+The new [HCP realization adapters](../../TCB/HCPRealization.lean) identify the
+actual cellular operator, snapshot classifier and original bound Hodge sample
+with the semantic operative target; their CVP agreement is derived.
+The [concrete family adapter](../../TCB/HCPAxisFamily.lean) instantiates that
+operator alignment and retains supplied original-artifact contracts.
+The fixed-`F` storage core continues to reuse `BoundHCPObservation` through
+`ofHCPObservation`; storage roots and receipts supply no new hiding or key
+migration theorem.
 
 ## Module map
 

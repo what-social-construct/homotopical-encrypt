@@ -54,6 +54,13 @@ The important distinctions remain visible:
   is good for its diagonal family; arbitrary fixed-mix preservation is refuted.
   Euclidean decoded exactness, full HCP residual and frame scores retain their
   own definitions and comparison obligations.
+- The [concrete HCP family](lean/HCP/README.md) supplies two actual integral
+  cellular sheaves, a proved homological-test semantic model, the same `(class,b)`
+  with distinct nonzero harmonic targets, and positive/negative CVP comparisons.
+  A weighted sample separates integer coefficients 2 and 1 in its declared
+  encoder. All 96 selected new reports are standard-only. Full first-order
+  semantics, a complete public storage-view privacy result and a sampling
+  security game are separate claims.
 - Full genuine Plucker coordinates reconstruct the subspace and its fixed-metric
   projector. Operative-target recovery requires identification with that kernel;
   no efficient finite encoding or recovery from a digest is claimed.
@@ -65,22 +72,23 @@ The important distinctions remain visible:
 ## Readiness record
 
 The main development now passes validation on the stable Lean/Mathlib 4.35.0
-pair. The current full aggregate/integration build passed 9,253 jobs; the literal default passes 9,248 jobs. The consolidated
-fresh probe covers 139 distinct declarations. Earlier 4.24 milestones
+pair. The current full aggregate/integration build passed 9,258 jobs; the literal default passes 9,253 jobs. The consolidated
+fresh probe covers 235 distinct declarations, including 96 new HCP/model/adapter
+reports. The earlier native-metric validation remains a dated baseline. Earlier 4.24 milestones
 remain dated baselines in the shared register.
 
 | Item | Current status |
 |---|---|
 | License and dependency pins | Existing MIT license, Lean `v4.35.0`, Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679` and matching transitive manifest. |
-| Current Lean source scan | 235 Lean files including the Lake configuration (234 source modules); no active `sorry`/`admit` found; seven explicit custom axioms isolated in the concrete cited-bound module. No local import cycles. This is source scanning, not theorem-dependency verification. |
+| Current Lean source scan | 240 Lean files including the Lake configuration (239 source modules); no active `sorry`/`admit` found; seven explicit custom axioms isolated in the concrete cited-bound module. No local import cycles. This is source scanning, not theorem-dependency verification. |
 | Generic coding mathematics | All nine named standalone statements have Lean endpoints. Q04--Q07 are complete; the 33-module standalone closure excludes project cited-bound axioms and legacy `Chain`. |
 | Conservative core and integration examples | The current 4.35 aggregate includes `Protocol.Core`, ledger and evidence examples, sheaf adapters and same-proposal quorum joins. All pass with their explicit profile inputs. |
 | Sheaf storage and gates | The current build includes `Storage.Core`, its fixtures and optional canonical observation adapter. Roots, decoded exactness and pair distance retain their separate definitions. |
 | History/manifest anchor | The joins and fixtures pass on 4.35, and all nineteen fresh anchor reports use only the three standard Lean axioms. Concrete authentication/encoding/backend profiles remain explicit. The earlier 4.24 focused/full results are preserved in the shared register. |
-| Theorem dependencies | All 139 distinct selected reports pass: 103 use only standard Lean axioms (100 exactly the usual three, three subsets); 36 also inherit existing native arithmetic trust, printed as generated `_native.native_decide.ax_` constants on 4.35. None uses a cited-bound axiom or `sorryAx`. The [validation guide](docs/MATH_STORAGE_VALIDATION.md) reproduces the consolidated probe and preserves earlier audit baselines. Explicit theorem/profile/runtime hypotheses remain. |
-| Full aggregate | The literal default `lake build` passes (9,248 jobs); all fifteen defaults plus the explicit ledger/evidence/storage integration targets also pass (9,253 jobs). The [current validation record](SEMANTIC-PARITY.md#lean-435-validation) distinguishes this from earlier milestones and axiom reports. Hosted CI has not been run as part of this preparation. |
-| Manuscripts | Papers 1 and 3 have reviewed PDFs and source ledgers. Paper 2 has initial manuscript text and remains work in progress. |
-| Manuscript alignment | Paper 1's 97-page PDF and Paper 3's 28-page PDF compile without undefined references/citations, missing glyphs or overfull boxes. All 125 pages were rendered and visually checked; some underfull-box diagnostics remain. Their ledgers include Plucker recovery, native-metric endpoints, storage owners and explicit source-profile boundaries. Canonical and stable review copies match byte-for-byte. |
+| Theorem dependencies | All 235 distinct selected reports pass: 199 use only standard Lean axioms (194 exactly the usual three, five subsets); 36 also inherit existing native arithmetic trust, printed as generated `_native.native_decide.ax_` constants on 4.35. None uses a cited-bound axiom or `sorryAx`. The [validation guide](docs/MATH_STORAGE_VALIDATION.md) reproduces the consolidated probe and preserves earlier audit baselines. Explicit theorem/profile/runtime hypotheses remain. |
+| Full aggregate | The literal default `lake build` passes (9,253 jobs); all fifteen defaults plus the explicit ledger/evidence/storage integration targets also pass (9,258 jobs). The [current validation record](docs/MATH_STORAGE_VALIDATION.md#current-cellular-hcp-implementation--2026-11-06) distinguishes this from earlier milestones and axiom reports. Hosted CI has not been run as part of this preparation. |
+| Manuscripts | Paper 1 §3 and its ledgers include the actual cellular HCP family and conditional observation adapters. Papers 1 and 3 have reviewed PDFs and source ledgers. Paper 2 has initial manuscript text and remains work in progress. |
+| Manuscript alignment | Paper 1's 99-page PDF and Paper 3's 28-page PDF compile without undefined references/citations, missing glyphs or overfull boxes. The revised 99-page Paper 1 was rendered and visually checked; Paper 3 retains its previous 28-page review; some underfull-box diagnostics remain. Their ledgers include Plucker recovery, native-metric endpoints, storage owners and explicit source-profile boundaries. Canonical and stable review copies match byte-for-byte. |
 | Public publication | Not performed. Review the source package and choose the destination and timing separately. |
 
 ## Prepare a local package

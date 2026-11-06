@@ -9,11 +9,14 @@ is the current statement/proof-status register.
 
 ### 1. Scope and paper ownership
 
-Paper 1 supplies the cellular Hodge objects, harmonic recovery and the
-mathematical commitment interfaces. Paper 2 owns the relation between those
-objects, the public payloads and observations, verification evidence, retained
-artifacts and one accepted state transition. Paper 3 owns the independent
-coding theorems and the quantitative analysis of a declared application
+Paper 1 supplies the cellular Hodge objects, the explicitly named homological
+Helfer fragment, concrete HCP families, harmonic recovery, CVP comparisons and
+the mathematical commitment interfaces. Paper 2 owns the visibility and
+encoding profile, the relation between those objects and public observations,
+verification evidence, retained artifacts and one accepted state transition.
+Authorized recipient recovery material, representative/key rotation and
+storage migration also belong to Paper 2's protocol profile. Paper 3 owns the
+independent coding theorems and the quantitative analysis of a declared application
 profile. Definitions are shared across the papers; a citation does not create
 a second commitment or discharge its compatibility conditions.
 
@@ -53,6 +56,22 @@ projection specialization retains the exact final prefix and actual gate
 database. Snapshot root, cochain leaf digest, gate-evidence digest, manifest
 root and block digest are separate coordinates. A matching quorum signs the
 same proposal; these joins do not by themselves prove global finality.
+
+The three visibility levels are already fixed in
+[Paper 1, Section 5](../paper1/sections/05-public-artifacts-and-commitments.tex).
+Paper 2 preserves that separation while specifying its concrete protocol paths:
+
+| Level | Data and exposure |
+|---|---|
+| Private witness | The base and ephemeral presentations, restrictions and operative Hodge data, harmonic message, noise, openings and transport. The full cochain \(b\) remains private unless a specified observation path explicitly publishes or exposes it. |
+| Public payload | The serialized residue edge vector \(\bar c=\delta_0a\bmod q\), modulus, declared edge count and topology tag; public artifact handles and root bindings refer to the selected objects. This payload is not the full Hodge sample or a presentation of its operator. |
+| Selective opening/proof | Only the declared local values, conditions or verified statements are exposed. An opening or proof does not make every field of its semantic witness record public. |
+
+This settles the level of each object. The concrete byte encoding, recipient
+and verifier access, permitted proof outputs, and full-Plucker versus
+digest-only profile still need their selected contracts. A semantic
+`BoundHCPObservation` retains a message and openings for proofs and must not be
+serialized wholesale into public history.
 
 ### 3. One payload and distinct validity predicates
 
@@ -97,6 +116,13 @@ b=h+\delta_0a+\delta_1^*v,\qquad P_Hb=h.
 An exact committed component has zero harmonic projection. It is not the full
 encrypted sample when the harmonic message is nonzero. A statement connecting
 these objects must retain its actual serialization and observation witnesses.
+
+The selected mathematical HCP input remains the existing classifier/cochain
+pair \((\alpha,b)\). This is an explicit observation experiment, rather than
+an assertion that every residue payload publishes \(b\). Any protocol path
+obtaining that datum from a payload, selective opening or verified evaluation
+must identify it with the same sample. Extending the theorem to a richer
+storage view requires a separate comparison of the released fields.
 
 ### 4. Three native metric levels
 
@@ -283,26 +309,44 @@ Representative privacy, plaintext hiding, sender anonymity, unlinkability and
 forward secrecy are distinct experiments. This draft selects none of them
 implicitly from a large classifier fiber or the name of a gate.
 
+Paper 2 must also specify how an authorized recipient holds or derives the
+ephemeral presentation or transport needed for recovery, and which delivery
+hints an outsider sees. That key-delivery profile must use the same semantic
+plaintext, public view and lifecycle as the stored artifacts. A Hodge noise
+opening or a supplied class-membership path is not a key-exchange,
+encapsulation or recipient-recovery construction.
+
 ### 7. Proof ledger and remaining protocol work
 
 The successful Lean 4.35 builds of 9,233 aggregate/integration jobs and 9,228
 default jobs, and the 68-declaration audit, are the **pre-addition baseline**.
 They do not validate the newer modules merely because the pin is unchanged.
-The expanded aggregate/integration union passes **9,253 jobs**, and the
-literal default build passes **9,248 jobs** on the same pin. The fresh
+The completed native-metric follow-up's aggregate/integration union passes
+**9,253 jobs**, and its literal default build passes **9,248 jobs** on the same
+pin. Its
 consolidated probe through public facades passes for **139 distinct selected
 endpoints**, with sets exactly matching the individual reports: 100 use
 exactly the three standard axioms, three use a subset, and 36 retain only
 existing native certificates beyond them. None uses a cited-bound axiom or
-`sorryAx`. The current Paper 1/Paper 3 PDFs have 97/28 pages; all 125 overview
+`sorryAx`. That record's Paper 1/Paper 3 PDFs have 97/28 pages; all 125 overview
 pages and changed pages have been inspected. Final formatting/artifact details
 and current PDF hashes belong to the
 [shared validation record](../../docs/MATH_STORAGE_VALIDATION.md), separately
 from the preserved pre-addition baseline. No publication or Palomar protected
 preflight has been performed.
 
+The actual Helfer/cellular/HCP observation wiring is a separate follow-up to
+that native-metric baseline. Its latest build and dependency outcomes belong
+to the same [central validation record](../../docs/MATH_STORAGE_VALIDATION.md);
+the earlier counts are not validation of the added modules.
+
 | Material / source owner | Checked endpoint and boundary |
 |---|---|
+| [Actual cochain model and homological tests](../../lean/Helfer/CochainModel.lean) | Focused compilation and the selected dependency probe pass. The actual bounded-below Quillen model carries the cellular coboundaries; strict/isometric chain isomorphisms give typed Helfer equivalences. Nonzero-cohomology closed tests are proved invariant for all interpretations. This is an explicitly named fragment, not full Helfer first-order fibrational semantics or Theorem 12.3. |
+| [Concrete integral coexact-axis family](../../lean/Sheaf/HCPAxisFamily.lean) | The focused integration includes actual cellular restrictions, stalk lattices, a harmonic lattice presentation, the true operator with positive spectral gap one, and harmonic-message/coexact-noise samples. The shared full cochain and zero exact components are separate from equality of snapshots or public artifacts. Current validation outcomes are recorded centrally. |
+| [Actual HCP realization](../../lean/HCP/AxisFamily.lean) | The focused integration build passes for the stated endpoints. Actual matrices and the homological closed theories form `HCPBridge.Realization`, with a common `(class,b)` observation and distinct nonzero operative targets. Existing no-recovery/CVP-oracle results and positive discrete CVP recovery are reused. Coordinate-target ambiguity alone does not distinguish semantic plaintexts or supply a privacy game or equality of the full storage view; current dependency outcomes are recorded centrally. |
+| [Original bound-observation adapter](../../lean/TCB/HCPRealization.lean) | The focused adapter build passes. Operator-action and classifier alignment retain the original bound sample, payload, interpretation and artifact; kernel/projector/operative-message agreement and the stated discrete CVP comparison are derived. A richer view inherits no-recovery only under its explicit factorization hypothesis. The adapter does not manufacture snapshot, hash or verification contracts. |
+| [Concrete artifact-bound family adapter](../../lean/TCB/HCPAxisFamily.lean) | The final focused glue build passes. Actual operator alignment and the computed positive spectral gap one instantiate the declared spectral gate/window. `bindSample` retains an existing artifact and derives the same operative-target/CVP join. Acceptance, hash/snapshot binding, decoding of the zero exact component and the snapshot-classifier equality remain application inputs; the adapter does not construct a dummy artifact or equality of full public views. |
 | [Existing transition kernel](../../lean/Protocol/Ledger/Transition.lean), [candidate evidence](../../lean/Protocol/Evidence/Transition.lean) and [history anchor](../../lean/Protocol/Storage/Anchor.lean) | Baseline checked conservation, replay exclusion and same-object/context joins under explicit authentication, policy and backend relations. These do not instantiate a production protocol. |
 | [Plucker reconstruction](../../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) and [operative-target adapter](../../lean/TCB/PluckerObservation.lean) | Eight reconstruction endpoints and the observation endpoints in the 27-declaration root probe are standard-only. Recovery consumes full exact-real shadow data and an explicit operative-kernel identification; digest-only visibility is a separate profile. |
 | [Canonical-lift obstruction](../../lean/Sheaf/CanonicalLiftObstruction.lean) | Thirteen core/sheaf endpoints are standard-only. A nontrivial real-linear decoder cannot have a global zero-defect comparison against unrestricted canonical RS distance. |
@@ -315,7 +359,7 @@ preflight has been performed.
 | [Canonical systematic profile](../../lean/Protocol/Storage/CanonicalSystematic.lean) | Fifteen selected concrete endpoints inherit the existing canonical primality/root-order native certificates. They include the original payload codec and a positive no-wrap Euclidean example; native arithmetic trust remains explicit. |
 | [Canonical native-metric and challenge adapter](../../lean/Protocol/Storage/CanonicalThreeLevel.lean) | The focused build passes (3,432 jobs). Sixteen selected reports retain existing canonical arithmetic trust. The original well-formed payload has all three native distances `3/4`; observed-artifact joins, accepted-to-native-zero, raw-far rejection and the stated canonical diagonal challenge are checked. Expanded aggregate and consolidated public-facade dependency checks pass; artifact details remain centrally recorded. |
 | [Existing calibration and near interfaces](../../lean/Protocol/Storage/CanonicalCalibration.lean) | The focused build passes (3,430 jobs). Nine selected reports split into four generic standard-only and five concrete reports with existing native certificates. Actual original-payload extraction instantiates `SourceToSourceCalibration`, `SourceToCodeCalibration.transCode` and `EvaluationProjection` with the explicit `2*d_C` near score; no metric inequality is assumed. |
-| Security and runtime realization | Cryptographic games, canonical bytes, actual hashing, persistence backends, dynamic geometry/key rotation, consensus finality and runtime refinement remain construction or implementation obligations. |
+| Paper 2 security and runtime realization | Preserve the three inherited visibility levels while selecting concrete bytes, access and proof outputs; specify authorized recipient key delivery, persistence, dynamic geometry/key rotation and retirement. Cryptographic games, actual hashing, backend realization, consensus finality and runtime refinement remain construction or implementation obligations. |
 
 “Standard-only” means that the actual axiom report uses no dependencies beyond
 `propext`, `Classical.choice` and `Quot.sound`; some elementary identities use
@@ -323,12 +367,12 @@ a subset. The concrete canonical reports additionally expose the existing
 generated `_native.native_decide.ax_` certificates. These checks cover the
 listed endpoints, not every declaration or a security theorem.
 
-The current static source inventory contains 234 modules plus the Lake
-configuration, with no active proof holes, local import cycles or unresolved
+The completed native-metric baseline's static inventory contains 234 modules
+plus the Lake configuration, with no active proof holes, local import cycles or unresolved
 local imports. The same seven explicit cited-bound axioms remain isolated.
-The standalone coding closure now has 33 modules; the bounded protocol core
-remains 33 and storage core has 79. Optional canonical metric/calibration
-surfaces have separately recorded closures. A short logical-axiom list does
+That baseline's standalone coding closure has 33 modules, bounded protocol core
+33 and storage core 79. Current closures including the semantic observation
+follow-up are tracked centrally. A short logical-axiom list does
 not instantiate authentication, a private-frame producer or runtime refinement.
 
 The runtime must authenticate the chosen sheaf, coefficient convention,

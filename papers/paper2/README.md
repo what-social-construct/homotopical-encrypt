@@ -7,6 +7,28 @@ real versus modular validity, three native metric levels, geometric comparison
 boundaries and evidence contracts. It is an early working draft; no Paper 2
 TeX/PDF manuscript or complete security argument is claimed.
 
+Paper 2 owns the concrete visibility, encoding and storage profile, authorized
+recipient key delivery, representative/key rotation and migration. It inherits
+Paper 1's three visibility levels: private Hodge/restriction data and full
+cochains unless explicitly exposed; public residue payload/modulus/count/tag;
+and only the declared selective openings or proof statements. The selected
+mathematical HCP theorem uses the existing `(class,b)` observation. A richer
+storage or full-Plucker view needs its own compatibility conditions; the
+visibility levels themselves are not being reopened.
+
+The shared mathematical wiring is owned by Paper 1:
+[actual cochain model and invariant homological tests](../../lean/Helfer/CochainModel.lean),
+[integral cellular axis family](../../lean/Sheaf/HCPAxisFamily.lean),
+[HCP realization](../../lean/HCP/AxisFamily.lean) and
+[original observation/target adapter](../../lean/TCB/HCPRealization.lean), with
+an [artifact-bound family adapter](../../lean/TCB/HCPAxisFamily.lean) that
+retains the application-supplied acceptance, decoder and binding contracts.
+The fragment is not full Helfer first-order semantics. The
+[draft ledger](DRAFT.md#7-proof-ledger-and-remaining-protocol-work) and
+[central validation record](../../docs/MATH_STORAGE_VALIDATION.md) distinguish
+checked endpoints from integration work. These mathematical joins do not
+construct a privacy game, recipient key-delivery scheme or rotation runtime.
+
 The current mathematical profile keeps three native metrics:
 scalar-coordinate cochain edits normalized by `2n`, whole integer-plane pair
 edits normalized by `n`, and whole-pair RS distance after reduction. Actual
@@ -20,8 +42,9 @@ a target-distance pullback.
 The [draft proof ledger](DRAFT.md#7-proof-ledger-and-remaining-protocol-work)
 records focused builds and actual theorem dependencies. Canonical payload
 and existing-interface specializations pass their focused builds and selected
-reports. The expanded aggregate/default builds pass **9,253/9,248 jobs**.
-The consolidated public-facade probe passes for 139 distinct new endpoints
+reports. That completed native-metric baseline's aggregate/default builds pass
+**9,253/9,248 jobs**. Its consolidated public-facade probe passes for 139
+distinct selected endpoints
 (103 standard-only, 36 with existing native arithmetic trust), matching the
 individual reports. The earlier 9,233-job/68-endpoint result is a pre-addition
 baseline. A capacity-scale native modular result is separate from the coarse no-wrap
@@ -69,8 +92,10 @@ Wider planned scope, beyond the bounded first endpoint:
 - Vertra chain architecture;
 - Rust implementation boundary.
 
-Paper 1 should remain the math/formalization paper: HCP, hidden operators,
-CVP comparison, projection chain, RS/MCA endpoint, and Lean theorem surfaces.
+Paper 1 remains the mathematical HCP/formalization paper: the declared
+homological fragment, actual cellular families and hidden operators, harmonic
+recovery, CVP comparison and shared projection interfaces. Paper 3 owns the
+independent RS/MCA coding theorems and their stated application profile.
 
 ## Consensus and PoV redesign checkpoint
 

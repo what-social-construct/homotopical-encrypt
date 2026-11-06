@@ -323,9 +323,96 @@ elementary matrix witness \(L=0\),
 \(L'=\operatorname{diag}(1,0,\ldots,0)\), and \(b=e_1\) under the constant
 projection to a one-point public type. This is a sanity example showing that
 the abstract ambiguity predicates are inhabited. It is not used as evidence
-that a concrete HCP realization admits the required semantic and Hodge
-extension witness; that witness is an explicit hypothesis of
-\cref{prop:cvp-insufficient}.
+that an arbitrary HCP realization admits the required semantic and Hodge
+extension witness. That witness remains an explicit hypothesis of
+\cref{prop:cvp-insufficient}; the following family constructs one for its
+stated semantic fragment.
+
+\subsection{A Constructed Integral Cellular Family}
+
+The preceding implication has a concrete instantiation in a stated
+homological fragment of the typed Helfer interface. Take one vertex, one edge
+and one face with incidence numbers \(\partial_1=0\), \(\partial_2=1\),
+and stalks \(0,\mathbb R^2,\mathbb R\), respectively. Two actual cellular
+sheaves on this base have
+\[
+  \delta_{0,0}=\delta_{0,1}=0,
+  \qquad
+  \delta_{1,0}(x_0,x_1)=x_0,
+  \qquad
+  \delta_{1,1}(x_0,x_1)=x_1.
+\]
+Their true degree-one Hodge operators are
+\[
+  \Delta_0=\operatorname{diag}(1,0),
+  \qquad
+  \Delta_1=\operatorname{diag}(0,1).
+\]
+Coordinate exchange is a degreewise chain isometry. Both operators have
+positive spectral gap \(1\). Standard integral stalk lattices give harmonic
+lattices \(\mathbb Z e_1\) and \(\mathbb Z e_0\), each with an explicit
+full-span presentation.
+
+Interpret these actual complexes in the bounded-below real cochain Quillen
+model category. For this example the closed tests ask whether cohomology in
+an integer degree is nonzero. Their invariance is proved under every typed
+Helfer equivalence, using quasi-isomorphisms. The chain isometry therefore
+makes the two actual closed theories equal. This proves invariance for this
+homological test fragment; it does not formalize Helfer's full first-order
+formula syntax or general fibrational invariance theorem.
+
+\Needspace{10\baselineskip}
+\begin{proposition}[One observation, two nonzero integral harmonic targets]
+  \label{prop:cellular-axis-ambiguity}
+  Let \(p\) be the common closed theory of these two presentations in the
+  stated fragment, and let \(b=e_0+e_1\). There are structured Hodge samples
+  with that same observation \((p,b)\), harmonic messages \(e_1\) and \(e_0\),
+  and zero exact components. Their operative targets are distinct and nonzero.
+  For each presentation's explicit harmonic lattice, its message is also the
+  unique closest lattice vector to \(b\).
+\end{proposition}
+
+\begin{proof}
+  In the first presentation use harmonic message \(e_1\), exact opening zero
+  and coexact opening \(1\), producing noise \(e_0\). In the second use
+  message \(e_0\), exact opening zero and coexact opening \(1\), producing
+  noise \(e_1\). Both sums equal \(b\), and both messages belong to their
+  standard integral harmonic lattices. The actual Hodge projections recover
+  those messages. Orthogonality gives the Pythagorean identity from
+  \cref{prop:hodge-projection-is-cvp}; any other lattice point has strictly
+  positive squared distance from the recovered message. Thus each message
+  is the unique CVP answer in its presented lattice.
+\end{proof}
+
+For the same realization, the fixed coordinate \(e_1\) is harmonic for
+\(\Delta_0\) and not for \(\Delta_1\). This constructs the separation witness
+used in \cref{prop:cvp-insufficient}. The existing no-uniform-recovery theorem
+therefore applies, and its explicit-CVP-oracle corollary applies under its
+oracle-existence premise. Equality of the public theory is derived from the
+actual semantic equivalence, rather than imposed by a one-point classifier.
+The matrix-level public projection is extended from the two admitted
+operators; no semantic realization is asserted for other matrices.
+
+The displayed pair uses coefficient \(1\) in each presentation's own
+harmonic-lattice basis. Its distinct ambient targets therefore do not alone
+assert distinct encoded integer plaintexts. A second constructed pair makes
+the encoding explicit: take \(b=e_0+2e_1\), harmonic messages \(2e_1\) and
+\(e_0\), and complementary coexact noise \(e_0\) and \(2e_1\). Their integer
+coefficients in the same declared lattice presentations are \(2\) and \(1\).
+Both messages are nonzero, both exact components remain zero, and the public
+observation is again shared. No function of that observation can return the
+correct coefficient for both presentations. This is a finite exact-recovery
+obstruction for the specified integer encoding, not a distributional security
+experiment. Each message remains the unique CVP answer in its actual lattice.
+
+This example fixes the mathematical observation to \((p,b)\). Its equal zero
+exact components do not assert equality of complete storage records. The
+application adapter requires the actual operator and snapshot classifier to
+agree with the semantic realization before deriving message/operative-target
+and CVP agreement. Existing payload acceptance, decoder, hash and envelope
+bindings remain explicit. Paper~2 owns those concrete visibility/storage,
+rotation and key-delivery profiles; this example establishes no distributional
+anonymity or plaintext-security experiment.
 
 \subsection*{Lean Cross-Reference}
 
@@ -350,4 +437,16 @@ closest-harmonic and hidden-operator surfaces are
 \lean{Hcrypt.HCPBridge.SolverExactOnHarmonic},
 \lean{Hcrypt.HCPBridge.no_solver_on_kernelSeparation}, and
 \lean{Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation}.
+The concrete instance is \lean{Hcrypt.HCP.AxisFamily.realization},
+\lean{shared_observation_distinct_nonzero_targets},
+\lean{no_exact_public_solver}, \lean{cvp_oracle_insufficient},
+\lean{cvp_solution_iff_message}, and \lean{cvp_existsUnique} in that namespace.
+The explicit integer-encoding variant is \lean{weightedSample},
+\lean{weighted_public_observations_eq},
+\lean{weighted_cvp_solution_iff_operativeTarget}, and
+\lean{no_exact_encoded_message_decoder} in the same namespace.
+Its actual cellular objects are in \lean{Sheaf/HCPAxisFamily.lean}; the
+proved homological semantics is in \lean{Helfer/CochainModel.lean}.
+\lean{TCB/HCPRealization.lean} and \lean{TCB/HCPAxisFamily.lean} own the
+conditional same-object application adapters.
 \end{leanledger}

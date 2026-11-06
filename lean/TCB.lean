@@ -2,6 +2,8 @@ module
 
 public import TCB.ProofCarrying
 public import TCB.HCPObservation
+public import TCB.HCPRealization
+public import TCB.HCPAxisFamily
 public import TCB.PluckerObservation
 public import TCB.CompressionBoundary
 public import TCB.Runtime

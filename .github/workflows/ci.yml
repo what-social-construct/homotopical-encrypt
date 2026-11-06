@@ -107,7 +107,7 @@ jobs:
 
       - name: Check protocol transition examples
         working-directory: lean
-        run: lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration
+        run: lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily
 
   # ─── Integration ─────────────────────────────────────────────
   integration:

@@ -250,6 +250,12 @@ without creating a Lean version of the mistake.
 ## Priority 1 — Ephemeral Representative And Anonymity Flow
 
 1. **Paper 1 mathematical family**
+   - **Finite core now constructed:** [HCP.AxisFamily](../lean/HCP/AxisFamily.lean)
+     supplies actual integral cellular sheaves and a proved homological-test
+     semantic realization, shared `(class,b)` observations, positive/negative
+     CVP comparisons, and a weighted exact integer-recovery counterexample.
+     This supplies a concrete seed example for the argument; it does not yet
+     construct the indexed ephemeral generation/transport/lifecycle below.
    - **Current state:** Lean contains only the supplied abstract path
      `EphemeralFiberSpec.path`. `EphemeralRepresentativeSpec`, the indexed
      family, concrete generation, and the lifecycle state machine do not yet
@@ -283,6 +289,12 @@ without creating a Lean version of the mistake.
 ## Priority 2 — Proximity Evidence And Sheaf Storage
 
 4. **Original context and typed projection checkpoints**
+   - The three visibility levels are inherited from Paper 1 Section 5:
+     private Hodge/presentation data, public residue payload/modulus/count/tag,
+     and selective opening/proof disclosure. Paper 2 owns concrete bytes,
+     access, storage and recipient key delivery. The chosen mathematical
+     example grants `(class,b)`; the new TCB adapters keep any richer
+     snapshot/artifact view subject to explicit profile conditions.
    - **Mathematical source implemented:** `Storage.Context` retains the actual
      `CochainPayloadInterpretation`, snapshot and public artifact. Its key
      derives the run ID, schema version, snapshot root, cochain leaf digest,

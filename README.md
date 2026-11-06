@@ -255,6 +255,13 @@ See [CONSENSUS](docs/CONSENSUS.md),
    list/MCA results, explicit coding instances, and radius analysis for the
    existing committed-cochain projection.
 
+Paper 1 now also has an [actual integral cellular HCP family](lean/HCP/README.md):
+its true operators and proved homological-test semantics instantiate the
+shared-observation recovery obstruction and both CVP comparisons. The weighted
+example distinguishes encoded integers in its declared lattice encoder.
+Concrete visibility/storage, rotation and recipient key delivery remain
+Paper 2 profile obligations.
+
 Paper 3's universal coding results are independent of the HCP protocol.
 Paper 1 retains the
 application-specific projection bridge; the [shared manuscript parity register](SEMANTIC-PARITY.md)

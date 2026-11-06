@@ -250,6 +250,27 @@ The appendices below record the HCP paper's own declaration and file coverage.
     conditional on an explicit harmonic-lattice presentation and a sample
     constructed from one of its lattice points. This does not supply a
     general CVP algorithm or derive the presentation from public data.
+  \item[An actual integral family instantiates the semantic HCP ambiguity.]
+    \lean{HCP.AxisFamily.shared_observation_distinct_nonzero_targets},
+    \lean{HCP.AxisFamily.no_exact_public_solver},
+    \lean{HCP.AxisFamily.cvp_oracle_insufficient}, and
+    \lean{HCP.AxisFamily.cvp_solution_iff_message};
+    the two cellular sheaves, integral structures, actual Hodge matrices,
+    common structured-noise observation and harmonic lattices are constructed.
+    Homological-test invariance is proved in the actual bounded-below real
+    cochain model. The semantics is a stated fragment, and the oracle
+    corollary retains its oracle-existence premise. The observation is
+    \((p,b)\), without a full storage-view or security-game claim.
+    \lean{weighted_public_observations_eq} and
+    \lean{no_exact_encoded_message_decoder} in the same namespace additionally
+    separate the explicit integer coefficients \(2\) and \(1\) at one
+    shared observation, rather than only separate ambient coordinates.
+  \item[The actual bound observation agrees with the semantic operative target.]
+    \lean{TCB.HCPRealization.BoundObservationAlignment.operativeTarget_eq_message}
+    and \lean{cvp_solution_iff_operativeTarget} in the same namespace;
+    derived from actual-operator action and classifier alignment, retaining
+    the original sample, payload, snapshot and artifact. A selected richer
+    public view requires its own observation-factorization proof.
   \item[The bound observation retains payload/snapshot identity and harmonic recovery.]
     \lean{TCB.BoundHCPObservation.artifact_wellFormed},
     \lean{TCB.BoundHCPObservation.payload_boundToSnapshot}, and
@@ -581,6 +602,25 @@ Import-only aggregate files are listed with the files they collect.
     compressed public data, observation boundaries, gap-decision certificates,
     witness-compression envelopes, public state updates, and theorems stating
     that accepted artifacts expose well-formed cochain and oracle predicates.
+  \item[\lean{Helfer/CochainModel.lean}, \lean{Sheaf/HCPAxisFamily.lean},
+    \lean{HCP/AxisFamily.lean}.]
+    Section 3's concrete family. The first module constructs the real cochain
+    Quillen model, retains the actual cellular differentials and proves
+    homological-test invariance for all typed interpretations. The second
+    constructs integral sheaves, samples, operator matrices, chain isometry,
+    spectrum and harmonic lattices. The third derives the semantic realization,
+    common observation, distinct nonzero targets and both positive and negative
+    CVP comparisons from those same objects. No full first-order semantics,
+    cryptographic sampling experiment or runtime profile is constructed.
+  \item[\lean{TCB/HCPRealization.lean}, \lean{TCB/HCPAxisFamily.lean}.]
+    Sections 3 and 5's application join. Actual matrix action gives the
+    cellular kernel/projector equality; snapshot-classifier agreement gives
+    the original observation's hidden witness and operative message. The
+    existing CVP comparison is transported to that target. The concrete family
+    instantiates the operator alignment and can retain an original artifact
+    under supplied acceptance, decoding and envelope bindings. The actual
+    computed positive gap also satisfies the spectral gate. Complete public
+    storage-view equality is not inferred from the class equality.
   \item[\lean{TCB/HCPObservation.lean}.]
     Sections 2 and 5 use \lean{HCPStackBinding} and
     \lean{BoundHCPObservation} to join the full Hodge sample to its accepted

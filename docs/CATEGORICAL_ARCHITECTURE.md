@@ -192,8 +192,11 @@ The recovered flow is: a private base presentation, an admissible ephemeral
 representative connected by a hidden path/transport, Hodge-structured encryption,
 and a selected public artifact with verification evidence. The existing
 `EphemeralFiberSpec` proves same-class membership under a supplied path-respect
-condition. Its indexed generation family, transported private state, concrete
-Helfer realization and anonymity experiment remain unconstructed.
+condition. A finite actual realization is now constructed in [HCP.AxisFamily](../lean/HCP/AxisFamily.lean):
+two integral sheaves enter the genuine cochain model with proved homological-test
+invariance and yield different targets at a common observation. Indexed
+generation, a complete transported-private-state lifecycle, full Helfer
+first-order semantics and an anonymity experiment remain separate work.
 
 Two squares must be kept separate. Rotation co-transports a ciphertext and
 its harmonic/noise coordinates, `b' = T1 b` and `h' = T1 h`; a common plaintext
@@ -229,6 +232,22 @@ No quotient universal property is assumed. Distinct same-fiber
 representatives can produce distinct operative targets; this is the
 hidden-operator obstruction used in `Hardness.lean`.
 
+The [actual-operator adapter](../lean/TCB/HCPRealization.lean) now derives
+matrix-kernel, fixed-metric projector and message equality for an existing
+bound observation from its operator action and snapshot-classifier alignment.
+Its discrete CVP result uses that same sample and an explicitly presented
+message point. The [concrete family adapter](../lean/TCB/HCPAxisFamily.lean)
+instantiates operator alignment, proves the actual computed spectral gap
+passes the gate, and retains supplied artifact/decoder/binding contracts.
+No digest or extra public-view equality is manufactured.
+
+The family has a simple shared `b=(1,1)` with different ambient harmonic
+vectors; both represent coefficient one in their respective bases. Its
+weighted `b=(1,2)` variant instead uses the actual integer encoder with
+coefficients two and one and proves exact coefficient-recovery failure from
+the common input. This separates the declared encoded integers, while still
+making no distributional security or sender-anonymity claim.
+
 ## Grassmannian, Plucker coordinates and a possible moduli layer
 
 At fixed ambient dimension and harmonic rank, `ker Delta1` is a Grassmannian
@@ -258,7 +277,7 @@ efficient finite-encoding algorithm.
 |---|---|---|
 | Presentation | Cellular sheaf, coordinate/basis conventions, inner products, optional integral structure and cochain. | An arbitrary change of basis requires transport of these structures; the current Hodge transport theorem assumes degreewise isometry. |
 | Grassmannian/Plucker | Harmonic subspace and its full projective exterior coordinate. | Projective rescaling forgets the frame's scalar, not the subspace. It does not supply a geometric-to-Hamming distance comparison. |
-| Public observation and authentication | Selected shadow, cochain artifact, digest, proof and manifest. `HashedPluckerShadow` retains both the mathematical shadow and digest as semantic fields. | Which fields are actually public is an encoding/profile choice. A digest is not automatically a recoverable projective coordinate or a distance-preserving map. |
+| Public observation and authentication | Selected shadow, cochain artifact, digest, proof and manifest. `HashedPluckerShadow` retains both the mathematical shadow and digest as semantic fields. | Paper 1 §5 fixes private Hodge data, a public residue payload and selective opening/proof roles; a concrete encoding/profile still selects the released fields. A digest is not automatically a recoverable projective coordinate or a distance-preserving map. |
 
 A moduli-groupoid or stack organization is a possible later layer: retain
 presentations together with their actual equivalences and automorphisms.

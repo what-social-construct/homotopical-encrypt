@@ -83,6 +83,7 @@ stronger manuscript claim.
 | Paper 1 candidate family | Existing endpoint(s) | Premises and claim boundary to retain |
 |---|---|---|
 | Hidden targets and public-data ambiguity | `Hcrypt.HCPBridge.operativeTargets_ne_of_kernelSeparation`; `no_solver_exactOnOperativeTarget_of_kernelSeparation`; `cvpOracle_insufficient_for_operativeTarget` in [Hardness](../lean/Hardness.lean) | The actual realization, closed-formula invariance, kernel-separation witness, and, for the CVP statement, existence of a correct explicit-lattice oracle remain visible. This is conditional information loss, not a computational cryptographic security reduction. |
+| Constructed cellular HCP/CVP family | `Hcrypt.HCP.AxisFamily.realization`, `shared_observation_distinct_nonzero_targets`, `cvp_solution_iff_message`, `cvp_oracle_insufficient`, `no_exact_encoded_message_decoder` in [AxisFamily](../lean/HCP/AxisFamily.lean) | Actual integral cellular sheaves and true operators enter the real cochain model. Closed homological-test invariance and the separation witness are constructed. The weighted example separates coefficients 2 and 1 at one `(class,b)` input. This is a stated homological fragment and finite exact-recovery obstruction, with the oracle-existence premise retained; no full first-order semantics, whole-storage-view equality or distributional security claim. |
 | Hodge coordinates and recovery | `Hcrypt.HCP.split_encrypt`, `encrypt_split`, `decrypt_encrypt` in [HCP](../lean/HCP.lean); concrete Hodge results in [Sheaf/Hodge](../lean/Sheaf/Hodge.lean) | The bijection includes both harmonic and orthogonal-noise coordinates. Preserve the actual degree-one operator and distinguish it from the normalized residual projector. |
 | Discrete lattice comparison | `HarmonicCVPBridge.solution_iff_projectedTarget`; `concreteSheafHCP_CVP_solution_iff_message`; `concreteSheafHCP_CVP_existsUnique` in [Hardness](../lean/Hardness.lean) | The integral structure and presented harmonic lattice are supplied data. Continuous projection does not solve an arbitrary discrete CVP instance. |
 | Exact-component observation limitation | `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent` and `not_far_preserving_exactComponent` in [ObservationQuotient](../lean/Sheaf/ObservationQuotient.lean) | Requires a nonzero coexact direction on the unrestricted sample carrier. It does not exclude a restricted noise profile or prove factorization of every concrete wire extraction. |
@@ -164,31 +165,21 @@ are comparison targets; Solution proofs must contain none.
 
 Do not add project axioms or hide conclusions in newly assumed premises.
 The fresh consolidated Lean 4.35 [dependency audit](MATH_STORAGE_VALIDATION.md)
-covers **139 distinct selected declarations** and exactly reproduces their
-individual reports: **103 standard-only** (100 use exactly the three permitted
-logical axioms; three use a subset) and **36 with existing native arithmetic
-certificates**. No report uses a cited-bound axiom or `sorryAx`. The earlier
-68-declaration, 64/4 split is preserved as the pre-addition 4.35 baseline.
+covers **235 distinct selected declarations**: **199 standard-only** (194
+exactly the permitted three and five subsets), and **36 with existing native
+arithmetic certificates**. All **96 new cellular/HCP/model/adapter reports**
+are standard-only, and the retained 139 dependency sets match their preceding
+reports. No selected result uses a cited-bound axiom or `sorryAx`.
+The earlier 139-report and 68-report snapshots remain dated baselines.
+
 The native dependencies print as generated `_native.native_decide.ax_*`
-constants; the older
-`Lean.ofReduceBool`/`Lean.trustCompiler` names describe the preserved 4.24
-reports. Native dependencies must be replaced by kernel-checked proofs before
-selecting those endpoints for a Palomar comparison. The concrete application's
-seven cited-bound axioms must not enter the selected proof dependencies.
-The 139-report result is a development audit, not proof that a future selected
-Solution or its protected comparison already satisfies the submission rules.
-
-Keep statement selection and dependency eligibility as separate checks:
-
-| Candidate surface | Present evidence | Submission consequence |
-|---|---|---|
-| Generic statements such as the modular-coboundary equivalence, native metric comparison, monomial/diagonal and fixed-challenge results | Their selected reports use only the permitted logical axioms. Prime-field, information-set, degree, length, line-profile and realization hypotheses remain explicit. | These are candidates for a standard-only entry, not completed submissions. The independently stated Challenge, matching Solution, retained hypotheses, manuscript claim and protected comparison still need review. |
-| Concrete canonical payload, fixed-root and numerical boundary endpoints | They retain native certificates in the current development. The canonical native profile inherits the existing `q=12289` primality/root-order certificates; the separate numerical boundary instance has its own arithmetic trust. | Replace the actual required arithmetic proofs with kernel-checked proofs before selecting such endpoints. Advertising the concrete conclusion while changing it to a newly assumed certificate or a weaker generic theorem would not cover that claim. |
-
-The **103 standard-only audited declarations do not automatically constitute
-an eligible or complete submission**. The final named wrappers and their exact
-proof dependencies, statement bodies, hypotheses and informal descriptions
-are the objects that must pass the selected entry's checks.
+constants; the older `Lean.ofReduceBool`/`Lean.trustCompiler` names describe
+preserved 4.24 reports. Replace native dependencies before selecting those
+endpoints for a comparison. The concrete application's seven cited-bound
+axioms must not enter the selected proof dependencies. The new concrete HCP
+example has no such trust blocker; selecting its exact statement and accurate
+semantic/observation scope is still a separate task. A development audit does
+not establish that future wrappers or protected comparisons have passed.
 
 Use `formalization.yaml` v0.4 for each entry: author and responsible maintainer,
 existing MIT licence, classifications, precise manuscript/source relationships,
@@ -202,16 +193,15 @@ than copying Jacobian's historical metadata or its review status verbatim.
 The user has authorized upgrading the **main repository** to the current
 stable Lean/Mathlib pair. Its pins are now Lean `leanprover/lean4:v4.35.0`
 and Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679` (release `v4.35.0`).
-The expanded mathematics and integration union passes **9,253 jobs**, covering
-all fifteen default roots and the explicit ledger, evidence, storage and native
-application targets. The literal default build passes **9,248 jobs**. The fresh
-139-declaration public-facade probe passes with the trust split above.
-The current source inventory has 235 Lean files: 234 source modules with
-public-module interfaces and the Lake configuration. The scan finds no active
-proof holes, unresolved local imports or cycles, and the same seven explicit
-cited-bound axioms remain isolated. Build, source and selected-dependency
-checks have different scopes. These results supersede the 9,233/9,228-job and
-68-report pre-addition 4.35 snapshot while preserving it as dated evidence.
+The expanded mathematics and integration union passes **9,258 jobs**, covering
+all fifteen default roots and the explicit ledger, evidence, storage and HCP
+example targets. The literal default build passes **9,253 jobs**. The fresh
+235-declaration public-facade probe passes with the trust split above.
+The source inventory has 240 Lean files: 239 public source modules and the
+Lake configuration, with no active proof holes, unresolved local imports or
+cycles. The same seven cited-bound axioms remain isolated. The preceding
+9,253/9,248-job, 139-report and earlier 68-report snapshots remain dated
+baselines; they are distinct from the new full/default and dependency record.
 The completed main upgrade supersedes the
 earlier proposal to keep main development on Lean 4.24.0; the earlier build
 and dependency records remain separately dated historical evidence.

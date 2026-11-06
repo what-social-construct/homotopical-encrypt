@@ -12,7 +12,7 @@ The project [MIT license](../LICENSE) is included at the package root.
 
 | Surface | Entry point | Claim boundary |
 |---|---|---|
-| Paper 1: hidden operators and HCP | [HCP.lean](HCP.lean), [Hardness.lean](Hardness.lean), [CVP.lean](CVP.lean) | Hidden-operator ambiguity, conditional public-class comparisons and discrete-CVP relationships. These structural results are not a computational security theorem; CVP hardness remains an external assumption. |
+| Paper 1: hidden operators and HCP | [HCP.lean](HCP.lean), [Hardness.lean](Hardness.lean), [CVP.lean](CVP.lean) | Hidden-operator ambiguity, public-class comparisons and discrete-CVP relationships, including the [actual integral cellular family](HCP/README.md) in a proved homological-test fragment. These structural results are not a computational security theorem; CVP hardness remains an external assumption. |
 | Cellular-sheaf and Hodge mathematics | [Sheaf.lean](Sheaf.lean), [Laplacian.lean](Laplacian.lean), [Helfer.lean](Helfer.lean) | Concrete cochain/Hodge constructions and stated transport/invariance results. Supplied realization and invariance hypotheses remain explicit. |
 | Paper 3: universal coding results | [ProximityPrize.lean](ProximityPrize.lean), [hierarchy guide](Proximity/README.md) | All nine named generic coding statements have Lean endpoints, including the actual all-parameter field family, phase split, real thresholds and attained distances. Its 33-module closure does not import the project's cited RS-bound axioms or require the protocol implementation. Application profile obligations remain separate. |
 | Cochain-specific proximity application | [Proximity.lean](Proximity.lean), [object trace](../docs/COCHAIN_PROXIMITY_TRACE.md) | Original-payload extraction and an explicit modular cellular profile with `d_C ≤ d_P = D_RS ≤ 2d_C`, a capacity-far payload and diagonal-family challenge guarantee. Euclidean/HCP and arbitrary fixed-challenge comparisons retain their separate boundaries. |
@@ -41,7 +41,7 @@ Install elan, then run from the package root:
 cd lean
 lake exe cache get
 lake build
-lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration
+lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily
 ```
 
 The cache command retrieves the pinned Mathlib build cache; it avoids a

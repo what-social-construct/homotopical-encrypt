@@ -1,12 +1,205 @@
 # Mathematics and sheaf-storage validation
 
-This record covers Q04--Q07, the concrete sheaf/storage adapters, the HCP
-information-loss obstruction and D03's gap-boundary interface. It distinguishes
+This record covers the concrete Helfer/Hodge/CVP family and observation
+adapters, Q04--Q07 and the native modular profile, the sheaf/storage adapters,
+and D03's gap-boundary interface. It distinguishes
 source coverage, checked proof statements and theorem dependencies. It does
 not certify a concrete cryptographic scheme, an uninstantiated source-radius
 profile, an efficient gap solver or a storage backend.
 
-## Current mathematics record — 2026-11-05
+## Current cellular HCP implementation — 2026-11-06
+
+The five-module follow-up constructs an actual finite integral cellular HCP
+family in a proved homological fragment of the typed Helfer interface. It
+reuses the existing positive CVP comparison and negative public-recovery/oracle
+argument. The full union of all fifteen default roots plus explicit transition,
+storage and HCP targets passes **9,258 jobs**; the literal default `lake build`
+passes **9,253 jobs**, with `LEAN_NUM_THREADS=4` and unchanged Lean/Mathlib 4.35 pins.
+
+The source scan has **239 public source modules / 240 Lean files** including
+Lake configuration. It finds no active proof holes, unresolved local imports
+or cycles and the same seven cited-bound axioms. No new project axiom or native
+certificate is introduced. The source snapshot is recorded separately from
+proof-dependency evidence.
+
+A fresh probe through public facades (`ProximityPrize`, `Sheaf`,
+`Protocol.Storage`, `TCB`) passes **235 distinct declarations**:
+
+- **199 standard-only**: 194 exactly the usual three axioms and five subsets.
+- **36 retain existing native arithmetic certificates**, all generated names
+  containing `_native.native_decide.ax_`.
+- **All 96 new reports are standard-only**: 94 exactly the three and two subsets.
+- All 139 retained dependency sets match their preceding reports exactly;
+  no selected result uses a cited-bound axiom or `sorryAx`.
+
+| New checked group | Reports | Dependency boundary |
+|---|---:|---|
+| Actual cochain model / homological-test invariance | 17 | Standard-only. |
+| Integral cellular axis family / actual spectrum / lattices | 20 | Standard-only. |
+| Concrete semantic realization / positive and negative CVP / weighted encoding | 43 | Standard-only; two elementary coefficient facts use subsets. |
+| Generic actual-operator / bound-observation / selected-view adapter | 9 | Standard-only; application profile fields remain explicit. |
+| Concrete artifact-bound family / actual spectral gate | 7 | Standard-only; no artifact bindings or hashes are manufactured. |
+
+The example with `b=(1,1)` has two distinct nonzero ambient harmonic targets,
+each coefficient one in its own lattice basis. The weighted example uses the
+existing integer lattice encryptor with coefficients **2 and 1**, at common
+`b=(1,2)`, and proves that no exact function of the selected HCP input recovers
+both coefficients. Each actual lattice CVP has a unique answer equal to its
+operative target. This is a finite exact-recovery obstruction, not an
+asymptotic/distributional privacy theorem.
+
+The semantic model is Mathlib's genuine bounded-below real cochain Quillen
+model. The selected nonzero-cohomology tests are proved invariant for all typed
+interpretations. Full Helfer first-order syntax/fibrational semantics, a bundled
+homotopy quotient, an infinite generated representative family, actual full
+storage-view hiding and protocol key delivery remain separate work.
+
+The existing observation adapter derives cellular kernel/projector/message and
+CVP agreement from actual operator action and classifier alignment. Original
+payload/snapshot/hash/proof contracts remain inputs. Its public-view extension
+requires an explicit factorization proof; equality of a class label alone does
+not establish equality of a richer record. The computed positive spectral gap
+one is connected to the actual spectral gate.
+
+Current local import closures (including each entry) are: `ProximityPrize` 33,
+`Protocol.Core` 33, `Storage.Core` 79, `Storage.CanonicalRS` 58,
+`Storage.CanonicalSystematic` 70, `Storage.CanonicalThreeLevel` 78,
+`Storage.CanonicalCalibration` 76; new entries `Helfer.CochainModel` 8,
+`Sheaf.HCPAxisFamily` 8, `HCP.AxisFamily` 19, `TCB.HCPRealization` 23 and
+`TCB.HCPAxisFamily` 30. All twelve exclude `Chain` and `CitedBounds`.
+
+### Reproduce the new selected checks
+
+From `lean/`, the example and adapters are in the public `TCB` facade:
+
+```sh
+LEAN_NUM_THREADS=4 lake build
+LEAN_NUM_THREADS=4 lake build HCP.AxisFamily TCB.HCPAxisFamily \
+  Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples \
+  Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples \
+  Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel \
+  Protocol.Storage.CanonicalCalibration
+cat > /tmp/cellular-hcp-new-axioms.lean <<'LEAN'
+import TCB
+
+#print axioms Hcrypt.Helfer.CochainModel.boundedContainsZero
+#print axioms Hcrypt.Helfer.CochainModel.Data.differential_comp
+#print axioms Hcrypt.Helfer.CochainModel.Data.strictlyGE
+#print axioms Hcrypt.Helfer.CochainModel.Data.StrictIso.complexIso
+#print axioms Hcrypt.Helfer.CochainModel.Data.StrictIso.modelIso
+#print axioms Hcrypt.Helfer.CochainModel.module_injective
+#print axioms Hcrypt.Helfer.CochainModel.model_isFibrant
+#print axioms Hcrypt.Helfer.CochainModel.model_isCofibrant
+#print axioms Hcrypt.Helfer.CochainModel.homologyIso
+#print axioms Hcrypt.Helfer.CochainModel.closedTestInvariance
+#print axioms Hcrypt.Helfer.CochainModel.homotopyEquivalence_of_iso
+#print axioms Hcrypt.Helfer.CochainModel.equivalent_of_iso
+#print axioms Hcrypt.Helfer.CochainModel.equivalent_refl
+#print axioms Hcrypt.Helfer.CochainModel.Data.StrictIso.equivalent
+#print axioms Hcrypt.Helfer.CochainModel.ofSheaf
+#print axioms Hcrypt.Helfer.CochainModel.strictIso_of_isometricCochainEquiv
+#print axioms Hcrypt.Helfer.CochainModel.equivalent_of_isometricCochainEquiv
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.delta0_eq_zero
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.delta1_adjoint_eq
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.degreeOneLaplacian_apply
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.harmonic_iff
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.standardStalkLattice
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.integralStructure
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_observed
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_exactComponent
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_messages_ne
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_noise_orthogonal
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_projection
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.laplacianMatrix_mulVec
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.laplacianMatrix_eq_diagonal
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.axisSwap
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.eigenvalue_eq_zero_or_one
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.positiveSpectralGap_eq_one
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.harmonicLatticePresentation
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.harmonicLatticePresentation_point
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_message_eq_point
+#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_eq_encrypt_one
+#print axioms Hcrypt.HCP.AxisFamily.semanticEquivalence
+#print axioms Hcrypt.HCP.AxisFamily.theory_zero_eq_one
+#print axioms Hcrypt.HCP.AxisFamily.publicProjection_laplacian
+#print axioms Hcrypt.HCP.AxisFamily.realization
+#print axioms Hcrypt.HCP.AxisFamily.operatorAction
+#print axioms Hcrypt.HCP.AxisFamily.matrixHarmonicSubspace_eq
+#print axioms Hcrypt.HCP.AxisFamily.operativeHarmonicComponent_eq
+#print axioms Hcrypt.HCP.AxisFamily.isometricPresentation
+#print axioms Hcrypt.HCP.AxisFamily.fixedCoordinateNonstabilization
+#print axioms Hcrypt.HCP.AxisFamily.kernelSeparation
+#print axioms Hcrypt.HCP.AxisFamily.same_public_class
+#print axioms Hcrypt.HCP.AxisFamily.kernel_ambiguous
+#print axioms Hcrypt.HCP.AxisFamily.classifier_nonfaithful
+#print axioms Hcrypt.HCP.AxisFamily.no_exact_representative_decoder
+#print axioms Hcrypt.HCP.AxisFamily.left_target_eq_message
+#print axioms Hcrypt.HCP.AxisFamily.right_target_eq_message
+#print axioms Hcrypt.HCP.AxisFamily.same_observation_distinct_targets
+#print axioms Hcrypt.HCP.AxisFamily.both_targets_nonzero
+#print axioms Hcrypt.HCP.AxisFamily.sample_observation_and_exact_component
+#print axioms Hcrypt.HCP.AxisFamily.sample_public_observations_eq
+#print axioms Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets
+#print axioms Hcrypt.HCP.AxisFamily.cvp_solution_iff_message
+#print axioms Hcrypt.HCP.AxisFamily.cvp_existsUnique
+#print axioms Hcrypt.HCP.AxisFamily.cvp_solution_iff_left_operativeTarget
+#print axioms Hcrypt.HCP.AxisFamily.cvp_solution_iff_right_operativeTarget
+#print axioms Hcrypt.HCP.AxisFamily.no_exact_public_solver
+#print axioms Hcrypt.HCP.AxisFamily.no_sound_and_harmonic_exact_public_solver
+#print axioms Hcrypt.HCP.AxisFamily.cvp_oracle_insufficient
+#print axioms Hcrypt.HCP.AxisFamily.weightedSample_message
+#print axioms Hcrypt.HCP.AxisFamily.weightedOpening_value
+#print axioms Hcrypt.HCP.AxisFamily.weightedSample_observed
+#print axioms Hcrypt.HCP.AxisFamily.weightedSample_exactComponent
+#print axioms Hcrypt.HCP.AxisFamily.weighted_public_observations_eq
+#print axioms Hcrypt.HCP.AxisFamily.weighted_coefficients_values
+#print axioms Hcrypt.HCP.AxisFamily.weighted_coefficients_ne
+#print axioms Hcrypt.HCP.AxisFamily.weightedSample_messages_ne
+#print axioms Hcrypt.HCP.AxisFamily.weightedSample_message_ne_zero
+#print axioms Hcrypt.HCP.AxisFamily.weighted_target_eq_message
+#print axioms Hcrypt.HCP.AxisFamily.weighted_same_observation_distinct_targets
+#print axioms Hcrypt.HCP.AxisFamily.weighted_both_targets_nonzero
+#print axioms Hcrypt.HCP.AxisFamily.weighted_cvp_solution_iff_operativeTarget
+#print axioms Hcrypt.HCP.AxisFamily.weighted_cvp_existsUnique
+#print axioms Hcrypt.HCP.AxisFamily.no_exact_encoded_message_decoder
+#print axioms Hcrypt.TCB.HCPRealization.CellularOperatorAlignment
+#print axioms Hcrypt.TCB.HCPRealization.CellularOperatorAlignment.matrixHarmonicSubspace_eq
+#print axioms Hcrypt.TCB.HCPRealization.CellularOperatorAlignment.operativeHarmonicComponent_eq
+#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment
+#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment.hiddenWitness
+#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment.operativeTarget_eq_projection
+#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment.operativeTarget_eq_message
+#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment.cvp_solution_iff_operativeTarget
+#print axioms Hcrypt.TCB.HCPRealization.no_exact_view_solver_of_factorization
+#print axioms Hcrypt.TCB.HCPAxisFamily.operatorAlignment
+#print axioms Hcrypt.TCB.HCPAxisFamily.actualSpectralGate
+#print axioms Hcrypt.TCB.HCPAxisFamily.observationAlignment
+#print axioms Hcrypt.TCB.HCPAxisFamily.bindSample
+#print axioms Hcrypt.TCB.HCPAxisFamily.bindSample_artifact
+#print axioms Hcrypt.TCB.HCPAxisFamily.operativeTarget_eq_original_message
+#print axioms Hcrypt.TCB.HCPAxisFamily.cvp_solution_iff_operativeTarget
+LEAN
+LEAN_NUM_THREADS=2 lake env lean /tmp/cellular-hcp-new-axioms.lean
+```
+
+The 139-declaration probe in the preserved native-metric section below supplies
+the retained selection. The fresh combined 235-report probe uses the union of
+these declarations and the four public facades named above. This follow-up
+supersedes the preceding inventory/build snapshot without changing its earlier
+record. The final Paper 1 PDF has **99 pages**. Its final TeX pass has no LaTeX
+warnings, undefined references/citations, missing glyphs or overfull boxes.
+Eight underfull-box diagnostics remain without a visible layout defect. All
+99 pages were rendered and visually inspected; pages 21--23, 87 and 94--95
+were also checked at higher resolution. Paper 3 is unchanged at 28 pages and
+retains its preceding visual review. Both canonical PDFs match their stable
+review exports bytewise. The local `cellular-hcp-pdf-qa.json` records the check;
+the preceding 97-page Paper 1 export is preserved under
+`output/pdf/baselines/2026-11-06-pre-cellular-hcp/`.
+
+- Current Paper 1 SHA-256: `beb20f8c4a67ef4afcd0bfe950cfb444cfaf38b9abba1c3150fa0c2a3930a213`.
+- Unchanged Paper 3 SHA-256: `61d7589a75b48bc877c768df0795059220af7fc921ed6f681e8e5b391a8ab9e7`.
+
+## Native-metric baseline — 2026-11-05
 
 The twenty-module mathematics follow-up is complete for the declared native
 modular source profile. The full union of all fifteen default roots and the
@@ -90,7 +283,7 @@ imply that every imported declaration was axiom-audited. The earlier
 9,233/9,228/68-result record below is retained as the pre-addition 4.35
 baseline, followed by the older 4.24 milestones.
 
-### Current manuscript checks
+### Native-metric manuscript baseline
 
 Paper 1's 97-page PDF and Paper 3's 28-page PDF both pass their final TeX
 runs without undefined references/citations, missing glyphs or overfull boxes.
