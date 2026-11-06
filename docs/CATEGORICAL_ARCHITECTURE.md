@@ -179,6 +179,32 @@ A future presentation-groupoid description could organize the projector's
 equivariance, after constructing the required objects/maps. Neither
 description alone supplies the metric comparison to the extracted code.
 
+## Accounted objects: ephemeral representatives, rotation and anonymity
+
+The [HCP object crosswalk](COCHAIN_PROXIMITY_TRACE.md#hcp-object-accounting-rotation-and-anonymity)
+records HC01--HC44: semantic carriers/classes, actual cellular and integral
+geometry, message/noise/sample objects, the selected public view, gates,
+projection states, artifacts, retained manifests and lifecycle/privacy claims.
+It is development documentation, not a new submission statement or a completed
+concrete family.
+
+The recovered flow is: a private base presentation, an admissible ephemeral
+representative connected by a hidden path/transport, Hodge-structured encryption,
+and a selected public artifact with verification evidence. The existing
+`EphemeralFiberSpec` proves same-class membership under a supplied path-respect
+condition. Its indexed generation family, transported private state, concrete
+Helfer realization and anonymity experiment remain unconstructed.
+
+Two squares must be kept separate. Rotation co-transports a ciphertext and
+its harmonic/noise coordinates, `b' = T1 b` and `h' = T1 h`; a common plaintext
+requires an encoding/lattice transport law. Fixed-observation HCP ambiguity
+instead compares the same raw `b` under distinct hidden projections. Distinct
+harmonic vectors need not mean distinct plaintexts across presentations.
+Equality of the small `(class,b)` input also establishes no equality of the
+larger payload/snapshot/root/proof view. The crosswalk records the corresponding
+joins and a face-free candidate whose changing exact component exposes that
+difference.
+
 ## Public classifier, fiber, and operative target
 
 An HCP realization contains a commuting classifier triangle:

@@ -263,6 +263,26 @@ candidate-indexed evidence and anchor joins preserve those statements and
 objects; they do not construct an omitted source comparison or turn an
 admissibility predicate into finality.
 
+The shared [HCP object crosswalk](../../docs/COCHAIN_PROXIMITY_TRACE.md#hcp-object-accounting-rotation-and-anonymity)
+accounts for semantic classes, admissible presentations, integral messages,
+exact/coexact noise, the full sample, commitments, gates and retained artifacts
+(HC01--HC44). It also recovers the ephemeral/anonymity plan: generate a private
+representative in the same class with a hidden path/transport, then publish
+only the selected artifact and evidence view. Class preservation for one
+supplied representative is proved under an explicitly path-respecting
+classifier; indexed generation, transported state,
+rotation migration and an anonymity game remain separate obligations.
+
+Rotation correctness must name the semantic plaintext and its cross-presentation
+encoding: transporting harmonic coordinates can preserve the same plaintext.
+Fixed-observation HCP ambiguity instead compares one raw observed cochain
+under different hidden presentations. To claim ambiguity of the actual public
+stack, the released payloads, roots, proof outputs and handles must be included
+in its view; equality of the classifier/cochain pair alone is insufficient.
+Representative privacy, plaintext hiding, sender anonymity, unlinkability and
+forward secrecy are distinct experiments. This draft selects none of them
+implicitly from a large classifier fiber or the name of a gate.
+
 ### 7. Proof ledger and remaining protocol work
 
 The successful Lean 4.35 builds of 9,233 aggregate/integration jobs and 9,228
@@ -270,7 +290,7 @@ default jobs, and the 68-declaration audit, are the **pre-addition baseline**.
 They do not validate the newer modules merely because the pin is unchanged.
 The expanded aggregate/integration union passes **9,253 jobs**, and the
 literal default build passes **9,248 jobs** on the same pin. The fresh
-consolidated probe through public facades passes for **139 distinct new
+consolidated probe through public facades passes for **139 distinct selected
 endpoints**, with sets exactly matching the individual reports: 100 use
 exactly the three standard axioms, three use a subset, and 36 retain only
 existing native certificates beyond them. None uses a cited-bound axiom or

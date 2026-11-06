@@ -14,6 +14,173 @@ the new sheaf/storage/optional canonical adapters (7,447 jobs). Expanded
 axiom, full-workspace and manuscript/PDF outcomes are recorded separately in
 the [shared validation record](../SEMANTIC-PARITY.md#mathematics-and-storage-follow-up).
 
+## HCP object accounting, rotation and anonymity
+
+This is a development crosswalk, dated 2026-11-05. It accounts for the objects
+needed to connect the intended Helfer/Hodge family to the existing public,
+gate and storage chain. It inventories definitions and joins; it does not
+construct the missing family or strengthen a theorem. The eventual slim
+Palomar entry should select its own required statements and proof closure.
+
+A semantic record can retain hidden witnesses even when its name contains
+“public”. Visibility must be specified by an actual selected public-view map.
+The table therefore distinguishes a mathematical carrier from the fields
+that an implementation publishes or persists.
+
+### Semantic and Hodge objects
+
+| ID | Object and source owner | Meaning, existing result and remaining join |
+|---|---|---|
+| HC01 | Hidden representative `Rep`; [HCPBridge.Realization](../lean/HCP.lean) | Index of a presentation, not a cochain, frame, digest or public class. The current realization is supplied; no intended concrete constructor is instantiated. |
+| HC02 | [Helfer.Signature and Interpretation](../lean/Helfer/Signature.lean) | Sorts, operations, finite-product contexts and their categorical interpretation. A selected cellular complex still needs an actual interpretation adapter. |
+| HC03 | [Helfer.HomotopyEquivalence](../lean/Helfer/HomotopyEquivalence.lean) | Function compatibility up to right homotopy, bifibrant sort objects and weak-equivalence components. Component homotopy inverses are proved. A quotient must first use bifibrant interpretations or chosen replacements; relation laws/setoid/quotient are not bundled here. |
+| HC04 | [ClosedSemantics, ClosedTheory and ClosedFormulaInvariance](../lean/Helfer/Invariance.lean) | Formula carrier and satisfaction are supplied, as is invariance. Theory equality is proved from them. Full first-order syntax and Helfer's fibrational semantics are not constructed. A proved cohomological test fragment would need that precise label. |
+| HC05 | [PublicClassifier, PublicFiber and HomotopyClassFingerprint](../lean/Axioms/HomotopyClass.lean) | Public class is classifier equality/inverse image. `Realization` factors it through closed theory. Only the forward equivalence-to-class direction is proved; neither classifier completeness nor an actual Helfer quotient follows. Fingerprint fields are not automatically computed invariants. |
+| HC06 | [Path space and ClassMembershipWitness](../lean/Axioms/HelferFOL.lean) | A hidden path gives same-class membership under an explicit path-respecting classifier. Continuous paths, typed Helfer equivalence, classifier equality and equal matrix nullity are distinct relations. The legacy `HomotopyEquivalentLaplacians` in [Spectral](../lean/Laplacian/Spectral.lean) means equal kernel dimension only. |
+| HC07 | [FiberSystem and TransportAdmissibility](../lean/Axioms/Fibration.lean) | Dependent fibers and a supplied path transport/invariant. Identity/composition coherence and a concrete metric-preserving action are not bundled. The categorical Grothendieck-fibration/tagged-copy construction in [Hardness](../lean/Hardness.lean) is a separate object, not the intended Helfer model. |
+| HC08 | [OrientedTwoComplex](../lean/Sheaf/CellComplex.lean) and [CellularSheaf](../lean/Sheaf/Cellular.lean) | Actual cells, incidences, stalks, restrictions and coboundaries; `delta1_comp_delta0` is proved. Cells are not identified with blocks or network peers. Base, stalk and restriction changes require specified transports. |
+| HC09 | `TotalCoord`, `C0`, `C1`, `C2` in [Cellular](../lean/Sheaf/Cellular.lean) | Finite Euclidean cochain carriers with explicit coordinate order and inner products. Comparing two raw observations requires a declared common carrier or coordinate identification. |
+| HC10 | [degreeOneLaplacian and Hodge subspaces](../lean/Sheaf/Hodge.lean) | True `Delta1 = delta0 delta0* + delta1* delta1`, exact/harmonic/coexact subspaces, positivity, symmetry and orthogonality. `P_H` is harmonic projection; `I-P_H` is the separate normalized residual operator and need not have the true positive spectrum. |
+| HC11 | [IntegralStructure and harmonicOneLattice](../lean/Sheaf/Integral.lean) | Supplied stalk lattices preserved by restrictions; integral coboundary preservation is proved. Intrinsic message lattice is `C1_Z ∩ ker Delta1`, without a full-span assertion. No concrete bundled `IntegralStructure` instance was found in this audit. Integer `SystematicCode` openings do not themselves instantiate that bundle. |
+| HC12 | [HarmonicLatticePresentation](../lean/Sheaf/HarmonicLattice.lean) and [CVP.ExplicitLattice](../lean/CVP.lean) | Optional discrete harmonic sublattice, integer coefficients and supplied full-real-span/inclusion proofs. Distinct from the entire real harmonic space; a concrete presentation is still needed if used for message encoding or CVP. |
+| HC13 | [HodgeNoise](../lean/Sheaf/HarmonicLattice.lean) | Exact opening `a : C0` and coexact opening `v : C2`; noise is `delta0 a + delta1* v`. Both openings are arbitrary real cochains. No integrality, norm bound, distribution or sampler is imposed. |
+| HC14 | [HodgeEncryptedCochain](../lean/Sheaf/HarmonicLattice.lean) | Integral harmonic message plus those noise openings; full sample `b = h + delta0 a + delta1* v` need not be integral or exact. Harmonic projection recovery is proved. A chosen allowed-noise profile must be stated separately. |
+| HC15 | [HCP.hodgeDecompositionEquiv, encrypt, split and decrypt](../lean/HCP.lean) | Invertible full coordinates `H × H^perp`; decryption retains only the harmonic coordinate. This is distinct from injectivity of encryption from messages alone and from a randomized security experiment. |
+| HC16 | [IsometricCochainEquiv](../lean/Sheaf/Equivalence.lean), [CochainSemantics](../lean/Sheaf/CochainSemantics.lean) | The isometric object transports actual coboundaries, adjoints, Delta1 and harmonic subspaces. The legacy semantic adapter instead supplies carrier/decoder/binding compatibility without an isometry claim. Neither supplies integral-lattice transport automatically. |
+| HC17 | `Realization.laplacian`, `HiddenHodgeWitness`, `operativeTarget` in [HCP](../lean/HCP.lean) | The realization's matrix is not automatically the actual cellular Delta1. Its hidden witness binds a representative to the public class, without payload/hash/snapshot fields. The matrix/operator, classifier and target joins to the cellular observation remain uninstantiated. |
+
+### Public artifacts, gates and retained objects
+
+| ID | Object and source owner | Meaning, existing result and remaining join |
+|---|---|---|
+| HC18 | [CochainCommitmentData](../lean/Axioms/CochainCommitment/Payload.lean) | Original modulus, count, integer edge list and 16-byte topology tag. Shape validity alone gives neither semantic exactness nor representative bounds, authentication or hiding. |
+| HC19 | [CochainPayloadInterpretation and SheafStateSnapshot](../lean/Sheaf/Commitment.lean) | Decoder into that actual sheaf, snapshot/schema/root/tag and supplied envelope/encoding/root-binding contracts. A snapshot is indexed by the full sheaf; equality of roots across private presentations requires a defined encoding/binding profile. |
+| HC20 | `AcceptedCommittedOneCochain` and opening equivalence in [Commitment](../lean/Sheaf/Commitment.lean); [ModularExact](../lean/Sheaf/SystematicCode/Modular.lean) | Real decoded exactness, opening equality modulo `ker delta0`, and integral coboundary congruence modulo `q` are separate predicates. The constructed modular profile is RS-compatible; it is not an arbitrary HCP integral realization. |
+| HC21 | [HashedCommittedCochain and ProofCarryingCommittedCochain](../lean/TCB/ProofCarrying.lean) | Same original payload, leaf digest, supplied hash binding and proof statement/verification contracts. Mathematical proof fields do not select serialized bytes or construct a verifier. |
+| HC22 | [BoundHCPObservation](../lean/TCB/HCPObservation.lean) | Actual integral Hodge sample, accepted exact artifact, `decode c = delta0 a`, and supplied binding of full `b` to class, context, leaf and snapshot. `toObservation` returns only `(classify snapshot,b)`. Its target is not yet joined to `HCPBridge.operativeTarget`. |
+| HC23 | [ObservedStatement](../lean/TCB/ObservationBoundary.lean) | Runtime-accepted proof artifact and extracted bounded public statement. Separate from `BoundHCPObservation`; common words like “observation” do not identify their fields or visibility. |
+| HC24 | [FrameWitness and HarmonicGrassmannianPoint](../lean/Proximity/Concrete/GrassmannianPlucker.lean); [Reconstruction](../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) | Independent frame, ranked embedded subspace and full exterior/projective shadow. Genuine full-point recovery is proved; the raw quotient also contains zero/non-Grassmannian data. Identification with the operative HCP kernel is an extra join. |
+| HC25 | [HashedPluckerShadow and PayloadRealization](../lean/Proximity/Concrete/PluckerCochain/PublicBinding.lean); [PluckerObservation](../lean/TCB/PluckerObservation.lean) | Semantic hashed record retains both the full shadow and digest. Producer/realization and observed-frame bindings are supplied. Equal full operative-kernel shadows force equal targets at the same `b`; a digest-only public view is a different profile. |
+| HC26 | [Exact](../lean/Gates/Exact.lean), [Spectral](../lean/Gates/Spectral.lean), [Oracle](../lean/Gates/Oracle.lean) and [Stage](../lean/Gates/Stage.lean) gates | Structural facts, gap window, boundary policy and stage/runtime refinement have separate inputs. `ByConstructionPoVGeometry.gap_in_bounds` is supplied; the scalar must be identified with the actual operator's gap. Equal spectra alone prove no Helfer equivalence. |
+| HC27 | [SourceMetricGate and PluckerMetricGate](../lean/Proximity/Concrete/Gates.lean) | Nonnegative quotient-invariant score plus chart/distance/admissibility data. They neither choose a full metric automatically nor construct an HCP realization or separation family. |
+| HC28 | `SemanticAlignmentGate`, `PublicShadowRespectGate`, `SyndromeAdequacyGate` in [Gates](../lean/Proximity/Concrete/Gates.lean) | Alignment and full-shadow respect are derived from an existing chain. Zero local syndrome implies global candidacy only under the optional adequacy converse. Full Plucker equality is not coarse Helfer-class equality. |
+| HC29 | [ProjectionChain.Chain](../lean/Proximity/Concrete/ProjectionChain/Core.lean), [stage certificates and StateBus](../lean/Proximity/Concrete/Gates/Stage.lean) | Original payload, extracted plane and scalar received word with predecessor identities. Near/upper metric handoffs and stage/naturality facts compose from existing local inputs; no full intended private-frame chain is thereby instantiated. |
+| HC30 | `HardGateCertificate`, `ProjectionNaturalityGate`, `FarGatePipeline` in [Gates](../lean/Proximity/Concrete/Gates.lean); [FarNonCollapseWitness](../lean/Proximity/Concrete/Gates/Final.lean) | Hard gates collect structural/stage facts; naturality composes local squares. Far lower bounds are additional theorems at explicit intermediate radii, or a supplied final witness. No gate package currently constructs the concrete Helfer/HCP family. |
+| HC31 | [EvidenceDatabase and accumulated records](../lean/Proximity/Concrete/GateEvidence.lean) | Seven evidence slots: five hard, naturality, final far. Records retain actual certificates and binding/inclusion relations. Evidence inclusion authenticates the recorded object under its profile; it does not prove a missing mathematical input. |
+| HC32 | [Storage.Context](../lean/Protocol/Storage/Context.lean), [ofHCPObservation](../lean/Protocol/Storage/HCP.lean) | Same original interpretation, artifact and snapshot; raw binding differs from exact acceptance. The HCP adapter reuses its accepted exact component and has zero decoded exactness distance. `ContextKey` is a run/context identifier, not a cryptographic secret key. |
+| HC33 | [Projection.Input and SealedProjection](../lean/Protocol/Storage/Projection.lean), [CheckpointScheme and PersistenceReceipt](../lean/Protocol/Storage/Checkpoint.lean) | Existing legacy/concrete semantics and exact payload identity; six typed manifest stages, exact ordered seal and receipt. The temporary StateBus differs from the retained manifest. Proof payloads are not automatically a public serialization. |
+| HC34 | [TransitionAnchor](../lean/Protocol/Storage/Anchor.lean), [ProjectionAnchor](../lean/Protocol/Storage/ProjectionAnchor.lean), [CertifiedTransition](../lean/Protocol/Ledger/Certified.lean) | Same candidate, snapshot, original artifact, manifest, actual gate database and quorum proposal are joined under explicit authentication/history relations. Snapshot, leaf, evidence, manifest and block roots remain separate names. Fixed-`F` adapters implement no geometry/key migration. |
+| HC35 | [PlaneView](../lean/Proximity/Concrete/Public.lean), [CanonicalRS.Observation](../lean/Protocol/Storage/CanonicalRS.lean) | Existing observed artifact and extraction; canonical storage adapter proves equality of the whole original artifact and the actual reduced pair. This is a proved storage/public join, distinct from the missing HCP realization join. |
+| HC36 | [ThreeLevelMetrics](../lean/Protocol/Storage/ThreeLevelMetrics.lean), [CanonicalCalibration](../lean/Protocol/Storage/CanonicalCalibration.lean), affine challenge | Native scalar cochain, whole-pair plane and RS metrics satisfy `d_C <= d_P = D_RS <= 2*d_C` in the constructed modular profile. Frame disagreement, Euclidean exactness and full-HCP residual remain separate. A sampled-challenge profile must bind the pair before sampling; fixed canonical-mix goodness is family-specific. |
+| HC37 | [HodgeBlindingContext and BlindedCommittedCochain](../lean/Axioms/CochainCommitment/Blinded.lean), [security/MAC contracts](../lean/Axioms/CochainCommitment/Security.lean) | Separate exact-plus-harmonic blinded value, blinding scalar and topology-derived harmonic direction. Not the exact serialized base, full HCP sample, noise opening or an instantiated MAC. Hiding, binding and unforgeability remain explicit security obligations. |
+| HC38 | [EphemeralFiberSpec and runtime obligations](../lean/Axioms/Fibration.lean), [Protocol.Ephemeral](../lean/Protocol/Ephemeral.lean) | Existing representative/path/admissibility object; same-class theorem under path-respect. Indexed generation, transported state and generated/active/consumed/retired lifecycle are planned; the protocol module is an import attachment point. Secure generation, erasure and forward secrecy are not constructed. |
+
+### Rotation and anonymity: recovered intent and distinct claims
+
+The recovered anonymity idea is **many private presentations over one public
+class, with a fresh admissible representative and hidden path for each use**.
+The active [ephemeral/anonymity queue](PROTOCOL_PARITY_QUEUE.md#priority-1--ephemeral-representative-and-anonymity-flow)
+and [infinite-family bridge plan](SEMANTIC_PARITY_QUEUE.md#priority-3--verification-completeness)
+already record this intent. The archived `docs/archive/STORAGE_AND_ROUTING.md:89--101` rotation plan
+describes decrypting old stored credentials and re-encrypting under a new
+master, followed by atomic wallet replacement. That archive is retained only
+in the development repository, outside the public-review package. These historical
+intentions are context, not evidence for their old spectral-identity,
+unlinkability or forward-secrecy claims.
+
+For a degreewise isometry `T` between presentations, the proved geometric
+relationship transports the cochain together with its harmonic component:
+
+```text
+b' = T1 b,       h' = T1 h,       eta' = T1 eta,
+P_H' (T1 b) = T1 (P_H b).
+```
+
+This is the geometry relevant to rotation correctness. A protocol still needs
+lattice/encoding compatibility and a plaintext interpretation: different
+harmonic coordinate vectors may encode the **same semantic plaintext** after
+transport. The existing lattice presentation can encode coefficient vectors,
+but no cross-presentation plaintext/encoding compatibility is supplied by
+isometry alone. Fresh re-encryption may also resample allowed noise rather
+than use precisely `T1 eta`. Snapshot, payload, proof and digest updates must
+be named, authorized and bound to the new context; unchanged plaintext or
+class does not imply unchanged public bytes.
+
+Fixed-observation ambiguity asks a different question. It holds a common raw
+`b` fixed while varying the hidden presentation, and asks whether two different
+harmonic targets are compatible with **the same selected public view**. No
+change of coordinates is silently applied to `b` in that statement.
+
+| ID | Privacy/lifecycle object or claim | Exact accounting obligation |
+|---|---|---|
+| HC39 | Indexed representative family and hidden transport | Connect every generated endpoint/path to the actual Helfer interpretation, cellular geometry, gates and transported secret state. `EphemeralFiberSpec` currently supplies one endpoint/path, not such a family. |
+| HC40 | Candidate set versus anonymity distribution | Infinite Grassmannian/Laplacian candidate families are proved in [Tsirelson](../lean/Tsirelson.lean). Membership of an injective family in one selected gate-admissible classifier fiber still needs a bridge. A finite/asymptotic sampler and observation experiment are further objects; no uniform “one over infinity” probability theorem follows. |
+| HC41 | Public view and linking coordinates | Specify the actually released class tag, payload, roots, proof outputs, handles, nullifiers and any frame data. Hiding a representative within one class does not alone hide which account acted. A stable account-specific tag can link uses; a deliberately shared coarse tag has different authorization obligations. No privacy policy is selected by this crosswalk. |
+| HC42 | Security experiment and persistent migration | Separate representative indistinguishability, plaintext hiding, sender anonymity, transaction unlinkability and forward secrecy. They require sampling/adversary/corruption views and proof-system assumptions. Rotation also requires authorized snapshot/handle updates and retirement; existing checkpoint consumption and ledger replay exclusion are not a complete ephemeral-rotation lifecycle. |
+| HC43 | Semantic plaintext and cross-presentation encoding | Required profile object, not an existing general bundle. `HarmonicLatticePresentation.encrypt` accepts integer coefficients in a fixed presentation; `HodgeEncryptedCochain` accepts an intrinsic integral harmonic vector. State which values mean the same plaintext across presentations and prove that rotation respects that encoding before deriving plaintext correctness or hiding. |
+| HC44 | Authorized recipient recovery material | Required profile object: state how the recipient holds or derives the ephemeral presentation/transport needed to recover the message, and which hints an outsider sees. Neither `HodgeNoise` nor `EphemeralFiberSpec` constructs key exchange, encapsulation or a public-hint recovery algorithm. This must use the same plaintext, public view and lifecycle as HC39--HC43. |
+
+The intended anonymity flow can be traced without identifying these objects:
+
+```mermaid
+flowchart LR
+  Base["Private base presentation r0"] --> Path["Hidden path and transport"]
+  Seed["Generation index or sampled seed"] --> Rep["Admissible ephemeral presentation rs"]
+  Path --> Rep
+  Rep --> Class["Same selected public class p"]
+  Rep --> Geometry["Actual sheaf, lattice, Hodge operator"]
+  Plain["Semantic plaintext and encoding"] --> Sample["Harmonic message + allowed Hodge noise"]
+  Geometry --> Sample
+  Sample --> View["Selected public view of ciphertext and artifacts"]
+  Class --> View
+  Gates["Object-indexed gates and proof contracts"] --> View
+  View --> History["Authenticated handles, roots and retained records"]
+```
+
+The class equality on the upper branch constrains one coordinate of `View`.
+The full public view can reveal more. The anonymity question is whether the
+specified observer can distinguish allowed representative choices or link
+uses after seeing that whole view, with the declared sampling and corruption
+information. Hodge projection supplies correctness for the intended receiver;
+its algebra alone does not answer that experiment.
+
+### Required joins for the intended family
+
+1. **Semantic carrier.** Select actual bifibrant interpretations or replacements,
+   an actual semantic model/fragment and its invariance proof or precisely stated
+   external premise. Do not substitute equal spectra, Betti data, a bare `True`
+   gate or a constant-classifier example alone for the intended construction.
+2. **Presentation and integral geometry.** Map each representative to its actual
+   cellular sheaf, coordinate convention, true Delta1, integral structure and
+   allowed message/noise carrier. Identify the matrix in `Realization` with that
+   operator. Supply lattice transport separately when rotation needs it.
+3. **Gate instantiation.** Prove the relevant exact/spectral and selected
+   projection/runtime contracts for those same objects. Compute or identify the
+   actual spectral gap. Local upper bounds and gate-record presence do not
+   produce final far separation or a nonempty ambiguity family.
+4. **Observation identity.** Relate `classify snapshot` to `Realization.classifier`
+   and `BoundHCPObservation` to its `HiddenHodgeWitness`/`operativeTarget`.
+   Define the actual released view. Equality of `(class,b)` alone proves no
+   equality of payloads, decoder profiles, roots, proofs or frames.
+5. **Structured-noise witness.** Construct the compared encrypted samples with
+   integral harmonic messages and allowed exact/coexact noise. Prove common
+   observation and distinct targets under the intended observation experiment.
+   For plaintext hiding, distinct raw harmonic vectors must additionally be
+   distinguished by the selected semantic plaintext interpretation.
+6. **Rotation, generation and security.** Prove class-preserving generation and
+   correct plaintext/state transport, then specify lifecycle migration and the
+   finite/asymptotic anonymity experiment. These are separate from the current
+   conditional no-uniform-recovery theorem and generic coding theorems.
+
+A useful failed candidate makes join 4 concrete: in a face-free axis-swap
+family, the same `b` has exact components `0` and `b`. One fixed decoder cannot
+map an identical serialized payload to both. A family varying coexact noise
+could keep the exact component zero, but it would still need the snapshot,
+artifact, gate and public-view proofs. If the view reveals the full genuine
+Plucker point of the operative kernel, the existing recovery theorem forces
+equal targets at the same `b`; that visibility choice excludes this proposed
+ambiguity. These are accounting constraints, not newly proved family results.
+
 ## The same payload travels through the stack
 
 ```mermaid
