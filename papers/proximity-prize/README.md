@@ -18,9 +18,11 @@ Paper 1 may later consume the resulting coding theorem through a short
 application interface.
 Completing Paper 2 is not a prerequisite for these coding proofs. The
 selected commitment-specific application uses the existing Lean commitment
-object and actual projection. Its bounded commitment/layout profile and
-intended source score still need selection. The existing public pullback is
-calibrated; an independent source metric needs its actual comparison. See the
+object and actual projection. The explicit systematic modular profile uses
+the same original payload and
+a proved native comparison `d_C ≤ d_P = D_RS ≤ 2*d_C`. Its source validity
+is an actual integral cellular coboundary modulo a carry. A separate Euclidean
+or full-HCP source score needs its own comparison. See the
 [object trace](../../docs/COCHAIN_PROXIMITY_TRACE.md). Full Rust execution,
 ledger, and consensus are not prerequisites for proving that radius theorem.
 A concrete protocol separately enforces the fixed-pair, later-challenge order.
@@ -34,15 +36,14 @@ and generic attained minimum-distance interpretation are implemented and
 have passed their relevant builds. The concrete canonical plane/pair
 distance equality and actual public-observation pullback calibration remain
 separate results outside the standalone target.
-The completed coverage table accounts for all eight manuscript sections, all
-nine named coding statements, 40 standalone-object rows, 20 generic claims
-and the standalone target's 25 local modules. Ten further object rows and
-eleven application/source-boundary rows trace the selected commitment
-application and storage mathematics. These counts are not an overall
-completion percentage: Q08's selected codec/source comparison, nonempty
-actual far family and challenge guarantee remain open. Current expanded
-build, axiom and manuscript/PDF checks are recorded separately from the
-historical validation results.
+The coverage register accounts for all eight manuscript sections, nine named
+generic coding statements, and the native modular profile and its boundaries.
+The standalone import closure has 33 local modules. These inventories are
+not completion percentages:
+Q08 is complete for the declared native modular profile, while unrestricted
+Euclidean/full-HCP comparisons, arbitrary fixed-mix preservation and
+cryptographic security are separate claims. Current builds, axiom audits
+and manuscript checks are recorded separately from historical baselines.
 
 Current status:
 
@@ -89,17 +90,30 @@ Current status:
   `q = 12289` has no safe count radius at 128 bits; it is not treated as the
   prize-facing boundary or large-field instance.
 
-The new source/storage boundary retains the original sheaf interpretation,
+The source/storage boundary retains the original sheaf interpretation,
 snapshot and public artifact. Raw binding is separate from accepted exactness;
 operator-compatible semantics and nested checkpoint/gate prefixes preserve
-the actual objects. Controlled exact lifts provide a sufficient theorem for
-an independently decoded cochain score, and an optional canonical adapter
-joins the existing public observation and distance representation to that
-same artifact. Their actual modules pass in the focused 7,447-job build;
-the full 7,530-job build and fresh forty-endpoint axiom report also pass.
-The four inherited native-arithmetic endpoints are identified in the
-[shared validation record](../../SEMANTIC-PARITY.md#mathematics-and-storage-follow-up).
-The actual codec/layout/lifts remain a selected-profile obligation.
+the actual objects. The explicit systematic modular profile constructs
+coboundary congruence and RS compatibility, the full original-payload codec,
+three native distance comparisons and a payload with all three distances
+`3/4`. Its canonical mix is good for the diagonal family, whose only bad
+challenge is `-1`. A different capacity-far family shows why arbitrary fixed
+nonzero mixing cannot preserve positive farness uniformly.
+
+The separate integer-syndrome no-wrap profile supplies a coarse Euclidean
+comparison. The older controlled-lift interface retains its explicit inputs;
+a global zero-additive-loss Euclidean comparison is obstructed for a linear
+decoder with nonexact image. No capacity-scale unrestricted geometric theorem
+is claimed. Accepted exact contexts have zero native distance under the stated
+decoder contract; positive-far payloads are raw proximity/rejection inputs.
+
+The Lean/Mathlib 4.35 aggregate and default builds pass 9,253 and 9,248 jobs.
+The fresh consolidated audit has 139 selected declarations: 103 standard-only
+and 36 with existing native arithmetic certificates; none depends on the
+seven cited-bound axioms or `sorryAx`. Papers 1 and 3 have 97 and 28 reviewed
+pages. The [shared validation record](../../SEMANTIC-PARITY.md)
+and [reproduction guide](../../docs/MATH_STORAGE_VALIDATION.md) retain the
+exact scopes, probes and separately dated earlier results.
 
 The full Hodge sample is a separate source. With a nonzero coexact direction,
 `Sheaf/ObservationQuotient.lean` proves an obstruction on the unrestricted
@@ -111,9 +125,10 @@ noise-bounded profiles need their own comparison.
 The [primary-source novelty comparison](../../docs/PROXIMITY_NOVELTY_COMPARISON.md)
 records classical endpoint/deep-hole context, existing same-set MCA results,
 field/radius distinctions and commitment interfaces. The supported framing
-is an elementary formalized endpoint/certificate development. A new
-commitment-specific geometric radius, security or cost advantage is still
-to be established from a concrete profile.
+is an elementary formalized endpoint/certificate development. The explicit
+native modular comparison is proved; a new cryptographic
+security or cost advantage, or a stronger original HCP geometric radius,
+requires a separate construction and comparison.
 
 Suggested local build:
 
