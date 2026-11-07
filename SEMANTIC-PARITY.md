@@ -2,7 +2,7 @@
 
 Review dates: 2026-11-04; mathematics/storage, object-model and toolchain
 follow-ups 2026-11-05; concrete Helfer/HCP implementation, public-input profile
-recipient recovery/rotation and owned-resource transition 2026-11-06.
+recipient recovery/rotation, owned-resource transition and one-shot integrity 2026-11-06.
 
 **Completed native-metric follow-up — 2026-11-05 baseline:** the cochain,
 plane and RS metrics remain separate. The explicit systematic modular profile
@@ -25,7 +25,7 @@ full-storage-view compatibility remains conditional. P231--P236 and the
 [central validation record](docs/MATH_STORAGE_VALIDATION.md) record the new
 checks separately from P229's native baseline and P230's preimplementation
 object-accounting audit. The [Paper 2 draft](papers/paper2/DRAFT.md) records
-protocol ownership; HC01--HC44 in the
+protocol ownership; HC01--HC47 in the
 [object crosswalk](docs/COCHAIN_PROXIMITY_TRACE.md#hcp-object-accounting-rotation-and-anonymity)
 retain their IDs and updated construction boundaries.
 
@@ -52,7 +52,24 @@ handoff and optional complete-proposal quorum. Hash preimages follow an
 explicit acyclic order. Secure primitives, authentic prior-state origin,
 wire/runtime refinement and finality remain contracts. P246--P252 record it.
 
-The final expanded/default builds pass **9,274/9,267 jobs**. A fresh
+**One-shot sampled integrity — 2026-11-06:** the same packet and transfer
+checks now have a soundness-free operational layer. Local authorization and
+original-context acceptance derive validity; accepted-invalid outcomes imply
+an actual authorization or payload-verification failure. A shared-PMF union
+bound composes supplied error budgets without independence. The released
+packet/proposal/input-manifest projection exposes public IDs directly. This
+is a fixed-setup one-attempt integrity experiment, not primitive unforgeability,
+full-view privacy or an adaptive protocol-security proof. P253--P257 record it.
+
+The current expanded/default builds pass **9,278/9,271 jobs**. The fresh
+seven-facade probe passes **605 selected reports**: 569 standard-only
+(508 exact standard-three sets, 61 subsets), and 36 old-native reports.
+All 105 additions are standard-only (79 exact-three, 24 axiom-free, two
+nonempty subsets); all 500 preceding sets are unchanged. Static coverage is
+259 source modules/260 Lean files, with 32 recorded focused closures excluding
+legacy `Chain` and `CitedBounds`. P257 records these checks.
+
+The preceding owned-transition expanded/default builds pass **9,274/9,267 jobs**. A fresh
 public-facade probe passes **500 distinct selected reports**: 464 standard-only
 (429 exact standard-three sets and 35 subsets), and 36 retaining only old
 native arithmetic certificates. All 145 additions are standard-only; the 355
@@ -196,6 +213,10 @@ no mathematical objects.
 | H47 | Original input seal and semantic TCB compatibility | `Storage.TransferManifest`, `Evidence.TransferEnvelope.Derivation` | **Actual objects retained.** One original payload/digest is sealed before later proof/block data. Already-derived validity and exact root joins are represented using the real candidate/transfer witness and projected-intent existential shadow, not a unit/always-valid fixture. This bridge supplies neither new verifier soundness nor six-stage gate completeness. Persistence requires an actual matching receipt. | Paper 2 §6.2 |
 | H48 | Boolean transfer acceptance and computed update | `Transfer.Owned.{Config,Prechecks,CheckedTransfer,check_implies_accepted_update}` | **Concrete composition proved.** Resource checks and trusted-interpretation signature/payload results derive the existing `Candidate.Valid` and `AcceptedUpdate`. The action/snapshot are built from the original objects. Canonical parser evidence fixes one candidate/successor; conservation, input consumption, fresh output, conditional inventory preservation and replay rejection follow. The Boolean specification is noncomputable, not verified Rust. | Paper 2 §6.2 |
 | H49 | Full-packet inclusion and exact final history/quorum | `Transfer.Anchored`, `CheckedTransfer.{packet_included,source_reconstruct,successor_reconstruct,anchor,certified}` | **Original-object endpoint.** Full typed proof packet determines the evidence preimage; its actual input manifest enters the block preimage. Existing evidence and history anchors retain the same candidate, context, artifact and computed successor. Optional quorum matches the complete proposal and acceptance judgment. Fixed snapshot/epoch, trusted state origin, primitive security, atomic persistence and consensus finality remain separate. | Paper 2 §6.2 |
+| H50 | Operational algorithms versus ideal soundness | [TransferCheck](lean/Protocol/Evidence/TransferCheck.lean), `Transfer.Operational.Config`; exact `.operational` projections | **Same checks, weaker assumptions.** Raw signature/proof algorithms carry no universal soundness. Actual metadata/intent/canonical-byte checks remain. The exact verifier and transfer delegate to this shared checker; original context, interpretation, candidate and policy are retained. | Paper 2 §6.3 |
+| H51 | Released owned-transfer record | [PublicTransferView](lean/Protocol/Transfer/PublicView.lean), `CheckedTransfer.publicView` | **Actual projection.** Canonical bytes, parsed packet, complete proposal and original one-input manifest base/root/directory. Explicit resource/signer IDs and metadata distinguish records directly. Public setup, catalog/prior-state access and external access metadata enter the experiment separately. This is not the entire network transcript or a hiding theorem. | Paper 2 §6.3 |
+| H52 | Accepted-invalid outcome and primitive failure events | [Operational](lean/Protocol/Transfer/Operational.lean), `AcceptedInvalid`, `AuthorizationFailure`, `PayloadFailure` | **Pointwise reduction proved.** Actual checker success plus an invalid candidate from the actual parser implies authorization false acceptance or proof false acceptance for the exact expected intent and trusted original interpretation. No exact primitive soundness is assumed. An authorization failure is not automatically an EUF-CMA forgery. | Paper 2 §6.3 |
+| H53 | One-shot sampled integrity and error budgets | [Security](lean/Protocol/Transfer/Security.lean), `Experiment`, `ofCheckedRelease` | **Conditional probability composition.** Explicit view, auxiliary data, PMF tape and adversary determine the same attempt for all three events. Bad-acceptance probability is at most the two failure probabilities, then their supplied bounds; independence is unnecessary. Actual checked releases have a named constructor. No primitive estimate, security parameter, efficiency, adaptive oracle or anonymity follows. | Paper 2 §6.3 |
 
 ## Definition, notation, and claim issue table
 
@@ -228,7 +249,7 @@ mathematical or author decisions, rather than silent copyediting.
 | D21 / P1 | Storage roots, stages and local lifecycle | Same-shaped hash names and slot presence do not identify prior mathematical artifacts or prove durability. | **Typed joins implemented.** Actual context/payload/digest-indexed relations, exact predecessor prefixes and exact sealed-manifest receipts are separate. Six manifest stages differ from seven legacy gate-evidence slots. Global run freshness, backend atomicity, root codecs and memory erasure remain profile/runtime work. |
 | D22 / P1 | History entry to original snapshot/artifact and complete projection | Independent candidate validity and manifest sealing did not bind those actual objects together. | **Bounded semantic join implemented**, P215--P216. Actual interpretation/artifact equalities derive accepted context and snapshot/payload joins; supplied history/gate relations bind the exact manifest and gate database. The wire-field choice, concrete authentication, persistence implementation and dynamic geometry remain open. |
 | D23 / P1 | H17, H27--H28; projective/stack terminology | The raw quotient contains zero and arbitrary exterior coordinates, while a projective Grassmannian point has additional validity conditions. A moduli analogy does not construct descent or metric transport. | **Definition boundary recorded.** Use the actual raw/frame/soundness predicates; distinguish classical reconstruction from its current Lean proof status. Keep stack packaging prospective and the public-point visibility decision explicit. |
-| D24 / P1 | Lean/Mathlib version and validation | Older successful builds cannot certify later sources or newly added modules. | **Current owned-transfer profile validated.** Final union/default builds pass 9,274/9,267 jobs; 500 selected reports split into 464 standard-only and 36 retaining old native arithmetic certificates. All 145 additions are standard-only; all 355 preceding sets are unchanged. P245 preserves the rotation baseline, P239 the public-input baseline and P236/P229 the earlier milestones. Hosted CI and Palomar protected comparison remain separate. |
+| D24 / P1 | Lean/Mathlib version and validation | Older successful builds cannot certify later sources or newly added modules. | **Current one-shot integrity validated.** Final union/default builds pass 9,278/9,271 jobs; 605 selected reports split into 569 standard-only and 36 old-native. All 105 additions are standard-only and all 500 preceding sets are unchanged. P257 is current; P252/P245/P239/P236/P229 preserve earlier milestones. Hosted CI and Palomar protected comparison remain separate. |
 | D25 / P1 | Helfer/class construction; H31 | Typed equivalence needs actual bifibrancy; a classifier fiber does not define a quotient, and arbitrary supplied satisfaction has no automatic invariance. | **Homological fragment instantiated.** `CochainModel` constructs the real cochain model and proves invariance of nonzero-homology tests for all interpretations. Actual axis theories give its classifier. Full first-order syntax/fibrational semantics, full Theorem 12.3 and a general quotient remain open. |
 | D26 / P0 | Intended HCP realization; H23, H33 | An arbitrary realized matrix is not automatically cellular Delta1; the small `(class,b)` observation forgets larger artifact fields. | **Scoped operator/target join closed; larger public-view condition retained.** P231--P234 construct actual cellular interpretation, matrices, classifier and operative targets. TCB alignment derives the same original sample’s target/CVP answer under explicit operator/classifier and artifact contracts. Storage-view equality or factorization, byte encodings and runtime realization remain additional obligations. |
 | D27 / P0 | Structured noise, rotation and messages; H32, H34, H36 | Fixed-raw-`b` ambiguity and co-transported rotation have different data; equal or distinct ambient coordinates need an actual plaintext encoding. | **Finite ambiguity and coefficient-preserving rotation proved.** The fixed-input two/one example remains separate from actual axis rotation, which moves `(1,2)` to `(2,1)` and retains two. Integral sample transport, both recovery routes and conditional original-payload migration now have proofs. Fresh generation, channel security, atomic migration, lifecycle/erasure and distributional security remain separate. |
@@ -236,6 +257,7 @@ mathematical or author decisions, rather than silent copyediting.
 | D29 / P0 | Paper 2 payload verifier; H46 | A verifier quantified over arbitrary interpretations sharing a public view can conflate incompatible decoders and become vacuous. | **Trusted interpretation fixed.** `PayloadVerifier` indexes the actual interpretation; accepting an original context requires literal interpretation equality plus exact base-view equality. The deployment must bind metadata to that implementation; names alone supply no decoder identity. |
 | D30 / P0 | Paper 2 hash/signature dependency order; H44--H45 | Hashing/signing the complete proposal or full successor into its own block/evidence fields is cyclic; a content projection can also omit source historical evidence. | **Typed acyclic construction and reconstruction proved.** Owner signs the pre-proof intent. Source parent plus explicit old evidence root complete source content; final proposal coordinates complete target content. Packet evidence precedes block hashing, and each preimage excludes its own root. Cryptographic codec/domain separation/binding and prior-state authenticity remain contracts. |
 | D31 / P1 | Paper 2 ownership/value/nullifier interpretation; H43, H48 | Generic conservative flow and arbitrary body nullifiers did not select a concrete owner/value/spend profile. | **Bounded public-ID profile selected.** Actual owned catalog, input-derived nullifier, absent/unspent output and positive value are implemented, with independent checks yielding the existing update. This does not instantiate anonymous nullifiers, economic value as a Hodge quantity, splitting/fees, secure primitives or a global ledger architecture. |
+| D32 / P1 | Paper 2 §6.3; H50--H53 | A security experiment over globally exact-sound verifier records would rule out its bad event by assumption and could not justify a nonzero primitive error bound. | **Resolved for one-shot integrity.** Shared soundness-free packet/transfer checks, local semantic good facts, actual parsed-candidate bad event and PMF union bound are implemented. Exact contracts are the ideal specialization. Primitive estimates, adaptive signing/corruption games and runtime/state-origin/finality security remain open. |
 
 ## HCP theorem parity and remaining work
 
@@ -469,6 +491,11 @@ completion in the current record below.
 | P250 | Existing TCB/evidence representation | `Evidence.TransferEnvelope` packages independently derived validity, actual candidate/transfer witness, intent shadow, original artifact and indexed root proofs into the existing envelope/evidence interfaces. It does not substitute a `True` runtime or unit witness and adds no verifier soundness assumption beyond the explicit supplied contracts. |
 | P251 | Checked transfer through history and optional quorum | `Protocol.Transfer` constructs the actual candidate and derives validity/update from component checks. Parser determinism fixes its successor. Full-packet evidence and original input manifest enter typed computed roots; existing evidence/history anchors retain the same objects. An optional acceptance quorum must match the complete final proposal. Snapshot and epoch stay fixed; primitive implementations, state origin, runtime refinement and finality remain contracts. |
 | P252 | Owned-transfer validation — 2026-11-06 | Expanded/default builds pass 9,274/9,267 jobs. Fresh public-facade audit: 500 selected declarations, 464 standard-only (429 exact-three, 35 subsets), 36 old-native. All 145 additions are standard-only (123 exact-three, 19 axiom-free, three nonempty subsets); all 355 preceding sets are unchanged. Static scan: 255 modules/256 Lean files, no holes/cycles/unresolved imports and same seven isolated axioms. New focused closures: 13/46/47/47/51/50/58/59; all 28 exclude `Chain`/`CitedBounds`. Paper 2 and parity updated; Paper 1/3 sources and PDFs unchanged. |
+| P253 | Shared operational packet algorithms | `Evidence.TransferCheck` retains actual parsing, canonical bytes, exact metadata/intent and signature/proof Boolean checks without universal soundness. Exact verifier projections execute definitionally the same check and preserve the actual parsed packet. |
+| P254 | Local-good owned-transition reduction | `Transfer.Operational` retains original setup/context and constructs the same policy/candidate. Local authorization and original-context acceptance suffice for validity. Actual accepted-invalid attempts imply an exact authorization or payload-check failure. `Transfer.Owned` reuses that construction and theorem under its ideal contracts. |
+| P255 | Actual released transfer record | `Transfer.PublicView` projects bytes, packet, complete proposal and original one-input manifest from the actual checked transfer. Parser, canonical bytes, source input/directory, signed intent and final proposal joins are proved. Public-ID and metadata differences distinguish records directly; no full-view privacy is inferred from the HCP pair. |
+| P256 | One-shot sampled integrity | `Transfer.Security` fixes the raw setup, explicit observation/auxiliary input, arbitrary PMF tape and adversary. The same-attempt bad-event inclusion yields an authorization-plus-payload error bound without independence, with support-local zero-error and supplied-budget corollaries. `ofCheckedRelease` uses the exact release projection; setup sampling, adaptive oracles and actual primitive bounds remain open. |
+| P257 | One-shot integrity validation — 2026-11-06 | Expanded/default builds pass 9,278/9,271 jobs. Seven-facade probe: 605 selected declarations, 569 standard-only (508 exact-three, 61 subsets), 36 old-native. All 105 additions are standard-only (79 exact-three, 24 axiom-free, two nonempty subsets); all 500 preceding sets are unchanged. Static scan: 259 modules/260 files, no holes/cycles/unresolved imports, same seven isolated axioms. New closures: 47/50/53/54; all 32 recorded scopes exclude `Chain`/`CitedBounds`. Paper 2/parity updated; Paper 1/3 sources/PDFs unchanged. |
 
 #### Current protocol validation
 
@@ -741,7 +768,8 @@ catalog values are separate from cochain coordinates and Hodge plaintexts.
 Secure primitives, codecs/runtime refinement, state origin, backend/finality
 and broader ledger/geometry/private-nullifier profiles remain separate.
 
-Current expanded/default builds pass 9,274/9,267 jobs. The 500-report selected
+At that owned-transition milestone, expanded/default builds pass 9,274/9,267
+jobs. The 500-report selected
 audit has 464 standard-only and 36 old-native results; all 145 additions are
 standard-only and all 355 prior sets are unchanged. Static scan: 255 source
 modules/256 files with no holes/cycles/unresolved imports, same seven isolated
@@ -749,3 +777,22 @@ axioms and 28 focused closures excluding legacy `Chain`/`CitedBounds`. The
 [validation guide](docs/MATH_STORAGE_VALIDATION.md#current-owned-resource-transition--2026-11-06)
 records exact groups and reproduction. Earlier milestones remain dated;
 Papers 1/3 and reviewed PDFs are unchanged; Paper 2 §6.2 carries this step.
+
+### One-shot sampled integrity — 2026-11-06
+
+P253--P257 separate actual checking algorithms from ideal soundness contracts,
+retain the original context and parsed candidate, and reduce accepted-invalid
+outcomes to actual authorization or payload false acceptance. The complete
+selected transfer release exposes public resource/signer identifiers. One
+explicit PMF and auxiliary input give the conditional error sum without
+independence; actual primitive bounds and adaptive/oracle/privacy claims remain
+open. External-history authentication, source origin, runtime and finality are
+outside the event model.
+
+Current expanded/default builds pass 9,278/9,271 jobs. All 605 selected reports
+pass: 569 standard-only and 36 old-native. All 105 additions are standard-only;
+all 500 preceding dependency sets match exactly. The static scan covers 259
+source modules/260 files and 32 scoped closures, with no new holes, cycles,
+unresolved imports or cited-bound assumptions. The
+[validation guide](docs/MATH_STORAGE_VALIDATION.md#current-one-shot-integrity--2026-11-06)
+records exact counts and reproduction. Paper 2 §6.3 owns the security account.

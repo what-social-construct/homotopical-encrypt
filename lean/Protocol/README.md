@@ -19,6 +19,8 @@ existing authenticated proposal and quorum types.
 | `Storage/Anchor`, `Storage/ProjectionAnchor` | Join the same candidate evidence to the original snapshot/artifact and exact sealed projection manifest, with explicit history authentication and actual gate-database inclusion. Derive payload acceptance and retain the matching quorum/RS-word endpoints. |
 | `Ephemeral/Rotation`, `Ephemeral/Delivery`, `Ephemeral/HCP` | Separately imported actual integral/presented rotation, coefficient-preserving recipient recovery, original bound-sample/payload migration and scoped delivery receipts. Channel/authentication, generation and lifecycle enforcement remain explicit. |
 | `Transfer` | Focused conditional owned-resource profile: actual catalog and public input-ID nullifier, typed canonical packet checks, trusted-decoder proof result, derived candidate/update, staged hash inputs and original input-manifest/evidence/history joins. Secure primitives and runtime/state-origin/finality contracts remain explicit. |
+| `Evidence/TransferCheck`, `Transfer/Operational` | The same canonical packet and resource checks without assumed primitive soundness; local semantic good facts derive validity and actual accepted-invalid outcomes reduce to authorization or exact-payload false acceptance. |
+| `Transfer/PublicView`, `Transfer/Security` | Original checked release projection and direct public-ID distinction; explicit observation/auxiliary/PMF adversary experiment and conditional one-shot error bound. No primitive estimate, oracle security or privacy theorem. |
 
 `Protocol.Core` is the focused review entry point. `Protocol.Ledger` is the
 broader compatibility aggregate. Its legacy `Chain` import remains for

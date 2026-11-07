@@ -9,6 +9,194 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Current one-shot integrity — 2026-11-06
+
+The conditional Paper 2 transition now has a soundness-free operational layer
+and an explicit sampled integrity experiment. The raw algorithms do not assume
+that verification implies semantic authorization or payload acceptance. This
+avoids proving an error bound in a model that already excludes every error.
+The exact interfaces retain their universal contracts and project to the same
+checker, original context, policy and parsed candidate.
+
+| Source | Checked statement and boundary |
+|---|---|
+| [TransferCheck](../lean/Protocol/Evidence/TransferCheck.lean) | Actual canonical parser, metadata/intent equality and signature/proof Boolean checks without primitive soundness. Exact [TransferVerifier](../lean/Protocol/Evidence/TransferVerifier.lean) projections run definitionally the same check and retain the same packet. |
+| [Operational](../lean/Protocol/Transfer/Operational.lean) | Same original input, owned-resource policy and staged proposal. Local authorization and original-context acceptance derive validity. Actual Boolean acceptance plus invalidity of the actually parsed candidate implies authorization false acceptance or exact-payload false acceptance under that trusted interpretation. |
+| [PublicView](../lean/Protocol/Transfer/PublicView.lean) | Actual checked packet bytes, typed packet, complete proposal and original input-manifest base/root/directory. Canonical-byte and original-object joins are proved. Exposed resource/signer IDs and metadata distinguish records directly; this release is not the whole network transcript. |
+| [Security](../lean/Protocol/Transfer/Security.lean) | Explicit view, auxiliary input, PMF tape and adversary determine the same attempt. Event inclusion gives `Pr[AcceptedInvalid] ≤ Pr[AuthorizationFailure] + Pr[PayloadFailure]`; supplied bounds compose without independence. Support-local good events give zero error. The exact-config specialization gives ideal zero only under its universal contracts. `ofCheckedRelease` uses the actual release projection. |
+
+The experiment fixes the trusted setup, including the actual interpretation,
+original source state and selected algorithms. Additional setup information,
+catalog/prior-state access, openings and access metadata must enter its declared
+auxiliary input or an extended view. No primitive error estimate, security
+parameter, efficient-adversary class, adaptive signing/proof oracle, corruption
+policy, confidentiality, anonymity, authenticated state origin, runtime
+refinement, external-history hash authentication, durable application or
+finality result is established. Exact
+canonical-codec and topology setup contracts remain explicit. The one-entry
+manifest supplies no additional proximity radius or six-stage gate theorem.
+
+Paper 2 §6.3 and the shared register H50--H53, D32, P253--P257 and HC45--HC47
+record this step. Paper 1/3 sources and reviewed PDFs are unchanged. The entry
+below records the preceding owned-resource milestone; its counts and closure
+sizes are historical baselines rather than validation of later source.
+
+### One-shot integrity validation
+
+Focused checks pass for the raw/exact packet modules (3,406 jobs), operational
+profile (3,408), refactored exact owned/history profile (3,418), actual released
+view (3,411), sampled security module (3,458) and complete facade (3,467).
+These modules have no local warnings or errors; upstream warnings are replayed
+separately. The expanded union passes **9,278 jobs** and literal default passes
+**9,271 jobs**, on the unchanged Lean/Mathlib 4.35 pins.
+
+The static scan covers **259 public source modules / 260 Lean files**, with no
+active holes, unresolved local imports or cycles and the same seven isolated
+cited-bound axioms. All **32** recorded focused closures exclude legacy `Chain`
+and `CitedBounds`. Current closure sizes are raw packet checks 47, operational
+transfer 50, actual released view 53, sampled security 54, exact owned profile
+52, anchored profile 60 and facade 63.
+
+The fresh seven-facade probe passes **605 distinct selected reports**:
+**569 standard-only** (508 exactly the usual three, 61 subsets) and
+**36 retaining existing native arithmetic certificates**. All **105 additions
+are standard-only**: 79 exactly the three, 24 axiom-free and two proper
+nonempty subsets. Every preceding 500 dependency set is unchanged. No selected
+report uses a cited-bound axiom or `sorryAx`. Dependency reports do not
+discharge the explicit setup, primitive-error or runtime assumptions.
+
+| Added selected group | Reports |
+|---|---:|
+| Soundness-free canonical packet checks | 14 |
+| Original operational transfer and failure reduction | 28 |
+| Actual released transfer record and distinguishers | 36 |
+| Shared-PMF experiment, bounds and ideal specialization | 17 |
+| Exact-to-operational algorithm/candidate joins | 10 |
+
+Local artifacts are `security-{full,default}-build.log`,
+`security-{all,new}-axioms.lean`, `security-all-axioms.log`,
+`security-axiom-summary.json` and `security-source-audit.json` under
+`output/validation/`, plus focused build logs. Reproduce the added endpoints:
+
+```sh
+LEAN_NUM_THREADS=4 lake build Protocol.Transfer
+cat > /tmp/security-new-axioms.lean <<'LEAN'
+import Protocol.Transfer
+
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.Authorization
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.PayloadVerifier
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.PacketCodec
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.PacketCodec.encode_injective
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.check
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.check_sound
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket.ofCheck
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket.check_true
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket.packet_eq
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket.signatureVerified_expected
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket.proofVerified_expected
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.check_true_iff
+#print axioms Hcrypt.Protocol.Evidence.TransferCheck.reject_malformed
+#print axioms Hcrypt.Protocol.Transfer.Operational.ResourceTransfer
+#print axioms Hcrypt.Protocol.Transfer.Operational.ResourceChecks
+#print axioms Hcrypt.Protocol.Transfer.Operational.Config
+#print axioms Hcrypt.Protocol.Transfer.Operational.Config.manifest
+#print axioms Hcrypt.Protocol.Transfer.Operational.Config.cochainRoot
+#print axioms Hcrypt.Protocol.Transfer.Operational.Config.draftFor
+#print axioms Hcrypt.Protocol.Transfer.Operational.Config.intentFor
+#print axioms Hcrypt.Protocol.Transfer.Operational.Config.subject
+#print axioms Hcrypt.Protocol.Transfer.Operational.Config.candidateFor
+#print axioms Hcrypt.Protocol.Transfer.Operational.Config.policy
+#print axioms Hcrypt.Protocol.Transfer.Operational.Prechecks
+#print axioms Hcrypt.Protocol.Transfer.Operational.check
+#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer
+#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.ofCheck
+#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.check_true
+#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.candidate
+#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.candidate_eq
+#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.successor_eq
+#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.draft_eq
+#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.subject_eq
+#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.valid
+#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.accepted_update
+#print axioms Hcrypt.Protocol.Transfer.Operational.Attempt
+#print axioms Hcrypt.Protocol.Transfer.Operational.AcceptedInvalid
+#print axioms Hcrypt.Protocol.Transfer.Operational.AuthorizationFailure
+#print axioms Hcrypt.Protocol.Transfer.Operational.PayloadFailure
+#print axioms Hcrypt.Protocol.Transfer.Operational.acceptedInvalid_implies_failure
+#print axioms Hcrypt.Protocol.Transfer.Operational.not_acceptedInvalid_of_good
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ext
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.eq_iff
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.transfer
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.base
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.metadata
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.nullifiers
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_packetBytes_ne
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_transfer_ne
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_input_ne
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_output_ne
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_signer_ne
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_metadata_ne
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_base_ne
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_proposal_ne
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_manifest_ne
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.inputTest
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.inputTest_distinguishes
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_bytes
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_decoded
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_canonical
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_intent
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_transfer
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_metadata
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_base
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest_base
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest_root
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest_directory
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_proposal
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_proposal_computed
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_proposal_draft
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_source_evidence
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_nullifiers
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_eq
+#print axioms Hcrypt.Protocol.Transfer.Security.Adversary
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.attempt
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidEvent
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.authorizationFailureEvent
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.payloadFailureEvent
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.authorizationFailureProbability
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.payloadFailureProbability
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidEvent_subset_failures
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_le
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_le_of_bounds
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_eq_zero_of_no_failures
+#print axioms Hcrypt.Protocol.Transfer.Security.ofCheckedRelease
+#print axioms Hcrypt.Protocol.Transfer.Security.ofCheckedRelease_view
+#print axioms Hcrypt.Protocol.Transfer.Security.ofCheckedRelease_attempt
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.Authorization.operational
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.PayloadVerifier.operational
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.PacketCodec.operational
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.check_eq_operational
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.operational
+#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.ofOperational
+#print axioms Hcrypt.Protocol.Transfer.Owned.Config.operational
+#print axioms Hcrypt.Protocol.Transfer.Owned.check_eq_operational
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.operational
+#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.operational_candidate
+#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_eq_zero_of_exact_config
+LEAN
+LEAN_NUM_THREADS=4 lake env lean /tmp/security-new-axioms.lean
+```
+
+The full 605-declaration probe retains the earlier seven facade imports:
+`ProximityPrize`, `Sheaf`, `Protocol.Storage`, `TCB`, `Protocol.Ephemeral`,
+`Protocol.Ephemeral.Examples` and `Protocol.Transfer`. It combines the preceding
+500 selected reports with these 105 additions.
+
 ## Current owned-resource transition — 2026-11-06
 
 The conditional first Paper 2 transition is now implemented through

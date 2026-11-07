@@ -77,6 +77,21 @@ older counts above remain dated baselines. Production wire/hash/signature/proof
 implementations, state-origin security, runtime refinement and finality remain
 separate from this conditional specification.
 
+The integrity follow-up separates the actual algorithms in
+[Evidence.TransferCheck](../lean/Protocol/Evidence/TransferCheck.lean) and
+[Transfer.Operational](../lean/Protocol/Transfer/Operational.lean) from the
+exact profile's universal soundness contracts.
+[Transfer.PublicView](../lean/Protocol/Transfer/PublicView.lean) retains the
+actual packet bytes, parsed packet, complete proposal and original input
+manifest. [Transfer.Security](../lean/Protocol/Transfer/Security.lean) defines
+a fixed-setup one-shot sampled experiment over this declared release and
+explicit auxiliary information. Actual bad acceptance entails an
+authorization or payload failure on the same attempted packet, so supplied
+failure budgets compose without independence. This is no primitive error
+estimate or adaptive cryptographic security theorem; signing/proving queries,
+corruption, security parameters, public setup/prior-state/catalog access,
+network metadata and full-view privacy still need their own specification.
+
 ## Chain Ownership Decision
 
 Paper scope and implementation language are independent. The chain is Paper 2,
@@ -110,6 +125,8 @@ primitive contracts. Mint/burn policies are outside this kernel.
 | Committed public state | Semantic resource/nullifier state and public context, with content roots distinguished from late tip/evidence coordinates. | `Ledger.State` remains the actual object. `TransferTranscript.StateContent` explicitly projects it; the original before-evidence root and parent tip are included in the intent, while late coordinates reconstruct the successor through its final proposal. Content hashing alone does not bind every state coordinate. Concrete byte/hash/state-origin security remains open. |
 | Candidate transition | Action body, before-state, snapshot, complete proposal, computed successor, and a validity predicate for that exact candidate. | Implemented in `Protocol/Ledger/Transition.lean`: `after` applies the body's actual flow and nullifier list; `Valid` checks conservation, availability, freshness and context. The result is not an independently supplied after-state. |
 | Typed transition evidence | Exact packet metadata, public intent, owner-signature/proof bytes and their selected verifier facts, before deriving candidate validity. | `Evidence.TransferVerifier` checks canonical packets and invokes indexed primitive verifiers. `Transfer.Owned` derives validity; `TransferEnvelope` packages the actual candidate/transfer witness, original artifact and public intent into the existing TCB. The generic statement-equality adapter is not itself new verifier soundness. |
+| Released transfer record | Exact packet bytes, parsed packet, complete proposal and original one-input public manifest. | `Transfer.PublicView` projects this same checked release and proves canonical parsing, original context/intent/metadata/manifest coherence and actual consumed nullifier. Exposed resource/signer IDs and metadata can distinguish releases. This is not the entire network transcript or a hiding theorem. |
+| One-shot integrity experiment | Actual checker acceptance with invalid computed candidate, authorization/payload failure events, explicit observation/auxiliary input/random tape and error composition. | `Evidence.TransferCheck` and `Transfer.Operational` assume no universal primitive soundness. `Transfer.Security` reduces actual bad acceptance to the two same-attempt failures and composes supplied `PMF` error budgets, without independence; support-local ideal conditions give zero error. Primitive bounds, adaptive/oracle/corruption models and security parameters remain open. |
 | Accepted transaction | Authorization, derived input-ID nullifier, fresh unit-resource flow, accepted original payload and computed application. | `Ledger.OwnedResource` and `Transfer.Owned` select a bounded positive-value profile and derive `AcceptedUpdate`, value/inventory preservation and replay/output-resurrection rejection. Cryptographic soundness and trusted state-origin/refinement remain explicit. Legacy `Chain.TransactionAccepted` is not silently migrated. |
 | Nullifier state | Abstract identifiers, body-list binding, freshness, duplicate-free use, monotone consumption and replay exclusion. | Implemented in `Ledger/Nullifier.lean` and `Candidate.Valid`: nonempty/Nodup/Fresh are checked on the actual body list, which the update consumes. Replay with that same list is excluded even with new proposal metadata. Derivation/linkability security, ephemeral-handle linkage and reorganization semantics remain open. |
 | Exact ledger flow | Finite nonnegative quantities, availability and conservative multi-resource application. | `Ledger/ValueFlow.lean` uses mathlib finite markings and an explicit additive asset valuation. Enabled conservative flow preserves value; connected `Execution` preserves value and spent-set monotonicity. Fees may be produced resources. Mint/burn and concrete resource/asset semantics remain open; edge sums are not the conservation theorem. |
@@ -301,8 +318,28 @@ without creating a Lean version of the mistake.
    - Leave CSPRNG calls, secret bytes, constant-time behavior, and memory
      zeroization to Rust realization obligations.
 
-3. **Anonymity/security game**
-   - State the finite-family/asymptotic sampling game used to interpret
+3. **Bounded integrity and open privacy games**
+   - **One-shot integrity source defined:** `Evidence.TransferCheck` retains
+     the actual parser, canonical bytes, exact metadata/intent and verifier
+     algorithms without universal primitive soundness. `Transfer.Operational`
+     derives validity from local semantic good events and reduces actual bad
+     acceptance to authorization or payload failure on the same packet.
+   - `Transfer.Security` fixes a configuration, declared transfer release,
+     explicit auxiliary input and supplied `PMF` random tape. One adversarial
+     transfer/byte attempt is checked by the actual algorithm. Its
+     accepted-invalid mass is bounded by the sum of the two failure masses;
+     supplied primitive budgets compose without independence. The actual
+     `CheckedTransfer.publicView` instantiation retains bytes, packet,
+     complete proposal and original one-input manifest, rather than replacing
+     the observation by the HCP pair. The attacked configuration is explicit
+     and may differ from the prior release's setup.
+   - Concrete primitive error bounds, security parameters/efficient
+     adversaries, adaptive signing/proving oracles and corruption policies
+     remain open. The authorization-failure event is not an EUF-CMA game.
+     Declare public setup/prior-state/catalog access and network/access
+     metadata as additional experiment inputs; trusted state origin and
+     runtime agreement are not supplied by this bound.
+   - **Privacy remains open:** state the finite-family/asymptotic sampling game used to interpret
      anonymity; do not treat `1/∞ = 0` as a literal uniform distribution.
    - Connect the protocol-relevant classifier fiber to the infinite
      Grassmannian/Laplacian family under explicit compatibility hypotheses.
@@ -503,8 +540,15 @@ without creating a Lean version of the mistake.
      independently derived validity is subsequently represented by
      `TransferEnvelope` with the actual candidate/transfer witness and
      original artifact; TCB statement equality supplies no extra soundness.
+   - **One-shot error composition now defined:** raw operational algorithms
+     are separate from ideal universal soundness. The actual released
+     bytes/packet/proposal/input manifest enter the sampled experiment;
+     accepted-invalid implies one of the same-attempt primitive failure
+     events, whose supplied budgets add. No primitive estimate or adaptive
+     security result is inferred, and exact public IDs still link uses.
    - **Still pending:** production byte/hash/signature/proof implementations,
-     trusted state-origin security, adversary/error games, runtime refinement,
+     trusted state-origin security, primitive error bounds and adaptive/oracle
+     adversary models, runtime refinement,
      secure ephemeral linkage, storage backend/global-run policy and any
      batched block/reorganization model. Fixed snapshot and epoch are part of
      this action; ledger rotation/atomic migration and finality remain outside

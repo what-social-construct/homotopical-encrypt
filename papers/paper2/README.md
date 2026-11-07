@@ -28,7 +28,7 @@ not implicitly disclose this pair.
 
 These records fix the public values, not a complete wire transcript or a
 hiding theorem. Public roots, tags, proof outputs and released extensions must
-all appear in the eventual adversary view. The base profile excludes full
+all appear in the adversary view. The base profile excludes full
 operative-kernel Plücker coordinates; a digest-only extension needs an explicit
 digest projection and binding contract. Canonical bytes, selective access,
 proof/verifier formats and cryptographic guarantees remain separate. The
@@ -105,6 +105,27 @@ complete-proposal quorum, backend receipt and runtime contracts remain inputs.
 No global hash injectivity, secure primitive implementation, authenticated
 before-state origin, finality, ledger epoch/geometry migration or anonymous
 transfer theorem is inferred. Current checks remain recorded centrally.
+
+The next bounded security statement is recorded in
+[Draft §6.3](DRAFT.md#63-one-shot-sampled-integrity-under-the-declared-transfer-view).
+The [raw packet checker](../../lean/Protocol/Evidence/TransferCheck.lean) and
+[operational transfer](../../lean/Protocol/Transfer/Operational.lean) assume no
+universal signature or payload soundness. The exact interfaces project to the
+same checks and candidate. Accepted-invalid outcomes imply an actual
+authorization-check or exact-payload-check failure under the original trusted
+interpretation. The [sampled experiment](../../lean/Protocol/Transfer/Security.lean)
+uses one shared PMF and composes supplied failure budgets by a union bound;
+it constructs no primitive error estimate.
+
+The [actual release](../../lean/Protocol/Transfer/PublicView.lean) contains
+canonical packet bytes, parsed packet, complete proposal and original input
+manifest. Different public input IDs are directly distinguishable; the selected
+HCP observation's ambiguity supplies no hiding of this larger record.
+`ofCheckedRelease` provides this exact view to the adversary, together with
+explicit auxiliary input. This fixed-setup, one-attempt integrity experiment
+does not implement randomized key generation, adaptive oracle/corruption games,
+EUF-CMA, IND or anonymity. State origin, runtime agreement and finality remain
+separate obligations.
 
 The shared mathematical wiring is owned by Paper 1:
 [actual cochain model and invariant homological tests](../../lean/Helfer/CochainModel.lean),

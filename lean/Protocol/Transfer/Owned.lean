@@ -1,6 +1,7 @@
 module
 
 public import Protocol.Evidence.TransferVerifier
+public import Protocol.Transfer.Operational
 public import Protocol.Storage.TransferManifest
 public import Protocol.Ledger.Sheaf
 
@@ -67,70 +68,52 @@ namespace Config
 
 variable (config : Config F Owner Asset Receipt)
 
-/-- The exact original input leaf is sealed before proof or proposal completion. -/
-def manifest := Storage.TransferManifest.sealed config.hashes config.persisted config.context
-
-/-- The enclosing cochain root remains distinct from its original payload leaf. -/
-def cochainRoot : TCB.Hash32 := config.hashes.cochainRoot [config.context.artifact.digest]
-
-/-- All coordinates known before the signature and proof bytes are produced. -/
-def draftFor (transfer : ResourceTransfer Owner) : ProposalDraft where
+/-- Forget only global primitive soundness, retaining the original setup and actual algorithms. -/
+def operational : Operational.Config F Owner Asset Receipt where
+  catalog := config.catalog
+  context := config.context
+  before := config.before
+  hashes := config.hashes
+  metadata := config.metadata
+  authorization := config.authorization.operational
+  payload := config.payload.operational
+  codec := config.codec.operational
+  topologyBinds := config.topologyBinds
+  topologyBound := config.topologyBound
+  persisted := config.persisted
   committeeDigest := config.committeeDigest
-  epoch := config.before.epoch
-  height := config.before.height + 1
   round := config.round
   phase := config.phase
-  parentDigest := config.before.tipHash
-  beforeStateRoot := config.hashes.state (StateContent.ofState config.before)
-  afterStateRoot := config.hashes.state
-    (StateContent.afterFor config.before (transfer.action config.context.cochain)
-      config.cochainRoot)
-  snapshotRoot := config.context.interpretation.snapshot.root
-  topologyRoot := config.before.topologyRoot
-  cochainRoot := config.cochainRoot
 
-/-- The owner authorizes the actual transfer, source metadata and chosen policy domain. -/
-def intentFor (transfer : ResourceTransfer Owner) : Intent Owner where
-  schemaVersion := config.metadata.schemaVersion
-  statementId := config.metadata.statementId
-  policyId := config.metadata.policyId
-  transfer := transfer
-  base := config.context.publicView
-  beforeEvidenceRoot := config.before.evidenceRoot
-  draft := config.draftFor transfer
-  manifestRoot := config.manifest.root
+/-- The exact original input leaf is sealed before proof or proposal completion. -/
+def manifest := config.operational.manifest
+
+/-- The enclosing cochain root remains distinct from its original payload leaf. -/
+def cochainRoot : TCB.Hash32 := config.operational.cochainRoot
+
+/-- All coordinates known before the signature and proof bytes are produced. -/
+def draftFor (transfer : ResourceTransfer Owner) : ProposalDraft :=
+  config.operational.draftFor transfer
+
+/-- Authorize the actual transfer, source metadata and chosen policy domain. -/
+def intentFor (transfer : ResourceTransfer Owner) : Intent Owner :=
+  config.operational.intentFor transfer
 
 /-- Reconstruct the exact authorization subject from an existing candidate. -/
 def subject (candidate : Ledger.Candidate ℕ ℕ (CochainPayloadInterpretation F))
-    (transfer : ResourceTransfer Owner) : Intent Owner where
-  schemaVersion := config.metadata.schemaVersion
-  statementId := config.metadata.statementId
-  policyId := config.metadata.policyId
-  transfer := transfer
-  base := config.context.publicView
-  beforeEvidenceRoot := candidate.before.evidenceRoot
-  draft := ProposalDraft.ofProposal candidate.proposal
-  manifestRoot := config.manifest.root
+    (transfer : ResourceTransfer Owner) : Intent Owner :=
+  config.operational.subject candidate transfer
 
-/-- A concrete ownership/value/nullifier policy using the existing snapshot semantics. -/
-def policy [DecidableEq Asset] : Ledger.Policy ℕ ℕ Asset (CochainPayloadInterpretation F) where
-  values := Ledger.OwnedResource.values config.catalog
-  snapshots := Ledger.SnapshotModel.ofSheaf F config.topologyBinds
-  authorized candidate := ∃ transfer : ResourceTransfer Owner,
-    candidate.action = transfer.action config.context.cochain ∧
-    candidate.snapshot = config.context.interpretation ∧
-    ResourceChecks config.catalog transfer candidate.before ∧
-    config.authorization.Authorized transfer.signer (config.subject candidate transfer)
+/-- The same ownership/value/nullifier policy as the operational profile. -/
+def policy [DecidableEq Asset] : Ledger.Policy ℕ ℕ Asset (CochainPayloadInterpretation F) :=
+  config.operational.policy
 
 end Config
 
-/-- Structural checks and explicit source snapshot/hash alignment.
-Topology authentication is already an indexed trusted input of `Config`. -/
-structure Prechecks (config : Config F Owner Asset Receipt)
-    (transfer : ResourceTransfer Owner) : Prop where
-  resources : ResourceChecks config.catalog transfer config.before
-  snapshotMatches : config.context.interpretation.snapshot.root = config.before.snapshotRoot
-  leafMatches : config.context.artifact.digest = config.hashes.cochain config.context.cochain
+/-- The same structural source checks as the soundness-free profile. -/
+abbrev Prechecks (config : Config F Owner Asset Receipt)
+    (transfer : ResourceTransfer Owner) : Prop :=
+  Operational.Prechecks config.operational transfer
 
 /-- Mathematical Boolean specification; the codec and primitive verifiers are supplied. -/
 def check (config : Config F Owner Asset Receipt) (transfer : ResourceTransfer Owner)
@@ -139,6 +122,11 @@ def check (config : Config F Owner Asset Receipt) (transfer : ResourceTransfer O
   exact decide (Prechecks config transfer) &&
     Evidence.TransferVerifier.check config.codec config.metadata (config.intentFor transfer)
       config.authorization config.payload bytes
+
+/-- Forgetting soundness does not change the Boolean acceptance decision. -/
+theorem check_eq_operational (config : Config F Owner Asset Receipt)
+    (transfer : ResourceTransfer Owner) (bytes : List UInt8) :
+    check config transfer bytes = Operational.check config.operational transfer bytes := rfl
 
 /-- Actual component checks, without storing candidate validity as an assumption. -/
 structure CheckedTransfer (config : Config F Owner Asset Receipt)
@@ -151,6 +139,12 @@ namespace CheckedTransfer
 
 variable {config : Config F Owner Asset Receipt} {transfer : ResourceTransfer Owner}
   {bytes : List UInt8}
+
+/-- Retain the same structural checks, bytes and parsed packet without global soundness. -/
+def operational (checked : CheckedTransfer config transfer bytes) :
+    Operational.CheckedTransfer config.operational transfer bytes where
+  prechecks := checked.prechecks
+  proof := checked.proof.operational
 
 def ofCheck (accepted : check config transfer bytes = true) :
     CheckedTransfer config transfer bytes := by
@@ -172,6 +166,10 @@ def candidate (checked : CheckedTransfer config transfer bytes) :
   action := transfer.action config.context.cochain
   snapshot := config.context.interpretation
   proposal := config.hashes.proposal checked.proof.packet
+
+/-- The soundness-free projection retains this exact candidate. -/
+theorem operational_candidate (checked : CheckedTransfer config transfer bytes) :
+    checked.operational.candidate = checked.candidate := rfl
 
 /-- The actual parser result fixes the candidate independently of proof-witness choice. -/
 theorem candidate_eq (first second : CheckedTransfer config transfer bytes) :
@@ -196,53 +194,13 @@ theorem draft_eq (checked : CheckedTransfer config transfer bytes) :
   rfl
 
 theorem subject_eq (checked : CheckedTransfer config transfer bytes) :
-    config.subject checked.candidate transfer = config.intentFor transfer := by
-  unfold Config.subject
-  rw [checked.draft_eq]
-  rfl
+    config.subject checked.candidate transfer = config.intentFor transfer :=
+  checked.operational.subject_eq
 
-/-- Local checks plus indexed primitive soundness derive the existing concrete validity. -/
+/-- Recover the ideal theorem from the same operational candidate and local semantic facts. -/
 theorem valid [DecidableEq Asset] (checked : CheckedTransfer config transfer bytes) :
-    checked.candidate.Valid config.policy := by
-  refine
-    { authorized := ?_
-      nullifiersNonempty := transfer.nullifiers_nonempty _
-      nullifiersNodup := transfer.nullifiers_nodup _
-      fresh := checked.prechecks.resources.fresh _
-      enabled := checked.prechecks.resources.enabled
-      conserves := checked.prechecks.resources.conserves
-      cochainWellFormed := config.context.artifactWellFormed.1
-      snapshotAccepted := checked.proof.accepted config.context rfl rfl
-      epochMatches := ?_
-      heightMatches := ?_
-      parentMatches := ?_
-      snapshotMatches := ?_
-      beforeSnapshotMatches := checked.prechecks.snapshotMatches
-      topologyMatches := ?_
-      topologyBound := ?_ }
-  · refine ⟨transfer, rfl, rfl, checked.prechecks.resources, ?_⟩
-    rw [checked.subject_eq]
-    exact checked.proof.authorized
-  · change checked.proof.packet.intent.draft.epoch = config.before.epoch
-    rw [checked.proof.intent_eq]
-    rfl
-  · change checked.proof.packet.intent.draft.height = config.before.height + 1
-    rw [checked.proof.intent_eq]
-    rfl
-  · change checked.proof.packet.intent.draft.parentDigest = config.before.tipHash
-    rw [checked.proof.intent_eq]
-    rfl
-  · change checked.proof.packet.intent.draft.snapshotRoot =
-      config.context.interpretation.snapshot.root
-    rw [checked.proof.intent_eq]
-    rfl
-  · change checked.proof.packet.intent.draft.topologyRoot = config.before.topologyRoot
-    rw [checked.proof.intent_eq]
-    rfl
-  · change config.topologyBinds config.context.interpretation.snapshot
-      checked.proof.packet.intent.draft.topologyRoot
-    rw [checked.proof.intent_eq]
-    exact config.topologyBound
+    checked.candidate.Valid config.policy :=
+  checked.operational.valid checked.proof.authorized (checked.proof.accepted config.context rfl rfl)
 
 theorem accepted_update [DecidableEq Asset]
     (checked : CheckedTransfer config transfer bytes) :

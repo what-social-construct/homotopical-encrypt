@@ -165,12 +165,13 @@ are comparison targets; Solution proofs must contain none.
 
 Do not add project axioms or hide conclusions in newly assumed premises.
 The fresh consolidated Lean 4.35 [dependency audit](MATH_STORAGE_VALIDATION.md)
-covers **500 distinct selected declarations**: **464 standard-only** (429
-exactly the permitted three and 35 subsets), and **36 with existing native
+covers **605 distinct selected declarations**: **569 standard-only** (508
+exactly the permitted three and 61 subsets), and **36 with existing native
 arithmetic certificates**. All **96 new cellular/HCP/model/adapter reports**
-are standard-only, as are the 33 public-observation, 87 rotation/recovery and
-145 owned-transfer reports. All 355 preceding dependency sets match exactly.
-No selected result uses a cited-bound axiom or `sorryAx`. The earlier 355-,
+are standard-only, as are the 33 public-observation, 87 rotation/recovery,
+145 owned-transfer and 105 integrity/view/operational reports. All 500 preceding
+dependency sets match exactly.
+No selected result uses a cited-bound axiom or `sorryAx`. The earlier 500-, 355-,
 268-, 235-, 139- and
 68-report snapshots remain dated baselines.
 
@@ -195,13 +196,14 @@ than copying Jacobian's historical metadata or its review status verbatim.
 The user has authorized upgrading the **main repository** to the current
 stable Lean/Mathlib pair. Its pins are now Lean `leanprover/lean4:v4.35.0`
 and Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679` (release `v4.35.0`).
-The expanded mathematics and integration union passes **9,274 jobs**, covering
+The expanded mathematics and integration union passes **9,278 jobs**, covering
 all fifteen default roots and the explicit ledger, evidence, storage and HCP
-example, public-view, recipient and owned-transfer targets. The literal default build passes **9,267 jobs**.
-The fresh 500-declaration public-facade probe passes with the trust split above.
-The source inventory has 256 Lean files: 255 public source modules and the
+example, public-view, recipient and owned-transfer targets. The literal default build passes **9,271 jobs**.
+The fresh 605-declaration public-facade probe passes with the trust split above.
+The source inventory has 260 Lean files: 259 public source modules and the
 Lake configuration, with no active proof holes, unresolved local imports or
 cycles. The same seven cited-bound axioms remain isolated. The preceding
+9,274/9,267-job, 500-report owned-transition milestone,
 9,266/9,259-job, 355-report rotation milestone,
 9,259/9,254-job, 268-report public-input milestone,
 9,258/9,253-job, 235-report cellular-HCP milestone and the native-metric
@@ -212,8 +214,8 @@ earlier proposal to keep main development on Lean 4.24.0; the earlier build
 and dependency records remain separately dated historical evidence.
 
 The current corresponding PDFs have 99 pages for Paper 1 and 28 for Paper 3;
-both retain their recorded visual reviews. The public-observation, rotation
-and owned-transfer steps change Paper 2's Markdown draft, leaving those PDFs unchanged. Select
+both retain their recorded visual reviews. The public-observation, rotation,
+owned-transfer and one-shot integrity steps change Paper 2's Markdown draft, leaving those PDFs unchanged. Select
 the appropriate manuscript evidence for each entry and tie it to the final
 immutable release. This is evidence preparation, not a completed submission.
 

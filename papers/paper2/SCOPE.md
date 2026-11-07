@@ -2,8 +2,7 @@
 
 Status: **recommended first publishable scope**, reviewed 2026-11-06.
 The [initial manuscript text](DRAFT.md) records the object and metric contracts;
-this scope map retains the wider completion criteria.
-This scope map retains the wider completion criteria. A bounded conditional
+this scope map retains the wider completion criteria. A bounded conditional
 owned-resource profile is now defined below; it is not a complete secure
 protocol or a claim that the supplied cryptographic/runtime contracts are
 implemented. The conservative kernel and its proof endpoints are implemented.
@@ -58,6 +57,14 @@ acyclic hash inputs and the original one-input manifest lead to the computed
 accepted update under explicit primitive contracts. Source and current checks
 are in the same central record; this does not instantiate production crypto,
 wire codecs, a backend or consensus finality.
+The subsequent integrity step separates operational verifier algorithms from
+universal soundness, specifies the actual released transfer record and defines
+a fixed-setup one-shot sampled experiment. Bad acceptance is reduced to an
+authorization or payload-verifier failure on the same attempted packet; their
+supplied error budgets compose without independence. This is an error
+composition theorem, not established cryptographic security of an
+instantiation. Adaptive queries, corruption policy, security parameters and
+primitive error estimates remain additional work.
 The later sheaf-storage source adds a raw snapshot-bound context, typed
 projection/gate prefixes and a local append/seal/receipt/consume lifecycle.
 Its current validation is recorded separately in that register; source
@@ -176,7 +183,51 @@ completion. The generic resource kernel remains available independently of
 this bounded public-ID profile; no global account/UTXO architecture, anonymous
 nullifier construction, mint/burn policy or new commitment/MAC primitive is
 selected. Production codecs/hashes/signatures/proofs, state-origin security,
-adversary/error games and runtime refinement remain separate work.
+adaptive security games and runtime refinement remain separate work.
+
+### One-shot sampled integrity and the actual release
+
+[Transfer.PublicView](../../lean/Protocol/Transfer/PublicView.lean) projects the
+actual canonical packet bytes, parsed packet, complete final proposal and
+original one-input manifest view from the same checked transfer. Coherence
+theorems retain its original public context/payload, exact metadata and intent,
+ordered input directory, signed manifest root and action-derived singleton
+nullifier. Resource input/output/signer identifiers and verifier metadata are
+observable. Changed exposed identifiers distinguish these records; an explicit
+input-ID equality test separates different inputs without private Hodge data.
+The record is one transfer release. Public setup, prior-state and catalog
+access, auxiliary information and network/access metadata must be declared
+separately by an experiment.
+
+[TransferCheck](../../lean/Protocol/Evidence/TransferCheck.lean) and
+[Transfer.Operational](../../lean/Protocol/Transfer/Operational.lean) retain the
+same actual parser, canonical-byte and metadata/intent checks and the selected
+Boolean verifier algorithms, without assuming their universal semantic
+soundness. Local authorization and exact-payload acceptance under the actual
+trusted interpretation suffice to derive the same candidate validity and
+computed update. An operationally accepted invalid candidate therefore entails
+either signature acceptance of an unauthorized exact intent or proof acceptance
+of a payload rejected by that interpretation. These are predicates on the
+actual attempted packet, not assumed abstract success relations.
+
+[Transfer.Security](../../lean/Protocol/Transfer/Security.lean) supplies a
+fixed-setup one-shot experiment: the adversary receives a specified transfer
+release and explicit auxiliary input, uses a tape sampled from a supplied
+`PMF`, and returns one transfer/byte attempt. The accepted-invalid probability
+is at most the sum of authorization-failure and payload-failure probabilities
+for that same experiment. Supplied primitive budgets compose by this bound;
+support-local absence of both failures gives probability zero. No independence
+is needed. `ofCheckedRelease` instantiates the observation with an existing
+checked transfer's exact projection; the attacked configuration remains an
+explicit separate input.
+
+No numerical or negligible primitive bound, efficient adversary class,
+security parameter, adaptive signing/proving oracle or corruption experiment
+is supplied. The authorization event is not an EUF-CMA definition. Public-root
+lookup, trusted state origin, cryptographic bytes, runtime refinement,
+persistence and finality remain separate obligations. Neither this integrity
+bound nor equality of a selected `(class,b)` pair proves complete-view hiding,
+sender anonymity or anonymous-nullifier security.
 
 ## Existing progress and its limits
 
@@ -193,6 +244,9 @@ adversary/error games and runtime refinement remain separate work.
 | `lean/Protocol/Ledger/{State,Transition,ValueFlow,Nullifier}.lean` | Typed state/action/candidate, computed resource update, conservative value and spent-set preservation, same-action replay exclusion, and connected `Execution`. | Concrete ownership, resource/asset interpretation, nullifier derivation/security, mint/burn or a runtime refinement theorem. |
 | [OwnedResource](../../lean/Protocol/Ledger/OwnedResource.lean) | Concrete owner/asset/positive-amount catalog; one-input/output flow; derived input-ID nullifier; structural validity, unit-inventory preservation, replay/output-resurrection rejection and positive value-seven fixture. | Cryptographic ownership verification, anonymous nullifiers, global architecture or a production state-origin argument. |
 | [TransferTranscript](../../lean/Protocol/Evidence/TransferTranscript.lean); [TransferVerifier](../../lean/Protocol/Evidence/TransferVerifier.lean); [TransferEnvelope](../../lean/Protocol/Evidence/TransferEnvelope.lean) | Actual canonical-packet/metadata/intent/signature/proof checks; independently derived validity; acyclic typed content/intent/evidence/block inputs and original-witness TCB packaging. | Concrete canonical byte implementation, hash/domain security, signature/proof soundness implementation or a computational security game. Exact-payload soundness is indexed by the actual trusted interpretation. |
+| [TransferCheck](../../lean/Protocol/Evidence/TransferCheck.lean); [Transfer.Operational](../../lean/Protocol/Transfer/Operational.lean) | Soundness-free algorithm/checker layer, the same computed candidate, local-good validity and accepted-invalid reduction to the actual authorization/payload failure events. The exact-soundness profile reuses this layer. | A primitive error estimate, authenticated source-state construction, deployed codec/runtime refinement or finality. |
+| [Transfer.PublicView](../../lean/Protocol/Transfer/PublicView.lean) | Exact bytes/packet/final-proposal/input-manifest release with original-object coherence and distinguishers for exposed identifiers and metadata. | A complete network transcript, richer-view HCP factorization or a privacy theorem. Setup, catalog/prior-state access and access metadata are separate experiment inputs. |
+| [Transfer.Security](../../lean/Protocol/Transfer/Security.lean) | Fixed-setup one-shot `PMF` experiment, actual-release instantiation, same-attempt failure reduction, union/error-budget composition and support-local zero-error consequence. | Concrete primitive bounds, a security parameter/PPT model, adaptive signing/proving queries, corruption policy, an EUF-CMA reduction or anonymity. |
 | [Transfer.Owned](../../lean/Protocol/Transfer/Owned.lean); [Transfer.Anchored](../../lean/Protocol/Transfer/Anchored.lean); [TransferManifest](../../lean/Protocol/Storage/TransferManifest.lean) | Same actual candidate, source/context/artifact and computed update; complete packet inclusion and a pre-proof one-input manifest; conditional evidence/history/quorum joins. | Secure state initialization, deployed backend/primitive refinement, finality, ledger epoch/geometry migration or completion of the separate six-stage projection manifest. |
 | `lean/Protocol/Ledger/Sheaf.lean` | Adapter over the existing payload interpretation/snapshot, preserving accepted exact payload and decoded cocycle consequences. | A concrete encoding/decoder and topology-root realization; no replacement commitment or snapshot is introduced. |
 | `lean/Protocol/Evidence/Transition.lean`; `Ledger/Certified.lean` | Existing TCB envelope joined to the actual candidate, payload and roots; acceptance quorum attached to that same proposal, excluding hold/rejection. | Concrete hash/inclusion/authentication implementations, security games, rounds/locks, or finality. |
@@ -316,7 +370,7 @@ protocol. Build and theorem-dependency outcomes are recorded separately.
 
 | Priority | Deliverable and completion criterion | Source owner / target | Current status |
 |---|---|---|---|
-| P0 | Select public observation, encoding, exact commitment and actual resource/asset/authorization/nullifier profile. Record primitive assumptions and distributions. | Paper 1 interfaces; `Storage/PublicView.lean`; `Ledger/OwnedResource.lean`; `Transfer/Owned.lean`. | The first public values and bounded owned-resource profile are defined: positive catalog value, actual owner label, one input/output and derived public input-ID nullifier. The operational checker verifies exact metadata/intent, signature and payload proof under supplied trusted implementations/soundness. Production codecs/access, primitive security, state-origin argument and adversary distributions remain open. |
+| P0 | Select public observation, encoding, exact commitment and actual resource/asset/authorization/nullifier profile. Record primitive assumptions and distributions. | Paper 1 interfaces; `Storage/PublicView.lean`; `Ledger/OwnedResource.lean`; `Transfer/{Owned,PublicView,Security}.lean`. | The first public values and bounded owned-resource profile are defined: positive catalog value, actual owner label, one input/output and derived public input-ID nullifier. The exact bytes/packet/proposal/input-manifest release and fixed-setup one-shot `PMF` experiment are now specified. Production codecs/access, primitive error bounds, concrete setup/randomness selection and state-origin security remain open. |
 | P0 | Instantiate the exact-component/full-sample relation and bounded public projection of the private witness stack. | `TCB/HCPObservation.lean`; `TCB/{HCPRealization,HCPAxisFamily}.lean`; `Storage/{HCP,PublicView}.lean`; `Sheaf/ObservationQuotient.lean`. | The same accepted exact artifact/snapshot is reused. Actual operator/classifier alignment derives operative-message and CVP agreement; the finite family instantiates its operator and actual spectral gate. The public projection and optional same-sample HCP disclosure now retain the actual payload and identifiers. Acceptance, decoder, snapshot/envelope binding implementations and richer released-view equality or factorization remain explicit. The unrestricted full-residual obstruction remains separate. |
 | P0 | State/action/candidate, computed after-state and context/root joins. | `Protocol/Ledger/{State,Transition,OwnedResource}.lean`; `Transfer/{Owned,Anchored}.lean`. | The bounded profile constructs the candidate and derives its actual computed accepted update in a fixed snapshot/epoch. Typed content/intent/evidence/block inputs and reconstruction laws name late coordinates separately. Canonical cryptographic/runtime refinement and state-origin security remain open. |
 | P0 | Candidate-validity-indexed evidence, same artifact and proposal, distinct enclosing root bindings. | `Evidence/{TransferTranscript,TransferVerifier,TransferEnvelope}.lean`; `Transfer/Anchored.lean`; existing TCB envelope. | The exact complete packet is checked independently of validity and included under its evidence hash; owner authorization signs the pre-proof intent. The same candidate/artifact/context/input manifest is joined to existing evidence and a supplied same-proposal quorum. Signature/proof/hash security, authenticated codecs and runtime refinement remain explicit. |
@@ -326,7 +380,7 @@ protocol. Build and theorem-dependency outcomes are recorded separately.
 | P1 | Join one history entry and matching quorum to the original snapshot/artifact, exact sealed manifest, final projection prefix and actual gate database. | `Protocol/Storage/{Anchor,ProjectionAnchor,AnchorExamples}.lean`. | The pre-addition baseline and standard-only anchor reports pass. History/gate inclusion, wire/root layout and backend refinement remain profile obligations. Actual same-base sample rotation is separate from atomic retained-history migration; anchor equality alone supplies no new metric or radius theorem. |
 | P1 | Bind the native modular source comparison and capacity family to the original observed payload. | `Sheaf/SystematicCode/Modular.lean`; `Storage/{ThreeLevelMetrics,CanonicalThreeLevel}.lean`. | Generic validity, native distance bridge and canonical context/payload, capacity and restricted fixed-challenge adapters pass focused checks. `CanonicalCalibration` composes the existing interfaces with explicit near/far scores. Expanded aggregate and consolidated public-facade checks pass; artifact details remain centrally recorded. Real acceptance is a separate policy predicate. |
 | P1 | Preserve the independent Euclidean source metric where claimed. | `Sheaf/Distance.lean`; `Storage/{Calibration,NoWrapCalibration,CanonicalSystematic}.lean`. | Controlled-lift criterion and explicit no-wrap first-shell profile are checked. Fifteen canonical endpoints retain existing native arithmetic trust. No capacity-scale Euclidean or full-HCP radius theorem is claimed. |
-| P1 | Algorithms, correctness, threat model, security experiments, assumptions/reductions and claim inventory. | Paper 2 manuscript, which does not yet have a TeX bundle. | Open; the kernel does not establish primitive security. |
+| P1 | Algorithms, correctness, threat model, security experiments, assumptions/reductions and claim inventory. | `Transfer/{Operational,PublicView,Security}.lean`; Paper 2 manuscript, which does not yet have a TeX bundle. | A soundness-free checker and fixed-setup one-shot integrity experiment now reduce actual accepted-invalid outcomes to authorization/payload failure and compose supplied budgets. Concrete primitive bounds, adaptive/oracle/corruption games, efficient adversaries/security parameters, full-view privacy and manuscript completion remain open. |
 | P1 | One bounded runtime verification path with canonical bytes, malformed-input rejection and reproducible fixtures. | Rust runtime; `docs/PROTOCOL_PARITY_QUEUE.md`. | Open; distinguish runtime tests from formal refinement. |
 | P1 | Build selected Lean targets, inspect theorem axioms, compile/render manuscript, reproduce claimed costs. | Pinned Lean/Mathlib; paper build and validation record. | The pre-addition 4.35 build/68 reports and 2026-11-05 native-metric build (9,253/9,248 jobs)/139 reports are preserved baselines. The 2026-11-06 cellular-HCP baseline passes 9,258/9,253 jobs; its 235 selected reports include 199 standard-only and 36 with existing native certificates, with all 96 added reports standard-only. The public-view follow-up and current manuscript/artifact details are [recorded centrally](../../docs/MATH_STORAGE_VALIDATION.md). Paper 2 still has a Markdown draft, no TeX/PDF bundle or cost reproduction. |
 

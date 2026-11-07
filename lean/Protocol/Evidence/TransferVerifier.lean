@@ -1,6 +1,6 @@
 module
 
-public import Protocol.Evidence.TransferTranscript
+public import Protocol.Evidence.TransferCheck
 
 @[expose] public section
 
@@ -62,6 +62,26 @@ structure PacketCodec (Owner : Type) where
   decode : List UInt8 → Option (ProofPacket Owner)
   decode_encode : ∀ packet, decode (encode packet) = some packet
 
+/-- Forget the universal signature-soundness contract, retaining the same algorithm. -/
+def Authorization.operational {Owner : Type} (authorization : Authorization Owner) :
+    TransferCheck.Authorization Owner where
+  Authorized := authorization.Authorized
+  verify := authorization.verify
+
+/-- Forget universal payload soundness, retaining its actual interpretation index. -/
+def PayloadVerifier.operational {F : CellularSheaf X}
+    {interpretation : CochainPayloadInterpretation F} {Owner : Type}
+    {metadata : ProofMetadata} (payload : PayloadVerifier interpretation Owner metadata) :
+    TransferCheck.PayloadVerifier interpretation Owner metadata where
+  verify := payload.verify
+
+/-- Retain this exact canonical encoding and deterministic parser. -/
+def PacketCodec.operational {Owner : Type} (codec : PacketCodec Owner) :
+    TransferCheck.PacketCodec Owner where
+  encode := codec.encode
+  decode := codec.decode
+  decode_encode := codec.decode_encode
+
 namespace PacketCodec
 
 /-- The roundtrip law prevents two different typed packets sharing canonical bytes. -/
@@ -79,17 +99,17 @@ variable {Owner : Type} {F : CellularSheaf X}
 /-- Check canonical bytes and every selected public coordinate before primitive verification. -/
 def check (codec : PacketCodec Owner) (expectedMetadata : ProofMetadata)
     (expectedIntent : Intent Owner) (authorization : Authorization Owner)
-    (payload : PayloadVerifier interpretation Owner expectedMetadata) (bytes : List UInt8) : Bool := by
-  classical
-  exact match codec.decode bytes with
-    | none => false
-    | some packet =>
-        ((((decide (packet.metadata = expectedMetadata) &&
-          decide (packet.intent = expectedIntent)) &&
-          decide (bytes = codec.encode packet)) &&
-          authorization.verify packet.intent.transfer.signer packet.intent
-            packet.ownerSignature) &&
-          payload.verify packet.intent packet.proofBytes)
+    (payload : PayloadVerifier interpretation Owner expectedMetadata) (bytes : List UInt8) : Bool :=
+  TransferCheck.check codec.operational expectedMetadata expectedIntent authorization.operational
+    payload.operational bytes
+
+/-- Exact contracts and their soundness-free projections execute the same checks. -/
+theorem check_eq_operational (codec : PacketCodec Owner) (expectedMetadata : ProofMetadata)
+    (expectedIntent : Intent Owner) (authorization : Authorization Owner)
+    (payload : PayloadVerifier interpretation Owner expectedMetadata) (bytes : List UInt8) :
+    check codec expectedMetadata expectedIntent authorization payload bytes =
+      TransferCheck.check codec.operational expectedMetadata expectedIntent
+        authorization.operational payload.operational bytes := rfl
 
 /-- Actual packet/check evidence, before deriving authorization or exactness. -/
 structure CheckedPacket (codec : PacketCodec Owner) (expectedMetadata : ProofMetadata)
@@ -110,19 +130,42 @@ theorem check_sound (codec : PacketCodec Owner) (expectedMetadata : ProofMetadat
     (payload : PayloadVerifier interpretation Owner expectedMetadata) (bytes : List UInt8)
     (accepted : check codec expectedMetadata expectedIntent authorization payload bytes = true) :
     Nonempty (CheckedPacket codec expectedMetadata expectedIntent authorization payload bytes) := by
-  classical
-  cases decoded : codec.decode bytes with
-  | none => simp [check, decoded] at accepted
-  | some packet =>
-    simp only [check, decoded, Bool.and_eq_true_iff, decide_eq_true_eq] at accepted
-    obtain ⟨⟨⟨⟨metadata, intent⟩, canonical⟩, signature⟩, proof⟩ := accepted
-    exact ⟨⟨packet, decoded, canonical, metadata, intent, signature, proof⟩⟩
+  obtain ⟨checked⟩ := TransferCheck.check_sound codec.operational expectedMetadata expectedIntent
+    authorization.operational payload.operational bytes accepted
+  exact ⟨⟨checked.packet, checked.decoded, checked.canonical, checked.metadata_eq,
+    checked.intent_eq, checked.signatureVerified, checked.proofVerified⟩⟩
 
 namespace CheckedPacket
 
 variable {codec : PacketCodec Owner} {expectedMetadata : ProofMetadata}
   {expectedIntent : Intent Owner} {authorization : Authorization Owner}
   {payload : PayloadVerifier interpretation Owner expectedMetadata} {bytes : List UInt8}
+
+/-- Drop the semantic contracts without changing any actual checked coordinate. -/
+def operational
+    (checked : CheckedPacket codec expectedMetadata expectedIntent authorization payload bytes) :
+    TransferCheck.CheckedPacket codec.operational expectedMetadata expectedIntent
+      authorization.operational payload.operational bytes where
+  packet := checked.packet
+  decoded := checked.decoded
+  canonical := checked.canonical
+  metadata_eq := checked.metadata_eq
+  intent_eq := checked.intent_eq
+  signatureVerified := checked.signatureVerified
+  proofVerified := checked.proofVerified
+
+/-- Structural checking can be reused when the separate exact contracts are supplied. -/
+def ofOperational
+    (checked : TransferCheck.CheckedPacket codec.operational expectedMetadata expectedIntent
+      authorization.operational payload.operational bytes) :
+    CheckedPacket codec expectedMetadata expectedIntent authorization payload bytes where
+  packet := checked.packet
+  decoded := checked.decoded
+  canonical := checked.canonical
+  metadata_eq := checked.metadata_eq
+  intent_eq := checked.intent_eq
+  signatureVerified := checked.signatureVerified
+  proofVerified := checked.proofVerified
 
 /-- Extract the checked value; this is a classical specification, not a parsing algorithm. -/
 def ofCheck
@@ -133,11 +176,8 @@ def ofCheck
 /-- Retained check evidence also establishes success of the Boolean specification. -/
 theorem check_true
     (checked : CheckedPacket codec expectedMetadata expectedIntent authorization payload bytes) :
-    check codec expectedMetadata expectedIntent authorization payload bytes = true := by
-  classical
-  simp only [check, checked.decoded, Bool.and_eq_true_iff, decide_eq_true_eq]
-  exact ⟨⟨⟨⟨checked.metadata_eq, checked.intent_eq⟩, checked.canonical⟩,
-    checked.signatureVerified⟩, checked.proofVerified⟩
+    check codec expectedMetadata expectedIntent authorization payload bytes = true :=
+  checked.operational.check_true
 
 /-- The indexed signature soundness contract authorizes this exact expected intent. -/
 theorem authorized
@@ -173,7 +213,8 @@ theorem reject_malformed (codec : PacketCodec Owner) (expectedMetadata : ProofMe
     (expectedIntent : Intent Owner) (authorization : Authorization Owner)
     (payload : PayloadVerifier interpretation Owner expectedMetadata) (bytes : List UInt8)
     (malformed : codec.decode bytes = none) :
-    check codec expectedMetadata expectedIntent authorization payload bytes = false := by
-  simp only [check, malformed]
+    check codec expectedMetadata expectedIntent authorization payload bytes = false :=
+  TransferCheck.reject_malformed codec.operational expectedMetadata expectedIntent
+    authorization.operational payload.operational bytes malformed
 
 end Hcrypt.Protocol.Evidence.TransferVerifier

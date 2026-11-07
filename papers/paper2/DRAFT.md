@@ -22,9 +22,11 @@ a second commitment or discharge its compatibility conditions.
 
 The first protocol endpoint is the conservative, snapshot-bound owned-resource
 transition of §6.2, with candidate-indexed evidence and an optional matching
-acceptance quorum.
-Consensus finality, cryptographic security games and backend durability are
-additional obligations. Section 6.1 specifies mathematical recipient recovery
+acceptance quorum. Section 6.3 gives a fixed-setup one-shot integrity experiment
+and conditional error-composition theorem for that checker. Primitive security
+estimates, adaptive cryptographic games, consensus finality and backend
+durability remain additional obligations. Section 6.1 specifies mathematical
+recipient recovery
 and rotation; authenticated delivery, lifecycle enforcement and bytes remain
 explicit contracts. The existing proofs state their authentication and
 implementation contracts explicitly.
@@ -119,6 +121,7 @@ remain separately named public extensions wherever the history releases them.
 | Selective local opening | An authorized reader receives only the declared indices and opening values, together with their verification material. | The policy must bind the query and answers to this payload and context. Authorization, boundary-edge data and the response codec remain explicit contracts. |
 | Public proof or verified statement | The declared reader receives the released statement/instance identifiers, proof-system and verifier identifiers, public inputs and proof bytes. | The encoding and verifier relation must bind those actual fields to the same candidate and context. A semantic `Prop` or proof-system record is not their wire format. |
 | Retained manifest and projection evidence | The selected retained view publishes the sealed root and ordered `(slot,digest)` directory with the same base input. Released leaf openings and evidence bytes extend this view. | The directory is derived from the actual items. Their semantic checkpoint payloads and projection prefixes remain private unless separately disclosed; retaining them in Lean does not authorize publishing every witness field. |
+| Bounded owned-transfer release | `PublicTransferView` in §6.3 publishes the actual canonical packet bytes, parsed packet, complete proposal and original input-manifest view. | Public resource/signer IDs, metadata, original base input, signature and proof bytes are observable. This release is distinct from a complete network transcript; setup, available prior-state data, catalogue access and other auxiliary inputs must also be declared. |
 
 The base and manifest views are not a completed adversary transcript. A proof,
 selective response, state root or other
@@ -622,13 +625,107 @@ projection-gate theorem.
 
 The correctness statement in this section uses exact primitive soundness
 contracts. It supplies no computational or statistical failure bound for a
-deployed signature or proof system. Such an instantiation needs its own
-adversary model, good-event conditions and error analysis; matching verifier
-labels alone does not discharge them.
+deployed signature or proof system. Section 6.3 supplies the bounded
+one-attempt experiment and composes its failure estimates conditionally;
+matching verifier labels alone do not discharge those estimates.
 
 The packet's schema version and the original snapshot's schema version are
 separate coordinates. Both enter the typed intent in their respective
 locations; the construction does not identify them.
+
+#### 6.3. One-shot sampled integrity under the declared transfer view
+
+The [soundness-free packet layer](../../lean/Protocol/Evidence/TransferCheck.lean)
+retains the actual codec and signature/payload checking algorithms without
+assuming that successful verification implies either semantic authorization or
+exact-payload acceptance. Its `CheckedPacket` supplies parsing, canonical-byte,
+metadata and intent equalities plus the two Boolean verification results.
+The payload algorithm is still indexed by the original trusted interpretation
+and selected metadata. Public names do not identify arbitrary decoders.
+
+The [operational transfer](../../lean/Protocol/Transfer/Operational.lean)
+retains the same original context, catalogue, before-state, input manifest and
+acyclic proposal construction. Local semantic facts suffice for validity:
+the exact owner/intent pair is authorized and that original context is
+accepted. The exact interfaces of §6.2 project to these operational interfaces
+without changing the checker, candidate or policy. Their universal soundness
+contracts recover the ideal correctness theorem as a specialization; those
+contracts are not assumed by the sampled failure experiment below.
+
+The [released transfer view](../../lean/Protocol/Transfer/PublicView.lean) is
+
+\[
+V_{\mathrm{transfer}}=
+(\mathrm{packetBytes},\mathrm{packet},\mathrm{proposal},\mathrm{inputManifestView}).
+\]
+
+`CheckedTransfer.publicView` derives every coordinate from the same checked
+release. The packet contains public input/output and signer IDs, full
+metadata, original base payload/context, signature bytes and proof bytes;
+the proposal and manifest retain their existing roots and directory.
+The private interpretation and harmonic witness are not record fields, which
+alone proves no hiding. A deterministic equality test on the released input
+ID separates any two records with different input IDs. Output or signer
+differences also imply different records. This public-ID profile therefore
+provides no concealment of those identifiers. Paper 1's ambiguity for the
+selected `(class,b)` observation does not establish equality or
+indistinguishability of this larger view.
+
+The [sampled experiment](../../lean/Protocol/Transfer/Security.lean) fixes an
+operational configuration, a selected view, explicit auxiliary input, a PMF
+on random tapes and an adversary
+\(A(V_{\mathrm{transfer}},\mathrm{aux},r)=(\mathrm{transfer},\mathrm{bytes})\).
+`ofCheckedRelease` supplies the exact view of an existing checked release;
+the attacked configuration remains explicit and may be different. The general
+experiment permits an arbitrary selected view and does not assert that
+independently supplied fields form a coherent release. Public setup,
+available prior-state data, catalogue access, openings or access metadata
+beyond the selected record must enter the declared auxiliary input or an
+extended view.
+
+`AcceptedInvalid` means that the actual operational checker returns `true`
+and the candidate determined by its parsed packet is invalid under the same
+configured policy. Deterministic parsing identifies that packet with the
+one retained by the checked transfer. The pointwise reduction proves
+
+\[
+\mathrm{AcceptedInvalid}\;\Longrightarrow\;
+\mathrm{AuthorizationFailure}\;\lor\;\mathrm{PayloadFailure}.
+\]
+
+Each failure names an actually decoded packet with the exact expected
+metadata and intent and a successful corresponding Boolean check.
+`AuthorizationFailure` additionally says that this exact owner/intent pair is
+unauthorized; `PayloadFailure` says that this original trusted interpretation
+does not accept its payload. Neither event substitutes a matching digest or
+verifier label for the actual semantic object.
+
+All three events use the **same** sampled tape and attempted bytes. PMF mass
+and the union bound give, without independence,
+
+\[
+\Pr[\mathrm{AcceptedInvalid}]
+\leq \Pr[\mathrm{AuthorizationFailure}]+\Pr[\mathrm{PayloadFailure}]
+\leq \varepsilon_{\mathrm{auth}}+\varepsilon_{\mathrm{payload}},
+\]
+
+where the second inequality requires supplied failure estimates for that same
+experiment and adversary. Support-local absence of both failures implies zero
+accepted-invalid mass. Projecting an existing exact-soundness configuration
+gives this ideal zero-error specialization explicitly; it is conditional on
+those universal contracts, not a new estimate for deployed primitives.
+No primitive estimate is constructed. The PMF has
+countable support; no uniform distribution on an infinite classifier fiber is
+postulated.
+
+This is a conditional one-attempt integrity reduction at fixed setup. It is
+not an EUF-CMA, IND or anonymity theorem. A security parameter, randomized key
+generation, adaptive signing/proof queries, corruption policy and the relevant
+primitive reductions remain to be specified. Authenticated state origin,
+hash binding of an external encoded history, runtime agreement, durable
+application and finality are outside these events. The bad event is invalidity
+of the typed candidate under the configured policy, not failure of every
+external authentication contract.
 
 ### 7. Proof ledger and remaining protocol work
 
@@ -668,8 +765,10 @@ the earlier counts are not validation of the added modules.
 | [Existing transition kernel](../../lean/Protocol/Ledger/Transition.lean), [candidate evidence](../../lean/Protocol/Evidence/Transition.lean) and [history anchor](../../lean/Protocol/Storage/Anchor.lean) | Baseline checked conservation, replay exclusion and same-object/context joins under explicit authentication, policy and backend relations. These do not instantiate a production protocol. |
 | [Owned-resource kernel](../../lean/Protocol/Ledger/OwnedResource.lean) | A positive owner/asset/amount catalogue, one-input/one-output action, source-derived public spend identifier and actual inventory-coordinate laws. Structural checks derive conservation and freshness; inventory preservation retains its initial invariant hypothesis. The positive mechanical fixture constructs no runtime, hash or owner-authorization proof. |
 | [Acyclic transcript](../../lean/Protocol/Evidence/TransferTranscript.lean) and [input manifest](../../lean/Protocol/Storage/TransferManifest.lean) | Explicit content/draft/intent/packet/block preimages and reconstruction of omitted metadata. The exact one-entry original-payload seal is prepared independently of later packet/block digests. Typed hashing supplies no injectivity, canonical-byte implementation or six-stage gate completeness. |
-| [Operational packet verifier](../../lean/Protocol/Evidence/TransferVerifier.lean) | Parsing, canonical bytes and complete metadata/intent equality guard actual Boolean signature/payload verification. Indexed soundness derives authorization and payload exactness under the actual trusted interpretation, not arbitrary same-named decoders. Candidate validity is not stored in `CheckedPacket`. |
-| [Checked owned transfer](../../lean/Protocol/Transfer/Owned.lean) and [anchored endpoint](../../lean/Protocol/Transfer/Anchored.lean) | Concrete local prechecks and primitive soundness derive the existing candidate's validity and computed update. The complete packet, original artifact/context and exact input manifest are joined; value/inventory preservation and spent-input rejection reuse those actual objects. A matching whole-proposal quorum remains an external input. |
+| [Soundness-free packet checking](../../lean/Protocol/Evidence/TransferCheck.lean) and [exact verifier specialization](../../lean/Protocol/Evidence/TransferVerifier.lean) | Parsing, canonical bytes and complete metadata/intent equality guard the actual Boolean algorithms. Raw checked records assume no semantic soundness; exact interfaces project to the same checker and use their separately supplied contracts to derive authorization and payload exactness under the actual trusted interpretation. |
+| [Operational transfer](../../lean/Protocol/Transfer/Operational.lean), [ideal checked transfer](../../lean/Protocol/Transfer/Owned.lean) and [anchored endpoint](../../lean/Protocol/Transfer/Anchored.lean) | Local authorization and original-payload acceptance derive validity of the candidate computed from the actual parsed packet. The exact checker/policy/candidate projection preserves the ideal theorem. Complete packet, original artifact/context and input manifest remain joined; a matching whole-proposal quorum remains an external input. |
+| [Actual transfer view](../../lean/Protocol/Transfer/PublicView.lean) | Publishes this checked release's bytes, parsed packet, complete proposal and original input-manifest view. Public input/output/signer differences distinguish records; the deterministic input-ID test needs no private witness or hash inversion. This supplies no privacy theorem or complete network transcript. |
+| [One-shot sampled integrity](../../lean/Protocol/Transfer/Security.lean) | Accepted-invalid outcomes for the actual soundness-free checker imply authorization or exact-payload verification failure. One shared PMF yields the union bound and composition of supplied error budgets without independence. `ofCheckedRelease` provides an actual released observation. No primitive estimate, adaptive oracle game, security-parameter family or privacy claim is inferred. |
 | [Semantic evidence compatibility](../../lean/Protocol/Evidence/TransferEnvelope.lean) | Packages independently derived validity/check facts in the existing TCB envelope, with the actual candidate/transfer witness and public intent shadow. Its root/inclusion and runtime facts are supplied or proved by the selected profile; it is not an additional operational verifier or security proof. |
 | [Plucker reconstruction](../../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) and [operative-target adapter](../../lean/TCB/PluckerObservation.lean) | Eight reconstruction endpoints and the observation endpoints in the 27-declaration root probe are standard-only. Recovery consumes full exact-real shadow data and an explicit operative-kernel identification; digest-only visibility is a separate profile. |
 | [Canonical-lift obstruction](../../lean/Sheaf/CanonicalLiftObstruction.lean) | Thirteen core/sheaf endpoints are standard-only. A nontrivial real-linear decoder cannot have a global zero-defect comparison against unrestricted canonical RS distance. |
@@ -682,13 +781,13 @@ the earlier counts are not validation of the added modules.
 | [Canonical systematic profile](../../lean/Protocol/Storage/CanonicalSystematic.lean) | Fifteen selected concrete endpoints inherit the existing canonical primality/root-order native certificates. They include the original payload codec and a positive no-wrap Euclidean example; native arithmetic trust remains explicit. |
 | [Canonical native-metric and challenge adapter](../../lean/Protocol/Storage/CanonicalThreeLevel.lean) | The focused build passes (3,432 jobs). Sixteen selected reports retain existing canonical arithmetic trust. The original well-formed payload has all three native distances `3/4`; observed-artifact joins, accepted-to-native-zero, raw-far rejection and the stated canonical diagonal challenge are checked. Expanded aggregate and consolidated public-facade dependency checks pass; artifact details remain centrally recorded. |
 | [Existing calibration and near interfaces](../../lean/Protocol/Storage/CanonicalCalibration.lean) | The focused build passes (3,430 jobs). Nine selected reports split into four generic standard-only and five concrete reports with existing native certificates. Actual original-payload extraction instantiates `SourceToSourceCalibration`, `SourceToCodeCalibration.transCode` and `EvaluationProjection` with the explicit `2*d_C` near score; no metric inequality is assumed. |
-| Paper 2 security and runtime realization | Preserve the selected public, recipient and owned-transfer profiles while instantiating actual codecs, access, proof/verifier and authorization implementations. Cryptographic games, authenticated setup and state origin, secure delivery, persistence, dynamic geometry/key rotation, retirement, finality and runtime refinement remain obligations. |
+| Paper 2 security and runtime realization | The fixed-setup one-shot integrity experiment is scoped and its conditional error composition is proved. Instantiate the algorithms and failure bounds; specify a parameter/key-generation family, adaptive oracle/corruption games and any privacy claim. Authenticated setup/state origin, secure delivery, persistence, dynamic geometry/key rotation, retirement, finality and runtime refinement remain obligations. |
 
 “Standard-only” means that the actual axiom report uses no dependencies beyond
 `propext`, `Classical.choice` and `Quot.sound`; some elementary identities use
 a subset. The concrete canonical reports additionally expose the existing
 generated `_native.native_decide.ax_` certificates. These checks cover the
-listed endpoints, not every declaration or a security theorem.
+listed endpoints, not every declaration or a complete protocol security claim.
 
 The completed native-metric baseline's static inventory contains 234 modules
 plus the Lake configuration, with no active proof holes, local import cycles or unresolved
