@@ -805,7 +805,15 @@ possession; its verifier sketch is not a secure implementation. The present
 backend/key type remains generic, with no selection of Ed25519 for owner
 authorization. Its native witness relation should reuse the existing private
 representative and `EphemeralFiberSpec.path`/admissibility setup, with the
-appropriate typed-equivalence adapter where required. Verification must bind
+existing `EphemeralRotation` carrying proved admissibility and actual integral
+transport. The cellular-to-Helfer adapter already exists:
+`Helfer.CochainModel.equivalent_of_isometricCochainEquiv` applies to
+`R.rotation.integral.toIsometricCochainEquiv`. The chosen representative
+family must still relate its path transport to that rotation when their
+agreement is required; the record stores both without such a law. The
+[focused import map](../../docs/PROTOCOL_PARITY_QUEUE.md#native-path-signature-import-map--2026-11-07)
+identifies these existing leaves and the optional original-HCP/storage join.
+Verification must bind
 knowledge of the designated authorized private witness to the exact message
 and public credential commitment. A path or class-membership existence theorem
 alone supplies neither knowledge nor unforgeability; the path need not be
