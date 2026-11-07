@@ -86,10 +86,8 @@ namespace PacketCodec
 
 /-- The roundtrip law prevents two different typed packets sharing canonical bytes. -/
 theorem encode_injective {Owner : Type} (codec : PacketCodec Owner) :
-    Function.Injective codec.encode := by
-  intro left right h
-  have decoded := congrArg codec.decode h
-  simpa only [codec.decode_encode, Option.some.injEq] using decoded
+    Function.Injective codec.encode :=
+  codec.operational.encode_injective
 
 end PacketCodec
 

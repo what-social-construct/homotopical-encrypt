@@ -82,6 +82,23 @@ structure ProofVerifier where
 
 namespace ProofVerifier
 
+variable {Key : Type}
+
+/-- Reuse this exact proof-checking algorithm as an owner-signature checker.
+The supplied public-input function selects the key/message encoding. This
+wrapper establishes no encoding reflection, statement truth, possession,
+message-bound knowledge or unforgeability property. -/
+def asSignatureVerifier (backend : ProofVerifier) (inputFor : Key → Bytes → Bytes) :
+    SignatureVerifier Key where
+  verify key message signature := backend.verify (inputFor key message) signature
+
+/-- The wrapper executes the original backend on the selected public inputs. -/
+@[simp]
+theorem asSignatureVerifier_verify (backend : ProofVerifier)
+    (inputFor : Key → Bytes → Bytes) (key : Key) (message signature : Bytes) :
+    (backend.asSignatureVerifier inputFor).verify key message signature =
+      backend.verify (inputFor key message) signature := rfl
+
 /-- The actual backend accepts bytes whose declared backend statement is false. -/
 def FalseAccept (backend : ProofVerifier) (input proof : Bytes) : Prop :=
   backend.verify input proof = true ∧ ¬ backend.Holds input

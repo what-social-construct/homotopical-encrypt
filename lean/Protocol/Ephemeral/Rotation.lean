@@ -135,6 +135,50 @@ theorem rotateObserved_symm (R : PresentedRotation H K) (b : F.C1) :
     R.symm.rotateObserved (R.rotateObserved b) = b :=
   R.integral.degreeOne.symm_apply_apply b
 
+section Paths
+
+variable {Rep : Type*} [Axioms.HasPathSpace Rep]
+  {family : Rep → CellularSheaf X}
+  {integrals : ∀ r, IntegralStructure (family r)}
+  {presentations : ∀ r, HarmonicLatticePresentation (integrals r) Rank}
+
+/-- Realize the original dependent fiber system using the chosen path's actual
+presented rotation. The realization is supplied mathematical data; no path
+composition or identity law is inferred from its type. -/
+def pathFiberSystem
+    (realize : ∀ {x y : Rep}, Axioms.HasPathSpace.Path x y →
+      PresentedRotation (presentations x) (presentations y)) :
+    Axioms.FiberSystem Rep where
+  Fiber r := (family r).C1
+  transport p b := (realize p).rotateObserved b
+
+/-- The fiber transport is the actual degree-one map of this same path. -/
+theorem pathFiberSystem_transport
+    (realize : ∀ {x y : Rep}, Axioms.HasPathSpace.Path x y →
+      PresentedRotation (presentations x) (presentations y))
+    {x y : Rep} (p : Axioms.HasPathSpace.Path x y) (b : (family x).C1) :
+    (pathFiberSystem realize).transport p b = (realize p).rotateObserved b := rfl
+
+/-- Harmonic projection commutes with transport along the selected path. -/
+theorem pathFiberSystem_harmonicProjection
+    (realize : ∀ {x y : Rep}, Axioms.HasPathSpace.Path x y →
+      PresentedRotation (presentations x) (presentations y))
+    {x y : Rep} (p : Axioms.HasPathSpace.Path x y) (b : (family x).C1) :
+    (family y).harmonicOneProjection ((pathFiberSystem realize).transport p b) =
+      (pathFiberSystem realize).transport p ((family x).harmonicOneProjection b) :=
+  (realize p).integral.toIsometricCochainEquiv.harmonicOneProjection_naturality b
+
+/-- The original fiber-system invariant contract holds for harmonic cochains. -/
+theorem pathFiberSystem_preserves_harmonic
+    (realize : ∀ {x y : Rep}, Axioms.HasPathSpace.Path x y →
+      PresentedRotation (presentations x) (presentations y)) :
+    (pathFiberSystem realize).TransportPreserves
+      (fun r b => (family r).IsHarmonicOneCochain b) := by
+  intro x y p b harmonic
+  exact ((realize p).integral.toIsometricCochainEquiv.isHarmonicOneCochain_iff b).mp harmonic
+
+end Paths
+
 end PresentedRotation
 
 /-- Original payloads are related by the selected decoder/transport equation.
@@ -187,6 +231,55 @@ variable {Rep : Type*} [Axioms.HasPathSpace Rep]
   {presentations : ∀ r, HarmonicLatticePresentation (integrals r) Rank}
   {classifier : Axioms.FibrationClassifier Rep} {base : Rep}
   {ephemeral : Axioms.EphemeralFiberSpec classifier base}
+
+/-- Construct the existing ephemeral-rotation carrier from this very path's
+realization, retaining the independently supplied admissibility proof. -/
+def ofPath
+    (realize : ∀ {x y : Rep}, Axioms.HasPathSpace.Path x y →
+      PresentedRotation (presentations x) (presentations y))
+    (admissible : ephemeral.WellFormed) :
+    EphemeralRotation family integrals presentations ephemeral where
+  admissible := admissible
+  rotation := realize ephemeral.path
+
+/-- No second rotation is introduced by the path-based constructor. -/
+theorem ofPath_rotation
+    (realize : ∀ {x y : Rep}, Axioms.HasPathSpace.Path x y →
+      PresentedRotation (presentations x) (presentations y))
+    (admissible : ephemeral.WellFormed) :
+    (ofPath realize admissible).rotation = realize ephemeral.path := rfl
+
+/-- The original path transport and retained rotation act identically on every
+observed cochain, by construction rather than an unrelated supplied equation. -/
+theorem ofPath_rotateObserved
+    (realize : ∀ {x y : Rep}, Axioms.HasPathSpace.Path x y →
+      PresentedRotation (presentations x) (presentations y))
+    (admissible : ephemeral.WellFormed) (b : (family base).C1) :
+    (ofPath realize admissible).rotation.rotateObserved b =
+      (PresentedRotation.pathFiberSystem realize).transport ephemeral.path b := rfl
+
+/-- The target presentation recovers the same coefficients after transport
+along the original ephemeral path under the selected realization. -/
+theorem decode_path_transport
+    (realize : ∀ {x y : Rep}, Axioms.HasPathSpace.Path x y →
+      PresentedRotation (presentations x) (presentations y))
+    (z : Rank → ℤ) (opening : HodgeNoise (family base)) :
+    (presentations ephemeral.representative).decodeCoefficients
+      ((PresentedRotation.pathFiberSystem realize).transport ephemeral.path
+        ((presentations base).encrypt z opening).observed) = some z :=
+  (realize ephemeral.path).decode_rotated_encrypt z opening
+
+/-- Retaining the base key and this same path's inverse rotation recovers the
+coefficients of the original sample. -/
+theorem recover_path_transport
+    (realize : ∀ {x y : Rep}, Axioms.HasPathSpace.Path x y →
+      PresentedRotation (presentations x) (presentations y))
+    (admissible : ephemeral.WellFormed)
+    (z : Rank → ℤ) (opening : HodgeNoise (family base)) :
+    (ofPath realize admissible).rotation.recoverWithBase
+      ((PresentedRotation.pathFiberSystem realize).transport ephemeral.path
+        ((presentations base).encrypt z opening).observed) = some z :=
+  (realize ephemeral.path).recoverWithBase_rotated_encrypt z opening
 
 /-- The original path interface supplies class preservation under its existing law. -/
 theorem samePublicFingerprint

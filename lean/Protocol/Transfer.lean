@@ -6,6 +6,7 @@ public import Protocol.Transfer.PublicView
 public import Protocol.Transfer.Security
 public import Protocol.Transfer.Primitives
 public import Protocol.Transfer.Authorization
+public import Protocol.Transfer.PathSignature
 
 @[expose] public section
 
@@ -32,4 +33,10 @@ history; full message reflection excludes queried unauthorized intents under
 the same fixed policy and an explicit foreign-domain condition. Its PMF bound
 retains four primitive/context failure terms. Concrete serialization, key
 setup, arbitrary-history coverage and numerical security remain obligations.
+
+The optional native path adapter reuses the original representative and rotation
+with supplied credential-opening, partial finite decoding and path-realization
+contracts. It feeds owner-signature bytes through the existing proof backend;
+encoding/statement reflection, authenticated setup and knowledge security remain
+explicit obligations rather than consequences of existential witness validity.
 -/

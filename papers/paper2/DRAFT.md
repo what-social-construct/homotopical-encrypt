@@ -803,22 +803,18 @@ It introduces no new account registry or credential issuer. The recovered
 path-space-signature plan intended message-bound proof of private fibration/path
 possession; its verifier sketch is not a secure implementation. The present
 backend/key type remains generic, with no selection of Ed25519 for owner
-authorization. Its native witness relation should reuse the existing private
-representative and `EphemeralFiberSpec.path`/admissibility setup, with the
-existing `EphemeralRotation` carrying proved admissibility and actual integral
-transport. The cellular-to-Helfer adapter already exists:
+authorization. The native refinement in §6.6 reuses the existing private
+representative, `EphemeralFiberSpec.path` and `EphemeralRotation`, and constructs
+transport agreement under a supplied path realization. The cellular-to-Helfer
+adapter already exists:
 `Helfer.CochainModel.equivalent_of_isometricCochainEquiv` applies to
-`R.rotation.integral.toIsometricCochainEquiv`. The chosen representative
-family must still relate its path transport to that rotation when their
-agreement is required; the record stores both without such a law. The
+`R.rotation.integral.toIsometricCochainEquiv`. The
 [focused import map](../../docs/PROTOCOL_PARITY_QUEUE.md#native-path-signature-import-map--2026-11-07)
 identifies these existing leaves and the optional original-HCP/storage join.
-Verification must bind
-knowledge of the designated authorized private witness to the exact message
-and public credential commitment. A path or class-membership existence theorem
-alone supplies neither knowledge nor unforgeability; the path need not be
-published. Those native proving/verification and security results remain open. Here issuance means recording an authorized signing request and
-output, not issuing a credential. The
+The intended authentication target remains knowledge of the designated private
+witness bound to the exact message and authenticated credential. Here issuance
+means recording an authorized signing request and output, not issuing a
+credential. The
 [plan-to-primitive table](../../docs/PROTOCOL_PARITY_QUEUE.md#recovered-native-authentication-plan-and-existing-primitive-layer--2026-11-07)
 retains that distinction and the existing typed Hodge-blinded construction.
 Committee votes
@@ -887,6 +883,51 @@ Secret signing execution, authenticated registration, complete disclosure
 history, concrete wire refinement, primitive error bounds and adaptive security
 remain separate work.
 
+#### 6.6. Reused path transport and finite native witness boundary
+
+[PresentedRotation.pathFiberSystem](../../lean/Protocol/Ephemeral/Rotation.lean)
+constructs the existing `Axioms.FiberSystem` from a supplied realization that
+assigns a `PresentedRotation` to each original path. Transport is that path's
+actual degree-one map; harmonic projection commutes with it and harmonic
+cochains remain harmonic. `EphemeralRotation.ofPath` puts the same realization
+of the existing ephemeral path into the existing rotation carrier, retaining
+its independent admissibility proof. Both direct and retained-base recovery
+return the original encoded coefficients after this path transport. No new
+fibration or rotation type is introduced. Arbitrary earlier rotation records
+are not retroactively identified with a path transport, and the realization
+itself remains supplied data.
+
+[PathSignature](../../lean/Protocol/Transfer/PathSignature.lean) defines a finite
+witness relation using a supplied partial decoder. Its result is a dependent
+pair of the private base representative and an opening together with the
+original `EphemeralFiberSpec`. Validity requires
+`opens key base opening` and that very decoded path's `WellFormed` proposition.
+The opening relation is indexed by the selected public key; no second owner
+registry or replacement commitment is introduced. Deterministic decoding fixes
+the original objects. `rotationOfWitness` applies `ofPath` to this same decoded
+path and derives its transport and coefficient-recovery laws. This allows a
+restricted byte-representable profile without asserting that every continuous
+path or real linear map has a finite encoding.
+
+`TCB.PrimitiveChecks.ProofVerifier.asSignatureVerifier` reuses the selected
+proof-checking algorithm on `inputFor key message`. The native checker and an
+actual checked release execute it on the existing `keyFor`, full
+`Signing.message` and original packet's `ownerSignature`; the separate payload
+proof remains unchanged. If the supplied key/message encoder is injective,
+equal inputs reflect the key, complete metadata and full intent. If backend
+statement truth implies the finite witness relation, verification implies
+existence of such a witness or actual backend false acceptance. Neither
+conditional statement supplies the encoder, opening construction or decoder.
+The exact packet codec's injectivity theorem now delegates to its operational
+counterpart, preserving its API and eliminating the duplicate proof.
+
+The witness-existence statement is independent of the message and does not
+establish possession: an arbitrary backend can ignore its public input.
+Concrete path realization, authenticated credential construction, codecs,
+proving/transcript algorithms, knowledge extraction, unforgeability and their
+setup/error games remain obligations. The generic `Signing`, `Issuance` and
+`Authorization` modules retain their geometry-independent roles.
+
 ### 7. Proof ledger and remaining protocol work
 
 The successful Lean 4.35 builds of 9,233 aggregate/integration jobs and 9,228
@@ -934,6 +975,8 @@ the earlier counts are not validation of the added modules.
 | [Full-intent signing](../../lean/Protocol/Transfer/Signing.lean) | The existing packet codec encodes an empty-signature/empty-proof skeleton under the literal owner domain. Equality reflects full metadata and intent; worker spectral messages have a different prefix. The codec remains supplied; no concrete Rust serialization, hash injectivity or signing algorithm is inferred. |
 | [Typed authorized issuance](../../lean/Protocol/Transfer/Issuance.lean) | Actual metadata, intent and signature bytes carry authorization for the intent-derived signer under one fixed relation. The existing key map/query history is reused, with explicit foreign non-owner-domain queries. Owner-domain query reflection recovers authorization without key injectivity; actual-signature coverage remains separate from key/message query membership. |
 | [Constructed owner authorization](../../lean/Protocol/Transfer/Authorization.lean) | The selected backend/key map construct the raw full-intent checker and a reflexive profile-agreement equation, preserving the original context/intent/candidate/policy. The actual typed history rules out queried-unauthorized mass and yields the four-term configured-experiment bound. An independently authorized release checked under this new checker can be recorded with its exact signature and `PublicTransferView.ofOperational` coverage. No secret signing execution, registration, numerical bound or general history/revocation game follows. |
+| [Path-realized transport](../../lean/Protocol/Ephemeral/Rotation.lean) | Under a supplied path-to-`PresentedRotation` realization, the existing fiber system's transport is the same path's degree-one map. Projection naturality and harmonic invariance are inherited; `EphemeralRotation.ofPath` constructs the original admissible carrier with matching transport and direct/base recovery. Arbitrary existing records and concrete realization algorithms remain separate. |
+| [Finite native witness boundary](../../lean/Protocol/Transfer/PathSignature.lean) | A partial decoder retains the original base/opening/path, actual key-indexed opening relation and admissibility. The same decoded path constructs the original rotation/recovery. Exact proof-to-signature execution uses full intent and actual `ownerSignature`; encoder reflection and backend-statement-to-witness existence are explicit conditional laws. Witness existence is not message-bound knowledge or unforgeability. |
 | [Ordinary graph commitment ambiguity](../../lean/Sheaf/GraphCommitment.lean) | Constant translation preserves actual modular `CochainCommitmentData`, fixed topology and every deterministic encoding while changing a designated message coordinate. The explicit path example has messages three/ten and identical edge values two/four. It refutes raw message binding for this profile, without claiming a hash collision, a hiding theorem or an obstruction for every cellular sheaf. |
 | [Semantic evidence compatibility](../../lean/Protocol/Evidence/TransferEnvelope.lean) | Packages independently derived validity/check facts in the existing TCB envelope, with the actual candidate/transfer witness and public intent shadow. Its root/inclusion and runtime facts are supplied or proved by the selected profile; it is not an additional operational verifier or security proof. |
 | [Plucker reconstruction](../../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) and [operative-target adapter](../../lean/TCB/PluckerObservation.lean) | Eight reconstruction endpoints and the observation endpoints in the 27-declaration root probe are standard-only. Recovery consumes full exact-real shadow data and an explicit operative-kernel identification; digest-only visibility is a separate profile. |

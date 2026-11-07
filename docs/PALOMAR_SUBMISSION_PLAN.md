@@ -165,13 +165,13 @@ are comparison targets; Solution proofs must contain none.
 
 Do not add project axioms or hide conclusions in newly assumed premises.
 The fresh consolidated Lean 4.35 [dependency audit](MATH_STORAGE_VALIDATION.md)
-covers **728 distinct selected declarations**: **692 standard-only** (555
-exactly the permitted three and 137 subsets), and **36 with existing native
+covers **750 distinct selected declarations**: **714 standard-only** (569
+exactly the permitted three and 145 subsets), and **36 with existing native
 arithmetic certificates**. All **96 new cellular/HCP/model/adapter reports**
 are standard-only, as are the 33 public-observation, 87 rotation/recovery,
 145 owned-transfer, 105 integrity/view/operational, 62 primitive/TCB/graph and
-61 owner-signing/issuance/release reports. All 667 preceding sets match exactly.
-No selected result uses a cited-bound axiom or `sorryAx`. The earlier 667-, 605-, 500-, 355-,
+61 owner-signing/issuance/release and 22 native path/witness reports. All 728 preceding sets match exactly.
+No selected result uses a cited-bound axiom or `sorryAx`. The earlier 728-, 667-, 605-, 500-, 355-,
 268-, 235-, 139- and
 68-report snapshots remain dated baselines.
 
@@ -183,6 +183,9 @@ axioms must not enter the selected proof dependencies. The new concrete HCP
 example has no such trust blocker; selecting its exact statement and accurate
 semantic/observation scope is still a separate task. A development audit does
 not establish that future wrappers or protected comparisons have passed.
+The native path/witness adapter is supporting Paper 2 infrastructure: supplied
+path realization, finite decoded credential opening and exact owner-verifier
+execution do not establish knowledge security or add a manuscript submission.
 
 Use `formalization.yaml` v0.4 for each entry: author and responsible maintainer,
 existing MIT licence, classifications, precise manuscript/source relationships,
@@ -196,13 +199,14 @@ than copying Jacobian's historical metadata or its review status verbatim.
 The user has authorized upgrading the **main repository** to the current
 stable Lean/Mathlib pair. Its pins are now Lean `leanprover/lean4:v4.35.0`
 and Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679` (release `v4.35.0`).
-The expanded mathematics and integration union passes **9,284 jobs**, covering
+The expanded mathematics and integration union passes **9,285 jobs**, covering
 all fifteen default roots and the explicit ledger, evidence, storage and HCP
-example, public-view, recipient and owned-transfer targets. The literal default build passes **9,277 jobs**.
-The fresh 728-declaration public-facade probe passes with the trust split above.
-The source inventory has 266 Lean files: 265 public source modules and the
+example, public-view, recipient and owned-transfer targets. The literal default build passes **9,278 jobs**.
+The fresh 750-declaration public-facade probe passes with the trust split above.
+The source inventory has 267 Lean files: 266 public source modules and the
 Lake configuration, with no active proof holes, unresolved local imports or
 cycles. The same seven cited-bound axioms remain isolated. The preceding
+9,284/9,277-job, 728-report owner-signing milestone,
 9,281/9,274-job, 667-report primitive-comparison milestone,
 9,278/9,271-job, 605-report one-shot integrity milestone,
 9,274/9,267-job, 500-report owned-transition milestone,

@@ -398,6 +398,26 @@ codec, secret signing execution, history completeness, public-class privacy,
 general account lifecycle or numerical signature-security bound. Runtime paths
 are literal because those files are excluded from the Lean/manuscript bundle.
 
+The [native path join](../lean/Protocol/Transfer/PathSignature.lean) now reuses
+the existing representative/path, admissibility, rotation and verifier
+interfaces with a supplied credential-opening relation. A supplied path
+realization constructs the same cochain `FiberSystem` transport and
+`EphemeralRotation`; this does not
+align every arbitrary pre-existing rotation. A supplied partial finite-byte
+decoder selects the exact private base/opening/path. The proof-to-signature
+wrapper executes the original backend with the selected credential/full signing
+input and `ownerSignature` bytes, keeping the cochain payload proof separate.
+Public-input and backend-statement reflection remain supplied laws; deriving
+existence of a valid witness establishes no knowledge or signature-security
+bound. The [canonical map](PROTOCOL_PARITY_QUEUE.md#native-path-signature-import-map--2026-11-07)
+records the remaining setup, transcript, decoder and credential obligations.
+
+The duplicate exact codec injectivity proof now delegates to the existing raw
+codec theorem through `.operational`, retaining its public name, type and
+constructor APIs. Signature/proof verifier roles and semantic/raw carriers
+retain their different contracts; this cleanup introduces no replacement
+fibration, owner registry or representative type.
+
 #### Useful objects hidden in the legacy chain
 
 “Unused” does not mean “semantically dead.” The following concepts should be
@@ -1076,14 +1096,15 @@ prototype into a new secure commitment.
      public fiber is infinite.
    - Add an explicit bridge showing that an infinite candidate family lies in
      one chosen public classifier fiber under stated hypotheses.
-   - `Axioms/Fibration.lean` currently proves same-class membership only for
-     one already-supplied `EphemeralFiberSpec`. It does not define a generation
-     family, prove distinct outputs, or connect `FiberSystem.transport` to the
-     transported private state. Introduce an `EphemeralRepresentativeSpec`
-     (keeping the old name as a compatibility alias), an indexed
-     `EphemeralRepresentativeFamily`, and a transported-state package. The
-     path is the class-membership witness; the generated endpoint is the
-     ephemeral representative, not a “random cochain candidate.”
+   - Reuse `Axioms.EphemeralFiberSpec` from `Axioms/Fibration.lean` as the
+     existing representative/path interface, and the current representative-to-sheaf,
+     integral and presentation maps. `PresentedRotation.pathFiberSystem` and
+     `EphemeralRotation.ofPath` now connect the selected path realization to
+     the actual transported cochain and rotation. No replacement representative
+     type or transported-state package is needed for this join. Indexed
+     generation, distinct outputs and a realization for the intended family
+     remain profile obligations. The generated endpoint is the ephemeral
+     representative; the path is its class-membership witness.
    - For an infinite seed/index type and an injective representative family,
      prove that the family range is an infinite subset of the base
      representative's public classifier fiber. Then add the concrete bridge

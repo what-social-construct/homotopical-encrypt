@@ -23,6 +23,7 @@ existing authenticated proposal and quorum types.
 | `Transfer/PublicView`, `Transfer/Security` | Original checked release projection and direct public-ID distinction; explicit observation/auxiliary/PMF adversary experiment and conditional one-shot error bound. No primitive estimate, oracle security or privacy theorem. |
 | `Transfer/Primitives` | Actual owner/key/message/history and byte-proof backend agreement, with five-event same-PMF error composition. Query coverage, backend-to-original-context refinement and concrete primitive budgets remain explicit. Current spectral runtime paths do not instantiate these joins. |
 | `Transfer/Signing`, `Transfer/Issuance`, `Transfer/Authorization` | Reuse the complete subject, packet codec, existing key map/history and release carrier. Construct owner-domain byte checks and exact authorized query projection; the bounded fixed-policy theorem excludes queried-unauthorized targets and leaves four same-PMF errors. Concrete wire/key/oracle refinement remains separate. |
+| `Transfer/PathSignature` | Partial finite-byte decoding retains the exact private base, credential opening and admissible path. A supplied path realization constructs the existing rotation and cochain transport. The existing proof backend executes through `asSignatureVerifier` on selected credential/full-signing inputs and `ownerSignature` bytes. Input/statement reflection remain supplied; witness existence establishes no knowledge or unforgeability. |
 
 `Protocol.Core` is the focused review entry point. `Protocol.Ledger` is the
 broader compatibility aggregate. Its legacy `Chain` import remains for
@@ -38,6 +39,15 @@ and prevents no repeated valid request. Actual delivery, epoch/state binding
 and lifecycle security remain supplied channel/policy obligations. The
 [axis fixture](Ephemeral/Examples.lean) constructs the rotation and encoding
 law without fabricating contexts, envelopes or authorization proofs.
+
+Given a supplied path-to-`PresentedRotation` realization,
+`PresentedRotation.pathFiberSystem` constructs the original `FiberSystem` on
+full cochains, with harmonic-projection, norm and recovery laws.
+`EphemeralRotation.ofPath` retains that same path's rotation; arbitrary older
+carrier values need not satisfy this alignment. The
+[native join map](../../docs/PROTOCOL_PARITY_QUEUE.md#native-path-signature-import-map--2026-11-07)
+keeps those conditional geometry results separate from credential setup,
+finite decoding algorithms and message-bound knowledge security.
 
 `Protocol.Transfer` selects one whole-resource transfer in the fixed current
 snapshot and epoch. Catalog ownership, assets and positive amounts give its

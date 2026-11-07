@@ -9,7 +9,102 @@ profile, an efficient gap solver or a storage backend.
 
 
 
-## Current owner-signing reuse and issuance — 2026-11-07
+## Native path transport and finite witness boundary — 2026-11-07
+
+The [native import map](PROTOCOL_PARITY_QUEUE.md#native-path-signature-import-map--2026-11-07)
+and [Paper 2 §6.6](../papers/paper2/DRAFT.md#66-reused-path-transport-and-finite-native-witness-boundary)
+now connect the existing objects without another fibration, owner registry,
+rotation carrier or verifier structure.
+
+| Source | Implemented join and retained hypotheses |
+|---|---|
+| [Ephemeral.Rotation](../lean/Protocol/Ephemeral/Rotation.lean) | A supplied path-to-PresentedRotation realization defines the original FiberSystem. Harmonic projection commutes with that transport and harmonicity is preserved. `EphemeralRotation.ofPath` retains actual admissibility and selects the same path's rotation; direct and retained-base recovery use that transport. Realization, path identity/composition coherence and arbitrary old-record alignment are not inferred. |
+| [TCB.PrimitiveChecks](../lean/TCB/PrimitiveChecks.lean) | `ProofVerifier.asSignatureVerifier` executes the same backend on the selected key/message public input, with a reflexive execution law. No new verification algorithm or soundness assumption is introduced. |
+| [Transfer.PathSignature](../lean/Protocol/Transfer/PathSignature.lean) | A partial decoder interprets finite private bytes as the actual base, credential opening and original ephemeral path. Validity requires the selected opening relation and admissibility. The same decoded path yields the original rotation and coefficient recovery. Injective input encoding reflects key/full metadata/Intent; actual checked ownerSignature bytes execute that backend. A separate statement-reflection premise yields finite witness existence or backend false acceptance. |
+| [Codec reuse](../lean/Protocol/Evidence/TransferVerifier.lean) | The duplicate injectivity proof delegates to the raw operational codec theorem. Existing public types/constructors are preserved. |
+
+The decoder and credential-opening predicate are supplied profile inputs. This
+is neither a total finite encoding of arbitrary real/path data nor a completed
+credential scheme. The witness-existence predicate is message-independent;
+key/message input reflection alone does not force a backend to use its input.
+Concrete authenticated setup, public-input and supported-witness encodings,
+actual proving/verifying algorithms, transcript binding, knowledge extraction,
+unforgeability and error bounds remain separate implementation/security work.
+The existing cochain payload proof and ownership policy keep their meanings.
+
+### Native path validation
+
+Focused checks pass: path transport **3,395 jobs**, primitive wrapper
+**3,144**, native leaf **3,470** and public transfer facade **3,479**.
+The expanded union passes **9,285 jobs**, and the literal default passes
+**9,278 jobs** on the unchanged Lean/Mathlib 4.35 pins. The changed/new sources
+have no local warnings or errors.
+
+The fresh seven-facade probe covers **750 distinct selected reports**:
+**714 standard-only** (569 exact-three, 145 subsets) and **36 existing-native**.
+All **22 additions are standard-only** (14 exact-three, seven axiom-free,
+one `propext`-only); all **728 retained dependency sets are unchanged**.
+The separate codec-prune audit also retains all nineteen earlier endpoint sets.
+No selected `sorryAx` or cited-bound dependency occurs.
+
+| Added selected group | Reports |
+|---|---:|
+| Same-path fiber transport, harmonic projection and recovery | 9 |
+| Existing proof verifier as signature verifier | 2 |
+| Finite witness, same decoded rotation and original signature execution | 11 |
+
+Static coverage is **266 public modules / 267 Lean files**. The scan finds no
+active holes, local import cycles or unresolved imports and the same seven
+isolated cited-bound axioms. All **39** recorded scoped closures exclude
+legacy `Chain` and `CitedBounds`; the new native leaf has 66 local modules and
+the transfer facade 75. The existing rotation and primitive closures remain
+37 and six modules. This validation does not discharge the supplied profile
+or cryptographic hypotheses above.
+
+Local artifacts under `output/validation/` are
+`native-path-{full,default,facade}-build.log`, `path-signature-build.log`,
+`native-path-{all,new}-axioms.lean`, `native-path-all-axioms.log`,
+`native-path-axiom-summary.json`, `native-path-source-audit.json`,
+`path-transport-{build,axioms}.log`,
+`path-proof-primitive-wrapper-{build,axioms}.log` and
+`native-codec-reuse-validation.json`.
+
+Reproduce the new endpoints from `lean/`:
+
+```sh
+LEAN_NUM_THREADS=4 lake build Protocol.Transfer
+cat > /tmp/native-path-new-axioms.lean <<'LEAN'
+import Protocol.Transfer
+
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.pathFiberSystem
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.pathFiberSystem_transport
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.pathFiberSystem_harmonicProjection
+#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.pathFiberSystem_preserves_harmonic
+#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.ofPath
+#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.ofPath_rotation
+#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.ofPath_rotateObserved
+#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.decode_path_transport
+#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.recover_path_transport
+#print axioms Hcrypt.TCB.PrimitiveChecks.ProofVerifier.asSignatureVerifier
+#print axioms Hcrypt.TCB.PrimitiveChecks.ProofVerifier.asSignatureVerifier_verify
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.WitnessRelation
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.witnessRelation_iff_of_decode
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.witnessRelation_credential
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.witnessRelation_class
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.rotationOfWitness
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.rotationOfWitness_transport
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.rotationOfWitness_recovery
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.input_subject_eq
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.checker_verify
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.verified_witness_or_falseAccept
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.checked_signature_verified
+LEAN
+LEAN_NUM_THREADS=4 lake env lean /tmp/native-path-new-axioms.lean
+```
+
+<a id="current-owner-signing-reuse-and-issuance--2026-11-07"></a>
+
+## Owner-signing reuse and issuance baseline — 2026-11-07
 
 The [inventory](PROTOCOL_PARITY_QUEUE.md#existing-objects-reused-for-owner-signing--2026-11-07)
 traces the existing catalog, complete intent/metadata, codec, key map, history

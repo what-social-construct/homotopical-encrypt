@@ -95,13 +95,25 @@ representative/path/admissibility setup, with authenticated designated-owner
 binding and a message-bound knowledge/possession proof; mere class or path
 existence is not that security theorem.
 
-The current expanded/default builds pass **9,284/9,277 jobs**. The fresh
-seven-facade probe passes **728 selected reports**: 692 standard-only
-(555 exact-three, 137 subsets) and 36 existing-native. All 61 additions are
-standard-only (18 exact-three, 22 axiom-free, 21 proper nonempty subsets);
-all 667 preceding sets are unchanged. Static scan: 265 modules/266 files,
-no holes/cycles/unresolved imports and 38 scoped closures excluding `Chain`
-and `CitedBounds`. P268 records current validation.
+**Native path/witness reuse — 2026-11-07:** a supplied path realization now
+constructs the existing `FiberSystem` and `EphemeralRotation` with the same
+transport, harmonic projection and coefficient-recovery laws. A partial finite
+decoder retains the actual base, credential opening and original admissible
+path; the native adapter feeds original owner-signature bytes to the existing
+proof backend on its key/full-message input. Encoder and backend-statement
+reflection remain explicit premises, and witness existence supplies no knowledge
+or unforgeability theorem. The duplicate codec-injectivity proof and stale plan
+for replacement representative/family types are pruned. H62--H64, D38--D39,
+P269--P272 and Paper 2 §6.6 record these joins and retained obligations.
+
+The current expanded/default builds pass **9,285/9,278 jobs**. The fresh
+seven-facade probe passes **750 selected reports**: 714 standard-only
+(569 exact-three, 145 subsets) and 36 existing-native. All 22 additions are
+standard-only (14 exact-three, seven axiom-free, one `propext`-only); all 728
+preceding sets are unchanged. Static scan: 266 modules/267 files, with no
+holes/cycles/unresolved imports and 39 scoped closures excluding `Chain` and
+`CitedBounds`. P273 records current validation. The preceding owner-signing
+baseline is P268: 9,284/9,277 jobs and 728 selected reports.
 
 At the preceding primitive-comparison milestone, expanded/default builds pass **9,281/9,274 jobs**. The fresh
 seven-facade audit covers **667 selected reports**: 631 standard-only
@@ -275,6 +287,9 @@ no mathematical objects.
 | H59 | Authorized issuance records and exact byte history | [Transfer.Issuance](lean/Protocol/Transfer/Issuance.lean), `Issued`, `history`, `Covers` | **Constructed data join.** Each record retains source metadata, actual Intent/signature and authorization for the signer inside that Intent. Its exact query projection plus foreign out-of-owner-domain messages forms the existing history. Full reflection derives the same actual authorization without key injectivity. Covers retains signature equality separately; query membership does not imply equal signature bytes. | Paper 2 §6.5 |
 | H60 | Constructed owner checker and reduced error composition | [Transfer.Authorization](lean/Protocol/Transfer/Authorization.lean) | **Positive wiring.** Existing backend/keyFor and signing bytes construct raw verification; profile agreement is reflexive. Original context/intent/policy/candidate are retained. Under the exact typed/foreign history, queried-unauthorized mass is zero and four error masses remain. No secret signing, authentic registry, arbitrary-history coverage or numerical primitive estimate is inferred. | Paper 2 §6.5 |
 | H61 | Actual matching release-signature coverage | `PublicTransferView.ofOperational`, `Authorization.issueOfChecked` | **Original bytes retained.** The old release carrier now also projects actual raw checks. A packet checked by the newly constructed checker, with independent semantic authorization, yields an issue record covering its exact metadata/intent/signature and proving backend verification for that subject. This does not reinterpret arbitrary old signatures or establish an oracle execution. | Paper 2 §6.5 |
+| H62 | Realized path transport and harmonic recovery | [Ephemeral.Rotation](lean/Protocol/Ephemeral/Rotation.lean), `PresentedRotation.pathFiberSystem`, `EphemeralRotation.ofPath` | **Constructed under a selected realization.** A supplied path-to-presented-rotation map defines the existing FiberSystem; the stored rotation acts on exactly the same path. Harmonic projection, harmonic invariance and both coefficient recovery routes reuse the integral laws. No path realization, composition coherence or alignment of arbitrary old records is inferred. | Paper 2 §6.6 |
+| H63 | Finite credential-opening/path witness | [Transfer.PathSignature](lean/Protocol/Transfer/PathSignature.lean), `WitnessRelation`, `rotationOfWitness` | **Restricted decoded relation.** Finite private bytes decode to the actual base, opening and original ephemeral spec, with explicit credential opening and admissibility. That same decoded path constructs the existing rotation and recovery. The decoder/opening scheme remain supplied; no total codec for arbitrary continuous witnesses or owner authentication is inferred. | Paper 2 §6.6 |
+| H64 | Native proof execution through owner verification | `ProofVerifier.asSignatureVerifier`, `PathSignature.input_subject_eq`, `.checked_signature_verified` | **Exact algorithm join.** Original owner-signature bytes execute the selected proof backend on its key/full-message input. Injective public-input encoding reflects key, metadata and full Intent. Separately supplied backend-statement reflection yields a valid finite witness or actual false acceptance; existential truth does not establish message-bound knowledge or unforgeability. Original payload-proof semantics remain separate. | Paper 2 §6.6 |
 
 ## Definition, notation, and claim issue table
 
@@ -307,7 +322,7 @@ mathematical or author decisions, rather than silent copyediting.
 | D21 / P1 | Storage roots, stages and local lifecycle | Same-shaped hash names and slot presence do not identify prior mathematical artifacts or prove durability. | **Typed joins implemented.** Actual context/payload/digest-indexed relations, exact predecessor prefixes and exact sealed-manifest receipts are separate. Six manifest stages differ from seven legacy gate-evidence slots. Global run freshness, backend atomicity, root codecs and memory erasure remain profile/runtime work. |
 | D22 / P1 | History entry to original snapshot/artifact and complete projection | Independent candidate validity and manifest sealing did not bind those actual objects together. | **Bounded semantic join implemented**, P215--P216. Actual interpretation/artifact equalities derive accepted context and snapshot/payload joins; supplied history/gate relations bind the exact manifest and gate database. The wire-field choice, concrete authentication, persistence implementation and dynamic geometry remain open. |
 | D23 / P1 | H17, H27--H28; projective/stack terminology | The raw quotient contains zero and arbitrary exterior coordinates, while a projective Grassmannian point has additional validity conditions. A moduli analogy does not construct descent or metric transport. | **Definition boundary recorded.** Use the actual raw/frame/soundness predicates; distinguish classical reconstruction from its current Lean proof status. Keep stack packaging prospective and the public-point visibility decision explicit. |
-| D24 / P1 | Lean/Mathlib version and validation | Older successful builds cannot certify later sources or newly added modules. | **Current owner-signing reuse validated.** Final union/default builds pass 9,284/9,277 jobs; 728 selected reports split into 692 standard-only and 36 existing-native. All 61 additions are standard-only and all 667 preceding dependency sets are unchanged. P268 is current; preceding dated rows retain their own sources and counts. Hosted CI and Palomar protected comparison remain separate. |
+| D24 / P1 | Lean/Mathlib version and validation | Older successful builds cannot certify later sources or newly added modules. | **Current native path/witness join validated.** Final union/default builds pass 9,285/9,278 jobs; 750 selected reports split into 714 standard-only and 36 existing-native. All 22 additions are standard-only and all 728 preceding dependency sets are unchanged. P273 is current; preceding dated rows retain their own sources and counts. Hosted CI and Palomar protected comparison remain separate. |
 | D25 / P1 | Helfer/class construction; H31 | Typed equivalence needs actual bifibrancy; a classifier fiber does not define a quotient, and arbitrary supplied satisfaction has no automatic invariance. | **Homological fragment instantiated.** `CochainModel` constructs the real cochain model and proves invariance of nonzero-homology tests for all interpretations. Actual axis theories give its classifier. Full first-order syntax/fibrational semantics, full Theorem 12.3 and a general quotient remain open. |
 | D26 / P0 | Intended HCP realization; H23, H33 | An arbitrary realized matrix is not automatically cellular Delta1; the small `(class,b)` observation forgets larger artifact fields. | **Scoped operator/target join closed; larger public-view condition retained.** P231--P234 construct actual cellular interpretation, matrices, classifier and operative targets. TCB alignment derives the same original sample’s target/CVP answer under explicit operator/classifier and artifact contracts. Storage-view equality or factorization, byte encodings and runtime realization remain additional obligations. |
 | D27 / P0 | Structured noise, rotation and messages; H32, H34, H36 | Fixed-raw-`b` ambiguity and co-transported rotation have different data; equal or distinct ambient coordinates need an actual plaintext encoding. | **Finite ambiguity and coefficient-preserving rotation proved.** The fixed-input two/one example remains separate from actual axis rotation, which moves `(1,2)` to `(2,1)` and retains two. Integral sample transport, both recovery routes and conditional original-payload migration now have proofs. Fresh generation, channel security, atomic migration, lifecycle/erasure and distributional security remain separate. |
@@ -321,6 +336,8 @@ mathematical or author decisions, rather than silent copyediting.
 | D35 / P1 | Raw graph opening binding; H57 | Rust ordinary incidence comments claimed SVP-hard message binding despite global constant translations in its kernel. | **Counterexample proved and claims corrected.** Alternative modular openings preserve the original full payload and every deterministic observation while changing the vertex message. Authenticated C¹ payload binding and any new message-binding wrapper are separate claims. The theorem does not identify arbitrary private sheaves with this prototype. |
 | D36 / P1 | Owner objects and existing identity/key handles | Names such as logical Signature, public identity/context hash, geometric key rotation or validator registry could be mistaken for an existing authenticated owner-signing implementation. | **Roles inventoried and separated.** Reuse actual Catalog/Intent/PacketCodec/keyFor/history/view. Committee/ValidatorSet remain validator objects; wallet/identity/ContextKey remain their own containers/projections. The existing Python/Rust public-identity encodings also differ. No owner registry is inferred from a shared name or 32-byte shape. |
 | D37 / P1 | Queried unauthorized reuse and history coverage | The primitive profile accepted an arbitrary byte history, so honest queried-message authorization/metadata binding and released-signature coverage were not constructed. | **Bounded positive join implemented.** Full subject reflection, typed issued authorization and foreign-domain exclusion construct a history with no queried-unauthorized target. Matching new checked releases have exact signature coverage. All owner-domain queries must satisfy the same actual fixed relation; revoked-policy/unknown histories cannot be relabeled foreign. Concrete wire/key/issuance execution remains open. |
+| D38 / P1 | Path and integral-rotation alignment; H62 | Existing EphemeralRotation stored both objects without identifying their actions. | **Constructor-based join implemented.** `ofPath` selects the supplied realization of the original path; `pathFiberSystem` defines the same transport and derives harmonic/recovery laws. Concrete realization and its path identity/composition laws remain inputs, and arbitrary pre-existing records are not retroactively aligned. |
+| D39 / P1 | Native owner credential and finite proof boundary; H63--H64 | Class equality, witness existence and a public hash transcript do not establish possession or unforgeability. | **Finite relation and execution joined.** The actual decoded base/opening/path, admissibility, key/full-message input and ownerSignature execution are retained without a new registry or fibration. Credential registration/opening construction, supported decoder implementation, canonical public-input encoding, actual message-bound prover/verifier, knowledge extraction and security bounds remain uninstantiated. |
 
 ## HCP theorem parity and remaining work
 
@@ -570,6 +587,11 @@ completion in the current record below.
 | P266 | Constructed raw owner verifier and four-event bound | `Transfer.Authorization` builds the checker/profile from existing backend/keyFor/signing bytes with agrees=rfl, preserving original context/intent/policy/candidate and proof backend. Typed fixed-policy history excludes queried-unauthorized targets and gives zero mass; the same PMF retains forgery/compromise/backend-error/statement-mismatch terms and supplied budgets. |
 | P267 | Matching raw release and actual signature coverage | `PublicTransferView.ofOperational` reuses the existing carrier; exact publicView delegates to it. A raw packet checked under the new constructed checker plus independently supplied authorization becomes a covered issue with literal metadata/Intent/signature and actual backend verification. Legacy signatures are not reinterpreted, and history/oracle provenance remains separate. |
 | P268 | Owner-signing reuse validation — 2026-11-07 | Expanded/default builds pass 9,284/9,277 jobs; facade 3,472. Seven-facade probe: 728 selected reports, 692 standard-only (555 exact-three, 137 subsets), 36 existing-native. All 61 additions are standard-only (18 exact-three, 22 axiom-free, 21 proper nonempty subsets); all 667 preceding sets are unchanged. Static coverage: 265 modules/266 files, no holes/cycles/unresolved imports, same seven isolated axioms. New closures 48/50/59, facade 68; all 38 scoped closures exclude `Chain`/`CitedBounds`. Existing native-authentication plan mapped; no concrete codec/owner backend or numerical bound selected. |
+| P269 | Same-path transport through existing objects | `PresentedRotation.pathFiberSystem` realizes selected paths in the original FiberSystem. `EphemeralRotation.ofPath` selects that very rotation with actual admissibility. Harmonic projection and invariant preservation plus direct/retained-key coefficient recovery follow from existing integral laws. Realization and path coherence are not constructed from a class label. |
+| P270 | Finite native credential/path relation | `Transfer.PathSignature.WitnessRelation` uses a partial byte decoder into existing dependent sums: base, opening and original EphemeralFiberSpec. Deterministic decoding identifies that same witness; its credential opening/admissibility construct the original rotation, same-path action and recovery. Only the selected encodable profile is covered. |
+| P271 | Existing proof backend at the owner-signature field | `ProofVerifier.asSignatureVerifier` wraps the same algorithm without a new verifier structure. Native input reflection conditionally recovers the key, metadata and full Intent; actual checked releases verify their original ownerSignature bytes. Supplied statement reflection derives finite witness existence or backend false acceptance, not knowledge security. |
+| P272 | Redundancy pruning | `TransferVerifier.PacketCodec.encode_injective` now delegates to the raw codec's existing theorem through its operational projection, preserving public types/constructors. The stale proposal for a second ephemeral representative/family carrier is replaced by the actual existing objects. Distinct signature/proof roles, private samples/blinded values and credential/snapshot bindings retain their semantics. |
+| P273 | Native path/witness validation — 2026-11-07 | Expanded/default builds pass 9,285/9,278 jobs; native leaf 3,470, facade 3,479. Seven-facade probe: 750 selected reports, 714 standard-only (569 exact-three, 145 subsets), 36 existing-native. All 22 additions are standard-only (14 exact-three, seven axiom-free, one propext-only); all 728 retained dependency sets are unchanged. Static scan: 266 modules/267 files, no holes/cycles/unresolved imports, same seven isolated cited axioms. Native leaf closure 66, facade 75; all 39 scoped closures exclude Chain/CitedBounds. No concrete credential/codec/proof or knowledge-security implementation is inferred. |
 
 #### Current protocol validation
 
@@ -905,11 +927,28 @@ plan targets message-bound possession of the actual private representative/path;
 no Ed25519 owner scheme, central credential issuer or replacement fibration is
 selected. Existing Hodge-blinded and fibration objects retain their roles.
 
-Current expanded/default builds pass 9,284/9,277 jobs. All 728 selected reports
+At that owner-signing milestone, expanded/default builds pass 9,284/9,277 jobs. All 728 selected reports
 pass: 692 standard-only and 36 existing-native; all 61 additions use only standard
 logical axioms and all 667 preceding dependency sets are unchanged. The
 [validation guide](docs/MATH_STORAGE_VALIDATION.md#current-owner-signing-reuse-and-issuance--2026-11-07)
-records current 265-module/266-file coverage and 38 scoped closures, plus
+records that 265-module/266-file coverage and 38 scoped closures, plus
 reproducible checks. [Plan provenance and primitive roles](docs/PROTOCOL_PARITY_QUEUE.md#recovered-native-authentication-plan-and-existing-primitive-layer--2026-11-07)
 remain explicit; native proving/verification, knowledge/unforgeability, codec,
 key/setup and arbitrary-history execution are separate completion requirements.
+
+### Native path transport and finite witness handoff — 2026-11-07
+
+P269--P273 construct same-path transport under supplied realization, finite
+credential-opening/path validity and exact proof-backend owner verification.
+The implementation reuses the existing mathematical and byte-verifier objects;
+a duplicate proof and stale replacement-type plan are pruned. Concrete
+realization/coherence, authenticated credential setup, codecs and message-bound
+proof/knowledge/unforgeability security remain separate obligations.
+
+Expanded/default builds pass 9,285/9,278 jobs. All 750 selected reports pass:
+714 standard-only and 36 existing-native. All 22 additions use only standard
+logical axioms, and all 728 preceding dependency sets are unchanged. The
+[current validation guide](docs/MATH_STORAGE_VALIDATION.md#native-path-transport-and-finite-witness-boundary--2026-11-07)
+records the 266-module/267-file inventory, 39 scoped closures and reproducible
+probe. These are conditional mathematical/execution joins, not completed
+native cryptography or a new Paper 1/3 radius claim.

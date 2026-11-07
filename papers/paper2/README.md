@@ -67,7 +67,11 @@ contracts. The scoped recovery map rejects changed request labels; matching
 labels alone authenticate no caller and prevent no replay. The
 [ephemeral wrapper](../../lean/Protocol/Ephemeral/Rotation.lean) connects actual
 typed family endpoints to the existing path object without deriving transport
-from class equality. These results keep the base complex fixed and prove no
+from class equality. A supplied path realization now constructs the original
+`FiberSystem` and `EphemeralRotation.ofPath`; their transports agree by
+construction and preserve harmonic projection and coefficient recovery.
+Arbitrary existing rotation records need their own alignment. These results
+keep the base complex fixed and prove no
 secure-channel construction, random generation, global lifecycle/retirement,
 physical erasure, privacy or Hamming-distance preservation theorem.
 
@@ -184,6 +188,19 @@ distinguishes existing committee, context, delivery, geometric, logical-signatur
 wallet and identity roles. This supplies no new key registry, secret signing
 execution, concrete Rust codec, complete disclosure history, numerical primitive
 bound or adaptive security game.
+
+The [native witness refinement](DRAFT.md#66-reused-path-transport-and-finite-native-witness-boundary)
+reuses these objects in [PathSignature](../../lean/Protocol/Transfer/PathSignature.lean).
+A partial decoder returns the private base, credential opening and original
+ephemeral path; validity uses the selected key-indexed opening relation and
+actual admissibility. That same decoded path constructs the existing rotation
+and recovery law. `ProofVerifier.asSignatureVerifier` routes the selected proof
+backend through the existing full-intent checker and actual `ownerSignature`.
+Key/message encoder reflection and backend-statement-to-witness existence
+remain conditional. No concrete realization, credential scheme, codec,
+prover/transcript or knowledge/unforgeability argument is selected. The shared
+signing modules remain generic; the exact packet codec's injectivity proof now
+delegates to its operational counterpart.
 
 The shared mathematical wiring is owned by Paper 1:
 [actual cochain model and invariant homological tests](../../lean/Helfer/CochainModel.lean),

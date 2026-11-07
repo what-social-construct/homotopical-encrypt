@@ -281,7 +281,7 @@ retain the current mathematical/protocol boundaries.
 | [CochainCommitment payload](../lean/Axioms/CochainCommitment/Payload.lean), [Sheaf.Commitment](../lean/Sheaf/Commitment.lean) | Existing actual payload, decoded exactness, snapshot binding and kernel-quotient opening semantics. | Reuse these original objects; a public payload or kernel ambiguity is not itself a message-bound possession proof. |
 | [Hodge-blinded construction](../lean/Axioms/CochainCommitment/Blinded.lean) | `HodgeBlindingContext` and `BlindedCommittedCochain` carry an accepted exact base, harmonic direction, scalar and actual exact-plus-harmonic value equation. | This is typed mathematical structure already present. Do not recreate it as an owner key or identify it with the ordinary-incidence runtime. Its authentication/privacy role still needs an explicit construction and semantic bridge. |
 | [Commitment security interfaces](../lean/Axioms/CochainCommitment/Security.lean) | Separate binding/hiding/vector-opening/MAC propositions. | These are assumptions, not a native signature implementation or proved unforgeability. `CohomologicalMACAxioms` must not be substituted for asymmetric possession authentication by name. |
-| [Fibration](../lean/Axioms/Fibration.lean), [presented ephemeral rotations](../lean/Protocol/Ephemeral/Rotation.lean), [cellular Helfer model](../lean/Helfer/CochainModel.lean) | Existing representative/path/class semantics, proved admissibility, actual integral transport and cellular-to-Helfer equivalence. | Reuse `EphemeralRotation` and the existing `equivalent_of_isometricCochainEquiv` adapter. Path/rotation transport alignment, designated-owner binding and message-bound possession remain separate joins. |
+| [Fibration](../lean/Axioms/Fibration.lean), [presented ephemeral rotations](../lean/Protocol/Ephemeral/Rotation.lean), [cellular Helfer model](../lean/Helfer/CochainModel.lean) | Existing representative/path/class semantics, proved admissibility, actual integral transport and cellular-to-Helfer equivalence. | `pathFiberSystem` and `EphemeralRotation.ofPath` now align the same original path and rotation under a supplied realization. The existing cellular-to-Helfer adapter is reused; concrete realization, credential construction and message-bound possession remain profile obligations. |
 | Historical `primitives` folder | `docs/archive/python/src/primitives/` contains former Python mathematical helpers; archived Lean scratch probes concern wrapper/fibration proof search. | No active or historical Lean `Primitives/` owner-signature implementation was found in this checkout/history. The active Lean primitive roles are split across the modules above. |
 
 The intended native verifier should reuse the existing homotopy-path witness
@@ -289,29 +289,30 @@ setup rather than introduce another fibration type:
 
 | Native authentication role | Existing object / required join |
 |---|---|
-| Private witness | Actual private base representative and admissible ephemeral representative, with `Axioms.EphemeralFiberSpec.path` and the selected transport obligations. Existing integral/presented rotation supplies stronger geometric laws when that profile is chosen. |
-| Public owner input | The actual verification input selected by `keyFor owner`, with an explicit authenticated binding to that owner's credential commitment. A coarse public class, Betti tuple or spectral fingerprint does not establish individual ownership. This binding is not inferred from the cochain snapshot root. |
-| Message and context | The exact existing metadata/Intent encoded by `Signing.message`, including the original public payload/context and staged source/draft coordinates. The native proof transcript must actually bind this message and public credential input; merely placing an unused message in a statement is insufficient. |
-| Path validity | Reuse the actual path/admissibility relation. `EphemeralRotation` already retains a proof of `ephemeral.WellFormed` and actual integral rotation. `Helfer.CochainModel.equivalent_of_isometricCochainEquiv` turns that rotation into typed equivalence. An equation relating the chosen path transport to the rotation is still needed when the statement requires their agreement; storing both does not prove it. |
+| Private witness | `PathSignature.WitnessRelation` uses a partial byte decoder into the private base, opening and original `Axioms.EphemeralFiberSpec`. Validity requires the selected opening relation and that same decoded path's admissibility; no total encoding of arbitrary paths is assumed. |
+| Public owner input | The existing `keyFor owner` indexes `opens key base opening`. This retains an explicit credential relation without a new registry; its concrete authenticated construction remains open. A public class or snapshot root does not establish individual ownership. |
+| Message and context | `ProofVerifier.asSignatureVerifier` executes the selected backend on the public key and full `Signing.message`, using actual `ownerSignature` bytes. Injective public-input encoding reflects key, metadata and Intent. Actual transcript/knowledge binding remains a separate security obligation. |
+| Path validity | `EphemeralRotation.ofPath` retains proved admissibility and the actual rotation of the decoded path under supplied `realize`; its transport/recovery agrees with `PresentedRotation.pathFiberSystem`. Arbitrary existing records are not retroactively aligned. The existing cellular-to-Helfer theorem applies to the actual isometry. |
 | Verification claim | A message-bound proof of knowledge/possession of the designated authorized private witness, not merely existence of some same-class representative or a path. A truthful existential statement alone supplies no knowledge or unforgeability theorem. |
 | Private release boundary | The path/representative remains private witness material; the released packet carries proof bytes. Any zero-knowledge/anonymity property requires its own experiment. |
 
-No concrete native proof system or knowledge extractor is implemented by this
-mapping. Its setup/sampler, complete proving/verifying algorithms, a finite/bit-model witness encoding with a checked relation or
-arithmetization, message-bound knowledge/unforgeability reduction and error
-bounds remain the next backend obligations. Arbitrary continuous or categorical
-path data is not automatically a finite proof-system witness. Existing HCP recovery obstructions and formula-invariance theorems
-do not by themselves establish them.
+The [native refinement](../lean/Protocol/Transfer/PathSignature.lean) now joins
+the finite witness relation, same-path rotation and existing byte verifier.
+Backend-statement truth must separately imply witness existence; accepted
+proofs then give existence or actual backend false acceptance. This relation
+is independent of the message, so it supplies no knowledge or unforgeability
+theorem. Concrete realization, authenticated credentials, encoding/decoding,
+prover/transcript algorithms, setup/sampling and security bounds remain open.
+Existing HCP recovery obstructions and formula invariance do not establish them.
 
 The implemented `Signing`/`Issuance`/`Authorization` result concerns full-message
 binding and a policy-respecting finite query history. Its `Key` and byte backend
 remain generic, so it is compatible with pursuing the recovered path-space
 primitive; it does not choose Ed25519 for owner authorization. The finite query
 log and its proof obligations are new formal bookkeeping, not an implemented
-algorithm recovered from the older plans. A native backend still needs an exact
-message/context-bound possession statement, concrete proving/verification
-algorithms, setup/sampling and a soundness/unforgeability game. The existing
-worker Ed25519 path remains a separate attestation layer.
+algorithm recovered from the older plans. The exact codec's injectivity proof
+now delegates to its operational counterpart with its API preserved. The
+existing worker Ed25519 path remains a separate attestation layer.
 
 #### Native path-signature import map — 2026-11-07
 
@@ -320,18 +321,17 @@ The mathematical pieces already have focused import surfaces:
 | Piece consumed by a native refinement | Import and existing object |
 |---|---|
 | Private representative/path and public-class preservation | [Axioms.Fibration](../lean/Axioms/Fibration.lean): `EphemeralFiberSpec.path`, `.WellFormed`, `.samePublicFingerprint`. A bare `TransportAdmissible : Prop` field names a proposition; the refinement must carry its proof. |
-| Admissible path plus actual Hodge transport/recovery | [Protocol.Ephemeral.Rotation](../lean/Protocol/Ephemeral/Rotation.lean): `EphemeralRotation.admissible`, `.rotation : PresentedRotation`, and the rotation's actual `IntegralCochainEquiv`. This module already reexports `Axioms.Fibration`. |
+| Admissible path plus actual Hodge transport/recovery | [Protocol.Ephemeral.Rotation](../lean/Protocol/Ephemeral/Rotation.lean): `PresentedRotation.pathFiberSystem` and `EphemeralRotation.ofPath` use one supplied path realization for the original fiber transport and actual integral rotation, preserving harmonic projection and coefficient recovery. This module already reexports `Axioms.Fibration`. |
 | Typed Helfer equivalence of the cellular models | [Helfer.CochainModel](../lean/Helfer/CochainModel.lean): apply `equivalent_of_isometricCochainEquiv` to `R.rotation.integral.toIsometricCochainEquiv`, with `open scoped CochainComplex.Plus.modelCategoryQuillen` for the model-category instance. The existing `Helfer` facade does not reexport this concrete model. |
 | Same original HCP sample and stored payload across rotation | [Protocol.Ephemeral.HCP](../lean/Protocol/Ephemeral/HCP.lean): `BoundSampleRotation`, `.cochainObject_eq` and `.payloadRotation`, retaining the original `TCB.BoundHCPObservation` endpoints. Needed only when the selected possession statement includes this join. |
 | Typed exact-plus-harmonic blinding | [Axioms.CochainCommitment.Blinded](../lean/Axioms/CochainCommitment/Blinded.lean): `HodgeBlindingContext` and `BlindedCommittedCochain`. Import when that construction is selected; it supplies neither a credential-opening scheme nor a signature algorithm. |
-| Exact message and selected byte-verifier execution | [Protocol.Transfer.Signing](../lean/Protocol/Transfer/Signing.lean) and [Protocol.Transfer.Authorization](../lean/Protocol/Transfer/Authorization.lean): `Signing.message`, `Authorization.checker` and `.signatureProfile`; the latter already consumes `TCB.PrimitiveChecks.SignatureVerifier`. The same primitive module provides `ProofVerifier`. |
+| Exact message and selected byte-verifier execution | [Protocol.Transfer.Signing](../lean/Protocol/Transfer/Signing.lean) and [Protocol.Transfer.Authorization](../lean/Protocol/Transfer/Authorization.lean): `Signing.message`, `Authorization.checker` and `.signatureProfile`; [PrimitiveChecks](../lean/TCB/PrimitiveChecks.lean) provides `ProofVerifier.asSignatureVerifier` with exact execution agreement. |
+| Finite credential/path witness and actual checked signature | [Protocol.Transfer.PathSignature](../lean/Protocol/Transfer/PathSignature.lean): partial-decoder `WitnessRelation`, same-path `rotationOfWitness`, conditional key/full-message reflection, backend-statement-to-witness existence and the checked packet's actual `ownerSignature` verification. |
 
-Keep `Signing`, `Issuance` and `Authorization` generic. The native refinement
-should import the geometry it consumes, rather than adding geometric imports
-to these shared modules. For the integral/typed-Helfer profile, the focused
-imports are `Protocol.Ephemeral.Rotation`, `Helfer.CochainModel` and
-`Protocol.Transfer.Authorization`; original-sample and blinded-commitment
-refinements add the corresponding leaves above.
+`Signing`, `Issuance` and `Authorization` remain generic. `PathSignature` is the
+geometry refinement, importing `Protocol.Ephemeral.Rotation` and
+`Protocol.Transfer.Authorization`. The optional typed-Helfer, original-sample
+and blinded-commitment refinements add the corresponding leaves above.
 
 The typed-model leaf must also activate the existing scoped instance:
 
@@ -340,15 +340,12 @@ open scoped CochainComplex.Plus.modelCategoryQuillen
 ```
 
 `HasPathSpace` supplies a path type family, with path laws supplied separately
-by `PathAxioms`. Selecting the actual representative family and relating its
-path transport to the stored integral rotation remain explicit obligations.
-Owner credential opening/binding, finite witness encoding and the exact
-key/message-bound proof relation are also still to be constructed. A native
-proof backend must feed the packet's `ownerSignature` through the existing
-signature-verifier interface; `config.payload` and `proofBytes` continue to
-refer to original cochain acceptance. Importing `Gates`, `Axioms.ZKP`,
-`TCB.SNARK` or the semantic witness envelope establishes no missing possession,
-knowledge or unforgeability law.
+by `PathAxioms`. A concrete representative family and realization still need
+to be selected; the new constructor derives transport agreement relative to
+that supplied realization. The native wrapper consumes `ownerSignature`;
+`config.payload` and `proofBytes` continue to refer to original cochain
+acceptance. Importing `Gates`, `Axioms.ZKP`, `TCB.SNARK` or the semantic witness
+envelope supplies no missing knowledge or unforgeability law.
 
 ### Rust-only concrete objects
 
@@ -481,22 +478,28 @@ without creating a Lean version of the mistake.
      semantic realization, shared `(class,b)` observations, positive/negative
      CVP comparisons, and a weighted exact integer-recovery counterexample.
      This supplies a concrete seed example for the argument; it does not yet
-     construct the indexed ephemeral generation/transport/lifecycle below.
+     construct a generated infinite ephemeral family or the lifecycle below.
    - **Current state:** the supplied abstract `EphemeralFiberSpec.path` is
      retained. `Sheaf.Rotation` and `Protocol.Ephemeral` now provide actual
      integral/presented rotation, both recipient recovery routes, original
      bound-HCP sample/payload joins and scoped delivery receipts. The actual
-     axis swap preserves every integer coefficient. `EphemeralRotation`
-     joins supplied path endpoints to actual rotation data; it does not
-     derive that data from a path. The indexed family, concrete fresh
-     generation and active/consumed/retired lifecycle remain unimplemented.
-   - Rename the conceptual object to `EphemeralRepresentativeSpec`; keep
-     `EphemeralFiberSpec` as a compatibility alias while references migrate.
+     axis swap preserves every integer coefficient. Under supplied `realize`,
+     `PresentedRotation.pathFiberSystem` and `EphemeralRotation.ofPath`
+     construct the original fiber transport and matching rotation from the
+     same path, preserving harmonic projection and coefficient recovery.
+     Concrete realization/coherence, fresh generation and the
+     active/consumed/retired lifecycle remain open.
+   - Keep the original `EphemeralFiberSpec` and existing representative-family
+     maps (`family`, `integrals`, `presentations`); no renamed compatibility
+     spec or second family carrier is needed.
    - The generated endpoint is the ephemeral hidden representative. Its path
      from the base is the class-membership witness.
-   - Add an indexed `EphemeralRepresentativeFamily`, connect the path to
-     `FiberSystem.transport`, and prove that an injective infinite family is an
-     infinite subset of one public classifier fiber.
+   - Construct the selected generated family as indexed values of these
+     existing objects, with actual paths, admissibility and a compatible
+     realization. Under classifier path-respect, prove that an injective
+     infinite representative family gives an infinite subset of one public
+     classifier fiber. The general path-to-`FiberSystem.transport` join is
+     already supplied by `pathFiberSystem` relative to that realization.
    - Do not call this a random cochain candidate. A committed cochain is
      downstream of the representative's sheaf/cochain geometry.
 

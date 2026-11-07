@@ -259,7 +259,7 @@ sender anonymity or anonymous-nullifier security.
 | `lean/Protocol/Storage/{CoordinateCodec,NoWrapCalibration,ThreeLevelMetrics}.lean` | The complete codec retains the original payload; integer no-wrap gives a coarse Euclidean criterion, while explicit saturated representative lifts prove the global native three-level comparison. The 27-endpoint root probe is standard-only. | Public byte/hash authentication, parser/backend refinement and an arbitrary hidden-source metric comparison. Real `Accepted` remains distinct from modular validity. |
 | `lean/Proximity/Core/{InterleavedMetric,DeepHole,FixedChallenge}.lean`; `Proximity/MCA/{ZeroDirection,Diagonal}.lean` | Native scalar/pair normalization, a monomial capacity-far family, exact restricted challenge guarantees and fixed-mix cancellation counterfamilies have standard-only focused reports. | A global fixed-mix guarantee for arbitrary pairs or a cryptographic sampling/binding experiment. |
 | `lean/Protocol/Storage/{CanonicalSystematic,CanonicalThreeLevel,CanonicalCalibration}.lean` | Focused builds pass. Fifteen systematic and sixteen native-profile selected reports retain existing canonical arithmetic trust; nine interface reports split four generic standard-only/five native. The original payload, capacity family, raw rejection/accepted-zero boundary and explicit near/far interface composition are checked. | Expanded aggregate and consolidated dependency checks pass; artifact details remain centrally recorded. No deployment, private-frame producer or security theorem follows. |
-| [Ephemeral.Rotation](../../lean/Protocol/Ephemeral/Rotation.lean); [Ephemeral.HCP](../../lean/Protocol/Ephemeral/HCP.lean) | `PresentedRotation` retains the same-coefficient encoding law and proves direct target-key/base-pullback recovery. `BoundSampleRotation` relates two original bound samples and derives their original payload-decoder transport from existing exact-component bindings; the source-message equation `message = H.point z` gives both coefficient-recovery routes. `PayloadRotation` preserves acceptance under its actual decoder law. `EphemeralRotation` links typed family endpoints to an existing path without inferring the transport from that path. | Random representative generation, an infinite family, topology migration, atomic replacement of retained state, or Hamming-distance preservation. Target artifacts and their binding implementations remain supplied. |
+| [Ephemeral.Rotation](../../lean/Protocol/Ephemeral/Rotation.lean); [Ephemeral.HCP](../../lean/Protocol/Ephemeral/HCP.lean) | `PresentedRotation` retains the same-coefficient encoding law and proves direct target-key/base-pullback recovery. `BoundSampleRotation` relates two original bound samples and derives their original payload-decoder transport from existing exact-component bindings; the source-message equation `message = H.point z` gives both coefficient-recovery routes. `PayloadRotation` preserves acceptance under its actual decoder law. `EphemeralRotation.ofPath` constructs the same path/rotation action under supplied `realize`; a bare earlier record alone supplies no such agreement. | Random representative generation, an infinite family, topology migration, atomic replacement of retained state, or Hamming-distance preservation. Target artifacts and their binding implementations remain supplied. |
 | [Ephemeral.Delivery](../../lean/Protocol/Ephemeral/Delivery.lean); [Examples](../../lean/Protocol/Ephemeral/Examples.lean) | Receipts index the actual recipient, source/target epoch labels, original context keys, rotation and envelope under explicit `Authorized`/`Delivers` contracts. Matching-scope recovery returns the original coefficients; changed request labels reject. The example reuses the actual axis rotation and coefficient-two sample. | Caller authentication from matching labels, epoch certification/advancement, replay exclusion, a secure channel, private key generation, retirement or physical erasure. |
 | `lean/Protocol/{Oracle,Coregulator}.lean` | Existing attachment/import surfaces for oracle and control lifecycles. | Their selected typed lifecycle/state-machine endpoints. |
 
@@ -446,19 +446,29 @@ masses. A matching raw checked release plus independently supplied
 authorization has an actual signature record and exact coverage in the reused
 public view. Query membership alone does not identify signature bytes.
 
+The [native refinement](DRAFT.md#66-reused-path-transport-and-finite-native-witness-boundary)
+now constructs the existing fiber system and `EphemeralRotation.ofPath` under
+a supplied path-to-presented-rotation realization. Transport, harmonic
+projection and direct/base coefficient recovery refer to that same path;
+arbitrary earlier records are not automatically aligned. The existing
+cellular-to-Helfer adapter remains available for this actual rotation.
+[PathSignature](../../lean/Protocol/Transfer/PathSignature.lean) uses a partial
+decoder into the original base/opening/ephemeral-path objects, requiring the
+actual key-indexed opening relation and admissibility. It constructs the
+existing rotation from that decoded path. The generic proof-verifier wrapper
+executes through the full-intent checker on actual `ownerSignature` bytes;
+encoder reflection and backend-statement-to-witness existence are conditional.
+The duplicate exact-codec injectivity proof delegates to the raw counterpart
+with its API preserved.
+
 The [recovered-plan table](../../docs/PROTOCOL_PARITY_QUEUE.md#recovered-native-authentication-plan-and-existing-primitive-layer--2026-11-07)
-keeps native, message-bound fibration/path possession as the earlier intended
-authentication target. The witness should reuse the existing representative,
-path/admissibility and selected transport objects, with the required adapter to
-typed Helfer equivalence. A native verifier must bind proof of possession of
-the designated owner's private witness to the exact message and authenticated
-public credential input; class/path existence alone is insufficient. This
-generic wiring chooses no Ed25519 owner primitive or central credential issuer,
-and does not duplicate existing Hodge-blinded, fibration/path or public-artifact
-objects. No native proof-of-knowledge implementation or reduction is supplied.
-A concrete backend also needs a finite witness encoding and checked
-relation/arithmetization; an abstract path is not automatically a finite proof
-input.
+retains message-bound possession of the designated private witness as the
+authentication target. Witness existence alone does not meet it and is
+independent of the message. Concrete realization, authenticated credential
+construction, encoding/decoding and proving/transcript algorithms,
+knowledge/unforgeability and security games remain open. The shared signing
+modules remain generic, with no new Ed25519 owner choice, central credential
+issuer or replacement Hodge/fibration/artifact objects.
 
 Concrete codec/backend refinement, authentic key registration and secrecy,
 complete release/auxiliary-history provenance, adaptive or chronological
