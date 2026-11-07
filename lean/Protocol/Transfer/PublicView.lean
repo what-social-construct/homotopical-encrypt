@@ -146,17 +146,24 @@ variable {Vertex Edge Face Owner Asset Receipt : Type}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
   {X : OrientedTwoComplex Vertex Edge Face} {F : CellularSheaf X}
 
+/-- Reuse this release carrier for actual checks without assuming primitive soundness. -/
+def PublicTransferView.ofOperational
+    {config : Operational.Config F Owner Asset Receipt}
+    {transfer : ResourceTransfer Owner} {bytes : List UInt8}
+    (checked : Operational.CheckedTransfer config transfer bytes) : PublicTransferView Owner where
+  packetBytes := bytes
+  packet := checked.proof.packet
+  proposal := checked.candidate.proposal
+  manifest := config.manifest.publicView
+
 namespace CheckedTransfer
 
 variable {config : Config F Owner Asset Receipt} {transfer : ResourceTransfer Owner}
   {bytes : List UInt8}
 
 /-- Release this actual checked packet, final proposal and original input seal. -/
-def publicView (checked : CheckedTransfer config transfer bytes) : PublicTransferView Owner where
-  packetBytes := bytes
-  packet := checked.proof.packet
-  proposal := checked.candidate.proposal
-  manifest := config.manifest.publicView
+def publicView (checked : CheckedTransfer config transfer bytes) : PublicTransferView Owner :=
+  PublicTransferView.ofOperational checked.operational
 
 theorem publicView_bytes (checked : CheckedTransfer config transfer bytes) :
     checked.publicView.packetBytes = bytes := rfl

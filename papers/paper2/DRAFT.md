@@ -787,12 +787,97 @@ must match the actual setup. The fixed-history model is still not an adaptive
 EUF-CMA oracle game. No event receives a numerical budget from the presence of
 an algorithm name or the runtime checks above.
 
-The remaining instantiation work is therefore concrete: select authenticated
-keys and canonical owner-intent bytes, discharge check agreement and backend
-statement reflection for the same original cochain interpretation, establish
-primitive/query/setup error bounds, and implement the required parser/runtime
-contracts. The conditional mathematics supplies none of those missing runtime
-or secrecy guarantees by using the legacy TCB carrier.
+Section 6.5 constructs the owner-message/check/history binding relative to the
+existing supplied codec. Concrete authenticated keys, cross-language canonical
+bytes, backend statement reflection for the same original cochain interpretation,
+primitive/query/setup error bounds and parser/runtime contracts remain to be
+instantiated. The legacy TCB carrier supplies none of those runtime or secrecy
+guarantees.
+
+#### 6.5. Full-intent signing and authorized issuance from existing objects
+
+The [reuse inventory](../../docs/PROTOCOL_PARITY_QUEUE.md#existing-objects-reused-for-owner-signing--2026-11-07)
+keeps the actual resource catalogue, full `Intent`/metadata, `PacketCodec`,
+selected `keyFor` function, byte-query history and released-view carrier.
+It introduces no new account registry or credential issuer. The recovered
+path-space-signature plan intended message-bound proof of private fibration/path
+possession; its verifier sketch is not a secure implementation. The present
+backend/key type remains generic, with no selection of Ed25519 for owner
+authorization. Its native witness relation should reuse the existing private
+representative and `EphemeralFiberSpec.path`/admissibility setup, with the
+appropriate typed-equivalence adapter where required. Verification must bind
+knowledge of the designated authorized private witness to the exact message
+and public credential commitment. A path or class-membership existence theorem
+alone supplies neither knowledge nor unforgeability; the path need not be
+published. Those native proving/verification and security results remain open. Here issuance means recording an authorized signing request and
+output, not issuing a credential. The
+[plan-to-primitive table](../../docs/PROTOCOL_PARITY_QUEUE.md#recovered-native-authentication-plan-and-existing-primitive-layer--2026-11-07)
+retains that distinction and the existing typed Hodge-blinded construction.
+Committee votes
+have validator targets; `ContextKey` and recipient delivery scopes are public
+names; geometric presentation rotation transports recovery material; Helfer's
+`Signature` is logical vocabulary. None is silently substituted for owner
+signing authority or secret key custody.
+
+[Signing](../../lean/Protocol/Transfer/Signing.lean) defines
+
+\[
+\operatorname{SignBytes}(\mu,\iota)
+=\texttt{HCRYPT\_OWNER\_INTENT\_V1}\mathbin\Vert
+\operatorname{encode}(\operatorname{skeleton}(\mu,\iota)),
+\]
+
+where \(\mu\) is the full metadata and \(\iota\) the original intent. The
+skeleton is the existing packet with its signature and proof fields empty.
+There is no recursive signature/proof output in its own signing input.
+The existing codec roundtrip law proves that equal signing bytes imply equality
+of **both full metadata and the original full intent**. No injectivity of
+hashes or owner-to-key lookup is needed. The literal owner prefix is disjoint
+from every message under the existing worker spectral prefix. This constructs
+a signing message relative to the supplied codec, not a concrete Rust serializer
+or an implementation of a signature primitive.
+
+[Issuance](../../lean/Protocol/Transfer/Issuance.lean) records actual metadata,
+existing intent and signature bytes together with authorization under one fixed
+actual relation. The owner is derived from `intent.transfer.signer`; there is
+no independently supplied second owner. Its byte history is exactly the mapped
+key/signing-message queries followed by a supplied foreign batch. Every foreign
+message must lie outside the owner-intent domain. Consequently every logged
+owner-domain query is explained by a typed authorized issuance, and full-intent
+reflection recovers authorization even when different owner labels share a key.
+Matching policy names do not identify different authorization relations.
+
+Signature coverage is a separate predicate on actual metadata, intent **and
+signature bytes**. Its projection gives key/message query coverage; membership
+in the byte-query list alone does not identify which signature was disclosed.
+Appending records preserves earlier coverage and queries. These are batch
+records under the selected policy and epoch profile, not an adaptive signing
+oracle or chronological revocation protocol. A revoked-policy owner-domain
+signature cannot be put into the foreign batch merely by changing its label;
+all such disclosed queries remain history/authorization obligations.
+
+[Authorization](../../lean/Protocol/Transfer/Authorization.lean) now constructs
+the raw checker from the selected backend, existing key map and full-intent
+message. Its primitive-profile agreement is reflexive (`rfl`). The original
+context, full intent and semantic policy are preserved, as is the candidate
+constructed from the same parsed packet. Under the
+actual typed-history/foreign-domain conditions, queried-but-unauthorized
+acceptance is impossible, so its probability is zero. The configured experiment
+retains the selected view, auxiliary data, tape, adversary and attempted bytes.
+Its accepted-invalid bound therefore has four remaining masses: fresh forgery,
+compromised key, backend proof false acceptance and original-context statement
+mismatch. Their numerical budgets remain supplied premises.
+
+The same [released-view carrier](../../lean/Protocol/Transfer/PublicView.lean)
+now has `PublicTransferView.ofOperational`, derived directly from actual raw
+checks without assuming perfect primitive soundness. For a release checked
+under the newly constructed checker, `issueOfChecked` retains its exact parsed
+metadata, intent and verified signature, given an **independent authorization
+fact**. Adding that record covers the signature in this actual view. No theorem
+relabels acceptance of a legacy worker signature as acceptance on the new bytes.
+Secret signing execution, authenticated registration, complete disclosure
+history, concrete wire refinement, primitive error bounds and adaptive security
+remain separate work.
 
 ### 7. Proof ledger and remaining protocol work
 
@@ -834,10 +919,13 @@ the earlier counts are not validation of the added modules.
 | [Acyclic transcript](../../lean/Protocol/Evidence/TransferTranscript.lean) and [input manifest](../../lean/Protocol/Storage/TransferManifest.lean) | Explicit content/draft/intent/packet/block preimages and reconstruction of omitted metadata. The exact one-entry original-payload seal is prepared independently of later packet/block digests. Typed hashing supplies no injectivity, canonical-byte implementation or six-stage gate completeness. |
 | [Soundness-free packet checking](../../lean/Protocol/Evidence/TransferCheck.lean) and [exact verifier specialization](../../lean/Protocol/Evidence/TransferVerifier.lean) | Parsing, canonical bytes and complete metadata/intent equality guard the actual Boolean algorithms. Raw checked records assume no semantic soundness; exact interfaces project to the same checker and use their separately supplied contracts to derive authorization and payload exactness under the actual trusted interpretation. |
 | [Operational transfer](../../lean/Protocol/Transfer/Operational.lean), [ideal checked transfer](../../lean/Protocol/Transfer/Owned.lean) and [anchored endpoint](../../lean/Protocol/Transfer/Anchored.lean) | Local authorization and original-payload acceptance derive validity of the candidate computed from the actual parsed packet. The exact checker/policy/candidate projection preserves the ideal theorem. Complete packet, original artifact/context and input manifest remain joined; a matching whole-proposal quorum remains an external input. |
-| [Actual transfer view](../../lean/Protocol/Transfer/PublicView.lean) | Publishes this checked release's bytes, parsed packet, complete proposal and original input-manifest view. Public input/output/signer differences distinguish records; the deterministic input-ID test needs no private witness or hash inversion. This supplies no privacy theorem or complete network transcript. |
+| [Actual transfer view](../../lean/Protocol/Transfer/PublicView.lean) | Publishes this checked release's bytes, parsed packet, complete proposal and original input-manifest view. `ofOperational` reuses the same carrier for actual raw checks without perfect primitive soundness. Public input/output/signer differences distinguish records; the deterministic input-ID test needs no private witness or hash inversion. This supplies no privacy theorem or complete network transcript. |
 | [One-shot sampled integrity](../../lean/Protocol/Transfer/Security.lean) | Accepted-invalid outcomes for the actual soundness-free checker imply authorization or exact-payload verification failure. One shared PMF yields the union bound and composition of supplied error budgets without independence. `ofCheckedRelease` provides an actual released observation. No primitive estimate, adaptive oracle game, security-parameter family or privacy claim is inferred. |
 | [Actual byte-level primitive checks](../../lean/TCB/PrimitiveChecks.lean) | Selected signature/proof algorithms, exact byte-indexed backend statements, signing-query history and compromised-key predicate. Successful verification is classified without a global soundness, zero-knowledge or numerical-error assumption. Legacy TCB comments distinguish these raw checks from carriers whose well-formedness already includes statement truth. |
-| [Primitive-to-original-transfer comparison](../../lean/Protocol/Transfer/Primitives.lean) | Exact owner/key/message and payload-input check-agreement equations retain the same operational configuration and parsed packet. Accepted-invalid outcomes reduce to fresh forgery, compromised key, queried unauthorized message, backend proof false acceptance or original-context statement mismatch. Their shared-PMF sum composes supplied budgets; current Rust algorithms are not claimed to discharge those contracts or estimates. |
+| [Primitive-to-original-transfer comparison](../../lean/Protocol/Transfer/Primitives.lean) | Exact owner/key/message and payload-input check-agreement equations retain the same operational configuration and parsed packet; §6.5 constructs the owner signing equation for the selected new checker. Accepted-invalid outcomes reduce to fresh forgery, compromised key, queried unauthorized message, backend proof false acceptance or original-context statement mismatch. Their shared-PMF sum composes supplied budgets; current Rust algorithms are not claimed to discharge those contracts or estimates. |
+| [Full-intent signing](../../lean/Protocol/Transfer/Signing.lean) | The existing packet codec encodes an empty-signature/empty-proof skeleton under the literal owner domain. Equality reflects full metadata and intent; worker spectral messages have a different prefix. The codec remains supplied; no concrete Rust serialization, hash injectivity or signing algorithm is inferred. |
+| [Typed authorized issuance](../../lean/Protocol/Transfer/Issuance.lean) | Actual metadata, intent and signature bytes carry authorization for the intent-derived signer under one fixed relation. The existing key map/query history is reused, with explicit foreign non-owner-domain queries. Owner-domain query reflection recovers authorization without key injectivity; actual-signature coverage remains separate from key/message query membership. |
+| [Constructed owner authorization](../../lean/Protocol/Transfer/Authorization.lean) | The selected backend/key map construct the raw full-intent checker and a reflexive profile-agreement equation, preserving the original context/intent/candidate/policy. The actual typed history rules out queried-unauthorized mass and yields the four-term configured-experiment bound. An independently authorized release checked under this new checker can be recorded with its exact signature and `PublicTransferView.ofOperational` coverage. No secret signing execution, registration, numerical bound or general history/revocation game follows. |
 | [Ordinary graph commitment ambiguity](../../lean/Sheaf/GraphCommitment.lean) | Constant translation preserves actual modular `CochainCommitmentData`, fixed topology and every deterministic encoding while changing a designated message coordinate. The explicit path example has messages three/ten and identical edge values two/four. It refutes raw message binding for this profile, without claiming a hash collision, a hiding theorem or an obstruction for every cellular sheaf. |
 | [Semantic evidence compatibility](../../lean/Protocol/Evidence/TransferEnvelope.lean) | Packages independently derived validity/check facts in the existing TCB envelope, with the actual candidate/transfer witness and public intent shadow. Its root/inclusion and runtime facts are supplied or proved by the selected profile; it is not an additional operational verifier or security proof. |
 | [Plucker reconstruction](../../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) and [operative-target adapter](../../lean/TCB/PluckerObservation.lean) | Eight reconstruction endpoints and the observation endpoints in the 27-declaration root probe are standard-only. Recovery consumes full exact-real shadow data and an explicit operative-kernel identification; digest-only visibility is a separate profile. |

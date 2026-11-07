@@ -210,6 +210,109 @@ The exact interfaces from §6.2 remain an ideal specialization. Integrity here
 requires the relevant semantic implication and error model, without adding
 zero-knowledge or succinctness assumptions merely to fill the old proof carrier.
 
+### Existing objects reused for owner signing — 2026-11-07
+
+The owner-signing pass reuses the existing resource owner, complete intent,
+packet codec, fixed key map and byte-query history. It introduces no new account,
+credential issuer or anonymous-key architecture. Similar words in other layers
+do not make their objects interchangeable.
+
+| Existing object / source | Actual role and reuse decision | Remaining join or distinct meaning |
+|---|---|---|
+| [OwnedResource.Catalog](../lean/Protocol/Ledger/OwnedResource.lean) and `Transfer.signer` | Reuse the actual resource-owner labels and transfer, with the existing owner check. | The catalog is not an authenticated key-registration service; its owner label is not automatically a credential fingerprint, public class or validator. |
+| [TransferTranscript.Intent and ProofMetadata](../lean/Protocol/Evidence/TransferTranscript.lean) | Reuse the exact transfer, public input, source evidence, proposal draft, manifest and metadata. | Owner signing must cover those original values without including its own signature/proof bytes recursively. |
+| [TransferCheck.PacketCodec](../lean/Protocol/Evidence/TransferCheck.lean) | Reuse the selected encoder/parser and its roundtrip law. | The signing construction can encode the existing packet with signature/proof fields empty under an owner-domain prefix; this derives binding from the codec law, not a concrete Rust byte implementation. |
+| [Primitives.SignatureProfile](../lean/Protocol/Transfer/Primitives.lean) | Reuse the existing `keyFor`, backend and exact algorithm-agreement equation. | The fixed key map remains selected input. No separate global owner registry, registration/rotation state machine or key-secrecy theorem is inferred. |
+| [PrimitiveChecks.SignatureHistory](../lean/TCB/PrimitiveChecks.lean) | Reuse the actual finite key/message list and compromised-key predicate. | Typed authorized issuance must explain owner-domain entries; non-owner-domain queries stay explicit. History must cover released/auxiliary honest signatures before importing a primitive-game bound. |
+| [PublicTransferView](../lean/Protocol/Transfer/PublicView.lean) | Reuse the actual released packet, bytes, proposal and input manifest. | A disclosed owner signature must correspond to recorded issuance or another declared signing source; view equality alone proves neither authorization nor history coverage. |
+| [Committee](../lean/Protocol/Consensus/Committee.lean) and [VoteAuthentication](../lean/Protocol/Consensus/Vote.lean) | Existing validator membership, weights and exact complete vote target. | Validator registration and vote authentication have a different subject from resource-owner intent authorization. They are not an owner-key registry or canonical owner signing codec. |
+| [Storage.ContextKey](../lean/Protocol/Storage/Context.lean) and [DeliveryScope](../lean/Protocol/Ephemeral/Delivery.lean) | Reuse public run/schema/root names and recipient/epoch/context scope where required. | These are public context identifiers, not secret signing keys. Matching scope labels authenticate no caller. |
+| [PresentedRotation](../lean/Protocol/Ephemeral/Rotation.lean) | Existing geometry/encoding transport for coefficient-preserving recovery. | Geometric key/presentation rotation does not register, revoke or rotate an external signing key. |
+| [Helfer.Signature](../lean/Helfer/Signature.lean) | Existing many-sorted logical vocabulary for interpretations. | This logical signature is unrelated to cryptographic signing material or signatures on messages. |
+| Runtime validator key map | `rust/node/src/consensus/validator_set.rs::{Validator,ValidatorSet}` already stores fingerprint-to-public-key records, active flags and duplicate-registration checks. | Reusable container pattern in the validator-worker role; registration takes supplied bytes without an owner-intent/key-possession proof. Its `trusted_pubkeys` list is not automatically the resource-owner key map. |
+| Oracle identity and Python public identity | `rust/oracle/src/stalk_bridge.rs::HashStalk.identity_hash` and `src/crypto/credential.py::PublicIdentity` are public geometry/class handles. | They are not owner signing keys, and their byte encodings differ; neither can silently replace `keyFor` or an authenticated owner identifier. |
+| Rust wallet container | `rust/wallet/src/store.rs::{EncryptedCredential,WalletStore}` stores opaque credential bytes and public metadata by label. | No signing-key custody, owner registration or signing/query operation is implemented. Current persistence/overwrite tests establish container behavior, not secure key rotation. |
+| Legacy account lifecycle | `src/chain/account.py::{SovereignAccount,AccountState}` records fingerprints, status, nonce and rotation counters. | Confirmation is unauthenticated; class-ID equality and counter updates change no signing key material. Preserve the lifecycle questions, not this implementation as authorization. |
+
+The public identity encodings are a separate versioned-wire obligation.
+Python `PublicIdentity.identity_hash` hashes
+`HCRYPT_PUBLIC_IDENTITY_V1 || str(betti_tuple) || topology_hash`, whereas the
+Oracle hashes `i32LE(β₀) || i32LE(β₁) || i32LE(β₂) || topology_hash`.
+For the fixed public fixture `(1,0,0)` and topology bytes `01` repeated 32 times,
+the hashes begin `fba80c47` and `4655e105`, respectively. Even these existing
+public handles require an explicit encoding comparison before wiring.
+
+The bounded wiring is implemented by
+[Signing](../lean/Protocol/Transfer/Signing.lean),
+[Issuance](../lean/Protocol/Transfer/Issuance.lean) and
+[Authorization](../lean/Protocol/Transfer/Authorization.lean). Signing uses the
+existing packet codec on a skeleton with empty signature/proof fields under
+`HCRYPT_OWNER_INTENT_V1`; equal bytes reflect the full metadata and intent.
+Issuance derives the owner from the intent signer and projects authorized
+records to the existing query history, while retaining foreign queries outside
+that domain. Authorization constructs the raw checker and its reflexive backend
+agreement, preserving the original context, intent, candidate and semantic
+policy. Under those codec/history and issuance conditions,
+`QueriedUnauthorized` has zero mass and the existing error bound has four
+remaining terms. A checked release can be recorded with its exact signature
+given independent authorization. Legacy worker signatures are not reinterpreted
+as signatures on these new messages. This supplies no new secret-key setup,
+concrete wire codec, history completeness or numerical cryptographic bound.
+Runtime paths above refer to the full workspace and are outside the
+Lean/manuscript review bundle.
+
+### Recovered native-authentication plan and existing primitive layer — 2026-11-07
+
+The repository does contain earlier plans. The active architecture/roadmap
+status pages and `docs/archive/INDEX.md` mark their old bodies non-normative;
+that status does not erase the requirements worth recovering. Historical paths
+below refer to the full workspace, not the slim Lean/manuscript bundle. The
+active [paper-split plan](PAPER_OUTLINE.md) and [categorical map](CATEGORICAL_ARCHITECTURE.md)
+retain the current mathematical/protocol boundaries.
+
+| Plan or source | Recovered intention / actual object | Present disposition |
+|---|---|---|
+| `docs/archive/PRIMITIVES.md` §4, Path-Space Signatures | Message-bound proof of possession of private fibration/path data, explicitly proposed instead of EdDSA owner signing. The challenge includes message hash, commitment and topology. | Preserve this native-authentication target. The sketch accepts a 32-byte response after public checks; it does not establish possession, knowledge soundness or unforgeability. The present generic byte/history wiring selects no owner-signature primitive. |
+| `docs/archive/SECURITY_VULNERABILITIES.md` §III.A--B | Signed payload, nonce, timestamp and previous hash; authenticated setup and key continuity. | Full Intent now binds the selected source/draft/metadata, with existing ledger freshness/replay rules. This does not implement the entire older messaging envelope, arbitrary-message nonces/clocks, authenticated setup or continuity protocol. |
+| `docs/archive/CHAIN_ARCHITECTURE.md`, Sovereignty Setup Flow | Local self-generated credential, public registration evidence and bilateral signatures, without a central credential issuer. | No new central issuer or account architecture is selected. `Issuance.Issued` is a recorded authorized signing request/output, not issuance of a credential. Authentic registration/possession remains a separate protocol obligation. |
+| `docs/archive/ORACLE_SECURITY.md`, wallet/HSM checklist | Keep the secret fibration local or in hardware; display recipient/amount before approving signing. | Preserve custody and user approval requirements. Current typed authorization does not prove a hardware wallet, safe custody or a trusted confirmation UI. |
+| `docs/archive/STORAGE.md`, storage/routing and privacy-chain variants | Local private state, class-preserving migration and optional anonymous ownership. Some variants also equate public fingerprints with secret keys. | Recover retention/transport/privacy questions; do not revive public-derived secrets, spectral equality as homotopy proof or automatic forward secrecy/anonymity claims. The bounded public-ID profile does not replace those larger design questions. |
+| `docs/CHAIN_NETWORK_OBJECT_REVIEW.md` | Recovered product intention: verified encrypted database with a public proof ledger, private representatives/paths/openings and bounded public evidence. | Current storage/manifest/transition work is a bounded mathematical foundation for that goal, not a completed database or privacy system. |
+| [CochainCommitment payload](../lean/Axioms/CochainCommitment/Payload.lean), [Sheaf.Commitment](../lean/Sheaf/Commitment.lean) | Existing actual payload, decoded exactness, snapshot binding and kernel-quotient opening semantics. | Reuse these original objects; a public payload or kernel ambiguity is not itself a message-bound possession proof. |
+| [Hodge-blinded construction](../lean/Axioms/CochainCommitment/Blinded.lean) | `HodgeBlindingContext` and `BlindedCommittedCochain` carry an accepted exact base, harmonic direction, scalar and actual exact-plus-harmonic value equation. | This is typed mathematical structure already present. Do not recreate it as an owner key or identify it with the ordinary-incidence runtime. Its authentication/privacy role still needs an explicit construction and semantic bridge. |
+| [Commitment security interfaces](../lean/Axioms/CochainCommitment/Security.lean) | Separate binding/hiding/vector-opening/MAC propositions. | These are assumptions, not a native signature implementation or proved unforgeability. `CohomologicalMACAxioms` must not be substituted for asymmetric possession authentication by name. |
+| [Fibration](../lean/Axioms/Fibration.lean), [Helfer](../lean/Helfer.lean), [actual rotations](../lean/Sheaf/Rotation.lean) | Existing representative/path/class semantics, finite cellular interpretation and transported message/noise/recovery data. | Reuse these for any selected native possession statement. Class membership or existence of a path alone does not establish knowledge of a designated owner's secret or authorization of a message. |
+| Historical `primitives` folder | `docs/archive/python/src/primitives/` contains former Python mathematical helpers; archived Lean scratch probes concern wrapper/fibration proof search. | No active or historical Lean `Primitives/` owner-signature implementation was found in this checkout/history. The active Lean primitive roles are split across the modules above. |
+
+The intended native verifier should reuse the existing homotopy-path witness
+setup rather than introduce another fibration type:
+
+| Native authentication role | Existing object / required join |
+|---|---|
+| Private witness | Actual private base representative and admissible ephemeral representative, with `Axioms.Fibration.EphemeralFiberSpec.path` and the selected transport obligations. Existing integral/presented rotation supplies stronger geometric laws when that profile is chosen. |
+| Public owner input | The actual verification input selected by `keyFor owner`, with an explicit authenticated binding to that owner's credential commitment. A coarse public class, Betti tuple or spectral fingerprint does not establish individual ownership. This binding is not inferred from the cochain snapshot root. |
+| Message and context | The exact existing metadata/Intent encoded by `Signing.message`, including the original public payload/context and staged source/draft coordinates. The native proof transcript must actually bind this message and public credential input; merely placing an unused message in a statement is insufficient. |
+| Path validity | Reuse the actual path/admissibility relation. Where genuine Helfer/model-category equivalence is needed, supply the adapter; path existence, class equality, a cellular isometry and typed Helfer equivalence are distinct objects. |
+| Verification claim | A message-bound proof of knowledge/possession of the designated authorized private witness, not merely existence of some same-class representative or a path. A truthful existential statement alone supplies no knowledge or unforgeability theorem. |
+| Private release boundary | The path/representative remains private witness material; the released packet carries proof bytes. Any zero-knowledge/anonymity property requires its own experiment. |
+
+No concrete native proof system or knowledge extractor is implemented by this
+mapping. Its setup/sampler, complete proving/verifying algorithms, a finite/bit-model witness encoding with a checked relation or
+arithmetization, message-bound knowledge/unforgeability reduction and error
+bounds remain the next backend obligations. Arbitrary continuous or categorical
+path data is not automatically a finite proof-system witness. Existing HCP recovery obstructions and formula-invariance theorems
+do not by themselves establish them.
+
+The implemented `Signing`/`Issuance`/`Authorization` result concerns full-message
+binding and a policy-respecting finite query history. Its `Key` and byte backend
+remain generic, so it is compatible with pursuing the recovered path-space
+primitive; it does not choose Ed25519 for owner authorization. The finite query
+log and its proof obligations are new formal bookkeeping, not an implemented
+algorithm recovered from the older plans. A native backend still needs an exact
+message/context-bound possession statement, concrete proving/verification
+algorithms, setup/sampling and a soundness/unforgeability game. The existing
+worker Ed25519 path remains a separate attestation layer.
+
 ### Rust-only concrete objects
 
 Rust, not Lean, owns transaction/block byte structs, serialization versions,

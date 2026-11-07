@@ -22,6 +22,7 @@ existing authenticated proposal and quorum types.
 | `Evidence/TransferCheck`, `Transfer/Operational` | The same canonical packet and resource checks without assumed primitive soundness; local semantic good facts derive validity and actual accepted-invalid outcomes reduce to authorization or exact-payload false acceptance. |
 | `Transfer/PublicView`, `Transfer/Security` | Original checked release projection and direct public-ID distinction; explicit observation/auxiliary/PMF adversary experiment and conditional one-shot error bound. No primitive estimate, oracle security or privacy theorem. |
 | `Transfer/Primitives` | Actual owner/key/message/history and byte-proof backend agreement, with five-event same-PMF error composition. Query coverage, backend-to-original-context refinement and concrete primitive budgets remain explicit. Current spectral runtime paths do not instantiate these joins. |
+| `Transfer/Signing`, `Transfer/Issuance`, `Transfer/Authorization` | Reuse the complete subject, packet codec, existing key map/history and release carrier. Construct owner-domain byte checks and exact authorized query projection; the bounded fixed-policy theorem excludes queried-unauthorized targets and leaves four same-PMF errors. Concrete wire/key/oracle refinement remains separate. |
 
 `Protocol.Core` is the focused review entry point. `Protocol.Ledger` is the
 broader compatibility aggregate. Its legacy `Chain` import remains for

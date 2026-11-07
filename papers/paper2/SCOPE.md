@@ -380,7 +380,7 @@ protocol. Build and theorem-dependency outcomes are recorded separately.
 | P1 | Join one history entry and matching quorum to the original snapshot/artifact, exact sealed manifest, final projection prefix and actual gate database. | `Protocol/Storage/{Anchor,ProjectionAnchor,AnchorExamples}.lean`. | The pre-addition baseline and standard-only anchor reports pass. History/gate inclusion, wire/root layout and backend refinement remain profile obligations. Actual same-base sample rotation is separate from atomic retained-history migration; anchor equality alone supplies no new metric or radius theorem. |
 | P1 | Bind the native modular source comparison and capacity family to the original observed payload. | `Sheaf/SystematicCode/Modular.lean`; `Storage/{ThreeLevelMetrics,CanonicalThreeLevel}.lean`. | Generic validity, native distance bridge and canonical context/payload, capacity and restricted fixed-challenge adapters pass focused checks. `CanonicalCalibration` composes the existing interfaces with explicit near/far scores. Expanded aggregate and consolidated public-facade checks pass; artifact details remain centrally recorded. Real acceptance is a separate policy predicate. |
 | P1 | Preserve the independent Euclidean source metric where claimed. | `Sheaf/Distance.lean`; `Storage/{Calibration,NoWrapCalibration,CanonicalSystematic}.lean`. | Controlled-lift criterion and explicit no-wrap first-shell profile are checked. Fifteen canonical endpoints retain existing native arithmetic trust. No capacity-scale Euclidean or full-HCP radius theorem is claimed. |
-| P1 | Algorithms, correctness, threat model, security experiments, assumptions/reductions and claim inventory. | `Transfer/{Operational,PublicView,Security}.lean`; Paper 2 manuscript, which does not yet have a TeX bundle. | A soundness-free checker and fixed-setup one-shot integrity experiment now reduce actual accepted-invalid outcomes to authorization/payload failure and compose supplied budgets. Actual key/message/history and proof-backend/original-context joins now have a five-event conditional reduction. Concrete primitive bounds, authentic setup/history coverage, adaptive/oracle/corruption games, efficient adversaries/security parameters, full-view privacy and manuscript completion remain open. |
+| P1 | Algorithms, correctness, threat model, security experiments, assumptions/reductions and claim inventory. | `Transfer/{Operational,PublicView,Security}.lean`; Paper 2 manuscript, which does not yet have a TeX bundle. | A soundness-free checker and fixed-setup one-shot integrity experiment now reduce actual accepted-invalid outcomes to authorization/payload failure and compose supplied budgets. Actual key/message/history and proof-backend/original-context joins have a five-event conditional reduction. The reused codec/intent/key map and authorized fixed-policy history now construct a signer path with zero queried-unauthorized mass and four remaining errors. Concrete primitive bounds, authentic setup/history coverage, adaptive/oracle/corruption games, efficient adversaries/security parameters, full-view privacy and manuscript completion remain open. |
 | P1 | One bounded runtime verification path with canonical bytes, malformed-input rejection and reproducible fixtures. | Rust runtime; `docs/PROTOCOL_PARITY_QUEUE.md`. | Open; distinguish runtime tests from formal refinement. |
 | P1 | Build selected Lean targets, inspect theorem axioms, compile/render manuscript, reproduce claimed costs. | Pinned Lean/Mathlib; paper build and validation record. | The pre-addition 4.35 build/68 reports and 2026-11-05 native-metric build (9,253/9,248 jobs)/139 reports are preserved baselines. The 2026-11-06 cellular-HCP baseline passes 9,258/9,253 jobs; its 235 selected reports include 199 standard-only and 36 with existing native certificates, with all 96 added reports standard-only. The public-view follow-up and current manuscript/artifact details are [recorded centrally](../../docs/MATH_STORAGE_VALIDATION.md). Paper 2 still has a Markdown draft, no TeX/PDF bundle or cost reproduction. |
 
@@ -418,6 +418,53 @@ kernel-quotient interpretation of openings and separate from general private
 restrictions, harmonic blinding and authenticated binding of the `C¹` value.
 A new message-binding commitment or MAC needs its own construction/reduction;
 the raw incidence payload cannot supply that claim.
+
+## Existing-object owner signing — 2026-11-07
+
+The [reuse inventory](../../docs/PROTOCOL_PARITY_QUEUE.md#existing-objects-reused-for-owner-signing--2026-11-07)
+separates actual owner-signing inputs from public identity/context hashes,
+logical signatures, validator membership, geometric rotation and wallet
+containers. The bounded path reuses the existing catalog/Intent/metadata,
+packet codec, `keyFor`, signature history and public release carrier.
+
+[Signing](../../lean/Protocol/Transfer/Signing.lean) encodes the existing
+empty-output packet under an exact owner domain. The supplied codec's
+roundtrip law reflects full metadata and Intent; this does not implement a
+new concrete wire serializer. [Issuance](../../lean/Protocol/Transfer/Issuance.lean)
+retains actual metadata/Intent/signature records with authorization under the
+same actual relation and projects them to the existing byte-query history.
+Foreign queries must be outside the owner domain. Policy-ID equality cannot
+replace predicate identity; revoked or unknown owner-domain queries cannot be
+moved to the foreign batch.
+
+[Authorization](../../lean/Protocol/Transfer/Authorization.lean) constructs
+the raw backend/key/message checker and primitive profile with reflexive
+algorithm agreement. Context, intent, semantic policy and the candidate for
+the same packet are preserved. Under this covered fixed-policy history,
+queried-unauthorized probability is zero, leaving four conditional error
+masses. A matching raw checked release plus independently supplied
+authorization has an actual signature record and exact coverage in the reused
+public view. Query membership alone does not identify signature bytes.
+
+The [recovered-plan table](../../docs/PROTOCOL_PARITY_QUEUE.md#recovered-native-authentication-plan-and-existing-primitive-layer--2026-11-07)
+keeps native, message-bound fibration/path possession as the earlier intended
+authentication target. The witness should reuse the existing representative,
+path/admissibility and selected transport objects, with the required adapter to
+typed Helfer equivalence. A native verifier must bind proof of possession of
+the designated owner's private witness to the exact message and authenticated
+public credential input; class/path existence alone is insufficient. This
+generic wiring chooses no Ed25519 owner primitive or central credential issuer,
+and does not duplicate existing Hodge-blinded, fibration/path or public-artifact
+objects. No native proof-of-knowledge implementation or reduction is supplied.
+A concrete backend also needs a finite witness encoding and checked
+relation/arithmetization; an abstract path is not automatically a finite proof
+input.
+
+Concrete codec/backend refinement, authentic key registration and secrecy,
+complete release/auxiliary-history provenance, adaptive or chronological
+issuance, revocation and numerical security bounds remain implementation or
+security obligations. Neither arbitrary historical signatures nor the
+geometric presentation-rotation theorem instantiate them automatically.
 
 ## Optional or deferred topics
 

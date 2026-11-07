@@ -153,6 +153,38 @@ cannot repair equality before hashing. This is a statement about the runtime's
 ordinary-incidence profile, distinct from the general cellular/Hodge objects
 and separately assumed authenticated payload binding.
 
+The [owner-signing reuse and wiring](DRAFT.md#65-full-intent-signing-and-authorized-issuance-from-existing-objects)
+now uses [Signing](../../lean/Protocol/Transfer/Signing.lean),
+[Issuance](../../lean/Protocol/Transfer/Issuance.lean) and
+[Authorization](../../lean/Protocol/Transfer/Authorization.lean). The existing
+codec encodes a packet skeleton with empty signature/proof outputs under the
+literal owner domain; equal bytes reflect complete metadata and the original
+intent. Typed issuance retains actual signature bytes and authorization for the
+intent-derived signer, then maps into the existing key/message history. Foreign
+queries must be outside that domain. One fixed actual authorization relation
+governs the batch; changed labels cannot turn revoked-policy owner signatures
+into foreign queries.
+
+The selected backend and existing `keyFor` now construct the checker and its
+reflexive agreement equation while preserving the original context, intent,
+policy and candidate construction for the same parsed packet.
+Queried-but-unauthorized mass is zero under those codec/history conditions;
+the configured experiment retains four other error masses and their supplied
+budgets. [PublicTransferView.ofOperational](../../lean/Protocol/Transfer/PublicView.lean)
+reuses the released record for actual raw checks. For a release checked under
+the new checker, the checked-release constructor records its exact verified
+signature given independent authorization. Query membership alone is not actual-signature coverage.
+The [recovered native-authentication plan](../../docs/PROTOCOL_PARITY_QUEUE.md#recovered-native-authentication-plan-and-existing-primitive-layer--2026-11-07)
+proposes message-bound fibration/path possession. The generic checker/history
+wiring selects neither an Ed25519 owner scheme nor a central credential issuer;
+its issuance records are signing records. The existing typed Hodge blinding,
+path/class objects and security assumptions retain their distinct roles.
+The [reuse inventory](../../docs/PROTOCOL_PARITY_QUEUE.md#existing-objects-reused-for-owner-signing--2026-11-07)
+distinguishes existing committee, context, delivery, geometric, logical-signature,
+wallet and identity roles. This supplies no new key registry, secret signing
+execution, concrete Rust codec, complete disclosure history, numerical primitive
+bound or adaptive security game.
+
 The shared mathematical wiring is owned by Paper 1:
 [actual cochain model and invariant homological tests](../../lean/Helfer/CochainModel.lean),
 [integral cellular axis family](../../lean/Sheaf/HCPAxisFamily.lean),

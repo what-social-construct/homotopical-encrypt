@@ -349,7 +349,7 @@ captured separately below so that archival does not erase the design intent.
 | Python file | Canonical Lean owner / coverage | Semantic verdict | Current disposition and next action |
 |---|---|---|---|
 | `__init__.py` | No independent owner. | The eager facade advertises the legacy Python chain as production while importing broken/quarantined identity, proof, storage, and consensus paths. | Archive with the folder after severing the network import. A future facade should expose only versioned Rust refinements. |
-| `account.py` | Future `Protocol/Ledger.lean` and `Protocol/Ephemeral.lean`; class/path mathematics is only abstractly owned by the fibration interfaces. | The account/presentation/connection lifecycle is a useful protocol concept, but this registry is unauthenticated. Sovereignty confirmation has no witness, connections are unilateral, rotation changes no key material and proves no path/equivalence, status and nonces are not enforced, and the public class index may create unwanted linkability. | Archive the implementation; recover authenticated presentation registration, bilateral topology-edge transitions, and witness-bound rotation as Paper 2 objects. |
+| `account.py` | The bounded owner labels, actual intent and primitive authorization boundary now live in `Ledger.OwnedResource`, `Evidence.TransferTranscript` and `Transfer.Primitives`; authenticated account registration remains separate. | The account/presentation/connection lifecycle is a useful protocol concept, but this registry is unauthenticated. Sovereignty confirmation has no witness, connections are unilateral, rotation changes no key material and proves no path/equivalence, status and nonces are not enforced, and the public class index may create unwanted linkability. | Archive the implementation; recover authenticated presentation registration, bilateral topology-edge transitions, and witness-bound rotation as Paper 2 objects. |
 | `block.py` | `Chain.lean` has an old abstract block; `Protocol/Consensus/Vote.lean` has the newer signed root tuple. Canonical bytes remain Unmapped. | Rejected as a verifier. Any nonempty 32-byte fallback is accepted as PoV, a zero cochain root bypasses checking, VRF data is not verified, and the header/body encoding is unbounded and noncanonical. The claimed Tsirelson/Bell interpretation of the graph-gap window is not proved. | Archive after extracting adversarial wire tests. Define one canonical Rust block manifest that binds the full body, state roots, evidence, quorum certificate, and slot proof. |
 | `block_producer.py` | Partial overlap with `Protocol/Consensus/{Committee,Vote,Quorum}.lean`; round/lock/finality and accepted ledger application are unfinished. | Rejected. Mempool admission skips transaction verification, spectral failure falls back to the admissible value `1.0`, the proof fallback is structural, historical nullifiers are not supplied, `Undetermined` can be committed, and coalition/coregulator failures are swallowed. Mutations are not atomic. | Archive the single-node simulator; do not port its acceptance behavior. |
 | `block_section.py` | No direct owner. The intended replacement belongs to `Protocol/Storage.lean` and must bind `Sheaf/Commitment.lean` artifacts. | It is not a cellular-sheaf section: there is no base sheaf or restriction compatibility. “Coherence” compares one scalar and checks that a root is nonzero; the alleged private stalk is plaintext byte packing; the \(C^1\) values are neither populated nor serialized. | Archive. Preserve only the idea of typed artifact slots, rebuilt as a canonical tagged `SheafBlock` manifest rather than a “section.” |
@@ -367,6 +367,36 @@ captured separately below so that archival does not erase the design intent.
 | `agents/hedge_agent.py` | No current owner. | Principal-angle numerics may be a test fixture after validation, but Grassmannian distance is relabeled as impermanent loss without a proved economic bridge. Its principal actions are not executable by the orchestrator. | Archive the strategy; retain no protocol authority. |
 | `agents/stabilizer_agent.py` | No current owner. | A return-jump statistic is called persistent homology; token-price policy is coupled to spectral gap through arbitrary thresholds; wall-clock/external-price/floating mutable state would make validators diverge; rate limits do not record accepted use. | Archive or keep as an explicitly off-chain product experiment. |
 | `agents/treasury_agent.py` | No current owner. | The abstract “proposal -> invariant gate -> atomic transition” shape is worth recovering. The implementation makes its \(k\)-check tautological, debits before fallible swaps, discards outputs, mints liquidity legs, and leaves several proposed actions unresolved. It is not the protocol coregulator. | Archive the strategy/orchestrator; recover the typed transition architecture under a neutral name such as `TransitionExecutor`. |
+
+#### Owner-signing reuse and wiring decision — 2026-11-07
+
+The [owner-signing object inventory](PROTOCOL_PARITY_QUEUE.md#existing-objects-reused-for-owner-signing--2026-11-07)
+keeps the existing `Catalog`, complete `Intent`/metadata, `PacketCodec`,
+`SignatureProfile.keyFor`, `SignatureHistory` and `PublicTransferView` as the
+canonical inputs. No dormant runtime owner-intent signer or authenticated
+owner-key registry was found. Reuse the fixed selected key map instead of
+introducing a new account or credential architecture for this bounded result.
+
+| Candidate object | Wiring verdict | Exact missing or separate obligation |
+|---|---|---|
+| Resource catalog, intent and packet codec | Reuse the actual [owned catalog](../lean/Protocol/Ledger/OwnedResource.lean), [intent/metadata](../lean/Protocol/Evidence/TransferTranscript.lean) and [selected codec](../lean/Protocol/Evidence/TransferCheck.lean). | A fixed owner-domain prefix and an existing packet with empty signature/proof fields can bind the original typed intent through the codec law. A concrete cross-language encoder is still separate. |
+| Selected key map and primitive history | Reuse [SignatureProfile](../lean/Protocol/Transfer/Primitives.lean) and [SignatureHistory](../lean/TCB/PrimitiveChecks.lean). | Typed authorized issuance must explain owner-domain query entries; foreign-domain queries remain explicit. Registration, secret-key generation and coverage of disclosed signatures require their own implementation/game. |
+| Committee/vote, context/delivery and presented rotation | Keep [committee/vote authentication](../lean/Protocol/Consensus/Vote.lean), [recipient delivery scope](../lean/Protocol/Ephemeral/Delivery.lean) and [geometric rotation](../lean/Protocol/Ephemeral/Rotation.lean) in their current roles. | These respectively concern validator targets, recipient/context labels and geometric transport; none is automatically an owner-key registry or owner signing operation. Runtime `ValidatorSet` already stores worker public-key records, but its supplied-byte registration is not owner-key-possession authentication. `Helfer.Signature` is logical vocabulary, not a cryptographic signature. |
+| Public identity hashes | Retain `PublicIdentity` and Oracle `HashStalk.identity_hash` as public projection candidates pending encoding comparison. | Python hashes a domain plus textual Betti tuple; Rust hashes three little-endian integers without that domain. They differ even on fixed `(1,0,0)`/`01`-topology input. Class identifiers and public hashes do not establish key possession. |
+| Wallet and account containers | Preserve `rust/wallet/src/store.rs` label/opaque-credential storage as a container concept; preserve lifecycle questions from `src/chain/account.py`. | Wallet persistence has no signing keys or query log. Account confirmation and rotation counters are unauthenticated and change no signing material. Do not wire fingerprint-as-key or class-ID equality into owner authorization. |
+
+The bounded wiring now uses
+[Signing](../lean/Protocol/Transfer/Signing.lean),
+[Issuance](../lean/Protocol/Transfer/Issuance.lean) and
+[Authorization](../lean/Protocol/Transfer/Authorization.lean): a full-intent
+packet skeleton under an owner-domain prefix, typed authorized records with
+actual signature bytes, and the existing key map/query history. The constructed
+checker preserves the original semantic objects and derives zero
+queried-but-unauthorized mass under those actual codec/history conditions;
+foreign-domain queries remain explicit. This does not establish a new wire
+codec, secret signing execution, history completeness, public-class privacy,
+general account lifecycle or numerical signature-security bound. Runtime paths
+are literal because those files are excluded from the Lean/manuscript bundle.
 
 #### Useful objects hidden in the legacy chain
 

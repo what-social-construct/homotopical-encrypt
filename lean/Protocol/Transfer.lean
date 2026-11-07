@@ -5,6 +5,7 @@ public import Protocol.Transfer.Anchored
 public import Protocol.Transfer.PublicView
 public import Protocol.Transfer.Security
 public import Protocol.Transfer.Primitives
+public import Protocol.Transfer.Authorization
 
 @[expose] public section
 
@@ -24,4 +25,11 @@ signature forgery, key compromise, queried-message authorization mismatch,
 backend proof false acceptance and backend-to-original-statement mismatch.
 Its algorithm-agreement equations and finite signing history are explicit;
 the existing Rust spectral paths do not automatically instantiate them.
+
+Full-intent owner signing reuses the existing packet codec, subject and
+owner-key map. An authorized issuance batch projects to the existing query
+history; full message reflection excludes queried unauthorized intents under
+the same fixed policy and an explicit foreign-domain condition. Its PMF bound
+retains four primitive/context failure terms. Concrete serialization, key
+setup, arbitrary-history coverage and numerical security remain obligations.
 -/

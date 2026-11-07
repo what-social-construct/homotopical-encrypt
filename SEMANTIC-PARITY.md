@@ -3,7 +3,7 @@
 Review dates: 2026-11-04; mathematics/storage, object-model and toolchain
 follow-ups 2026-11-05; concrete Helfer/HCP implementation, public-input profile
 recipient recovery/rotation, owned-resource transition and one-shot integrity
-2026-11-06; primitive/TCB comparison 2026-11-07.
+2026-11-06; primitive/TCB comparison and existing-object owner-signing wiring 2026-11-07.
 
 **Completed native-metric follow-up — 2026-11-05 baseline:** the cochain,
 plane and RS metrics remain separate. The explicit systematic modular profile
@@ -26,7 +26,7 @@ full-storage-view compatibility remains conditional. P231--P236 and the
 [central validation record](docs/MATH_STORAGE_VALIDATION.md) record the new
 checks separately from P229's native baseline and P230's preimplementation
 object-accounting audit. The [Paper 2 draft](papers/paper2/DRAFT.md) records
-protocol ownership; HC01--HC51 in the
+protocol ownership; HC01--HC55 in the
 [object crosswalk](docs/COCHAIN_PROXIMITY_TRACE.md#hcp-object-accounting-rotation-and-anonymity)
 retain their IDs and updated construction boundaries.
 
@@ -73,7 +73,37 @@ counterexample preserves the existing full payload while changing its message.
 Legacy semantic TCB carriers are documented as packaging supplied truth, not
 as concrete verifier proofs. P258--P262 and Paper 2 §6.4 record this step.
 
-The current expanded/default builds pass **9,281/9,274 jobs**. The fresh
+**Existing-object owner-signing wiring — 2026-11-07:** the inventory reuses
+the owned catalog, complete intent/metadata, packet codec, `keyFor`, byte query
+history and actual release carrier. It distinguishes public identity/context
+handles, geometric rotation, logical signatures and validator registries from
+owner signing authority. Domain-prefixed encoding of an existing empty-output
+packet reflects the full subject. Typed authorized issues and out-of-domain
+foreign queries construct the actual byte history; queried-but-unauthorized
+intents are excluded under the same fixed policy. The signature checker/profile
+are constructed from the selected backend, and a matching checked release can
+be covered with its exact signature and independent authorization. The supplied
+codec, authentic keys, full-history provenance and numerical crypto remain
+contracts. P263--P268 and Paper 2 §6.5 record this bounded step.
+
+The [recovered-plan table](docs/PROTOCOL_PARITY_QUEUE.md#recovered-native-authentication-plan-and-existing-primitive-layer--2026-11-07)
+retains the original native path-space signing goal and distinguishes existing
+typed Hodge blinding from security assumptions and archived Python primitives.
+The generic checker/history construction selects no Ed25519 owner scheme or
+central credential issuer. The intended native verifier reuses the actual
+representative/path/admissibility setup, with authenticated designated-owner
+binding and a message-bound knowledge/possession proof; mere class or path
+existence is not that security theorem.
+
+The current expanded/default builds pass **9,284/9,277 jobs**. The fresh
+seven-facade probe passes **728 selected reports**: 692 standard-only
+(555 exact-three, 137 subsets) and 36 existing-native. All 61 additions are
+standard-only (18 exact-three, 22 axiom-free, 21 proper nonempty subsets);
+all 667 preceding sets are unchanged. Static scan: 265 modules/266 files,
+no holes/cycles/unresolved imports and 38 scoped closures excluding `Chain`
+and `CitedBounds`. P268 records current validation.
+
+At the preceding primitive-comparison milestone, expanded/default builds pass **9,281/9,274 jobs**. The fresh
 seven-facade audit covers **667 selected reports**: 631 standard-only
 (537 exact-three, 94 subsets) and 36 existing-native. All 62 additions are
 standard-only (29 exact-three, 11 axiom-free, 22 proper nonempty subsets);
@@ -241,6 +271,10 @@ no mathematical objects.
 | H55 | Owner/key/message/history authorization join | `Transfer.Primitives.SignatureProfile`, `Forgery`, `CompromisedKey`, `QueriedUnauthorized` | **Explicit primitive reduction.** Actual owner-key map and signing bytes agree with the original raw checker. Unauthorized acceptance splits into fresh forgery, key compromise or queried-message policy/key/encoding mismatch. Applying a primitive game requires correct key setup and history covering all released/auxiliary honest signatures. Worker spectral signatures do not discharge this join. | Paper 2 §6.4 |
 | H56 | Proof-backend statement versus original cochain acceptance | `Transfer.Primitives.PayloadProfile`, `ProofFalseAccept`, `StatementMismatch` | **Original interpretation retained.** Exact algorithm agreement on encoded original intent separates false backend statement from a true backend statement that fails to imply original-context acceptance. Five actual event masses compose under the existing PMF, without independence or a supplied concrete estimate. A sampled spectral predicate is not assumed to imply exactness. | Paper 2 §6.4 |
 | H57 | Ordinary graph commitment and alternative modular openings | [Sheaf.GraphCommitment](lean/Sheaf/GraphCommitment.lean) | **Concrete ambiguity proved.** Ordered incidence coordinates and the existing full canonical payload are invariant under global stalk translation. At modulus 12289, `[3,5,9]` and `[10,12,16]` both produce `[2,4]` with different vertex-0 messages and well-formed payloads. Deterministic payload encoding/hash cannot repair that message binding. Scope is ordinary incidence, separate from private cellular restrictions, harmonic blinding or authenticated C¹ binding. | Papers 1 §5 / 2 §6.4 |
+| H58 | Full owner-intent signing subject | [Transfer.Signing](lean/Protocol/Transfer/Signing.lean) | **Existing schema reused.** Fixed owner prefix plus existing codec encoding of actual metadata/Intent with empty signature/proof outputs. Equal message bytes reflect full metadata and Intent; owner messages differ from spectral-domain messages. This is relative to a supplied roundtrip codec, not a concrete serializer or signature-security theorem. | Paper 2 §6.5 |
+| H59 | Authorized issuance records and exact byte history | [Transfer.Issuance](lean/Protocol/Transfer/Issuance.lean), `Issued`, `history`, `Covers` | **Constructed data join.** Each record retains source metadata, actual Intent/signature and authorization for the signer inside that Intent. Its exact query projection plus foreign out-of-owner-domain messages forms the existing history. Full reflection derives the same actual authorization without key injectivity. Covers retains signature equality separately; query membership does not imply equal signature bytes. | Paper 2 §6.5 |
+| H60 | Constructed owner checker and reduced error composition | [Transfer.Authorization](lean/Protocol/Transfer/Authorization.lean) | **Positive wiring.** Existing backend/keyFor and signing bytes construct raw verification; profile agreement is reflexive. Original context/intent/policy/candidate are retained. Under the exact typed/foreign history, queried-unauthorized mass is zero and four error masses remain. No secret signing, authentic registry, arbitrary-history coverage or numerical primitive estimate is inferred. | Paper 2 §6.5 |
+| H61 | Actual matching release-signature coverage | `PublicTransferView.ofOperational`, `Authorization.issueOfChecked` | **Original bytes retained.** The old release carrier now also projects actual raw checks. A packet checked by the newly constructed checker, with independent semantic authorization, yields an issue record covering its exact metadata/intent/signature and proving backend verification for that subject. This does not reinterpret arbitrary old signatures or establish an oracle execution. | Paper 2 §6.5 |
 
 ## Definition, notation, and claim issue table
 
@@ -273,7 +307,7 @@ mathematical or author decisions, rather than silent copyediting.
 | D21 / P1 | Storage roots, stages and local lifecycle | Same-shaped hash names and slot presence do not identify prior mathematical artifacts or prove durability. | **Typed joins implemented.** Actual context/payload/digest-indexed relations, exact predecessor prefixes and exact sealed-manifest receipts are separate. Six manifest stages differ from seven legacy gate-evidence slots. Global run freshness, backend atomicity, root codecs and memory erasure remain profile/runtime work. |
 | D22 / P1 | History entry to original snapshot/artifact and complete projection | Independent candidate validity and manifest sealing did not bind those actual objects together. | **Bounded semantic join implemented**, P215--P216. Actual interpretation/artifact equalities derive accepted context and snapshot/payload joins; supplied history/gate relations bind the exact manifest and gate database. The wire-field choice, concrete authentication, persistence implementation and dynamic geometry remain open. |
 | D23 / P1 | H17, H27--H28; projective/stack terminology | The raw quotient contains zero and arbitrary exterior coordinates, while a projective Grassmannian point has additional validity conditions. A moduli analogy does not construct descent or metric transport. | **Definition boundary recorded.** Use the actual raw/frame/soundness predicates; distinguish classical reconstruction from its current Lean proof status. Keep stack packaging prospective and the public-point visibility decision explicit. |
-| D24 / P1 | Lean/Mathlib version and validation | Older successful builds cannot certify later sources or newly added modules. | **Current primitive/TCB comparison validated.** Final union/default builds pass 9,281/9,274 jobs; 667 selected reports split into 631 standard-only and 36 existing-native. All 62 additions are standard-only and all 605 preceding sets are unchanged. P262 is current; P257/P252/P245/P239/P236/P229 retain earlier milestones. Hosted CI and Palomar protected comparison remain separate. |
+| D24 / P1 | Lean/Mathlib version and validation | Older successful builds cannot certify later sources or newly added modules. | **Current owner-signing reuse validated.** Final union/default builds pass 9,284/9,277 jobs; 728 selected reports split into 692 standard-only and 36 existing-native. All 61 additions are standard-only and all 667 preceding dependency sets are unchanged. P268 is current; preceding dated rows retain their own sources and counts. Hosted CI and Palomar protected comparison remain separate. |
 | D25 / P1 | Helfer/class construction; H31 | Typed equivalence needs actual bifibrancy; a classifier fiber does not define a quotient, and arbitrary supplied satisfaction has no automatic invariance. | **Homological fragment instantiated.** `CochainModel` constructs the real cochain model and proves invariance of nonzero-homology tests for all interpretations. Actual axis theories give its classifier. Full first-order syntax/fibrational semantics, full Theorem 12.3 and a general quotient remain open. |
 | D26 / P0 | Intended HCP realization; H23, H33 | An arbitrary realized matrix is not automatically cellular Delta1; the small `(class,b)` observation forgets larger artifact fields. | **Scoped operator/target join closed; larger public-view condition retained.** P231--P234 construct actual cellular interpretation, matrices, classifier and operative targets. TCB alignment derives the same original sample’s target/CVP answer under explicit operator/classifier and artifact contracts. Storage-view equality or factorization, byte encodings and runtime realization remain additional obligations. |
 | D27 / P0 | Structured noise, rotation and messages; H32, H34, H36 | Fixed-raw-`b` ambiguity and co-transported rotation have different data; equal or distinct ambient coordinates need an actual plaintext encoding. | **Finite ambiguity and coefficient-preserving rotation proved.** The fixed-input two/one example remains separate from actual axis rotation, which moves `(1,2)` to `(2,1)` and retains two. Integral sample transport, both recovery routes and conditional original-payload migration now have proofs. Fresh generation, channel security, atomic migration, lifecycle/erasure and distributional security remain separate. |
@@ -285,6 +319,8 @@ mathematical or author decisions, rather than silent copyediting.
 | D33 / P1 | Paper 2 owner authorization; H54--H55 | Available Rust Ed25519 signs 69 bytes of worker spectral fields; bootstrap keys derive from a public fingerprint. These facts do not establish owner-intent authorization, secret-key setup or whole-proposal quorum. | **Joins and gaps explicit.** Key/message/check agreement, query history and fresh-forgery/compromise/queried-unauthorized events are formalized. Actual owner-signature implementation, authentic registry/history coverage and primitive bound remain open. Runtime comments no longer claim whole-block authorization. |
 | D34 / P1 | Paper 2 proof soundness; H54, H56 | The geodesic verifier checks sampled floating matrices, not original `Context.Accepted`; opening count is not a proved `2^-k` error bound and the existing caller is not the canonical fail-closed packet path. | **Statement gap separated.** Backend false acceptance and original-context mismatch have distinct events in the proved five-term bound. Legacy TCB carriers explicitly include statement truth. No SNARK/ZK or payload error estimate is obtained from labels or current sampling. |
 | D35 / P1 | Raw graph opening binding; H57 | Rust ordinary incidence comments claimed SVP-hard message binding despite global constant translations in its kernel. | **Counterexample proved and claims corrected.** Alternative modular openings preserve the original full payload and every deterministic observation while changing the vertex message. Authenticated C¹ payload binding and any new message-binding wrapper are separate claims. The theorem does not identify arbitrary private sheaves with this prototype. |
+| D36 / P1 | Owner objects and existing identity/key handles | Names such as logical Signature, public identity/context hash, geometric key rotation or validator registry could be mistaken for an existing authenticated owner-signing implementation. | **Roles inventoried and separated.** Reuse actual Catalog/Intent/PacketCodec/keyFor/history/view. Committee/ValidatorSet remain validator objects; wallet/identity/ContextKey remain their own containers/projections. The existing Python/Rust public-identity encodings also differ. No owner registry is inferred from a shared name or 32-byte shape. |
+| D37 / P1 | Queried unauthorized reuse and history coverage | The primitive profile accepted an arbitrary byte history, so honest queried-message authorization/metadata binding and released-signature coverage were not constructed. | **Bounded positive join implemented.** Full subject reflection, typed issued authorization and foreign-domain exclusion construct a history with no queried-unauthorized target. Matching new checked releases have exact signature coverage. All owner-domain queries must satisfy the same actual fixed relation; revoked-policy/unknown histories cannot be relabeled foreign. Concrete wire/key/issuance execution remains open. |
 
 ## HCP theorem parity and remaining work
 
@@ -528,6 +564,12 @@ completion in the current record below.
 | P260 | Actual graph-payload message-binding obstruction | `Sheaf.GraphCommitment` models ordered ordinary incidence and canonical modular residues in the existing `CochainCommitmentData`. Global translation preserves the full payload; explicit path-three openings at 12289 change message three to ten while both produce `[2,4]` and satisfy WellFormed. All deterministic encodings/hashes preserve this collision. General cellular/harmonic constructions remain separate. |
 | P261 | Existing runtime primitive comparison | The protocol queue and Paper 2 §6.4 compare the actual worker signature target, public-seed key setup, entry-count quorum/call path, raw graph openings, permissive parser, geodesic statement, sampling label and Python/Rust challenge mismatch. Rust comments/diagnostics now state their actual scope; no acceptance algorithm or verified runtime/cryptographic refinement is supplied. |
 | P262 | Primitive/TCB validation — 2026-11-07 | Expanded/default builds pass 9,281/9,274 jobs. Seven-facade probe: 667 selected declarations, 631 standard-only (537 exact-three, 94 subsets), 36 existing-native. All 62 additions are standard-only (29 exact-three, 11 axiom-free, 22 proper nonempty subsets); all 605 preceding sets unchanged. Static scan: 262 modules/263 files, no holes/cycles/unresolved imports, same seven isolated axioms. New closures: TCB primitives 6, transfer primitive adapter 56, graph payload 2; all 35 recorded scopes exclude `Chain`/`CitedBounds`. Legacy semantic code tokens and runtime acceptance/arithmetic unchanged; current source/PDF evidence is recorded centrally. |
+| P263 | Existing owner-signing object inventory | The two implementation queues now map fourteen reusable roles and missing joins: Catalog/Intent/codec/keyFor/history/view, committee/votes, public context/delivery, geometric rotation, logical signature, runtime validator map, identity hashes and wallet/account containers. Public Python/Rust identity encoding mismatch is recorded as a versioned-refinement obligation. Archived path-space signatures, replay/custody and self-generated credentials are mapped to current primitives; generic owner-message wiring selects no Ed25519 owner scheme or central credential issuer. |
+| P264 | Acyclic full-subject signing bytes | `Transfer.Signing` prefixes the existing codec encoding of actual metadata and Intent in a packet with empty signature/proof fields. Existing codec injectivity proves full subject reflection and metadata/intent separation; literal owner/spectral domains prove message-byte distinction. Codec execution and signature security remain contracts. |
+| P265 | Authorized issuance to actual query history | `Transfer.Issuance` retains actual source metadata/Intent/signature and authorization for its derived signer. Mapping all records plus explicitly foreign-domain queries constructs the existing SignatureHistory. Lookup/reflection proves authorization and exact Covers retains actual signatures; no key injectivity or predicate identity from policy IDs is assumed. |
+| P266 | Constructed raw owner verifier and four-event bound | `Transfer.Authorization` builds the checker/profile from existing backend/keyFor/signing bytes with agrees=rfl, preserving original context/intent/policy/candidate and proof backend. Typed fixed-policy history excludes queried-unauthorized targets and gives zero mass; the same PMF retains forgery/compromise/backend-error/statement-mismatch terms and supplied budgets. |
+| P267 | Matching raw release and actual signature coverage | `PublicTransferView.ofOperational` reuses the existing carrier; exact publicView delegates to it. A raw packet checked under the new constructed checker plus independently supplied authorization becomes a covered issue with literal metadata/Intent/signature and actual backend verification. Legacy signatures are not reinterpreted, and history/oracle provenance remains separate. |
+| P268 | Owner-signing reuse validation — 2026-11-07 | Expanded/default builds pass 9,284/9,277 jobs; facade 3,472. Seven-facade probe: 728 selected reports, 692 standard-only (555 exact-three, 137 subsets), 36 existing-native. All 61 additions are standard-only (18 exact-three, 22 axiom-free, 21 proper nonempty subsets); all 667 preceding sets are unchanged. Static coverage: 265 modules/266 files, no holes/cycles/unresolved imports, same seven isolated axioms. New closures 48/50/59, facade 68; all 38 scoped closures exclude `Chain`/`CitedBounds`. Existing native-authentication plan mapped; no concrete codec/owner backend or numerical bound selected. |
 
 #### Current protocol validation
 
@@ -841,7 +883,8 @@ joins or error estimates. The ordinary graph prototype has a constructive
 same-payload/different-message obstruction, compatible with kernel-quotient
 openings and distinct from general private cellular restrictions or C¹ binding.
 
-Current expanded/default builds pass 9,281/9,274 jobs. All 667 selected reports
+At that primitive-comparison milestone, expanded/default builds pass
+9,281/9,274 jobs. All 667 selected reports
 pass: 631 standard-only and 36 existing-native; all 62 additions are standard-only
 and all 605 earlier dependency sets match. Static coverage is 262 modules/263
 files and 35 scoped closures without new holes, cycles or unresolved imports.
@@ -850,3 +893,23 @@ records source, dependency, runtime-comparison and unchanged-PDF evidence.
 Paper 2 §6.4 and the [protocol comparison](docs/PROTOCOL_PARITY_QUEUE.md#actual-primitive-comparison-and-tcb-joins--2026-11-07)
 record implementation gaps explicitly. No numerical primitive or privacy claim
 follows from these conditional reductions.
+
+### Existing-object signing and native-plan reconciliation — 2026-11-07
+
+P263--P268 reuse the full intent, packet codec, key map, history and release
+carrier. The checker/profile execution equation is constructed; authorized
+fixed-policy issuance and foreign-domain exclusion make queried-unauthorized
+mass zero, leaving four same-PMF errors. Exact checked-release signature
+coverage requires independent authorization. The recovered native path-space
+plan targets message-bound possession of the actual private representative/path;
+no Ed25519 owner scheme, central credential issuer or replacement fibration is
+selected. Existing Hodge-blinded and fibration objects retain their roles.
+
+Current expanded/default builds pass 9,284/9,277 jobs. All 728 selected reports
+pass: 692 standard-only and 36 existing-native; all 61 additions use only standard
+logical axioms and all 667 preceding dependency sets are unchanged. The
+[validation guide](docs/MATH_STORAGE_VALIDATION.md#current-owner-signing-reuse-and-issuance--2026-11-07)
+records current 265-module/266-file coverage and 38 scoped closures, plus
+reproducible checks. [Plan provenance and primitive roles](docs/PROTOCOL_PARITY_QUEUE.md#recovered-native-authentication-plan-and-existing-primitive-layer--2026-11-07)
+remain explicit; native proving/verification, knowledge/unforgeability, codec,
+key/setup and arbitrary-history execution are separate completion requirements.

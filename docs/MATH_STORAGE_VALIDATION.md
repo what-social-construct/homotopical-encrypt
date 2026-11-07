@@ -9,6 +9,147 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Current owner-signing reuse and issuance — 2026-11-07
+
+The [inventory](PROTOCOL_PARITY_QUEUE.md#existing-objects-reused-for-owner-signing--2026-11-07)
+traces the existing catalog, complete intent/metadata, codec, key map, history
+and release carrier, while retaining public identity/context handles, logical
+signatures, validator objects, geometric rotation and wallet containers in
+their proper roles. [Paper 2 §6.5](../papers/paper2/DRAFT.md#65-full-intent-signing-and-authorized-issuance-from-existing-objects)
+records the positive wiring and its fixed-policy boundary.
+
+| Source | Checked statement and boundary |
+|---|---|
+| [Signing](../lean/Protocol/Transfer/Signing.lean) | Existing packet skeleton with actual metadata/Intent and empty signature/proof fields, prefixed with literal owner-domain bytes. The supplied codec roundtrip implies full metadata/Intent reflection. Owner/spectral messages differ as bytes; no signature-security theorem or concrete serializer is inferred. |
+| [Issuance](../lean/Protocol/Transfer/Issuance.lean) | Actual issued metadata/Intent/signature and authorization for the signer inside that Intent. Exact typed-query mapping plus outside-owner-domain foreign batch constructs the existing history. Lookup recovers the same actual authorization without key injectivity; Covers retains actual signature equality separately. |
+| [Authorization](../lean/Protocol/Transfer/Authorization.lean) | Existing backend/keyFor and signing bytes construct raw verification with profile agreement `rfl`. Original context/Intent/policy and same-packet candidate remain. This fixed-policy covered history excludes queried-unauthorized targets, gives zero mass, and reduces the same-PMF bound to four errors with supplied-budget composition. |
+| [PublicView](../lean/Protocol/Transfer/PublicView.lean) | The existing released-value carrier now projects raw checks; exact publicView delegates to it. A matching new-checker packet with independent authorization yields an actual issue and coverage of its exact metadata/Intent/signature, plus backend verification on that subject. |
+
+Every owner-domain query in this history must be covered under the same actual
+authorization relation. Matching policy identifiers do not equate predicates;
+revoked or unknown owner-domain signatures cannot be relabeled foreign.
+Coverage of arbitrary auxiliary data, actual secret signing/key registration,
+chronological or adaptive oracle execution, concrete codec/Rust refinement,
+revocation, numeric primitive estimates and privacy remain separate. The
+proof does not reinterpret worker signatures or infer authorization from
+Boolean acceptance alone. The public identity encoding mismatch has a fixed
+public fixture in local `output/validation/signing-identity-comparison.json`.
+
+### Owner-signing validation
+
+The signing subject passes its 3,406-job focused build and 19 standard-only
+reports (ten axiom-free, nine `propext`-only). Issuance passes 3,408 jobs and
+23 standard-only reports (eleven axiom-free, twelve proper subsets). The
+constructed authorization target passes 3,463 jobs, including all coverage,
+zero-mass and four-term endpoints. These source modules have no local warnings
+or errors. The complete facade passes **3,472 jobs**; the expanded union
+passes **9,284 jobs** and literal default passes **9,277 jobs** on the same
+Lean/Mathlib 4.35 pins.
+
+The fresh seven-facade probe covers **728 distinct selected reports**:
+**692 standard-only** (555 exact-three, 137 subsets) and **36 existing-native**.
+All **61 additions are standard-only** (18 exact-three, 22 axiom-free,
+21 proper nonempty subsets), and all 667 preceding dependency sets are unchanged.
+No selected cited-bound axiom or `sorryAx` occurs. These reports do not discharge
+codec, key setup, history provenance or primitive-security assumptions.
+
+| Added selected group | Reports |
+|---|---:|
+| Existing full signing subject and domain separation | 19 |
+| Typed authorized issuance, lookup and exact coverage | 23 |
+| Constructed checker, same-object joins and four-error composition | 18 |
+| Reused raw released-view projection | 1 |
+
+Static coverage is **265 public modules / 266 Lean files**, with no active
+holes, local import cycles or unresolved imports and the same seven isolated
+cited-bound axioms. All **38** recorded focused closures exclude legacy `Chain`
+and `CitedBounds`. New closure sizes are Signing 48, Issuance 50, Authorization
+59; the transfer facade has 68 local modules.
+
+Local artifacts under `output/validation/` are
+`owner-signing-{full,default,profile}-build.log`,
+`owner-signing-{all,new}-axioms.lean`, `owner-signing-all-axioms.log`,
+`owner-signing-axiom-summary.json`, `owner-signing-source-audit.json`,
+`signing-message-{build,axioms}.log`, `issuance-{build,axioms}.log` and
+`authorization-wiring-build.log`. The recovered native path-space plan is
+recorded in the [plan-to-primitive table](PROTOCOL_PARITY_QUEUE.md#recovered-native-authentication-plan-and-existing-primitive-layer--2026-11-07);
+this generic wiring selects no Ed25519 owner scheme or central credential issuer.
+
+Reproduce the added public endpoints from `lean/`:
+
+```sh
+LEAN_NUM_THREADS=4 lake build Protocol.Transfer
+cat > /tmp/owner-signing-new-axioms.lean <<'LEAN'
+import Protocol.Transfer
+
+#print axioms Hcrypt.Protocol.Transfer.Signing.domain
+#print axioms Hcrypt.Protocol.Transfer.Signing.spectralDomain
+#print axioms Hcrypt.Protocol.Transfer.Signing.skeleton
+#print axioms Hcrypt.Protocol.Transfer.Signing.message
+#print axioms Hcrypt.Protocol.Transfer.Signing.InDomain
+#print axioms Hcrypt.Protocol.Transfer.Signing.skeleton_metadata
+#print axioms Hcrypt.Protocol.Transfer.Signing.skeleton_intent
+#print axioms Hcrypt.Protocol.Transfer.Signing.skeleton_ownerSignature
+#print axioms Hcrypt.Protocol.Transfer.Signing.skeleton_proofBytes
+#print axioms Hcrypt.Protocol.Transfer.Signing.message_eq_iff
+#print axioms Hcrypt.Protocol.Transfer.Signing.message_metadata_eq
+#print axioms Hcrypt.Protocol.Transfer.Signing.message_intent_eq
+#print axioms Hcrypt.Protocol.Transfer.Signing.message_injective
+#print axioms Hcrypt.Protocol.Transfer.Signing.message_ne_of_metadata_ne
+#print axioms Hcrypt.Protocol.Transfer.Signing.message_ne_of_intent_ne
+#print axioms Hcrypt.Protocol.Transfer.Signing.message_inDomain
+#print axioms Hcrypt.Protocol.Transfer.Signing.domain_append_ne_spectralDomain_append
+#print axioms Hcrypt.Protocol.Transfer.Signing.not_inDomain_spectralMessage
+#print axioms Hcrypt.Protocol.Transfer.Signing.message_ne_spectralMessage
+#print axioms Hcrypt.Protocol.Transfer.Issuance.Issued
+#print axioms Hcrypt.Protocol.Transfer.Issuance.Issued.query
+#print axioms Hcrypt.Protocol.Transfer.Issuance.Issued.query_key
+#print axioms Hcrypt.Protocol.Transfer.Issuance.Issued.query_message
+#print axioms Hcrypt.Protocol.Transfer.Issuance.typedQueries
+#print axioms Hcrypt.Protocol.Transfer.Issuance.mem_typedQueries_iff
+#print axioms Hcrypt.Protocol.Transfer.Issuance.typedQuery_mem
+#print axioms Hcrypt.Protocol.Transfer.Issuance.typedQueries_append
+#print axioms Hcrypt.Protocol.Transfer.Issuance.history
+#print axioms Hcrypt.Protocol.Transfer.Issuance.history_queries
+#print axioms Hcrypt.Protocol.Transfer.Issuance.history_compromised
+#print axioms Hcrypt.Protocol.Transfer.Issuance.queried_iff
+#print axioms Hcrypt.Protocol.Transfer.Issuance.issued_queried
+#print axioms Hcrypt.Protocol.Transfer.Issuance.queried_issued
+#print axioms Hcrypt.Protocol.Transfer.Issuance.queried_authorized
+#print axioms Hcrypt.Protocol.Transfer.Issuance.Covers
+#print axioms Hcrypt.Protocol.Transfer.Issuance.covers_record
+#print axioms Hcrypt.Protocol.Transfer.Issuance.covers_cons
+#print axioms Hcrypt.Protocol.Transfer.Issuance.Covers.authorization
+#print axioms Hcrypt.Protocol.Transfer.Issuance.Covers.queried
+#print axioms Hcrypt.Protocol.Transfer.Issuance.Covers.append_left
+#print axioms Hcrypt.Protocol.Transfer.Issuance.Covers.append_right
+#print axioms Hcrypt.Protocol.Transfer.Issuance.queried_append
+#print axioms Hcrypt.Protocol.Transfer.Authorization.checker
+#print axioms Hcrypt.Protocol.Transfer.Authorization.configure
+#print axioms Hcrypt.Protocol.Transfer.Authorization.configure_context
+#print axioms Hcrypt.Protocol.Transfer.Authorization.configure_intent
+#print axioms Hcrypt.Protocol.Transfer.Authorization.configure_policy
+#print axioms Hcrypt.Protocol.Transfer.Authorization.configure_candidate
+#print axioms Hcrypt.Protocol.Transfer.Authorization.signatureProfile
+#print axioms Hcrypt.Protocol.Transfer.Authorization.payloadProfile
+#print axioms Hcrypt.Protocol.Transfer.Authorization.not_queriedUnauthorized
+#print axioms Hcrypt.Protocol.Transfer.Authorization.issueOfChecked
+#print axioms Hcrypt.Protocol.Transfer.Authorization.issueOfChecked_verified
+#print axioms Hcrypt.Protocol.Transfer.Authorization.issueOfChecked_covers
+#print axioms Hcrypt.Protocol.Transfer.Authorization.issueOfChecked_covers_view
+#print axioms Hcrypt.Protocol.Transfer.Authorization.experiment
+#print axioms Hcrypt.Protocol.Transfer.Authorization.experiment_attempt
+#print axioms Hcrypt.Protocol.Transfer.Authorization.queriedUnauthorizedProbability_eq_zero
+#print axioms Hcrypt.Protocol.Transfer.Authorization.acceptedInvalidProbability_le
+#print axioms Hcrypt.Protocol.Transfer.Authorization.acceptedInvalidProbability_le_of_bounds
+#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ofOperational
+LEAN
+LEAN_NUM_THREADS=4 lake env lean /tmp/owner-signing-new-axioms.lean
+```
+
+The full 728-report probe retains the preceding seven facade imports and adds
+these 61 names. Earlier entries below preserve their milestone evidence.
+
 ## Current primitive and TCB comparison — 2026-11-07
 
 The actual-runtime comparison and original-object joins are recorded in
