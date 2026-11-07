@@ -159,6 +159,57 @@ produces/checks the concrete witnesses:
 | Random/leader selection | Distribution-independent eligibility relation and safety consequences of a valid selection witness. | CSPRNG/VRF implementation, key custody, canonical input bytes. |
 | Secret lifecycle | Fresh/active/consumed/retired semantics and non-reuse consequences. | Secure randomness, AEAD wallet storage, zeroization and memory policy. |
 
+### Actual primitive comparison and TCB joins — 2026-11-07
+
+The selected byte-verifier interface is now
+[TCB.PrimitiveChecks](../lean/TCB/PrimitiveChecks.lean); the original-transfer
+[primitive adapter](../lean/Protocol/Transfer/Primitives.lean) relates those
+algorithms to the exact owner/intent and trusted payload interpretation through
+explicit equality of their Boolean results. Matching algorithm names or public
+hashes do not establish that equality. The following is a source comparison,
+not a verified Rust refinement. Runtime paths name files in the full workspace;
+the Lean/manuscript review bundle excludes runtime sources and `Cargo.lock`.
+
+| Object | Actual inspected implementation | Required original-object join / result |
+|---|---|---|
+| Signature primitive | `Cargo.lock` pins `ed25519-dalek` 2.2.0. `rust/node/src/consensus/pov.rs::proof_signing_message` signs domain, fingerprint hash, gap flag and three Betti integers: 69 bytes. | A byte signature authenticates its selected message. The current message is a worker spectral target, not the owned transfer intent, its resource IDs, source state, manifest or whole final proposal. No owner-authorization instantiation is supplied by this path. |
+| Owner signing key and query history | `SignatureProfile` supplies an actual owner-to-key map, owner/intent encoder, verifier-agreement equation and finite key/message query list. | History must cover every honest signature available in the selected release and auxiliary data. Key ownership, secrecy, generation, authentic registry and history/execution correspondence require their own model before applying a primitive-game bound. |
+| Runtime key setup | `rust/node/src/main.rs` derives bootstrap signing seeds from the public producer fingerprint; the compatibility constructor in `pov.rs` treats supplied bytes as a signing seed. | That bootstrap cannot establish an uncompromised-secret-key premise. The Lean compromised-key event is explicit; the runtime has not been proved to populate it correctly. |
+| Worker quorum / call path | `pov.rs` counts submitted signature entries and uses a threshold based on their count. The incoming-block path in `main.rs` does not call `PoVVerifier`; the self-produced path does. | Distinct authenticated committee members, whole-proposal signatures and mandatory verification do not follow. This does not instantiate the Lean weighted-quorum/finality interface. |
+| Raw graph commitment | `rust/node/src/crypto/commitment.rs` computes ordinary incidence differences in edge-major/stalk-coordinate order. | [GraphCommitment](../lean/Sheaf/GraphCommitment.lean) proves global translation leaves the **existing full cochain payload** unchanged. At modulus 12289, `[3,5,9]` and `[10,12,16]` both give `[2,4]`. Raw vertex-message binding fails; deterministic serialization/hash of that same payload cannot restore it. |
+| Scope of the graph comparison | The graph prototype has no arbitrary cellular restriction maps or harmonic blinding. A fixed topology tag depends on the graph, not the opening. | This matches the existing kernel-quotient opening interpretation. It does not refute authenticated binding of a `C¹` payload, identify the prototype with the general private sheaf, or establish any hiding theorem. |
+| Commitment decoding | `commitment.rs::from_bytes` accepts absent topology bytes and trailing data. | It is not the exact canonical codec checked by `TransferCheck`. Canonical encoding, input bounds, interpretation and root binding remain separate implementation contracts. |
+| Geodesic proof input | `rust/node/src/crypto/geodesic_zkp.rs` receives sampled matrices, target spectrum, topology tag and a strictness flag. | It has no original cochain, trusted decoder or owner intent. Its backend spectral statement has not been proved to imply `Context.Accepted`; this is the explicit `StatementMismatch` boundary. |
+| Proof caller | `pov.rs::verify_transaction_zkps` skips malformed optional trailers and passes empty target spectrum with `strict=false`. No selected SNARK backend was identified in the inspected Cargo dependencies. | This does not refine the fail-closed transfer packet checker or the SNARK/zero-knowledge assumption bundle. Exact parsing, statement selection and verifier agreement must be supplied explicitly. |
+| Sampling/error label | The proof supplies the opening count. The former `soundness_bits` name returns that count; it carries no proved cryptographic estimate. | Even ideal uniform sampling of `k` among `M` fixed commitments misses `b` bad entries with probability `choose(M-b,k)/choose(M,k)`: `M=16,b=1,k=8` gives `1/2`, rather than `2^-8`. Fiat–Shamir additionally requires a query/grinding model. |
+| Python/Rust transcript parity | The Rust shuffle uses a custom 64-bit state and modulo selection; the Python prover uses NumPy PCG64. | A fixed public comparison on NumPy 2.0.2 gives opened sets `[3,5,6,7]` versus `[0,1,5,7]` for an independent translation of the Rust algorithm. The full inputs/source hashes are in local `output/validation/primitive-runtime-comparison.json`. This is a parity counterexample, not verified Rust execution. |
+| Legacy TCB carrier | `ProofCarrying.WellFormed` contains the statement itself; runtime/observation/envelope consequences recover supplied semantic facts. | These carriers remain compatibility packaging after independent verification. They are not a theorem that a `Prop` label, signature or successful unindexed verifier establishes the original statement. |
+
+The pinned [Ed25519 library documentation](https://docs.rs/ed25519-dalek/2.2.0/ed25519_dalek/)
+exposes signing/verification of message bytes; [RFC 8032](https://www.rfc-editor.org/rfc/rfc8032.html)
+specifies the EdDSA algorithm, not this protocol's authorization policy.
+[NumPy's PCG64 documentation](https://numpy.org/doc/stable/reference/random/bit_generators/pcg64.html)
+describes its 128-bit state construction, which differs from the prototype.
+None of these sources supplies the missing protocol error estimate.
+
+The proved same-attempt decomposition is
+
+`AcceptedInvalid ⇒ Forgery ∨ CompromisedKey ∨ QueriedUnauthorized ∨ ProofFalseAccept ∨ StatementMismatch`.
+
+Here a forgery is verified, on an uncompromised selected key, and unqueried in
+that key/message history. A queried message can still authorize the wrong
+intent through bad issuance policy, aliased keys or encoding/hash collisions.
+A correct backend proof may certify a statement that fails to imply acceptance
+of the original cochain under its actual interpretation. The shared-PMF union
+bound composes these five probabilities without independence; every numerical
+budget remains a premise for the same experiment. No global hash injectivity,
+new primitive estimate, adaptive oracle, key-generation game, privacy,
+state-origin, external-history authentication or runtime refinement is proved.
+
+The exact interfaces from §6.2 remain an ideal specialization. Integrity here
+requires the relevant semantic implication and error model, without adding
+zero-knowledge or succinctness assumptions merely to fill the old proof carrier.
+
 ### Rust-only concrete objects
 
 Rust, not Lean, owns transaction/block byte structs, serialization versions,

@@ -12,7 +12,7 @@ public import TCB.ObservationBoundary
   - Paper 1 Section 5: public artifact stack and witness/private-object split.
   - Paper 2: runtime verifier and witness handling.
 
-  This module assembles the production validation shape:
+  This module assembles a semantic witness/verifier envelope:
 
     full/private witness
       -> compressed public shadow
@@ -22,8 +22,11 @@ public import TCB.ObservationBoundary
 
   It does not define concrete byte formats, hash functions, storage engines, or
   proof systems. Those remain Rust/runtime obligations. Lean records the
-  semantic handoff: if Rust accepts the proof-carrying artifact, the public
-  statement and compressed shadow are valid at the specification boundary.
+  semantic handoff after validity has been established. The acceptance carrier
+  contains statement truth and the witness contains its validity proof; the
+  consequences below recover those supplied facts. They do not prove that a
+  concrete Rust byte verifier establishes them. Data-indexed primitive checks
+  and protocol adapters own that separate implication and its error events.
 -/
 
 namespace Hcrypt
@@ -82,7 +85,7 @@ End-to-end witness/verifier envelope.
 The envelope ties together:
 - a private witness and compressed shadow;
 - a proof-carrying artifact about that shadow;
-- a runtime observation showing Rust accepted the artifact;
+- an observation carrying the semantic acceptance contract;
 - a public state-root update bound to the accepted public inputs.
 -/
 structure WitnessVerifierEnvelope (R : RuntimeBoundary) where

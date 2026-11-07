@@ -21,6 +21,7 @@ existing authenticated proposal and quorum types.
 | `Transfer` | Focused conditional owned-resource profile: actual catalog and public input-ID nullifier, typed canonical packet checks, trusted-decoder proof result, derived candidate/update, staged hash inputs and original input-manifest/evidence/history joins. Secure primitives and runtime/state-origin/finality contracts remain explicit. |
 | `Evidence/TransferCheck`, `Transfer/Operational` | The same canonical packet and resource checks without assumed primitive soundness; local semantic good facts derive validity and actual accepted-invalid outcomes reduce to authorization or exact-payload false acceptance. |
 | `Transfer/PublicView`, `Transfer/Security` | Original checked release projection and direct public-ID distinction; explicit observation/auxiliary/PMF adversary experiment and conditional one-shot error bound. No primitive estimate, oracle security or privacy theorem. |
+| `Transfer/Primitives` | Actual owner/key/message/history and byte-proof backend agreement, with five-event same-PMF error composition. Query coverage, backend-to-original-context refinement and concrete primitive budgets remain explicit. Current spectral runtime paths do not instantiate these joins. |
 
 `Protocol.Core` is the focused review entry point. `Protocol.Ledger` is the
 broader compatibility aggregate. Its legacy `Chain` import remains for

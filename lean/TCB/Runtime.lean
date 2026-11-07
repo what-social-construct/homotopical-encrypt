@@ -24,6 +24,11 @@ public import TCB.ProofCarrying
   It intentionally does not claim that Rust is verified by Lean. It records the
   obligations that a production Rust implementation must satisfy before a
   public artifact is treated as consensus-facing evidence.
+
+  The named `Prop` fields are contract assumptions, not data-indexed results
+  from actual parsers, keys, messages or proof bytes. The acceptance predicates
+  below include already-established semantic facts; raw primitive checks are
+  represented separately in `TCB.PrimitiveChecks`.
 -/
 
 namespace Hcrypt
@@ -85,6 +90,11 @@ Runtime acceptance contract for a proof-carrying cochain artifact.
 The artifact itself carries the Lean-side statement/proof-system assumptions.
 The runtime side must also verify canonical encoding, hash binding, domain
 separation, and proof bytes.
+
+This is the ideal semantic acceptance contract, not a Boolean runtime check.
+Through `P.WellFormed` it explicitly includes `P.statement`. Consequently its
+consequences recover supplied truth; concrete verifier soundness and any error
+estimate must be established separately for actual indexed inputs.
 -/
 def RuntimeAcceptsProofCarryingCochain
     (R : RuntimeBoundary)
@@ -104,8 +114,8 @@ def RuntimeAcceptsSheafCommittedCochain
     ∧ P.publicArtifact.cochain.CoherentWith S
 
 /--
-If Rust accepts a proof-carrying cochain artifact under the TCB runtime
-contract, Lean can recover the canonical well-formed cochain payload.
+The semantic runtime acceptance contract exposes the canonical well-formed
+cochain payload already included in its premises.
 -/
 theorem accepted_proofCarryingCochain_implies_cochain_wellFormed
     {R : RuntimeBoundary} {P : ProofCarryingCommittedCochain}

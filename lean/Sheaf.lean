@@ -14,6 +14,7 @@ public import Sheaf.Distance
 public import Sheaf.CochainSemantics
 public import Sheaf.ObservationQuotient
 public import Sheaf.CanonicalLiftObstruction
+public import Sheaf.GraphCommitment
 
 @[expose] public section
 

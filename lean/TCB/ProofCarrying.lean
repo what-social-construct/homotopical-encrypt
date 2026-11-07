@@ -17,6 +17,12 @@ public import Axioms.ZKP
   Core mathematical objects should not become hashes or SNARKs themselves.
   Instead, runtime/public layers carry commitments and certificates that bind
   back to the core objects.
+
+  These legacy carriers package semantic facts under supplied contracts. In
+  particular, `ProofCarryingCommittedCochain.WellFormed` includes the truth of
+  its statement as a premise. It is not an execution trace or a theorem that a
+  concrete byte verifier establishes that statement. Raw primitive algorithms
+  and byte-indexed failure events live in `TCB.PrimitiveChecks`.
 -/
 
 namespace Hcrypt
@@ -28,8 +34,9 @@ abbrev Hash32 := Fin 32 → UInt8
 /--
 Public hash commitment to an existing cochain commitment payload.
 
-`Binds` is intentionally a proposition: Rust owns the concrete hash function,
-domain separation, serialization, and byte validation.
+`Binds` is intentionally a proposition: a runtime instantiation must supply
+the concrete hash function, domain separation, serialization and byte
+validation. This field alone identifies no algorithm or authenticated bytes.
 -/
 structure HashedCommittedCochain where
   cochain : Axioms.CochainCommitmentData
@@ -61,6 +68,10 @@ SNARK/ZK certificate for a committed cochain statement.
 The statement is kept abstract so this interface can serve proximity,
 naturality, global-section, balance, or homotopy-path statements without
 conflating those predicates with the proof system itself.
+
+The carrier contains no proof bytes or verification algorithm. Its
+`VerifiesStatement` label alone does not imply `statement`; the semantic
+well-formedness contract requires both facts separately.
 -/
 structure ProofCarryingCommittedCochain where
   publicArtifact : HashedCommittedCochain
@@ -68,7 +79,8 @@ structure ProofCarryingCommittedCochain where
   statement : Prop
   VerifiesStatement : Prop
 
-/-- A proof-carrying cochain artifact is well formed at the Lean boundary. -/
+/-- Semantic packaging of an already-true statement and its verification fact.
+This is not a soundness theorem about a concrete byte-checking algorithm. -/
 def ProofCarryingCommittedCochain.WellFormed
     (P : ProofCarryingCommittedCochain) : Prop :=
   P.publicArtifact.WellFormed

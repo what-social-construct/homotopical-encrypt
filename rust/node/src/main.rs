@@ -397,11 +397,10 @@ impl Node {
         // Publicly verifiable: derive VRF key from producer_fingerprint,
         // recompute VRF(key, parent_hash, height), check score < threshold.
         //
-        // This is sound because:
-        //   - VRF key derivation is deterministic from fingerprint
-        //   - VRF output is deterministic from key + inputs
-        //   - Ed25519 signature (Gate 6 in PoV) binds producer to block
-        //   - Forging a low score requires forging the fingerprint
+        // This prototype derives its eligibility input from public data.
+        // Determinism alone proves no cryptographic VRF property. The separate
+        // worker signatures cover spectral fields rather than the whole block;
+        // this gate does not establish owner authorization or proposal binding.
         if block.header.height > 0 {
             let producer_fp = block.header.producer_fingerprint;
             let vrf_key = consensus::vrf::VRFKey::from_fingerprint(producer_fp);

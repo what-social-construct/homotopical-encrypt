@@ -10,6 +10,7 @@ public import TCB.Runtime
 public import TCB.SNARK
 public import TCB.ObservationBoundary
 public import TCB.WitnessVerifier
+public import TCB.PrimitiveChecks
 
 @[expose] public section
 
@@ -24,4 +25,10 @@ public import TCB.WitnessVerifier
   `Axioms` owns assumptions and mathematical specification contracts.
   `TCB` owns proof-carrying artifacts, compression boundaries, runtime
   acceptance predicates, observations, and witness/verifier envelopes.
+
+  Legacy proof/observation carriers include statement truth as a premise.
+  `PrimitiveChecks` separately names actual byte-verification algorithms,
+  signing history and backend false acceptance without assuming soundness.
+  Protocol adapters must bind those bytes and backend statements to the
+  original owner intent and cochain interpretation before using error bounds.
 -/

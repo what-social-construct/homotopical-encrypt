@@ -9,12 +9,12 @@ Initial audit date: 2026-10-30. Historical source checkpoint: `dc89188`.
 Generic coding completion and application follow-up: **2026-11-05**.
 
 **Status reconciliation — 2026-11-07:** Q04--Q08 are complete for the
-stated generic coding and native modular application claims. The latest shared
-expanded/default builds pass 9,278/9,271 jobs; 605 selected dependency reports
-pass (569 standard-only, 36 retaining existing native certificates). Current
-reviewed PDFs are 99/28 pages for Papers 1/3. The
-[central validation record](../../docs/MATH_STORAGE_VALIDATION.md#current-one-shot-integrity--2026-11-06)
-contains current source counts and exact checks. The dated 2026-11-05 figures
+stated generic coding and native modular application claims. Current shared
+expanded/default, dependency and source checks are recorded in the
+[central validation record](../../docs/MATH_STORAGE_VALIDATION.md).
+The 2026-11-06 one-shot integrity milestone passed 9,278/9,271 jobs and 605
+selected reports; later primitive/TCB checks retain those earlier dependency
+sets. Current reviewed PDFs are 99/28 pages for Papers 1/3. The dated 2026-11-05 figures
 below are preserved native-metric baselines, not later-source validation.
 
 The current pin is Lean **4.35.0** and Mathlib
@@ -398,7 +398,7 @@ maintenance; R means new mathematical work beyond the current closed results.
 | Q06 | P1 | Package the boundary-field real safe set. | Exact `[0,1/4096)`, its supremum, exclusion and no maximum, using reusable real/count shells. | **Complete.** `MCA/RealThreshold.lean`: `pairMCA_safeRelativeRadii_128_eq_Ico`, `pairMCA_real_128_threshold` and generic same-shell transport; actual module build passes. |
 | Q07 | P1 | Package the generic standalone distance interpretation. | Attained scalar/pair minima identified with `CloseAt` and the neutral interface; covering, good-challenge farness and endpoint equality with correct strictness. | **Complete.** `Core/Distance.lean` and `Application/DistanceCalibration.lean` export the minimum/witness/model/covering/transfer endpoints and pass. Concrete C02–C04 remain separate retained results. |
 | Q08 | P0/R | Complete the selected native commitment profile and its canonical closure. | Retain actual integral modular coboundaries, complete original-payload extraction, native scalar/pair/RS metrics, a nonempty capacity-far family and the declared sampled/restricted challenge profile. Keep Euclidean/frame/full-HCP scores separate. | **Complete for the declared native modular profile:** generic actual-coboundary validity, `d_C≤d_P=D_RS≤2*d_C`, sharp factor-two near bound, serialized canonical capacity family, observed-artifact/existing-interface adapters and restricted challenge theorems all pass the expanded aggregate and consolidated audit. This does not prove a capacity-scale Euclidean/full-HCP comparison or a global fixed-mix guarantee. Authentication/private-frame producers, runtime/security and artifact maintenance remain separate. |
-| Q09 | P2 | Keep validation reproducible. | Preserve exact pins, dated baselines, source/aggregate/public-facade checks and current manuscript/artifact QA. | Latest shared expanded/default builds pass 9,278/9,271 jobs; 605 selected reports comprise 569 standard-only and 36 existing-native, with no cited-bound or `sorryAx` dependency. Source scan: 259 modules/260 Lean files, no holes/cycles/unresolved imports. Current reviewed PDFs are 99/28 pages. The [central validation record](../../docs/MATH_STORAGE_VALIDATION.md#current-one-shot-integrity--2026-11-06) retains exact checks; 9,253/9,248-job, 139-report and 97/28-page figures below are the native-metric baseline. Publication and Palomar preflight are separate. |
+| Q09 | P2 | Keep validation reproducible. | Preserve exact pins, dated baselines, source/aggregate/public-facade checks and current manuscript/artifact QA. | The [central validation record](../../docs/MATH_STORAGE_VALIDATION.md) owns current shared build/dependency/source counts; the standalone coding closure remains 33 modules. Papers 1/3 retain reviewed 99/28-page PDFs. The 2026-11-06 one-shot integrity milestone passed 9,278/9,271 jobs and 605 selected reports; the 9,253/9,248-job, 139-report and 97/28-page figures below remain native-metric baselines. Publication and Palomar preflight are separate. |
 | Q10 | R | Solve optimal list radius in the intermediate field-size regime. | Matching sub-endpoint bounds for a supplied code when `1≤2^-128 q<choose(n,k)`. | Open mathematics; not a wrapper or build task. |
 | Q11 | R | Locate further code-specific MCA transitions. | Prove matching in-budget bounds and over-budget lines beyond the current small-radius example, or determine `B_C(r)` more generally. | Open mathematics; the generic exact-budget API alone does not supply these bounds. |
 | Q12 | R | Broaden the experiment if desired. | Separate statements/proofs for higher-dimensional challenge families or a different agreement notion. | Outside current pair/same-set scope. |

@@ -6,10 +6,12 @@
 //   - r is randomness (at vertices 1..n)
 //   - δ: C⁰ → C¹ is the coboundary operator
 //
-// Properties:
-//   BINDING:      collision requires ker(δ) element (SVP-hard)
-//   HIDING:       δ with secret restriction maps is lattice-hard
-//   HOMOMORPHIC:  δ(m₁∥r₁) + δ(m₂∥r₂) = δ((m₁+m₂)∥(r₁+r₂))
+// This prototype uses ordinary graph incidence, without secret restrictions.
+// Adding the same vector to every vertex leaves δ unchanged and changes the
+// vertex-0 message. The raw payload therefore does not bind that message.
+// Authenticated C¹ payload binding and distributional hiding require separate
+// wrapper contracts; kernel ambiguity is not an SVP reduction.
+// Linearity: δ(m₁∥r₁) + δ(m₂∥r₂) = δ((m₁+m₂)∥(r₁+r₂)).
 //
 // Wire format (matching Python CochainCommitment.to_bytes()):
 //   modulus(4 LE) + n_edges(4 LE) + edge_values(n × 8 i64 LE) + topology_hash(16)
@@ -101,9 +103,10 @@ impl CochainComplex {
 
 /// Cochain commitment: Commit(m) = δ(m ∥ r) mod q
 ///
-/// The commitment lives in C¹ (edge space). Binding comes from
-/// the hardness of finding ker(δ) elements (SVP on cochain lattice).
-/// Hiding comes from the random shares at non-message vertices.
+/// The payload lives in C¹ (edge space). Openings are identified modulo the
+/// incidence kernel: a global constant shift changes the message without
+/// changing this payload. No message-binding or hiding theorem is supplied by
+/// this type. See the modular model in `lean/Sheaf/GraphCommitment.lean`.
 ///
 /// Matches Python CochainCommitment from src/crypto/commitment.py.
 #[derive(Debug, Clone)]
@@ -213,7 +216,10 @@ impl CochainCommitment {
         data
     }
 
-    /// Deserialize from wire format (matching Python CochainCommitment.from_bytes()).
+    /// Deserialize the legacy permissive format.
+    ///
+    /// This accepts missing topology bytes and trailing data; it does not
+    /// implement the canonical packet codec required by the Lean transfer.
     pub fn from_bytes(data: &[u8]) -> Option<Self> {
         if data.len() < 8 {
             return None;

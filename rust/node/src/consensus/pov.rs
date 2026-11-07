@@ -25,8 +25,10 @@ const PROOF_SIG_DOMAIN: &[u8] = b"HCRYPT_SPECTRAL_PROOF_V1";
 ///
 /// message = DOMAIN_SEP || fingerprint_hash || gap_valid || β₀ || β₁ || β₂
 ///
-/// This binds the signature to the specific geometric commitment.
-/// Signing the hash (not raw data) prevents length-extension attacks.
+/// This authenticates only the listed spectral fields. It does not authorize
+/// an owner transfer intent or bind the complete block/proposal, its parent,
+/// transactions, source state, topology or manifest. A separate canonical
+/// signing-message adapter is required for the Lean ownership policy.
 fn proof_signing_message(fingerprint: &SpectralFingerprint) -> Vec<u8> {
     let mut msg = Vec::with_capacity(PROOF_SIG_DOMAIN.len() + 32 + 1 + 12);
     msg.extend_from_slice(PROOF_SIG_DOMAIN);

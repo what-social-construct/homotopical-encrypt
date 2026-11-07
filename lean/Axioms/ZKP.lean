@@ -14,6 +14,10 @@ public import Mathlib.Init
   These assumptions are intentionally abstract so different concrete proof
   systems (spectral range proof, homotopy/geodesic proof, class-membership
   proof) can refine this interface.
+
+  These fields name assumptions. They contain no actual verifier, public-input
+  encoding, proof bytes, sampling game or numerical error bound, and do not
+  establish the properties of a runtime backend from its name alone.
 -/
 
 namespace Hcrypt
@@ -22,7 +26,8 @@ namespace Axioms
 structure ZKP where
   /-- Completeness: honest prover with valid witness verifies. -/
   Completeness : Prop
-  /-- Soundness: verifier acceptance implies statement validity (up to security error). -/
+  /-- Named soundness assumption; an indexed verifier law and any sampled
+      security-error bound must be supplied separately. -/
   Soundness : Prop
   /-- Zero-knowledge: transcript leaks no witness-identifying information. -/
   ZeroKnowledge : Prop

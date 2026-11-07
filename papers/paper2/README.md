@@ -106,7 +106,7 @@ No global hash injectivity, secure primitive implementation, authenticated
 before-state origin, finality, ledger epoch/geometry migration or anonymous
 transfer theorem is inferred. Current checks remain recorded centrally.
 
-The next bounded security statement is recorded in
+The sampled integrity statement is recorded in
 [Draft §6.3](DRAFT.md#63-one-shot-sampled-integrity-under-the-declared-transfer-view).
 The [raw packet checker](../../lean/Protocol/Evidence/TransferCheck.lean) and
 [operational transfer](../../lean/Protocol/Transfer/Operational.lean) assume no
@@ -126,6 +126,32 @@ explicit auxiliary input. This fixed-setup, one-attempt integrity experiment
 does not implement randomized key generation, adaptive oracle/corruption games,
 EUF-CMA, IND or anonymity. State origin, runtime agreement and finality remain
 separate obligations.
+
+The [actual primitive comparison](DRAFT.md#64-actual-primitives-and-the-trusted-computing-boundary)
+now separates byte checks from semantic TCB packaging. Current Rust worker
+Ed25519 signatures authenticate spectral fields, not the owner intent or
+complete proposal; public-seed bootstrap keys cannot justify uncompromised-key
+security. The sampled geodesic verifier supplies no proved exact-payload,
+SNARK, zero-knowledge or numerical soundness bound, and its parser/call path
+has not met the canonical fail-closed packet contract.
+
+[PrimitiveChecks](../../lean/TCB/PrimitiveChecks.lean) and the
+[original-transfer adapter](../../lean/Protocol/Transfer/Primitives.lean)
+require explicit key/message/input functions and exact check agreement.
+Accepted-invalid outcomes reduce to five events: fresh-message forgery,
+compromised key, queried-but-unauthorized message, false backend proof statement,
+and backend-to-original-context mismatch. Their shared-PMF sum composes supplied
+budgets; it assigns none numerically. Signing history must include honest
+signatures available in the release or auxiliary data; the fixed-history model
+is not an adaptive signing/corruption game.
+
+The [ordinary graph model](../../lean/Sheaf/GraphCommitment.lean) also constructs
+the actual modular payload and proves its constant-translation message
+ambiguity. Openings `(3,5,9)` and `(10,12,16)` yield identical edge values
+`(2,4)` while changing the vertex-zero message. Deterministic payload hashing
+cannot repair equality before hashing. This is a statement about the runtime's
+ordinary-incidence profile, distinct from the general cellular/Hodge objects
+and separately assumed authenticated payload binding.
 
 The shared mathematical wiring is owned by Paper 1:
 [actual cochain model and invariant homological tests](../../lean/Helfer/CochainModel.lean),

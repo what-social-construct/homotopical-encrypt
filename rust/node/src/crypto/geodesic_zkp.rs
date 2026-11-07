@@ -2,10 +2,10 @@
 //
 // Verify-only port of Python src/proofs/homotopical_zkp.py.
 // The PROVER stays Python-side (needs scipy/numpy for eigendecomposition
-// and SO(n) geodesic construction). The VERIFIER runs in Rust at wire
-// speed in the node's block validation pipeline.
+// and SO(n) geodesic construction). This verifier checks sampled floating-point
+// matrices; correspondence with the Python transcript is a separate obligation.
 //
-// Protocol (Fiat-Shamir Σ-protocol):
+// Intended commit/challenge/open transcript:
 //   1. STATEMENT: Public spectral fingerprint S_pub = (λ₁,...,λₙ)
 //   2. WITNESS: Secret homotopy γ(t) = V·exp(t·Ω), Ω ∈ so(n) [PYTHON]
 //   3. COMMIT: Sample γ at t₁,...,tₖ, commit Cᵢ = H(L(tᵢ) ‖ rᵢ) [PYTHON]
@@ -20,8 +20,10 @@
 //   e) Betti consistency: zero-eigenvalue count matches claimed β₀
 //   f) Fiat-Shamir: recompute challenge, verify opened indices
 //
-// SOUNDNESS: Forging requires inverse spectral problem (Hodge-hard).
-// ZERO-KNOWLEDGE: Opened L(tᵢ) share the PUBLIC spectrum; |[F]| = ∞.
+// These checks supply no proved HCP reduction, zero-knowledge theorem or
+// 2^-n_opened soundness estimate. They do not receive the original cochain,
+// trusted decoder or owner transfer intent required for Context.Accepted.
+// Infinite same-spectrum families alone imply no distributional privacy.
 //
 // Reference: Helfer (2019), Swan et al. (2025)
 
@@ -163,6 +165,7 @@ impl GeodesicZKProof {
 
     pub fn n_commitments(&self) -> usize { self.commitment_hashes.len() }
     pub fn n_opened(&self) -> usize { self.opened_indices.len() }
+    /// Legacy name for the opening count; this is not a proved security-bit estimate.
     pub fn soundness_bits(&self) -> usize { self.opened_indices.len() }
 }
 
@@ -414,14 +417,14 @@ pub fn verify_geodesic_proof(
     // ALL GATES PASSED
     // ═══════════════════════════════════════════════════════════
 
-    debug!("✅ Geodesic ZKP verified: {}/{} opened, soundness ≈ 2^{{-{}}}",
-        proof.n_opened(), proof.n_commitments(), proof.soundness_bits());
+    debug!("Geodesic spectral checks passed: {}/{} opened; no soundness estimate",
+        proof.n_opened(), proof.n_commitments());
 
     ZKPVerification {
         valid: true,
         reason: format!(
-            "Valid geodesic ZK proof: {}/{} opened, spectrum preserved, continuity verified, soundness ≈ 2^{{-{}}}",
-            proof.n_opened(), proof.n_commitments(), proof.soundness_bits()
+            "Geodesic spectral checks passed: {}/{} opened; no primitive soundness estimate",
+            proof.n_opened(), proof.n_commitments()
         ),
         gates_passed,
         total_gates,
@@ -450,9 +453,8 @@ fn fiat_shamir_challenge(
     hasher.update(topology_hash);
     let challenge: [u8; 32] = hasher.finalize().into();
 
-    // Derive opened indices from challenge (Fisher-Yates with PCG64)
-    // Python uses: np.random.Generator(PCG64(seed_from_challenge[:16]))
-    // We replicate the same RNG: PCG64 with the same 128-bit seed.
+    // Derive indices with this prototype's custom shuffle. Python uses NumPy
+    // PCG64; this 64-bit-state implementation is not an equivalent generator.
     let seed = u128::from_le_bytes(challenge[..16].try_into().unwrap());
     let mut indices: Vec<u32> = (0..n_total as u32).collect();
     pcg64_shuffle(&mut indices, seed);
@@ -462,18 +464,16 @@ fn fiat_shamir_challenge(
     (challenge, opened)
 }
 
-/// PCG64 shuffle matching numpy's PCG64 + Fisher-Yates.
+/// Legacy custom shuffle; not a NumPy PCG64 compatibility implementation.
 ///
-/// numpy's Generator.shuffle uses the bounded rejection method.
-/// PCG64: state = state * 6364136223846793005 + increment
-/// output = rotr((state ^ (state >> 18)) >> 27, state >> 59)
+/// Uses a 64-bit state and modulo selection. Transcript compatibility and a
+/// uniform-subset sampling argument must be established separately.
 fn pcg64_shuffle(arr: &mut [u32], seed: u128) {
-    // NumPy's PCG64 initializes from a 128-bit seed.
-    // Default increment is 1442695040888963407 (odd).
+    // Constants used by this local 64-bit generator.
     let increment: u64 = 1442695040888963407;
     let multiplier: u64 = 6364136223846793005;
 
-    // NumPy seeds PCG64 with: state = (seed_low + increment) * multiplier + increment
+    // This prototype discards the upper half of the supplied seed.
     let seed_low = seed as u64;
     let mut state: u64 = seed_low.wrapping_add(increment).wrapping_mul(multiplier).wrapping_add(increment);
 
@@ -486,7 +486,7 @@ fn pcg64_shuffle(arr: &mut [u32], seed: u128) {
         let rot = old_state >> 59;
         let output = (xorshifted >> rot as u32) | (xorshifted << ((-(rot as i64) as u64) & 63));
 
-        // Bounded: j = output % (i+1) — simplified (matches numpy for small n)
+        // Modulo selection; no NumPy equivalence or unbiased-sampling claim.
         let j = (output % (i as u64 + 1)) as usize;
         arr.swap(i, j);
     }

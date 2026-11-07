@@ -21,9 +21,11 @@ namespace TCB
 /--
 SNARK interface refining the generic `ZKP` contract.
 
-The concrete proof system, arithmetization, transcript format, and verifier are
-Rust-owned runtime artifacts. Lean records the statement-level obligations that
-make a SNARK suitable for proof-carrying cochain validation.
+A runtime instantiation must supply the concrete proof system,
+arithmetization, transcript format and verifier. These named `Prop` fields
+record statement-level assumptions, without connecting them to actual proof
+bytes or a selected algorithm. No existing runtime backend inherits soundness,
+succinctness or witness hiding merely by carrying this interface label.
 -/
 structure SNARK where
   zkp : Axioms.ZKP
@@ -48,6 +50,9 @@ SNARK-carrying committed cochain artifact.
 
 This specializes `ProofCarryingCommittedCochain` to a SNARK proof system while
 reusing the same canonical cochain payload and hash-binding layer.
+
+Its well-formedness contract likewise includes the statement's truth. It is a
+semantic carrier, not an independent derivation from concrete SNARK bytes.
 -/
 structure SNARKCarryingCommittedCochain where
   publicArtifact : HashedCommittedCochain

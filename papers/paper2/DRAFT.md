@@ -727,6 +727,73 @@ application and finality are outside these events. The bad event is invalidity
 of the typed candidate under the configured policy, not failure of every
 external authentication contract.
 
+#### 6.4. Actual primitives and the trusted-computing boundary
+
+The byte-level [primitive interfaces](../../lean/TCB/PrimitiveChecks.lean)
+record selected verification algorithms, exact message/public-input bytes,
+signing-query history and compromised-key status. They supply no primitive
+soundness, zero knowledge or numerical error estimate. The legacy
+[proof carrier](../../lean/TCB/ProofCarrying.lean) and
+[runtime acceptance contract](../../lean/TCB/Runtime.lean) instead package
+already-established semantic facts: their well-formedness includes statement
+truth. Their named `Prop` fields cannot turn a successful runtime check into
+that truth. The [SNARK interface](../../lean/TCB/SNARK.lean) likewise records
+assumptions; no SNARK backend is selected by the current
+workspace `Cargo.toml`.
+
+Runtime paths below refer to the full workspace; those implementations are
+excluded from the Lean/manuscript review bundle. The implementation comparison
+identifies distinct signed and proved objects:
+
+| Existing implementation | Actual object and missing comparison |
+|---|---|
+| Worker signatures in `rust/node/src/consensus/pov.rs` | Ed25519 authenticates a 69-byte spectral message: domain, fingerprint hash, gap-valid bit and three Betti numbers. It does not sign the owner transfer intent or complete final proposal. A selected key registry, message encoder and exact verifier-agreement equation are required before this algorithm can instantiate owner authorization. |
+| Bootstrap keys in `rust/node/src/main.rs` | The single-node path derives four signing seeds from the public producer fingerprint. That path does not justify an uncompromised-key assumption. An Ed25519 implementation alone supplies no authorization/error bound for this setup. |
+| Raw graph commitment in `rust/node/src/crypto/commitment.rs` | Ordered ordinary-incidence differences, without general private cellular restrictions. A global constant translation changes the vertex-zero message while preserving every edge value. Payload authentication is distinct from binding that message. |
+| Geodesic verifier in `rust/node/src/crypto/geodesic_zkp.rs` and transaction call path in `rust/node/src/consensus/pov.rs` | Sampled floating-point matrix, spectral and transcript checks. They do not receive the original cochain, trusted interpretation or owner intent required for `Context.Accepted`. No bound `2^{-n_opened}` or SNARK/zero-knowledge property is established. The audited parser/call path also does not establish the canonical, fail-closed packet contract: trailing bytes can remain unconsumed and malformed optional proofs can be skipped. |
+
+The [graph model](../../lean/Sheaf/GraphCommitment.lean) proves the constant
+translation law over additive groups and constructs the existing modular
+`CochainCommitmentData`. With a fixed topology tag, translating every stalk
+by the same vector leaves the complete payload and every deterministic
+encoding/hash of that payload unchanged. Its path example changes openings
+`(3,5,9)` to `(10,12,16)` modulo `12289`, preserving edge values `(2,4)` while
+changing the message. This is equality before hashing, not a cryptographic
+hash collision. It concerns this ordinary-incidence profile, not all cellular
+sheaves, harmonic blinding or a plaintext defined as a quotient class.
+
+The [protocol adapter](../../lean/Protocol/Transfer/Primitives.lean) explicitly
+binds each operational check to its chosen backend. `SignatureProfile` supplies
+actual owner-to-key and owner/intent-to-message functions, a signing history,
+and exact check agreement. `PayloadProfile` supplies the actual encoded proof
+input and check agreement. Neither agreement equation supplies semantic
+soundness or identifies arbitrary decoders sharing public names.
+
+For the original parsed packet, accepted-invalid outcomes are covered by five
+events: a verified fresh-message signature under an uncompromised key; a
+verified unauthorized packet using a compromised key; a queried key/message
+accepted for an unauthorized intent; a proof backend accepting a false backend
+statement; or a true backend statement that fails to imply acceptance of the
+original context. The queried-but-unauthorized event retains policy failures,
+key aliasing and message-encoding collisions rather than silently assuming
+these away. The last event keeps backend soundness separate from the required
+original-interpretation comparison.
+
+One shared PMF gives the sum of these five event probabilities and composes
+supplied budgets, without independence. To apply a primitive forgery estimate,
+the history must cover every honest signature made available in the released
+record or auxiliary input, and the key registry and corruption classification
+must match the actual setup. The fixed-history model is still not an adaptive
+EUF-CMA oracle game. No event receives a numerical budget from the presence of
+an algorithm name or the runtime checks above.
+
+The remaining instantiation work is therefore concrete: select authenticated
+keys and canonical owner-intent bytes, discharge check agreement and backend
+statement reflection for the same original cochain interpretation, establish
+primitive/query/setup error bounds, and implement the required parser/runtime
+contracts. The conditional mathematics supplies none of those missing runtime
+or secrecy guarantees by using the legacy TCB carrier.
+
 ### 7. Proof ledger and remaining protocol work
 
 The successful Lean 4.35 builds of 9,233 aggregate/integration jobs and 9,228
@@ -769,6 +836,9 @@ the earlier counts are not validation of the added modules.
 | [Operational transfer](../../lean/Protocol/Transfer/Operational.lean), [ideal checked transfer](../../lean/Protocol/Transfer/Owned.lean) and [anchored endpoint](../../lean/Protocol/Transfer/Anchored.lean) | Local authorization and original-payload acceptance derive validity of the candidate computed from the actual parsed packet. The exact checker/policy/candidate projection preserves the ideal theorem. Complete packet, original artifact/context and input manifest remain joined; a matching whole-proposal quorum remains an external input. |
 | [Actual transfer view](../../lean/Protocol/Transfer/PublicView.lean) | Publishes this checked release's bytes, parsed packet, complete proposal and original input-manifest view. Public input/output/signer differences distinguish records; the deterministic input-ID test needs no private witness or hash inversion. This supplies no privacy theorem or complete network transcript. |
 | [One-shot sampled integrity](../../lean/Protocol/Transfer/Security.lean) | Accepted-invalid outcomes for the actual soundness-free checker imply authorization or exact-payload verification failure. One shared PMF yields the union bound and composition of supplied error budgets without independence. `ofCheckedRelease` provides an actual released observation. No primitive estimate, adaptive oracle game, security-parameter family or privacy claim is inferred. |
+| [Actual byte-level primitive checks](../../lean/TCB/PrimitiveChecks.lean) | Selected signature/proof algorithms, exact byte-indexed backend statements, signing-query history and compromised-key predicate. Successful verification is classified without a global soundness, zero-knowledge or numerical-error assumption. Legacy TCB comments distinguish these raw checks from carriers whose well-formedness already includes statement truth. |
+| [Primitive-to-original-transfer comparison](../../lean/Protocol/Transfer/Primitives.lean) | Exact owner/key/message and payload-input check-agreement equations retain the same operational configuration and parsed packet. Accepted-invalid outcomes reduce to fresh forgery, compromised key, queried unauthorized message, backend proof false acceptance or original-context statement mismatch. Their shared-PMF sum composes supplied budgets; current Rust algorithms are not claimed to discharge those contracts or estimates. |
+| [Ordinary graph commitment ambiguity](../../lean/Sheaf/GraphCommitment.lean) | Constant translation preserves actual modular `CochainCommitmentData`, fixed topology and every deterministic encoding while changing a designated message coordinate. The explicit path example has messages three/ten and identical edge values two/four. It refutes raw message binding for this profile, without claiming a hash collision, a hiding theorem or an obstruction for every cellular sheaf. |
 | [Semantic evidence compatibility](../../lean/Protocol/Evidence/TransferEnvelope.lean) | Packages independently derived validity/check facts in the existing TCB envelope, with the actual candidate/transfer witness and public intent shadow. Its root/inclusion and runtime facts are supplied or proved by the selected profile; it is not an additional operational verifier or security proof. |
 | [Plucker reconstruction](../../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) and [operative-target adapter](../../lean/TCB/PluckerObservation.lean) | Eight reconstruction endpoints and the observation endpoints in the 27-declaration root probe are standard-only. Recovery consumes full exact-real shadow data and an explicit operative-kernel identification; digest-only visibility is a separate profile. |
 | [Canonical-lift obstruction](../../lean/Sheaf/CanonicalLiftObstruction.lean) | Thirteen core/sheaf endpoints are standard-only. A nontrivial real-linear decoder cannot have a global zero-defect comparison against unrestricted canonical RS distance. |
@@ -781,7 +851,7 @@ the earlier counts are not validation of the added modules.
 | [Canonical systematic profile](../../lean/Protocol/Storage/CanonicalSystematic.lean) | Fifteen selected concrete endpoints inherit the existing canonical primality/root-order native certificates. They include the original payload codec and a positive no-wrap Euclidean example; native arithmetic trust remains explicit. |
 | [Canonical native-metric and challenge adapter](../../lean/Protocol/Storage/CanonicalThreeLevel.lean) | The focused build passes (3,432 jobs). Sixteen selected reports retain existing canonical arithmetic trust. The original well-formed payload has all three native distances `3/4`; observed-artifact joins, accepted-to-native-zero, raw-far rejection and the stated canonical diagonal challenge are checked. Expanded aggregate and consolidated public-facade dependency checks pass; artifact details remain centrally recorded. |
 | [Existing calibration and near interfaces](../../lean/Protocol/Storage/CanonicalCalibration.lean) | The focused build passes (3,430 jobs). Nine selected reports split into four generic standard-only and five concrete reports with existing native certificates. Actual original-payload extraction instantiates `SourceToSourceCalibration`, `SourceToCodeCalibration.transCode` and `EvaluationProjection` with the explicit `2*d_C` near score; no metric inequality is assumed. |
-| Paper 2 security and runtime realization | The fixed-setup one-shot integrity experiment is scoped and its conditional error composition is proved. Instantiate the algorithms and failure bounds; specify a parameter/key-generation family, adaptive oracle/corruption games and any privacy claim. Authenticated setup/state origin, secure delivery, persistence, dynamic geometry/key rotation, retirement, finality and runtime refinement remain obligations. |
+| Paper 2 security and runtime realization | The fixed-setup one-shot integrity experiment is scoped and its conditional error composition is proved. The actual primitive comparison and five-event decomposition now name check agreement, key/message history and backend/original-statement gaps. Instantiate those contracts and failure bounds; specify a parameter/key-generation family, adaptive oracle/corruption games and any privacy claim. Authenticated setup/state origin, secure delivery, persistence, dynamic geometry/key rotation, retirement, finality and runtime refinement remain obligations. |
 
 “Standard-only” means that the actual axiom report uses no dependencies beyond
 `propext`, `Classical.choice` and `Quot.sound`; some elementary identities use

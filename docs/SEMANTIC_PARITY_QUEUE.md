@@ -759,6 +759,17 @@ The current `sheaf_state.py` dependency graph also shows what must be removed:
   differing by `ker δ₀`; unique-message binding requires a gauge/reference
   anchor or a separate cryptographic construction.
 
+The 2026-11-07 [graph comparison](../lean/Sheaf/GraphCommitment.lean) now
+constructs this ambiguity for the actual ordered incidence/modular payload
+profile, rather than only assuming a kernel element: `[3,5,9]` and
+`[10,12,16]` give the same existing canonical payload `[2,4]` at modulus 12289.
+The [byte-level TCB](../lean/TCB/PrimitiveChecks.lean) and
+[original-transfer reduction](../lean/Protocol/Transfer/Primitives.lean)
+separate backend error from owner/message/history and original-context
+statement mismatches. The [runtime comparison](PROTOCOL_PARITY_QUEUE.md#actual-primitive-comparison-and-tcb-joins--2026-11-07)
+records the concrete missing joins; it does not turn the Python or Rust
+prototype into a new secure commitment.
+
 ### R4. Foundation/commitment ownership split
 - **Was:** commitment binding, hiding, and homomorphism propositions were added
   directly to `Foundation`, conflating cochain/Hodge structure with a

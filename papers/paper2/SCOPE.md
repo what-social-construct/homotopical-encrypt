@@ -380,7 +380,7 @@ protocol. Build and theorem-dependency outcomes are recorded separately.
 | P1 | Join one history entry and matching quorum to the original snapshot/artifact, exact sealed manifest, final projection prefix and actual gate database. | `Protocol/Storage/{Anchor,ProjectionAnchor,AnchorExamples}.lean`. | The pre-addition baseline and standard-only anchor reports pass. History/gate inclusion, wire/root layout and backend refinement remain profile obligations. Actual same-base sample rotation is separate from atomic retained-history migration; anchor equality alone supplies no new metric or radius theorem. |
 | P1 | Bind the native modular source comparison and capacity family to the original observed payload. | `Sheaf/SystematicCode/Modular.lean`; `Storage/{ThreeLevelMetrics,CanonicalThreeLevel}.lean`. | Generic validity, native distance bridge and canonical context/payload, capacity and restricted fixed-challenge adapters pass focused checks. `CanonicalCalibration` composes the existing interfaces with explicit near/far scores. Expanded aggregate and consolidated public-facade checks pass; artifact details remain centrally recorded. Real acceptance is a separate policy predicate. |
 | P1 | Preserve the independent Euclidean source metric where claimed. | `Sheaf/Distance.lean`; `Storage/{Calibration,NoWrapCalibration,CanonicalSystematic}.lean`. | Controlled-lift criterion and explicit no-wrap first-shell profile are checked. Fifteen canonical endpoints retain existing native arithmetic trust. No capacity-scale Euclidean or full-HCP radius theorem is claimed. |
-| P1 | Algorithms, correctness, threat model, security experiments, assumptions/reductions and claim inventory. | `Transfer/{Operational,PublicView,Security}.lean`; Paper 2 manuscript, which does not yet have a TeX bundle. | A soundness-free checker and fixed-setup one-shot integrity experiment now reduce actual accepted-invalid outcomes to authorization/payload failure and compose supplied budgets. Concrete primitive bounds, adaptive/oracle/corruption games, efficient adversaries/security parameters, full-view privacy and manuscript completion remain open. |
+| P1 | Algorithms, correctness, threat model, security experiments, assumptions/reductions and claim inventory. | `Transfer/{Operational,PublicView,Security}.lean`; Paper 2 manuscript, which does not yet have a TeX bundle. | A soundness-free checker and fixed-setup one-shot integrity experiment now reduce actual accepted-invalid outcomes to authorization/payload failure and compose supplied budgets. Actual key/message/history and proof-backend/original-context joins now have a five-event conditional reduction. Concrete primitive bounds, authentic setup/history coverage, adaptive/oracle/corruption games, efficient adversaries/security parameters, full-view privacy and manuscript completion remain open. |
 | P1 | One bounded runtime verification path with canonical bytes, malformed-input rejection and reproducible fixtures. | Rust runtime; `docs/PROTOCOL_PARITY_QUEUE.md`. | Open; distinguish runtime tests from formal refinement. |
 | P1 | Build selected Lean targets, inspect theorem axioms, compile/render manuscript, reproduce claimed costs. | Pinned Lean/Mathlib; paper build and validation record. | The pre-addition 4.35 build/68 reports and 2026-11-05 native-metric build (9,253/9,248 jobs)/139 reports are preserved baselines. The 2026-11-06 cellular-HCP baseline passes 9,258/9,253 jobs; its 235 selected reports include 199 standard-only and 36 with existing native certificates, with all 96 added reports standard-only. The public-view follow-up and current manuscript/artifact details are [recorded centrally](../../docs/MATH_STORAGE_VALIDATION.md). Paper 2 still has a Markdown draft, no TeX/PDF bundle or cost reproduction. |
 
@@ -388,6 +388,36 @@ For a conditional protocol/specification paper, name concrete primitive
 interfaces and state precisely which implementations are assumed. For a
 claim of a new secure commitment or MAC construction, an actual construction
 and its security argument are additional completion requirements.
+
+## Concrete primitive comparison — 2026-11-07
+
+The [byte-level TCB](../../lean/TCB/PrimitiveChecks.lean) and
+[original-transfer adapter](../../lean/Protocol/Transfer/Primitives.lean)
+now separate fresh-message forgery, key compromise, queried-but-unauthorized
+message reuse, backend false acceptance and backend/original-context mismatch.
+Their exact execution equations retain the actual encoded owner/intent and
+original trusted interpretation; one PMF composes supplied error budgets.
+No numerical primitive bound or adaptive oracle game is instantiated. Query
+history must account for honest signatures already disclosed in the selected
+release and auxiliary input before an EUF-CMA-style bound can apply.
+
+The [comparison in the protocol queue](../../docs/PROTOCOL_PARITY_QUEUE.md#actual-primitive-comparison-and-tcb-joins--2026-11-07)
+records why current runtime objects do not discharge those assumptions:
+worker Ed25519 signs spectral fields, bootstrap keys derive from public data,
+and geodesic matrix checks do not imply original decoded-cochain acceptance.
+Canonical fail-closed parsing, secret owner-key setup, full intent signing,
+backend arithmetization/refinement, query-history coverage and their actual
+error estimates remain required for a concrete cryptographic instantiation.
+The old ZKP/SNARK/TCB `Prop` carriers package assumed properties and supplied
+statement truth; they do not establish those runtime implications.
+
+[GraphCommitment](../../lean/Sheaf/GraphCommitment.lean) additionally proves an
+explicit different-message collision for the existing full canonical payload
+of the ordinary graph-incidence prototype. This is compatible with the existing
+kernel-quotient interpretation of openings and separate from general private
+restrictions, harmonic blinding and authenticated binding of the `C¹` value.
+A new message-binding commitment or MAC needs its own construction/reduction;
+the raw incidence payload cannot supply that claim.
 
 ## Optional or deferred topics
 

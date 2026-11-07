@@ -9,6 +9,156 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Current primitive and TCB comparison — 2026-11-07
+
+The actual-runtime comparison and original-object joins are recorded in
+[Paper 2 §6.4](../papers/paper2/DRAFT.md#64-actual-primitives-and-the-trusted-computing-boundary)
+and the [protocol queue](PROTOCOL_PARITY_QUEUE.md#actual-primitive-comparison-and-tcb-joins--2026-11-07).
+Existing worker spectral signatures and sampled matrix verification do not
+instantiate owner-intent authorization or snapshot-bound decoded-cochain
+acceptance. Concrete primitive error estimates therefore remain open.
+
+| Source | Checked statement and boundary |
+|---|---|
+| [TCB.PrimitiveChecks](../lean/TCB/PrimitiveChecks.lean) | Actual byte-signature/proof algorithms, byte-indexed backend statement, finite query history and compromised-key predicate. Verified signatures split into fresh forgery, compromise or queried message; successful proof verification does not assert statement truth. No soundness, ZK or numerical estimate is built in. |
+| [Transfer.Primitives](../lean/Protocol/Transfer/Primitives.lean) | Explicit owner/key/message/history and proof-input/check-agreement equations preserve the actual parsed packet, exact intent/metadata and original interpretation. Accepted-invalid implies fresh forgery, compromise, queried-unauthorized message, false backend proof statement or backend/original-context mismatch. The same PMF gives the five-term bound and supplied-budget corollary, without independence. |
+| [Sheaf.GraphCommitment](../lean/Sheaf/GraphCommitment.lean) | Actual ordered incidence differences and canonical modular residues form the existing full `CochainCommitmentData`. Global stalk translation preserves payload and all deterministic observations while changing the designated message. At modulus 12289, path-three openings `[3,5,9]` and `[10,12,16]` both give `[2,4]`; both payloads are well formed. This is an ordinary-incidence obstruction, separate from private restrictions, harmonic blinding and authenticated C¹ payload binding. |
+| Legacy TCB/ZKP carriers | Comment-only clarification: proof/observation/envelope acceptance contains supplied statement truth and feature assumptions. No code/API token or semantic definition changes. The data-indexed primitive implication must be established separately. |
+
+Primitive-game instantiation requires correct secret-key setup/registration and
+history covering honest signatures already present in the release or auxiliary
+input. The recorded history is not an adaptive oracle execution. The backend
+proof statement needs a finite-encoding/arithmetization comparison to the
+original trusted context, not matching names. No global digest injectivity,
+actual SNARK/ZK implementation, primitive error estimate, runtime refinement,
+external-history authentication or finality is proved by these interfaces.
+
+The current Rust comparison identifies public-seed bootstrap keys, spectral
+rather than owner-intent messages, signature-entry counting, permissive optional
+parsing, a sampled-matrix statement, unsupported opening-count error labels and
+Python/Rust challenge-generator disagreement. Runtime comments and success
+diagnostics now describe their actual scope; acceptance/arithmetic algorithms
+are unchanged. Fixed public comparisons and source hashes are in local
+`output/validation/primitive-runtime-comparison.json`. These are source audits
+and an independent generator translation, not native Rust refinement.
+
+### Primitive comparison validation
+
+Focused builds pass for the low-level/legacy TCB batch (3,156 jobs), graph
+payload (3,140), primitive transfer adapter (3,460) and combined transfer/sheaf/
+TCB facade (3,779). Added modules have no local warnings/errors; upstream
+warnings are replayed separately. The fresh seven-facade probe passes
+**667 distinct selected reports**: **631 standard-only** (537 exactly the usual
+three and 94 subsets), plus **36 retaining existing native arithmetic
+certificates**. All **62 additions are standard-only**: 29 exact-three,
+11 axiom-free and 22 proper nonempty subsets. All 605 preceding dependency
+sets match exactly. No selected report uses a cited-bound axiom or `sorryAx`.
+These reports do not discharge explicit primitive/refinement assumptions.
+
+| Added selected group | Reports |
+|---|---:|
+| Byte-level TCB records and check classification | 9 |
+| Original-transfer primitive/error composition | 24 |
+| Ordered graph and actual modular payload ambiguity | 29 |
+
+The current static audit covers **262 source modules / 263 Lean files**,
+without active holes, unresolved imports or cycles and with the same seven
+isolated cited-bound axioms. All **35** recorded focused closures exclude
+legacy `Chain` and `CitedBounds`. New closures contain 6 local modules for
+`TCB.PrimitiveChecks`, 56 for `Transfer.Primitives`, and 2 for
+`Sheaf.GraphCommitment`; the transfer facade contains 65.
+The expanded union passes **9,281 jobs** and literal default passes
+**9,274 jobs**, on the unchanged Lean/Mathlib 4.35 pins.
+
+Local artifacts under `output/validation/` are `primitive-{full,default}-build.log`,
+`primitive-{all,new}-axioms.lean`, `primitive-all-axioms.log`,
+`primitive-axiom-summary.json`, `primitive-source-audit.json`,
+`primitive-comment-scope-audit.json` and `primitive-runtime-comparison.json`.
+Six legacy Lean bodies are unchanged after comment/whitespace normalization;
+three Rust files change comments only. The geodesic source additionally changes
+two success diagnostics and removes their opening-count display arguments;
+acceptance/arithmetic tokens are unchanged. Runtime behavior is not formally
+verified by that source audit.
+
+Reproduce the added proof/dependency endpoints from `lean/`:
+
+```sh
+LEAN_NUM_THREADS=4 lake build Protocol.Transfer Sheaf TCB
+cat > /tmp/primitive-new-axioms.lean <<'LEAN'
+import TCB.PrimitiveChecks
+import Protocol.Transfer.Primitives
+import Sheaf.GraphCommitment
+
+#print axioms Hcrypt.TCB.PrimitiveChecks.Bytes
+#print axioms Hcrypt.TCB.PrimitiveChecks.SignatureVerifier
+#print axioms Hcrypt.TCB.PrimitiveChecks.SignatureHistory
+#print axioms Hcrypt.TCB.PrimitiveChecks.SignatureHistory.Queried
+#print axioms Hcrypt.TCB.PrimitiveChecks.SignatureHistory.Forgery
+#print axioms Hcrypt.TCB.PrimitiveChecks.SignatureHistory.verified_cases
+#print axioms Hcrypt.TCB.PrimitiveChecks.ProofVerifier
+#print axioms Hcrypt.TCB.PrimitiveChecks.ProofVerifier.FalseAccept
+#print axioms Hcrypt.TCB.PrimitiveChecks.ProofVerifier.verified_cases
+#print axioms Hcrypt.Protocol.Transfer.Primitives.SignatureProfile
+#print axioms Hcrypt.Protocol.Transfer.Primitives.PayloadProfile
+#print axioms Hcrypt.Protocol.Transfer.Primitives.ParsedFor
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Forgery
+#print axioms Hcrypt.Protocol.Transfer.Primitives.CompromisedKey
+#print axioms Hcrypt.Protocol.Transfer.Primitives.QueriedUnauthorized
+#print axioms Hcrypt.Protocol.Transfer.Primitives.ProofFalseAccept
+#print axioms Hcrypt.Protocol.Transfer.Primitives.StatementMismatch
+#print axioms Hcrypt.Protocol.Transfer.Primitives.authorizationFailure_implies_cases
+#print axioms Hcrypt.Protocol.Transfer.Primitives.payloadFailure_implies_cases
+#print axioms Hcrypt.Protocol.Transfer.Primitives.acceptedInvalid_implies_cases
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.forgeryEvent
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.compromisedKeyEvent
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.queriedUnauthorizedEvent
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.proofFalseAcceptEvent
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.statementMismatchEvent
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.forgeryProbability
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.compromisedKeyProbability
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.queriedUnauthorizedProbability
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.proofFalseAcceptProbability
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.statementMismatchProbability
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.acceptedInvalidEvent_subset_cases
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.acceptedInvalidProbability_le
+#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.acceptedInvalidProbability_le_of_bounds
+#print axioms Hcrypt.Sheaf.GraphCommitment.Layout
+#print axioms Hcrypt.Sheaf.GraphCommitment.Assignment
+#print axioms Hcrypt.Sheaf.GraphCommitment.edgeCoordinates
+#print axioms Hcrypt.Sheaf.GraphCommitment.translate
+#print axioms Hcrypt.Sheaf.GraphCommitment.edgeCoordinates_length
+#print axioms Hcrypt.Sheaf.GraphCommitment.edgeCoordinates_translate
+#print axioms Hcrypt.Sheaf.GraphCommitment.translate_coordinate_ne
+#print axioms Hcrypt.Sheaf.GraphCommitment.observe_translate
+#print axioms Hcrypt.Sheaf.GraphCommitment.alternative_observed_opening
+#print axioms Hcrypt.Sheaf.GraphCommitment.not_injective_observe
+#print axioms Hcrypt.Sheaf.GraphCommitment.payload
+#print axioms Hcrypt.Sheaf.GraphCommitment.payload_edgeCountMatches
+#print axioms Hcrypt.Sheaf.GraphCommitment.payload_wellFormed
+#print axioms Hcrypt.Sheaf.GraphCommitment.payload_translate
+#print axioms Hcrypt.Sheaf.GraphCommitment.encoded_payload_translate
+#print axioms Hcrypt.Sheaf.GraphCommitment.alternative_payload_opening
+#print axioms Hcrypt.Sheaf.GraphCommitment.not_messageBinding
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.layout
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.original
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.shifted
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.shifted_values
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.original_edges
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.shifted_edges
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.messages_differ
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.payload_collision
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.original_payload_edges
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.original_payload_wellFormed
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.shifted_payload_wellFormed
+#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.encoded_collision
+LEAN
+LEAN_NUM_THREADS=4 lake env lean /tmp/primitive-new-axioms.lean
+```
+
+The consolidated 667-report probe retains the same seven facade imports as
+the preceding integrity milestone and appends these 62 names. Earlier dated
+entries below retain their milestone counts and source snapshots.
+
 ## Current one-shot integrity — 2026-11-06
 
 The conditional Paper 2 transition now has a soundness-free operational layer

@@ -15,8 +15,10 @@ public import Proximity.Problem
 
   This file names the point where a public artifact becomes an observed
   chain-facing statement. It is intentionally thinner than an oracle: an
-  observation is just an accepted, bounded artifact whose public statement
-  follows from the proof-carrying statement Rust verified.
+  observation retains a semantic artifact-acceptance contract and an explicit
+  statement-extraction implication. The contract already contains the
+  artifact statement's truth. It does not establish a concrete Rust verifier's
+  soundness from successful byte checking alone.
 -/
 
 namespace Hcrypt
@@ -24,13 +26,16 @@ namespace TCB
 namespace ObservationBoundary
 
 /--
-A runtime-observed public statement carried by a proof-carrying cochain
-artifact.
+A semantic public observation carried by a proof-carrying cochain artifact.
 
 The artifact owns the hash/proof payload. The `publicStatement` is the
 chain-facing claim extracted from that payload: for example, a cochain is
 well-formed, a projected shadow is near a code, or a public residual is within
 the accepted radius.
+
+`accepted` is the existing semantic contract, including artifact statement
+truth. Concrete parsing, verification and their indexed soundness/error
+arguments are separate obligations.
 -/
 structure ObservedStatement (R : RuntimeBoundary) where
   artifact : ProofCarryingCommittedCochain
@@ -57,7 +62,7 @@ theorem publicArtifact_wellFormed (O : ObservedStatement R) :
   rcases O.accepted with ⟨_, _, _, _, hArtifact⟩
   exact hArtifact.1
 
-/-- Runtime acceptance recovers the proof-carrying statement itself. -/
+/-- Semantic acceptance exposes the statement truth already in its premises. -/
 theorem artifact_statement_holds (O : ObservedStatement R) :
     O.artifact.statement := by
   rcases O.accepted with ⟨_, _, _, _, hArtifact⟩
