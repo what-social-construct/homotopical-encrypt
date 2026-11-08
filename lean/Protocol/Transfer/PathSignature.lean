@@ -2,6 +2,7 @@ module
 
 public import Protocol.Ephemeral.Rotation
 public import Protocol.Transfer.Authorization
+public import Protocol.Transfer.PathSignature.Codec
 
 @[expose] public section
 
@@ -148,6 +149,16 @@ theorem input_subject_eq (inputFor : Key → Bytes → Bytes)
       (rightKey, Signing.message codec rightMetadata rightIntent) := reflects same
   exact ⟨congrArg Prod.fst subjects,
     (Signing.message_eq_iff codec _ _ _ _).mp (congrArg Prod.snd subjects)⟩
+
+/-- The concrete canonical byte codec discharges the outer input-injectivity
+premise for byte-valued public credentials and the original signing subject. -/
+theorem canonical_input_subject_eq (codec : Evidence.TransferCheck.PacketCodec Owner)
+    {leftKey rightKey : Bytes} {leftMetadata rightMetadata : ProofMetadata}
+    {leftIntent rightIntent : Intent Owner}
+    (same : Codec.encode leftKey (Signing.message codec leftMetadata leftIntent) =
+      Codec.encode rightKey (Signing.message codec rightMetadata rightIntent)) :
+    leftKey = rightKey ∧ leftMetadata = rightMetadata ∧ leftIntent = rightIntent :=
+  input_subject_eq Codec.encode Codec.encode_injective codec same
 
 /-- Native proof bytes occupy the original owner-signature field and execute
 the supplied proof backend on the selected key and exact full-intent message. -/

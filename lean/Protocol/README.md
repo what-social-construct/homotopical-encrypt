@@ -23,7 +23,9 @@ existing authenticated proposal and quorum types.
 | `Transfer/PublicView`, `Transfer/Security` | Original checked release projection and direct public-ID distinction; explicit observation/auxiliary/PMF adversary experiment and conditional one-shot error bound. No primitive estimate, oracle security or privacy theorem. |
 | `Transfer/Primitives` | Actual owner/key/message/history and byte-proof backend agreement, with five-event same-PMF error composition. Query coverage, backend-to-original-context refinement and concrete primitive budgets remain explicit. Current spectral runtime paths do not instantiate these joins. |
 | `Transfer/Signing`, `Transfer/Issuance`, `Transfer/Authorization` | Reuse the complete subject, packet codec, existing key map/history and release carrier. Construct owner-domain byte checks and exact authorized query projection; the bounded fixed-policy theorem excludes queried-unauthorized targets and leaves four same-PMF errors. Concrete wire/key/oracle refinement remains separate. |
-| `Transfer/PathSignature` | Partial finite-byte decoding retains the exact private base, credential opening and admissible path. A supplied path realization constructs the existing rotation and cochain transport. The existing proof backend executes through `asSignatureVerifier` on selected credential/full-signing inputs and `ownerSignature` bytes. Input/statement reflection remain supplied; witness existence establishes no knowledge or unforgeability. |
+| `Transfer/PathSignature` | Partial finite-byte decoding and a supplied path realization retain the original credential opening, admissible path and rotation. The existing proof backend executes on credential/full-signing inputs and actual `ownerSignature` bytes. Statement reflection and witness encoding remain supplied; existence establishes no knowledge or unforgeability. |
+| [Transfer/PathSignature/Codec](Transfer/PathSignature/Codec.lean) | Concrete byte-key/full-message framing, canonical parser, roundtrip and injectivity. `canonical_input_subject_eq` discharges the outer encoding premise; typed owner-packet, HCP ciphertext and private-witness codecs remain separate. |
+| [Storage/Retrieval](Storage/Retrieval.lean) | Optional native Hodge query/answer and same-answer CVP laws, local content-address verification and original HCP recovery, fixed-bucket uniform-read privacy, and a conditional joint-query obstruction. See the [storage leaf map](Storage/README.md#hash-indexed-retrieval-and-native-hodge-queries) for separate hypotheses. |
 
 `Protocol.Core` is the focused review entry point. `Protocol.Ledger` is the
 broader compatibility aggregate. Its legacy `Chain` import remains for
@@ -42,12 +44,21 @@ law without fabricating contexts, envelopes or authorization proofs.
 
 Given a supplied path-to-`PresentedRotation` realization,
 `PresentedRotation.pathFiberSystem` constructs the original `FiberSystem` on
-full cochains, with harmonic-projection, norm and recovery laws.
+full cochains, with harmonic-projection, harmonic-invariance and recovery laws.
 `EphemeralRotation.ofPath` retains that same path's rotation; arbitrary older
 carrier values need not satisfy this alignment. The
 [native join map](../../docs/PROTOCOL_PARITY_QUEUE.md#native-path-signature-import-map--2026-11-07)
 keeps those conditional geometry results separate from credential setup,
 finite decoding algorithms and message-bound knowledge security.
+
+`Protocol.Storage.Retrieval` is separate from both focused cores and is
+exported by the broader `Protocol.Storage` facade. Its native queries use
+the original `HodgeNoise` fields; their public weighted answer is an actual
+HCP encryption with aggregated exact/coexact openings. This preserves the
+existing coefficient/CVP correspondence. Efficient selector privacy needs
+a joint sampler/view argument; the uniform whole-bucket reference has exact
+same-bucket privacy at linear download cost. These results select no public-key
+HCP encryption or conventional/native signature combiner.
 
 `Protocol.Transfer` selects one whole-resource transfer in the fixed current
 snapshot and epoch. Catalog ownership, assets and positive amounts give its

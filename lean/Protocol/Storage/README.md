@@ -47,9 +47,44 @@ belong in the chosen security view; this API proves no cryptographic hiding.
 | [NoWrapCalibration](NoWrapCalibration.lean), [CanonicalSystematic](CanonicalSystematic.lean) | Constructed systematic cellular sheaf, original canonical payload codec and integer-syndrome no-wrap comparison. Its positive Euclidean family is checked, but the coarse bound does not reach the capacity radius. |
 | [ThreeLevelMetrics](ThreeLevelMetrics.lean), [CanonicalThreeLevel](CanonicalThreeLevel.lean) | Intrinsic modular validity via an integral cellular coboundary and carry; global native metric comparison and original canonical payload attaining `3/4` at all three levels. Canonical-mix goodness is for the declared diagonal family. |
 | [CanonicalCalibration](CanonicalCalibration.lean) | Composes the existing source/plane/RS calibration contracts on original storage contexts. Far transfer has unit scale; the near contract uses `2*d_C`, and the factor two is sharp. |
-| [Core](Core.lean) | Aggregates `Context`, `Checkpoint`, `Projection`, `Calibration`, `HCP`, `PublicView`, `Anchor`, `ProjectionAnchor` and `CoordinateCodec`. Import `CanonicalRS` explicitly for the fixed canonical application. The separate transition kernel is [Protocol.Core](../Core.lean). |
+| [Core](Core.lean) | Aggregates `Context`, `Checkpoint`, `Projection`, `Calibration`, `HCP`, `PublicView`, `Anchor`, `ProjectionAnchor` and `CoordinateCodec`. Import `CanonicalRS` for the fixed canonical application or `Retrieval` for the optional query/read profiles. The separate transition kernel is [Protocol.Core](../Core.lean). |
+| [Retrieval](Retrieval.lean) | Optional facade over the native query, authenticated lookup, private recovery and privacy-reference leaves below. It is outside `Storage.Core` and also exported by the broader `Protocol.Storage` facade. |
+| [Retrieval/HodgeQuery](Retrieval/HodgeQuery.lean) | Actual harmonic-lattice query samples and exact/coexact `HodgeNoise` aggregation. The public integer-weighted answer is the same full observation as an original encrypted answer; the existing coefficient decoder and CVP comparison apply to it. |
+| [Retrieval/ContentAddress](Retrieval/ContentAddress.lean) | Executable client-local slot/digest lookup and hash checks against the existing fixed manifest directory, followed by parsing. Substitution for original content gives equality or an actual hash collision, without global injectivity. |
+| [Retrieval/Recovery](Retrieval/Recovery.lean) | Connects accepted byte lookup and full-target decoding to the existing `RecoveryDelivery`; the native theorem retains original `BoundHCPObservation` endpoints through `BoundSampleRotation` and gives source coefficients or collision. |
+| [Retrieval/UniformRead](Retrieval/UniformRead.lean) | Downloads the whole fixed public bucket before local selection/checking/recovery. The complete declared server view and its distribution are target-independent under one shared PMF, at linear download cost. |
+| [Retrieval/LinearQueryObstruction](Retrieval/LinearQueryObstruction.lean) | Conditional public essential-column test for a joint one-hot query, with an example using varying coexact openings in the original cellular family and the existing CVP comparison. It does not decide every native query profile's privacy. |
 | [Examples](Examples.lean) | A concrete two-coordinate sheaf with zero `delta0`, a nonexact raw `[1,0]` input, accepted zero, two actual payload/plane slots, and positive/negative lifecycle fixtures. Authentication and backend receipt relations are explicitly toy equality models. |
 | [AnchorExamples](AnchorExamples.lean) | Integrates that actual sheaf/context/manifest with a positive conservative transfer, candidate evidence and a matching singleton quorum. Exercises mismatched run/snapshot and persisted-nonexact-context rejection under explicit fixture authentication relations. |
+
+## Hash-indexed retrieval and native Hodge queries
+
+`HodgeQuery` is the native evaluation construction: the client supplies the
+existing harmonic presentation and structured openings, while the server sums
+only observed cochains with public integer weights. `answer_eq_observed`
+retains the full encrypted answer, rather than just its harmonic projection.
+`decode_answer` and `cvp_answer_iff` reuse the original recovery/CVP laws.
+The hidden-operator comparison in [Hardness](../../Hardness.lean) keeps its
+declared public-input and uniform-solver quantifiers. Selector privacy for a
+whole query additionally needs a specified joint sampler/view.
+
+`UniformRead` supplies a complete lower-efficiency privacy reference within
+one fixed public bucket. It returns all labelled ciphertext bytes, with payload
+volume equal to their summed lengths and separate serialization overhead.
+The chosen hash, lookup result, recovery scope and failures remain local;
+selected requests, authorization metadata or retries extend the transcript.
+`LinearQueryObstruction` records explicit redundancy/projection hypotheses
+under which a joint view reveals its selector, without claiming that all HCP
+samplers satisfy them or that efficient native retrieval is impossible.
+
+The retrieval functions reuse `PublicManifestView` and opaque byte rows,
+not a replacement database or fibration. Trust in the directory/root,
+availability, the hash implementation, finite full-ciphertext decoding and
+private delivery remain profile/runtime contracts. This layer establishes no
+efficient PIR/OMR protocol or public-key HCP encryption interface. The
+[Paper 2 account](../../../papers/paper2/DRAFT.md#67-hash-indexing-private-retrieval-and-native-hodge-queries)
+and [implementation map](../../../docs/PROTOCOL_PARITY_QUEUE.md#hash-indexed-private-retrieval-and-native-hcp-queries--2026-11-08)
+record those boundaries.
 
 ## Raw inputs and exact acceptance
 
@@ -103,6 +138,7 @@ All 32-byte values reuse `TCB.Hash32`, but their roles remain different.
 | `Context.key.runId` | The projection lifecycle name. Its global freshness and the injectivity/security of a lifecycle identification function are separate obligations. |
 | `Context.key.snapshotRoot` | The original immutable cellular-sheaf snapshot root. |
 | `Context.key.cochainDigest` | The original public cochain artifact's leaf digest. |
+| Retrieval ciphertext digest | A directory-listed hash of named encrypted bytes. Joining those bytes to the full target HCP cochain needs its own decoder equation; the exact-component `cochainDigest` alone does not supply it. |
 | `Context.key.topologyTag` | The existing **16-byte** declared topology tag; it is not a 32-byte root. |
 | `Context.key.parameterSet` | The selected parameter-profile identifier. |
 | `Context.key.schemaVersion` | The schema version inherited from the original snapshot. |
@@ -252,6 +288,7 @@ From `lean/`, the focused commands are:
 lake build Protocol.Storage.Core Protocol.Storage.Examples
 lake build Protocol.Storage.AnchorExamples
 lake build Protocol.Storage.CanonicalRS Sheaf.ObservationQuotient
+lake build Protocol.Storage.Retrieval
 ```
 
 These commands describe validation targets; consult the shared parity record

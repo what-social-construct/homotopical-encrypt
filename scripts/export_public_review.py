@@ -14,7 +14,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 MARKER = "PUBLIC_REVIEW_MANIFEST.json"
 DOCS = (
-    "CATEGORICAL_ARCHITECTURE", "COCHAIN_PROXIMITY_TRACE", "PAPER_OUTLINE",
+    "CATEGORICAL_ARCHITECTURE", "COCHAIN_PROXIMITY_TRACE", "PAPER_OUTLINE", "SOURCE_LEDGER",
     "PROTOCOL_PARITY_QUEUE", "PROXIMITY", "PROXIMITY_ASSUMPTIONS",
     "PROXIMITY_PAPER_OUTLINE", "PROXIMITY_NOVELTY_COMPARISON", "MATH_STORAGE_VALIDATION",
     "SEMANTIC_OWNERSHIP", "SEMANTIC_PARITY_QUEUE", "PALOMAR_SUBMISSION_PLAN",
@@ -41,7 +41,7 @@ jobs:
         run: lake exe cache get
       - name: Build proofs and transition examples
         working-directory: lean
-        run: lake build && lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer
+        run: lake build && lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer Protocol.Storage.Retrieval
   manuscripts:
     runs-on: ubuntu-latest
     steps:

@@ -290,6 +290,22 @@ metric have different roles. Lattice preservation adds another condition.
 Neither a public classifier fiber nor an ordinary set quotient by itself
 supplies this stack structure.
 
+Fernandez Herrero--Inchiostro, [*Relative cohomology and base-change*](https://arxiv.org/abs/2611.05209),
+is a candidate reference for a future family/descent layer. Its derived
+pushforward/base-change results have explicit algebraic-geometric hypotheses.
+A realization of our finite cellular families in that setting remains to be
+supplied, together with metric and integral transport; it is not an imported
+Hodge-projection or retrieval-privacy theorem.
+
+Odabaşi's [enriched-functor homotopy framework](https://arxiv.org/abs/2610.40746)
+is another candidate comparison, via Frobenius exact structures. Relating it
+to our existing typed Helfer cochain model requires an explicit categorical
+and homotopy-relation adapter. [Knowledge Sheaves](https://arxiv.org/abs/2110.03789v2)
+provides a graph/schema example of approximate global-section semantics;
+that degree-zero interpretation remains distinct from HCP degree-one samples.
+The [source ledger](SOURCE_LEDGER.md) owns
+source-review status; neither reference is a new protocol assumption.
+
 ## Prospective block-sum structure
 
 External orthogonal direct sum, equivalently block sum in matrix coordinates,

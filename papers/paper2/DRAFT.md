@@ -923,10 +923,86 @@ counterpart, preserving its API and eliminating the duplicate proof.
 
 The witness-existence statement is independent of the message and does not
 establish possession: an arbitrary backend can ignore its public input.
-Concrete path realization, authenticated credential construction, codecs,
+The [outer byte-key/message codec](../../lean/Protocol/Transfer/PathSignature/Codec.lean)
+is now concrete: an exact domain, tagged key bytes, delimiter and complete
+message have a canonical parser and proved injectivity. The native
+`canonical_input_subject_eq` theorem therefore reflects the key, metadata and
+original full intent without supplying another outer-injectivity premise.
+This does not implement the typed packet codec, a full HCP ciphertext codec or
+the supported path-witness decoder.
+Concrete path realization, authenticated credential construction, those codecs,
 proving/transcript algorithms, knowledge extraction, unforgeability and their
 setup/error games remain obligations. The generic `Signing`, `Issuance` and
 `Authorization` modules retain their geometry-independent roles.
+
+#### 6.7. Hash indexing, private retrieval and native Hodge queries
+
+The [retrieval layer](../../lean/Protocol/Storage/Retrieval.lean) recovers the
+encrypted-database/private-read intention using the existing manifest, actual
+HCP samples and private recovery material. Its native query construction is
+in [HodgeQuery](../../lean/Protocol/Storage/Retrieval/HodgeQuery.lean). For a
+selected position \(i\), integer database values \(d_j\), coefficients \(z\)
+and existing exact/coexact openings \(e_j\), the columns are
+\(q_j=(H.\mathrm{encrypt}(\mathbf{1}_{j=i}z,e_j)).\mathrm{observed}\).
+The server forms \(A=\sum_j d_j q_j\) using only the observed columns and
+public integer weights. `answer_eq_observed` identifies this entire answer
+with the original encryptor applied to \(d_i z\): its exact and coexact
+openings are the corresponding weighted sums. No replacement ambient-noise
+model is introduced. The existing coefficient decoder returns \(d_i z\),
+and `cvp_answer_iff` identifies the same answer's unique closest point in
+the selected explicit harmonic lattice.
+
+The earlier `HCPBridge.cvpOracle_insufficient_for_operativeTarget` in
+[Hardness](../../lean/Hardness.lean) remains the declared uniform comparison:
+under closed-formula invariance, kernel separation and existence of a correct
+explicit-lattice oracle, no single solver is exact on the operative target
+for every correct oracle at the specified public input. The full joint query
+can contain additional observations. Extending that theorem to this view
+requires its own factorization or sampled security argument.
+[LinearQueryObstruction](../../lean/Protocol/Storage/Retrieval/LinearQueryObstruction.lean)
+records a precise extra condition: when the selected column has nonzero
+harmonic projection, the other projections vanish and the nonselected columns
+are redundant, the selected column is the unique one outside the span of
+the others. This predicate uses only the public query. Its concrete example
+uses the original cellular axis sample and varying nonzero coexact openings,
+and retains the existing CVP comparison for those same samples. The result
+is a conditional joint-view obstruction, not a universal rejection of native
+HCP queries or a theorem about an unspecified random sampler.
+
+Hash lookup and recovery are separate implemented stages.
+[ContentAddress](../../lean/Protocol/Storage/Retrieval/ContentAddress.lean)
+selects a slot or digest locally from an entire downloaded bucket, checks the
+actual returned bytes against a trusted fixed directory, and parses only
+accepted bytes. Substitution for a named original gives either the original
+bytes or an explicit colliding byte candidate; no global hash injectivity is
+assumed. [Recovery](../../lean/Protocol/Storage/Retrieval/Recovery.lean) then
+uses the existing recipient/epoch/context-scoped `RecoveryDelivery`. Its native
+corollary retains both original `BoundHCPObservation` endpoints and their
+`BoundSampleRotation`, yielding source-coefficient recovery or a collision
+under the named-byte availability and full-target decoding contracts.
+The full ciphertext's digest has a separate role from the existing
+exact-component leaf `cochainDigest`; the latter alone supplies no full
+ciphertext binding.
+
+[UniformRead](../../lean/Protocol/Storage/Retrieval/UniformRead.lean) is the
+complete selector-privacy reference profile: request the same whole public
+bucket and keep selection, hash checks and recovery local. The full
+request/response view and its PMF distribution are identical for any two
+targets in that fixed public bucket under the same random-tape PMF, even for
+an arbitrary server. It transfers the entire bucket; ciphertext byte volume is
+the sum of all record lengths, with label/transport overhead separate. This lower-efficiency reference
+does not decide the native query's privacy question. Efficient native retrieval
+still needs a specified joint sampler/view and selector-privacy proof. A
+plaintext hash-to-slot request, record-specific authorization, targeted retries
+or later public target-bearing actions extend the view and need their own
+analysis. Oblivious recipient discovery is a further property; the UnifOMR
+reference remains background, without protocol adoption.
+
+The client can use its private Hodge geometry to generate the native query;
+this is distinct from public sender encryption to an arbitrary recipient.
+That public-key interface remains open.
+No auxiliary CRS encryption or conventional/native signature combiner is
+selected by this retrieval construction.
 
 ### 7. Proof ledger and remaining protocol work
 
@@ -977,6 +1053,9 @@ the earlier counts are not validation of the added modules.
 | [Constructed owner authorization](../../lean/Protocol/Transfer/Authorization.lean) | The selected backend/key map construct the raw full-intent checker and a reflexive profile-agreement equation, preserving the original context/intent/candidate/policy. The actual typed history rules out queried-unauthorized mass and yields the four-term configured-experiment bound. An independently authorized release checked under this new checker can be recorded with its exact signature and `PublicTransferView.ofOperational` coverage. No secret signing execution, registration, numerical bound or general history/revocation game follows. |
 | [Path-realized transport](../../lean/Protocol/Ephemeral/Rotation.lean) | Under a supplied path-to-`PresentedRotation` realization, the existing fiber system's transport is the same path's degree-one map. Projection naturality and harmonic invariance are inherited; `EphemeralRotation.ofPath` constructs the original admissible carrier with matching transport and direct/base recovery. Arbitrary existing records and concrete realization algorithms remain separate. |
 | [Finite native witness boundary](../../lean/Protocol/Transfer/PathSignature.lean) | A partial decoder retains the original base/opening/path, actual key-indexed opening relation and admissibility. The same decoded path constructs the original rotation/recovery. Exact proof-to-signature execution uses full intent and actual `ownerSignature`; encoder reflection and backend-statement-to-witness existence are explicit conditional laws. Witness existence is not message-bound knowledge or unforgeability. |
+| [Concrete outer input codec](../../lean/Protocol/Transfer/PathSignature/Codec.lean) | Canonical byte-key/full-message encoding, parser roundtrip, injectivity and malformed-input rejection discharge the outer-injection premise in `canonical_input_subject_eq`. Typed packet, full-ciphertext and witness encodings remain separate. |
+| [Native Hodge queries and same-answer CVP](../../lean/Protocol/Storage/Retrieval/HodgeQuery.lean) | Queries and the whole integer-weighted server answer use original `HodgeNoise`/harmonic-lattice samples; weighted exact/coexact openings derive private coefficient recovery and the existing CVP solution equivalence for that same answer. Joint selector privacy remains a separate sampled-view obligation. |
+| [Retrieval privacy and authenticated recovery](../../lean/Protocol/Storage/Retrieval.lean) | Local digest/slot checks and original bound-HCP recipient recovery give correctness or an actual collision. Whole-bucket reads have exact same-bucket selector privacy at linear download cost. The separate joint-query obstruction is conditional and uses the actual structured-noise cellular family; it does not replace the original HCP/CVP quantifiers. Concrete authentication/encoding/backend and efficient private-query security remain profile work. |
 | [Ordinary graph commitment ambiguity](../../lean/Sheaf/GraphCommitment.lean) | Constant translation preserves actual modular `CochainCommitmentData`, fixed topology and every deterministic encoding while changing a designated message coordinate. The explicit path example has messages three/ten and identical edge values two/four. It refutes raw message binding for this profile, without claiming a hash collision, a hiding theorem or an obstruction for every cellular sheaf. |
 | [Semantic evidence compatibility](../../lean/Protocol/Evidence/TransferEnvelope.lean) | Packages independently derived validity/check facts in the existing TCB envelope, with the actual candidate/transfer witness and public intent shadow. Its root/inclusion and runtime facts are supplied or proved by the selected profile; it is not an additional operational verifier or security proof. |
 | [Plucker reconstruction](../../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) and [operative-target adapter](../../lean/TCB/PluckerObservation.lean) | Eight reconstruction endpoints and the observation endpoints in the 27-declaration root probe are standard-only. Recovery consumes full exact-real shadow data and an explicit operative-kernel identification; digest-only visibility is a separate profile. |

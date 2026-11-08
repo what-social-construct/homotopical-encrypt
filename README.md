@@ -9,15 +9,19 @@ The repository contains:
 - a Lean 4 formalization of the mathematical interfaces and proved
   relationships;
 - Paper 1, covering the Harmonic Cochain Problem (HCP), its relationship to
-  discrete CVP, and the full proximity projection;
-- a Paper 2 workspace for protocol, runtime, consensus, and security-game
-  concerns;
+  discrete CVP, and the source/proximity interface;
+- a Paper 2 working manuscript for commitments, protocol transitions, storage
+  and explicit security-game contracts;
+- Paper 3, covering smooth-domain Reed–Solomon capacity-radius results and
+  the proved native modular cochain application;
 - Rust and Python prototypes whose eventual relationship to the Lean
   specifications remains an explicit trust-boundary problem.
 
-The current priority is to make the Lean development and Paper 1 mutually
-faithful. Rust and Python are research/protocol work, not the normative source
-for the mathematics.
+The [source ledger](docs/SOURCE_LEDGER.md) indexes the reviewed literature.
+The [three-paper completion checkpoint](docs/PAPER_OUTLINE.md#source-based-completion-checkpoint--2026-11-08)
+records proved results and remaining mathematical/manuscript work. Lean and
+the corresponding manuscripts define the mathematical claims; runtime
+refinement remains an explicit obligation.
 
 ## Core Mathematical Idea
 

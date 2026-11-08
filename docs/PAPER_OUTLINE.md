@@ -7,6 +7,87 @@ the current three-paper plan: Paper 1 is HCP foundations, Paper 2 is the
 protocol/commitment layer, and Paper 3 is the standalone capacity-radius
 coding manuscript in `papers/proximity-prize/`.
 
+## Source-based completion checkpoint — 2026-11-08
+
+The [source ledger](SOURCE_LEDGER.md) provides the quick topic/ID index,
+reviewed versions and adoption boundaries. Bibliographic inclusion is not a
+proof dependency. The manuscript parity registers and
+[validation record](MATH_STORAGE_VALIDATION.md) remain authoritative for
+actual statement/Lean correspondence and checked dependencies.
+
+| Paper | Selected proved core | Required completion work |
+|---|---|---|
+| **1 — HCP foundations** | Actual cellular Hodge noise/recovery, finite integral family for the homological fragment of Helfer semantics, encoded-message ambiguity, precise known-lattice CVP comparison and hidden-operator oracle obstruction; full genuine Plucker/projector reconstruction. | Freeze those exact headline quantifiers; repair wording that lets an exact-component payload appear to supply the full observation; resolve the closed near/far boundary convention in §6 and align its Lean contract. Keep an uninstantiated geometric application conditional. Finish the focused novelty/source account and selected submission statements. |
+| **2 — protocol/commitments** | One fixed-snapshot/epoch public-resource transition and conditional one-shot integrity; actual rotation and original-object evidence/history joins; native structured-noise query/answer/CVP identity; hash-addressed recovery; whole-bucket private-read reference and joint-view obstruction under explicit noise-column redundancy. | Instantiate one finite original-object profile and its visibility, packet/ciphertext/witness bytes, hash preimages and authenticated initial state. Supply a genuine credential/proof construction if native authentication security is advertised. If efficient private reads are claimed, choose and analyze the whole query sampler/view; the whole-bucket reference supports a bounded first scope. Complete one bounded verifier/persistence path if runtime implementation is claimed, and turn the Markdown working text into a theorem-led manuscript/TeX/PDF. |
+| **3 — capacity-radius proximity** | All nine named coding claims, Q04--Q07 and Q08 for the actual modular cochain profile, including native metric comparison and nonempty capacity-far examples. | Update stale abstract/introduction summaries to reflect the completed modular application; finish the bounded prior-work/deep-hole account and precise complexity claims. Resolve native arithmetic trust for selected Palomar endpoints, then synchronize the manuscript/ledgers and package the selected statements. Q10--Q12 are extensions, not required missing proofs. |
+
+Paper 2 can be completed as a conditional mathematical specification with
+explicit primitive/runtime contracts. Advertising a new native authentication
+construction additionally requires its actual algorithms and security proof;
+those contracts cannot stand in for that contribution. Runtime/persistence
+refinement is required for an implementation claim, rather than a prerequisite
+for the selected conditional mathematics.
+
+### Recommended order
+
+1. **Reconcile the two mathematical manuscripts first.** Paper 1 and Paper 3
+   do not depend on finishing private retrieval, signatures, public-key HCP,
+   full consensus or Rust production work. In Paper 1, the key source wording
+   is in the introduction and §5: an accepted exact payload alone does not
+   supply `b`; use the additional `BoundHCPObservation`/alignment/disclosure
+   relation. Full operative-kernel Plucker coordinates together with `b`
+   determine the HCP target; digest/proof-only observations have a separate
+   visibility profile. In Paper 3, the abstract and introduction should state §7's
+   completed modular result rather than calling it a contribution to complete.
+2. **Close Paper 1's application convention explicitly.** The equal closed
+   near/far threshold at `2047/4096` needs either a strict gap, an empty-shell
+   proof or a synchronized half-open convention for a meaningful solver
+   instantiation. Change the manuscript and formal contract together. Check
+   the cited canonical theorem's actual hypotheses; a conditional displayed
+   bound is not a constructed nontrivial security budget.
+3. **Build one concrete Paper 2 profile from the existing interfaces.**
+   Reuse the original commitment, snapshot, `Intent`, history, manifest,
+   `HodgeNoise`, private presentation and delivered rotation. Its remaining
+   byte profile must support a bounded integral/rational realization; arbitrary
+   real cochains do not automatically have a faithful finite encoding.
+   The outer credential/message codec is now concrete, while the typed owner
+   packet, full-ciphertext and private-witness codecs remain separate work.
+4. **Choose the security claim before the next cryptographic construction.**
+   HCP content secrecy, private retrieval, owner authentication and public
+   sender encryption are separate games. The user's current direction is to
+   investigate HCP public encryption before choosing auxiliary CRS encryption.
+   No auxiliary public-key primitive or conventional/native signature combiner
+   is selected by this checkpoint. Native query evaluation already retains
+   the exact/coexact noise and the same-answer CVP comparison; efficient
+   selector privacy still needs its full joint view and sampler. The existing
+   one-observation exact-solver obstruction must not be promoted to that game.
+5. **Freeze the submission surface last.** Preserve each theorem's real
+   hypotheses, metric/field and quantifier order in Challenge/Solution,
+   metadata, README and manuscript excerpts. The current native arithmetic
+   certificates and the seven isolated cited-bound axioms are different trust
+   questions. Remove native dependencies for the selected endpoints or select
+   accurately scoped standard-only results; excluding cited axioms alone does
+   not establish Palomar compliance. Rebuild/render changed manuscripts and
+   run protected comparison before making any submission claim.
+
+### Sources that matter for this sequence
+
+| Source group | Immediate use | Additional work it does not discharge |
+|---|---|---|
+| Hansen--Ghrist; Helfer; the existing HCP/CVP proof surface | Exact cellular/Hodge foundations, the declared homological fragment and precise comparison statements in Paper 1. | Full first-order semantics, sampled encryption secrecy and arbitrary protocol-view privacy. |
+| Paper 3's ABF/BCHKS/DKT/deep-hole comparisons | Identify the actual event, parameter ranges and contribution of the endpoint/certificate and modular-bridge results. | A new cryptographic security, decoder complexity or cost advantage merely from source coverage. |
+| UnifOMR/private retrieval | Specify the recipient/selector observation and compare possible efficient private-read constructions for Paper 2. | An adopted protocol or a privacy proof for our full Hodge query array. |
+| Cellular reductions, diffusion and Knowledge Sheaves | Possible implementation, graph/schema and computational refinements after selecting their actual maps and metrics. | Preservation of literal harmonic representatives, metric radii or authentication by cohomology/graph terminology alone. |
+| Relative base-change and enriched-functor homotopy | Candidate future family/descent and categorical comparison frameworks. | Immediate missing coding proofs, Hodge isometry, finite codecs or cryptographic security. |
+
+Three fields must remain separate in Paper 3: the smooth large-field family,
+the exact boundary field and the canonical `12289` cochain application. The
+latter fails the unrestricted `2^-128` MCA budget even at count zero. A
+large-extension-field **actual cochain** application would need a new finite
+extension-field encoding and original-object adapters; integer casts into a
+prime subfield do not construct it. Keep this optional stronger application
+separate from the already completed native modular radius theorem.
+
 ## Current Status And Source Of Truth
 
 This is now a planning and cross-paper scope document, not the current table of

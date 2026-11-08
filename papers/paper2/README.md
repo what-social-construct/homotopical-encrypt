@@ -196,11 +196,38 @@ ephemeral path; validity uses the selected key-indexed opening relation and
 actual admissibility. That same decoded path constructs the existing rotation
 and recovery law. `ProofVerifier.asSignatureVerifier` routes the selected proof
 backend through the existing full-intent checker and actual `ownerSignature`.
-Key/message encoder reflection and backend-statement-to-witness existence
-remain conditional. No concrete realization, credential scheme, codec,
-prover/transcript or knowledge/unforgeability argument is selected. The shared
+Backend-statement-to-witness existence remains conditional. The
+[concrete outer byte-key/message codec](../../lean/Protocol/Transfer/PathSignature/Codec.lean)
+now supplies canonical parsing and injectivity, discharging the outer encoder
+premise in `canonical_input_subject_eq`. The typed packet, full HCP ciphertext
+and supported-witness decoders remain separate contracts. No concrete path
+realization, authenticated credential scheme, prover/transcript or
+knowledge/unforgeability argument is selected. The shared
 signing modules remain generic; the exact packet codec's injectivity proof now
 delegates to its operational counterpart.
+
+The [native retrieval construction](DRAFT.md#67-hash-indexing-private-retrieval-and-native-hodge-queries)
+is exported separately by [Storage.Retrieval](../../lean/Protocol/Storage/Retrieval.lean).
+`HodgeQuery` builds columns with the original harmonic encoder and structured
+exact/coexact `HodgeNoise`; the server's public integer sum is itself an actual
+encryption with weighted noise openings. The private decoder and existing CVP
+comparison apply to that same answer. The original HCP/CVP oracle-insufficiency
+theorem retains its declared single-observation/uniform-solver quantifiers.
+`LinearQueryObstruction` isolates an additional joint-column redundancy
+condition and an actual cellular example; it does not decide every native
+query sampler's privacy.
+
+`ContentAddress` performs local directory/digest checks on opaque ciphertext
+bytes, and `Recovery` joins those bytes to the existing original bound-HCP
+samples and scoped recipient recovery. `UniformRead` downloads the entire fixed
+public bucket and proves exact selector independence of the complete declared
+request/response view, at linear download cost. This is a complete privacy
+reference while efficient native-query privacy remains open. Hash lookup,
+selected recovery scope and errors stay local; targeted requests or retries
+need a new transcript analysis. The ciphertext digest remains distinct in role
+from the exact-component `cochainDigest`. This retrieval layer chooses no
+auxiliary CRS encryption, public sender-encryption algorithm or hybrid
+conventional/native owner-signature scheme.
 
 The shared mathematical wiring is owned by Paper 1:
 [actual cochain model and invariant homological tests](../../lean/Helfer/CochainModel.lean),
@@ -212,7 +239,7 @@ retains the application-supplied acceptance, decoder and binding contracts.
 The fragment is not full Helfer first-order semantics. The
 [draft ledger](DRAFT.md#7-proof-ledger-and-remaining-protocol-work) and
 [central validation record](../../docs/MATH_STORAGE_VALIDATION.md) distinguish
-checked endpoints from integration work. These mathematical joins do not
+checked endpoints from integration work. These Paper 1 mathematical joins do not
 construct a privacy game, secure recipient channel or rotation runtime.
 
 The current mathematical profile keeps three native metrics:
@@ -269,8 +296,8 @@ Wider planned scope, beyond the bounded first endpoint:
   forward-secure identity-based encryption;
 - post-quantum authenticated key exchange and signcryption for protocol
   session establishment;
-- oblivious message retrieval / private retrieval boundary for protocol
-  storage and worker access;
+- oblivious recipient discovery and efficient native private retrieval for
+  protocol storage and worker access;
 - encrypted-computation framework risk, metamorphic testing, and implementation
   correctness boundaries for privacy-preserving runtimes;
 - protocol implementation testing, including fuzzing and LLM-guided seed

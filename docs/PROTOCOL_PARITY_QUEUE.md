@@ -347,6 +347,47 @@ that supplied realization. The native wrapper consumes `ownerSignature`;
 acceptance. Importing `Gates`, `Axioms.ZKP`, `TCB.SNARK` or the semantic witness
 envelope supplies no missing knowledge or unforgeability law.
 
+### Hash-indexed private retrieval and native HCP queries — 2026-11-08
+
+The recovered storage plan (`docs/archive/STORAGE.md`, sections "verified
+encrypted data layer" and "rust storage") placed encrypted objects behind content hashes
+or authenticated roots, followed by bounded public commitments/proofs and
+ledger updates. [Paper 2's scope](../papers/paper2/README.md) separately names
+oblivious message retrieval/private retrieval for storage and worker access.
+The UnifOMR reference is background, not an adopted protocol. The active
+implementation reuses the existing public manifest and original HCP objects:
+
+| Role | Existing/new implementation and precise status |
+|---|---|
+| Native encrypted query and server answer | [Retrieval.HodgeQuery](../lean/Protocol/Storage/Retrieval/HodgeQuery.lean) uses the original harmonic encoder and actual `HodgeNoise` fields. Public integer-weighted evaluation produces the same full observation as an original encrypted answer with weighted exact/coexact openings. Its coefficient decoder and known-lattice CVP equivalence concern that same answer. |
+| Joint selector-privacy boundary | [LinearQueryObstruction](../lean/Protocol/Storage/Retrieval/LinearQueryObstruction.lean) gives a public essential-column predicate under explicit nonzero/zero projection and redundancy hypotheses, with varying structured coexact noise in the original cellular family. This is an additional joint-view condition, not a rejection of every native query sampler or of the fixed-observation HCP/CVP theorem. |
+| Local authenticated encrypted-object access | [ContentAddress](../lean/Protocol/Storage/Retrieval/ContentAddress.lean) reuses the manifest's slot/digest directory and downloaded labelled byte rows. Actual local hash checks precede parsing; original-content substitution gives equality or a concrete collision. The trusted directory, hash implementation, availability and full-ciphertext decoder remain profile/runtime inputs. |
+| Original private HCP recovery after retrieval | [Recovery](../lean/Protocol/Storage/Retrieval/Recovery.lean) reuses `RecoveryDelivery` and the original source/target `BoundHCPObservation` via `BoundSampleRotation`. Fetched target decoding plus the existing presented-message equation derives coefficient recovery or collision. No second recovery key, snapshot or private observation carrier is created. |
+| Complete reference read profile | [UniformRead](../lean/Protocol/Storage/Retrieval/UniformRead.lean) requests the entire fixed public bucket, then performs selection/checks/recovery locally. The whole declared server view and PMF distribution are equal for all targets in that bucket, even for an arbitrary server. Bandwidth is the complete ciphertext payload plus labels/transport overhead. This reference is separate from the efficient native-query privacy goal. |
+
+The full encrypted object's content address must bind its canonical ciphertext
+bytes. `BoundHCPObservation.hashObject` and `ContextKey.cochainDigest` instead
+name the existing exact-component payload; neither alone authenticates the
+full encrypted cochain. All public directory entries can be visible while the
+selected entry remains local. A preliminary plaintext hash lookup,
+record-specific authorization, selected `DeliveryScope`, targeted retry/error
+or later public selected-object action would extend the observed transcript.
+
+Client-generated HCP queries can use private geometry, so this read role does
+not by itself require public sender encryption. Public-key HCP encryption,
+efficient query sampling/security and oblivious recipient discovery remain
+distinct investigations. No auxiliary CRS PKE or traditional/native owner
+signature combiner is selected. The original
+`cvpOracle_insufficient_for_operativeTarget` retains its declared realization,
+invariance/separation and oracle-existence hypotheses and uniform solver
+quantifiers; extending it to the joint query needs an explicit view argument.
+
+The [outer path-signature input codec](../lean/Protocol/Transfer/PathSignature/Codec.lean)
+is now an actual tagged byte-key/full-message format with canonical decoding
+and injectivity. `canonical_input_subject_eq` discharges that outer reflection
+premise; typed owner packets, full HCP ciphertexts and supported private-path
+witnesses retain their own encoding contracts.
+
 ### Rust-only concrete objects
 
 Rust, not Lean, owns transaction/block byte structs, serialization versions,

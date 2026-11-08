@@ -1,7 +1,8 @@
 # Chain, network and cellular-sheaf object review
 
-Working review, 2026-11-05. This records the recovered plans, current source
-objects and the user's reading list. It supports the active
+Working review started 2026-11-05; source lookup and selected status notes
+updated 2026-11-08. This records the recovered plans, source objects and the
+user's reading list. It supports the active
 [categorical map](CATEGORICAL_ARCHITECTURE.md) and
 [protocol queue](PROTOCOL_PARITY_QUEUE.md); it does not select a new protocol,
 metric, storage backend or cryptographic construction.
@@ -186,10 +187,12 @@ matrices and the Euclidean conventions also makes the corresponding Hodge
 operator computable. The hidden-operator claim therefore needs an explicit
 public observation profile.
 
-The currently found direct cellular-sheaf constructor in
-[Storage.Examples](../lean/Protocol/Storage/Examples.lean) is a small
-zero-incidence fixture. The general definitions and transport results do not
-yet construct the intended database/network sheaf.
+The initial review used the small zero-incidence
+[Storage.Examples](../lean/Protocol/Storage/Examples.lean) fixture. The later
+[Sheaf.HCPAxisFamily](../lean/Sheaf/HCPAxisFamily.lean) and
+[HCP.AxisFamily](../lean/HCP/AxisFamily.lean) construct actual integral cellular
+HCP examples. Selecting the intended database/network sheaf remains separate
+from those examples and the general transport theorems.
 
 ## Graph roles and maps to specify
 
@@ -213,51 +216,14 @@ than inferred from shared graph terminology.
 
 ## Reading register
 
-Versions below were checked against official arXiv sources. “Possible role” is
-an assessment, not an adopted dependency or an assertion that the external
-theorem is formalized here. These are targeted definition/result reviews,
-not complete independent proof audits. The two new cryptographic preprints
-especially need a separate security review before any use as assumptions.
+The single canonical [source ledger](SOURCE_LEDGER.md) now owns the topic/ID
+index, versioned source rows, reviewed material and adoption boundaries.
+This working review retains historical architecture and object provenance.
 
-### Foundations and categorical organization
+### Quick topic and ID index
 
-| Source | Result/definition examined | Possible role and boundary |
-|---|---|---|
-| [Hansen–Ghrist, *Toward a Spectral Theory of Cellular Sheaves*, 1808.01513v2](https://arxiv.org/html/1808.01513v2) | Face-poset vector-space sheaves, weighted cochains and Hodge theory (§§2–3). Already cited by Paper 1. | Primary mathematical foundation. Our finite coordinate truncation gives concrete maps/laws; it does not formalize the entire paper. |
-| [Helfer, *First-order homotopical logic*, 1908.08944v2](https://arxiv.org/html/1908.08944v2) | Fibrational semantics and homotopy-invariant first-order interpretation, including Theorem 12.3. Already cited by Paper 1. | Interpretation/equivalence layer. The full external model-categorical construction and its realization by the intended cellular objects remain separate from existing interface consequences. |
-| [*A topos for étale-finite Heyting algebras*, 2606.03861v2](https://arxiv.org/pdf/2606.03861v2) | The étale-finite construction realizes `H` as `Sub(1)` of a topos (Theorem 5.25). | Possible logical semantics. Global truth values `Sub(1)` and the internal classifier object are distinct. Our abstract residuation interface alone does not establish all required lattice laws or construct this topos. |
-| [Færgeman–Kjærsgaard, *Local Constancy of the Betti Automorphic Category over the Moduli of Curves*, 2610.12384v2](https://arxiv.org/html/2610.12384v2) | Categories of derived sheaves with nilpotent singular support; fiber restriction is an equivalence over a contractible real analytic family (Theorem 10.1.0.1). Appendix B.1 organizes local constancy; global monodromy can remain. | Useful pattern: a parameter base, categories over it and coherent transport. No realization from our cellular sheaf or Helfer interfaces is supplied. Its categorical spectral projector is distinct from an orthogonal Hodge projector. Local equivalence alone does not establish metric preservation, key rotation or byte recovery. |
-
-### Geometry, code extraction and reduction
-
-| Source | Result/definition examined | Possible role and boundary |
-|---|---|---|
-| [*Grassmann–Plücker functions for orthogonal matroids*, 2601.19830v2](https://arxiv.org/html/2601.19830v2) | Restricted Plücker data for maximal isotropic subspaces of a split orthogonal space, with recovery of the subspace (Corollary 3.7). | A specialized algebraic comparison. Our arbitrary real harmonic subspaces have no selected orthogonal-matroid realization. Current Lean shadow soundness does not itself prove full Plücker injectivity. |
-| [Beelen–Ghorpade–Høholdt, *Affine Grassmann Codes*, 0911.1298v2](https://arxiv.org/abs/0911.1298v2) | Span of all minors of a finite-field matrix, evaluated on all matrices; exact length, dimension and minimum distance. Section 7 identifies the normalized big-cell connection to Grassmann/Plücker evaluation. | Direct coding reference to assess for the extraction layer. Applying its distance requires choosing that finite-field chart/evaluation code and proving the identification. The current real shadow and subsequent plane-to-RS encoding do not supply this automatically. Minimum codeword distance does not prove the missing geometric-source-to-pair far comparison. |
-| [*Hyper-derivative AG Codes via Local Expansions*, 2609.18098v1](https://arxiv.org/html/2609.18098v1) | Finite-field function evaluation through local derivative jets, with an ordered NRT metric. | Alternative codec research. Current paired RS words have independent coordinates and whole-pair Hamming distance. A derivative relation, new locus/codec and metric comparison would need construction before importing bounds. |
-| [Guruswami–Li–Singhal, *Average-Radius List-Decodability of Random Linear Codes*, 2608.22663v2](https://arxiv.org/html/2608.22663v2) | Random linear codes have a high-probability average-radius guarantee near finite-alphabet capacity, stronger than ordinary list decoding. | Paper 3 comparison source. Applying it needs an actual ensemble/transfer theorem for our fixed code; it constructs no harmonic projector or geometric-to-Hamming bridge. |
-| [Curry–Ghrist–Nanda, *Discrete Morse theory for computing cellular sheaf cohomology*, 1312.6454v2](https://arxiv.org/html/1312.6454v2) | Acyclic matching with invertible differential blocks gives a reduced cochain complex and chain-homotopy equivalence (Theorem 2.6). | Potential computational reduction with retained maps/certificates. Cohomology preservation allows dimension changes and does not automatically preserve Euclidean distances or literal harmonic representatives. Preserve lifts and the original metric if the original HCP target matters. |
-| [*Multidimensional Persistence Module Classification via Lattice-Theoretic Convolutions*, 2011.14057v2](https://arxiv.org/html/2011.14057v2) | Order-indexed homology/persistence features and meet/join convolutions for classification. | Optional feature/learning reference. Filtration persistence, disk retention and integral CVP lattices have separate meanings. The proposed invariants are incomplete classifiers and do not authenticate a snapshot. |
-
-### Network computation, metrics and learning
-
-| Source | Result/definition examined | Possible role and boundary |
-|---|---|---|
-| [*Consensus and Persistent Harmonic Edge Circulation in a Hodge-Theoretic Model of Networked Information Flow*, 2608.15397v2](https://arxiv.org/html/2608.15397v2) | Coupled scalar node/edge flow on a fixed connected complex; its harmonic edge component is conserved and the flow converges to a stated mean/harmonic limit. | Possible constant-sheaf dynamics example. Evolving cochains and retained geometry are distinct. Arbitrary sheaf stalks require different hypotheses; averaging consensus does not establish authenticated quorum/finality. |
-| [*Learning Discrete Riemannian Metrics for Physical Fields with Cochain-Frame Equivariance*, 2608.14556v2](https://arxiv.org/html/2608.14556v2) | Positive weights in the displayed fixed-incidence operator preserve its Euclidean harmonic kernel; the paper separately discusses intrinsic metric-dependent adjoints. | Makes the metric choice concrete. Changing the middle-degree metric can change harmonic representatives. Feature-channel orthogonal symmetry does not define cryptographic key rotation. No metric from this paper is selected. |
-| [*Consistent Geometric Deep Learning via Hilbert Bundles and Cellular Sheaves*, 2605.06395v3](https://arxiv.org/html/2605.06395v3) | Hilbert fibers, connection transport, sampled graph sheaves, finite-rank projection and conditional approximation results. | Potential learning/sheaf construction source. Its finite-dimensional graph case could fit after choosing bases, incidences and maps; infinite fibers, manifold sampling and connection results are additional infrastructure. Version 3, dated November 4, is the reviewed version. |
-| [*A Bochner Weitzenböck Decomposition for Cellular Sheaf Laplacians, Curvature and Neural Sheaf Diffusion*, 2610.28455v1](https://arxiv.org/html/2610.28455v1) | Uniform block operators decompose into a positive connection-like term and block-diagonal curvature. Holonomy results have invertibility/connectivity hypotheses. | Possible operator-analysis tool. Dropping curvature need not preserve the original kernel. Node-feature degree zero and HCP degree one must be identified through an actual construction. |
-| [*Polynomial Neural Sheaf Diffusion*, 2512.00242v3](https://arxiv.org/html/2512.00242v3) | Polynomial spectral filters, finite-hop support and Chebyshev recurrence; stated stability bounds concern a properly scaled linear core. | Candidate efficient numerical layer. For `h` in `ker L`, `p(L)h = p(0)h`; exact preservation requires `p(0)=1`. Nonlinear gates and changing sheaves need additional analysis. |
-| [*Sheaf-MPNN*, 2611.04670v1](https://arxiv.org/html/2611.04670v1) | Local endpoint restrictions, edge discrepancy, adjoint pullbacks and aggregation realize the sheaf Laplacian; buffered message-passing steps implement polynomial diffusion. | Concrete modular computation pattern. Numerical message passing needs its own wire/delivery/authentication refinement when distributed. It supplies no ledger agreement theorem. |
-
-### Ordered constraints, transitions and cryptographic comparisons
-
-| Source | Result/definition examined | Possible role and boundary |
-|---|---|---|
-| [Ghrist–Riess, *Cellular Sheaves of Lattices and the Tarski Laplacian*, 2007.04099v2](https://arxiv.org/html/2007.04099v2) | Lattice stalks with Galois adjunctions; fixed points of `id meet L` are global sections of the lower-map sheaf. Completeness and termination require the stated order hypotheses. | Promising `TaskSheaf` constraint-propagation model, after constructing its actual stalks/adjunctions. The current truth order `Invalid < Undetermined < Valid` makes the meet flow descending; evidence growth requires a deliberate order/semantics choice. DCC gives per-orbit termination, not a uniform round bound. |
-| [Ghrist, *Clearing in Liability Networks via Sheaves on Directed Hypergraphs*, 2605.15778v1](https://arxiv.org/html/2605.15778v1) | Local payment constraints, distribution/aggregation maps and global clearing as an equalizer/fixed-point problem; existence and uniqueness depend on additional hypotheses. | Useful local-constraint-to-global-transition pattern. Any economic interpretation remains unselected. Compiling a proposed clearing into the conservative kernel needs authorization, availability, freshness and conservation proofs for the same action. |
-| [*Information Loss Is All You Need: TC0 Pseudorandomness from Worst-Case Lattices*, 2611.05136v1](https://arxiv.org/html/2611.05136v1) | Preliminary main-statement review: deterministic keyed rounding and a lattice quotient, with conditional worst-case lattice/LWE reductions. Its weak-PRF claim uses classical uniform random examples against a uniform quantum polynomial-time distinguisher; it does not establish chosen-input or quantum-query security. | Security-game comparison only. The paper's examples can determine the secret information-theoretically; the claimed barrier is computational. No HCP-to-distribution/reduction map is instantiated. Information loss alone establishes neither pseudorandomness nor distance preservation. A dedicated proof audit remains open. |
-| [*GKS Fully Homomorphic Encryption: Security Analysis*, 2610.37061v1](https://arxiv.org/html/2610.37061v1) | Preliminary game/deployment review: plaintext slots/ring, ciphertext algebra, secret ideal and quotient/retraction are separated. The security theorem retains an open balance lemma; the experiment needs clarification and KPA/CPA security is not claimed. | Helps separate encrypted storage, encrypted search/computation, custody and epoch capabilities. It does not establish authenticated database queries or expiration of copied ciphertext. No construction or security claim is adopted here. |
+Use the [ledger's quick index](SOURCE_LEDGER.md#quick-topic-and-id-index) for
+source lookup; the detailed reading rows were moved rather than duplicated.
 
 ## Decisions to resolve, one object at a time
 
@@ -281,7 +247,7 @@ appropriate raw-observation/source profile. A full-HCP far statement through
 an exact-component-only view needs the additional restrictions or observed
 data identified by the existing obstruction.
 
-The reading register adopts no new external construction or security claim.
+The source ledger adopts no new external construction or security claim.
 The separately implemented anchor sources have the validation status recorded
 above and in the shared validation record. The public-review exporter stages
 the validated Lean/manuscript subset separately; this historical working

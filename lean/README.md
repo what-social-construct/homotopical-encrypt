@@ -23,7 +23,8 @@ The project [MIT license](../LICENSE) is included at the package root.
 | One-shot integrity experiment | [Protocol/Transfer/Security.lean](Protocol/Transfer/Security.lean) | Shared soundness-free checks reduce actual accepted-invalid attempts to authorization/payload failures. Explicit released view, auxiliary input and one PMF give their conditional sum bound, without independence or a new primitive estimate. |
 | Primitive/TCB comparison | [TCB/PrimitiveChecks.lean](TCB/PrimitiveChecks.lean), [Transfer/Primitives.lean](Protocol/Transfer/Primitives.lean) | Actual byte backends, selected owner/key/message/history and original-context statement joins. Five failure events compose without assuming perfect soundness or supplying a numerical primitive bound. |
 | Existing-object owner signing | [Signing](Protocol/Transfer/Signing.lean), [Issuance](Protocol/Transfer/Issuance.lean), [Authorization](Protocol/Transfer/Authorization.lean) | Full metadata/Intent reflection from the supplied packet codec, actual typed issue/query projection and constructed backend checker. Under the same fixed policy/foreign-domain history, queried-unauthorized mass is zero; no new registry, concrete serializer or numerical primitive estimate is assumed. |
-| Native path-witness join | [PathSignature](Protocol/Transfer/PathSignature.lean), [path realization](Protocol/Ephemeral/Rotation.lean) | Supplied partial decoding retains the exact credential opening and admissible original path. A supplied realization constructs its existing rotation/transport; the existing proof backend checks credential/full-signing inputs using `ownerSignature` bytes. Input and statement reflection remain supplied; witness existence is not knowledge or unforgeability. See the [native map](../docs/PROTOCOL_PARITY_QUEUE.md#native-path-signature-import-map--2026-11-07). |
+| Native path-witness join | [PathSignature](Protocol/Transfer/PathSignature.lean), [path realization](Protocol/Ephemeral/Rotation.lean), [outer codec](Protocol/Transfer/PathSignature/Codec.lean) | Supplied partial decoding and realization retain the same credential opening, admissible path and rotation. The concrete byte-key/full-message codec discharges outer input reflection in `canonical_input_subject_eq`; typed packet/witness encodings and statement reflection remain explicit. Actual `ownerSignature` execution establishes no knowledge or unforgeability. See the [native map](../docs/PROTOCOL_PARITY_QUEUE.md#native-path-signature-import-map--2026-11-07). |
+| Native HCP queries and private retrieval | [Protocol/Storage/Retrieval.lean](Protocol/Storage/Retrieval.lean), [storage guide](Protocol/Storage/README.md#hash-indexed-retrieval-and-native-hodge-queries) | Original exact/coexact Hodge queries aggregate into the same encrypted answer with coefficient/CVP correctness. Local hash checks and recovery retain original HCP samples or exhibit a collision. Whole-bucket reads give fixed-bucket selector privacy at linear download cost; the native joint-view obstruction is conditional. Efficient PIR, recipient discovery and public-key encryption remain separate claims. |
 | Raw graph message-binding obstruction | [Sheaf/GraphCommitment.lean](Sheaf/GraphCommitment.lean) | Global translation changes the vertex message while retaining ordered modular differences and the existing full canonical payload. The actual path-three example has openings `[3,5,9]` and `[10,12,16]` with payload `[2,4]`; general private sheaves and harmonic blinding retain their separate semantics. |
 | Public artifact and verification contracts | [TCB.lean](TCB.lean), [Axioms.lean](Axioms.lean) | Existing payload/artifact/observation interfaces and their conditional consequences. Concrete bytes, hashing, proof/signature verification and runtime refinement are separate obligations. |
 | Legacy chain model | [Chain.lean](Chain.lean) | Retained compatibility model. Its spectral validator identity, cumulative-gap fork choice and raw cochain-sum balance are not the semantics or security claims of the new bounded core. |
@@ -48,15 +49,16 @@ Install elan, then run from the package root:
 cd lean
 lake exe cache get
 lake build
-lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer
+lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer Protocol.Storage.Retrieval
 ```
 
 The cache command retrieves the pinned Mathlib build cache; it avoids a
 source rebuild of that dependency. The examples are checked explicitly because they are separate from the
 production aggregate. For focused review, use `lake build ProximityPrize`
 for the standalone coding target, `lake build Protocol.Core` for the bounded
-protocol core, or `lake build Protocol.Storage.Core` for the storage and gate
-adapters. The Lean build needs the pinned Lean/Mathlib dependencies; Rust
+protocol core, `lake build Protocol.Storage.Core` for the storage/gate adapters,
+or `lake build Protocol.Storage.Retrieval` for the optional native-query/read
+profiles. The Lean build needs the pinned Lean/Mathlib dependencies; Rust
 and Python prototypes are not build dependencies.
 
 The [Axiom Stacks library](https://github.com/AxiomMath/Stacks#readme) was

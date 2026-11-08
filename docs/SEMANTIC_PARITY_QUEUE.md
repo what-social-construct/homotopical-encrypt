@@ -16,6 +16,8 @@ cross-language refinement and disposition; it does not redefine those objects.
 The rows below preserve earlier audit identifiers and findings. The following
 table supersedes stale completion language and earlier runtime-profile choices;
 it does not reclassify every legacy implementation as a refinement.
+The retrieval and public-input codec rows were added on 2026-11-08; the dated
+validation row retains its earlier baseline, with later checks recorded centrally.
 
 | Surface | Current mathematical/source status | Remaining refinement or application work |
 |---|---|---|
@@ -23,6 +25,8 @@ it does not reclassify every legacy implementation as a refinement.
 | `Axioms/` versus concrete mathematics | Interfaces state supplied propositions/maps and prove their stated consequences. Concrete `Sheaf/` definitions supply the actual cellular coboundaries, degree-one Hodge operator, projections and exact-subspace distance. | Instantiate the intended mathematical and security profiles and prove runtime refinement. An interface field, a conditional theorem and a concrete algorithm have different status. The seven cited-bound axiom declarations remain separate. |
 | Bounded Paper 2 transition and quorum | `Protocol/Ledger` computes the successor and proves conservative flow, nullifier preservation/replay exclusion, candidate-indexed evidence and same-proposal acceptance-quorum attachment. | Resource/authorization/nullifier/root/signature implementations remain profile inputs. Geometry or epoch migration, rounds/locks, finality and liveness are additional work. |
 | Storage-to-history join | `Storage/Anchor.lean` joins the actual interpretation and whole artifact to an exact sealed manifest under an object-indexed history-inclusion relation. `ProjectionAnchor.lean` retains the final typed prefix, the same received word and actual gate database. `AnchorExamples.lean` exercises transfer/quorum/receipt and substitution rejection. These modules pass the Lean 4.35 aggregate/integration build, with all nineteen selected anchor endpoints standard-only. | Implement canonical authentication and backend contracts, public/private serialization and retrieval. The semantic join chooses neither a new manifest-root wire field nor a concrete hash preimage. No concrete Rust/Python realization is claimed. |
+| Hash-addressed retrieval and HCP recovery | [Retrieval](../lean/Protocol/Storage/Retrieval.lean) reuses the public manifest directory. `ContentAddress.readByDigest` selects locally from the downloaded bucket and verifies actual ciphertext bytes before parsing; named available originals give recovery or an actual hash collision. `Recovery` joins the decoded full cochain to existing `BoundHCPObservation`, `BoundSampleRotation` and scoped delivery. The full-ciphertext digest is distinct from the exact-component `ContextKey.cochainDigest`. | Instantiate finite full-ciphertext bytes, authenticated manifest/root and authorized private delivery. `UniformRead` proves fixed-bucket selector privacy for the complete request/reply view by downloading all records. Native `HodgeQuery` correctness/CVP uses actual exact/coexact `HodgeNoise`; its joint-span obstruction remains separate from that privacy theorem. No efficient PIR, public-key HCP encryption or runtime realization is established. See the [object trace](COCHAIN_PROXIMITY_TRACE.md#hash-addressed-ciphertexts-and-private-local-recovery). |
+| Native path-signature public-input bytes | [PathSignature/Codec](../lean/Protocol/Transfer/PathSignature/Codec.lean) gives an executable domain-separated encoding of public credential bytes and the complete signing message, with roundtrip, canonical acceptance, injectivity, malformed-input rejection and linear encoded length. `PathSignature.canonical_input_subject_eq` derives credential/metadata/full-intent equality from equal bytes. | Construct the actual credential opening and finite private path-witness decoder, then prove backend reflection, message-bound extraction and unforgeability. Public-input injectivity alone supplies none of those properties; the original cochain payload proof remains separate. |
 | Temporary bus and retained context | `Context` is snapshot-bound with exact acceptance separate. `StateBus` is an immutable witness-local projection record; the checkpoint engine requires an exact-seal persistence receipt before local consumption. | Earlier per-commit allocation/reset wording is a proposed profile, not settled runtime granularity. Global run freshness, replay across independent histories, atomicity and physical erasure remain explicit. |
 | Operators and source scores | Harmonic recovery uses `P_H`; the true operator is `Delta_1`; the kernel-normalized residual uses `I-P_H`; decoded exactness distance is `‖P_{(im δ₀)⊥} b‖`. | These are distinct maps/scores. A selected source-to-coding comparison and nonempty far family remain Q08; neither storage anchoring nor a pullback definition supplies them. |
 | Plucker and public hash views | The raw projective quotient includes the zero orbit and imposes no decomposability predicate; `ValidRawCoordinate` imposes nonzero/decomposable/selected-relation validity. `HashedPluckerShadow` carries the actual mathematical shadow plus a binding proposition. | Construct the selected admissible chart, public encoding and hiding/verification profile where needed. A raw quotient or digest does not construct a moduli stack or conceal a valid harmonic-subspace coordinate. |
@@ -1114,6 +1118,20 @@ prototype into a new secure commitment.
      Avoid treating “`1/∞ = 0`” as a literal uniform probability theorem until
      that game exists; use it only as shorthand for an asymptotic finite-family
      limit.
+
+7. **Finite ciphertext profile and joint retrieval experiment**
+   - Reuse [Retrieval](../lean/Protocol/Storage/Retrieval.lean), the original
+     `HodgeNoise` encryptor and the existing bound-sample/delivery objects.
+     Select finite full-cochain bytes and prove their actual decoder equation;
+     keep their digest separate from the exact-component context key.
+   - Supply authenticated manifest/root and private recovery delivery producers.
+     Hash-checked local lookup gives original bytes or an actual collision,
+     not directory authentication or content secrecy by itself.
+   - Preserve `UniformRead` as the whole-bucket privacy reference. Any smaller
+     native query needs a declared joint-view/noise experiment addressing
+     `LinearQueryObstruction`; individual HCP ambiguity and `cvp_answer_iff`
+     do not prove selector privacy. Recipient discovery and efficient PIR
+     remain separate protocol work.
 
 ## Priority 4 — Rust Hodge Geometry
 

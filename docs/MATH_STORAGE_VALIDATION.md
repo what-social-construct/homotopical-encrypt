@@ -9,7 +9,169 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Native Hodge retrieval and concrete outer codec — 2026-11-08
+
+The focused [Retrieval facade](../lean/Protocol/Storage/Retrieval.lean) reuses
+the original manifest, Hodge presentation/noise, coefficient decoder, recipient
+material and bound-HCP rotation. It stays outside `Storage.Core`; the broad
+`Protocol.Storage` facade includes it. [Paper 2 §6.7](../papers/paper2/DRAFT.md#67-hash-indexing-private-retrieval-and-native-hodge-queries)
+records the construction boundaries. The [source ledger](SOURCE_LEDGER.md)
+and [completion checkpoint](PAPER_OUTLINE.md#source-based-completion-checkpoint--2026-11-08)
+separate reviewed literature from remaining manuscript/proof work.
+
+| Source | Checked result and retained boundary |
+|---|---|
+| `Retrieval.HodgeQuery` | Actual H.encrypt columns use original HodgeNoise. Integer server evaluation is exactly an original full encryption observation; exact and coexact openings combine separately. The original coefficient decoder and discrete-CVP comparison apply to that same answer. Correctness is not selector privacy or a public-encryption construction. |
+| `Retrieval.ContentAddress` | Actual local hash checks, existing directory membership and downloaded-byte scan give completeness and original-or-collision authentication. Requested digest addresses full opaque ciphertext bytes, not the existing exact-component ContextKey digest. Authenticated directory/root and original availability remain inputs. |
+| `Retrieval.Recovery` | A selected finite full-cochain parser feeds original recipient/context/epoch recovery. Native corollaries retain the same BoundHCPObservation and BoundSampleRotation endpoints; correct coefficients or actual colliding bytes follow under original availability/decoding and delivery contracts. No arbitrary real cochain serializer is constructed. |
+| `Retrieval.UniformRead` | Fixed public bucket/scope, target-independent request and arbitrary server tape give equal full transcripts, arbitrary observer views, PMF distributions and event masses. Entire bucket is downloaded, with O(N) payload volume. Targeted authorization, errors/retries, network metadata and later public actions require an enlarged view theorem if used. |
+| `Retrieval.LinearQueryObstruction` | Under explicit redundancy of all other noise columns, public span exclusion singles out the selected query column. An actual Fin3 axis fixture has varying coexact HodgeNoise and retains the original sample/CVP joins. The additional joint hypothesis neither refutes the fixed-input HCP oracle theorem nor proves universal efficient-retrieval impossibility. |
+| `Transfer.PathSignature.Codec` and `canonical_input_subject_eq` | Concrete domain-prefixed credential/message byte framing has an actual parser, exact roundtrip/reencoding, injectivity and malformed-input rejection. The canonical outer encoding reflects the original key/full-message input. Typed owner packet, full-ciphertext and supported-witness codecs, credential setup/proof algorithms and message-bound knowledge/unforgeability remain open. |
+
+### Retrieval and codec validation
+
+Expanded union/default builds pass **9,292 / 9,285 jobs**; focused retrieval
+and transfer facades pass **3,490**. The final codec/native-query check passes
+**3,472**. New leaf logs have no local warnings or errors. Pins remain Lean
+`v4.35.0` and Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679`.
+
+The consolidated probe passes **839 distinct selected reports**:
+**803 standard-only** (627 exact-three, 176 subsets) and **36 existing-native**.
+All **89 additions are standard-only** (58 exact-three, 31 subsets/axiom-free),
+and all **750 preceding dependency sets are unchanged**. No selected
+`sorryAx` or cited-bound dependency occurs. This audit includes definitions
+and interface joins as well as theorems; it is not a count of 839 research results.
+
+| Added selected group | Reports |
+|---|---:|
+| Concrete outer codec | 14 |
+| Content addressing | 22 |
+| Whole-bucket transcript and distribution privacy | 14 |
+| Conditional joint-query obstruction and actual axis fixture | 19 |
+| Native Hodge query, response, decoder and CVP join | 12 |
+| Full-ciphertext recipient/original HCP recovery | 7 |
+| Canonical original-subject reflection | 1 |
+
+Static coverage: **273 public source modules / 274 Lean files**, no active
+holes, local cycles or unresolved imports, and the same seven isolated
+cited-bound axioms. All **46** scoped closures exclude legacy `Chain` and
+`CitedBounds`. New closure sizes including their entry: codec 49,
+ContentAddress 40, UniformRead 39, HodgeQuery 8, Recovery 49,
+LinearQueryObstruction 11, Retrieval 54. Storage.Core is unchanged.
+
+Local artifacts under `output/validation/`: `retrieval-{full,default,facades}-build.log`,
+`retrieval-native-codec-query-build.log`, `retrieval-{all,new}-axioms.lean`,
+`retrieval-all-axioms.log`, `retrieval-axiom-summary.json`,
+`retrieval-new-selection.json` and `retrieval-source-audit{,-summary}.json`.
+These development logs are outside the public review subset. Paper 1/3 TeX
+and canonical/review PDFs are unchanged at this checkpoint; the completion
+plan identifies stale prose and the unresolved Paper 1 near/far convention.
+This is not final manuscript alignment or a completed cryptographic scheme.
+
+Reproduce the added selected reports from `lean/`:
+
+```sh
+LEAN_NUM_THREADS=4 lake build Protocol.Storage.Retrieval Protocol.Transfer
+cat > /tmp/retrieval-new-axioms.lean <<'LEAN'
+import Protocol.Storage.Retrieval
+import Protocol.Transfer
+
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.domain
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.frame
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.parseFrame
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.encode
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.parseFrame_frame
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode_encode
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode_eq_some_iff
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.encode_injective
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.frame_length
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.encode_length
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode_rejects_invalid_tag
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode_rejects_truncated_key
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode_rejects_wrong_domain
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_eq_some_iff
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_members
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_none_of_directory_missing
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_none_of_bytes_missing
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_none_of_wrong_digest
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_eq_some_of_matching
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_original_or_collision
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_eq_original_of_no_collision
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeLocal
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeLocal_eq_some_iff
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeLocal_none_of_read_none
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeLocal_original_or_collision
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest_sound
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest_none_of_unlisted
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest_none_of_no_match
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest_complete
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest_original_or_collision
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeByDigest
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeByDigest_eq_some_iff
+#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeByDigest_original_or_collision
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.request
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.honestReply
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.transcript
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.run
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.view
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.request_eq
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.transcript_eq
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.run_public_eq
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.view_eq
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.honestReply_eq
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.honestReply_payloadBytes
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.distribution
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.distribution_eq
+#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.event_probability_eq
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.EssentialColumn
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.selected_essential
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.essential_iff_selected
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.query_ne_of_selected_ne
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.public_predicate_separates
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.harmonic_essential_iff_selected
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.encrypted_essential_iff_selected
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.coefficients
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.queryNoise
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.queryNoise_value
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.querySample
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.selected_sample_eq_original
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.query
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.query_eq
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.selected_projection
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.others_projection
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.others_redundant
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.selected_is_publicly_identified
+#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.cvp_solution_iff_message
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.point_zero
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.point_int_mul
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.sample
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.query
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.query_projection
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.answer
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.answerNoise
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.answerNoise_value
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.answerSample
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.answer_eq_observed
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.decode_answer
+#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.cvp_answer_iff
+#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest
+#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_none_of_unlisted
+#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_none_of_scope_ne
+#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_of_original
+#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_correct_or_collision
+#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_rotated_or_collision
+#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_bound_observation_or_collision
+#print axioms Hcrypt.Protocol.Transfer.PathSignature.canonical_input_subject_eq
+LEAN
+lake env lean /tmp/retrieval-new-axioms.lean
+```
+
 ## Native path transport and finite witness boundary — 2026-11-07
+
+Dated predecessor to the retrieval/codec checkpoint above.
 
 The [native import map](PROTOCOL_PARITY_QUEUE.md#native-path-signature-import-map--2026-11-07)
 and [Paper 2 §6.6](../papers/paper2/DRAFT.md#66-reused-path-transport-and-finite-native-witness-boundary)

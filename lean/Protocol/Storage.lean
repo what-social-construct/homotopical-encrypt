@@ -8,6 +8,7 @@ public import Protocol.Storage.CanonicalSystematic
 public import Protocol.Storage.ThreeLevelMetrics
 public import Protocol.Storage.CanonicalThreeLevel
 public import Protocol.Storage.CanonicalCalibration
+public import Protocol.Storage.Retrieval
 
 @[expose] public section
 
@@ -24,4 +25,10 @@ public import Protocol.Storage.CanonicalCalibration
   instantiation, database atomicity and crash consistency remain profile/runtime
   obligations. `Protocol.Storage.Core` is the focused import without the legacy
   broad evidence facade or optional canonical-field application.
+
+`Protocol.Storage.Retrieval` separately analyzes hash-indexed encrypted-object
+reads: uniform whole-bucket transcript privacy, local content verification,
+original HCP recovery, native structured-noise/CVP query correctness and a
+conditional disclosure from joint one-hot query views. The six-stage manifest
+is not silently reinterpreted as an already implemented private database.
 -/

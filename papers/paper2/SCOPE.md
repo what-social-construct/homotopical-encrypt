@@ -461,11 +461,17 @@ encoder reflection and backend-statement-to-witness existence are conditional.
 The duplicate exact-codec injectivity proof delegates to the raw counterpart
 with its API preserved.
 
+The [outer byte-key/message codec](../../lean/Protocol/Transfer/PathSignature/Codec.lean)
+now has a concrete canonical format and parser; `canonical_input_subject_eq`
+uses its proved injectivity. This closes that outer input-encoding premise,
+while typed packet, full ciphertext and supported-witness encodings remain
+separate.
+
 The [recovered-plan table](../../docs/PROTOCOL_PARITY_QUEUE.md#recovered-native-authentication-plan-and-existing-primitive-layer--2026-11-07)
 retains message-bound possession of the designated private witness as the
 authentication target. Witness existence alone does not meet it and is
 independent of the message. Concrete realization, authenticated credential
-construction, encoding/decoding and proving/transcript algorithms,
+construction, remaining encoding/decoding and proving/transcript algorithms,
 knowledge/unforgeability and security games remain open. The shared signing
 modules remain generic, with no new Ed25519 owner choice, central credential
 issuer or replacement Hodge/fibration/artifact objects.
@@ -476,6 +482,30 @@ issuance, revocation and numerical security bounds remain implementation or
 security obligations. Neither arbitrary historical signatures nor the
 geometric presentation-rotation theorem instantiate them automatically.
 
+## Native HCP queries and hash-indexed retrieval — 2026-11-08
+
+The [supporting retrieval layer](../../lean/Protocol/Storage/Retrieval.lean)
+uses the existing public manifest and original HCP geometry; it does not
+replace the bounded accepted-transition claim. [Draft §6.7](DRAFT.md#67-hash-indexing-private-retrieval-and-native-hodge-queries)
+records its native construction and privacy boundary.
+
+| Source | Implemented endpoint | Remaining boundary |
+|---|---|---|
+| [HodgeQuery](../../lean/Protocol/Storage/Retrieval/HodgeQuery.lean) | Original `HodgeNoise` samples encode a one-hot selection; the public integer-weighted answer is the observation of an actual encryption with separately aggregated exact/coexact openings. Existing coefficient recovery and CVP solution equivalence apply to the same answer. | A joint query sampler and full server-view selector-privacy game, finite record encoding and runtime realization. |
+| [LinearQueryObstruction](../../lean/Protocol/Storage/Retrieval/LinearQueryObstruction.lean) | Explicit nonzero/zero harmonic projections and nonselected-column redundancy identify the selected column from its public span predicate. The actual cellular example retains varying coexact Hodge openings and the existing CVP comparison. | No universal insecurity theorem for all HCP samplers or contradiction of the old fixed-observation HCP/CVP result is inferred. |
+| [ContentAddress](../../lean/Protocol/Storage/Retrieval/ContentAddress.lean) | Local slot/digest lookup checks actual ciphertext bytes against a trusted fixed directory and parses only accepted bytes; substituted original content gives equality or a concrete hash collision. | Root authentication, hash implementation/security, availability and full-ciphertext byte decoding remain explicit contracts. The old exact-component digest is not reinterpreted as a full ciphertext hash. |
+| [Recovery](../../lean/Protocol/Storage/Retrieval/Recovery.lean) | The fetched full target cochain joins the existing scoped `RecoveryDelivery` and both original `BoundHCPObservation` samples through `BoundSampleRotation`, giving source coefficients or collision. | Actual ciphertext encoding, private material delivery/access control and runtime refinement. |
+| [UniformRead](../../lean/Protocol/Storage/Retrieval/UniformRead.lean) | Entire fixed-bucket request/response, local selection and exact same-bucket view/distribution privacy for arbitrary server behavior under one shared PMF. | Linear whole-bucket download; efficient native PIR/OMR is not claimed. Selected hashes, recovery scopes, per-record authorization and targeted retry/error messages must not be exposed by a refinement. |
+
+The native query uses the client's private Hodge presentation. It does not
+require public sender encryption, but it also does not construct that separate
+public-key interface. Auxiliary CRS encryption and a conventional/native
+signature combiner remain unselected. The existing
+`cvpOracle_insufficient_for_operativeTarget` keeps its realization,
+closed-formula-invariance, kernel-separation and correct-oracle-existence
+hypotheses and uniform solver quantifiers; carrying it to a richer joint
+query view needs an additional factorization or sampled argument.
+
 ## Optional or deferred topics
 
 - Full blockchain consensus: validator admission, scarce resource, private
@@ -484,8 +514,9 @@ geometric presentation-rotation theorem instantiate them automatically.
 - The proposed cohomological MAC: its current Lean record contains security
   propositions. If its input is the same exact cochain, harmonic tags vanish;
   a nontrivial construction and unforgeability game remain to be supplied.
-- Anonymous credentials, unlinkability/nullifier constructions, private
-  retrieval, post-quantum sessions, TEEs, Karcher aggregation, coregulator
+- Anonymous credentials, unlinkability/nullifier constructions, efficient
+  native private retrieval and oblivious recipient discovery, post-quantum
+  sessions, TEEs, Karcher aggregation, coregulator
   economics, and product positioning. Each needs its own selected model.
 - Full protocol composition of the radius guarantee. The selected modular
   cochain/plane/RS metric profile now has a proved generic comparison; its
