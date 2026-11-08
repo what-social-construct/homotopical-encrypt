@@ -13,10 +13,14 @@ The protocol working draft in `papers/paper2/` is a different manuscript.
 The 2026-11-08 observation reconciliation distinguishes the accepted exact
 payload, separately bound full Hodge sample, operative alignment and explicit
 disclosure in the introduction and §§2/5. It also states the full operative
-Plucker visibility consequence. The revised reviewed PDF has 100 pages. The
-[validation record](../../docs/MATH_STORAGE_VALIDATION.md#paper-1-full-observation-correspondence--2026-11-08)
-links the existing Lean endpoints; the near/far boundary convention remains
-the next mathematical task.
+Plucker visibility consequence. The revised reviewed PDF has 101 pages. The
+[validation record](../../docs/MATH_STORAGE_VALIDATION.md#strict-canonical-decision-profile--2026-11-08)
+links the existing Lean endpoints. The canonical decision convention now
+uses near `ε<δ_J`, with concrete near `2046/4096` and far `2047/4096`;
+its separated bridge retains the same projection and conditional solver
+pullback. The geometric far witness, cited-bound budget and efficient solver
+remain separate obligations. Pure radius arithmetic is standard-only;
+canonical bridge adapters retain existing native arithmetic certificates.
 
 Suggested local build:
 

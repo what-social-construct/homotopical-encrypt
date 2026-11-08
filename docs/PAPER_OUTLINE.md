@@ -17,7 +17,7 @@ actual statement/Lean correspondence and checked dependencies.
 
 | Paper | Selected proved core | Required completion work |
 |---|---|---|
-| **1 — HCP foundations** | Actual cellular Hodge noise/recovery, finite integral family for the homological fragment of Helfer semantics, encoded-message ambiguity, precise known-lattice CVP comparison and hidden-operator oracle obstruction; full genuine Plucker/projector reconstruction. | Freeze those exact headline quantifiers; resolve the closed near/far boundary convention in §6 and align its Lean contract. Keep an uninstantiated geometric application conditional. Finish the focused novelty/source account and selected submission statements. |
+| **1 — HCP foundations** | Actual cellular Hodge noise/recovery, finite integral family for the homological fragment of Helfer semantics, encoded-message ambiguity, precise known-lattice CVP comparison and hidden-operator oracle obstruction; full genuine Plucker/projector reconstruction. | The observation wording and canonical strict near/far convention are reconciled. Freeze the exact headline quantifiers. Keep an uninstantiated geometric application conditional. Finish the focused novelty/source account and selected submission statements. |
 | **2 — protocol/commitments** | One fixed-snapshot/epoch public-resource transition and conditional one-shot integrity; actual rotation and original-object evidence/history joins; native structured-noise query/answer/CVP identity; hash-addressed recovery; whole-bucket private-read reference and joint-view obstruction under explicit noise-column redundancy. | Instantiate one finite original-object profile and its visibility, packet/ciphertext/witness bytes, hash preimages and authenticated initial state. Supply a genuine credential/proof construction if native authentication security is advertised. If efficient private reads are claimed, choose and analyze the whole query sampler/view; the whole-bucket reference supports a bounded first scope. Complete one bounded verifier/persistence path if runtime implementation is claimed, and turn the Markdown working text into a theorem-led manuscript/TeX/PDF. |
 | **3 — capacity-radius proximity** | All nine named coding claims, Q04--Q07 and Q08 for the actual modular cochain profile, including native metric comparison and nonempty capacity-far examples. | Update stale abstract/introduction summaries to reflect the completed modular application; finish the bounded prior-work/deep-hole account and precise complexity claims. Resolve native arithmetic trust for selected Palomar endpoints, then synchronize the manuscript/ledgers and package the selected statements. Q10--Q12 are extensions, not required missing proofs. |
 
@@ -41,14 +41,18 @@ for the selected conditional mathematics.
    track this step. Paper 3's stale abstract/introduction summaries still need
    reconciliation with §7's completed modular result. These manuscript tasks
    do not depend on completing signatures, efficient retrieval or Rust.
-2. **Close Paper 1's application convention next.** The equal closed
-   near/far threshold at `2047/4096` needs either a strict gap, an empty-shell
-   proof or a synchronized half-open convention for a meaningful solver
-   instantiation. The smallest proposed repair retains the Johnson far radius
-   and chooses a strictly smaller near radius using the existing calibration
-   and separated-gap APIs. Change the manuscript and formal contract together. Check
-   the cited canonical theorem's actual hypotheses; a conditional displayed
-   bound is not a constructed nontrivial security budget.
+2. **Paper 1 canonical decision convention — completed 2026-11-08.**
+   The selected closed promises now use `(ε,δ_J)` on both sides, with
+   `0≤ε<δ_J`; `2046/4096` is the concrete near value. The Johnson far and
+   list/MCA radii stay `2047/4096`. Existing calibration and strict-view APIs
+   retain the same projection and correct-solver pullback; the old equal
+   helper remains conditional packaging. The independent geometric far
+   witness and efficient solver are not constructed. Next reconcile Paper 3's
+   stale summaries with its completed modular application, then sharpen the
+   actual-profile novelty comparison. Check Paper 1's cited canonical theorem
+   hypotheses and numerical budget separately; a conditional bound is not a
+   constructed nontrivial security budget. [P282](../SEMANTIC-PARITY.md) records
+   this decision repair.
 3. **Build one concrete Paper 2 profile from the existing interfaces.**
    Reuse the original commitment, snapshot, `Intent`, history, manifest,
    `HodgeNoise`, private presentation and delivered rotation. Its remaining

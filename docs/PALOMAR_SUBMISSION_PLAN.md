@@ -165,15 +165,15 @@ are comparison targets; Solution proofs must contain none.
 
 Do not add project axioms or hide conclusions in newly assumed premises.
 The fresh consolidated Lean 4.35 [dependency audit](MATH_STORAGE_VALIDATION.md)
-covers **839 distinct selected declarations**: **803 standard-only** (627
-exactly the permitted three and 176 subsets), and **36 with existing native
-arithmetic certificates**. All **96 new cellular/HCP/model/adapter reports**
-are standard-only, as are the 33 public-observation, 87 rotation/recovery,
-145 owned-transfer, 105 integrity/view/operational, 62 primitive/TCB/graph and
-61 owner-signing/issuance/release, 22 native path/witness and 89 native-retrieval/outer-codec reports. All 750 preceding sets match exactly.
-No selected result uses a cited-bound axiom or `sorryAx`. The earlier 750-, 728-, 667-, 605-, 500-, 355-,
-268-, 235-, 139- and
-68-report snapshots remain dated baselines.
+covers **855 distinct selected declarations**: **806 standard-only** (630
+exactly the permitted three and 176 subsets), and **49 with existing native
+certificates**. All **839 preceding sets match exactly**. The sixteen strict
+canonical-profile additions split into three pure rational arithmetic reports
+and thirteen inheriting the canonical endpoint type/proof dependencies.
+Completing the bridge newly reaches a pre-existing divisibility certificate;
+no new axiom/native-decision declaration is added. No selected result uses a
+cited-bound axiom or `sorryAx`. Earlier 839-, 750-, 728-, 667-, 605-, 500-,
+355-, 268-, 235-, 139- and 68-report snapshots remain dated baselines.
 
 The native dependencies print as generated `_native.native_decide.ax_*`
 constants; the older `Lean.ofReduceBool`/`Lean.trustCompiler` names describe
@@ -206,11 +206,11 @@ and Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679` (release `v4.35.0`).
 The expanded mathematics and integration union passes **9,292 jobs**, covering
 all fifteen default roots and the explicit ledger, evidence, storage and HCP
 example, public-view, recipient and owned-transfer targets. The literal default build passes **9,285 jobs**.
-The fresh 839-declaration public-facade probe passes with the trust split above.
+The fresh 855-declaration public-facade probe passes with the trust split above.
 The source inventory has 274 Lean files: 273 public source modules and the
 Lake configuration, with no active proof holes, unresolved local imports or
-cycles. The same seven cited-bound axioms remain isolated; all 46 scoped
-closures exclude legacy Chain and CitedBounds. The preceding
+cycles. The same seven cited-bound axioms remain isolated; all 48 scoped
+closures exclude legacy Chain and CitedBounds. The preceding 9,292/9,285-job, 839-report retrieval/codec milestone and
 9,285/9,278-job, 750-report native-path milestone,
 9,284/9,277-job, 728-report owner-signing milestone,
 9,281/9,274-job, 667-report primitive-comparison milestone,
@@ -225,12 +225,12 @@ The completed main upgrade supersedes the
 earlier proposal to keep main development on Lean 4.24.0; the earlier build
 and dependency records remain separately dated historical evidence.
 
-The current corresponding PDFs have 100 pages for Paper 1 and 28 for Paper 3;
-Paper 1's observation-wording reconciliation has been rebuilt and visually
+The current corresponding PDFs have 101 pages for Paper 1 and 28 for Paper 3;
+Paper 1's observation and strict canonical-profile corrections have been rebuilt and visually
 reviewed, while Paper 3 retains its recorded visual review. The earlier
 public-observation, rotation, owned-transfer, one-shot integrity, primitive,
 owner-signing and retrieval steps changed Paper 2's Markdown draft and left
-both PDFs unchanged. This observation-wording step updates only Paper 1. Select
+both PDFs unchanged. These manuscript corrections update only Paper 1. Select
 the appropriate manuscript evidence for each entry and tie it to the final
 immutable release. This is evidence preparation, not a completed submission.
 

@@ -31,12 +31,18 @@ Current audit facts:
   declarations for externally cited Johnson/list-decoding and BCHKS MCA theorem
   inputs. These are trusted literature imports, not hidden proof gaps.
 - The proximity build passed after the paper-MCA endpoint and cited-bound pass:
-  `lake build Proximity.CanonicalRS.CitedBounds`,
-  `lake build Proximity.CanonicalRS`, and `lake build Proximity`.
+  `lake build Proximity.Concrete.CanonicalRS.CitedBounds`,
+  `lake build Proximity.Concrete.CanonicalRS`, and `lake build Proximity`.
 - The first concrete Plucker instantiation now builds:
-  `lake build Proximity.GrassmannianPlucker.Concrete Proximity`.
+  `lake build Proximity.Concrete.GrassmannianPlucker.Concrete Proximity`.
 - The remaining assumptions are carried as structure fields, theorem slots, or
   TCB/runtime contracts.
+- Generated native arithmetic certificates are separate from the seven named
+  literature axioms. The canonical BridgeData type and completed strict-gap
+  adapters retain existing native dependencies. The standalone rational near
+  value/nonnegativity/comparison are standard-only; no new native/axiom
+  declaration is added by the decision repair. See the
+  [current dependency audit](MATH_STORAGE_VALIDATION.md#strict-canonical-decision-profile--2026-11-08).
 
 ## Already Discharged In Lean
 
@@ -44,7 +50,7 @@ Current audit facts:
 |------|--------------|--------|-------|
 | Generic projection near-side preservation | `Proximity/Application/Projection.lean` | Lean-proved | `EvaluationProjection.distanceControlled` gives `projected_near_code_of_disagreement_le`. |
 | Generic source-to-code far calibration | `Proximity/Application/Calibration.lean` | Lean-proved from calibration data | `SourceToCodeCalibration.sourceFar_implies_targetFar` turns the pointwise lower bound into the all-radius implication. |
-| Gap-reduction plumbing | `Proximity/Application/Problem.lean` | Lean-proved | `GapReduction.pullbackSolverCorrect` and calibrated pullback theorems are proved once near/far fields are supplied. |
+| Gap-reduction plumbing | `Proximity/Application/Problem.lean` | Lean-proved | `GapReduction.pullbackSolverCorrect` and calibrated pullbacks are proved. The canonical decision profile now selects `(ε,δ_J)` with ε<δ_J using the same far witness/map; no efficient solver is inferred. |
 | Stage certificate accumulation | `Proximity/Concrete/Gates/Stage.lean` | Lean-proved | `PluckerCochainGateCertificate`, `CochainPlaneGateCertificate`, `PlaneRSGateCertificate`, and `ProjectionStageGateCertificate` accumulate stage checks without recomputation. |
 | Plucker decomposability from frame | `Proximity/Concrete/GrassmannianPlucker.lean` | Lean-proved | `FrameWitness.toExterior_decomposable` follows from the exterior-product construction. |
 | Frame membership/span facts | `Proximity/Concrete/GrassmannianPlucker.lean` | Lean-proved from witness fields | `frame_mem_hodgeSubmodule` and `span_eq_hodgeSubmodule` expose the witness data. |
@@ -87,8 +93,8 @@ interfaces. A concrete instantiation must provide them.
 | `CochainPlane.Projection` | accepted local codewords align, map to plane target codewords, plane distance controlled by local syndrome distance | Cochain-to-plane bridge | Explicit input |
 | `PlaneEncoding` | `encodePoint : (Fin 2 -> R) -> F` | Finite-field encoding boundary | Explicit input |
 | `CochainReedSolomon.Interpretation` | a cochain-plane projection into the RS-induced plane target | Plane-to-RS bridge | Explicit input |
-| `ReceivedWordMetric` | RS received-word distance and zero distance for exact RS codewords | RS metric choice | Canonical absolute metric discharged; other metrics explicit |
-| `RadiusNormalization` | conversion from Hamming radii to real score radii and close-implies-metric bound | RS metric/radius choice | Canonical absolute normalization discharged; other normalizations explicit |
+| `ReceivedWordMetric` | RS received-word distance and zero distance for exact RS codewords | RS metric choice | Canonical relative metric discharged through the absolute distance/count intermediate; other metrics explicit |
+| `RadiusNormalization` | conversion from Hamming radii to real score radii and close-implies-metric bound | RS metric/radius choice | Canonical relative normalization discharged; other normalizations explicit |
 
 ## External RS And Code-Theory Slots
 

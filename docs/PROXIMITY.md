@@ -385,32 +385,58 @@ Gates.Projection.FarRegionSeparation
 FarRegionSeparation.collapsed_pair_target_far
 ```
 
-For the first concrete RS regime, Lean now names the canonical same-radius
-Johnson calibration:
+For the canonical RS endpoint, the Johnson radius is the **relative** Hamming
+radius `deltaJ = 2047/4096`, exposed by:
 
 ```text
 CanonicalRS.BridgeData.johnsonRadiusReal
-CanonicalRS.BridgeData.johnsonRadiusCalibration
 ```
 
-This sets source and target near/far radii to the absolute Hamming radius
-associated to `johnsonBelowRadius = 2047`. The remaining theorem at that
-calibration is:
+The decision profile selects `0 <= epsilon < deltaJ` and uses
+`kappa = (epsilon, deltaJ, epsilon, deltaJ)`: both source and target have
+near radius `epsilon` and far radius `deltaJ`. The closed promises
+`score <= epsilon` and `deltaJ <= score` are therefore disjoint. The target's
+list-decoding, point and line radii remain `deltaJ`; selecting a smaller
+decision near radius does not change those coding-theorem inputs.
+
+The canonical helpers are
+`BridgeData.separatedJohnsonRadiusCalibration` and
+`JohnsonRSFarSeparation.toSeparatedBridge`. The concrete choice
+`BridgeData.decisionNearRadiusReal = 2046/4096` has explicit nonnegativity
+and strict-gap proofs. `toSeparatedBridge_radii` retains all four selected
+radii in the completed bridge.
+
+The constructor `RadiusCalibration.sameRadius` makes the source and target
+radius pairs agree. It does not require the near and far radii to coincide.
+The earlier `BridgeData.johnsonRadiusCalibration`, which sets all four radii
+to `deltaJ`, remains conditional compatibility packaging. At an attained
+equal-radius boundary its closed promises cannot admit a correct accept/reject
+solver; it is not the selected decision profile.
+
+The required far-separation witness is unchanged:
 
 ```text
 Gates.Projection.FarNonCollapseWitness
   Gamma beta.johnsonRadiusReal beta.johnsonRadiusReal
 ```
 
-From this, Lean constructs:
+The chosen calibration, the original naturality certificate and this same
+far witness feed the existing final-certificate handoff. The strict views
+retain the original source, target, score and projection map:
 
 ```text
 CalibratedEndToEndReady.toCalibratedEndToEndGapProjection
-CalibratedEndToEndReady.toCalibratedHcryptToRSBridge
+CalibratedEndToEndGapProjection.toSeparatedGapReduction
+GapProximityProblem.promisesDisjoint_of_strictGap
+GapReduction.pullbackSolverCorrect
 ```
 
-The mathematical theorem still to prove is the concrete calibrated
-far/non-collapse statement:
+The canonical specialization is
+`JohnsonRSFarSeparation.toSeparatedGapReduction`; its map is the original
+received-word map, and `pullbackSeparatedSolverCorrect` supplies the same
+conditional solver consequence.
+
+The concrete geometric far/non-collapse theorem remains an application input:
 
 ```text
 sourceFarRadius <= sourceDisagreement W
@@ -418,8 +444,9 @@ sourceFarRadius <= sourceDisagreement W
 targetFarRadius <= targetDistance (Gamma.receivedWord W)
 ```
 
-The calibrated version is probably the right final statement, because the
-projection chain is not expected to be isometric.
+Strict numeric separation resolves the decision convention without proving
+that geometric input or constructing an efficient solver. A correct target
+solver still pulls back conditionally through the same projection.
 
 ## RS Target Obligations
 
@@ -478,27 +505,29 @@ The full-generator certificate is algebraic: Lean proves
 the order-`4096` root by the `orderOf (g^3)` theorem. No exhaustive
 point-injectivity check belongs in the library.
 
-The canonical RS metric is now the geometric distance to the RS code: the
-infimum of absolute Hamming distances from the received word to RS codewords.
-Lean exposes it as:
+The canonical bridge uses **relative** Hamming distance to the RS code. The
+absolute intermediate is the infimum of absolute Hamming distances to RS
+codewords; the selected relative metric divides it by `length = 4096`.
+Lean exposes these distinct values as:
 
 ```text
 CanonicalRS.hammingDistanceToCode
-CanonicalRS.absoluteHammingMetric
-CanonicalRS.absoluteRadiusNormalization
+CanonicalRS.relativeHammingDistanceToCode
+CanonicalRS.relativeHammingMetric
+CanonicalRS.relativeRadiusNormalization
 ```
 
-The metric proves exact codewords have zero distance and Hamming-close words are
-bounded by the corresponding absolute real radius. The real-valued radius
-interface is named by:
+Exact codewords have zero distance. An absolute count bound `r` on Hamming
+distance gives a relative real bound `r/4096`. The normalization interface is:
 
 ```text
 ReedSolomonTarget.Target.RadiusNormalization
 ```
 
-It converts natural-number Hamming radii into the real-valued proximity score
-used by `GapProximityProblem`, and records that Hamming-close words are close in
-the selected received-word metric.
+Its selected relative normalization converts natural-number Hamming radii to
+the real-valued proximity score used by `GapProximityProblem` and records the
+corresponding closeness implication. Thus `johnsonBelowRadius = 2047` is an
+absolute count, while `johnsonRadiusReal = 2047/4096` is the relative radius.
 
 The canonical bridge-data layer now bundles the constructed endpoint:
 
@@ -514,11 +543,14 @@ BridgeData.codeShadow
 BridgeData.bridgeObligations
 BridgeData.johnsonRadiusReal
 BridgeData.johnsonRadiusCalibration
+BridgeData.separatedJohnsonRadiusCalibration
+BridgeData.decisionNearRadiusReal
 BridgeTheoremSlots
 BridgeCertificate.complete
 RSMetricCertificate
 RSMetricCertificate.of_rsFarSeparation
 RSMetricCertificate.of_johnsonRSFarSeparation
+RSMetricCertificate.of_separatedJohnsonRSFarSeparation
 RSMetricCertificate.toBridgeCertificate
 RSMetricCertificate.calibratedFinalGateCertificate
 RSMetricCertificate.toCalibratedHcryptToRSBridge
@@ -528,6 +560,10 @@ JohnsonRSFarSeparation.of_distanceEquality
 JohnsonRSFarSeparation.toRSMetricCertificate
 JohnsonRSFarSeparation.finalGate
 JohnsonRSFarSeparation.toBridge
+JohnsonRSFarSeparation.toSeparatedBridge
+JohnsonRSFarSeparation.toSeparatedBridge_radii
+JohnsonRSFarSeparation.toSeparatedGapReduction
+JohnsonRSFarSeparation.pullbackSeparatedSolverCorrect
 ```
 
 `BridgeData` keeps the external RS bounds explicit, while the domain,

@@ -9,6 +9,98 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Strict canonical decision profile — 2026-11-08
+
+D03's selected canonical decision convention is now resolved without replacing
+any source, metric, projection, far-witness or gap-problem carrier. The existing
+`RadiusCalibration.sameRadius` makes the **source and target radius pairs**
+agree; it does not require near and far to coincide. The new calibration is
+`(ε,δ_J,ε,δ_J)` for `ε<δ_J`. The intended manuscript profile also selects
+`0≤ε`; its concrete near value is `2046/4096`, while the far/list/MCA radius
+remains `δ_J=2047/4096`.
+
+| Existing module | Added correspondence |
+|---|---|
+| [BridgeWitness](../lean/Proximity/Concrete/CanonicalRS/BridgeWitness.lean) | Separated calibration, exact four radii and strictness; independent rational near value/nonnegativity/comparison, then an adapter to the existing canonical Johnson radius. The old equal-threshold helper remains conditional compatibility packaging. |
+| [BridgeCertificate](../lean/Proximity/Concrete/CanonicalRS/BridgeCertificate.lean) | The same naturality and Johnson far witness construct the existing metric certificate and completed bridge. Exact bridge radii and literal `Γ.receivedWord` map are retained. The existing GapBoundary strict views and GapReduction theorem supply the correct-solver pullback on disjoint closed promises. |
+
+Paper 1 §6.1, Proposition 6.27 and Corollary 6.30 state the chosen strict
+profile; the list-decoding and MCA hypotheses retain their original radii.
+The geometric far-separation witness is still an application hypothesis, and
+no efficient solver or new cryptographic security result is constructed.
+
+### Decision-profile validation and trust boundary
+
+The final focused build passes **3,276 jobs**, expanded union **9,292** and
+literal default **9,285**. The final eight-import probe passes **855 selected
+reports**: **806 standard-only** (630 exact-three, 176 subsets) and **49 with
+existing native certificates**. All **839 preceding dependency sets match**.
+The sixteen additions split into **three exact-standard-three arithmetic
+reports** and **thirteen inheriting existing canonical native dependencies**.
+These are declaration reports, including definitions and interface joins,
+rather than a count of new research results.
+
+The pure value and rational proofs have no `BridgeData` parameter. The thirteen
+canonical adapters retain that type's native arithmetic dependencies in their
+types/proofs. Completing the bridge also reaches the **pre-existing**
+`length_dvd_canonical_modulus_minus_one` native certificate, which was outside
+the preceding selected audit. No new `axiom` or `native_decide` declaration is
+added. No selected cited-bound or `sorryAx` dependency occurs. These native
+canonical endpoints still need arithmetic trust removal before a Palomar entry
+permitting only the three standard logical axioms can select them; the pure
+rational helpers do not have that blocker.
+
+Static coverage remains **273 public modules / 274 Lean files**, with no
+active holes, local import cycles or unresolved imports. The same seven custom
+literature axioms remain isolated in `CitedBounds`. All **48** scoped closures
+exclude `Chain` and `CitedBounds`: the newly recorded witness/certificate
+closures have 33/45 local modules; all 46 preceding closure counts are
+unchanged. `ProximityPrize` remains 33 modules and independent of these
+concrete application helpers. Pins remain Lean/Mathlib 4.35.0.
+
+The revised **101-page** Paper 1 PDF compiles without undefined
+references/citations, missing glyphs or overfull boxes. All pages were rendered
+and reviewed in six contact sheets; pages 53--54, 78--79 and 81--83 were
+inspected at higher resolution. Eight underfull-box diagnostics remain, with
+no visible defect found. Canonical/stable copies match; Paper 3 is unchanged.
+Current Paper 1 SHA-256:
+`7a9feb8ad8dd080ddeb06fad4d82c3c06188571ae7411c12d2a1d75f302f1123`.
+
+Local evidence under `output/validation/`:
+`strict-gap-{full,default,tex}-build.log`, `strict-gap-{all,new}-axioms.lean`,
+`strict-gap-all-axioms.log`, `strict-gap-axiom-summary.json`,
+`strict-gap-source-audit{,-summary}.json`,
+`canonical-separated-leaf-validation.json` and `strict-gap-validation.json`.
+The superseded fifteen-report experiment is explicitly labeled baseline.
+Rendered QA pages are retained under `output/validation/strict-gap-render/`.
+
+Reproduce the sixteen added reports from `lean/`:
+
+```sh
+LEAN_NUM_THREADS=4 lake build Proximity.Concrete.CanonicalRS.BridgeCertificate
+cat > /tmp/strict-gap-new-axioms.lean <<'LEAN'
+import Proximity.Concrete.CanonicalRS.BridgeCertificate
+
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration_radii
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration_sourceStrictGap
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration_targetStrictGap
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal_nonneg
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal_lt_farRadius
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal_lt_johnsonRadiusReal
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.RSMetricCertificate.of_separatedJohnsonRSFarSeparation
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.RSMetricCertificate.of_separatedJohnsonRSFarSeparation_calibration
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedRSMetricCertificate
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedBridge
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedBridge_radii
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedGapReduction
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedGapReduction_map
+#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.pullbackSeparatedSolverCorrect
+LEAN
+lake env lean /tmp/strict-gap-new-axioms.lean
+```
+
 ## Paper 1 full-observation correspondence — 2026-11-08
 
 The introduction, §2's public-observation account and §5 now distinguish the

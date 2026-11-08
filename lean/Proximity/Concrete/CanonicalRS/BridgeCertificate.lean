@@ -1,6 +1,7 @@
 module
 
 public import Proximity.Concrete.CanonicalRS.BridgeWitness
+public import Proximity.Application.GapBoundary
 public import Proximity.Concrete.Gates
 
 @[expose] public section
@@ -71,7 +72,8 @@ def of_rsFarSeparation
   finalCertificate :=
     Gates.Projection.CalibratedFinalCertificate.of_farRegionSeparation χ κ ω
 
-/-- Extend a naturality-checked chain with canonical Johnson-radius separation. -/
+/-- Legacy equal-threshold certificate. Its conditional bridge remains valid,
+but disjoint closed decision promises need the separated constructor below. -/
 def of_johnsonRSFarSeparation
     {β : BridgeData}
     {n : Type} [Fintype n] [DecidableEq n] {r : ℕ}
@@ -89,6 +91,40 @@ def of_johnsonRSFarSeparation
         Γ β.johnsonRadiusReal β.johnsonRadiusReal) :
     RSMetricCertificate β Γ :=
   of_rsFarSeparation Γ χ β.johnsonRadiusCalibration ω
+
+section Separated
+
+variable
+    {β : BridgeData}
+    {n : Type} [Fintype n] [DecidableEq n] {r : ℕ}
+    {P : GrassmannianPlucker.FramedSystem n r}
+    {S : Axioms.SheafCoherence}
+    {L : PluckerCochain.LocalSyndromeTarget S}
+    {E : CochainPlane.PlaneExtractionContext ℤ (Fin length)}
+    {pluckerDisagreement : GrassmannianPlucker.FrameWitness n r → ℝ}
+    {Γ : ProjectionChain.Chain
+      P S L β.rsTarget β.metric E β.planeEncoding pluckerDisagreement}
+
+/-- Retain Johnson far separation while choosing a strictly smaller near radius.
+This constructs the existing certificate, not a parallel carrier. -/
+def of_separatedJohnsonRSFarSeparation
+    (χ : Gates.Projection.NaturalityGateCertificate Γ)
+    (nearRadius : ℝ) (hgap : nearRadius < β.johnsonRadiusReal)
+    (ω : Gates.Projection.FarRegionSeparation
+      Γ β.johnsonRadiusReal β.johnsonRadiusReal) :
+    RSMetricCertificate β Γ :=
+  of_rsFarSeparation Γ χ (β.separatedJohnsonRadiusCalibration nearRadius hgap) ω
+
+/-- The separated constructor keeps exactly the selected canonical calibration. -/
+@[simp] theorem of_separatedJohnsonRSFarSeparation_calibration
+    (χ : Gates.Projection.NaturalityGateCertificate Γ)
+    (nearRadius : ℝ) (hgap : nearRadius < β.johnsonRadiusReal)
+    (ω : Gates.Projection.FarRegionSeparation
+      Γ β.johnsonRadiusReal β.johnsonRadiusReal) :
+    (of_separatedJohnsonRSFarSeparation χ nearRadius hgap ω).calibration =
+      β.separatedJohnsonRadiusCalibration nearRadius hgap := rfl
+
+end Separated
 
 /-- The RS metric certificate produces the calibrated final metric check. -/
 def finalCheck
@@ -358,6 +394,74 @@ def toBridge
       β.rsTarget
       β.metric :=
   J.toRSMetricCertificate χ |>.toCalibratedHcryptToRSBridge
+
+section Separated
+
+variable
+    {β : BridgeData}
+    {n : Type} [Fintype n] [DecidableEq n] {r : ℕ}
+    {P : GrassmannianPlucker.FramedSystem n r}
+    {S : Axioms.SheafCoherence}
+    {L : PluckerCochain.LocalSyndromeTarget S}
+    {E : CochainPlane.PlaneExtractionContext ℤ (Fin length)}
+    {pluckerDisagreement : GrassmannianPlucker.FrameWitness n r → ℝ}
+    {Γ : ProjectionChain.Chain
+      P S L β.rsTarget β.metric E β.planeEncoding pluckerDisagreement}
+
+variable
+    (J : JohnsonRSFarSeparation
+      (β := β) (P := P) (S := S) (L := L) (E := E)
+      (pluckerDisagreement := pluckerDisagreement) (Γ := Γ))
+    (χ : Gates.Projection.NaturalityGateCertificate Γ)
+    (nearRadius : ℝ) (hgap : nearRadius < β.johnsonRadiusReal)
+
+/-- Package the same far witness with strictly separated decision radii. -/
+def toSeparatedRSMetricCertificate : RSMetricCertificate β Γ :=
+  RSMetricCertificate.of_separatedJohnsonRSFarSeparation χ nearRadius hgap J.witness
+
+/-- The completed bridge at the selected near radius and unchanged Johnson far radius. -/
+def toSeparatedBridge :
+    ReedSolomonTarget.Target.CalibratedHcryptToRSBridge
+      (PluckerCochain.pluckerInstance P pluckerDisagreement) β.rsTarget β.metric :=
+  J.toSeparatedRSMetricCertificate χ nearRadius hgap |>.toCalibratedHcryptToRSBridge
+
+/-- The completed bridge retains all four selected decision radii. -/
+@[simp] theorem toSeparatedBridge_radii :
+    (J.toSeparatedBridge χ nearRadius hgap).sourceNearRadius = nearRadius ∧
+      (J.toSeparatedBridge χ nearRadius hgap).sourceFarRadius = β.johnsonRadiusReal ∧
+      (J.toSeparatedBridge χ nearRadius hgap).targetNearRadius = nearRadius ∧
+      (J.toSeparatedBridge χ nearRadius hgap).targetFarRadius = β.johnsonRadiusReal :=
+  ⟨rfl, rfl, rfl, rfl⟩
+
+/-- Reuse the original projection between strict views of the closed source and
+target promises. This does not construct an efficient solver. -/
+def toSeparatedGapReduction :
+    GapReduction
+      (sheafSeparatedGapProblem (PluckerCochain.pluckerInstance P pluckerDisagreement)
+        nearRadius β.johnsonRadiusReal hgap).problem
+      (codeSeparatedGapProblem β.codeShadow nearRadius β.johnsonRadiusReal hgap).problem :=
+  (J.toSeparatedRSMetricCertificate χ nearRadius hgap).calibratedReady
+    |>.toCalibratedEndToEndGapProjection.toSeparatedGapReduction hgap hgap
+
+/-- The separated reduction uses the literal original received-word map. -/
+@[simp] theorem toSeparatedGapReduction_map
+    (W : GrassmannianPlucker.FrameWitness n r) :
+    (J.toSeparatedGapReduction χ nearRadius hgap).map W = Γ.receivedWord W := rfl
+
+/-- A correct target solver pulls back on the unchanged closed promises with
+a strict gap. Solver efficiency and the geometric far witness stay explicit. -/
+theorem pullbackSeparatedSolverCorrect
+    (solver :
+      (codeSeparatedGapProblem β.codeShadow nearRadius β.johnsonRadiusReal hgap).problem.Solver)
+    (hsolver :
+      (codeSeparatedGapProblem β.codeShadow nearRadius β.johnsonRadiusReal hgap).problem.SolverCorrect
+        solver) :
+    (sheafSeparatedGapProblem (PluckerCochain.pluckerInstance P pluckerDisagreement)
+      nearRadius β.johnsonRadiusReal hgap).problem.SolverCorrect
+      ((J.toSeparatedGapReduction χ nearRadius hgap).pullbackSolver solver) :=
+  GapReduction.pullbackSolverCorrect (J.toSeparatedGapReduction χ nearRadius hgap) solver hsolver
+
+end Separated
 
 end JohnsonRSFarSeparation
 

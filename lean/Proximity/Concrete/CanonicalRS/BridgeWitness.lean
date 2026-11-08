@@ -25,7 +25,10 @@ noncomputable section
 namespace BridgeData
 
 /--
-Canonical same-radius calibration for the first RS regime.
+Legacy equal-threshold calibration for the first RS regime.
+
+Both promises are closed, so this helper alone does not give disjoint decision
+promises. Use `separatedJohnsonRadiusCalibration` for the solver-facing regime.
 
 This uses the canonical relative-Hamming Johnson radius as the numeric
 threshold on the RS side and calibrates the source-disagreement threshold to
@@ -38,6 +41,58 @@ def johnsonRadiusCalibration (β : BridgeData) :
     β.johnsonRadiusReal
     β.johnsonRadiusReal
     le_rfl
+
+/-- Source and target share a near radius strictly below the unchanged Johnson
+far radius. The same original metric and far-separation witness are retained.
+A nonnegative near radius is an additional intended-profile choice. -/
+def separatedJohnsonRadiusCalibration (β : BridgeData) (nearRadius : ℝ)
+    (hgap : nearRadius < β.johnsonRadiusReal) :
+    Gates.Projection.RadiusCalibration :=
+  Gates.Projection.RadiusCalibration.sameRadius nearRadius β.johnsonRadiusReal hgap.le
+
+/-- All four decision radii of the separated canonical calibration. -/
+@[simp] theorem separatedJohnsonRadiusCalibration_radii
+    (β : BridgeData) (nearRadius : ℝ) (hgap : nearRadius < β.johnsonRadiusReal) :
+    (β.separatedJohnsonRadiusCalibration nearRadius hgap).sourceNearRadius = nearRadius ∧
+      (β.separatedJohnsonRadiusCalibration nearRadius hgap).sourceFarRadius = β.johnsonRadiusReal ∧
+      (β.separatedJohnsonRadiusCalibration nearRadius hgap).targetNearRadius = nearRadius ∧
+      (β.separatedJohnsonRadiusCalibration nearRadius hgap).targetFarRadius = β.johnsonRadiusReal :=
+  ⟨rfl, rfl, rfl, rfl⟩
+
+/-- Source closed promises have a strict numeric gap in the selected regime. -/
+theorem separatedJohnsonRadiusCalibration_sourceStrictGap
+    (β : BridgeData) (nearRadius : ℝ) (hgap : nearRadius < β.johnsonRadiusReal) :
+    (β.separatedJohnsonRadiusCalibration nearRadius hgap).sourceNearRadius <
+      (β.separatedJohnsonRadiusCalibration nearRadius hgap).sourceFarRadius := hgap
+
+/-- Target closed promises have the same strict numeric gap. -/
+theorem separatedJohnsonRadiusCalibration_targetStrictGap
+    (β : BridgeData) (nearRadius : ℝ) (hgap : nearRadius < β.johnsonRadiusReal) :
+    (β.separatedJohnsonRadiusCalibration nearRadius hgap).targetNearRadius <
+      (β.separatedJohnsonRadiusCalibration nearRadius hgap).targetFarRadius := hgap
+
+/-- A concrete nonzero adjacent-grid near radius; list/MCA radii stay unchanged.
+It is independent of the canonical endpoint's native arithmetic certificates. -/
+def decisionNearRadiusReal : ℝ := 2046 / 4096
+
+/-- The concrete decision near radius is nonnegative, independently of endpoint data. -/
+theorem decisionNearRadiusReal_nonneg : 0 ≤ decisionNearRadiusReal := by
+  norm_num [decisionNearRadiusReal]
+
+/-- Pure rational separation, independent of the canonical field/domain construction. -/
+theorem decisionNearRadiusReal_lt_farRadius : decisionNearRadiusReal < (2047 : ℝ) / 4096 := by
+  norm_num [decisionNearRadiusReal]
+
+/-- Identify the pure rational threshold with the unchanged canonical Johnson radius.
+This adapter retains the existing canonical endpoint's proof dependencies. -/
+theorem decisionNearRadiusReal_lt_johnsonRadiusReal (β : BridgeData) :
+    decisionNearRadiusReal < β.johnsonRadiusReal := by
+  have hfar : β.johnsonRadiusReal = (2047 : ℝ) / 4096 := by
+    norm_num [johnsonRadiusReal,
+      ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius,
+      ProximityPrize.BlockCode.relativeRadius, johnsonBelowRadius, length]
+  rw [hfar]
+  exact decisionNearRadiusReal_lt_farRadius
 
 /--
 Johnson-radius RS far separation for a canonical projection chain.

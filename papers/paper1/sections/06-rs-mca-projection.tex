@@ -129,6 +129,9 @@ correct accept/reject solver can exist only when the boundary shell
 \(\{x:s(x)=r\}\) is empty: an attained boundary would require both decisions.
 The solver pullbacks below are conditional on a correct target solver; they
 do not assert the existence of an efficient solver.
+The canonical decision consequence in \cref{prop:canonical-bridge} uses a
+strictly smaller near radius than the Johnson far radius, while leaving the
+list-decoding and MCA radii unchanged.
 
 A gap reduction \(f:P\to Q\) preserves near instances and far instances. Hence
 any correct solver for \(Q\) pulls back to a correct solver for \(P\).
@@ -1600,17 +1603,32 @@ or by exact distance preservation
   D(y_\Gamma(\mathcal F))=\rho(\mathcal F).
 \]
 Together with the naturality-extended hard-gate certificate, this witness gives
-the canonical calibrated RS bridge.
+the canonical calibrated RS bridge after selecting the decision near radius.
+Choose
+\[
+  0\le\varepsilon<\delta_J,
+  \qquad
+  \kappa=(\varepsilon,\delta_J,\varepsilon,\delta_J).
+\]
+Thus the source and target use the same pair of decision radii, with a strict
+gap between near and far. For example, the canonical grid choice
+\(\varepsilon=2046/4096\) is nonnegative and strictly below
+\(\delta_J=2047/4096\). This choice changes only the decision near radius;
+the list-decoding and MCA estimates below retain their radius \(\delta_J\).
 
 \begin{proposition}[Canonical bridge completion]\label{prop:canonical-bridge}
-A naturality-extended hard-gate certificate for \(\Gamma\), together with a
+Fix \(0\le\varepsilon<\delta_J\). A naturality-extended hard-gate
+certificate for \(\Gamma\), together with a
 canonical Johnson far-separation witness
 \[
   \delta_J\le \rho(\mathcal F)
   \Longrightarrow
   \delta_J\le D(y_\Gamma(\mathcal F)),
 \]
-gives a completed calibrated hcrypt-to-RS bridge for the canonical endpoint.
+gives a completed calibrated hcrypt-to-RS bridge for the canonical endpoint
+at \(\kappa=(\varepsilon,\delta_J,\varepsilon,\delta_J)\).
+Both closed promise pairs are disjoint. Every correct target gap solver
+pulls back along the same projection to a correct source gap solver.
 \end{proposition}
 
 \begin{proof}
@@ -1618,8 +1636,9 @@ The canonical endpoint supplies the concrete bridge conditions:
 domain cardinality is \(|\operatorname{Fin}(4096)|=4096\), smoothness is
 \(4096\mid12289-1\), evaluation points are \(a_i=g^i\) by
 \cref{prop:canonical-power-domain}, the metric normalization is
-\cref{prop:canonical-metric}, and the radius parameters are all the relative
-Hamming radius \(\delta_J\).
+\cref{prop:canonical-metric}, and the target's list, point and line radii
+normalize to the relative Hamming radius \(\delta_J\). The decision radii
+are separately selected as \((\varepsilon,\delta_J)\) on both sides.
 
 The naturality-extended certificate contains the hard-gate certificate, hence
 the accumulated stage certificate and structural gate bundle. Its two
@@ -1627,20 +1646,32 @@ naturality fields are the whole-chain composites of the restriction and
 syndrome squares already stored at the cochain/plane and plane/RS stages. By
 \cref{prop:composed-chain}, valid source frames
 map to RS codewords and the composed map is definitionally
-\(\mathcal F\mapsto y_\Gamma(\mathcal F)\). The same-radius calibration has
-near compatibility by reflexivity:
+\(\mathcal F\mapsto y_\Gamma(\mathcal F)\). The selected calibration has
+source and target gaps \(\varepsilon\le\delta_J\), and near compatibility
+by reflexivity:
 \[
-  \delta_J\le\delta_J.
+  \varepsilon\le\varepsilon.
 \]
+In particular, \(\rho(\mathcal F)\le\varepsilon\) implies
+\(D(y_\Gamma(\mathcal F))\le\varepsilon\) by the chain's metric handoff.
 The displayed far-separation witness supplies the final far non-collapse slot.
 The naturality-extended certificate and far-separation witness form the
 calibrated final certificate \(\Omega(\Gamma,\kappa)\); together with
 \(\kappa\), this is the RS metric certificate \(\Omega_{\mathrm{RS}}\). By
 \cref{prop:rs-metric-cert-slots}, it fills the bridge theorem slots and
-completes the canonical RS bridge conditions. Then
-\cref{prop:projection-pullback} gives the induced pullback of correct RS gap
-solvers.
+completes the canonical RS bridge conditions. Since
+\(\varepsilon<\delta_J\), neither source nor target can be both near and
+far. Applying the existing strictly separated gap-reduction view preserves
+the same map and promises; \cref{prop:projection-pullback} gives the induced
+pullback of correct RS gap solvers.
 \end{proof}
+
+The equal-threshold helper with all four radii equal to \(\delta_J\)
+remains a conditional certificate-packaging construction. It supplies no
+disjointness theorem or target solver at an attained closed boundary.
+The selected strict-gap construction resolves that decision convention;
+the geometric far-separation witness remains an independent hypothesis,
+and no efficient solver is constructed here.
 
 The deep list-decoding and MCA estimates are external theorem inputs
 \cite{benSassonCarmonHabockKoppartySaraf2026,proximityPrize2026}.
@@ -1767,12 +1798,14 @@ Substituting the displayed equality of bad-challenge sets gives the theorem.
 \end{proof}
 
 \begin{corollary}[Verifier-facing RS/MCA projection]\label{cor:verifier-rs-mca}
-Assume the cited canonical list/MCA bound above. Given an accepted
+Assume the cited canonical list/MCA bound above and fix
+\(0\le\varepsilon<\delta_J\). Given an accepted
 hidden/geometric witness, a certified
 Pl\"ucker-to-cochain-to-plane-to-RS projection chain, hard projection-gate
 evidence extended through assembled naturality, and a canonical
 Johnson-radius far-separation witness, the public verifier obtains a finite
-Reed--Solomon received word. For any second projected witness, the resulting
+Reed--Solomon received word and the strictly separated calibrated bridge at
+\((\varepsilon,\delta_J)\). For any second projected witness, the resulting
 affine line has canonical MCA bad-challenge fraction bounded by the cited
 threshold \(\tau_{\mathrm{cit}}/|F|\).
 \end{corollary}
@@ -1852,4 +1885,14 @@ to \lean{Proximity.CanonicalRS.Parameters},
 \lean{Proximity.CanonicalRS.MCA.Line}, \lean{Proximity.CanonicalRS.MCA},
 \lean{Proximity.CanonicalRS.MCA.Concrete},
 \lean{Proximity.CanonicalRS.CitedBounds}, and \lean{Proximity.CanonicalRS}.
+The strict canonical decision convention is implemented by
+\lean{CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration} and
+\lean{CanonicalRS.BridgeData.decisionNearRadiusReal_lt_johnsonRadiusReal}.
+The original far witness is retained by
+\lean{CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedRSMetricCertificate};
+\lean{toSeparatedBridge_radii} identifies its four decision radii, while
+\lean{toSeparatedGapReduction} and \lean{pullbackSeparatedSolverCorrect}
+retain the same projection and correct-solver pullback. These declarations
+reuse \lean{Proximity.Application.GapBoundary}'s strict views of the existing
+closed gap problems.
 \end{leanledger}
