@@ -4,7 +4,8 @@ Review dates: 2026-11-04; mathematics/storage, object-model and toolchain
 follow-ups 2026-11-05; concrete Helfer/HCP implementation, public-input profile
 recipient recovery/rotation, owned-resource transition and one-shot integrity
 2026-11-06; primitive/TCB comparison and existing-object owner-signing wiring 2026-11-07; native Hodge retrieval,
-full-ciphertext recovery and source/completion assessment 2026-11-08.
+full-ciphertext recovery, source/completion assessment and Paper 1 observation
+wording reconciliation 2026-11-08.
 
 **Completed native-metric follow-up — 2026-11-05 baseline:** the cochain,
 plane and RS metrics remain separate. The explicit systematic modular profile
@@ -129,7 +130,8 @@ probe passes **839 selected reports**: 803 standard-only (627 exact-three,
 all 750 preceding dependency sets are unchanged. Static coverage: 273 public
 modules/274 Lean files, no holes/cycles/unresolved imports, the same seven
 isolated cited axioms and 46 scoped closures excluding `Chain`/`CitedBounds`.
-P280 is current. P273 preserves the preceding 9,285/9,278-job, 750-report
+P280 remains the current Lean build/dependency checkpoint. P281 records the
+subsequent Paper 1 manuscript-only observation correction. P273 preserves the preceding 9,285/9,278-job, 750-report
 native path/witness milestone, and P268 the earlier owner-signing milestone.
 
 At the preceding primitive-comparison milestone, expanded/default builds pass **9,281/9,274 jobs**. The fresh
@@ -323,7 +325,7 @@ mathematical or author decisions, rather than silent copyediting.
 
 | ID / priority | Location / related objects | Finding | Disposition and required action |
 |---|---|---|---|
-| D01 / P0 | HCP §§2,5; H02, H10, H23 | A decoded exact payload has `P_H δ₀a=0`, whereas HCP permits nonzero `h`. A proof about a vector also need not expose it. | **Partial construction; public realization open.** `HodgeEncryptedCochain` and `TCB.BoundHCPObservation` already join the exact component to the distinct full sample and prove harmonic recovery. Instantiate their supplied interpretation/classifier/`Binds` relation, specify public encoding/extraction, and identify the operative semantic witness before claiming a concrete public-data HCP realization. |
+| D01 / P0 | HCP §§2,5; H02, H10, H23 | A decoded exact payload has `P_H δ₀a=0`, whereas HCP permits nonzero `h`. A proof about a vector also need not expose it. | **Manuscript distinction reconciled; application contracts remain.** Intro/§2/§5 now retain the separate full Hodge sample, supplied binding and operative alignment, and optional explicit disclosure. `BoundHCPObservation.toObservation` projects a record already containing that sample; it is not extraction from accepted payload bytes. Concrete full-sample public encoding/extraction and larger released-view compatibility remain profile obligations. P281 records the focused correspondence check. |
 | D02 / P0 | HCP §§5--6; H17, H37--H38 | A full Plücker point reveals `W`. If this is the operative kernel, public disclosure conflicts with withholding it. A digest alone is a different observation. | **First storage profile specified.** Paper 2 §2.1 publishes the original payload/header and retained root/directory; full operative Plücker coordinates remain outside the base release. Explicit HCP or local openings extend that view. A digest projection is distinct from the full hashed-shadow record. Concrete access control, bytes and security of all visible extensions remain obligations. |
 | D03 / P0 | HCP §6.1 and canonical bridge; H18, H20 | Closed near/far inequalities with equal radii overlap at the threshold. The current Lean `GapProximityProblem` also permits equality. A correct accept/reject solver cannot exist if an instance lies on both sides. | **Boundary criterion and strict view proved; profile convention open.** [GapBoundary](lean/Proximity/Application/GapBoundary.lean) characterizes overlap by equal radii plus threshold attainment and proves solver inconsistency there. `SeparatedGapProblem` retains the original score/radii and derives disjointness from numeric strictness. Legacy APIs remain unchanged. Concrete profiles still need strict gaps, an empty-shell proof, or an explicit half-open convention, with synchronized prose. The classical specification result supplies no efficient solver. |
 | D04 / P1 | HCP §6.4--6.5; H20 | Stage-certificate existence uses naturality squares and local nondegeneracy. The earlier prose displayed only alignment, codeword preservation, and distance control. | **Corrected presentation.** The stage definitions now explicitly include those supplied fields and display both restriction/syndrome squares. This adds no new proof of an application instance. |
@@ -629,6 +631,8 @@ completion in the current record below.
 | P278 | Conditional joint-query obstruction | Public span exclusion identifies the selected column under explicit redundancy of all others. Actual axis-family HodgeNoise uses varied coexact openings and retains original CVP comparisons. This extra joint hypothesis is distinct from existing fixed `(class,b)` oracle nonrecoverability. |
 | P279 | Original-object hash-addressed recovery | Selected finite full-ciphertext decoding and actual BoundHCPObservation/BoundSampleRotation endpoints feed existing delivered recovery material. Availability and original decoding yield coefficients or an actual collision; wrong scope and unlisted digest reject. Full ciphertext digest is distinct from the exact-component ContextKey digest. |
 | P280 | Retrieval/codec validation — 2026-11-08 | Expanded/default builds pass 9,292/9,285 jobs; focused facades 3,490. Consolidated probe: 839 selected declarations, 803 standard-only (627 exact-three, 176 subsets), 36 existing-native. All 89 additions are standard-only (58 exact-three, 31 subsets/axiom-free); all 750 retained dependency sets match. Static scan: 273 public modules/274 files, no holes/cycles/unresolved imports, same seven isolated cited axioms; all 46 scoped closures exclude Chain/CitedBounds. Source ledger and three-paper completion checkpoint updated; Paper 1/3 TeX and PDFs unchanged. |
+
+| P281 | Paper 1 full-observation wording — 2026-11-08 | Intro/§2/§5 now distinguish accepted exact payload, separate full Hodge sample, supplied binding/operative alignment and optional full-pair disclosure. Full genuine operative-kernel Plucker data plus b determine the target at a fixed metric. Eight existing supporting endpoints pass a fresh exact-standard-three audit; all 273 Lean source hashes are unchanged, so P280's build/consolidated selection remains the Lean baseline. Revised 100-page PDF compiles without undefined references/citations, missing glyphs or overfull boxes; all pages rendered, changed passages inspected in detail. Eight underfull diagnostics remain. Canonical/stable copies match. D03's near/far convention remains the next mathematical step. |
 
 #### Current protocol validation
 

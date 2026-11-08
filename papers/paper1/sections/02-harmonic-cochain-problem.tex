@@ -334,13 +334,15 @@ to exactness with the full HCP residual.
 Thus \((\alpha,b)\) is the protocol-independent vector-level abstraction of
 the concrete artifact-and-commitment layer in
 \cref{sec:public-artifacts-commitments}: \(\alpha\) records the public
-classifier value, while \(b\) records the cochain-level datum actually made
-available through an accepted payload, opening, or proof-carrying statement.
-A commitment to \(b\) does not by itself expose \(b\). Instantiating the
-vector-level HCP interface from a commitment therefore requires an explicit
-opening, extraction, or verified-evaluation path. This abstraction is the
-public datum used in the HCP definition and in the hidden-kernel ambiguity
-comparison.
+classifier value, while \(b\) is the full cochain actually released by the
+selected observation profile. Acceptance of an exact payload, an opening of
+its exact component, or a proof about that component does not by itself
+expose \(b\). Instantiating the vector-level interface requires a relation
+binding the full sample to the artifact and an explicit disclosure or
+specified extraction of that sample. The bound-observation construction in
+\cref{sec:public-artifacts-commitments} records this distinction. The
+hidden-kernel ambiguity comparison uses the resulting mathematical pair;
+equality of a larger artifact or storage view requires its own hypotheses.
 
 The public observation is not the hidden Hodge system. It classifies a public
 equivalence class of possible hidden representatives. Fibrational and

@@ -17,7 +17,7 @@ actual statement/Lean correspondence and checked dependencies.
 
 | Paper | Selected proved core | Required completion work |
 |---|---|---|
-| **1 — HCP foundations** | Actual cellular Hodge noise/recovery, finite integral family for the homological fragment of Helfer semantics, encoded-message ambiguity, precise known-lattice CVP comparison and hidden-operator oracle obstruction; full genuine Plucker/projector reconstruction. | Freeze those exact headline quantifiers; repair wording that lets an exact-component payload appear to supply the full observation; resolve the closed near/far boundary convention in §6 and align its Lean contract. Keep an uninstantiated geometric application conditional. Finish the focused novelty/source account and selected submission statements. |
+| **1 — HCP foundations** | Actual cellular Hodge noise/recovery, finite integral family for the homological fragment of Helfer semantics, encoded-message ambiguity, precise known-lattice CVP comparison and hidden-operator oracle obstruction; full genuine Plucker/projector reconstruction. | Freeze those exact headline quantifiers; resolve the closed near/far boundary convention in §6 and align its Lean contract. Keep an uninstantiated geometric application conditional. Finish the focused novelty/source account and selected submission statements. |
 | **2 — protocol/commitments** | One fixed-snapshot/epoch public-resource transition and conditional one-shot integrity; actual rotation and original-object evidence/history joins; native structured-noise query/answer/CVP identity; hash-addressed recovery; whole-bucket private-read reference and joint-view obstruction under explicit noise-column redundancy. | Instantiate one finite original-object profile and its visibility, packet/ciphertext/witness bytes, hash preimages and authenticated initial state. Supply a genuine credential/proof construction if native authentication security is advertised. If efficient private reads are claimed, choose and analyze the whole query sampler/view; the whole-bucket reference supports a bounded first scope. Complete one bounded verifier/persistence path if runtime implementation is claimed, and turn the Markdown working text into a theorem-led manuscript/TeX/PDF. |
 | **3 — capacity-radius proximity** | All nine named coding claims, Q04--Q07 and Q08 for the actual modular cochain profile, including native metric comparison and nonempty capacity-far examples. | Update stale abstract/introduction summaries to reflect the completed modular application; finish the bounded prior-work/deep-hole account and precise complexity claims. Resolve native arithmetic trust for selected Palomar endpoints, then synchronize the manuscript/ledgers and package the selected statements. Q10--Q12 are extensions, not required missing proofs. |
 
@@ -30,19 +30,23 @@ for the selected conditional mathematics.
 
 ### Recommended order
 
-1. **Reconcile the two mathematical manuscripts first.** Paper 1 and Paper 3
-   do not depend on finishing private retrieval, signatures, public-key HCP,
-   full consensus or Rust production work. In Paper 1, the key source wording
-   is in the introduction and §5: an accepted exact payload alone does not
-   supply `b`; use the additional `BoundHCPObservation`/alignment/disclosure
-   relation. Full operative-kernel Plucker coordinates together with `b`
-   determine the HCP target; digest/proof-only observations have a separate
-   visibility profile. In Paper 3, the abstract and introduction should state §7's
-   completed modular result rather than calling it a contribution to complete.
-2. **Close Paper 1's application convention explicitly.** The equal closed
+1. **Paper 1 observation wording — completed 2026-11-08.** The introduction,
+   §2 and §5 now distinguish the accepted exact payload from the separate full
+   sample, its binding/operative alignment and its explicit disclosure.
+   `BoundHCPObservation.toObservation` is a projection from a record containing
+   the sample, not a public byte extractor. Full operative-kernel Plucker data
+   together with `b` determine the target at the fixed ambient metric. The
+   eight supporting Lean endpoints were rechecked and the revised PDF reviewed.
+   [P281](../SEMANTIC-PARITY.md) and the [validation record](MATH_STORAGE_VALIDATION.md#paper-1-full-observation-correspondence--2026-11-08)
+   track this step. Paper 3's stale abstract/introduction summaries still need
+   reconciliation with §7's completed modular result. These manuscript tasks
+   do not depend on completing signatures, efficient retrieval or Rust.
+2. **Close Paper 1's application convention next.** The equal closed
    near/far threshold at `2047/4096` needs either a strict gap, an empty-shell
    proof or a synchronized half-open convention for a meaningful solver
-   instantiation. Change the manuscript and formal contract together. Check
+   instantiation. The smallest proposed repair retains the Johnson far radius
+   and chooses a strictly smaller near radius using the existing calibration
+   and separated-gap APIs. Change the manuscript and formal contract together. Check
    the cited canonical theorem's actual hypotheses; a conditional displayed
    bound is not a constructed nontrivial security budget.
 3. **Build one concrete Paper 2 profile from the existing interfaces.**

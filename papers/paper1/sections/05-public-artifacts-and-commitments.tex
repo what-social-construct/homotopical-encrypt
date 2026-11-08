@@ -7,16 +7,16 @@ itself is mixed: commitment values, payloads, hashes, roots, and verification
 statements are public-facing, while openings, randomness, full cochains, and
 hidden Hodge data remain witness-level unless a specified protocol path exposes
 them.
-These public-facing objects are the scaffolding for transparency in action and
-anonymity in identity: actions are exposed through auditable public artifacts,
-while identities remain inside hidden representatives and public equivalence
-classes.
+These public-facing objects support the intended separation between auditable
+actions and private representatives. Anonymity additionally requires an
+observation model and a security argument for the selected protocol.
 This section describes the artifact layer from which an instantiation may
 obtain the abstract public observation \((\alpha,b)\) of
 \cref{def:public-observation}. The public classifier supplies \(\alpha\).
-Obtaining the vector \(b\) from a payload, partial opening, or proof-carrying
-statement requires an explicit opening, extraction, or verified-evaluation
-path, as specified there.
+The full vector \(b\) is additional data, bound to the exact artifact by a
+specified relation. Making it public requires an explicit disclosure or a
+specified extraction of the full sample; acceptance of the exact artifact or
+a proof about it does not supply that disclosure.
 
 \subsection{Cochain Commitments}
 
@@ -44,11 +44,11 @@ coboundaries \(\delta_0,\delta_1\), and Hodge--Laplacian \(\Delta_x\).
     equations involving \(\bar c\). Only the stated local values, conditions,
     or proof statements become public.
 \end{enumerate}
-Thus the cochain-facing observation \(b\) in \cref{def:public-observation} is
-the abstract datum supplied by an accepted payload, opening, or proof-carrying
-statement; the commitment payload records the public residue edge vector
-\(\bar c\); and the hidden cochain witness remains private unless a protocol
-path explicitly exposes a specified part of it. The canonical payload is a
+Thus the commitment payload records the public residue edge vector
+\(\bar c\), while the full HCP sample \(b\) is retained separately.
+An opening or proof reveals only its stated data; the full sample becomes
+public only under the selected disclosure or extraction profile.
+The canonical payload is a
 mathematical object with a modulus, public residue edge values, declared edge
 count, and topology hash.
 
@@ -58,6 +58,18 @@ roles. In the same Hodge system,
 alone cannot represent an HCP sample with a nonzero harmonic message. An
 instantiation relating the two must specify the additional observation or
 witness relation.
+
+The formal bound-observation record retains the full encrypted sample and
+the accepted exact artifact as separate fields. Its decoder equation
+identifies the decoded payload with the sample's exact component; an
+application-owned relation binds the full observation to that payload,
+its digest, the snapshot root and the lifecycle context. Projecting this
+record gives \((\alpha,b)\); it is not an algorithm extracting \(b\) from
+accepted payload bytes. An additional alignment identifies the same
+cellular operator and classifier with the operative semantic witness, so
+its target is the harmonic message of that same sample. The optional HCP
+disclosure releases the pair alongside the base artifact/header view;
+equality of the pair alone does not imply equality of that larger view.
 
 \begin{definition}[Cochain commitment payload]\label{def:cochain-commitment-payload}
   A cochain commitment payload is a tuple
@@ -75,8 +87,9 @@ The intended commitment map is the transaction-facing coboundary map
 stored together with the topology hash of the supporting complex. The payload
 therefore preserves the accepted modulus, the edge-vector shape, the public
 topology binding, and the serialized \(C^1\)-level commitment values. It does
-not expose the hidden fibration representative, private transport data, the
-operative Hodge--Laplacian, or the harmonic kernel.
+not include a presentation of the hidden fibration representative, private
+transport data, operative Hodge--Laplacian or harmonic kernel. Hiding for a
+concrete encoding is a separate claim.
 
 The primary committed mathematical object is the resulting exact
 one-cochain, not a uniquely recoverable degree-zero representative. If
@@ -91,6 +104,7 @@ space \(\ker(\delta_0)\). Selecting one distinguished opening would require a
 separate gauge or reference anchor; none is inferred from the raw coboundary
 payload.
 
+\Needspace{6\baselineskip}
 \begin{definition}[Commitment well-formedness]\label{def:commitment-well-formedness}
   A cochain commitment payload is well formed when its modulus is the supported
   canonical modulus \(q=12289\), its declared edge count agrees with the actual
@@ -398,9 +412,10 @@ and ephemeral-fiber lifecycle properties are trusted computing base (TCB)
 requirements. They are boundary
 conditions, not part of the mathematical cochain commitment payload.
 
-For HCP, the concrete sources for the abstract observation \((\alpha,b)\) are:
-\(\alpha\) is the public classifier value, and \(b\) is the cochain-facing datum
-supplied by an accepted cochain payload, opening, or proof-carrying statement.
+For HCP, the selected bound-observation profile provides the public classifier
+value \(\alpha\) and the separate full sample \(b\). Its binding and
+operative-witness alignment are additional hypotheses; its disclosure
+specifies which parts become public.
 For \(x\in A_\alpha\), private restriction data determine \(C_x^\bullet\),
 \(\delta_0,\delta_1\), \(\Delta_x\), and the recovery target
 \[
@@ -408,9 +423,11 @@ For \(x\in A_\alpha\), private restriction data determine \(C_x^\bullet\),
 \]
 when \(b\in C_x^1\).
 
-The artifacts in this section may bind to the hidden representative or certify
-equations involving \(b\), but they do not present \(\Delta_x\),
-\(\ker(\Delta_x)\), or the private fibration data. Once HCP has selected or
+The base payload, hash and proof statements may bind to the hidden
+representative or certify equations involving \(b\). A binding assertion
+alone publishes neither \(\Delta_x\) nor \(\ker(\Delta_x)\);
+any additional disclosed geometric data must be assessed separately.
+Once HCP has selected or
 certified the hidden Hodge data, the fibration ID is
 \[
   \operatorname{FID}(x)=\operatorname{Spec}_{\mathrm{multi}}(\Delta_x).
@@ -449,8 +466,13 @@ by a hash, root, or proof-carrying statement, but the actual witness remains
 the hidden frame or representative.
 
 The full projective coordinate determines \(W\), although it forgets the
-choice of frame. Disclosing that coordinate therefore has a different
-visibility consequence from disclosing only a digest or a proof about it.
+choice of frame. At a fixed ambient inner product it therefore determines
+the orthogonal projector onto \(W\). If \(W=\ker(\Delta_x)\), disclosing
+the full coordinate together with \(b\) determines the HCP target
+\(P_Wb\), even without the frame or positive spectrum of \(\Delta_x\).
+Disclosing only a digest or a proof about the coordinate is a separate
+observation profile. This is a mathematical reconstruction on exact
+coordinates, with no claim of an efficient finite byte algorithm.
 
 In the proximity specialization of \cref{sec:rs-proximity-projection}, the cochain
 commitment remains the public committed payload. The Pl\"ucker coordinate enters
@@ -516,6 +538,12 @@ following Lean declarations:
     \lean{TCB.HashedCommittedCochain},
     \lean{TCB.ProofCarryingCommittedCochain}, and
     \lean{TCB.proofCarrying_cochain_wellFormed};
+  \item separate full-observation binding and operative-target alignment:
+    \lean{TCB.BoundHCPObservation},
+    \lean{TCB.BoundHCPObservation.toObservation},
+    \lean{TCB.HCPRealization.BoundObservationAlignment.operativeTarget_eq_message},
+    \lean{Protocol.Storage.hcpDisclosure_observation}, and
+    \lean{Protocol.Storage.hcpDisclosure_eq_iff};
   \item sheaf-coherent artifact refinements:
     \lean{TCB.HashedCommittedCochain.CoherentWith},
     \lean{TCB.ProofCarryingCommittedCochain.CoherentWith},

@@ -225,9 +225,12 @@ The completed main upgrade supersedes the
 earlier proposal to keep main development on Lean 4.24.0; the earlier build
 and dependency records remain separately dated historical evidence.
 
-The current corresponding PDFs have 99 pages for Paper 1 and 28 for Paper 3;
-both retain their recorded visual reviews. The public-observation, rotation,
-owned-transfer, one-shot integrity, primitive-comparison, owner-signing and native-retrieval steps change Paper 2's Markdown draft, leaving those PDFs unchanged. Select
+The current corresponding PDFs have 100 pages for Paper 1 and 28 for Paper 3;
+Paper 1's observation-wording reconciliation has been rebuilt and visually
+reviewed, while Paper 3 retains its recorded visual review. The earlier
+public-observation, rotation, owned-transfer, one-shot integrity, primitive,
+owner-signing and retrieval steps changed Paper 2's Markdown draft and left
+both PDFs unchanged. This observation-wording step updates only Paper 1. Select
 the appropriate manuscript evidence for each entry and tie it to the final
 immutable release. This is evidence preparation, not a completed submission.
 

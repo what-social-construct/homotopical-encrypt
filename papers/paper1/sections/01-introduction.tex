@@ -44,13 +44,18 @@ make public-data HCP a known-lattice problem: public homotopy-class data
 may be compatible with distinct hidden operators, distinct kernels, and
 different harmonicity judgments.  The paper isolates this boundary and then
 separates it from the finite verifier-facing projection artifacts used later.
-Those artifacts supply concrete sources for the abstract observation
-\((\alpha,b)\): the public classifier supplies the realized class value
-\(\alpha\), while accepted cochain payloads,
-openings, or proof-carrying statements supply the cochain-facing datum \(b\).
-When accompanied by the stated topology binding and proof relation, they are
-interpreted relative to hidden Hodge data without presenting \(\Delta_1\) or
-\(\ker(\Delta_1)\). The fibration ID is the spectral fingerprint
+The public classifier supplies the realized class value \(\alpha\).
+The full cochain \(b=h+e\) is separate from the accepted exact commitment
+payload: its decoded exact cochain has zero harmonic projection in its
+specified Hodge system. A bound-observation relation ties the full sample to that payload,
+its digest, snapshot and lifecycle context. Releasing \((\alpha,b)\)
+requires an explicit disclosure or a specified extraction of that full
+sample; a proof about the exact payload alone does not expose it.
+The selected observation need not present \(\Delta_1\) or
+\(\ker(\Delta_1)\). If full Pl\"ucker coordinates of the operative kernel
+are additionally disclosed, however, they determine its fixed-metric
+projector and hence the HCP target from \(b\).
+The fibration ID is the spectral fingerprint
 \(\operatorname{Spec}_{\mathrm{multi}}(\Delta_1)\), obtained only after the
 relevant Hodge data have been recovered or certified; it is not part of the
 public classifier value.

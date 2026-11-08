@@ -9,6 +9,69 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Paper 1 full-observation correspondence — 2026-11-08
+
+The introduction, §2's public-observation account and §5 now distinguish the
+accepted exact payload from the full Hodge sample. The decoded payload is the
+sample's exact component and has zero harmonic projection. The existing
+`BoundHCPObservation` retains the separate full sample with supplied
+artifact/snapshot/lifecycle binding; `toObservation` projects that record and
+is not an extractor from payload bytes. `BoundObservationAlignment` identifies
+the same operative operator/classifier and harmonic message. `hcpDisclosure`
+models an optional full-pair release alongside the base artifact/header;
+pair equality alone supplies no full-view equality.
+
+The same passages now state the existing visibility result: full genuine
+Plucker data for the **operative kernel**, at the fixed ambient inner product,
+together with `b`, determine its target. Digest/proof-only profiles remain
+separate. These are prose/correspondence corrections using existing objects;
+no new mathematical or cryptographic construction is introduced.
+
+A focused Lean probe rechecks **eight existing endpoints**, each using exactly
+`propext`, `Classical.choice`, `Quot.sound`. Seven already occur in P280's
+839-report consolidated selection; the separate probe does not change that
+selection. All **273 Lean source hashes match** the P280 checkpoint, so its
+9,292/9,285-job builds remain the applicable source baseline; no repeat full
+build is needed for these TeX/Markdown edits.
+
+The revised **100-page** Paper 1 PDF compiles without undefined
+references/citations, missing glyphs or overfull boxes. All pages were rendered
+and reviewed in contact sheets; the changed passages on pages 4, 11, 40--42
+and 49--51 were inspected at higher resolution; the short definition on
+page 43 was checked after keeping it together across the page break. The
+final wording refinement was rendered again and the reflowed pages rechecked. Eight underfull-box
+diagnostics remain, with no visible defect found. The canonical PDF and stable
+review copy match byte-for-byte; Paper 3 remains unchanged.
+Current Paper 1 SHA-256:
+`45796292203a5f58b02b3f41752742b11b7d6031e3213649814b5065a09b7c1f`.
+D03's near/far convention remains open and is the next mathematical step.
+
+Local evidence: `output/validation/paper1-observation-{tex-build,axioms}.log`,
+`paper1-observation-axiom-summary.json`, `paper1-observation-validation.json`,
+and rendered pages under `output/validation/paper1-observation-render/`.
+
+Reproduce the focused correspondence check from `lean/`:
+
+```sh
+cat > /tmp/paper1-observation-axioms.lean <<'LEAN'
+import TCB.HCPRealization
+import Protocol.Storage.PublicView
+import TCB.PluckerObservation
+
+#check Hcrypt.TCB.BoundHCPObservation.toObservation
+#check Hcrypt.TCB.BoundHCPObservation.decodedExactComponent
+#print axioms Hcrypt.TCB.BoundHCPObservation.harmonicProjection_cochainObject
+#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment.operativeTarget_eq_message
+#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_observation
+#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_eq_iff
+#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame
+#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame
+#print axioms Hcrypt.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent
+#print axioms Hcrypt.TCB.PluckerObservation.operativeHarmonicComponent_eq_of_same_full_shadow
+LEAN
+lake env lean /tmp/paper1-observation-axioms.lean
+```
+
 ## Native Hodge retrieval and concrete outer codec — 2026-11-08
 
 The focused [Retrieval facade](../lean/Protocol/Storage/Retrieval.lean) reuses
