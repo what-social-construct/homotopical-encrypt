@@ -11,8 +11,8 @@ the preparation tooling.
 
 - `lean/`: current source, pinned toolchain, Lake configuration/manifest and
   reviewer guides, including the conservative protocol core and typed
-  sheaf-storage/projection infrastructure. Paper 1's independent entry includes
-  its Comparator configuration, metadata and source crosswalk.
+  sheaf-storage/projection infrastructure. Paper 1 and Paper 3's coding/application
+  entries include their configurations, metadata and source crosswalks.
 - `papers/paper1/`: *Homotopical Encryption: Hidden Hodge Operators and the
   Harmonic Cochain Problem*, its TeX/bibliography sources and reviewed PDF.
 - `papers/proximity-prize/`: Paper 3, *Capacity-Radius Proximity for Smooth-Domain
@@ -75,10 +75,11 @@ The important distinctions remain visible:
 
 ## Readiness record
 
-The current Lean/Mathlib 4.35.0 expanded/default builds pass **9,293/9,285 jobs**.
-The fresh probe covers **946 selected declarations**, all standard-only,
-including all 46 Paper 1 entry declarations. All 900 prior dependency sets
-and 273 existing owner source hashes are unchanged.
+The current Lean/Mathlib 4.35.0 expanded/default builds pass **9,295/9,285 jobs**.
+The fresh probe covers **975 selected declarations**, all standard-only,
+including the 46 Paper 1, 52 coding and 22 application targets. All 946 prior
+dependency sets match. Five old modules change: three comments and two encoder/
+opening presentations whose values are definitionally equal to the old formulas.
 The selected manuscript statement map foregrounds Paper 1's CVP/HCP
 comparison and retains Paper 3's nine coding groups plus its bounded modular
 application. Hodge component uniqueness is now proved; boundary/canonical
@@ -88,7 +89,7 @@ baselines in the shared validation record.
 | Item | Current status |
 |---|---|
 | License and dependency pins | Existing MIT license, Lean `v4.35.0`, Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679` and matching transitive manifest. |
-| Current Lean source scan | 276 Lean files including Lake (275 public source modules); zero implementation holes, with 23 intentional theorem placeholders isolated in the independent Challenge. Solution imports no Challenge. Seven explicit custom axioms remain isolated in the concrete cited-bound module. No local import cycles. This is source scanning, not theorem-dependency verification. |
+| Current Lean source scan | 280 Lean files including Lake (279 public modules); zero implementation holes, with 96 deliberate theorem placeholders isolated in three independent Challenges. Solutions import no Challenge. Seven global custom axioms remain isolated in CitedBounds. No native calls, cycles or unresolved imports. |
 | Generic coding mathematics | All nine named standalone statements have Lean endpoints. Q04--Q07 are complete; the 33-module standalone closure excludes project cited-bound axioms and legacy `Chain`. |
 | Conservative core and integration examples | The current 4.35 aggregate includes `Protocol.Core`, ledger and evidence examples, sheaf adapters and same-proposal quorum joins. All pass with their explicit profile inputs. |
 | Sheaf storage and gates | The current build includes `Storage.Core`, its fixtures, public payload/header and sealed-root/directory projections, explicit HCP disclosure and optional canonical observation adapter. Roots, decoded exactness and pair distance retain their separate definitions. The public views are semantic projections, not serializers or hiding proofs. |
@@ -101,10 +102,11 @@ baselines in the shared validation record.
 | Native retrieval and full-ciphertext recovery | Actual HodgeNoise queries produce a response equal to an original full encryption observation, with original coefficient recovery and same-answer CVP comparison. Digest-checked full bytes join original bound-HCP rotation/recovery with a collision alternative. Whole-bucket O(N) reads have equal fixed-scope transcripts/distributions; conditional joint-column disclosure is separate. Efficient PIR, manifest authentication and concrete finite byte/proof profiles remain open. |
 | Canonical decision profile | Closed promises retain `(ε,δ_J)` on both sides, concrete near 2046/4096 and far 2047/4096, the original map and solver pullback. Its canonical arithmetic now uses kernel proofs. The geometric far witness and efficient solver remain explicit obligations. |
 | History/manifest anchor | The joins and fixtures pass on 4.35, and all nineteen fresh anchor reports use only the three standard Lean axioms. Concrete authentication/encoding/backend profiles remain explicit. The earlier 4.24 focused/full results are preserved in the shared register. |
-| Theorem dependencies | All 946 reports are standard-only (768 exact-three/178 subsets, including 106 axiom-free). All 900 prior sets match; no selected native, cited-bound or sorryAx dependency occurs. The [validation guide](docs/MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09) reproduces the entry probe and preserves historical audits. |
-| Full aggregate | Literal default 9,285 jobs and expanded union with Paper 1 Solution 9,293 jobs pass. The [current validation record](docs/MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09) distinguishes build, source and dependency checks; hosted CI has not been run here. |
+| Theorem dependencies | All 975 selected reports are standard-only (792 exact-three/183 subsets, 106 axiom-free); all 946 prior sets match. No selected native, cited-bound or sorryAx dependency occurs. The [validation record](docs/MATH_STORAGE_VALIDATION.md#paper-3-independent-entries--2026-11-09) reproduces the entry checks and preserves historical audits. |
+| Full aggregate | Literal default 9,285 jobs and expanded union with all three Solutions 9,295 jobs pass. Source/input identity, definition comparisons and dependency audits are separate checks; hosted/protected CI has not run here. |
 | Paper 1 independent entry | [Challenge/Solution and metadata](lean/Palomar/PaperOne/README.md) cover eight selected groups through 21 manuscript-facing and 25 supporting declarations. Mathlib-only independent statements and local Comparator/Lean/NanoDa checks pass. The macOS diagnostic disables Comparator's Linux sandbox; protected preflight remains. The manual-only workflow is prepared locally and has not run. |
-| Manuscripts | Paper 1's selected HCP/CVP entry follows its named propositions and includes Hodge uniqueness. Paper 3's modular summary/source comparison and kernel trust paragraph are aligned; its independent entry is pending. Paper 2 remains a conditional working draft. Frozen slim per-entry releases and concrete protocol/security implementation remain separate work. |
+| Paper 3 independent entries | [Coding](lean/Palomar/PaperThree/README.md) and [original-cochain application](lean/Palomar/PaperThree/Application/README.md) retain all fourteen selected groups across two configurations. Both full local definition comparisons and Lean/NanoDa replays pass. Actual fields, original Context/payload/decoder and three native distances remain explicit; encoder/opening values are preserved by rfl. Protected Linux verification remains. |
+| Manuscripts | Paper 1's selected HCP/CVP entry follows its named propositions and includes Hodge uniqueness. Paper 3's coding/application entries and field/trust boundaries are aligned. Paper 2 remains a conditional working draft. Both manuscript PDFs are unchanged in this entry-preparation step. Slim frozen releases and concrete protocol/security implementation remain separate. |
 | Manuscript alignment | Paper 1's 101-page PDF and Paper 3's 30-page PDF compile without undefined references/citations, missing glyphs or overfull boxes. The revised 101-page Paper 1 was rendered and visually checked after its observation and strict decision-profile corrections; Paper 3's revised 30-page summary/source-comparison pass was rendered and visually checked; some underfull-box diagnostics remain. These are recorded layout/compile checks, not final statement-alignment certification. Their ledgers include Plucker recovery, native-metric endpoints, storage owners and explicit source-profile boundaries. Canonical and stable review copies match byte-for-byte. |
 | Public publication | Not performed. Review the source package and choose the destination and timing separately. |
 
@@ -123,8 +125,8 @@ created by this exporter. The source repository and its history are unchanged.
 The package contains a small Lean/manuscript CI workflow, separate from the
 full repository's Rust/Python integration jobs. The authoritative checks are
 the pinned Lean build, explicit transition examples, theorem axiom reports,
-and both manuscript builds. Paper 1's selected Solution is included in the
-review build. Its separate manual Palomar workflow has no automatic push or
-pull-request trigger and has not run. Public visibility need not wait for every future
+and both manuscript builds. All three selected Solutions are included in the
+review build. The separate manual Palomar workflows have no automatic push or
+pull-request trigger and have not run. Public visibility need not wait for every future
 research theorem or production feature, provided the stated claims and open
 obligations remain accurate.

@@ -41,7 +41,7 @@ jobs:
         run: lake exe cache get
       - name: Build proofs and transition examples
         working-directory: lean
-        run: lake build && lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer Protocol.Storage.Retrieval Palomar.PaperOne.Solution
+        run: lake build && lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer Protocol.Storage.Retrieval Palomar.PaperOne.Solution Palomar.PaperThree.Solution Palomar.PaperThree.Application.Solution
   manuscripts:
     runs-on: ubuntu-latest
     steps:
@@ -60,6 +60,7 @@ jobs:
 def source_files():
     paths = [ROOT / name for name in ("LICENSE", "PUBLIC_REVIEW.md", "SEMANTIC-PARITY.md")]
     paths.append(ROOT / ".github/workflows/paper1-palomar-preflight.yml")
+    paths.append(ROOT / ".github/workflows/paper3-palomar-preflight.yml")
     paths += [ROOT / "docs" / f"{name}.md" for name in DOCS]
     paths.append(Path(__file__).resolve())
     scanned_roots = []
@@ -79,6 +80,7 @@ def source_files():
     # Keep entry configuration/metadata without copying unrelated JSON/YAML.
     for name in ("comparator.json", "formalization.yaml"):
         paths += list((ROOT / "lean/Palomar").glob(f"*/{name}"))
+        paths += list((ROOT / "lean/Palomar/PaperThree/Application").glob(name))
     for path in sorted(set(paths + scanned_roots)):
         if not path.is_relative_to(ROOT) or not path.resolve().is_relative_to(ROOT):
             raise ValueError(f"Refusing source outside repository: {path}")

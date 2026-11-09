@@ -23,8 +23,8 @@ input when a storage context or public observation is supplied.
 The finite-grid comparison is coarse: under its coordinate bound its
 certified output radius cannot exceed the first positive Hamming shell,
 `1/4096`. It does not close the capacity/Johnson-scale application problem.
-The inherited canonical field/root certificates retain native arithmetic
-trust; this file introduces no new native certificate.
+The inherited canonical field/root certificates now use kernel-checked
+arithmetic proofs, as recorded in the selected-dependency audit.
 -/
 
 set_option autoImplicit false

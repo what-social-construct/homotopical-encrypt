@@ -72,7 +72,7 @@ theorem separatedJohnsonRadiusCalibration_targetStrictGap
       (β.separatedJohnsonRadiusCalibration nearRadius hgap).targetFarRadius := hgap
 
 /-- A concrete nonzero adjacent-grid near radius; list/MCA radii stay unchanged.
-It is independent of the canonical endpoint's native arithmetic certificates. -/
+It is independent of the canonical endpoint's field and root certificates. -/
 def decisionNearRadiusReal : ℝ := 2046 / 4096
 
 /-- The concrete decision near radius is nonnegative, independently of endpoint data. -/

@@ -20,8 +20,8 @@ An explicit original payload lifts the two identical words `X^1024` on the
 existing 4096-point subgroup. All three native distances are exactly `3/4`.
 Its canonical fixed challenge is good because this particular line is
 diagonal and the challenge is not `-1`. No global fixed-challenge goodness or
-cryptographic security claim follows. Existing native arithmetic trust is
-inherited from the canonical field/domain certificates.
+cryptographic security claim follows. The inherited canonical field/domain
+certificates now use kernel-checked arithmetic proofs.
 -/
 
 set_option autoImplicit false

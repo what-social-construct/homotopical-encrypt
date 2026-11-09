@@ -1,0 +1,153 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Capacity-Radius Reed–Solomon List and Same-Set MCA Bounds"
+  description: >-
+    We formalize the exact capacity-grid list size choose(n,k), an explicit next-shell
+    lower bound and the three fractional-budget regimes for interleaved
+    Reed–Solomon codes. A same-set mutual-correlated-agreement certificate
+    gives bad-challenge count at most choose(n,k+1) for every fixed line and real radius.
+    An actual family over GaloisField(3,256*2^u) meets the stated 128-bit
+    fraction targets; a separate certified prime-field instance has exact
+    greatest-safe and first-unsafe counts zero and one and real safe interval
+    [0,1/4096). The entry also gives the exact spectrum-budget interpretation,
+    attained-distance transfer, sharp factor-two pair/scalar comparison and
+    fixed-mix cancellation limitation. A companion entry retains the original
+    cochain-storage application from the same manuscript. These are coding
+    and distance statements, without a cryptographic or efficiency claim.
+  authors:
+    - "Chloe van der Vlugt"
+  responsible_maintainers:
+    - "Chloe van der Vlugt"
+  license: "MIT"
+
+classification:
+  arxiv: ["cs.IT"]
+  msc2020: ["94B05", "94B35"]
+
+sources:
+  - title: "Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes"
+    authors:
+      - "Chloe van der Vlugt"
+    type: "paper"
+    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/755031469a047dd5f194f5763439c88c57c9d4ff/papers/proximity-prize/main.tex"
+    location: "Sections 3--6 and the pure coding sharpness/fixed-mix results of Section 7; P3-S01--S09, P3-B01, the coding portion of P3-A02 and P3-A04."
+    relationship: "formalizes"
+    note: >-
+      Immutable manuscript source. The independent entry retains the complete
+      selected coding claims. The separately configured application companion
+      retains P3-A01, the storage-calibration portion of P3-A02 and P3-A03.
+      Both configurations belong to one Paper 3 scope, split to respect the
+      independent Challenge size limit.
+
+status:
+  scope: >-
+    The Comparator surface contains 36 manuscript-facing and 16
+    supporting declarations. Original canonical ProximityPrize definitions
+    are independently restated using Mathlib only; Solution imports the
+    canonical proof owners and adds two explicit inverse-law wrappers.
+    Definitions remain ordinary and transparent, with no definition holes.
+    This is part of the substantive development, not a separate wrapper
+    repository. Local comparison, kernel checks and the separately recorded
+    combined dependency audit pass.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Quot.sound", "Classical.choice"]
+  validation:
+    solution_build: "Passed locally: 3173 jobs."
+    challenge_check: "Passed independently with Mathlib-only imports: 3138 jobs."
+    entry_axiom_audit: "Passed all 52 configured declarations: 48 exact-three and 4 standard subsets. Combined probe: 975 standard-only reports; all 946 previous sets unchanged."
+    local_comparator: "Passed statement/definition comparison, Lean default kernel and NanoDa; macOS diagnostic with --inadvisably-no-sandbox."
+    protected_linux_verification: "Pending; not run."
+    note: >-
+      Solution has zero proof and definition holes; its counts exclude the
+      51 intentional Challenge theorem placeholders. The local macOS diagnostic
+      disables Comparator's Linux sandbox and is not protected preflight evidence.
+      No metadata-schema validation, registry review or submission is claimed.
+  main_results:
+    - declaration: "Hcrypt.Palomar.PaperThree.planePairEquiv_inverse_laws"
+    - declaration: "ProximityPrize.planePairEquiv_hammingDistance"
+    - declaration: "ProximityPrize.planePairEquiv_relativeHammingDistance"
+    - declaration: "Hcrypt.Palomar.PaperThree.planeLineEquiv_inverse_laws"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorListSizeBoundAt_capacityGrid"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.capacityReceived_ballCardAt_eq_choose"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorFractionalListSizeBoundAt_capacityGrid_iff"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.fieldCard_pow_le_nextShell_ballCardAt"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorFractionalListPhaseSplit"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorFractionalListGridThreshold"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorFractionalListRealThreshold"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.badChallengeSetAt_card_le_choose_succ"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.pairMCAErrorBoundAt_of_compressed_budget"
+    - declaration: "ProximityPrize.BlockCode.pairMCAErrorBoundAt_relativeRadius_invPow_iff_spectrum_budget"
+    - declaration: "ProximityPrize.BlockCode.pairMCAThreshold_eq_of_countBound_and_badLine"
+    - declaration: "ProximityPrize.BlockCode.scalarDistance_ge_of_pairDistance_ge_of_good"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.scalarDistance_eq_capacity_of_pairFar_of_good"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_pairDistance_eq_capacity"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_flatDistance_eq_half_capacity"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.no_unit_pair_distance_bound_by_flat_distance"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.no_fixedChallenge_pair_far_preservation"
+    - declaration: "ProximityPrize.ReedSolomon.Parameters.no_fixedChallenge_flat_far_preservation"
+    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.rootUnit_order"
+    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_fractionalListSizeBoundAt_capacity"
+    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_listSafeRelativeRadii_eq_Ico"
+    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_listGridThreshold"
+    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_listRealThreshold"
+    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_pairMCAErrorBoundAt"
+    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_pairMCAGreatestSafe_eq_length"
+    - declaration: "ProximityPrize.MCA.BoundaryField.modulus_prime"
+    - declaration: "ProximityPrize.MCA.BoundaryField.candidateRootUnit_order"
+    - declaration: "ProximityPrize.MCA.BoundaryField.two_le_paperMCABadSpectrum_one"
+    - declaration: "ProximityPrize.MCA.BoundaryField.paperMCABadSpectrum_zero_eq_one"
+    - declaration: "ProximityPrize.MCA.BoundaryField.pairMCA_exact_128_bit_threshold"
+    - declaration: "ProximityPrize.MCA.BoundaryField.pairMCA_safeRelativeRadii_128_eq_Ico"
+    - declaration: "ProximityPrize.MCA.BoundaryField.pairMCA_real_128_threshold"
+
+automation:
+  methods:
+    - method: "agent"
+      framework: "OpenAI Codex"
+      tool_setup: >-
+        Author-directed statement selection and iterative agent-assisted Lean
+        implementation, source comparison, metadata and documentation.
+      prompting_notes: >-
+        The author directed the mathematical scope and reuse of existing
+        objects. Agents prepared independent canonical statement surfaces,
+        inverse-law wrappers and manuscript crosswalks. Exact model identifiers
+        were not recorded. Local verification is recorded above; protected Linux verification remains pending.
+
+fidelity:
+  divergences: >-
+    List statements retain positive interleaving width and their exact degree,
+    length and budget hypotheses. The endpoint-safe regime has a nonattained
+    real supremum; the middle regime's optimal smaller radius remains open.
+    The explicit Galois-field family and boundary prime are distinct from the
+    companion's modulus-12289 wire application. MCA fixes the affine line
+    before sampling the challenge. The 128-bit claim is a fractional
+    bad-challenge bound. These statements do not prove a cryptographic game,
+    bind a transcript, identify an unrestricted Hodge metric or establish a
+    novelty or efficiency advantage. Companion application claims are retained
+    under a separate configuration rather than weakened to a generic premise.
+
+review:
+  status: "not-reviewed"
+  notes: >-
+    Agent source/statement review and local proof comparison are complete; protected Linux verification remains pending.
+    This records preparation rather than external human or registry review.
+
+alignment:
+  namespace: "ProximityPrize"
+  wrapper_namespace: "Hcrypt.Palomar.PaperThree"
+  challenge_module: "Palomar.PaperThree.Challenge"
+  solution_module: "Palomar.PaperThree.Solution"
+  proof_file: "lean/Palomar/PaperThree/Solution.lean"
+  comparator_config: "lean/Palomar/PaperThree/comparator.json"
+  crosswalk: "lean/Palomar/PaperThree/README.md"
+  companion_config: "lean/Palomar/PaperThree/Application/comparator.json"
+  groups:
+    - "P3-S01--S09: nine original coding statement groups."
+    - "P3-B01: operational spectrum and attained-distance interpretation."
+    - "P3-A02, coding portion: sharp factor-two comparison."
+    - "P3-A04: fixed nonzero mix can cancel a capacity-far pair."
+
+acknowledgements: "Lean 4 and Mathlib provide the proof language and library; OpenAI Codex assisted implementation and preparation."

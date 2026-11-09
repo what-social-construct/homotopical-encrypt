@@ -14,6 +14,7 @@ The project [MIT license](../LICENSE) is included at the package root.
 |---|---|---|
 | Paper 1: hidden operators and HCP | [HCP.lean](HCP.lean), [Hardness.lean](Hardness.lean), [CVP.lean](CVP.lean) | Hidden-operator ambiguity, public-class comparisons and discrete-CVP relationships, including the [actual integral cellular family](HCP/README.md) in a proved homological-test fragment. These structural results are not a computational security theorem; CVP hardness remains an external assumption. |
 | Paper 1 independent entry | [Challenge/Solution, metadata and crosswalk](Palomar/PaperOne/README.md) | Eight selected manuscript groups. Local statement/definition comparison, Lean/NanoDa and all 46 selected axiom reports pass. The macOS diagnostic is separate from protected Linux preflight, which has not run. |
+| Paper 3 independent entries | [Coding](Palomar/PaperThree/README.md), [original-cochain application](Palomar/PaperThree/Application/README.md) | Both full local definition comparisons and Lean/NanoDa replays pass; all 52/22 target audits are standard-only. The same original payload/context and all three metrics are retained. Protected Linux preflight remains separate. |
 | Cellular-sheaf and Hodge mathematics | [Sheaf.lean](Sheaf.lean), [Laplacian.lean](Laplacian.lean), [Helfer.lean](Helfer.lean) | Concrete cochain/Hodge constructions and stated transport/invariance results. Supplied realization and invariance hypotheses remain explicit. |
 | Paper 3: universal coding results | [ProximityPrize.lean](ProximityPrize.lean), [hierarchy guide](Proximity/README.md) | All nine named generic coding statements have Lean endpoints, including the actual all-parameter field family, phase split, real thresholds and attained distances. Its 33-module closure does not import the project's cited RS-bound axioms or require the protocol implementation. Application profile obligations remain separate. |
 | Cochain-specific proximity application | [Proximity.lean](Proximity.lean), [object trace](../docs/COCHAIN_PROXIMITY_TRACE.md) | Original-payload extraction and an explicit modular cellular profile with `d_C ≤ d_P = D_RS ≤ 2d_C`, a capacity-far payload and diagonal-family challenge guarantee. Euclidean/HCP and arbitrary fixed-challenge comparisons retain their separate boundaries. |
@@ -50,7 +51,7 @@ Install elan, then run from the package root:
 cd lean
 lake exe cache get
 lake build
-lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer Protocol.Storage.Retrieval Palomar.PaperOne.Solution
+lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer Protocol.Storage.Retrieval Palomar.PaperOne.Solution Palomar.PaperThree.Solution Palomar.PaperThree.Application.Solution
 ```
 
 The cache command retrieves the pinned Mathlib build cache; it avoids a
@@ -60,10 +61,10 @@ for the standalone coding target, `lake build Protocol.Core` for the bounded
 protocol core, `lake build Protocol.Storage.Core` for the storage/gate adapters,
 or `lake build Protocol.Storage.Retrieval` for the optional native-query/read
 profiles. The Lean build needs the pinned Lean/Mathlib dependencies; Rust
-and Python prototypes are not build dependencies. The independent entry is
-nondefault: build `Palomar.PaperOne.Solution` explicitly. Challenge's 23
-intentional theorem placeholders are isolated comparison targets; Solution
-and implementation sources contain no proof holes. The
+and Python prototypes are not build dependencies. The three independent entry libraries are
+nondefault: build their Solutions explicitly. The96 intentional theorem
+placeholders are isolated in the three Challenges; Solutions and implementation
+sources contain no proof holes. The
 [entry validation record](../docs/MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
 reproduces the separate Challenge build and selected dependency probe.
 
@@ -104,7 +105,7 @@ no active source calls remain. Historical Lean 4.35 reports contain generated
 `_native.native_decide.ax_` axioms, while older 4.24 reports used
 `Lean.ofReduceBool` and `Lean.trustCompiler`. The
 [current audit](../docs/MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
-has 946 standard-only reports and retains those older records as dated
+has 975 standard-only reports and retains those older records as dated
 evidence, distinct from the seven isolated cited assumptions. Inspect important
 endpoints with `#print axioms` in a scratch file importing the relevant
 aggregate; a successful build alone does not identify a theorem's assumptions.

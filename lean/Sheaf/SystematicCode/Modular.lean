@@ -38,7 +38,7 @@ The head contains its coefficients and the tail is zero. -/
 def integralOpening
     (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (a : IntegerOpening S) : (sheaf P S).C0 :=
-  WithLp.toLp 2 fun coordinate =>
+  WithLp.toLp ((2 : ℕ) : ENNReal) fun coordinate =>
     let p := (Fintype.equivFin ({s // s ∈ S} × Fin 2)).symm coordinate.2
     if coordinate.1 then (a p.1 p.2 : ℝ) else 0
 

@@ -9,7 +9,106 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Paper 3 independent entries — 2026-11-09
+
+**Local comparison, kernel replay and dependency verification completed.**
+Both entries pass full local comparison and both kernel replays. The combined
+975-declaration audit passes and preserves all 946 earlier dependency sets.
+Protected Linux preflight remains a separate, unperformed check.
+
+The same manuscript is covered by a [coding entry](../lean/Palomar/PaperThree/README.md)
+and an [original-cochain companion](../lean/Palomar/PaperThree/Application/README.md).
+All fourteen selected Paper 3 groups are retained: the nine coding groups,
+spectrum/distance interpretation and four application/boundary groups. P3-A02
+has statements in both entries. Each Challenge independently defines the
+actual canonical mathematical objects using Mathlib-only imports; each
+Solution imports the canonical proofs. Three application statements unfold
+the same calibration interfaces and are proved with `change` and the original
+theorem, preserving Context, decoder, payload, maps and metric normalization.
+
+| Check | Current local result |
+|---|---|
+| Coding Challenge/Solution | Pass **3,138/3,173 jobs**. Challenge **771 lines / 36,949 bytes**; 52 configured theorems, 36 manuscript-facing and 16 supporting. |
+| Coding full comparison and kernels | **Pass**: ordinary definitions and theorem types match; Lean and NanoDa accept the Solution with only the three permitted logical axioms. |
+| Application Challenge/Solution | Pass **3,207/3,434 jobs**. Challenge **992 lines / 46,768 bytes**; 22 configured theorems, ten manuscript-facing and twelve supporting. |
+| Application full comparison and kernels | **Pass**: ordinary definitions and theorem types match; Lean and NanoDa accept the Solution with only the three permitted logical axioms. |
+| Encoder/opening preservation | **Pass**: two `rfl` proofs compare their current values against the exact formulas extracted from commit `7550314`. Both reports use exactly the three standard axioms. |
+| Combined dependency probe | **Pass**: 975 standard-only reports, 792 exact-three and 183 subsets, including 106 axiom-free. All 946 prior sets match; 29 direct reports added. Coding: 52 reports (48 exact-three/four subsets); application: 22 (21 exact-three/one subset). No selected native, cited-bound or sorryAx dependency. |
+| Static source/import scan | **279 modules / 280 Lean files**; 96 deliberate holes isolated in the three Challenges, zero implementation holes; no active native calls, cycles or unresolved imports. Same seven isolated cited axioms. |
+| Aggregate builds | Literal default **9,285 jobs**; expanded union with all three Solutions **9,295 jobs**. |
+| Local import closures | All 50 prior focused closures are retained. Added coding Challenge/Solution: **1/34** local modules; application: **1/80**. All 54 focused closures exclude `Chain` and `CitedBounds`. |
+| Protected verification / publication | **Not run**. Local Comparator uses macOS `--inadvisably-no-sandbox`; no workflow dispatch, push, release or registry submission occurred. |
+
+The independent files restore Lean's nonpersistent auxiliary-lemma cache at
+canonical source boundaries and spell the original universe parameters
+explicitly. These changes align generated proof references; ordinary values
+remain the comparison targets. The concrete encoder's existing coordinate
+function and linearity proofs are now named separately. Its exponent two and
+the integer opening use an explicit natural-number cast; the preservation
+probe proves definitionally equal values, and existing theorem signatures are
+retained. Three new public declarations name that same encoder function and
+its two linearity laws; the old embedded proofs are factored into those laws.
+Three old native-trust comments and the storage README were corrected
+to describe the already kernel-checked arithmetic certificates.
+
+The four named-capacity support statements bind well-formedness and all three
+`3/4` distances to the same payload used by the bad-fraction and scalar-distance
+statements. Accepted zero distances retain the matching interpretation/layout
+decoder equality and `Context.Accepted`. The characteristic-three family,
+boundary prime and original `12289` payload keep separate roles. These entries
+provide no stronger HCP/geometric metric, cryptographic security or runtime claim.
+
+Local records are `paper3-{core,application}-{challenge,solution}-build.log`,
+`paper3-{core,application}-local-comparator.log`,
+`paper3-encoder-definition-preservation.{lean,log}`,
+`paper3-entries-all-axioms.{lean,log}`, `paper3-entries-axiom-summary.json`,
+and `paper3-entries-source-audit.json` under `output/validation/`.
+The preceding Paper 1 record remains a
+completed, separately dated baseline.
+
+### Reproduce the Paper 3 entry checks
+
+From `lean/`, build each independent module separately:
+
+```sh
+LEAN_NUM_THREADS=1 lake build Palomar.PaperThree.Challenge
+LEAN_NUM_THREADS=1 lake build Palomar.PaperThree.Solution
+LEAN_NUM_THREADS=1 lake build Palomar.PaperThree.Application.Challenge
+LEAN_NUM_THREADS=1 lake build Palomar.PaperThree.Application.Solution
+python3 - <<'PY' > /tmp/paper3-entries-axioms.lean
+import json
+from pathlib import Path
+entries = ['Palomar/PaperThree', 'Palomar/PaperThree/Application']
+configs = [json.loads((Path(entry) / 'comparator.json').read_text())
+           for entry in entries]
+for config in configs:
+    print('import ' + config['solution_module'])
+for name in dict.fromkeys(name for config in configs
+                          for name in config['theorem_names']):
+    print('#print axioms ' + name)
+PY
+LEAN_NUM_THREADS=1 lake env lean -j1 /tmp/paper3-entries-axioms.lean
+```
+
+Check exit status zero and all 74 selected entry dependency reports against
+`propext`, `Quot.sound` and `Classical.choice`. The combined 975-report probe
+additionally retains the earlier audited declarations; its source and output
+are listed above. On supported Linux, run each full comparison separately:
+
+```sh
+LEAN_NUM_THREADS=1 lake comparator --config Palomar/PaperThree/comparator.json
+LEAN_NUM_THREADS=1 lake comparator --config Palomar/PaperThree/Application/comparator.json
+```
+
+Those protected commands have not run here. The completed local diagnostic
+made the pinned toolchain's `nanoda_bin` available on `PATH` and added
+`--inadvisably-no-sandbox`; both final logs explicitly report acceptance by
+NanoDa and Lean's default kernel.
+
 ## Paper 1 independent entry — 2026-11-09
+
+**Preserved P291 baseline.** The Paper 3 section above records the current
+source inventory, aggregate builds and combined dependency counts.
 
 The [Paper 1 entry](../lean/Palomar/PaperOne/README.md) now states all eight
 selected manuscript groups independently and proves them through adapters to
@@ -105,9 +204,10 @@ no upload or workflow dispatch was performed.
 
 ## Selected statements and kernel arithmetic — 2026-11-08
 
-**Preserved P289 implementation baseline.** The entry section above supersedes
-this section's wrapper status and source/declaration counts. All 273 owner
-files and 900 dependency sets described here are retained unchanged.
+**Preserved P289 implementation baseline.** The entry sections above supersede
+this section's wrapper status and source/declaration counts. All 900 dependency
+sets described here remain unchanged. The current Paper 3 record identifies
+the five later owner-file changes and the encoder/opening preservation checks.
 
 The [submission statement table](PALOMAR_SUBMISSION_PLAN.md#selected-manuscript-statement-surface--2026-11-08)
 is derived from the manuscripts' existing named propositions and theorems.

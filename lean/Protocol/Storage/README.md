@@ -8,9 +8,9 @@ construct their proofs.
 
 The [validation guide](../../../docs/MATH_STORAGE_VALIDATION.md) records the
 current full/default builds, exact selected dependency reports and source
-scan, separately from earlier milestones. Some canonical application results
-retain existing native arithmetic certificates; explicit theorem/profile
-hypotheses remain. The public-view API is checked separately from its
+scan, separately from earlier milestones. The canonical arithmetic certificates
+now use kernel proofs; explicit theorem/profile hypotheses remain.
+The public-view API is checked separately from its
 uninstantiated cryptographic and runtime contracts.
 
 The new [HCP realization adapters](../../TCB/HCPRealization.lean) identify the

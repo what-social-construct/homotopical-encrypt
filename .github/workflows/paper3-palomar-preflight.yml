@@ -1,0 +1,48 @@
+name: Paper 3 Palomar preflight
+
+on:
+  workflow_dispatch:
+    inputs:
+      entry:
+        description: Select the coding entry, application companion, or both
+        required: true
+        default: both
+        type: choice
+        options: [both, coding, application]
+      coding_request_id:
+        description: Unique 12-character lowercase alphanumeric coding request identifier
+        required: true
+        default: paper3cor001
+        type: string
+      application_request_id:
+        description: Unique 12-character lowercase alphanumeric application request identifier
+        required: true
+        default: paper3app001
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  coding:
+    if: inputs.entry != 'application'
+    uses: PalomarRegistry/PalomarSubmission/.github/workflows/submission.yml@14aa8d6b3c2f14a8540605e37144560b9a00e7e7
+    with:
+      repository: ${{ github.repository }}
+      commit: ${{ github.sha }}
+      pipeline_commit: 14aa8d6b3c2f14a8540605e37144560b9a00e7e7
+      request_id: ${{ inputs.coding_request_id }}
+      mode: full
+      execution_profile: palomar-standard-v1
+      options: '{"project_path":"lean","comparator_config_path":"lean/Palomar/PaperThree/comparator.json","formalization_metadata_path":"lean/Palomar/PaperThree/formalization.yaml","authorization_relationship":"I am a responsible author or maintainer"}'
+  application:
+    if: inputs.entry != 'coding'
+    uses: PalomarRegistry/PalomarSubmission/.github/workflows/submission.yml@14aa8d6b3c2f14a8540605e37144560b9a00e7e7
+    with:
+      repository: ${{ github.repository }}
+      commit: ${{ github.sha }}
+      pipeline_commit: 14aa8d6b3c2f14a8540605e37144560b9a00e7e7
+      request_id: ${{ inputs.application_request_id }}
+      mode: full
+      execution_profile: palomar-standard-v1
+      options: '{"project_path":"lean","comparator_config_path":"lean/Palomar/PaperThree/Application/comparator.json","formalization_metadata_path":"lean/Palomar/PaperThree/Application/formalization.yaml","authorization_relationship":"I am a responsible author or maintainer"}'

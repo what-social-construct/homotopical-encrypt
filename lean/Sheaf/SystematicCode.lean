@@ -40,23 +40,40 @@ def layout : (ι × Fin 2) ≃ TotalCoord Unit (fun _ => Fintype.card (ι × Fin
     rcases p with ⟨⟨⟩, i⟩
     simp
 
-def generator (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
-    Coord (Fintype.card ({a // a ∈ S} × Fin 2)) →ₗ[ℝ]
-      Coord (Fintype.card (ι × Fin 2)) where
-  toFun data := WithLp.toLp 2 fun idx =>
+/-- The original real encoder function in the fixed information and edge coordinates. -/
+def generatorFun (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (data : Coord (Fintype.card ({a // a ∈ S} × Fin 2))) :
+    Coord (Fintype.card (ι × Fin 2)) :=
+  WithLp.toLp ((2 : ℕ) : ENNReal) fun idx =>
     let p := (Fintype.equivFin (ι × Fin 2)).symm idx
     P.realEncode S
       (fun a => data ((Fintype.equivFin ({a // a ∈ S} × Fin 2)) (a, p.2))) p.1
-  map_add' a b := by
-    apply PiLp.ext
-    intro idx
-    simp [ProximityPrize.ReedSolomon.Parameters.realEncode,
-      add_mul, Finset.sum_add_distrib]
-  map_smul' r a := by
-    apply PiLp.ext
-    intro idx
-    simp [ProximityPrize.ReedSolomon.Parameters.realEncode,
-      mul_assoc, Finset.mul_sum]
+
+/-- The actual encoder preserves addition of the same input coordinate vectors. -/
+theorem generatorFun_add (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (a b : Coord (Fintype.card ({a // a ∈ S} × Fin 2))) :
+    generatorFun P S (a + b) = generatorFun P S a + generatorFun P S b := by
+  apply PiLp.ext
+  intro idx
+  simp [generatorFun, ProximityPrize.ReedSolomon.Parameters.realEncode,
+    add_mul, Finset.sum_add_distrib]
+
+/-- The same encoder preserves real scalar multiplication. -/
+theorem generatorFun_smul (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (r : ℝ) (a : Coord (Fintype.card ({a // a ∈ S} × Fin 2))) :
+    generatorFun P S (r • a) = r • generatorFun P S a := by
+  apply PiLp.ext
+  intro idx
+  simp [generatorFun, ProximityPrize.ReedSolomon.Parameters.realEncode,
+    mul_assoc, Finset.mul_sum]
+
+/-- The original systematic cellular restriction map, with named linearity proofs. -/
+def generator (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
+    Coord (Fintype.card ({a // a ∈ S} × Fin 2)) →ₗ[ℝ]
+      Coord (Fintype.card (ι × Fin 2)) where
+  toFun := generatorFun P S
+  map_add' := generatorFun_add P S
+  map_smul' := generatorFun_smul P S
 
 def sheaf (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
     CellularSheaf complex where
@@ -74,7 +91,7 @@ theorem generator_apply
     generator P S data ((Fintype.equivFin (ι × Fin 2)) p) =
       P.realEncode S
         (fun a => data ((Fintype.equivFin ({a // a ∈ S} × Fin 2)) (a, p.2))) p.1 := by
-  simp [generator]
+  simp [generator, generatorFun]
 
 theorem delta0_apply
     (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)

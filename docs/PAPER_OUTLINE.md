@@ -19,7 +19,7 @@ actual statement/Lean correspondence and checked dependencies.
 |---|---|---|
 | **1 — HCP foundations** | Actual cellular Hodge noise/recovery, finite integral family for the homological fragment of Helfer semantics, encoded-message ambiguity, precise known-lattice CVP comparison and hidden-operator oracle obstruction; full genuine Plucker/projector reconstruction. Independent eight-group entry with local statement/definition comparison, Lean and NanoDa checks. | The observation and strict near/far convention are reconciled. Keep the geometric application conditional. Finish the focused novelty/source account, freeze a slim release and run protected Linux preflight; the local macOS diagnostic is separate. |
 | **2 — protocol/commitments** | One fixed-snapshot/epoch public-resource transition and conditional one-shot integrity; actual rotation and original-object evidence/history joins; native structured-noise query/answer/CVP identity; hash-addressed recovery; whole-bucket private-read reference and joint-view obstruction under explicit noise-column redundancy. | Instantiate one finite original-object profile and its visibility, packet/ciphertext/witness bytes, hash preimages and authenticated initial state. Supply a genuine credential/proof construction if native authentication security is advertised. If efficient private reads are claimed, choose and analyze the whole query sampler/view; the whole-bucket reference supports a bounded first scope. Complete one bounded verifier/persistence path if runtime implementation is claimed, and turn the Markdown working text into a theorem-led manuscript/TeX/PDF. |
-| **3 — capacity-radius proximity** | All nine named coding claims, Q04--Q07 and Q08 for the actual modular cochain profile, including native metric comparison and nonempty capacity-far examples. | Summary and bounded prior-work/actual-projection comparison are now aligned. The nine core statement groups and bounded application are selected; kernel arithmetic certificates replace the native proofs. Prepare matching independent wrappers/metadata and the slim entry package. Q10--Q12 are extensions, not required missing proofs. |
+| **3 — capacity-radius proximity** | All nine named coding claims, Q04--Q07 and Q08 for the actual modular cochain profile, including native metric comparison and nonempty capacity-far examples. | Summary and bounded prior-work/actual-projection comparison are now aligned. The nine core statement groups and bounded application are selected; kernel arithmetic certificates replace the native proofs. Independent coding/application entries now pass local comparison, Lean/NanoDa replay and the 975-report retained audit. Freeze slim entry packages and run protected Linux preflight. Q10--Q12 are extensions, not required missing proofs. |
 
 Paper 2 can be completed as a conditional mathematical specification with
 explicit primitive/runtime contracts. Advertising a new native authentication
@@ -69,7 +69,12 @@ for the selected conditional mathematics.
    reports. All 900 prior sets and 273 owner sources are unchanged.
    [Entry validation](MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
    separates this macOS diagnostic from the pending protected Linux run.
-   Paper 3's selected statement/proof entry remains the next packaging step.
+   **Paper 3's coding/application entries are completed locally in P292--P293**:
+   both full definition comparisons and Lean/NanoDa replays pass. All 975
+   combined reports are standard-only, retaining all 946 prior sets. The full
+   original-context calibration is presented definitionally, with unchanged
+   encoder/opening values. Slim frozen releases and protected Linux preflight
+   remain the next packaging steps.
 4. **Build one concrete Paper 2 profile from the existing interfaces.**
    Reuse the original commitment, snapshot, `Intent`, history, manifest,
    `HodgeNoise`, private presentation and delivered rotation. Its remaining
@@ -640,19 +645,19 @@ and a source-to-code calibration interface. The selected application target
 is the actual cochain commitment and projection already in Lean, not a new
 commitment carrier; see the
 [object trace](COCHAIN_PROXIMITY_TRACE.md). Its counting theorems do not depend
-on finishing Paper 2's protocol. Its commitment-specific radius theorem needs
-one bounded shared profile and an original-source metric comparison.
+on finishing Paper 2's protocol. Its commitment-specific radius theorem uses
+the declared modular source profile and its proved original-source comparison.
 
-The remaining formal-parity work is the all-parameter smooth-family
-realization, complete list phase split/real interval, boundary-field real
-supremum, and standalone general distance interpretation. The concrete
-canonical plane/pair distance equality and public-observation pullback
-calibration already exist outside the standalone target. The detailed queue is
+The all-parameter smooth-family realization, complete list phase split/real
+interval, boundary-field real supremum and standalone general distance
+interpretation are complete. The concrete canonical plane/pair distance
+equality and public-observation pullback calibration also have independent
+application statements. Current results and optional extensions are recorded in
 [`papers/proximity-prize/SEMANTIC_PARITY.md`](../papers/proximity-prize/SEMANTIC_PARITY.md).
-The selected application still supplies a meaningful original-source metric,
-a nonempty actual far region, and the quantitative source-to-plane/pair
-comparison. Its challenge experiment must either sample after the pair is
-fixed or prove the chosen fixed mix good. Rust experiments are useful for
+The selected application supplies the intrinsic modular source metric,
+a nonempty actual far region and the quantitative source-to-plane/pair
+comparison. It retains sampling after the pair is fixed and separately proves
+the canonical fixed mix good on its restricted diagonal family. Rust experiments are useful for
 implementation parity and counterexamples, not required to prove the radius.
 
 ### Unnumbered Future Product / Whitepaper Material

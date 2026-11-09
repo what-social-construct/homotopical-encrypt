@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Original Cochain Payloads and Native Modular Proximity"
+  description: >-
+    We formalize a modular proximity profile on the original cochain payload
+    and storage context. Intrinsic source validity is an actual integral
+    cellular coboundary modulo a carry, equivalent to the paired Reed–Solomon
+    valid locus. Independently defined cochain, pair and extracted-code
+    distances satisfy d_C <= d_P = D_RS <= 2*d_C. Existing application
+    interfaces read the original extracted pair, transfer farness at unit
+    scale and use explicit factor-two near scaling. The actual modulus-12289
+    serializer admits a raw well-formed capacity-far payload with all three
+    distances 3/4 and a proved restricted diagonal challenge profile; accepted
+    exact anchors instead have zero native distance under the stated decoder
+    contract. A companion coding entry retains the pure-code sharpness and
+    fixed-mix obstruction. The selected profile does not supply a full-HCP
+    geometric comparison or cryptographic security statement.
+  authors:
+    - "Chloe van der Vlugt"
+  responsible_maintainers:
+    - "Chloe van der Vlugt"
+  license: "MIT"
+
+classification:
+  arxiv: ["cs.IT", "math.AT"]
+  msc2020: ["94B05", "94B35"]
+
+sources:
+  - title: "Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes"
+    authors:
+      - "Chloe van der Vlugt"
+    type: "paper"
+    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/755031469a047dd5f194f5763439c88c57c9d4ff/papers/proximity-prize/main.tex"
+    location: "Section 7; P3-A01, the storage-calibration portion of P3-A02 and P3-A03."
+    relationship: "formalizes"
+    note: >-
+      Immutable manuscript source. The companion coding configuration retains
+      all nine original coding groups, the spectrum/distance interpretation,
+      pure-code factor-two sharpness and the fixed-mix limitation. Splitting
+      the independently stated Challenges preserves the selected scope under
+      the 1000-line Challenge limit.
+
+status:
+  scope: >-
+    This companion retains the full original context, payload, codec,
+    intrinsic modular source relation and native metrics needed by the three
+    selected application groups. Canonical definitions are independently
+    restated under their original names using Mathlib only. Three entry
+    wrappers unfold the existing calibration/model facade types into the
+    unchanged original context, layout, maps and metrics; Solution reuses
+    the existing CanonicalCalibration proof owners. Definitions remain ordinary
+    and transparent.
+    The configured inventory is ten manuscript-facing and twelve supporting
+    declarations. Both modules build; comparison and dependency verification
+    are recorded separately. This directory belongs to the substantive development.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Quot.sound", "Classical.choice"]
+  validation:
+    solution_build: "Passed locally: 3434 jobs; all three unfolded calibration wrappers use change and the canonical theorem."
+    challenge_check: "Passed independently with Mathlib-only imports: 3207 jobs."
+    entry_axiom_audit: "Passed all 22 configured declarations: 21 exact-three and 1 standard subset. Combined probe: 975 standard-only reports; all 946 previous sets unchanged."
+    local_comparator: "Passed statement/definition comparison, Lean default kernel and NanoDa; macOS diagnostic with --inadvisably-no-sandbox."
+    protected_linux_verification: "Pending; not run."
+    note: >-
+      Intentional Challenge theorem placeholders are comparison targets.
+      Existing canonical proofs are separate evidence. No metadata-schema
+      validation, protected preflight, registry review or submission is claimed.
+  main_results:
+    - declaration: "Hcrypt.Sheaf.SystematicCode.modularExact_iff_vectorCodeword"
+    - declaration: "Hcrypt.Protocol.Storage.ThreeLevel.three_native_distance_comparison"
+    - declaration: "Hcrypt.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance"
+    - declaration: "Hcrypt.Palomar.PaperThree.Application.calibration_extract_eq_original_pair_unfolded"
+    - declaration: "Hcrypt.Palomar.PaperThree.Application.sourceFar_implies_rsFar_unfolded"
+    - declaration: "Hcrypt.Palomar.PaperThree.Application.planeNear_of_scaledSourceNear_unfolded"
+    - declaration: "Hcrypt.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity"
+    - declaration: "Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction"
+    - declaration: "Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_scalarDistance"
+    - declaration: "Hcrypt.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero"
+
+automation:
+  methods:
+    - method: "agent"
+      framework: "OpenAI Codex"
+      tool_setup: >-
+        Author-directed statement selection and iterative agent-assisted Lean
+        implementation, source comparison, metadata and documentation.
+      prompting_notes: >-
+        The author directed the mathematical scope and reuse of the actual
+        cochain, storage and projection objects. Agents prepared independent
+        canonical definitions, statement selections and manuscript crosswalks.
+        Exact model identifiers were not recorded. Local verification is recorded above; protected Linux verification
+        remains pending.
+
+fidelity:
+  divergences: >-
+    Generic modular results retain a prime field, declared information set,
+    complete coordinate layout and their degree/length hypotheses. Actual wire
+    serialization is the canonical modulus-12289 specialization. All three
+    native metric normalizations and both comparison directions are explicit.
+    Raw capacity-far payloads are rejection inputs; accepted exact anchors have
+    zero native distance only under the declared realization/decoder contract.
+    Diagonal challenge goodness is a restricted-line result and does not
+    establish uniform preservation for an arbitrary fixed mix. The three application
+    wrappers unfold facade types without changing the actual carrier, maps
+    or metrics. The source profile does not identify modular validity with unrestricted real Hodge
+    exactness or prove a capacity-scale Euclidean/full-HCP comparison.
+    Authentication, visibility, transcript binding, runtime refinement and
+    cryptographic or efficiency advantages are outside these conclusions.
+
+review:
+  status: "not-reviewed"
+  notes: >-
+    Agent source/statement review and local proof comparison are complete; protected Linux verification remains pending.
+    This records preparation rather than external human or registry review.
+
+alignment:
+  namespace: "Hcrypt.Protocol.Storage"
+  source_namespace: "Hcrypt.Sheaf.SystematicCode"
+  wrapper_namespace: "Hcrypt.Palomar.PaperThree.Application"
+  challenge_module: "Palomar.PaperThree.Application.Challenge"
+  solution_module: "Palomar.PaperThree.Application.Solution"
+  proof_file: "lean/Palomar/PaperThree/Application/Solution.lean"
+  comparator_config: "lean/Palomar/PaperThree/Application/comparator.json"
+  crosswalk: "lean/Palomar/PaperThree/Application/README.md"
+  companion_config: "lean/Palomar/PaperThree/comparator.json"
+  groups:
+    - "P3-A01: intrinsic modular source validity and three native metrics."
+    - "P3-A02, storage portion: original-payload calibration and near scaling."
+    - "P3-A03: canonical capacity-far payload and restricted challenge profile."
+
+acknowledgements: "Lean 4 and Mathlib provide the proof language and library; OpenAI Codex assisted implementation and preparation."

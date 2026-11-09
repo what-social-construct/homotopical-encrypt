@@ -98,7 +98,9 @@ lean_lib Axioms where
 /- Independent submission statements are built explicitly, outside the defaults. -/
 lean_lib Palomar where
   srcDir := "."
-  roots := #[`Palomar.PaperOne.Challenge, `Palomar.PaperOne.Solution]
+  roots := #[`Palomar.PaperOne.Challenge, `Palomar.PaperOne.Solution,
+    `Palomar.PaperThree.Challenge, `Palomar.PaperThree.Solution,
+    `Palomar.PaperThree.Application.Challenge, `Palomar.PaperThree.Application.Solution]
 
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4" @ "56a005855ea17e0b0958f73ec801ae140b0a1679"
