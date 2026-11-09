@@ -1,8 +1,10 @@
 # Palomar submission preparation: Papers 1 and 3
 
-Preparation note begun 2026-11-05; manuscript-led selection updated 2026-11-08. The intended public scope is the Lean development
-and corresponding manuscripts. This note creates no submission, registration,
-release, Comparator configuration, or successful verification record.
+Preparation note begun 2026-11-05; Paper 1 entry prepared 2026-11-09. The
+intended public scope is the Lean development and corresponding manuscripts.
+Paper 1 now has an independent statement/proof pair, Comparator configuration,
+metadata and completed local diagnostic checks. Protected preflight, public
+release, submission and registration have not occurred.
 
 The user reports that **Jacobian Paper I passed the machine checks and is
 already under Palomar review**. They suspect that docstrings or broader
@@ -28,8 +30,9 @@ current review status are separate facts.
 | Paper 1 | [Hidden Hodge operators and HCP](../papers/paper1/README.md); [HCP](../lean/HCP.lean), [Hardness](../lean/Hardness.lean), [Sheaf](../lean/Sheaf.lean), [Helfer](../lean/Helfer.lean) | `Palomar.PaperOne.Challenge` and `Palomar.PaperOne.Solution` |
 | Paper 3 | [Capacity-radius proximity](../papers/proximity-prize/README.md); [ProximityPrize](../lean/ProximityPrize.lean) | `Palomar.PaperThree.Challenge` and `Palomar.PaperThree.Solution` |
 
-These are **two proposed entries**, each with its own Comparator configuration
-and metadata. Paper 2 now has a [working Markdown draft](../papers/paper2/DRAFT.md)
+These are **two selected entries**. Paper 1's files now exist; Paper 3's
+independent statement/proof pair, configuration and metadata remain to be built.
+Paper 2 has a [working Markdown draft](../papers/paper2/DRAFT.md)
 and [scope/specification notes](../papers/paper2/SCOPE.md), but no TeX manuscript
 or PDF; it is not a third manuscript submission here.
 Shared protocol/storage work may be described as supporting infrastructure
@@ -70,8 +73,46 @@ remove a limitation needed to understand the result.
 
 The broader [Lean/manuscript public-review package](../PUBLIC_REVIEW.md) serves
 a different purpose and includes cross-paper context. Its ZIP is neither the
-slim per-entry release nor a Palomar submission. No slim entry, wrapper,
-protected preflight or submission is created by this note.
+slim per-entry release nor a Palomar submission. Paper 1's entry files now
+live in the development repository; a separately frozen slim release and
+protected preflight remain to be prepared.
+
+## Paper 1 independent entry — 2026-11-09
+
+The [entry README](../lean/Palomar/PaperOne/README.md) maps all eight selected
+Paper 1 groups below to **21 manuscript-facing declarations** and **25
+supporting declarations**. These are coverage counts, not 21 independent
+research contributions. The discrete CVP projection comparison and actual
+cellular public-target ambiguity remain central.
+
+Following the frozen Jacobian release, Challenge imports only Mathlib and
+states transparent mathematical objects independently. Solution matches those
+definitions and adapts the canonical proofs. The two pure categorical
+`Hcrypt.Helfer.contextObject/contextMap` helpers keep their canonical names
+in Challenge so the recursive finite-product interpretation matches the
+implementation structurally. No project imports or definition holes are used
+in Challenge; its 23 intentional theorem placeholders are selected targets.
+Solution contains no proof holes and imports no Challenge.
+
+Both entry modules build independently. Local Comparator accepts the selected
+statements, reachable definitions and permitted axioms, and both Lean and
+NanoDa accept the Solution proof export. This macOS run used the explicit
+`--inadvisably-no-sandbox` diagnostic mode; it does **not** supply protected
+preflight evidence. All 46 fresh entry dependency reports are standard-only
+(44 exact-three/two subsets); the combined 946-report audit preserves every
+one of the 900 preceding dependency sets. The
+[validation record](MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
+contains reproduction commands and the remaining boundaries.
+
+The local [manual workflow](../.github/workflows/paper1-palomar-preflight.yml)
+follows Jacobian's [pinned reusable workflow](https://github.com/PalomarRegistry/PalomarSubmission/blob/14aa8d6b3c2f14a8540605e37144560b9a00e7e7/.github/workflows/submission.yml) at
+`14aa8d6b3c2f14a8540605e37144560b9a00e7e7`, also the official upstream main
+commit checked on 2026-11-09. Its `project_path` is `lean`; configuration and
+metadata paths are relative to the repository root. Only `workflow_dispatch`
+is enabled, with a fresh 12-character request identifier and the selected
+commit recorded by `github.sha`. This workflow has not been pushed or run.
+Protected verification requires a public immutable source snapshot; public
+release and any registry submission are separate steps.
 
 ## Selected manuscript statement surface — 2026-11-08
 
@@ -170,17 +211,16 @@ native-certificate audits remain dated evidence rather than current wrappers.
 The official [statement/dependency policy](https://github.com/PalomarRegistry/PalomarPolicy/blob/main/CONTRIBUTING.md#22-challenge-and-solution-modules)
 was rechecked on 2026-11-08: the independent Challenge must state the selected
 claims faithfully using its permitted library closure, while the Solution
-may reuse this development. This selection creates no wrappers, metadata,
-protected preflight, public release or submission. Jacobian remains a layout
-reference and a separately reviewed project.
+may reuse this development. The 2026-11-09 section above records the completed
+Paper 1 local entry; Paper 3 packaging and protected verification remain.
+Jacobian remains a layout reference and a separately reviewed project.
 
 ## Wrapper and metadata conventions
 
-Following Jacobian, place the proposed files under
-`lean/Palomar/PaperOne/` and `lean/Palomar/PaperThree/`. Each directory would
-contain `Challenge.lean`, `Solution.lean`, `comparator.json`, and
-`formalization.yaml`, with a short shared guide. No such files are created by
-this note.
+Following Jacobian, Paper 1's files are under `lean/Palomar/PaperOne/`;
+Paper 3 will use `lean/Palomar/PaperThree/`. Each entry has `Challenge.lean`,
+`Solution.lean`, `comparator.json`, `formalization.yaml` and a short README.
+Paper 3's files have not yet been created.
 
 The Challenge states the mathematical objects and theorem using approved
 library imports only. Any needed project definitions must be stated
@@ -217,7 +257,8 @@ standard-only. This is the implementation audit, not a wrapper comparison. The o
 reports remain dated evidence. The seven custom literature axioms remain
 isolated in `CitedBounds` and outside this selected claim surface. Future
 wrappers require their own audit and protected comparison; implementation
-checks are not completed Palomar verification.
+checks are not completed Palomar verification. Paper 1's subsequent local
+entry audit and comparison are recorded above; protected comparison remains.
 The native path/witness adapter is supporting Paper 2 infrastructure: supplied
 path realization, finite decoded credential opening and exact owner-verifier
 execution do not establish knowledge security or add a manuscript submission.
@@ -238,15 +279,18 @@ than copying Jacobian's historical metadata or its review status verbatim.
 The user has authorized upgrading the **main repository** to the current
 stable Lean/Mathlib pair. Its pins are now Lean `leanprover/lean4:v4.35.0`
 and Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679` (release `v4.35.0`).
-The expanded mathematics and integration union passes **9,292 jobs**, covering
+The expanded mathematics and integration union with Paper 1 Solution passes
+**9,293 jobs**, covering
 all fifteen default roots and the explicit ledger, evidence, storage and HCP
 example, public-view, recipient and owned-transfer targets. The literal default build passes **9,285 jobs**.
 The preceding 855-declaration probe and its former trust split are historical;
 the refreshed selected-implementation checks are recorded centrally.
-The source inventory has 274 Lean files: 273 public source modules and the
-Lake configuration, with no active proof holes, unresolved local imports or
-cycles. The same seven cited-bound axioms remain isolated; all 48 scoped
-closures exclude legacy Chain and CitedBounds. The preceding 9,292/9,285-job, 839-report retrieval/codec milestone and
+The inventory has 276 Lean files: 275 public source modules and Lake, with
+zero implementation holes and 23 intentional Challenge theorem placeholders.
+There are no unresolved local imports or cycles. The same seven cited-bound
+axioms remain isolated; all 50 scoped closures exclude legacy Chain and
+CitedBounds. The current combined audit has 946 standard-only reports, with
+all 900 previous sets unchanged. The preceding 9,292/9,285-job, 839-report retrieval/codec milestone and
 9,285/9,278-job, 750-report native-path milestone,
 9,284/9,277-job, 728-report owner-signing milestone,
 9,281/9,274-job, 667-report primitive-comparison milestone,
@@ -267,8 +311,9 @@ reviewed. Paper 3's completed modular summary and bounded source comparison
 have also been rebuilt and visually reviewed. The earlier
 public-observation, rotation, owned-transfer, one-shot integrity, primitive,
 owner-signing and retrieval steps changed Paper 2's Markdown draft and left
-both PDFs unchanged. The subsequent manuscript-only alignment updates Paper 3 while retaining
-the P283 Lean source checkpoint. Select
+both PDFs unchanged. P289 subsequently closed kernel arithmetic and updated
+Paper 3's trust wording/PDF. The Paper 1 entry then retained all 273 owner
+files and both PDFs unchanged. Select
 the appropriate manuscript evidence for each entry and tie it to the final
 immutable release. This is evidence preparation, not a completed submission.
 
@@ -298,7 +343,7 @@ repository root. A public-review ZIP is not a Palomar submission.
 The following existing-target build command is reusable in the upgraded main
 development and its eventual frozen release. These targets passed as part of
 the larger Lean 4.35 aggregate/integration union; the command does not check
-the proposed Challenge/Solution modules, which do not yet exist:
+the independent Challenge/Solution modules:
 
 ```sh
 cd lean
@@ -306,14 +351,14 @@ lake exe cache get
 LEAN_NUM_THREADS=1 lake build HCP Hardness Sheaf ProximityPrize
 ```
 
-Build both new Solution modules and audit every selected theorem with
-`#print axioms` once their files exist. The current official
+Paper 1's entry builds, all selected dependency reports and local diagnostic
+comparison are completed as recorded above; Paper 3 still needs these checks
+after its files are built. The official
 [Comparator helper](https://github.com/PalomarRegistry/PalomarTemplate/blob/main/scripts/verify-comparator.sh)
 confirms the command form `lake comparator --config PATH`. From `lean/`, the
-proposed paths would be `Palomar/PaperOne/comparator.json` and
-`Palomar/PaperThree/comparator.json`. These commands are future checks, not
-evidence of a completed comparison. The helper also demonstrates independent
-kernel replay; a plain local comparison is not the full protected preflight.
+paths are `Palomar/PaperOne/comparator.json` and the future
+`Palomar/PaperThree/comparator.json`. The helper also demonstrates independent
+kernel replay; the local diagnostic is not the full protected preflight.
 
 [Jacobian's release workflow](https://github.com/what-social-construct/jacobian-collision-geometry/blob/67872a1b3e6c6a85e6c93ac0079b023282bc1510/.github/workflows/papers-palomar-preflight.yml)
 calls the official reusable submission workflow
@@ -332,14 +377,15 @@ Remaining preparation, in order:
 1. **Selected:** the manuscript-led tables above fix the HCP/CVP and Paper 3
    mathematical scopes, including the complete Q08 profile. Preserve those
    quantifiers and boundaries when constructing the independent wrappers.
-2. Prepare the two slim proof closures and independent statement/proof
-   surfaces, short READMEs, statement crosswalks, configurations and honest
-   metadata on the validated main pin. Exclude archives, plans and unrelated
-   paper claims; reconcile retained docstrings and informal text with the
-   selected formal statements before freezing the release.
+2. **Paper 1 independent surface completed locally:** Challenge/Solution,
+   README, crosswalk, configuration and metadata are prepared and checked.
+   Prepare Paper 3's matching surface, then the two slim proof closures.
+   Exclude archives, plans and unrelated claims; reconcile retained docstrings
+   and informal text before freezing each release.
 3. **Arithmetic source closure implemented:** preserve the new kernel proofs
-   and re-audit the actual future Solution declarations, including Hodge
-   uniqueness and both oracle-recovery contracts. Protected comparison remains separate.
+   and retain Paper 1's completed Solution dependency audit, including Hodge
+   uniqueness and both oracle-recovery contracts. Audit Paper 3's actual
+   Solution when built. Protected comparison remains separate.
 4. Build, inspect theorem dependencies, and check manuscript/metadata alignment;
    then freeze the corresponding release and run its protected comparisons.
 5. Choose the public repository and immutable commit, then run the official

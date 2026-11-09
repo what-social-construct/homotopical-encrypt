@@ -17,7 +17,7 @@ actual statement/Lean correspondence and checked dependencies.
 
 | Paper | Selected proved core | Required completion work |
 |---|---|---|
-| **1 — HCP foundations** | Actual cellular Hodge noise/recovery, finite integral family for the homological fragment of Helfer semantics, encoded-message ambiguity, precise known-lattice CVP comparison and hidden-operator oracle obstruction; full genuine Plucker/projector reconstruction. | The observation wording and canonical strict near/far convention are reconciled. The manuscript-led HCP/CVP statement selection is recorded in the submission plan. Keep an uninstantiated geometric application conditional. Finish the focused novelty/source account and build the selected independent statement/proof surface. |
+| **1 — HCP foundations** | Actual cellular Hodge noise/recovery, finite integral family for the homological fragment of Helfer semantics, encoded-message ambiguity, precise known-lattice CVP comparison and hidden-operator oracle obstruction; full genuine Plucker/projector reconstruction. Independent eight-group entry with local statement/definition comparison, Lean and NanoDa checks. | The observation and strict near/far convention are reconciled. Keep the geometric application conditional. Finish the focused novelty/source account, freeze a slim release and run protected Linux preflight; the local macOS diagnostic is separate. |
 | **2 — protocol/commitments** | One fixed-snapshot/epoch public-resource transition and conditional one-shot integrity; actual rotation and original-object evidence/history joins; native structured-noise query/answer/CVP identity; hash-addressed recovery; whole-bucket private-read reference and joint-view obstruction under explicit noise-column redundancy. | Instantiate one finite original-object profile and its visibility, packet/ciphertext/witness bytes, hash preimages and authenticated initial state. Supply a genuine credential/proof construction if native authentication security is advertised. If efficient private reads are claimed, choose and analyze the whole query sampler/view; the whole-bucket reference supports a bounded first scope. Complete one bounded verifier/persistence path if runtime implementation is claimed, and turn the Markdown working text into a theorem-led manuscript/TeX/PDF. |
 | **3 — capacity-radius proximity** | All nine named coding claims, Q04--Q07 and Q08 for the actual modular cochain profile, including native metric comparison and nonempty capacity-far examples. | Summary and bounded prior-work/actual-projection comparison are now aligned. The nine core statement groups and bounded application are selected; kernel arithmetic certificates replace the native proofs. Prepare matching independent wrappers/metadata and the slim entry package. Q10--Q12 are extensions, not required missing proofs. |
 
@@ -63,8 +63,13 @@ for the selected conditional mathematics.
    statement selection and kernel arithmetic closure are recorded in
    [the submission plan](PALOMAR_SUBMISSION_PLAN.md#selected-manuscript-statement-surface--2026-11-08).
    The CVP comparison is principal for Paper 1, and the new uniqueness companion
-   completes the formal scope of its Hodge proposition. Next construct the
-   independent Challenge/Solution statements and keep all informal accounts synchronized.
+   completes the formal scope of its Hodge proposition. **Paper 1's independent
+   entry is completed locally on 2026-11-09**: eight groups, 46 compared
+   declarations, Lean/NanoDa acceptance and 46 standard-only fresh axiom
+   reports. All 900 prior sets and 273 owner sources are unchanged.
+   [Entry validation](MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
+   separates this macOS diagnostic from the pending protected Linux run.
+   Paper 3's selected statement/proof entry remains the next packaging step.
 4. **Build one concrete Paper 2 profile from the existing interfaces.**
    Reuse the original commitment, snapshot, `Intent`, history, manifest,
    `HodgeNoise`, private presentation and delivered rotation. Its remaining

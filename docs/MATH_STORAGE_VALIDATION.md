@@ -9,7 +9,105 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Paper 1 independent entry — 2026-11-09
+
+The [Paper 1 entry](../lean/Palomar/PaperOne/README.md) now states all eight
+selected manuscript groups independently and proves them through adapters to
+the canonical development. The entry follows the frozen Jacobian package's
+Challenge/Solution and source-crosswalk conventions. Its headline content is
+the discrete CVP projection comparison and actual cellular public-target
+ambiguity, with Hodge/recovery and observation-boundary results retained.
+There are **21 manuscript-facing declarations / 25 supporting declarations**,
+not 46 independent research contributions.
+
+### Statement and proof checks
+
+| Check | Completed local result |
+|---|---|
+| Independent Challenge | Mathlib-only imports; **3,516-job** build passes. Transparent definitions and **23 intentional theorem placeholders**, all selected by Comparator; no definition holes. |
+| Proved Solution | **3,666-job** build passes; explicit canonical proof adapters, no Challenge import and no proof/definition holes. |
+| Local Comparator | **Pass** for all 46 selected theorems and reachable definition comparison; permitted axioms are only `propext`, `Quot.sound`, `Classical.choice`. Both Lean's default kernel and NanoDa accept the exported Solution. |
+| Execution boundary | The macOS diagnostic used `--inadvisably-no-sandbox`. This local result is **not protected preflight evidence**. Supported Linux sandbox verification has not run. |
+| Fresh entry dependencies | **46 standard-only reports**: 44 exact-three and two proper subsets. No native, cited-bound or `sorryAx` dependency. |
+| Retained plus entry dependencies | **946 standard-only reports**: 768 exact-three and 178 subsets, including 106 axiom-free. All **900 previous dependency sets match**. |
+| Aggregate builds | Literal default **9,285 jobs**; expanded union including the Solution **9,293 jobs**. All 15 default targets are retained; the Palomar library is nondefault. |
+| Static source/import scan | **275 public modules / 276 Lean files**, including Lake; all **273 previous owner hashes** and **48 previous scoped closures** are unchanged. Two entry closures added: Challenge one local module, Solution 30. Both exclude `Chain` and `CitedBounds`. |
+
+The source scanner distinguishes Challenge's 23 deliberate holes from zero
+implementation holes. There are no active native calls, local import cycles
+or unresolved imports; the same seven global cited axioms remain isolated in
+`CitedBounds`. Every source has the module/public-section header. The largest
+source is the 1,292-line Solution. Challenge is **977 physical lines / 49,234
+bytes**, within the current 1,000-line/100-KiB hard limits and above the
+published 300-line/32-KiB warning thresholds. These counts are source checks,
+separate from dependency and kernel verification.
+
+All compared definitions have ordinary transparent meanings. In particular,
+the independent Challenge restates the two pure finite-product helpers
+`Hcrypt.Helfer.contextObject/contextMap` under their canonical names; the
+remaining statement vocabulary lives in `Hcrypt.Palomar.PaperOne`. Structural
+comparison checks the actual context construction, incidence maps, integral
+stalks, Hodge operators, public theory, explicit lattices and genuine exterior
+quotient. The private adapters do not replace these objects with abstract
+predicates. The supporting `AxisFamily.cellular_complex_iso` exhibits an
+actual isomorphism of the constructed complexes; public-theory equality is
+not an added premise.
+
+README and v0.4 metadata record sources, eight-group correspondence,
+automation and agent review, as well as the remaining protected-verification
+boundary. This entry gives exact mathematical results, not asymptotic
+CVP-hardness or sampled cryptographic security. Paper 3's independent entry,
+a frozen slim public release and registry submission remain separate work.
+The manual-only preflight workflow is prepared locally and has not run.
+Both manuscript TeX/PDF trees, dependency pins and the unrelated Rust edit
+are unchanged; the prior PDF hashes below still apply.
+
+Local evidence under `output/validation/`:
+`paper1-entry-{challenge,solution,default,full}-build.log`,
+`paper1-entry-local-comparator.log`, `paper1-entry-{all-axioms,axioms}.lean`,
+`paper1-entry-all-axioms.log`, `paper1-entry-axiom-summary.json`,
+`paper1-entry-source-audit.json`, `paper1-entry-selection.json` and
+`paper1-entry-validation.json`. These are local records rather than registry
+reports. The previous `submission-*` records remain the dated P289 baseline.
+
+### Reproduce the independent entry checks
+
+From `lean/`, using the pinned Lean/Mathlib manifest:
+
+```sh
+LEAN_NUM_THREADS=1 lake build Palomar.PaperOne.Challenge
+LEAN_NUM_THREADS=1 lake build Palomar.PaperOne.Solution
+python3 - <<'PY' > /tmp/paper1-entry-axioms.lean
+import json
+from pathlib import Path
+config = json.loads(Path('Palomar/PaperOne/comparator.json').read_text())
+print('import Palomar.PaperOne.Solution')
+for declaration in config['theorem_names']:
+    print('#print axioms ' + declaration)
+PY
+LEAN_NUM_THREADS=1 lake env lean -j1 /tmp/paper1-entry-axioms.lean
+```
+
+Check all 46 dependency reports and exit status zero; importing the Solution
+alone is not an axiom audit. On the supported Linux sandbox, the protected
+comparison command is:
+
+```sh
+LEAN_NUM_THREADS=1 lake comparator --config Palomar/PaperOne/comparator.json
+```
+
+That protected command has not been run here. The completed local macOS
+diagnostic instead placed the pinned toolchain's binary directory on `PATH`
+so `nanoda_bin` was available, and used `--inadvisably-no-sandbox`. Its log
+explicitly warns that sandboxing is disabled. The prepared GitHub workflow
+selects the nested `lean` project and records the exact source/pipeline commit;
+no upload or workflow dispatch was performed.
+
 ## Selected statements and kernel arithmetic — 2026-11-08
+
+**Preserved P289 implementation baseline.** The entry section above supersedes
+this section's wrapper status and source/declaration counts. All 273 owner
+files and 900 dependency sets described here are retained unchanged.
 
 The [submission statement table](PALOMAR_SUBMISSION_PLAN.md#selected-manuscript-statement-surface--2026-11-08)
 is derived from the manuscripts' existing named propositions and theorems.
@@ -19,7 +117,8 @@ direct-operative-target oracle contracts. Paper 3 retains its nine original
 coding groups, spectrum/distance interpretation and separately scoped modular
 application. The table has **22 statement groups / 70 proof or object owners**;
 these are coverage counts, not claims of 70 new research theorems. Independent
-Challenge/Solution files, metadata and protected comparison remain future work.
+Challenge/Solution files, metadata and protected comparison were future work
+at this milestone; the subsequent entry section records Paper 1's local checks.
 
 ### Mathematics and arithmetic trust
 

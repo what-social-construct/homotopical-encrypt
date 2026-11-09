@@ -41,7 +41,7 @@ jobs:
         run: lake exe cache get
       - name: Build proofs and transition examples
         working-directory: lean
-        run: lake build && lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer Protocol.Storage.Retrieval
+        run: lake build && lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer Protocol.Storage.Retrieval Palomar.PaperOne.Solution
   manuscripts:
     runs-on: ubuntu-latest
     steps:
@@ -59,6 +59,7 @@ jobs:
 
 def source_files():
     paths = [ROOT / name for name in ("LICENSE", "PUBLIC_REVIEW.md", "SEMANTIC-PARITY.md")]
+    paths.append(ROOT / ".github/workflows/paper1-palomar-preflight.yml")
     paths += [ROOT / "docs" / f"{name}.md" for name in DOCS]
     paths.append(Path(__file__).resolve())
     scanned_roots = []
@@ -75,6 +76,9 @@ def source_files():
                 paths.append(path)
     paths += [ROOT / "lean" / name for name in
               ("lean-toolchain", "lake-manifest.json")]
+    # Keep entry configuration/metadata without copying unrelated JSON/YAML.
+    for name in ("comparator.json", "formalization.yaml"):
+        paths += list((ROOT / "lean/Palomar").glob(f"*/{name}"))
     for path in sorted(set(paths + scanned_roots)):
         if not path.is_relative_to(ROOT) or not path.resolve().is_relative_to(ROOT):
             raise ValueError(f"Refusing source outside repository: {path}")
@@ -108,7 +112,7 @@ def stage(destination: Path, refresh: bool):
             shutil.copyfile(source, target)
         shutil.copyfile(ROOT / "PUBLIC_REVIEW.md", tree / "README.md")
         workflow = tree / ".github/workflows/review.yml"
-        workflow.parent.mkdir(parents=True)
+        workflow.parent.mkdir(parents=True, exist_ok=True)
         workflow.write_text(WORKFLOW)
         (tree / ".gitignore").write_text(
             "lean/.lake/\n.DS_Store\n*.aux\n*.bbl\n*.blg\n*.fdb_latexmk\n"
