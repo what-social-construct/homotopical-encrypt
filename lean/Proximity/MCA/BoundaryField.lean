@@ -5,6 +5,8 @@ public import Proximity.MCA.SmallRadius
 public import Mathlib.GroupTheory.OrderOfElement
 public import Mathlib.NumberTheory.LucasPrimality
 public meta import Mathlib.Algebra.Field.ZMod
+public meta import Mathlib.Tactic.NormNum
+public meta import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -21,7 +23,8 @@ prize-facing boundary-field example
 The primality proof is a Lucas/Pratt certificate rooted at the full generator
 `7`.  Raising that generator to `(q - 1) / 4096` gives the displayed
 order-`4096` root.  Its first `4096` powers therefore form an injectively
-indexed Reed--Solomon evaluation domain.
+indexed Reed--Solomon evaluation domain. The arithmetic certificates use
+kernel-checked numeral normalization and binary modular exponentiation.
 -/
 
 namespace ProximityPrize
@@ -37,7 +40,7 @@ def modulus : ℕ :=
 /-- The boundary modulus has the advertised offset above `2^128`. -/
 theorem modulus_eq_two_pow_128_add :
     modulus = 2 ^ 128 + 192513 := by
-  native_decide
+  norm_num [modulus]
 
 /-- Smooth power-of-two block length. -/
 def length : ℕ := 4096
@@ -48,12 +51,12 @@ def degreeBound : ℕ := 1024
 /-- The selected degree bound has rate exactly `1/4`. -/
 theorem four_mul_degreeBound_eq_length :
     4 * degreeBound = length := by
-  native_decide
+  norm_num [degreeBound, length]
 
 /-- The selected length divides the boundary field's multiplicative order. -/
 theorem length_dvd_modulus_sub_one :
     length ∣ modulus - 1 := by
-  native_decide
+  norm_num [length, modulus]
 
 /-- The cofactor used to descend from a full generator to order `4096`. -/
 def rootExponent : ℕ :=
@@ -61,7 +64,7 @@ def rootExponent : ℕ :=
 
 theorem rootExponent_mul_length :
     rootExponent * length = modulus - 1 := by
-  native_decide
+  norm_num [rootExponent, modulus, length]
 
 /-! ## Compact Lucas/Pratt primality certificates -/
 
@@ -108,6 +111,82 @@ private theorem prime_of_lucas_factor_list
   apply prime_mem_of_dvd_list_prod hq hprime
   simpa only [← hfactor] using hq_dvd
 
+/-- A small-factor Lucas certificate avoids trial division of a 29-bit prime. -/
+private theorem prime_524887931 : Nat.Prime 524887931 := by
+  apply prime_of_lucas_factor_list
+    524887931 (2 : ZMod 524887931) [2, 5, 7, 653, 11483]
+  · norm_num
+  · intro p hp
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+    rcases hp with rfl | rfl | rfl | rfl | rfl
+    all_goals norm_num
+  · reduce_mod_char
+  · intro p hp
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+    rcases hp with rfl | rfl | rfl | rfl | rfl
+    all_goals (reduce_mod_char; decide)
+
+private theorem prime_1049775863 : Nat.Prime 1049775863 := by
+  apply prime_of_lucas_factor_list
+    1049775863 (5 : ZMod 1049775863) [2, 524887931]
+  · norm_num
+  · intro p hp
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+    rcases hp with rfl | rfl
+    · exact Nat.prime_two
+    · exact prime_524887931
+  · reduce_mod_char
+  · intro p hp
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+    rcases hp with rfl | rfl
+    all_goals (reduce_mod_char; decide)
+
+private theorem prime_6636571 : Nat.Prime 6636571 := by
+  apply prime_of_lucas_factor_list
+    6636571 (2 : ZMod 6636571) [2, 3, 5, 221219]
+  · norm_num
+  · intro p hp
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+    rcases hp with rfl | rfl | rfl | rfl
+    all_goals norm_num
+  · reduce_mod_char
+  · intro p hp
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+    rcases hp with rfl | rfl | rfl | rfl
+    all_goals (reduce_mod_char; decide)
+
+private theorem prime_146004563 : Nat.Prime 146004563 := by
+  apply prime_of_lucas_factor_list
+    146004563 (2 : ZMod 146004563) [2, 11, 6636571]
+  · norm_num
+  · intro p hp
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+    rcases hp with rfl | rfl | rfl
+    · exact Nat.prime_two
+    · norm_num
+    · exact prime_6636571
+  · reduce_mod_char
+  · intro p hp
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+    rcases hp with rfl | rfl | rfl
+    all_goals (reduce_mod_char; decide)
+
+private theorem prime_2044063883 : Nat.Prime 2044063883 := by
+  apply prime_of_lucas_factor_list
+    2044063883 (2 : ZMod 2044063883) [2, 7, 146004563]
+  · norm_num
+  · intro p hp
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+    rcases hp with rfl | rfl | rfl
+    · exact Nat.prime_two
+    · norm_num
+    · exact prime_146004563
+  · reduce_mod_char
+  · intro p hp
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+    rcases hp with rfl | rfl | rfl
+    all_goals (reduce_mod_char; decide)
+
 /-- A 49-bit prime in the Pratt chain. -/
 private theorem prime_439736412148619 :
     Nat.Prime 439736412148619 := by
@@ -115,16 +194,19 @@ private theorem prime_439736412148619 :
     439736412148619
     (2 : ZMod 439736412148619)
     [2, 13, 16111, 1049775863]
-  · native_decide
+  · norm_num
   · intro p hp
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
     rcases hp with rfl | rfl | rfl | rfl
-    all_goals native_decide
-  · native_decide
+    · exact Nat.prime_two
+    · norm_num
+    · norm_num
+    · exact prime_1049775863
+  · reduce_mod_char
   · intro p hp
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
     rcases hp with rfl | rfl | rfl | rfl
-    all_goals native_decide
+    all_goals (reduce_mod_char; decide)
 
 /-- A 60-bit prime in the Pratt chain. -/
 private theorem prime_693904058370520783 :
@@ -133,19 +215,19 @@ private theorem prime_693904058370520783 :
     693904058370520783
     (3 : ZMod 693904058370520783)
     [2, 3, 263, 439736412148619]
-  · native_decide
+  · norm_num
   · intro p hp
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
     rcases hp with rfl | rfl | rfl | rfl
     · exact Nat.prime_two
     · exact Nat.prime_three
-    · native_decide
+    · norm_num
     · exact prime_439736412148619
-  · native_decide
+  · reduce_mod_char
   · intro p hp
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
     rcases hp with rfl | rfl | rfl | rfl
-    all_goals native_decide
+    all_goals (reduce_mod_char; decide)
 
 /-- A 51-bit prime in the Pratt chain. -/
 private theorem prime_1995394721945771 :
@@ -154,16 +236,21 @@ private theorem prime_1995394721945771 :
     1995394721945771
     (2 : ZMod 1995394721945771)
     [2, 5, 31, 47, 67, 2044063883]
-  · native_decide
+  · norm_num
   · intro p hp
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
     rcases hp with rfl | rfl | rfl | rfl | rfl | rfl
-    all_goals native_decide
-  · native_decide
+    · exact Nat.prime_two
+    · exact Nat.prime_five
+    · norm_num
+    · norm_num
+    · norm_num
+    · exact prime_2044063883
+  · reduce_mod_char
   · intro p hp
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
     rcases hp with rfl | rfl | rfl | rfl | rfl | rfl
-    all_goals native_decide
+    all_goals (reduce_mod_char; decide)
 
 /-- The large prime factor of `modulus - 1`. -/
 private theorem prime_27692249912185747352162647089173861 :
@@ -172,7 +259,7 @@ private theorem prime_27692249912185747352162647089173861 :
     27692249912185747352162647089173861
     (2 : ZMod 27692249912185747352162647089173861)
     [2, 2, 5, 693904058370520783, 1995394721945771]
-  · native_decide
+  · norm_num
   · intro p hp
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
     rcases hp with rfl | rfl | rfl | rfl | rfl
@@ -181,11 +268,11 @@ private theorem prime_27692249912185747352162647089173861 :
     · exact Nat.prime_five
     · exact prime_693904058370520783
     · exact prime_1995394721945771
-  · native_decide
+  · reduce_mod_char
   · intro p hp
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
     rcases hp with rfl | rfl | rfl | rfl | rfl
-    all_goals native_decide
+    all_goals (reduce_mod_char; decide)
 
 /-- The boundary modulus is prime, certified by the Lucas witness `7`. -/
 theorem modulus_prime : modulus.Prime := by
@@ -195,7 +282,7 @@ theorem modulus_prime : modulus.Prime := by
     (7 : ZMod 340282366920938463463374607431768403969)
     [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
       27692249912185747352162647089173861]
-  · native_decide
+  · norm_num
   · intro p hp
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
     rcases hp with
@@ -205,13 +292,13 @@ theorem modulus_prime : modulus.Prime := by
       | exact Nat.prime_two
       | exact Nat.prime_three
       | exact prime_27692249912185747352162647089173861
-  · native_decide
+  · reduce_mod_char
   · intro p hp
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
     rcases hp with
       rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl |
       rfl | rfl | rfl | rfl | rfl | rfl
-    all_goals native_decide
+    all_goals (reduce_mod_char; decide)
 
 /-- The finite field used by the boundary example. -/
 abbrev RSField := ZMod modulus
@@ -236,13 +323,17 @@ def candidateRoot : RSField :=
 /-- The displayed root is obtained by descending from the full generator. -/
 theorem candidateGenerator_pow_rootExponent :
     candidateGenerator ^ rootExponent = candidateRoot := by
-  native_decide
+  have h : (7 : ZMod 340282366920938463463374607431768403969) ^
+      83076749736557242056487941267521583 =
+        138986559780198433259791608580824171955 := by
+    reduce_mod_char
+  exact h
 
 /-- The displayed root as a multiplicative unit. -/
 def candidateRootUnit : RSFieldˣ :=
   ZMod.unitOfCoprime
     138986559780198433259791608580824171955
-    (by native_decide)
+    (by norm_num [modulus])
 
 @[simp]
 theorem candidateRootUnit_coe :
@@ -264,9 +355,12 @@ private theorem prime_dvd_length_eq_two
 theorem candidateRootUnit_order :
     orderOf candidateRootUnit = length := by
   apply orderOf_eq_of_pow_and_pow_div_prime
-  · native_decide
+  · norm_num [length]
   · ext
-    native_decide
+    have h : (138986559780198433259791608580824171955 :
+        ZMod 340282366920938463463374607431768403969) ^ 4096 = 1 := by
+      reduce_mod_char
+    exact h
   · intro p hp hpdvd
     have hp_eq_two := prime_dvd_length_eq_two hp hpdvd
     subst p
@@ -274,7 +368,11 @@ theorem candidateRootUnit_order :
     have hcoe := congrArg ((↑) : RSFieldˣ → RSField) h
     have hne :
         ((candidateRootUnit ^ (length / 2) : RSFieldˣ) : RSField) ≠ 1 := by
-      native_decide
+      have h : (138986559780198433259791608580824171955 :
+          ZMod 340282366920938463463374607431768403969) ^ 2048 ≠ 1 := by
+        reduce_mod_char
+        decide
+      exact h
     exact hne hcoe
 
 /-- Evaluation point `i` is the `i`-th power of the certified root. -/
@@ -336,19 +434,19 @@ theorem parameters_length : parameters.length = 4096 := by
 theorem one_challenge_128_bit_budget :
     2 ^ 128 ≤ Fintype.card RSField := by
   rw [card_RSField]
-  native_decide
+  norm_num [modulus]
 
 /-- Two bad challenges exceed the certified boundary-field budget. -/
 theorem two_challenges_exceed_128_bit_budget :
     Fintype.card RSField < 2 ^ 128 * 2 := by
   rw [card_RSField]
-  native_decide
+  norm_num [modulus]
 
 /-- At radius zero, every affine line has at most one bad challenge. -/
 theorem radiusZero_uniform_count_certificate
     (L : AffineLine (Fin length) RSField) :
     (parameters.toBlockCode.badChallengeSet 0 L).card ≤ 1 := by
-  exact parameters.badChallengeSet_zero_card_le_one (by native_decide) L
+  exact parameters.badChallengeSet_zero_card_le_one (by norm_num [parameters, degreeBound]) L
 
 /--
 At radius one, a concrete two-spike line has at least the two distinct bad
@@ -362,7 +460,8 @@ theorem exists_radiusOne_twoSpike_count_certificate :
             (ReedSolomon.Parameters.twoSpikeLine
               (F := RSField) i₀ i₁)).card := by
   exact parameters.exists_twoSpikeLine_bad_of_degreeBound_add_two_le
-    (by native_decide) (by native_decide)
+    (by norm_num [parameters, degreeBound])
+    (by norm_num [parameters, degreeBound, length])
 
 /-- The exact bad-count spectrum has value at least two at radius one. -/
 theorem two_le_paperMCABadSpectrum_one :
@@ -377,7 +476,8 @@ theorem two_le_paperMCABadSpectrum_one :
 theorem paperMCABadSpectrum_zero_eq_one :
     parameters.toBlockCode.paperMCABadSpectrum 0 = 1 := by
   exact parameters.worstBadCount_zero_eq_one
-    (by native_decide) (by native_decide)
+    (by norm_num [parameters, degreeBound])
+    (by norm_num [parameters, degreeBound, length])
 
 /--
 The exact 128-bit MCA threshold for the boundary-field RS code: radius zero is
@@ -388,7 +488,8 @@ theorem pairMCA_exact_128_bit_threshold :
       parameters.toBlockCode.pairMCAFirstUnsafe 128 =
         ((1 : ℕ) : WithTop ℕ) := by
   exact parameters.pairMCAThreshold_zero_of_one_two_field_window
-    (by native_decide) (by native_decide) 128
+    (by norm_num [parameters, degreeBound])
+    (by norm_num [parameters, degreeBound, length]) 128
     one_challenge_128_bit_budget
     two_challenges_exceed_128_bit_budget
 

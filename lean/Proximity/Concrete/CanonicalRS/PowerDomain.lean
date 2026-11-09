@@ -126,7 +126,7 @@ def candidateGenerator : RSField :=
 def candidateGeneratorUnit : RSFieldˣ :=
   ZMod.unitOfCoprime
     11
-    (by native_decide : Nat.Coprime 11 Axioms.canonicalCochainModulus)
+    (by norm_num [Axioms.canonicalCochainModulus] : Nat.Coprime 11 Axioms.canonicalCochainModulus)
 
 /-- The candidate unit has the expected field value. -/
 @[simp]
@@ -158,9 +158,11 @@ theorem prime_dvd_fullGeneratorOrder_eq_two_or_three
 theorem candidateGeneratorUnit_order :
     orderOf candidateGeneratorUnit = fullGeneratorOrder := by
   apply orderOf_eq_of_pow_and_pow_div_prime
-  · native_decide
+  · norm_num [fullGeneratorOrder, Axioms.canonicalCochainModulus]
   · ext
-    native_decide
+    change (11 : ZMod 12289) ^ 12288 = 1
+    reduce_mod_char
+    decide
   · intro p hp hpdvd
     rcases prime_dvd_fullGeneratorOrder_eq_two_or_three hp hpdvd with rfl | rfl
     · intro h
@@ -168,14 +170,18 @@ theorem candidateGeneratorUnit_order :
       have hcalc :
           ((candidateGeneratorUnit ^ (fullGeneratorOrder / 2) : RSFieldˣ) : RSField) ≠
             1 := by
-        native_decide
+        change (11 : ZMod 12289) ^ 6144 ≠ 1
+        reduce_mod_char
+        decide
       exact hcalc hv
     · intro h
       have hv := congrArg ((↑) : RSFieldˣ → RSField) h
       have hcalc :
           ((candidateGeneratorUnit ^ (fullGeneratorOrder / 3) : RSFieldˣ) : RSField) ≠
             1 := by
-        native_decide
+        change (11 : ZMod 12289) ^ 4096 ≠ 1
+        reduce_mod_char
+        decide
       exact hcalc hv
 
 /-- Certified full generator for the canonical RS power domain. -/

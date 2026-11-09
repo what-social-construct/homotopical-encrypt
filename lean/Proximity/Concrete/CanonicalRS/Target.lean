@@ -62,7 +62,7 @@ theorem fAdditive (D : SmoothDomain) :
     D.parameters
     (by
       change 0 < degreeBound
-      native_decide)
+      decide)
 
 end Bounds
 

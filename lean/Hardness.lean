@@ -22,8 +22,9 @@ Terminology:
   `ker(Δ)` remain hidden up to the public equivalence relation.
 
 This module verifies the formal comparison used by the paper:
-1. **Hodge Decomposition**: Proves that any cochain decomposes into harmonic,
-   exact, and coexact parts (`Hodge_Decomposition_Theorem`).
+1. **Hodge Decomposition**: Constructs mutually orthogonal harmonic, exact,
+   and coexact parts (`Hodge_Decomposition_Theorem`) and proves their
+   uniqueness (`Hodge_Decomposition_unique`).
 2. **Presented linear-image comparison**: Proves that any finite-dimensional
    field-linear image can be realized as a matrix kernel
    (`Hodge_GeneratedSubspace_Reduction_Proof`).
@@ -421,8 +422,9 @@ theorem Hodge_GeneratedSubspace_Reduction_Proof
     rw [hΔ] at h_harm
     exact h_harm
 
-/-
-Hodge Decomposition Theorem: Any cochain b can be uniquely decomposed into a harmonic part, a boundary part, and a coboundary part, which are mutually orthogonal.
+/--
+Every cochain admits mutually orthogonal harmonic, exact, and coexact parts.
+Their uniqueness is proved separately by `Hodge_Decomposition_unique`.
 -/
 theorem Hodge_Decomposition_Theorem
   {n m k : Type} [Fintype n] [Fintype m] [Fintype k]
@@ -531,6 +533,84 @@ theorem Hodge_Decomposition_Theorem
     simp_all +decide [ Matrix.dotProduct_mulVec, Matrix.vecMul_mulVec ];
     simp_all +decide [ ← Matrix.mulVec_transpose ];
     aesop
+
+/--
+Two harmonic/exact/coexact decompositions of the same real matrix cochain
+agree componentwise. The complex equation makes the exact and coexact
+subspaces orthogonal; no additional orthogonality hypotheses are required.
+-/
+theorem Hodge_Decomposition_unique
+    {n m k : Type} [Fintype n] [Fintype m] [Fintype k]
+    [DecidableEq n] [DecidableEq m] [DecidableEq k]
+    (d_prev : Matrix m n ℝ) (d_next : Matrix k m ℝ)
+    (h_complex : d_next * d_prev = 0)
+    {b h e1 e2 h' e1' e2' : m → ℝ}
+    (hb : b = h + e1 + e2)
+    (hh : MatrixIsHarmonic
+      (d_prev * d_prev.transpose + d_next.transpose * d_next) h)
+    (he1 : ∃ x, e1 = d_prev.mulVec x)
+    (he2 : ∃ y, e2 = d_next.transpose.mulVec y)
+    (hb' : b = h' + e1' + e2')
+    (hh' : MatrixIsHarmonic
+      (d_prev * d_prev.transpose + d_next.transpose * d_next) h')
+    (he1' : ∃ x, e1' = d_prev.mulVec x)
+    (he2' : ∃ y, e2' = d_next.transpose.mulVec y) :
+    h = h' ∧ e1 = e1' ∧ e2 = e2' := by
+  obtain ⟨x, rfl⟩ := he1
+  obtain ⟨y, rfl⟩ := he2
+  obtain ⟨x', rfl⟩ := he1'
+  obtain ⟨y', rfl⟩ := he2'
+  let a := h - h'
+  let e := d_prev.mulVec (x - x')
+  let c := d_next.transpose.mulVec (y - y')
+  have hsum : a + e + c = 0 := by
+    dsimp [a, e, c]
+    simpa only [Matrix.mulVec_sub, add_sub_add_comm] using
+      sub_eq_zero.mpr (hb.symm.trans hb')
+  have ha : (d_prev * d_prev.transpose + d_next.transpose * d_next).mulVec a = 0 := by
+    change (d_prev * d_prev.transpose + d_next.transpose * d_next).mulVec h = 0 at hh
+    change (d_prev * d_prev.transpose + d_next.transpose * d_next).mulVec h' = 0 at hh'
+    simp only [a, Matrix.mulVec_sub, hh, hh', sub_self]
+  have henergy :
+      d_prev.transpose.mulVec a ⬝ᵥ d_prev.transpose.mulVec a +
+        d_next.mulVec a ⬝ᵥ d_next.mulVec a = 0 := by
+    have hz := congrArg (fun v => a ⬝ᵥ v) ha
+    simpa only [Matrix.add_mulVec, Matrix.mulVec_mulVec, dotProduct_add,
+      Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, Matrix.transpose_mul,
+      Matrix.transpose_transpose,
+      dotProduct_zero] using hz
+  have hparts : d_prev.transpose.mulVec a = 0 ∧ d_next.mulVec a = 0 := by
+    have hnonneg0 : 0 ≤ d_prev.transpose.mulVec a ⬝ᵥ d_prev.transpose.mulVec a :=
+      Finset.sum_nonneg fun _ _ => mul_self_nonneg _
+    have hnonneg1 : 0 ≤ d_next.mulVec a ⬝ᵥ d_next.mulVec a :=
+      Finset.sum_nonneg fun _ _ => mul_self_nonneg _
+    have hp := (add_eq_zero_iff_of_nonneg hnonneg0 hnonneg1).mp henergy
+    exact ⟨dotProduct_self_eq_zero.mp hp.1, dotProduct_self_eq_zero.mp hp.2⟩
+  have hae : a ⬝ᵥ e = 0 := by
+    dsimp [e]
+    rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hparts.1,
+      zero_dotProduct]
+  have hac : a ⬝ᵥ c = 0 := by
+    dsimp [c]
+    rw [Matrix.dotProduct_mulVec, Matrix.vecMul_transpose, hparts.2,
+      zero_dotProduct]
+  have hec : e ⬝ᵥ c = 0 := by
+    dsimp [e, c]
+    rw [Matrix.dotProduct_mulVec, Matrix.vecMul_transpose, Matrix.mulVec_mulVec,
+      h_complex, Matrix.zero_mulVec, zero_dotProduct]
+  have ha0 : a = 0 := by
+    apply dotProduct_self_eq_zero.mp
+    have hz := congrArg (fun v => a ⬝ᵥ v) hsum
+    simpa only [dotProduct_add, hae, hac, add_zero, dotProduct_zero] using hz
+  have he0 : e = 0 := by
+    apply dotProduct_self_eq_zero.mp
+    have hz := congrArg (fun v => e ⬝ᵥ v) hsum
+    simpa only [dotProduct_add, ha0, dotProduct_zero, hec, zero_add, add_zero] using hz
+  have hc0 : c = 0 := by
+    simpa only [ha0, he0, zero_add] using hsum
+  refine ⟨sub_eq_zero.mp ha0, ?_, ?_⟩
+  · exact sub_eq_zero.mp (by simpa only [e, Matrix.mulVec_sub] using he0)
+  · exact sub_eq_zero.mp (by simpa only [c, Matrix.mulVec_sub] using hc0)
 
 /--
 Public Hodge instance available to an attacker.

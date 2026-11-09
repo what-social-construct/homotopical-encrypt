@@ -41,7 +41,7 @@ abbrev CanonicalField :=
 /-- The current canonical cochain modulus is prime. -/
 instance canonicalCochainModulus_prime :
     Fact (Nat.Prime Axioms.canonicalCochainModulus) :=
-  ⟨by native_decide⟩
+  ⟨by norm_num [Axioms.canonicalCochainModulus]⟩
 
 /--
 Encoding boundary from a semantic plane point into an RS field element.

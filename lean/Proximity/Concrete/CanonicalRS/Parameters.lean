@@ -31,7 +31,7 @@ abbrev RSField :=
 /-- The current canonical cochain modulus is prime. -/
 instance canonicalCochainModulus_prime :
     Fact (Nat.Prime Axioms.canonicalCochainModulus) :=
-  ⟨by native_decide⟩
+  ⟨by norm_num [Axioms.canonicalCochainModulus]⟩
 
 /--
 Smooth power-of-two evaluation length.
@@ -57,21 +57,21 @@ power-of-two RS evaluation root.
 -/
 theorem fullGeneratorOrder_eq_rootExponent_mul_length :
     fullGeneratorOrder = rootExponent * length := by
-  native_decide
+  norm_num [fullGeneratorOrder, rootExponent, length, Axioms.canonicalCochainModulus]
 
 /-- Dividing the full generator order by the cubing exponent gives the RS length. -/
 theorem fullGeneratorOrder_div_rootExponent_eq_length :
     fullGeneratorOrder / rootExponent = length := by
-  native_decide
+  norm_num [fullGeneratorOrder, rootExponent, length, Axioms.canonicalCochainModulus]
 
 /-- The cubing exponent is nonzero. -/
 theorem rootExponent_ne_zero : rootExponent ≠ 0 := by
-  native_decide
+  norm_num [rootExponent]
 
 /-- The cubing exponent divides the full multiplicative-group order. -/
 theorem rootExponent_dvd_fullGeneratorOrder :
     rootExponent ∣ fullGeneratorOrder := by
-  native_decide
+  norm_num [rootExponent, fullGeneratorOrder, Axioms.canonicalCochainModulus]
 
 /-- Constant-rate degree bound for the first concrete target: rate `1/4`. -/
 def degreeBound : ℕ := 1024
@@ -82,12 +82,12 @@ def rateDenominator : ℕ := 4
 /-- The selected rate is exactly `degreeBound / length = 1/4`. -/
 theorem degreeBound_mul_rateDenominator_eq_length :
     degreeBound * rateDenominator = length := by
-  native_decide
+  norm_num [degreeBound, rateDenominator, length]
 
 /-- The chosen length divides the multiplicative-group order of the canonical field. -/
 theorem length_dvd_canonical_modulus_minus_one :
     length ∣ Axioms.canonicalCochainModulus - 1 := by
-  native_decide
+  norm_num [length, Axioms.canonicalCochainModulus]
 
 /--
 Conservative Johnson-below Hamming radius for rate `1/4`.
@@ -100,7 +100,7 @@ def johnsonBelowRadius : ℕ := 2047
 /-- The Johnson-below radius is strictly below half the block length. -/
 theorem two_mul_johnsonBelowRadius_lt_length :
     2 * johnsonBelowRadius < length := by
-  native_decide
+  norm_num [johnsonBelowRadius, length]
 
 /--
 Capacity-below radius for rate `1/4`.
@@ -113,7 +113,7 @@ def capacityBelowRadius : ℕ := 3071
 /-- The capacity-below radius is strictly below `3/4` of the block length. -/
 theorem four_mul_capacityBelowRadius_lt_three_mul_length :
     4 * capacityBelowRadius < 3 * length := by
-  native_decide
+  norm_num [capacityBelowRadius, length]
 
 /--
 A concrete smooth evaluation-domain choice.

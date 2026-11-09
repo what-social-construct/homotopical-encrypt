@@ -8,17 +8,40 @@ change when another manuscript cites those results.
 Initial audit date: 2026-10-30. Historical source checkpoint: `dc89188`.
 Generic coding completion and application follow-up: **2026-11-05**.
 
-**Summary and source-comparison reconciliation — 2026-11-08:** the abstract
+**Kernel arithmetic and statement selection — P289, 2026-11-08:** the boundary-field
+and canonical `q=12289` arithmetic now use kernel-checked primality, modular
+power, root-order and numerical proofs. All source calls to `native_decide`
+have been removed; the field moduli, generators, roots, domains and existing
+theorem statements are unchanged. The refreshed full/default builds pass
+**9,292/9,285 jobs**, and all **900 selected dependency reports** are
+standard-only: **724 exact-standard-three / 176 proper subsets**, including
+**106 axiom-free**. All 806 old standard-only sets are unchanged; all 49 old
+native-dependent reports are now standard-only. The 45 additional reports
+complete the **70-owner / 22-group cross-paper statement selection**, including
+the new public `Hodge_Decomposition_unique` companion. None of the 900 reports
+uses native, cited-bound or `sorryAx` dependencies. The
+[central validation record](../../docs/MATH_STORAGE_VALIDATION.md#selected-statements-and-kernel-arithmetic--2026-11-08)
+owns exact evidence; earlier native-dependent reports below remain dated
+baselines. The inventory is **273 public modules / 274 Lean files**: seven
+modules changed and 266 source hashes still match P283. There are no active
+holes, native calls, import cycles or unresolved local imports; all 48 scoped
+import closures are unchanged. The reviewed Papers 1/3 PDFs are 101/30 pages.
+The [selected manuscript statement surface](../../docs/PALOMAR_SUBMISSION_PLAN.md#selected-manuscript-statement-surface--2026-11-08)
+maps all nine named coding statements, their spectrum/distance account and the
+separately bounded modular application to the existing declarations. No
+submission wrappers or protected comparison have been created.
+
+**Historical summary and source-comparison reconciliation — P285, 2026-11-08:** the abstract
 and introduction now state Q08's completed native modular result and separate
 its canonical field from the two fractional-budget instances. §7 records the
 sharp factor-two near scaling, raw/accepted boundary and actual modular
 relation compared with coordinate/linear-map authentication and constrained
 RS proximity. §5 cites the classical degree-k deep-hole source; §6 bounds
-its own certificate saving and literature scope. §8 includes the actual
-application ledger and both native arithmetic footprints. Twelve existing
-supporting declarations pass a fresh audit: six standard-only and six
+its own certificate saving and literature scope. At that checkpoint, §8 included
+the actual application ledger and both native arithmetic footprints. Twelve
+existing supporting declarations passed the audit: six standard-only and six
 inherited-native, all matching P283's 855-report selection. All 273 Lean source
-hashes are unchanged. Current PDFs are 101/30 pages for Papers 1/3; the
+hashes then matched P283. The reviewed PDFs were 101/30 pages for Papers 1/3; the
 [central validation record](../../docs/MATH_STORAGE_VALIDATION.md#paper-3-summary-and-source-comparison--2026-11-08)
 records the checks. No priority, new cryptographic primitive, security or cost
 advantage is established by this comparison.
@@ -28,8 +51,9 @@ stated generic coding and native modular application claims. Current shared
 expanded/default, dependency and source checks are recorded in the
 [central validation record](../../docs/MATH_STORAGE_VALIDATION.md).
 The 2026-11-06 one-shot integrity milestone passed 9,278/9,271 jobs and 605
-selected reports; later primitive/TCB checks retain those earlier dependency
-sets. The then-reviewed PDFs were 99/28 pages for Papers 1/3. The dated 2026-11-05 figures
+selected reports; the subsequent primitive/TCB checks before the arithmetic
+replacement retained those earlier dependency sets. The then-reviewed PDFs
+were 99/28 pages for Papers 1/3. The dated 2026-11-05 figures
 below are preserved native-metric baselines, not later-source validation.
 
 The current pin is Lean **4.35.0** and Mathlib
@@ -38,30 +62,30 @@ passed the union of all fifteen default roots and integration examples
 (**9,233 jobs**), and the literal default build (**9,228 jobs**).
 Its axiom reports passed for **68 distinct
 declarations**: 64 use exactly `propext`, `Classical.choice` and `Quot.sound`;
-the same four boundary/canonical endpoints retain native arithmetic
-dependencies, now printed as generated `_native.native_decide.ax_`
+the same four boundary/canonical endpoints then retained native arithmetic
+dependencies, printed as generated `_native.native_decide.ax_`
 constants. None of these reports uses a cited-bound axiom or `sorryAx`.
 The [central validation record](../../docs/MATH_STORAGE_VALIDATION.md)
 separates the forty-endpoint group (36 standard-only, four native), nineteen
 anchor endpoints and nine HCP/CVP endpoints (all standard-only). These checks
 predate the new source-profile, reconstruction and native-metric modules.
 
-The new focused generic probes pass: 27 root codec/calibration/metric/operative
+At the 2026-11-05 native-metric milestone, focused generic probes passed: 27 root codec/calibration/metric/operative
 target endpoints; eight modular-coboundary; thirteen canonical-lift obstruction;
 eleven zero-direction; eleven diagonal-challenge; eight Plucker reconstruction;
 six systematic-profile; and eleven native metric/deep-hole/fixed-challenge
-endpoints. Each group is standard-only. The fifteen selected canonical
-systematic-profile reports additionally expose the existing primality/root-order
-native certificates. The canonical native-distance/challenge leaf also passes
+endpoints. Each group was standard-only. The fifteen selected canonical
+systematic-profile reports additionally exposed the then-existing primality/root-order
+native certificates. The canonical native-distance/challenge leaf also passed
 its focused 3,432-job build and sixteen selected reports with existing native
-certificates. The existing-interface adapter passes 3,430 jobs and nine selected
+certificates. The existing-interface adapter passed 3,430 jobs and nine selected
 reports: four generic standard-only and five with existing native certificates.
 At the native-metric milestone, the expanded aggregate/integration union and
-literal default build pass **9,253/9,248 jobs**. The fresh consolidated public-facade probe passes for
+literal default build passed **9,253/9,248 jobs**. The consolidated public-facade probe passed for
 **139 distinct new declarations**, with sets exactly matching the individual
 reports: 100 use exactly the three standard logical axioms, three use a subset,
-and 36 retain only existing generated native certificates beyond them. None
-uses a cited-bound axiom or `sorryAx`. That milestone produced 97-page
+and 36 retained only the then-existing generated native certificates beyond them. None
+used a cited-bound axiom or `sorryAx`. That milestone produced 97-page
 Paper 1 and 28-page Paper 3 PDFs; all 125 overview pages and changed pages
 have been inspected. Final formatting/artifact details and current hashes are
 recorded centrally. No publication or Palomar protected preflight occurred.
@@ -71,7 +95,7 @@ full 7,530-job build, forty-endpoint audit and synchronized 24-page PDF checks
 passed. Earlier standalone results remain below with their original pin and
 counts; their `Lean.ofReduceBool`/`Lean.trustCompiler` names describe the
 historical native reports. These validation counts do not change the
-statement-coverage inventory or close Q08.
+statement-coverage inventory and did not close Q08 at that earlier checkpoint.
 
 Follow-up proofreading and progress review: **2026-11-04**. Paper 3 is this
 coding manuscript; Paper 2 is the protocol/commitment paper. The coding
@@ -295,7 +319,7 @@ their linked source owners; they are outside `ProximityPrize`.
 | O59 | Paired monomial received word and serialized capacity family | `Core.DeepHole.diagonalPowerPair`; `Storage.CanonicalThreeLevel.capacityIntegerWord`, `capacityPayload` | The **generic** scalar/pair/flattened distances equal `(n-k)/n` for `0<k<n`. The canonical original-payload specialization at `3/4` passes focused checks; the expanded aggregate and consolidated dependency checks pass; artifact details are centrally recorded. This is a modular edit-distance family, not a Euclidean Hodge radius. | INSTANCE |
 | O60 | Zero-direction and diagonal challenge profiles | `MCA.ZeroDirection`; `MCA.Diagonal` | **checked**: every challenge is good for zero direction. For a diagonal non-codeword, every noncancelling challenge is good; at nonnegative radius and positive length the bad set is exactly `{-1}`. These are restricted-line facts. | PROOF |
 | O61 | Capacity-far pair adapted to a fixed nonzero challenge | `Core.FixedChallenge.fixedCancellingLine`, `no_fixedChallenge_pair_far_preservation`, `no_fixedChallenge_flat_far_preservation` | **checked counterfamily**. Both native scalar-coordinate and pair distances remain at capacity, but the selected scalar evaluation is zero. General use requires challenge sampling after binding or a proved restricted line profile. | PROOF |
-| O62 | Canonical original-payload, observed-pair and challenge adapters | `Storage.CanonicalSystematic`; `Storage.CanonicalThreeLevel`; `Storage.CanonicalCalibration` | Focused builds pass. Fifteen systematic and sixteen native-profile selected reports retain existing native arithmetic; nine interface reports split four generic standard-only/five native. Actual payload identity and restricted fixed-mix facts are checked; authentication and a private-frame producer remain explicit. | APPLICATION |
+| O62 | Canonical original-payload, observed-pair and challenge adapters | `Storage.CanonicalSystematic`; `Storage.CanonicalThreeLevel`; `Storage.CanonicalCalibration` | Actual payload identity and restricted fixed-mix facts are checked. The canonical primality/root-order certificates now use kernel proofs with unchanged objects; the older 15/16/9-report native footprints are historical. Refreshed shared build/dependency checks pass under P289; authentication and a private-frame producer remain explicit. | APPLICATION |
 | O63 | Native far contract and scaled near contract | `Core.InterleavedMetric.flattenedPairCode_distance_comparison`; `Storage.ThreeLevel.three_native_distance_comparison` | **checked** `d_C≤d_P=D_RS≤2*d_C`. Source farness transfers with unit lower comparison. The existing near interface can use the explicit calibrated score `2*d_C`; this does not rename or renormalize the native scalar metric. | ADAPTER |
 | O64 | Raw native-far rejection versus accepted exact anchors | `Storage.Context`; `CanonicalSystematic.pairCodeword_of_accepted`; O55–O63 | Positive native farness excludes modular validity; under the declared systematic realization/decoder, accepted real-exact anchors have zero native distance. Raw far witnesses are rejection inputs, not accepted ledger anchors. Arbitrary HCP or policy predicates are not identified by this boundary. | APPLICATION |
 | O65 | Sharp factor-two native near comparison on the actual RS code | `Core.MetricSharpness.zeroDirectionPowerLine`, `zeroDirectionPowerLine_flatDistance_eq_half_capacity`, `no_unit_pair_distance_bound_by_flat_distance` | **checked explicit witness** `(deep hole,0)`: pair distance is `(n-k)/n` and scalar-coordinate distance is half, for `0<k<n`. The global native unit near bound is false; all four selected dependency reports are standard-only. | PROOF |
@@ -328,29 +352,29 @@ their linked source owners; they are outside `ProximityPrize`.
 | T09 | §6 exact operational spectrum criterion | [BlockCode.pairMCAErrorBoundAt_relativeRadius_invPow_iff_spectrum_budget](../../lean/Proximity/MCA/Threshold.lean#L250) | **exact** for arbitrary supplied finite block codes with the required nonempty field and positive length. It characterizes the target; it does not compute `B_C`. |
 | T10 | §6 matching upper bound / next bad line pins threshold | [BlockCode.pairMCAThreshold_eq_of_countBound_and_badLine](../../lean/Proximity/MCA/SpectrumCertificate.lean#L67) | **exact conditional certificate**. The uniform count proof and one over-budget line are supplied inputs; the generic API derives both endpoints. |
 | T11 | §6 `B_C(0)=1`, two-spike lower bound at `1` | [ReedSolomon.Parameters.worstBadCount_zero_eq_one](../../lean/Proximity/MCA/SmallRadius.lean#L360); [ReedSolomon.Parameters.exists_twoSpikeLine_bad_of_degreeBound_add_two_le](../../lean/Proximity/MCA/SmallRadius.lean#L332) | **exact**: `1≤k`, `k+1≤n` for the zero equality; `k+2≤n` for the two-spike construction. The generic construction supplies an explicit line lower bound, not an exact formula for `B_C(1)`. |
-| T12 | §6, `thm:mca-boundary-threshold`, grid portion | [MCA.BoundaryField.modulus_prime](../../lean/Proximity/MCA/BoundaryField.lean#L186); [MCA.BoundaryField.candidateRootUnit_order](../../lean/Proximity/MCA/BoundaryField.lean#L259); [MCA.BoundaryField.paperMCABadSpectrum_zero_eq_one](../../lean/Proximity/MCA/BoundaryField.lean#L372); [MCA.BoundaryField.two_le_paperMCABadSpectrum_one](../../lean/Proximity/MCA/BoundaryField.lean#L363); [MCA.BoundaryField.pairMCA_exact_128_bit_threshold](../../lean/Proximity/MCA/BoundaryField.lean#L381) | **exact**, including the actual field/domain and one-/two-challenge budget window. No supplied primality or generic source bridge is hidden here. |
+| T12 | §6, `thm:mca-boundary-threshold`, grid portion | [MCA.BoundaryField.modulus_prime](../../lean/Proximity/MCA/BoundaryField.lean#L278); [MCA.BoundaryField.candidateRootUnit_order](../../lean/Proximity/MCA/BoundaryField.lean#L355); [MCA.BoundaryField.paperMCABadSpectrum_zero_eq_one](../../lean/Proximity/MCA/BoundaryField.lean#L476); [MCA.BoundaryField.two_le_paperMCABadSpectrum_one](../../lean/Proximity/MCA/BoundaryField.lean#L467); [MCA.BoundaryField.pairMCA_exact_128_bit_threshold](../../lean/Proximity/MCA/BoundaryField.lean#L486) | **exact**, including the actual field/domain and one-/two-challenge budget window. No supplied primality or generic source bridge is hidden here. |
 | T13 | Same theorem, real set `[0,1/4096)` and unattained supremum | [MCA.BoundaryField.pairMCA_safeRelativeRadii_128_eq_Ico](../../lean/Proximity/MCA/RealThreshold.lean#L133); [pairMCA_real_128_threshold](../../lean/Proximity/MCA/RealThreshold.lean#L141); [BlockCode.largeAgreementSetAt_iff_count_of_mem_shell](../../lean/Proximity/MCA/RealThreshold.lean#L18) | **exact**. Real-shell constancy and relative-radius monotonicity transport the adjacent safe/unsafe count certificates. The real cut is excluded and no greatest real safe radius exists. |
 | T14 | §6 distance implication for a good challenge | [BlockCode.pairDistance_le_scalarDistance_of_good](../../lean/Proximity/Application/DistanceCalibration.lean#L101); [scalarDistance_ge_of_pairDistance_ge_of_good](../../lean/Proximity/Application/DistanceCalibration.lean#L126); [BlockCode.exists_nearest_codeword_relative](../../lean/Proximity/Core/Distance.lean#L114) | **exact generic standalone endpoint** for nonempty codes and positive length. Goodness and `D₁≤δ` give `D₂≤D₁`; the strict-nearness contrapositive proves `D₂≥δ → D₁≥δ`, including the non-strict boundary. The separate canonical transfer C04 is retained. |
 | T15 | §7 source-far implies target-far | [Application.SourceToCodeCalibration.sourceFar_implies_targetFar](../../lean/Proximity/Application/Calibration.lean#L116) | **exact** given `noncollapse`; **parameterized** for an independent application metric. The canonical public pullback calibration is already proved as C03, and its concrete scalar transfer uses C04. The generic standalone distance endpoint is T14; the selected native source is instantiated by T24–T34; a different upstream geometric score remains a separate theorem. |
-| T16 | §6 runtime-field aside `q=12289` has no safe count at 128 bits | [Hcrypt.Proximity.CanonicalRS.MCA.Spectrum.canonical_pairMCA_threshold_128](../../lean/Proximity/Concrete/CanonicalRS/MCA/Spectrum.lean#L83) | Separate **APPLICATION** result, outside `ProximityPrize`, checked by its own module import. The runtime field is unrelated to the standalone large-field and boundary-field instances. |
+| T16 | §6 runtime-field aside `q=12289` has no safe count at 128 bits | [Hcrypt.Proximity.CanonicalRS.MCA.Spectrum.canonical_pairMCA_threshold_128](../../lean/Proximity/Concrete/CanonicalRS/MCA/Spectrum.lean#L94) | Separate **APPLICATION** result, outside `ProximityPrize`, checked by its own module import. The runtime field is unrelated to the standalone large-field and boundary-field instances. |
 | T17 | §6 endpoint interpretation: scalar/pair covering and good-challenge equality | [ReedSolomon.Parameters.relativeDistanceToCode_le_capacity](../../lean/Proximity/Application/DistanceCalibration.lean#L203); [vector_relativeDistanceToCode_le_capacity](../../lean/Proximity/Application/DistanceCalibration.lean#L213); [scalarDistance_eq_capacity_of_pairFar_of_good](../../lean/Proximity/Application/DistanceCalibration.lean#L224) | **exact generic standalone endpoint**. Interpolation proves scalar/interleaved covering by `(n-k)/n`; pair farness and a good endpoint challenge force scalar distance equal to that endpoint. No stronger beyond-capacity farness or independently chosen source comparison is asserted. |
 | T18 | §§4,6 ordered-certificate count equals `(k+1) choose(n,k+1)` | `Nat.choose_succ_right_eq` (Mathlib); [ReedSolomon.Parameters.card_certificate](../../lean/Proximity/MCA/Pair.lean#L635); [ReedSolomon.Parameters.card_compressedCertificate](../../lean/Proximity/MCA/Pair.lean#L660) | **exact** combinatorial identity, used in the compressed family budget proof. This compares certificate-space cardinalities, not the numbers of certificates selected for a particular line. |
 | T19 | §§3,6 the finite error fraction is for a pair fixed before the challenge | [BlockCode.PairMCAErrorBoundAt](../../lean/Proximity/MCA/Definitions.lean#L249) | **exact quantifier order**. A uniform bound for each fixed line does not quantify over a line selected after observing the challenge. A PMF model, adversarial transcript, or cryptographic binding theorem would be separate work outside this target. |
 | T20 | §7 actual coding-distance model, pullback and composition | [BlockCode.toCodeDistanceModel](../../lean/Proximity/Application/DistanceCalibration.lean#L244); [toSourceValidityModel](../../lean/Proximity/Application/DistanceCalibration.lean#L250); [distanceCalibration](../../lean/Proximity/Application/DistanceCalibration.lean#L259); [Application.SourceToSourceCalibration.transCode](../../lean/Proximity/Application/Calibration.lean#L161) | **exact** generic coding identification and existing pullback/composition. The model uses the actual codeword locus and attained relative Hamming minimum; intended nearest-distance semantics require a nonempty code. The selected systematic native source is instantiated in T24–T34; a different upstream source metric retains its own comparison obligation. |
 | T21 | §7 full-point Plucker recovery and operative target | [Reconstruction](../../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean); [PluckerObservation](../../lean/TCB/PluckerObservation.lean) | **checked generic proof**, standard-only reports. Genuine frames and the operative-kernel identification remain explicit; raw quotient validity, finite encodings and digest-only privacy are not inferred. |
 | T22 | §7 canonical-lift obstruction | [CanonicalLift](../../lean/Proximity/Core/CanonicalLift.lean); [CanonicalLiftObstruction](../../lean/Sheaf/CanonicalLiftObstruction.lean) | **checked**, thirteen standard-only reports. For `k≥2`, no global zero-defect scaled comparison exists for a real-linear decoder with a nonexact image. This does not rule out restricted no-wrap profiles or additive-defect/individual-threshold results. |
-| T23 | §7 explicit complete decoder and coarse Euclidean no-wrap transfer | [CoordinateCodec](../../lean/Protocol/Storage/CoordinateCodec.lean); [NoWrapCalibration](../../lean/Protocol/Storage/NoWrapCalibration.lean); [SystematicCode](../../lean/Sheaf/SystematicCode.lean) | **checked generic criterion/realization**; fifteen selected canonical systematic reports retain existing native arithmetic trust. Bound actual integer syndromes, identify the actual source exact subspace, and retain the decoder equality. The certified nonempty-region target radius is at most `1/n`. |
+| T23 | §7 explicit complete decoder and coarse Euclidean no-wrap transfer | [CoordinateCodec](../../lean/Protocol/Storage/CoordinateCodec.lean); [NoWrapCalibration](../../lean/Protocol/Storage/NoWrapCalibration.lean); [SystematicCode](../../lean/Sheaf/SystematicCode.lean) | **checked generic criterion/realization**. Canonical arithmetic now uses kernel proofs; the fifteen-report native-dependent audit is a dated baseline, with refreshed shared checks passing under P289. Bound actual integer syndromes, identify the actual source exact subspace, and retain the decoder equality. The certified nonempty-region target radius is at most `1/n`. |
 | T24 | §7 actual modular cellular validity iff RS vector-code validity | [Modular](../../lean/Sheaf/SystematicCode/Modular.lean), `modularExact_iff_vectorCodeword` | **checked**, eight standard-only reports. The source definition is actual `delta0` of an integer opening plus `q`-carry; positivity of degree and information-set size are explicit. No no-wrap condition or real-acceptance equivalence is assumed. |
 | T25 | §7 `d_C≤d_P=D_RS≤2*d_C`, plus scalar field transport | [InterleavedMetric](../../lean/Proximity/Core/InterleavedMetric.lean); [ThreeLevelMetrics](../../lean/Protocol/Storage/ThreeLevelMetrics.lean) | **checked generic bridge**, included in the root/native probes. Actual valid-locus compatibility and explicit matching lifts establish equality for all integer representatives. Scalar and pair normalizations remain `2n` and `n`. |
 | T26 | §7 nonempty native capacity-far family | [DeepHole](../../lean/Proximity/Core/DeepHole.lean); [CanonicalThreeLevel](../../lean/Protocol/Storage/CanonicalThreeLevel.lean) | Generic monomial/diagonal/flattened distances **checked** at `(n-k)/n`; native-chain probe is standard-only. Actual canonical serialization and the `3/4` adapter pass focused checks; expanded aggregate/artifact validation remains separate. No full-HCP or Euclidean capacity claim follows. |
 | T27 | §7 zero direction gives exact scalar/pair distance and all challenges good | [ZeroDirection](../../lean/Proximity/MCA/ZeroDirection.lean) | **checked**, eleven standard-only reports. The code need only contain zero; every count/real radius is allowed. This is a line-profile theorem, not a uniform result for arbitrary pairs. |
 | T28 | §7 diagonal noncancelling goodness and exact bad fraction | [Diagonal](../../lean/Proximity/MCA/Diagonal.lean) | **checked**, eleven standard-only reports. Goodness needs `1+gamma≠0`. Singleton bad set and fraction `1/card F` additionally require a non-codeword base, positive length and nonnegative real radius. Canonical fixed-mix specialization is tracked in T30. |
 | T29 | §7 failure of global fixed-mix scalar far preservation | [FixedChallenge](../../lean/Proximity/Core/FixedChallenge.lean) | **checked**, within the eleven-endpoint native-chain report. A pair `(u,-gamma0^-1*u)` is capacity-far in both native metrics and evaluates to zero at the fixed nonzero challenge. Pair-before-sampling or an authenticated restricted line profile is essential. |
-| T30 | §7 canonical original-payload/observation and fixed-mix adapter | [CanonicalThreeLevel](../../lean/Protocol/Storage/CanonicalThreeLevel.lean) | **Focused build and sixteen selected audits pass**, retaining existing canonical native certificates. The original payload has all three native distances `3/4`; artifact joins, accepted-to-native-zero, raw-far rejection and diagonal canonical-mix goodness use the actual root certificate. Expanded aggregate and consolidated dependency checks pass; artifact details are centrally recorded. |
+| T30 | §7 canonical original-payload/observation and fixed-mix adapter | [CanonicalThreeLevel](../../lean/Protocol/Storage/CanonicalThreeLevel.lean) | The original payload has all three native distances `3/4`; artifact joins, accepted-to-native-zero, raw-far rejection and diagonal canonical-mix goodness use the unchanged root object. Its arithmetic certificate now uses kernel proofs. The earlier focused build and sixteen native-dependent audits are preserved baselines; refreshed shared aggregate/dependency checks pass under P289. |
 | T31 | §7 explicit near versus far comparison direction | [ThreeLevelMetrics](../../lean/Protocol/Storage/ThreeLevelMetrics.lean), `three_native_distance_comparison` | **checked generic contract**: native source far implies pair far at the same radius; the existing unit near API can consume `2*d_C`. A global native near inequality `d_P≤d_C` is not asserted. |
 | T32 | §7 raw far inputs and accepted-context boundary | [Context](../../lean/Protocol/Storage/Context.lean); [CanonicalSystematic](../../lean/Protocol/Storage/CanonicalSystematic.lean) | Positive Euclidean farness rejects real exact acceptance; positive native modular farness rejects the modular source valid locus. In the declared systematic ordering and explicit stored-decoder equality, real accepted anchors also have zero native distance. These statements do not equate the two validity predicates globally. |
 | T33 | §7 sharpness of the factor-two near contract | [MetricSharpness](../../lean/Proximity/Core/MetricSharpness.lean) | Actual RS witness `(power word,0)` has pair distance exactly twice native scalar-coordinate distance, and refutes a global unit near bound when `0<k<n`. Focused proof build and all four selected standard-only dependency reports pass. |
-| T34 | §7 existing application interfaces on the original context | [CanonicalCalibration](../../lean/Protocol/Storage/CanonicalCalibration.lean) | **Focused build and nine selected reports pass**: four generic standard-only and five concrete native-dependent. Composed far calibration reads the actual original pair; the existing near API consumes the explicit `2*d_C` budget. No source-to-target distance inequality is supplied as a premise. |
+| T34 | §7 existing application interfaces on the original context | [CanonicalCalibration](../../lean/Protocol/Storage/CanonicalCalibration.lean) | Composed far calibration reads the actual original pair; the existing near API consumes the explicit `2*d_C` budget. No source-to-target distance inequality is supplied as a premise. The prior nine reports (four generic standard-only/five concrete native-dependent) are historical; canonical arithmetic now uses kernel proofs, with refreshed shared dependency checks passing under P289. |
 
 ### Concrete application proofs and dependencies outside `ProximityPrize`
 
@@ -359,7 +383,7 @@ shared storage/math boundary. The former 25-module standalone inventory is a
 baseline; eight new generic modules extend its current closure to 33 without
 importing concrete sheaf/storage objects or cited-bound axioms. The nine named
 generic coding statements retain their original count. C01–C11 preserve the
-earlier application facts and supplied-input boundaries; C12–C17 record the
+earlier application facts and supplied-input boundaries; C12–C18 record the
 new profile. Focused builds/axiom probes and final aggregate/artifact checks
 remain separate. A composition with supplied fields does not construct a
 profile or security theorem merely by importing it. The
@@ -381,11 +405,11 @@ object walkthrough and guardrails.
 | C11 | [Full-HCP exact-view obstruction](../../lean/Sheaf/ObservationQuotient.lean) | Assuming a nonzero coexact direction, the existing unrestricted Hodge-sample carrier contains a ray with constant zero exact component and unbounded actual kernel-normalized Laplacian residual. An exact-component-only map whose zero image has distance zero cannot preserve a positive far region on that carrier. | A map must be proved to factor through that exact component before applying this obstruction to an actual extraction. Equal decoded components alone do not imply equal wire payloads/pairs. Authenticated, quotient-aware or noise-bounded profiles require their own analysis. |
 | C12 | [Actual systematic sheaf](../../lean/Sheaf/SystematicCode.lean); [modular coboundary bridge](../../lean/Sheaf/SystematicCode/Modular.lean) | The real generator is derived from actual restriction maps; modular source validity is actual integral `delta0` plus coordinatewise `q`-carry, and is proved equivalent to RS vector-code validity. | Prime field, declared information set and complete coordinate profile are explicit. Real exactness/Accepted, full-HCP residual and a production geometry are not identified with modular validity. |
 | C13 | [Complete coordinate codec](../../lean/Protocol/Storage/CoordinateCodec.lean); [native three-level metrics](../../lean/Protocol/Storage/ThreeLevelMetrics.lean) | The original payload supplies every scalar/plane coordinate. Independently defined distances satisfy `d_C≤d_P=D_RS≤2*d_C`; separate whole-pair and scalar representative lifts establish all-integer and flattened field equality. The 27-declaration root probe is standard-only. | Actual interpretation/decoder and snapshot binding remain profile conditions. These proofs do not implement parsing, bytes, roots, cryptographic binding or a unit near inequality for unscaled `d_C`. |
-| C14 | [Geometric reflection criterion](../../lean/Protocol/Storage/DistanceReflection.lean); [no-wrap calibration](../../lean/Protocol/Storage/NoWrapCalibration.lean); [canonical model](../../lean/Protocol/Storage/CanonicalSystematic.lean) | A bounded full decoder and integer-syndrome no-wrap reflect validity and prove the independent Euclidean comparison. A raw unit-error payload gives positive decoded distance. Fifteen selected canonical reports retain existing arithmetic certificates. | The bound is first-shell coarse, not Euclidean capacity/Johnson scale. Positive far inputs cannot already be accepted real-exact anchors. The constructed code-adapted sheaf is a declared application profile. |
+| C14 | [Geometric reflection criterion](../../lean/Protocol/Storage/DistanceReflection.lean); [no-wrap calibration](../../lean/Protocol/Storage/NoWrapCalibration.lean); [canonical model](../../lean/Protocol/Storage/CanonicalSystematic.lean) | A bounded full decoder and integer-syndrome no-wrap reflect validity and prove the independent Euclidean comparison. A raw unit-error payload gives positive decoded distance. Canonical arithmetic now uses kernel proofs; the fifteen-report native audit is historical and refreshed shared checks pass under P289. | The bound is first-shell coarse, not Euclidean capacity/Johnson scale. Positive far inputs cannot already be accepted real-exact anchors. The constructed code-adapted sheaf is a declared application profile. |
 | C15 | [Canonical span obstruction](../../lean/Sheaf/CanonicalLiftObstruction.lean); [Plucker reconstruction](../../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean); [operative target](../../lean/TCB/PluckerObservation.lean) | Checked span/no-global-zero-defect comparison and full-point subspace/projector/operative-target recovery under its stated kernel identification. All selected generic reports are standard-only. | Full exact-real data, digest-only observations, integer serializers and efficient algorithms are different claim surfaces. Neither result proves a new secure encryption scheme. |
 | C16 | [Native capacity family](../../lean/Proximity/Core/DeepHole.lean); [challenge facts](../../lean/Proximity/MCA/Diagonal.lean); [fixed-mix obstruction](../../lean/Proximity/Core/FixedChallenge.lean) | Monomial pairs are capacity-far in scalar/pair/flattened metrics; diagonal noncancelling challenges are good with exact singleton bad set; arbitrary fixed nonzero mixes admit capacity-far cancellation. Focused generic probes are standard-only. | A sampled challenge must follow pair binding, or the actual line profile must carry its goodness proof. These facts do not construct a transcript-level cryptographic game. |
-| C17 | [Canonical native payload/observed-pair adapter](../../lean/Protocol/Storage/CanonicalThreeLevel.lean) | The same serialized payload, native distances and monomial family specialize to `q=12289,n=4096,k=1024`; all three native distances equal `3/4`. The accepted-zero/raw-far rejection boundary, actual observed artifact and stated canonical diagonal mix are checked. | Focused 3,432-job build and sixteen selected native-dependent reports pass. Expanded aggregate/artifact checks remain separate; authentication, an arbitrary hidden-Hodge identification and runtime refinement are not supplied. |
-| C18 | [Existing-interface composition](../../lean/Protocol/Storage/CanonicalCalibration.lean) | Raw original contexts, intrinsic modular validity, native plane/RS models, `SourceToSourceCalibration`/`transCode` and the factor-two `EvaluationProjection` are constructed from proved comparisons. | Focused 3,430-job build and nine selected reports pass (four generic standard-only/five existing-native). This does not construct a public/private-frame producer, authenticated transcript or runtime implementation. |
+| C17 | [Canonical native payload/observed-pair adapter](../../lean/Protocol/Storage/CanonicalThreeLevel.lean) | The same serialized payload, native distances and monomial family specialize to `q=12289,n=4096,k=1024`; all three native distances equal `3/4`. The accepted-zero/raw-far rejection boundary, actual observed artifact and stated canonical diagonal mix are checked. | Canonical primality/root order now use kernel proofs with unchanged field/root/domain objects. The 3,432-job build and sixteen native-dependent reports are historical; refreshed shared aggregate/dependency checks pass under P289. Authentication, an arbitrary hidden-Hodge identification and runtime refinement are not supplied. |
+| C18 | [Existing-interface composition](../../lean/Protocol/Storage/CanonicalCalibration.lean) | Raw original contexts, intrinsic modular validity, native plane/RS models, `SourceToSourceCalibration`/`transCode` and the factor-two `EvaluationProjection` are constructed from proved comparisons. | Canonical arithmetic now uses kernel proofs; the 3,430-job build and nine reports (four generic standard-only/five existing-native) are dated baselines, with refreshed shared checks passing under P289. This does not construct a public/private-frame producer, authenticated transcript or runtime implementation. |
 
 In particular, an omitted coordinate can change an all-cochain source score
 without changing the extracted pair. Canonical pair reduction also does not
@@ -405,15 +429,15 @@ maintenance; R means new mathematical work beyond the current closed results.
 
 | ID | Priority | Work | Completion criterion | Current state |
 |---|---|---|---|---|
-| Q01 | P0 | Maintain one object/claim register and link it from the paper and Lean entry points. | Preserve O01–O40/T01–T20; retain prior O41–O50/C01–C11; append new-profile O51–O66/T21–T34/C12–C18. The current standalone closure has 33 modules; the former 25 is historical. | Current source inventory, expanded aggregate and consolidated public-facade reports agree; manuscript/artifact details remain centrally recorded. |
+| Q01 | P0 | Maintain one object/claim register and link it from the paper and Lean entry points. | Preserve O01–O40/T01–T20; retain prior O41–O50/C01–C11; append new-profile O51–O66/T21–T34/C12–C18. The current standalone closure has 33 modules; the former 25 is historical. | Object IDs and declaration owners are preserved through the arithmetic replacements. Fresh source/aggregate/public-facade status is tracked under Q09; manuscript/artifact details remain centrally recorded. |
 | Q02 | P0 | Keep universal coding, selected commitment application and Paper 2 protocol dependencies explicit. | Shared ownership rows S01--S11 in `../../SEMANTIC-PARITY.md` identify owners; §7's bounded profile is required for the selected application, while complete Paper 2 is not. Keep the three field instances distinct. | Ownership boundary reconciled with the 2026-11-04 user-selected actual commitment-projection target. |
-| Q03 | P0 | Keep the compact TeX ledger aligned with the actual theorem surface. | Distinguish the nine original coding statements, new §7 modular/native results, restricted Euclidean criterion, obstructions and conditional canonical inputs. | New source claims are inventoried in T21–T34; the previous 24-page PDF is a preserved baseline. The expanded 28-page source build is recorded separately; current page/formatting QA and review-artifact details are recorded centrally. |
+| Q03 | P0 | Keep the compact TeX ledger aligned with the actual theorem surface. | Distinguish the nine original coding statements, new §7 modular/native results, restricted Euclidean criterion, obstructions and conditional canonical inputs. | Source claims are inventoried in T21–T34 and the selected submission statement map. The reviewed Paper 3 PDF is 30 pages; the 24/28-page artifacts are preserved baselines. Current formatting QA and review-artifact details are recorded centrally. |
 | Q04 | P1 | Construct the full smooth large-field family in Lean. | For every u, produce the field of size `3^(length u)`, prove `length u ∣ q-1`, construct an order-length subgroup domain and instantiate list/MCA results. | **Complete.** `Capacity/Realization.lean`: `card_RSField`, `length_dvd_fieldCard_sub_one`, `rootUnit_order`, `evaluationDomain`, realized list/MCA endpoints. Actual module build passes; no realization hypothesis remains. |
 | Q05 | P1 | Package the complete list phase split. | All three regimes, greatest safe count `n-k`, first unsafe count `n-k+1`, real safe interval and nonattained supremum. | **Complete.** `ListDecoding/PhaseSplit.lean` phase/grid/real theorems and `Core/RadiusShell.lean` pass. `Capacity/ListPhase.lean` instantiates all endpoints for the constructed family and passes. |
 | Q06 | P1 | Package the boundary-field real safe set. | Exact `[0,1/4096)`, its supremum, exclusion and no maximum, using reusable real/count shells. | **Complete.** `MCA/RealThreshold.lean`: `pairMCA_safeRelativeRadii_128_eq_Ico`, `pairMCA_real_128_threshold` and generic same-shell transport; actual module build passes. |
 | Q07 | P1 | Package the generic standalone distance interpretation. | Attained scalar/pair minima identified with `CloseAt` and the neutral interface; covering, good-challenge farness and endpoint equality with correct strictness. | **Complete.** `Core/Distance.lean` and `Application/DistanceCalibration.lean` export the minimum/witness/model/covering/transfer endpoints and pass. Concrete C02–C04 remain separate retained results. |
-| Q08 | P0/R | Complete the selected native commitment profile and its canonical closure. | Retain actual integral modular coboundaries, complete original-payload extraction, native scalar/pair/RS metrics, a nonempty capacity-far family and the declared sampled/restricted challenge profile. Keep Euclidean/frame/full-HCP scores separate. | **Complete for the declared native modular profile:** generic actual-coboundary validity, `d_C≤d_P=D_RS≤2*d_C`, sharp factor-two near bound, serialized canonical capacity family, observed-artifact/existing-interface adapters and restricted challenge theorems all pass the expanded aggregate and consolidated audit. This does not prove a capacity-scale Euclidean/full-HCP comparison or a global fixed-mix guarantee. Authentication/private-frame producers, runtime/security and artifact maintenance remain separate. |
-| Q09 | P2 | Keep validation reproducible. | Preserve exact pins, dated baselines, source/aggregate/public-facade checks and current manuscript/artifact QA. | The [central validation record](../../docs/MATH_STORAGE_VALIDATION.md) owns current shared build/dependency/source counts; the standalone coding closure remains 33 modules. Papers 1/3 now have reviewed 101/30-page PDFs; P285 records the summary/source-comparison alignment. The 2026-11-06 one-shot integrity milestone passed 9,278/9,271 jobs and 605 selected reports; the 9,253/9,248-job, 139-report and 97/28-page figures below remain native-metric baselines. Publication and Palomar preflight are separate. |
+| Q08 | P0/R | Complete the selected native commitment profile and its canonical closure. | Retain actual integral modular coboundaries, complete original-payload extraction, native scalar/pair/RS metrics, a nonempty capacity-far family and the declared sampled/restricted challenge profile. Keep Euclidean/frame/full-HCP scores separate. | **Complete for the declared native modular profile:** generic actual-coboundary validity, `d_C≤d_P=D_RS≤2*d_C`, sharp factor-two near bound, serialized canonical capacity family, observed-artifact/existing-interface adapters and restricted challenge theorems are proved and passed the earlier expanded aggregate/consolidated audit. Fresh arithmetic revalidation passes under P289/Q09. This does not prove a capacity-scale Euclidean/full-HCP comparison or a global fixed-mix guarantee. Authentication/private-frame producers, runtime/security and artifact maintenance remain separate. |
+| Q09 | P2 | Keep validation reproducible. | Preserve exact pins, dated baselines, source/aggregate/public-facade checks and current manuscript/artifact QA. | [P289 current validation](../../docs/MATH_STORAGE_VALIDATION.md#selected-statements-and-kernel-arithmetic--2026-11-08) passes full/default builds at **9,292/9,285 jobs** and **900 standard-only reports**: 724 exact-three / 176 proper subsets, including 106 axiom-free. All 806 old standard sets are unchanged; 49 old native reports are now standard-only. The 45 new reports complete the 70-owner/22-group cross-paper selection. Static coverage is 273 modules / 274 Lean files, seven changed / 266 hashes unchanged, no active holes/native calls/cycles/unresolved imports, and 48 unchanged scoped import closures. The standalone closure remains 33 modules; reviewed Papers 1/3 PDFs are 101/30 pages. P285 and earlier native-metric milestones remain historical. Wrappers, publication and protected Palomar comparison remain separate. |
 | Q10 | R | Solve optimal list radius in the intermediate field-size regime. | Matching sub-endpoint bounds for a supplied code when `1≤2^-128 q<choose(n,k)`. | Open mathematics; not a wrapper or build task. |
 | Q11 | R | Locate further code-specific MCA transitions. | Prove matching in-budget bounds and over-budget lines beyond the current small-radius example, or determine `B_C(r)` more generally. | Open mathematics; the generic exact-budget API alone does not supply these bounds. |
 | Q12 | R | Broaden the experiment if desired. | Separate statements/proofs for higher-dimensional challenge families or a different agreement notion. | Outside current pair/same-set scope. |
@@ -452,7 +476,9 @@ review.
 | P3-13 | Abstract/introduction called the commitment-specific comparison unfinished although Q08 was proved. | **Resolved 2026-11-08:** both summaries now state the intrinsic modular result, actual raw canonical capacity payload, metric scales and separate field/Euclidean/full-HCP scope. |
 | P3-14 | Generic source score was restricted to `[0,1]` before introducing an unbounded Euclidean example. | **Corrected:** §7 uses nonnegative real source scores; the native edit distances keep their normalized ranges. |
 | P3-15 | Literature/source comparison needed an explicit relation and bounded contribution account. | **Integrated:** Keti–Wan citation; BCHKS/DKT regimes; BCGM background; own-older-count `k+1` saving; actual modular δ-image/paired-RS relation versus coordinate/linear output authentication and constrained RS. No primitive, priority, security or cost superiority is claimed. |
-| P3-16 | Sharp near factor and canonical application trust were absent from the visible §8 ledger. | **Aligned:** §7 gives `(u,0)` as the factor-two witness, and §8 lists MetricSharpness plus intrinsic modular/original-payload results. Generic comparisons are standard-only; canonical12289 application adapters retain existing native certificates, separately from boundary-field arithmetic. |
+| P3-16 | Sharp near factor and canonical application trust were absent from the visible §8 ledger. | **Aligned:** §7 gives `(u,0)` as the factor-two witness, and §8 lists MetricSharpness plus intrinsic modular/original-payload results. The earlier canonical12289/boundary native footprints are dated baselines; P3-17 records their replacement. |
+| P3-17 | Concrete primality, root-order and numerical proofs introduced native-evaluation trust into otherwise generic results. | **Kernel replacement validated, P289:** both field moduli, generators, roots, domains and existing theorem statements are preserved, and no source call to `native_decide` remains. Full/default builds pass 9,292/9,285 jobs; all 900 selected reports are standard-only (724 exact-three / 176 subsets, including 106 axiom-free). All 49 previously native-dependent reports are now standard-only; prior native-report counts remain historical. |
+| P3-18 | Submission selection could reduce the manuscript to supporting lemmas or omit the bounded application. | **Mapped and checked:** the [selected manuscript statement surface](../../docs/PALOMAR_SUBMISSION_PLAN.md#selected-manuscript-statement-surface--2026-11-08) covers P3-S01–S09, the separate spectrum/distance account P3-B01 and modular application/boundaries P3-A01–A04. The cross-paper selection has 22 groups / 70 owners; 45 added reports complete its coverage within the passing 900-report probe. Complete claims, explicit hypotheses and the three distinct fields are retained; no wrapper declarations, protected comparison or submission are created by this map. |
 
 
 All nine named generic coding statements now have formal endpoints, with
@@ -478,17 +504,17 @@ quantifiers.
 
 ## Verification record
 
-### Current application follow-up: 2026-11-05
+### Preserved native-metric application follow-up: 2026-11-05
 
 This subsection preserves the 2026-11-05 native-metric validation milestone.
 Its counts and PDF sizes are historical; the current record is linked above.
 The generic native source theorems and the older coding results have distinct
-validation records. The following focused groups pass; their endpoint
+validation records. The following focused groups passed; their endpoint
 lists and actual reports are retained in the central validation artifacts.
 “Standard-only” permits a subset of `propext`, `Classical.choice`, `Quot.sound`;
 it does not claim primitive security or discharge explicit profile arguments.
 
-| Focused group | Distinct selected reports | Current trust/status |
+| Focused group | Distinct selected reports | Trust/status at this milestone |
 |---|---:|---|
 | Root distance reflection, complete codec, no-wrap criterion, native three-level and operative-target adapters | 27 | Exactly the three standard logical axioms; includes the separate scalar representative-lifting/flat-distance theorem. |
 | Intrinsic modular cellular coboundary | 8 | Exactly the three standard logical axioms. |
@@ -502,9 +528,9 @@ it does not claim primitive security or discharge explicit profile arguments.
 | Canonical native-distance/original-observation/fixed-mix leaf | 16 | Focused 3,432-job build passes; all sixteen selected reports retain existing native arithmetic certificates. |
 | Existing source/plane/RS calibration and near API | 9 | Focused 3,430-job build passes: four generic standard-only/five concrete with existing native arithmetic. |
 | Native near-factor sharpness on actual RS code | 4 | Focused proof build and all four standard-only selected reports pass. |
-| Expanded full aggregate/integration union | 9,253 jobs | Passed on the frozen current sources, including all defaults and the explicit integration/native adapters. |
+| Expanded full aggregate/integration union | 9,253 jobs | Passed on that milestone's frozen sources, including all defaults and the explicit integration/native adapters. |
 | Consolidated public-facade dependency probe | 139 | Passed, with every set matching its individual report: 103 standard-only (100 exact-three/three subsets), 36 only existing native certificates, no cited-bound axioms or `sorryAx`. |
-| Expanded manuscript/PDF/review artifact | Current 97/28 pages | All 125 overview pages and changed pages inspected; final formatting/artifact details and current hashes are centrally recorded. Earlier 95/24-page PDFs remain dated baselines. |
+| Expanded manuscript/PDF/review artifact | 97/28 pages at this milestone | All 125 overview pages and changed pages were inspected; final formatting/artifact details and current hashes are centrally recorded. Earlier 95/24-page PDFs remain dated baselines. |
 
 At that milestone the static source audit covers 235 Lean files: 234 source modules and
 one Lake configuration. All source modules use the public module interface;
@@ -701,8 +727,10 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 
 For theorem trust, import `ProximityPrize` in a scratch Lean file and run
 `#print axioms` on the declarations in T02–T12. Check the boundary-field
-primality/root-order proofs as well as the abstract counting theorems; native
-arithmetic can have a different dependency footprint from those theorems.
+primality/root-order proofs as well as the abstract counting theorems. The
+canonical `q=12289` application needs its separate concrete import and reports.
+The 2026-11-08 source replacements remove native arithmetic calls; exact
+refreshed dependency results belong in the central validation record.
 
 Before changing a status to **exact**, compare hypotheses, whole-symbol
 distance, same-set quantifiers, radius strictness, and ambient word coverage.

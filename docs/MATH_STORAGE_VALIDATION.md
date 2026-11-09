@@ -9,7 +9,180 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Selected statements and kernel arithmetic — 2026-11-08
+
+The [submission statement table](PALOMAR_SUBMISSION_PLAN.md#selected-manuscript-statement-surface--2026-11-08)
+is derived from the manuscripts' existing named propositions and theorems.
+Paper 1 foregrounds the discrete CVP comparison, actual cellular recovery and
+kernel ambiguity, including the distinct soundness/exact-on-harmonics and
+direct-operative-target oracle contracts. Paper 3 retains its nine original
+coding groups, spectrum/distance interpretation and separately scoped modular
+application. The table has **22 statement groups / 70 proof or object owners**;
+these are coverage counts, not claims of 70 new research theorems. Independent
+Challenge/Solution files, metadata and protected comparison remain future work.
+
+### Mathematics and arithmetic trust
+
+`Hodge_Decomposition_unique` now proves the manuscript's componentwise
+uniqueness from the actual complex equation and harmonic/exact/coexact
+membership. The old existence/orthogonality theorem API is preserved. It does
+not assume pairwise orthogonality or uniqueness of the degree-zero/degree-two
+openings; the cochain components are unique. This repairs D43 rather than
+weakening the manuscript proposition.
+
+The boundary-field Lucas/Pratt proof uses five additional private small-prime
+certificates, kernel numeral arithmetic and binary modular-exponentiation
+proof terms. The canonical `12289` primality, unit/root/order and numerical
+target/spectrum certificates likewise use kernel proofs. All **159
+pre-existing public declaration headers** across the seven changed Lean files
+are unchanged, including all **33** old BoundaryField headers. The field,
+root, domain, projection and metric objects are retained. The only new public
+declaration is the Hodge uniqueness companion; no replacement result is
+hidden in a new premise. No active `native_decide` call remains in the source.
+
+### Current checks and preserved baseline
+
+The expanded union and literal default builds pass **9,292/9,285 jobs** on
+Lean/Mathlib 4.35.0. The fresh combined probe passes **900 declaration reports**:
+**724 exact-standard-three** and **176 proper subsets** (including **106
+axiom-free**); every report uses only `propext`, `Classical.choice` and
+`Quot.sound`. There are **zero** native, cited-bound or `sorryAx` dependencies
+in this selection.
+
+All **806** previously standard-only dependency sets match exactly. The **49**
+previously native-dependent reports are now standard-only. The **45** added
+reports complete the 70-owner statement selection, including the boundary
+instance and new uniqueness companion; the preceding 855-report inventory is
+retained in full. Old generated native-certificate reports are preserved as
+historical evidence and are not the trust footprint of the current proofs.
+A separate 37-report boundary probe also passes (28 exact-three/nine subsets,
+five axiom-free). The interrupted, incomplete 20-name arithmetic probe is not
+counted as successful evidence; its relevant proof dependencies are checked
+through the completed combined audit.
+
+Static coverage remains **273 public modules / 274 Lean files**. Exactly
+**seven** Lean modules changed; the other **266** source hashes match P283.
+There are no active holes, import cycles or unresolved local imports, and the
+same **seven** custom literature axioms remain isolated in `CitedBounds`.
+All **48** scoped import closures, their counts and exclusions of `Chain` and
+`CitedBounds` match the preceding source audit; `ProximityPrize` remains 33
+modules. The largest public source has **1118 physical lines**.
+This source/import check is separate from compilation and theorem dependencies.
+
+Paper 3's §8 now describes the kernel arithmetic trust boundary. The **30-page**
+PDF compiles without undefined references/citations, missing glyphs or overfull
+boxes; one underfull diagnostic remains. Changed/reflowed pages **27--30**
+were rendered and visually checked. Canonical and stable review copies match.
+Current Paper 3 SHA-256: `68664a349e191df068dd6ba92ba5f94fbcfe728dc843c967d679dcd08920da7e`.
+Paper 1's **101-page** PDF remains byte-for-byte unchanged at
+`7a9feb8ad8dd080ddeb06fad4d82c3c06188571ae7411c12d2a1d75f302f1123`;
+its mathematical proposition is unchanged and now has the additional Lean
+uniqueness proof. The unrelated pre-existing Rust storage edit is preserved.
+Seven source line anchors were refreshed without changing object IDs.
+
+Local evidence under `output/validation/`:
+`submission-{full,default,tex}-build.log`,
+`submission-{all,selected,boundary}-axioms.lean`,
+`submission-{all,boundary}-axioms.log`, `submission-axiom-summary.json`,
+`submission-selected-statements.json`, `submission-public-api-validation.json`,
+`submission-source-audit{,-summary}.json`, `submission-validation.json`,
+and changed PDF pages under `submission-render/`.
+
+Reproduce the selected-owner probe from `lean/` after building the current
+full/default roots and explicit integration targets listed in this guide:
+
+```sh
+cat > /tmp/submission-selected-axioms.lean <<'LEAN'
+import Hardness
+import HCP.AxisFamily
+import Sheaf.CoefficientRecovery
+import Sheaf.ObservationQuotient
+import TCB.PluckerObservation
+import ProximityPrize
+import Protocol.Storage.CanonicalCalibration
+import Protocol.Storage.CanonicalThreeLevel
+import Proximity.Concrete.CanonicalRS.MCA.Spectrum
+
+#print axioms Hodge_Decomposition_Theorem
+#print axioms Hodge_Decomposition_unique
+#print axioms Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.harmonicOneProjection_observed
+#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt
+#print axioms exists_matrix_ker_eq_range
+#print axioms Hodge_GeneratedSubspace_Reduction_Proof
+#print axioms HarmonicCVPBridge.squaredDistance_projection_decomposition
+#print axioms HarmonicCVPBridge.solution_iff_projectedTarget
+#print axioms concreteSheafHCP_CVP_solution_iff_message
+#print axioms concreteSheafHCP_CVP_existsUnique
+#print axioms Hcrypt.HCPBridge.operativeTargets_ne_of_kernelSeparation
+#print axioms Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation
+#print axioms Hcrypt.HCPBridge.cvpOracle_insufficient_for_operativeTarget
+#print axioms Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets
+#print axioms Hcrypt.HCP.AxisFamily.cvp_oracle_insufficient
+#print axioms Hcrypt.HCP.AxisFamily.weighted_public_observations_eq
+#print axioms Hcrypt.HCP.AxisFamily.no_exact_encoded_message_decoder
+#print axioms Hcrypt.HCP.AxisFamily.weighted_cvp_solution_iff_operativeTarget
+#print axioms Hcrypt.HCP.AxisFamily.weighted_cvp_existsUnique
+#print axioms Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent
+#print axioms Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent
+#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame
+#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame
+#print axioms Hcrypt.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent
+#print axioms ProximityPrize.planePairEquiv
+#print axioms ProximityPrize.planePairEquiv_hammingDistance
+#print axioms ProximityPrize.planePairEquiv_relativeHammingDistance
+#print axioms ProximityPrize.planeLineEquiv
+#print axioms ProximityPrize.ReedSolomon.Parameters.vectorListSizeBoundAt_capacityGrid
+#print axioms ProximityPrize.ReedSolomon.Parameters.capacityReceived_ballCardAt_eq_choose
+#print axioms ProximityPrize.ReedSolomon.Parameters.vectorFractionalListSizeBoundAt_capacityGrid_iff
+#print axioms ProximityPrize.ReedSolomon.Parameters.fieldCard_pow_le_nextShell_ballCardAt
+#print axioms ProximityPrize.ReedSolomon.Parameters.vectorFractionalListPhaseSplit
+#print axioms ProximityPrize.ReedSolomon.Parameters.vectorFractionalListGridThreshold
+#print axioms ProximityPrize.ReedSolomon.Parameters.vectorFractionalListRealThreshold
+#print axioms ProximityPrize.Capacity.SmoothQuarterFamily.rootUnit_order
+#print axioms ProximityPrize.Capacity.SmoothQuarterFamily.realized_fractionalListSizeBoundAt_capacity
+#print axioms ProximityPrize.Capacity.SmoothQuarterFamily.realized_listGridThreshold
+#print axioms ProximityPrize.Capacity.SmoothQuarterFamily.realized_listSafeRelativeRadii_eq_Ico
+#print axioms ProximityPrize.Capacity.SmoothQuarterFamily.realized_listRealThreshold
+#print axioms ProximityPrize.ReedSolomon.Parameters.badChallengeSetAt_card_le_choose_succ
+#print axioms ProximityPrize.ReedSolomon.Parameters.pairMCAErrorBoundAt_of_compressed_budget
+#print axioms ProximityPrize.Capacity.SmoothQuarterFamily.realized_pairMCAErrorBoundAt
+#print axioms ProximityPrize.Capacity.SmoothQuarterFamily.realized_pairMCAGreatestSafe_eq_length
+#print axioms ProximityPrize.MCA.BoundaryField.modulus_prime
+#print axioms ProximityPrize.MCA.BoundaryField.candidateRootUnit_order
+#print axioms ProximityPrize.MCA.BoundaryField.paperMCABadSpectrum_zero_eq_one
+#print axioms ProximityPrize.MCA.BoundaryField.two_le_paperMCABadSpectrum_one
+#print axioms ProximityPrize.MCA.BoundaryField.pairMCA_exact_128_bit_threshold
+#print axioms ProximityPrize.MCA.BoundaryField.pairMCA_safeRelativeRadii_128_eq_Ico
+#print axioms ProximityPrize.MCA.BoundaryField.pairMCA_real_128_threshold
+#print axioms ProximityPrize.BlockCode.pairMCAErrorBoundAt_relativeRadius_invPow_iff_spectrum_budget
+#print axioms ProximityPrize.BlockCode.pairMCAThreshold_eq_of_countBound_and_badLine
+#print axioms ProximityPrize.BlockCode.scalarDistance_ge_of_pairDistance_ge_of_good
+#print axioms ProximityPrize.ReedSolomon.Parameters.scalarDistance_eq_capacity_of_pairFar_of_good
+#print axioms Hcrypt.Sheaf.SystematicCode.modularExact_iff_vectorCodeword
+#print axioms Hcrypt.Protocol.Storage.ThreeLevel.three_native_distance_comparison
+#print axioms Hcrypt.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance
+#print axioms ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_pairDistance_eq_capacity
+#print axioms ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_flatDistance_eq_half_capacity
+#print axioms ProximityPrize.ReedSolomon.Parameters.no_unit_pair_distance_bound_by_flat_distance
+#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.calibration_extract_eq_original_pair
+#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.sourceFar_implies_rsFar
+#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.planeNear_of_scaledSourceNear
+#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity
+#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction
+#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_scalarDistance
+#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero
+#print axioms ProximityPrize.ReedSolomon.Parameters.no_fixedChallenge_pair_far_preservation
+#print axioms ProximityPrize.ReedSolomon.Parameters.no_fixedChallenge_flat_far_preservation
+LEAN
+LEAN_NUM_THREADS=1 lake env lean -j1 /tmp/submission-selected-axioms.lean
+```
+
 ## Paper 3 summary and source comparison — 2026-11-08
+
+**Preserved P284–P285 alignment baseline.** P289 and the current section above
+supersede this section’s source hashes, native-dependency status and Paper 3
+PDF hash. The native dependencies described here were subsequently removed;
+its counts and artifact hashes remain dated evidence.
 
 Paper 3's abstract and introduction now state the completed intrinsic modular
 application: the original integer payload reduces to the actual cellular
@@ -51,7 +224,7 @@ references/citations, missing glyphs or overfull boxes. All thirty pages were
 rendered and reviewed in two contact sheets; pages 1, 4, 9, 12, 16, 22--24 and
 27--28 were checked at higher resolution. One underfull-box diagnostic remains,
 with no visible defect found. Canonical and stable review copies match
-byte-for-byte. Current Paper 3 SHA-256:
+byte-for-byte. Paper 3 SHA-256 at this preserved alignment checkpoint:
 `6a9c0cab59f433a12ed2f993ca4c4ec004b234802c4f331cf205220bc718bf42`.
 Paper 1 remains the unchanged, reviewed **101-page** PDF at SHA-256
 `7a9feb8ad8dd080ddeb06fad4d82c3c06188571ae7411c12d2a1d75f302f1123`.
@@ -87,6 +260,10 @@ lake env lean /tmp/paper3-alignment-axioms.lean
 ```
 
 ## Strict canonical decision profile — 2026-11-08
+
+**Preserved P282–P283 decision-profile baseline.** The decision convention is
+retained. P289 supersedes this section’s source/dependency snapshot; the former
+canonical native trust has been removed.
 
 D03's selected canonical decision convention is now resolved without replacing
 any source, metric, projection, far-witness or gap-problem carrier. The existing

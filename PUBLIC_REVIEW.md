@@ -45,8 +45,9 @@ The important distinctions remain visible:
 - Source coverage is not proof completion or novelty certification.
 - The standalone `ProximityPrize` target does not import the seven custom
   literature-bound axioms in `Concrete/CanonicalRS/CitedBounds.lean`.
-- Existing `native_decide` arithmetic certificates have compiler/native trust
-  dependencies separate from ordinary Lean logical axioms.
+- The formerly native arithmetic certificates now have kernel-checked proofs.
+  Current selected dependency reports use only standard logical axioms; the
+  older native-trust audits remain dated baselines.
 - The protocol core proves conservative update and evidence-binding results
   under explicit valuation, authorization, snapshot and runtime contracts.
   Its toy fixtures do not establish cryptographic security or consensus finality.
@@ -73,12 +74,13 @@ The important distinctions remain visible:
 
 ## Readiness record
 
-The main development now passes validation on the stable Lean/Mathlib 4.35.0
-pair. The current full aggregate/integration build passes 9,292 jobs; the
-literal default passes 9,285 jobs. The fresh probe covers 855 distinct selected
-declarations, including sixteen strict canonical-profile reports. The earlier
-owner-signing, primitive comparison, one-shot integrity, owned-transfer, rotation, public-observation, cellular-HCP, native-metric and 4.24 milestones remain dated baselines in the
-shared validation record.
+The current Lean/Mathlib 4.35.0 expanded/default builds pass **9,292/9,285 jobs**.
+The fresh probe covers **900 selected declarations**, all standard-only.
+The selected manuscript statement map foregrounds Paper 1's CVP/HCP
+comparison and retains Paper 3's nine coding groups plus its bounded modular
+application. Hodge component uniqueness is now proved; boundary/canonical
+arithmetic no longer adds native trust. Previous milestones remain dated
+baselines in the shared validation record.
 
 | Item | Current status |
 |---|---|
@@ -94,11 +96,11 @@ shared validation record.
 | Existing-object owner signing | Full metadata/Intent messages, typed authorized issues and actual history projection construct the checker/profile. Under the same fixed policy and foreign-domain condition, queried-unauthorized mass is zero; four primitive/context errors remain. Codec, keys, history provenance and concrete native path-space proof algorithms remain explicit obligations. |
 | Native path/witness handoff | A supplied path realization constructs the same original fiber transport and rotation, with harmonic projection and coefficient recovery. A partial finite decoder retains the actual credential opening and admissible path; original ownerSignature bytes execute the existing proof backend on the selected key/full message. The outer credential/message parser is concrete and injective; finite typed packet/full-ciphertext/private-witness encodings, credential/proof algorithms, statement reflection and knowledge/unforgeability security remain open. |
 | Native retrieval and full-ciphertext recovery | Actual HodgeNoise queries produce a response equal to an original full encryption observation, with original coefficient recovery and same-answer CVP comparison. Digest-checked full bytes join original bound-HCP rotation/recovery with a collision alternative. Whole-bucket O(N) reads have equal fixed-scope transcripts/distributions; conditional joint-column disclosure is separate. Efficient PIR, manifest authentication and concrete finite byte/proof profiles remain open. |
-| Canonical decision profile | Closed near/far promises now use `(ε,δ_J)` on both sides with ε<δ_J, concrete near 2046/4096 and far 2047/4096. The literal projection and solver pullback are retained. Three pure arithmetic reports are standard-only; thirteen canonical adapters inherit existing native type/proof certificates. No geometric far witness or efficient solver is constructed. |
+| Canonical decision profile | Closed promises retain `(ε,δ_J)` on both sides, concrete near 2046/4096 and far 2047/4096, the original map and solver pullback. Its canonical arithmetic now uses kernel proofs. The geometric far witness and efficient solver remain explicit obligations. |
 | History/manifest anchor | The joins and fixtures pass on 4.35, and all nineteen fresh anchor reports use only the three standard Lean axioms. Concrete authentication/encoding/backend profiles remain explicit. The earlier 4.24 focused/full results are preserved in the shared register. |
-| Theorem dependencies | All 855 distinct selected reports pass: 806 use only standard Lean axioms (630 exactly the usual three, 176 subsets); 49 inherit existing native arithmetic trust, printed as generated `_native.native_decide.ax_` constants on 4.35. None uses a cited-bound axiom or `sorryAx`. The [validation guide](docs/MATH_STORAGE_VALIDATION.md) reproduces the consolidated probe and preserves earlier audit baselines. Explicit theorem/profile/runtime hypotheses remain. |
-| Full aggregate | The literal default `lake build` passes (9,285 jobs); all fifteen defaults plus explicit ledger/evidence/storage/recipient/owned-transfer integration targets also pass (9,292 jobs). The [current validation record](docs/MATH_STORAGE_VALIDATION.md#strict-canonical-decision-profile--2026-11-08) distinguishes this from earlier milestones and axiom reports. Hosted CI has not been run as part of this preparation. |
-| Manuscripts | Paper 1 §3 and its ledgers include the actual cellular HCP family and conditional observation adapters. Papers 1 and 3 have reviewed PDFs and source ledgers; the current completion checkpoint identifies remaining Paper 1 headline/source alignment and submission work. Paper 3's completed modular summary and bounded source comparison are reconciled in P284--P285. Paper 1's observation wording and canonical strict decision convention are reconciled in P281--P283. Paper 2 has working text for public inputs, recipient rotation, the conditional owned-resource transition and one-shot sampled integrity; primitive/channel/runtime/state-origin and security implementation remain work in progress. |
+| Theorem dependencies | All 900 selected reports are standard-only (724 exact-three/176 subsets, including 106 axiom-free). The prior 806 standard sets match; all 49 previously native reports are now standard-only. No selected cited-bound or sorryAx dependency occurs. The [validation guide](docs/MATH_STORAGE_VALIDATION.md#selected-statements-and-kernel-arithmetic--2026-11-08) reproduces the owner probe and preserves historical audits; future wrappers/protected comparison are separate. |
+| Full aggregate | Literal default 9,285 jobs and expanded union 9,292 jobs pass on the current sources. The [current validation record](docs/MATH_STORAGE_VALIDATION.md#selected-statements-and-kernel-arithmetic--2026-11-08) distinguishes build, source and dependency checks; hosted CI has not been run here. |
+| Manuscripts | Paper 1’s HCP/CVP statement selection follows its existing named propositions and includes the new formal uniqueness companion. Paper 3’s completed modular summary/source comparison and kernel trust paragraph are aligned. Paper 2 remains a conditional working draft; concrete codecs, primitive/channel/runtime/state-origin and security implementation remain work. Independent submission wrappers and slim entry packages remain separate. |
 | Manuscript alignment | Paper 1's 101-page PDF and Paper 3's 30-page PDF compile without undefined references/citations, missing glyphs or overfull boxes. The revised 101-page Paper 1 was rendered and visually checked after its observation and strict decision-profile corrections; Paper 3's revised 30-page summary/source-comparison pass was rendered and visually checked; some underfull-box diagnostics remain. These are recorded layout/compile checks, not final statement-alignment certification. Their ledgers include Plucker recovery, native-metric endpoints, storage owners and explicit source-profile boundaries. Canonical and stable review copies match byte-for-byte. |
 | Public publication | Not performed. Review the source package and choose the destination and timing separately. |
 

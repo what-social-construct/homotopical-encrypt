@@ -154,18 +154,16 @@ Arbitrary fixed-mix obstruction & Lean-proved &
 \end{longtable}
 \endgroup
 
-The generic counting and calibration proofs use the standard Lean axioms
-\lean{propext}, \lean{Classical.choice}, and \lean{Quot.sound}. The
-boundary-field primality, root-order, and threshold certificates additionally
-use \lean{native_decide}; on Lean 4.35 their reports include generated native
-certificate axioms with names containing \mbox{\lean{native_decide.ax_}}.
-The older 4.24 reports
-used \lean{Lean.ofReduceBool} and \lean{Lean.trustCompiler}. These arithmetic
-certificates therefore have a different trust footprint from the generic
-counting arguments.
-The canonical \(q=12289\) application adapters also inherit existing native
-field/domain certificates. The generic modular-validity and native-metric
-comparison proofs use only the standard logical axioms.
+The counting, calibration, boundary-field and canonical application proofs
+use only the standard Lean logical axioms
+\lean{propext}, \lean{Classical.choice}, and \lean{Quot.sound}.
+The arithmetic certificates are kernel-checked: the boundary primality proof
+uses an explicit Lucas factor chain, and modular powers are checked by binary
+modular-exponentiation proof terms. The field, roots and domain parameters
+are unchanged. Earlier versions used \lean{native_decide} for some of these
+certificates; their dated dependency reports are historical evidence rather
+than the trust footprint of the present proofs. This arithmetic change does
+not construct a commitment protocol or a stronger source-metric comparison.
 
 \subsection{Submission boundary}
 

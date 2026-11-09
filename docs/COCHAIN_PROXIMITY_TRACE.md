@@ -584,7 +584,7 @@ is implied.
   Faithful canonical reduction preserves the full pair, not every scalar fold.
   A random-challenge MCA bound or explicit good-challenge proof is the relevant step.
 - **Current field-size budget:**
-  [MCA/Spectrum.lean:83](../lean/Proximity/Concrete/CanonicalRS/MCA/Spectrum.lean#L83)
+  [MCA/Spectrum.lean:94](../lean/Proximity/Concrete/CanonicalRS/MCA/Spectrum.lean#L94)
   proves no universally safe count radius at 128 bits for the canonical
   `q=12289` pair code. At 13 bits its greatest safe count radius is zero and
   its first unsafe count radius is one. These full-pair-space results do not

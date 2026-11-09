@@ -31,34 +31,40 @@ open ProximityPrize.ReedSolomon.Parameters
 /-- The canonical RS dimension is positive. -/
 theorem canonical_degreeBound_pos :
     0 < (canonicalSmoothDomain.parameters).degreeBound := by
-  native_decide
+  norm_num [SmoothDomain.parameters, degreeBound, length, RSField,
+    Axioms.canonicalCochainModulus, ZMod.card]
 
 /-- There is at least one coordinate outside a canonical interpolation set. -/
 theorem canonical_degreeBound_succ_le_length :
     (canonicalSmoothDomain.parameters).degreeBound + 1 ≤
       Fintype.card (Fin length) := by
-  native_decide
+  norm_num [SmoothDomain.parameters, degreeBound, length, RSField,
+    Axioms.canonicalCochainModulus, ZMod.card]
 
 /-- There are two coordinates outside a canonical interpolation set. -/
 theorem canonical_degreeBound_add_two_le_length :
     (canonicalSmoothDomain.parameters).degreeBound + 2 ≤
       Fintype.card (Fin length) := by
-  native_decide
+  norm_num [SmoothDomain.parameters, degreeBound, length, RSField,
+    Axioms.canonicalCochainModulus, ZMod.card]
 
 /-- The canonical field is smaller than the `128`-bit MCA denominator. -/
 theorem canonical_fieldCard_lt_two_pow_128 :
     Fintype.card RSField < 2 ^ (128 : ℕ) := by
-  native_decide
+  norm_num [SmoothDomain.parameters, degreeBound, length, RSField,
+    Axioms.canonicalCochainModulus, ZMod.card]
 
 /-- One bad challenge fits the `13`-bit budget in the canonical field. -/
 theorem two_pow_13_le_canonical_fieldCard :
     2 ^ (13 : ℕ) ≤ Fintype.card RSField := by
-  native_decide
+  norm_num [SmoothDomain.parameters, degreeBound, length, RSField,
+    Axioms.canonicalCochainModulus, ZMod.card]
 
 /-- Two bad challenges exceed the `13`-bit budget in the canonical field. -/
 theorem canonical_fieldCard_lt_two_pow_13_mul_two :
     Fintype.card RSField < 2 ^ (13 : ℕ) * 2 := by
-  native_decide
+  norm_num [SmoothDomain.parameters, degreeBound, length, RSField,
+    Axioms.canonicalCochainModulus, ZMod.card]
 
 /--
 At count radius zero, a concrete unit-spike line already exceeds the canonical

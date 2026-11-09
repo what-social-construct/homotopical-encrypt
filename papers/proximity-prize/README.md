@@ -45,6 +45,13 @@ Euclidean/full-HCP comparisons, arbitrary fixed-mix preservation and
 cryptographic security are separate claims. Current builds, axiom audits
 and manuscript checks are recorded separately from historical baselines.
 
+The [selected manuscript statement surface](../../docs/PALOMAR_SUBMISSION_PLAN.md#selected-manuscript-statement-surface--2026-11-08)
+maps the nine named coding statements to their complete Lean endpoints,
+including the spectrum/distance account and the separately bounded modular
+application. It preserves the three distinct field instances and their
+quantifiers. This selection does not create submission wrappers or a
+protected Palomar comparison.
+
 Current status:
 
 - the problem statements and normalized metrics are specified;
@@ -110,13 +117,24 @@ decoder contract; positive-far payloads are raw proximity/rejection inputs.
 The [shared validation record](../../SEMANTIC-PARITY.md) and
 [reproduction guide](../../docs/MATH_STORAGE_VALIDATION.md) record current
 Lean/Mathlib 4.35 full/default builds, selected dependency reports and source
-scans, separately from earlier milestones. Some canonical application results
-retain existing native arithmetic certificates; the selected reports use no
-cited-bound axiom or `sorryAx`. Paper 1 has 101 reviewed pages; Paper 3 now has 30 reviewed pages.
-The 2026-11-08 alignment pass updates its abstract/introduction, bounded
-related-work account and explicit modular-application ledger. Twelve existing
-supporting endpoints were rechecked (six standard-only, six inherited-native);
-all Lean sources are unchanged from the shared P283 checkpoint.
+scans, separately from earlier milestones. The 2026-11-08 arithmetic pass
+replaces the boundary-field and canonical `q=12289` source calls to
+`native_decide` with kernel-checked proofs, preserving the field moduli,
+generators, roots, domains and theorem statements. Earlier native-dependent
+axiom reports are dated baselines. The current
+[P289 validation](../../docs/MATH_STORAGE_VALIDATION.md#selected-statements-and-kernel-arithmetic--2026-11-08)
+passes the full/default builds at **9,292/9,285 jobs** and all **900 selected
+dependency reports**: 724 exact-standard-three and 176 proper subsets,
+including 106 axiom-free. No report in this selection has native, cited-bound
+or `sorryAx` dependencies. The source inventory remains 273 modules / 274 Lean
+files; seven modules changed and 266 hashes still match P283. Paper 1 has 101
+reviewed pages; Paper 3 has 30 reviewed pages.
+
+The historical P285 summary/source-comparison pass aligned the abstract,
+introduction, bounded related-work account and modular-application ledger.
+Its twelve supporting endpoint checks split six standard-only and six
+inherited-native; at that checkpoint all source hashes still matched P283.
+Those results describe the sources before the kernel arithmetic replacements.
 
 The full Hodge sample is a separate source. With a nonzero coexact direction,
 `Sheaf/ObservationQuotient.lean` proves an obstruction on the unrestricted
