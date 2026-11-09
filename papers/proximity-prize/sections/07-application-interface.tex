@@ -10,7 +10,7 @@ Let \(O\) be a type of raw presented observations, let
   \pi:O\longrightarrow(\F^2)^I
 \]
 be the extracted pair word.  A source distance
-\(\rho_O:O\to[0,1]\) is meaningful only when \(O\) includes arbitrary or noisy
+\(\rho_O:O\to[0,\infty)\) is meaningful only when \(O\) includes arbitrary or noisy
 presentations; if every element of \(O\) already contains a validity witness,
 then the proximity problem may collapse to the exact code locus.
 
@@ -204,7 +204,10 @@ encryption-security claim follows from this construction.
 \subsection{Three native metrics for modular cochains}
 
 The same cellular construction has a global comparison in its native modular
-metrics. Here the cochain valid locus is defined intrinsically by an actual
+metrics. The generic modular result uses a prime field \(\mathbb F_q\), an
+injective RS domain with \(0<k\le n\), and a chosen information set of size
+\(k\); subgroup smoothness is not required. Here the cochain valid locus is
+defined intrinsically by an actual
 integral opening and integer carry:
 \[
  \delta_0a=z+qm.
@@ -236,6 +239,13 @@ defined native distances are compared through the actual maps. A unit-scale
 near contract must use the explicitly scaled local score \(2d_C\); the
 far implication uses \(d_C\le D_2\).
 
+The factor two is sharp for proper RS codes. Put \(u_i=a_i^k\), and take
+the pair \((u,0)\). Its whole-pair distance is \((n-k)/n\), while its
+scalar-coordinate distance, normalized by \(2n\), is \((n-k)/(2n)\).
+The same representative-lifting equalities transfer this witness to the
+native integer metrics, so the upper bound cannot be replaced by a
+unit-factor near comparison.
+
 There is a nonempty capacity-scale family in these modular metrics. For
 \(0<k<n\), take \(u_i=a_i^k\) and both pair columns equal to \(u\).
 A polynomial of degree below \(k\) agrees with \(u\) on at most \(k\)
@@ -245,9 +255,11 @@ common interpolation, proves
 \[
  d_C(z)=d_P(z)=D_2(\bar z)=\frac{n-k}{n}.
 \]
-Canonical representatives of these two columns serialize into the original
-commitment payload in the declared complete layout. In the current canonical
-instance all three distances are \(3/4\). This is a native modular source
+For the canonical instance \((q,n,k)=(12289,4096,1024)\), representatives
+of these two columns serialize into the original commitment payload in the
+declared complete layout, and all three distances are \(3/4\).
+The payload is a well-formed raw proximity input. Under the matching decoder,
+accepted exact anchors have zero native distances. This is a native modular source
 statement, not a capacity-scale Euclidean Hodge-distance theorem.
 
 For this diagonal pair, the challenged word is \((1+\gamma)u\). Every
@@ -305,22 +317,30 @@ fixed-challenge obstructions constrain such stronger claims. The restricted
 Euclidean theorem and the diagonal fixed-mix example retain their stated
 profiles.
 
-This is a bounded mathematical dependency on the commitment/projection
-profile. It does not require the full Paper 2 ledger, consensus protocol, or
-Rust implementation. The universal coding theorems remain independent of
-that instantiation. A claim that the commitment-specific projection gives a
-new radius guarantee requires this concrete theorem and a comparison with
-position-binding vector commitments \cite{catalanoFiore2011}, committed
-linear maps \cite{campanelliEtAl2022}, and RS proximity applications such as
-WHIR \cite{arnonChiesaFenziYogev2024}. The distinctive question is what the
-cochain source relation and its proved metric comparison add to those
-interfaces.
-The explicit modular-coboundary and metric relations make that comparison
-concrete. They do not establish a new binding or hiding primitive, a security
-reduction, or a priority claim.
-In particular, the generic coefficient interpretation \(a\) is arbitrary.
-Its linearity and compatibility with the selected field reduction must be
-proved for the actual profile before making a linear-map commitment
-comparison. The storage and same-payload joins alone establish neither a new
-cryptographic binding game nor a radius or cost improvement over those
-interfaces.
+The selected profile gives a concrete relation for comparison with existing
+commitment interfaces. In its complete identity layout, reduce the original
+integer payload to \(v\in\mathbb F_q^{2n}\). Modular validity is the actual
+coboundary-image relation, proved equivalent to paired RS membership. For a
+fixed challenge, \(v\mapsto v_0+\gamma v_1\) is \(\mathbb F_q\)-linear.
+This identification uses the chosen identity coefficient map; the earlier
+generic interpretation \(a:\mathbb Z\to\mathbb Z\) is arbitrary.
+
+Position-binding vector commitments \cite{catalanoFiore2011} and linear-map
+vector commitments \cite{campanelliEtAl2022} concern authenticated coordinate
+or function outputs. Such output authentication alone does not supply the
+native source-distance comparison proved here. Applying either interface
+requires an actual commitment, opening and verifier construction, including
+binding of the field, coordinate layout and snapshot/topology metadata.
+Binding \(v\) also does not by itself bind a chosen integer representative
+or degree-zero opening; these are additional relations.
+
+WHIR's constrained-RS proximity and polynomial-commitment interfaces
+\cite{arnonChiesaFenziYogev2024} give a further comparison target. A protocol
+comparison requires a concrete polynomial/constraint encoding and the
+fixed-pair, later-challenge order. The proved fixed-mix counterfamily above
+prevents replacing that analysis by an arbitrary scalar fold. No new binding
+or hiding primitive, cryptographic security or verification-cost improvement
+is claimed. The contribution here is the explicit source relation and its
+metric calibration; priority for these constructions is not established by
+the present comparison. They are independent of completing the full Paper 2
+ledger, consensus protocol or Rust implementation.

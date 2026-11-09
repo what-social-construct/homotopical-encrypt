@@ -225,12 +225,14 @@ The completed main upgrade supersedes the
 earlier proposal to keep main development on Lean 4.24.0; the earlier build
 and dependency records remain separately dated historical evidence.
 
-The current corresponding PDFs have 101 pages for Paper 1 and 28 for Paper 3;
+The current corresponding PDFs have 101 pages for Paper 1 and 30 for Paper 3;
 Paper 1's observation and strict canonical-profile corrections have been rebuilt and visually
-reviewed, while Paper 3 retains its recorded visual review. The earlier
+reviewed. Paper 3's completed modular summary and bounded source comparison
+have also been rebuilt and visually reviewed. The earlier
 public-observation, rotation, owned-transfer, one-shot integrity, primitive,
 owner-signing and retrieval steps changed Paper 2's Markdown draft and left
-both PDFs unchanged. These manuscript corrections update only Paper 1. Select
+both PDFs unchanged. The subsequent manuscript-only alignment updates Paper 3 while retaining
+the P283 Lean source checkpoint. Select
 the appropriate manuscript evidence for each entry and tie it to the final
 immutable release. This is evidence preparation, not a completed submission.
 

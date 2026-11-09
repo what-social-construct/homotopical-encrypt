@@ -1,10 +1,10 @@
 # Paper 3: primary-source comparison for author review
 
-Reviewed 2026-11-05 against `papers/proximity-prize/references.bib` and
-Sections 1, 5, 6, and 7. This is a comparison note for review before manuscript
-integration. It establishes specific overlap and parameter distinctions;
-it does not establish priority from search results or the absence of a located
-statement.
+Updated 2026-11-08 against `papers/proximity-prize/references.bib` and
+Sections 1, 5, 6, and 7, recording the bounded comparison now integrated into
+the manuscript. It establishes specific overlap and parameter distinctions;
+it does not establish novelty or priority from search results or the absence
+of a located statement, or claim a security or cost advantage.
 
 The supported framing is an elementary, formally verified endpoint/certificate
 development, explicit smooth instances, and a checked connection to the existing
@@ -19,10 +19,10 @@ modular bridge alone establishes no novelty or cryptographic advantage.
 | --- | --- | --- |
 | Universal interleaved endpoint list size `L_m((n-k)/n) = choose(n,k)` | Degree-`k` received polynomials are classical RS deep holes; interpolation gives the binomial multiplicity as explained below. | The exact formula for every positive interleaving width, arbitrary injective domain, and its Lean proof. This should not be presented as a new capacity-achieving polynomial-list theorem. |
 | At the next count radius, `L_m ≥ q^m` | The multiples of a degree-`k-1` vanishing polynomial form a minimum-weight MDS subcode. | An explicit witness and the resulting exact fractional-budget phase split. Priority for this elementary observation is not established here. |
-| Same-set pair MCA count `≤ choose(n,k+1)` at every radius | The same bad event is already studied by BCHKS; sharper radius-dependent bounds exist in their regime. | A short unordered-obstruction injection, uniform over radii and characteristics. The factor `k+1` saving is relative to `choose(n,k)(n-k)`, the ordered certificate count, rather than a proved uniform improvement over prior MCA results. |
+| Same-set pair MCA count `≤ choose(n,k+1)` at every radius | The same bad event is already studied by BCHKS; sharper radius-dependent bounds exist in their regime. | A short unordered-obstruction injection, uniform over radii and characteristics. The factor `k+1` saving is relative to `choose(n,k)(n-k)`, the older ordered certificate count used in this development. It is not a proved uniform improvement over prior MCA results. |
 | Smooth family `n=2^(u+8)`, `k=n/4`, `q=3^n` meeting both fractional budgets | Cyclic finite-field units, power-of-two divisibility, and `choose(n,j) ≤ 2^n` supply the construction and comparison. | A realized order-`n` subgroup and all-`u` field/domain/parameter proofs, followed by the exact grid/real-radius conclusions. The exponential alphabet pays for the exponentially large allowable list; no efficient list decoder or polynomial list bound follows. |
 | Prime instance `q=2^128+192513`, `n=4096`, `k=1024` has MCA transition at count radii `0/1` | A full-set obstruction has at most one challenge; a two-spike line witnesses two challenges once one omission is allowed. | A certified smooth prime-field case with integer error budget `floor(q/2^128)=1`, `B(0)=1`, `B(1)≥2`, hence the half-open real safe interval. It does not determine the complete MCA spectrum. |
-| Committed-cochain application | Position binding, openings of linear maps, and constrained-RS proximity are established interfaces. | The actual payload, decoder, snapshot binding, plane extraction, state bus, and artifact/checkpoint identities are traced. The explicit modular profile has actual coboundary validity and the quantitative bridge `d_C ≤ d_P = D_RS ≤ 2d_C`, with a capacity-far original payload. These constructions still require a claim-by-claim comparison before advertising a new radius/security/cost advantage. |
+| Committed-cochain application | Position binding, openings of linear maps, and constrained-RS proximity are established interfaces. | In the complete identity layout, `v = reduce_q(flatten z)` is the concrete field vector. Actual modular coboundary-image validity is proved equivalent to paired RS membership; each fixed challenge is a linear output of `v`. The source theorem supplies `d_C ≤ d_P = D_RS ≤ 2d_C` and a capacity-far original payload. Authentication still needs a concrete commitment/opening/verifier and bound metadata; a WHIR protocol comparison also needs a polynomial/constraint encoding and challenge order. No new primitive, security, cost advantage or priority is claimed. |
 
 ## Exact overlap with MCA literature
 
@@ -40,8 +40,10 @@ m_B = max(ceil(sqrt(ρ_B)/(1-sqrt(ρ_B)-γ)), 3)
 ```
 
 This is linear in `n` at fixed rate and positive Johnson gap, generally much
-smaller than the binomial certificate count. The new bound's distinction is
-its all-radius elementary guarantee. [BCHKS full version](https://eccc.weizmann.ac.il/report/2025/169/download)
+smaller than the binomial certificate count. The binomial bound in this
+development supplies an all-radius elementary guarantee.
+[BCHKS author-hosted full version](https://www.math.toronto.edu/swastik/rs-proximity-gaps-2025.pdf),
+[ECCC record](https://eccc.weizmann.ac.il/report/2025/169/)
 
 **Dao–Kominers–Thaler, November 3, 2026 revision.** Definitions 3.1–3.2
 require `P=P₀+zP₁` and equality of the full scalar and common agreement sets,
@@ -58,6 +60,14 @@ Their `δ` is an **agreement gap**, not Paper 3's error radius. Exact endpoint
 hypotheses. They also cite existing Lean/ArkLib list and MCA formalizations;
 no first-formalization claim is justified. [DKT author-hosted full version](https://quangvdao.github.io/papers/authored/reed-solomon-codes-beyond-johnson.pdf),
 [ePrint record](https://eprint.iacr.org/2026/2056)
+
+**Bordage–Chiesa–Guan–Manzur, CCC 2026.** Broader polynomial-generator
+formulations of MCA for linear codes are studied in this work. Section 6
+cites it for this background role. The published introduction and metadata
+were checked; no quantitative bound is adopted here, and no identification
+of its full event or parameter regime with Paper 3's theorem is asserted.
+[Published proceedings and DOI](https://doi.org/10.4230/LIPIcs.CCC.2026.24),
+[ePrint full-version record](https://eprint.iacr.org/2025/2051)
 
 ## Endpoint and smooth-domain context
 
@@ -88,9 +98,10 @@ close points on a line whose pair is farther than that radius. This concerns a
 different field-size/radius regime; a large-field sufficient estimate here
 does not contradict it. [Kambiré, Theorem 1](https://arxiv.org/html/2604.09724v1#S2)
 
-No exact endpoint multiplicity source is currently cited in Section 5.
-The deep-hole context deserves a citation; a claim of priority for the full
-formula would require a separate bibliographic argument.
+Section 5 now cites Keti–Wan for this classical degree-`k` deep-hole
+context, while separating the interpolation inference that gives the exact
+interleaved multiplicity. The citation is not presented as a source stating
+the whole formula or as evidence of priority for that formula.
 
 Guruswami–Li–Singhal, Theorem 1, gives random linear codes at rate
 `1-h_q(p)-epsilon` an `O_(p,q)(1/epsilon)` average-radius guarantee with high
@@ -100,7 +111,7 @@ or a transfer theorem; its constants are not uniform over those choices.
 It supplies no geometric-distance bridge.
 [Primary paper, version 2](https://arxiv.org/html/2608.22663v2#S1)
 
-## Compare the actual commitment and projection
+## Comparison of the actual commitment and projection
 
 The current object is the existing `CochainCommitmentData`, interpreted by
 `CochainPayloadInterpretation F`, bound to `SheafStateSnapshot F`. Its accepted
@@ -108,13 +119,37 @@ mathematical value is an exact degree-one cochain `δ₀a`. An opening `a` is
 determined only modulo `ker δ₀`; this must be distinguished from binding a
 full Hodge-encrypted observation or its harmonic message.
 
-| Prior interface | Required concrete comparison |
-| --- | --- |
-| Catalano–Fiore vector commitments bind values at positions and support succinct coordinate openings. | Identify the exact serialized vector and binding game, then show which additional cochain relation is authenticated. Binding `δ₀a` does not itself bind a chosen representative `a`. [CF full-version record](https://eprint.iacr.org/2011/495) |
-| Campanelli et al., Section 3, Definition 3: strong function binding excludes accepted linear-map outputs inconsistent with any single underlying vector. Section 3.1 supports homomorphic proof/opening operations; Section 4.3 lifts inner-product openings to general linear maps. | Instantiate the actual coefficient/layout map, field, encoding and relation. The generic coefficient interpretation `a:ℤ→ℤ` is arbitrary, so linearity and compatibility with reduction need proof before invoking a linear-map comparison. [LMVC primary full version](https://research.protocol.ai/publications/linear-map-vector-commitments-and-their-practical-applications/campanelli2022b.pdf) |
-| WHIR's stated interface is constrained-RS proximity, with rich polynomial queries and a polynomial-commitment application. | State what the cochain relation and its source-distance theorem add beyond authenticating a constrained RS presentation. This comparison is based on the primary abstract, not a checked theorem-by-theorem protocol reduction. [WHIR primary record](https://eprint.iacr.org/2024/1586) |
+For the selected complete coordinate layout, let `z` be the original
+integer pair plane and set `v = reduce_q(flatten z) ∈ F_q^(2n)`. The layout
+reads every stored scalar coordinate once and uses the identity integer
+coefficient map. The generic extraction coefficient interpretation
+`a:ℤ→ℤ` remains arbitrary: its linearity and compatibility with reduction
+are not inferred from this selected profile.
 
-The new storage join is mathematically meaningful: `Sheaf.CochainSemantics`
+In this profile, source validity is the actual integral cellular relation
+`δ₀u = z + qm`, with an integral degree-zero opening and integer carry.
+Reduction of the actual interpolation coefficients proves that this relation
+holds if and only if `v` is a flattened paired RS codeword. For fixed `γ`,
+the output `v₀ + γv₁` is an `F_q`-linear map of `v`. This identifies a
+concrete relation and output for comparison; it does not instantiate an
+authenticated commitment or a proximity protocol.
+
+| Prior interface | Supported concrete comparison and remaining construction |
+| --- | --- |
+| Catalano–Fiore vector commitments bind values at positions and support succinct coordinate openings. | The selected value vector is `v`, with coordinates fixed by the complete layout. Position authentication alone does not establish the coboundary-image relation or its source-distance theorem. Applying this interface requires an actual commitment, opening, verifier and binding game, including the field and layout metadata. This is a primary-record comparison. [CF full-version record](https://eprint.iacr.org/2011/495) |
+| Campanelli et al., Section 3, Definition 3: strong function binding excludes accepted linear-map outputs inconsistent with any single underlying vector. Section 3.1 supports homomorphic proof/opening operations; Section 4.3 lifts inner-product openings to general linear maps. | For the selected identity profile, each fixed-`γ` challenged word is a concrete linear-map output of `v`. Authenticating that output does not prove modular source validity, the native metric comparison or a fixed-mix far-preservation claim. A construction must still fix the commitment, opening and verification relation, encoding and authenticated context. The arbitrary generic coefficient map is not covered by the identity-profile identification. [LMVC primary full version](https://research.protocol.ai/publications/linear-map-vector-commitments-and-their-practical-applications/campanelli2022b.pdf) |
+| WHIR's stated interface is constrained-RS proximity, with rich polynomial queries and a polynomial-commitment application. | The selected modular source relation has a proved paired-RS characterization and native distance comparison. A protocol comparison still requires a concrete polynomial/constraint encoding and the fixed-pair, later-challenge order; the fixed-mix counterfamily prevents substituting an arbitrary scalar fold. This is based on the primary record/abstract, not a checked theorem-by-theorem protocol reduction. [WHIR primary record](https://eprint.iacr.org/2024/1586) |
+
+Binding `v` alone does not bind the integer lift `z`: adding coordinatewise
+`q`-multiples preserves `v`. Nor does binding a cochain value alone select a
+degree-zero opening; exact openings differ by `ker δ₀`, and the modular
+relation additionally involves residue representatives and carries. Claims
+about a particular integer representative or opening therefore need their
+own relation and binding rules. The field/modulus, coordinate ordering and
+snapshot/topology metadata also need authenticated context; none is supplied
+merely by equality of the reduced vector.
+
+The storage join is mathematically meaningful: `Sheaf.CochainSemantics`
 uses carrier equivalences commuting with actual `δ₀`, `δ₁`, decoding, and
 snapshot binding; it derives acceptance equivalence under explicit ambient
 coherence. `Protocol.Storage.Projection.Input` identifies the legacy chain's
@@ -131,8 +166,10 @@ The preserved earlier comparison distinguished the following source scores:
 * `Protocol.Storage.Calibration.LiftControl` supplies a sufficient mathematical
   criterion: lift every target codeword to an actual exact cochain and control
   decoding error by `scale × pair Hamming distance`. It derives the quantitative
-  far transfer. A selected codec providing these lifts and estimates remains
-  to be instantiated.
+  far transfer. This interface alone does not instantiate a codec providing
+  those lifts and estimates. The selected no-wrap Euclidean profile supplies
+  a separate coarse comparison; the global modular profile below uses its
+  own native metrics.
 * The accepted exact-component HCP storage view has zero distance to the exact
   subspace. Its existence does not construct a positive far family for the
   full encrypted observation.
@@ -144,7 +181,7 @@ The preserved earlier comparison distinguished the following source scores:
   not refute a restricted noise profile, and equal decoded exact components
   alone do not prove equal wire payloads or equal actual extracted pairs.
 
-The new explicit systematic profile makes this comparison concrete. Its
+The selected explicit systematic profile makes this comparison concrete. Its
 native modular valid locus is defined by the actual integral cellular
 coboundary plus `q`-carry, then proved equivalent to RS validity. The full
 coordinate codec and separate native edit metrics give the proved global
@@ -165,9 +202,14 @@ for those mathematical statements.
 
 ## Review boundary
 
-The cited BCHKS, DKT, BGM, Kambiré, Keti–Wan and LMVC statements were checked
-in primary full texts. CF and WHIR comparisons above use their primary
-records/abstracts. The ABF survey's full PDF could not be retrieved in this
-review, so no exact survey lemma or priority claim for the boundary example is
-asserted. The subsequent mathematics and manuscript follow-up is recorded
-above; no publication step has occurred.
+The November 8 follow-up rechecked the BCHKS and DKT full versions, Keti–Wan
+Section 2, and the published BCGM introduction and metadata. The BGM,
+Kambiré and Guruswami–Li–Singhal context above is retained from the earlier
+primary-source review, without a new theorem-by-theorem comparison in this
+follow-up. The companion commitment review checked LMVC Section 3 (including
+Definition 3) and Section 4.3 in the primary full text. CF and WHIR comparisons
+use primary records/abstracts only. The ABF survey's record and the official
+challenge page were checked, but its full PDF could not be retrieved; no
+exact survey lemma or priority claim for the boundary example is asserted.
+This is a bounded manuscript comparison, not a proof of novelty, priority,
+cryptographic security or cost advantage. No publication step has occurred.

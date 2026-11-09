@@ -112,9 +112,11 @@ The [shared validation record](../../SEMANTIC-PARITY.md) and
 Lean/Mathlib 4.35 full/default builds, selected dependency reports and source
 scans, separately from earlier milestones. Some canonical application results
 retain existing native arithmetic certificates; the selected reports use no
-cited-bound axiom or `sorryAx`. Paper 1 has 99 reviewed pages; Paper 3 is
-unchanged at 28 reviewed pages. Later Paper 2 public-observation work does not
-change this manuscript or its standalone coding statements.
+cited-bound axiom or `sorryAx`. Paper 1 has 101 reviewed pages; Paper 3 now has 30 reviewed pages.
+The 2026-11-08 alignment pass updates its abstract/introduction, bounded
+related-work account and explicit modular-application ledger. Twelve existing
+supporting endpoints were rechecked (six standard-only, six inherited-native);
+all Lean sources are unchanged from the shared P283 checkpoint.
 
 The full Hodge sample is a separate source. With a nonzero coexact direction,
 `Sheaf/ObservationQuotient.lean` proves an obstruction on the unrestricted

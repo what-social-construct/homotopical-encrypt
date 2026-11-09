@@ -64,6 +64,9 @@ application bridges:
   \item[\lean{Proximity/Core/InterleavedMetric}]
     Native scalar-coordinate and whole-pair Hamming comparisons, retaining
     their different normalizations.
+  \item[\lean{Proximity/Core/MetricSharpness}]
+    The degree-\(k\) first column with zero second column attains factor two
+    between pair and scalar-coordinate distance for proper RS codes.
   \item[\lean{Proximity/Core/DeepHole} and \lean{Proximity/Core/FixedChallenge}]
     Exact scalar/pair/flattened capacity distances for monomial received words,
     and capacity-far counterexamples to arbitrary fixed-challenge compression.
@@ -136,6 +139,11 @@ Boundary-field real supremum & Lean-proved &
   \(1/4096\), not attained\\
 Native scalar/pair metric comparison & Lean-proved &
   \(d_C\le d_P\le2d_C\)\\
+Intrinsic modular application & Lean-proved & Actual integral coboundary
+  validity, full original payload and \(d_C\le d_P=D_2\le2d_C\)\\
+Sharp near scaling & Lean-proved & Factor two attained by \((u,0)\)\\
+Canonical raw payload & Lean-proved & All three distances \(3/4\) at
+  \((q,n,k)=(12289,4096,1024)\)\\
 Monomial capacity far family & Lean-proved &
   Scalar, pair and flattened distances \((n-k)/n\)\\
 Explicit challenge profiles & Lean-proved &
@@ -155,6 +163,9 @@ The older 4.24 reports
 used \lean{Lean.ofReduceBool} and \lean{Lean.trustCompiler}. These arithmetic
 certificates therefore have a different trust footprint from the generic
 counting arguments.
+The canonical \(q=12289\) application adapters also inherit existing native
+field/domain certificates. The generic modular-validity and native-metric
+comparison proofs use only the standard logical axioms.
 
 \subsection{Submission boundary}
 

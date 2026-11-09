@@ -50,10 +50,8 @@ the \(2^{-128}\) MCA error target. Over real radii the safe interval is
 The coding theorems quantify over the complete ambient received-word and
 affine-line spaces.  Their \(2^{-128}\) instantiation uses the displayed
 exponential-size field and is not a claim about every supplied smooth code.
-For an application whose observations lie upstream of the pair carrier, its
-source metric may be defined by pullback along the extraction map.
-Applications retaining a different source metric must provide one explicit
-comparison to the pair-code distance.
+An application with an independently defined source metric additionally
+requires a comparison with the extracted pair-code distance.
 
 This is Paper 3 of the Homotopical Encryption program. Paper 1 develops the
 HCP foundations and its application-specific projection bridge; Paper 2
@@ -61,7 +59,19 @@ addresses protocol evidence, commitments, and runtime verification. The
 coding theorems here do not require either paper's hidden geometry or
 commitment construction. A protocol using them must enforce the
 fixed-pair, later-challenge order described in Section~6.
-Section~7 traces the existing committed-cochain object through the actual
-plane extraction and field-pair calibration. The commitment-specific
-contribution to complete is a concrete radius theorem for that projection,
-with its source metric and remaining comparison stated explicitly.
+Section~7 supplies that comparison for an explicit systematic cellular model.
+It retains the original committed-cochain payload in a complete coordinate
+layout and defines source validity intrinsically by an integral opening and
+carry satisfying \(\delta_0a=z+qm\). Scalar cochain edits count \(2n\)
+coordinates, while plane and RS edits count \(n\) whole pairs. The proved
+global comparison is
+\[
+  d_C(z)\le d_P(z)=D_2(\bar z)\le2d_C(z).
+\]
+The factor two is necessary in the near direction; the far implication has
+unit scale. An actual well-formed raw payload at
+\((q,n,k)=(12289,4096,1024)\) has all three distances equal to \(3/4\).
+This is a modular source theorem. The Euclidean and full-HCP residuals have
+different comparison obligations, and positive-far raw payloads are distinct
+from already accepted exact storage anchors. The selected application field
+does not inherit the large-field family's \(2^{-128}\) guarantee.

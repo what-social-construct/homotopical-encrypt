@@ -30,7 +30,12 @@ This is the two-word same-set event appearing in
 That source uses polynomials of degree at most its parameter, so its
 parameter is \(k-1\) in the degree-\(<k\) convention used here.
 Our bound below is uniform in the radius; the cited literature gives
-sharper radius-dependent bounds in its stated regimes.
+sharper radius-dependent bounds in its stated regimes. At fixed rate and a
+fixed positive gap below the Johnson radius, the cited theorem gives an
+exceptional-challenge count linear in \(n\), generally much smaller than
+the binomial bound below. Broader polynomial-generator formulations of MCA
+for linear codes are studied by Bordage et al.
+\cite{bordageEtAl2026polynomialMCA}.
 
 \begin{theorem}[Uniform pair-MCA certificate bound]
 \label{thm:pair-mca}
@@ -241,9 +246,10 @@ sufficient comparison
 \[
   \binom n{k+1}\le 2^{-128}|\F|.
 \]
-This improves the ordered-certificate requirement by the exact factor
-\(k+1\), since
+Relative to the older ordered-certificate count used in this development,
+the bound saves the exact factor \(k+1\), since
 \(\binom nk(n-k)=(k+1)\binom n{k+1}\).
+This is not a uniform improvement over the cited literature bounds.
 If that inequality fails, this proof does not determine the optimal radius or
 show that the MCA target is impossible; it only ceases to certify the requested
 error.

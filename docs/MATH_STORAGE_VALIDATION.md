@@ -9,6 +9,83 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Paper 3 summary and source comparison — 2026-11-08
+
+Paper 3's abstract and introduction now state the completed intrinsic modular
+application: the original integer payload reduces to the actual cellular
+coboundary-image relation, with independently defined native distances
+`d_C ≤ d_P = D_RS ≤ 2d_C`. Section 7 states the sharp factor-two witness and
+ties the serialized capacity payload to `(q,n,k)=(12289,4096,1024)`. It keeps
+raw proximity inputs separate from accepted exact anchors, and this wire field
+separate from the large-field coding family. The generic source score is now
+correctly nonnegative rather than restricted to `[0,1]`; the independently
+chosen Euclidean/full-HCP comparison remains a separate obligation.
+
+The bounded source comparison is integrated in §§5--7 and the bibliography.
+It identifies the actual reduced vector, modular validity relation and fixed-γ
+linear output; authenticated outputs alone do not supply the source-distance
+comparison. Classical deep holes, the BCHKS/DKT regimes, BCGM background and
+the saving relative to this development's older certificate count are stated
+with their respective scopes. No priority, new commitment primitive,
+cryptographic security or verification-cost superiority is established.
+[The comparison note](PROXIMITY_NOVELTY_COMPARISON.md) records source-specific
+review depth and adoption limits; the [source ledger](SOURCE_LEDGER.md) now
+indexes **26 readings**. Section 8 records the completed application and the
+canonical native-certificate trust boundary.
+
+### Summary-alignment validation and trust boundary
+
+A fresh focused probe rechecks **twelve existing endpoints**: **six
+standard-only** and **six inheriting existing canonical native certificates**.
+All twelve already occur in P283's **855-report** consolidated selection, and
+all twelve dependency sets are unchanged; the focused check adds no reports to
+that total. All **273 Lean source hashes match** the P283 checkpoint, so its
+expanded/default **9,292/9,285-job** builds remain the applicable source
+baseline. No Lean source changed, and no new axiom, cited-bound or `sorryAx`
+dependency was introduced. Submission endpoints using canonical arithmetic
+still need their selected native trust dependencies removed if the entry
+permits only the three standard logical axioms.
+
+The revised **30-page** Paper 3 PDF compiles without undefined
+references/citations, missing glyphs or overfull boxes. All thirty pages were
+rendered and reviewed in two contact sheets; pages 1, 4, 9, 12, 16, 22--24 and
+27--28 were checked at higher resolution. One underfull-box diagnostic remains,
+with no visible defect found. Canonical and stable review copies match
+byte-for-byte. Current Paper 3 SHA-256:
+`6a9c0cab59f433a12ed2f993ca4c4ec004b234802c4f331cf205220bc718bf42`.
+Paper 1 remains the unchanged, reviewed **101-page** PDF at SHA-256
+`7a9feb8ad8dd080ddeb06fad4d82c3c06188571ae7411c12d2a1d75f302f1123`.
+The pre-existing Rust storage edit is preserved unchanged.
+
+Local evidence under `output/validation/`:
+`paper3-alignment-{tex-build,axioms}.log`,
+`paper3-alignment-axiom-summary.json`, `paper3-alignment-validation.json`,
+with rendered QA pages in `paper3-alignment-render/`.
+
+Reproduce the focused correspondence check from `lean/`:
+
+```sh
+cat > /tmp/paper3-alignment-axioms.lean <<'LEAN'
+import Protocol.Storage.CanonicalCalibration
+import Protocol.Storage.CanonicalThreeLevel
+import Proximity.Core.MetricSharpness
+
+#print axioms Hcrypt.Sheaf.SystematicCode.modularExact_iff_vectorCodeword
+#print axioms Hcrypt.Protocol.Storage.ThreeLevel.three_native_distance_comparison
+#print axioms Hcrypt.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance
+#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.calibration_extract_eq_original_pair
+#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.sourceFar_implies_rsFar
+#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.planeNear_of_scaledSourceNear
+#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity
+#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction
+#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero
+#print axioms ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_pairDistance_eq_capacity
+#print axioms ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_flatDistance_eq_half_capacity
+#print axioms ProximityPrize.ReedSolomon.Parameters.no_unit_pair_distance_bound_by_flat_distance
+LEAN
+lake env lean /tmp/paper3-alignment-axioms.lean
+```
+
 ## Strict canonical decision profile — 2026-11-08
 
 D03's selected canonical decision convention is now resolved without replacing

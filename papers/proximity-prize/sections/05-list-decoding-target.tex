@@ -30,6 +30,9 @@ received word
 \[
   w_i^\star=(a_i^k,0,\ldots,0).
 \]
+For \(k<n\), the degree-\(k\) component is a classical RS deep-hole
+witness \cite[Section~2]{ketiWan2016deepHoles}. The interpolation argument
+below counts its full interleaved endpoint list explicitly.
 For each \(k\)-subset \(S\subseteq I\), put
 \[
   V_S(X)=\prod_{i\in S}(X-a_i),
@@ -176,7 +179,10 @@ polynomial interpolation and an explicit field-size comparison.
 Recent work of Dao, Kominers, and Thaler \cite{daoKominersThaler2026}
 gives quantitative list-decoding and MCA bounds on prescribed evaluation
 domains, including beyond-Johnson bounds under sufficiently large
-characteristic. Those positive-gap results require a separate parameter
-comparison with the exact endpoint and the characteristic-three family
-studied here. The present binomial bounds are not asserted to improve the
-sharper radius-dependent estimates in that literature.
+characteristic. Their positive agreement-gap counting results do not cover
+the exact agreement endpoint \(A=k\); their beyond-Johnson counting
+hypotheses also exclude the characteristic-three family with \(k\ge64\)
+used here. Their Johnson-regime results in every characteristic remain a
+separate comparison. The present binomial bounds are not asserted to improve
+the sharper radius-dependent estimates in that literature, which also
+includes existing Lean/ArkLib formalizations.

@@ -8,13 +8,28 @@ change when another manuscript cites those results.
 Initial audit date: 2026-10-30. Historical source checkpoint: `dc89188`.
 Generic coding completion and application follow-up: **2026-11-05**.
 
-**Status reconciliation — 2026-11-07:** Q04--Q08 are complete for the
+**Summary and source-comparison reconciliation — 2026-11-08:** the abstract
+and introduction now state Q08's completed native modular result and separate
+its canonical field from the two fractional-budget instances. §7 records the
+sharp factor-two near scaling, raw/accepted boundary and actual modular
+relation compared with coordinate/linear-map authentication and constrained
+RS proximity. §5 cites the classical degree-k deep-hole source; §6 bounds
+its own certificate saving and literature scope. §8 includes the actual
+application ledger and both native arithmetic footprints. Twelve existing
+supporting declarations pass a fresh audit: six standard-only and six
+inherited-native, all matching P283's 855-report selection. All 273 Lean source
+hashes are unchanged. Current PDFs are 101/30 pages for Papers 1/3; the
+[central validation record](../../docs/MATH_STORAGE_VALIDATION.md#paper-3-summary-and-source-comparison--2026-11-08)
+records the checks. No priority, new cryptographic primitive, security or cost
+advantage is established by this comparison.
+
+**Preserved status reconciliation — 2026-11-07 baseline:** Q04--Q08 are complete for the
 stated generic coding and native modular application claims. Current shared
 expanded/default, dependency and source checks are recorded in the
 [central validation record](../../docs/MATH_STORAGE_VALIDATION.md).
 The 2026-11-06 one-shot integrity milestone passed 9,278/9,271 jobs and 605
 selected reports; later primitive/TCB checks retain those earlier dependency
-sets. Current reviewed PDFs are 99/28 pages for Papers 1/3. The dated 2026-11-05 figures
+sets. The then-reviewed PDFs were 99/28 pages for Papers 1/3. The dated 2026-11-05 figures
 below are preserved native-metric baselines, not later-source validation.
 
 The current pin is Lean **4.35.0** and Mathlib
@@ -378,8 +393,8 @@ make the scalar fold injective: shifts by `(-g,1)` preserve `x₀+g·x₁`.
 A restricted source/quotient and its comparison theorem, or an appropriate
 layout and challenge analysis, must justify the chosen source-radius claim.
 The [primary-source comparison note](../../docs/PROXIMITY_NOVELTY_COMPARISON.md)
-records the exact literature overlap and the remaining commitment-specific
-comparison. The coding formalization and source identities do not establish
+records the bounded literature and actual-relation comparison, plus the
+additional constructions a protocol/security comparison would require. The coding formalization and source identities do not establish
 a new cryptographic construction, security reduction or performance advantage.
 
 ## Remaining-work queue
@@ -398,7 +413,7 @@ maintenance; R means new mathematical work beyond the current closed results.
 | Q06 | P1 | Package the boundary-field real safe set. | Exact `[0,1/4096)`, its supremum, exclusion and no maximum, using reusable real/count shells. | **Complete.** `MCA/RealThreshold.lean`: `pairMCA_safeRelativeRadii_128_eq_Ico`, `pairMCA_real_128_threshold` and generic same-shell transport; actual module build passes. |
 | Q07 | P1 | Package the generic standalone distance interpretation. | Attained scalar/pair minima identified with `CloseAt` and the neutral interface; covering, good-challenge farness and endpoint equality with correct strictness. | **Complete.** `Core/Distance.lean` and `Application/DistanceCalibration.lean` export the minimum/witness/model/covering/transfer endpoints and pass. Concrete C02–C04 remain separate retained results. |
 | Q08 | P0/R | Complete the selected native commitment profile and its canonical closure. | Retain actual integral modular coboundaries, complete original-payload extraction, native scalar/pair/RS metrics, a nonempty capacity-far family and the declared sampled/restricted challenge profile. Keep Euclidean/frame/full-HCP scores separate. | **Complete for the declared native modular profile:** generic actual-coboundary validity, `d_C≤d_P=D_RS≤2*d_C`, sharp factor-two near bound, serialized canonical capacity family, observed-artifact/existing-interface adapters and restricted challenge theorems all pass the expanded aggregate and consolidated audit. This does not prove a capacity-scale Euclidean/full-HCP comparison or a global fixed-mix guarantee. Authentication/private-frame producers, runtime/security and artifact maintenance remain separate. |
-| Q09 | P2 | Keep validation reproducible. | Preserve exact pins, dated baselines, source/aggregate/public-facade checks and current manuscript/artifact QA. | The [central validation record](../../docs/MATH_STORAGE_VALIDATION.md) owns current shared build/dependency/source counts; the standalone coding closure remains 33 modules. Papers 1/3 retain reviewed 99/28-page PDFs. The 2026-11-06 one-shot integrity milestone passed 9,278/9,271 jobs and 605 selected reports; the 9,253/9,248-job, 139-report and 97/28-page figures below remain native-metric baselines. Publication and Palomar preflight are separate. |
+| Q09 | P2 | Keep validation reproducible. | Preserve exact pins, dated baselines, source/aggregate/public-facade checks and current manuscript/artifact QA. | The [central validation record](../../docs/MATH_STORAGE_VALIDATION.md) owns current shared build/dependency/source counts; the standalone coding closure remains 33 modules. Papers 1/3 now have reviewed 101/30-page PDFs; P285 records the summary/source-comparison alignment. The 2026-11-06 one-shot integrity milestone passed 9,278/9,271 jobs and 605 selected reports; the 9,253/9,248-job, 139-report and 97/28-page figures below remain native-metric baselines. Publication and Palomar preflight are separate. |
 | Q10 | R | Solve optimal list radius in the intermediate field-size regime. | Matching sub-endpoint bounds for a supplied code when `1≤2^-128 q<choose(n,k)`. | Open mathematics; not a wrapper or build task. |
 | Q11 | R | Locate further code-specific MCA transitions. | Prove matching in-budget bounds and over-budget lines beyond the current small-radius example, or determine `B_C(r)` more generally. | Open mathematics; the generic exact-budget API alone does not supply these bounds. |
 | Q12 | R | Broaden the experiment if desired. | Separate statements/proofs for higher-dimensional challenge families or a different agreement notion. | Outside current pair/same-set scope. |
@@ -434,6 +449,11 @@ review.
 | P3-10 | A purely generic interface understated the actual cochain-commitment projection already present in Lean. | **Reconciled:** §7, O41–O45 and C01–C06 trace the same payload, selected edge extraction, canonical pair and scalar challenge; optional encoders and public realization proofs remain distinct. |
 | P3-11 | Generic missing distance packaging could be read as absence of every concrete calibration. | **Resolved:** C02–C04 retain the canonical equality/pullback/transfer results, and Q07 now adds the complete generic minimum-distance/model/covering/good-challenge API. These are separate theorem owners, not replacement commitments. |
 | P3-12 | The selected commitment-specific radius target could be treated as optional or completed by defining a pullback. | **Q08 native profile completed:** intrinsic actual-coboundary modular validity, independent scalar/pair/RS distances, explicit all-integer lifts, a capacity-far monomial family and precise challenge restrictions. Canonical original-payload/observation, existing-interface, expanded aggregate and consolidated dependency checks pass. Artifact details are recorded centrally. This does not establish a capacity-scale Euclidean/full-HCP comparison, primitive security or novelty. |
+| P3-13 | Abstract/introduction called the commitment-specific comparison unfinished although Q08 was proved. | **Resolved 2026-11-08:** both summaries now state the intrinsic modular result, actual raw canonical capacity payload, metric scales and separate field/Euclidean/full-HCP scope. |
+| P3-14 | Generic source score was restricted to `[0,1]` before introducing an unbounded Euclidean example. | **Corrected:** §7 uses nonnegative real source scores; the native edit distances keep their normalized ranges. |
+| P3-15 | Literature/source comparison needed an explicit relation and bounded contribution account. | **Integrated:** Keti–Wan citation; BCHKS/DKT regimes; BCGM background; own-older-count `k+1` saving; actual modular δ-image/paired-RS relation versus coordinate/linear output authentication and constrained RS. No primitive, priority, security or cost superiority is claimed. |
+| P3-16 | Sharp near factor and canonical application trust were absent from the visible §8 ledger. | **Aligned:** §7 gives `(u,0)` as the factor-two witness, and §8 lists MetricSharpness plus intrinsic modular/original-payload results. Generic comparisons are standard-only; canonical12289 application adapters retain existing native certificates, separately from boundary-field arithmetic. |
+
 
 All nine named generic coding statements now have formal endpoints, with
 Q04–Q07 complete. Keep Q09's expanded axiom report and synchronized manuscript

@@ -16,41 +16,38 @@
 \maketitle
 
 \begin{abstract}
-We study list decoding and mutual correlated agreement for constant-rate
-Reed--Solomon codes over smooth evaluation domains. A field-valued
-two-coordinate plane is exactly a word in \((\F^2)^n\), equivalently the
-base--direction pair of an affine line of scalar received words. This
-lossless identification separates pair-code distance, list size, and
-scalar-projection error.
+We study list decoding and same-set mutual correlated agreement for
+Reed--Solomon codes over smooth evaluation domains. A two-coordinate plane
+is exactly an interleaved pair word, equivalently the base--direction pair
+of a scalar affine line.
 
-At count radius \(n-k\), a direct agreement-set injection and a matching
+At count radius \(n-k\), an agreement-set injection and a matching
 received-word construction prove
 \[
   L_m\!\left(\mathcal C,\frac{n-k}{n}\right)=\binom nk
 \]
-for \(1\le k\le n\) and every positive interleaving width. Thus
-\(\binom nk\le\varepsilon|\F|\) is necessary and sufficient for the
-fractional list target at this endpoint. A next-shell construction gives a
-three-regime phase split. For same-set pair mutual correlated agreement, an injective
-compressed-certificate map gives the radius-independent bound
+for \(1\le k\le n\) and every positive interleaving width. A next-shell
+construction gives the three-regime fractional-list phase split. For pair
+mutual correlated agreement, compressed interpolation certificates give
 \[
-  |\Bad_{\MCA}|\le\binom n{k+1}.
+  |\Bad_{\MCA}|\le\binom n{k+1}
 \]
-An explicit rate-\(1/4\) smooth family over \(\mathbb F_{3^n}\) satisfies both
-\(\binom nk\le2^{-128}|\F|\) and
-\(\binom n{k+1}\le2^{-128}|\F|\). Thus its list target holds at the
-capacity endpoint and its pair-MCA error is at most \(2^{-128}\) at every
-normalized radius. We define the exact bad-count spectrum
-\(B_{\mathcal C}(r)\) and certify a sharp transition for the same error target over
-\[
-  q=2^{128}+192513\equiv1\pmod {4096},\qquad (n,k)=(4096,1024).
-\]
-Here \(B_{\mathcal C}(0)=1\) and \(B_{\mathcal C}(1)\ge2\): the greatest safe
-count radius is zero, the first unsafe count radius is one, and the safe
-real-radius set is \([0,1/4096)\). The intermediate field-size list-decoding
-optimum remains open. We also trace the existing committed-cochain
-projection to the pair-code interface and identify the upstream metric
-comparison required for a commitment-specific radius theorem.
+at every radius. A smooth rate-\(1/4\) family over \(\mathbb F_{3^n}\)
+meets both \(2^{-128}\) fractional budgets: its list target holds at capacity
+and its pair-MCA target holds at every normalized radius.
+For the separate prime-field instance
+\((q,n,k)=(2^{128}+192513,4096,1024)\), the exact bad-count spectrum has
+\(B_{\mathcal C}(0)=1\) and \(B_{\mathcal C}(1)\ge2\). Its greatest safe MCA
+count radius is zero, its first unsafe count is one, and its real safe set
+is \([0,1/4096)\). The intermediate field-size list optimum remains open.
+
+For an explicit systematic cellular model, we instantiate the existing
+committed-cochain projection with intrinsic modular coboundary validity.
+Its independently defined native distances satisfy
+\(d_C\le d_P=D_2\le2d_C\), and a well-formed raw payload in the canonical
+\(q=12289\) instance attains \(3/4\) at all three levels. This application
+uses a separate field from the two fractional-budget instances above.
+Euclidean and full-HCP source comparisons remain separate.
 \end{abstract}
 
 \tableofcontents
