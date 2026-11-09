@@ -5,7 +5,9 @@ corresponding research manuscripts. It preserves the repository layout so
 paper-to-source links can be followed directly. This broad human-review package is distinct from the planned slim, per-entry
 Palomar release. This is a local review draft;
 no repository visibility change, upload or external outreach is performed by
-the preparation tooling.
+the preparation tooling. The [slim release guide](docs/PALOMAR_SLIM_RELEASES.md)
+records three separately generated entry packages and their local checks;
+this broad archive retains cross-paper context for human review.
 
 ## Included scope
 

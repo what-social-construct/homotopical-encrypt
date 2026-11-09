@@ -18,6 +18,7 @@ DOCS = (
     "PROTOCOL_PARITY_QUEUE", "PROXIMITY", "PROXIMITY_ASSUMPTIONS",
     "PROXIMITY_PAPER_OUTLINE", "PROXIMITY_NOVELTY_COMPARISON", "MATH_STORAGE_VALIDATION",
     "SEMANTIC_OWNERSHIP", "SEMANTIC_PARITY_QUEUE", "PALOMAR_SUBMISSION_PLAN",
+    "PALOMAR_SLIM_RELEASES",
 )
 WORKFLOW = """name: Lean and manuscript review
 on: [push, pull_request, workflow_dispatch]
@@ -63,6 +64,7 @@ def source_files():
     paths.append(ROOT / ".github/workflows/paper3-palomar-preflight.yml")
     paths += [ROOT / "docs" / f"{name}.md" for name in DOCS]
     paths.append(Path(__file__).resolve())
+    paths.append(ROOT / "scripts/export_palomar_entries.py")
     scanned_roots = []
     for folder, extensions in (("lean", {".lean", ".md"}),
                                ("papers/paper1", {".tex", ".bib", ".md", ".pdf"}),

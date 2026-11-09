@@ -9,6 +9,56 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Slim entry packages — 2026-11-09
+
+The [slim release guide](PALOMAR_SLIM_RELEASES.md) records three separately
+scoped local packages. Their Lean sources, configurations, metadata and
+corresponding manuscripts are byte-identical to the checked development
+sources. Only the Lake configuration, root README, manual preflight workflow
+and packaging records are generated; existing crosswalk changes affect
+navigation only.
+
+| Entry | Exact local modules | Files including manifest | Default Solution build | Separate Challenge build |
+|---|---:|---:|---:|---:|
+| Paper 1 | 31 | 54 | Pass, 3,667 jobs | Pass, 3,516 jobs |
+| Paper 3 coding | 35 | 58 | Pass, 3,174 jobs | Pass, 3,138 jobs |
+| Paper 3 application | 81 | 104 | Pass, 3,435 jobs | Pass, 3,207 jobs |
+
+These six builds use disposable package copies and the existing pinned
+dependency/compiled caches. They check each generated Lake project, including
+its Solution-only default and explicit Challenge target; they do not claim
+a clean Linux rebuild. The original source comparison/kernel/dependency
+records below remain applicable to the unchanged Lean bytes.
+
+Independent source/informal inspection covers the three Solution closures
+(30/34/80 modules; 118 distinct modules combined). No material alignment
+problem requiring a Lean edit was found. Selected security and runtime
+claims remain conditional. Full manuscript PDF/TeX/bibliography copies
+provide context; their entire contents are not advertised as selected
+formal statements. Plans and broader paper READMEs are excluded.
+
+The actual pinned Palomar metadata contract passes all three files through
+`load_formalization_metadata` and `normalized_provenance` at pipeline
+`14aa8d6b3c2f14a8540605e37144560b9a00e7e7`. All are classified as substantive
+developments because the proof closures are included. This is the mechanical
+metadata minimum, not a full JSON Schema or complete hosted preflight result.
+
+Static package checks verify exact import closures and module inventories,
+source hashes, size/header requirements, zero implementation holes, no
+native/custom-axiom declarations, local navigation and ZIP identity. Repeated
+exports are deterministic. Local records are
+`palomar-slim-package-validation.json`, `palomar-slim-local-builds.json`,
+`palomar-slim-*-build.log` and `palomar-slim-upstream-metadata.json` under
+`output/validation/`. Final release records bind the frozen local commits
+and archive hashes to their precise development checkpoint.
+
+**Protected Linux preflight and publication have not occurred.** The current
+GitHub remote is private, and this Mac has no Linux container/VM runtime.
+The public immutable snapshots require approval before the included
+manual-only workflows can run. No remote creation, push, visibility change,
+workflow dispatch, intake or registration was performed in preparing these
+packages. No Lean declaration or dependency pin changed in this step.
+
 ## Paper 3 independent entries — 2026-11-09
 
 **Local comparison, kernel replay and dependency verification completed.**

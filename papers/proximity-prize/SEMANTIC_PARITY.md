@@ -8,6 +8,8 @@ change when another manuscript cites those results.
 Initial audit date: 2026-10-30. Historical source checkpoint: `dc89188`.
 Generic coding completion and application follow-up: **2026-11-05**.
 
+**Slim entry packages — P294--P295, 2026-11-09:** coding/application packages retain exactly 35/81 local modules, with unchanged Lean/configuration/metadata/manuscripts. Their generated default and Challenge builds pass with pinned caches; the actual upstream metadata contract passes. Public snapshot approval and protected Linux preflight remain. See the [release guide](../../docs/PALOMAR_SLIM_RELEASES.md).
+
 **Independent coding/application entries — P292--P293, 2026-11-09:**
 The [coding entry](../../lean/Palomar/PaperThree/README.md) and
 [original-cochain companion](../../lean/Palomar/PaperThree/Application/README.md)
@@ -495,6 +497,7 @@ review.
 | P3-18 | Submission selection could reduce the manuscript to supporting lemmas or omit the bounded application. | **Mapped and checked:** the [selected manuscript statement surface](../../docs/PALOMAR_SUBMISSION_PLAN.md#selected-manuscript-statement-surface--2026-11-08) covers P3-S01–S09, the separate spectrum/distance account P3-B01 and modular application/boundaries P3-A01–A04. The cross-paper selection has 22 groups / 70 owners; 45 added reports complete its coverage within the passing 900-report probe. Complete claims, explicit hypotheses and the three distinct fields are retained; no wrapper declarations, protected comparison or submission are created by this map. |
 | P3-19 | The selected Paper 3 coding and actual-cochain statements need independent review surfaces. | **Prepared and checked locally:** two companion configurations retain all fourteen groups within the Challenge size cap. Canonical objects, all radius endpoints, fields and original payload/context/decoder contracts remain explicit. Three unfolded calibration propositions use the existing proof owners. |
 | P3-20 | Entry comparison, kernel trust and source-preserving normalization must be checked separately from the implementation build. | **P293 completed locally:** coding 52/application 22 comparisons and Lean/NanoDa replays pass; combined 975 reports use only standard axioms and preserve all 946 prior sets. Encoder/opening values equal the old formulas by rfl; existing headers retained. Expanded/default 9,295/9,285 pass; no protected preflight or publication. |
+| P3-21 | Slim releases should preserve the checked coding and original-cochain objects without exposing unrelated development. | **P294--P295 prepared locally:** exact 35/81-module packages, selected source/configuration/metadata/manuscript bytes unchanged, generated defaults and separate Challenges build using pinned caches. Actual upstream metadata validation and deterministic source/ZIP checks pass. Public upload and protected Linux preflight remain pending approval. |
 
 
 All nine named generic coding statements now have formal endpoints, with

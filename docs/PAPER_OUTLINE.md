@@ -73,8 +73,10 @@ for the selected conditional mathematics.
    both full definition comparisons and Lean/NanoDa replays pass. All 975
    combined reports are standard-only, retaining all 946 prior sets. The full
    original-context calibration is presented definitionally, with unchanged
-   encoder/opening values. Slim frozen releases and protected Linux preflight
-   remain the next packaging steps.
+   encoder/opening values. The [slim packages](PALOMAR_SLIM_RELEASES.md) now
+   have exact source closures, successful local project builds and accepted
+   metadata contracts. Public snapshot approval and protected Linux preflight
+   remain.
 4. **Build one concrete Paper 2 profile from the existing interfaces.**
    Reuse the original commitment, snapshot, `Intent`, history, manifest,
    `HodgeNoise`, private presentation and delivered rotation. Its remaining

@@ -79,7 +79,10 @@ The broader [Lean/manuscript public-review package](../PUBLIC_REVIEW.md) serves
 a different purpose and includes cross-paper context. Its ZIP is neither the
 slim per-entry release nor a Palomar submission. Paper 1's entry files now
 live in the development repository; a separately frozen slim release and
-protected preflight remain to be prepared.
+protected preflight are tracked in the
+[slim release guide](PALOMAR_SLIM_RELEASES.md). Local per-entry packages are
+now prepared from the exact checked import closures; publication and hosted
+verification remain separate.
 
 ## Paper 3 coding and application entries — 2026-11-09
 
@@ -436,15 +439,17 @@ Remaining preparation, in order:
    quantifiers and boundaries when constructing the independent wrappers.
 2. **All three independent surfaces completed locally:** Challenge/Solution,
    README, crosswalk, configuration and metadata are prepared and checked.
-   Prepare the three slim proof closures from these checked configurations.
-   Exclude archives, plans and unrelated claims; reconcile retained docstrings
-   and informal text before freezing each release.
+   The three slim proof closures are now prepared and checked locally;
+   archives, plans and other-paper claim surfaces are excluded. Retained
+   informal text and the actual pinned metadata contract have been checked.
+   See the [release guide](PALOMAR_SLIM_RELEASES.md).
 3. **Arithmetic source closure implemented:** preserve the new kernel proofs
    and retain Paper 1's completed Solution dependency audit, including Hodge
    uniqueness and both oracle-recovery contracts. Paper 3's actual 52/22 target
    audits also pass. Protected Linux comparison remains separate.
-4. Build, inspect theorem dependencies, and check manuscript/metadata alignment;
-   then freeze the corresponding release and run its protected comparisons.
+4. The generated per-entry defaults and separate Challenges build locally
+   using pinned caches. Freeze the checked snapshots, approve their public
+   destination and run the protected comparisons for the exact public commits.
 5. Choose the public repository and immutable commit, then run the official
    full preflight for each exact configuration and project path.
 6. Present the concrete repository/commit/configuration and authorization
