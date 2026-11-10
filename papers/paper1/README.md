@@ -24,31 +24,37 @@ The abstract now has one paragraph. Helfer's homotopical semantics opens
 the motivation, and the CVP bridge, ambiguity obstruction and cellular
 examples form one contribution item (four contribution items overall).
 
-The current PDF is **38 pages**. The earlier P300/P301 ownership checkpoint
-was 37 pages, reduced from the original 101-page draft.
+The current PDF is **36 pages**. The earlier P302/P303 back-matter checkpoint
+had 38 pages; the P300/P301 ownership checkpoint had 37 pages, reduced from
+the original 101-page draft.
 
-The mathematical body now contains no Lean cross-reference blocks or
-implementation filenames. Section 7, *Conclusion and Further Work*, is followed
-by Appendix A's single parity table: four definition rows, eight main result
-groups covering 21 declarations, five support groups covering 25 declarations,
-and three external-result/assumption/contract rows. Appendix B keeps concise
-proof boundaries. The table preserves the selected statements and their
-hypotheses while separating proved results from supplied assumptions.
+The exposition follows the HCP recovery problem, the hidden operative operator,
+the CVP comparison and the effect of changing the public observation. Section 5,
+[Observation Boundaries and Recovery](sections/05-observation-boundaries.tex),
+combines the former two observation sections. Its five subsections treat exact
+cochains, the exact-component obstruction, additional observations, projective
+frames (§5.4) and full-point recovery (§5.5). The former separate projective
+section is merged into that file. Section 6 is *Conclusion and Further Work*.
 
-All 280 Lean files are byte-identical to `dddfdd2`; its checked 9,295-job
-build and 975-report dependency state is retained. The
-[source ledger](../../docs/SOURCE_LEDGER.md#bibliography-correspondence) now
-maps all 28 source IDs to the three bibliographies, with 19 added records.
-Paper 1 cites seven entries; a candidate record in another paper's bibliography
-does not add it to this manuscript's formalization scope.
+The mathematical body contains no Lean cross-reference blocks, implementation
+filenames or repeated companion-paper descriptions. Appendix A's single
+post-conclusion parity table has four definition rows, eight main result groups
+covering 21 declarations, five support groups covering 25 declarations, and
+three external-result/assumption/contract rows. Appendix B keeps concise proof
+boundaries. All 46 selected declarations and the eleven propositions/proofs
+remain accounted for; the computational scope distinguishes exact recovery
+from an asymptotic hardness assumption.
 
-The former detailed commitment/RS chapters and whole-repository catalogue
-have been removed from this manuscript. Sections 5 and 6 are now
-[Observation Boundaries](sections/05-observation-boundaries.tex) and
-[Projective Observations and Recovery](sections/06-projective-observation-boundary.tex).
-The post-conclusion parity table accounts for all 21 main and 25 supporting declarations in the
-[independent entry](../../lean/Palomar/PaperOne/README.md), preserving all eight
-selected result groups and their explicit hypotheses.
+Lean edits are limited to section-number comments, with every non-comment
+source byte unchanged. The checked 9,295-job build and 975-report dependency
+state is retained; no repeated Lean build is claimed for this editorial change.
+The [source ledger](../../docs/SOURCE_LEDGER.md#bibliography-correspondence)
+continues to map all 28 source IDs to the three bibliographies. Paper 1 prints
+five external mathematical sources; its bibliography retains seven records,
+including two uncited companion entries. The three-paper allocation is
+recorded in the shared guide and parity register rather than repeated in the
+manuscript. Concrete protocol construction remains with Paper 2, and
+quantitative coding/metric comparisons remain with Paper 3.
 
 The published snapshot `66e1ad2` passed complete protected preflight. This
 revised manuscript and the aligned Lean documentation form a new local

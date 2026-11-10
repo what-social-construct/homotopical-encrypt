@@ -1,8 +1,8 @@
 \section{The Harmonic Cochain Problem}\label{sec:hcp-definition}
 
-The formal cellular model is algebraic: finite graded cell carriers, integer
-incidence numbers and face-to-coface linear stalk maps determine adjacent
-coboundaries satisfying \(\delta_1\delta_0=0\). It adapts the finite Hodge
+We use finite graded cell carriers, integer incidence numbers and
+face-to-coface linear stalk maps whose induced coboundaries satisfy
+\(\delta_1\delta_0=0\). This algebraic model adapts the finite Hodge
 setup of \cite{hansenGhrist2018sheaves} without assuming a regular CW or
 simplicial realization for every admitted incidence structure. All cellular
 examples below use this declared model; stronger topological realization and
@@ -328,28 +328,19 @@ to exactness with the full HCP residual.
 \subsection{Public and Hidden Data}
 
 \begin{definition}[Public observation]\label{def:public-observation}
-  A public observation is the data exposed to a verifier or adversary without
-  revealing a hidden representative. In the abstract model it consists of a
-  realized public classifier value \(\alpha\), together with a
-  cochain-facing observation \(b\). In the \HE{} instantiation, the fully
-  public handles are hashes, roots,
-  topology hashes, nullifiers, and bounded public summaries; cochain
-  commitments and proof-carrying cochain payloads sit in the verifier-facing
-  artifact layer; full cochains and openings remain witness data unless an
-  explicit protocol path exposes them.
+  The public HCP observation consists of a realized public classifier value
+  \(\alpha\) together with an observed degree-one cochain \(b\).
 \end{definition}
 
-Thus \((\alpha,b)\) is the protocol-independent vector-level abstraction of
-the artifact-and-commitment layer developed in Paper~2
-\cite{vanDerVlugt2026protocol}: \(\alpha\) records the public
+Thus \((\alpha,b)\) is the protocol-independent vector-level observation.
+The value \(\alpha\) records the public
 classifier value, while \(b\) is the full cochain actually released by the
 selected observation profile. Acceptance of an exact payload, an opening of
 its exact component, or a proof about that component does not by itself
 expose \(b\). Instantiating the vector-level interface requires a relation
 binding the full sample to the artifact and an explicit disclosure or
 specified extraction of that sample. \Cref{sec:observation-boundaries}
-records the mathematical distinction; Paper~2 supplies its concrete
-bound-observation contracts. The
+records this mathematical distinction. The
 hidden-kernel ambiguity comparison uses the resulting mathematical pair;
 equality of a larger artifact or storage view requires its own hypotheses.
 
@@ -358,7 +349,7 @@ equivalence class of possible hidden representatives. Fibrational and
 homotopical semantics enter through this distinction: public equality is
 equality after applying a public classifier, not strict equality of hidden
 representatives. Section~\ref{sec:mathematical-framework} develops this
-semantic layer.
+semantic interpretation.
 
 \begin{definition}[Hidden-operator public projection]\label{def:hidden-operator-public-projection}
   For a public class type \(P\), a public projection is a map
@@ -590,20 +581,14 @@ CVP instance additionally requires an explicit lattice
 that projection onto the kernel preserves the closest vectors of that supplied
 lattice. The hidden-operator model withholds the operative subspace itself.
 
-\subsection{Computational Model}
+\subsection{Computational Scope}\label{sec:computational-scope}
 
-The computational model separates three layers.
-\begin{enumerate}[label=(\roman*)]
-  \item The mathematical layer defines public projections, hidden operator
-    fibers, harmonicity, and kernel ambiguity.
-  \item The external known-lattice CVP hardness interface records a
-    computational assumption, separate from the proved exact-recovery
-    obstruction; no asymptotic hardness reduction is asserted.
-  \item Runtime requirements such as byte parsing, canonical encodings, hash
-    domain separation, proof verification, and state transition are outside the
-    mathematical HCP definition.
-\end{enumerate}
-
-This paper proves the mathematical comparisons and states the external CVP
-interface for context. Paper~2 owns concrete protocol and runtime claims;
-Paper~3 owns coding and proximity analysis.
+The comparisons below concern exact recovery and preservation of discrete
+CVP solutions when the harmonic subspace, lattice and inclusion are supplied.
+The ambiguity examples
+show that the stated public input can fail to identify its operative target,
+ruling out a uniformly exact solver on that family. A computational hardness
+assumption requires encoded instance families, a specified measure of input
+size, an algorithm class and a success criterion; the present results do not
+constitute an asymptotic CVP-hardness reduction. Distributional encryption
+security would further require a sampling model and a defined adversary view.

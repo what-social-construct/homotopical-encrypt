@@ -9,6 +9,49 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Paper 1 standalone exposition and merged observations — 2026-11-09
+
+Paper 1 now presents a standalone HCP recovery problem. The introduction
+runs from Helfer's semantic motivation through the public input, operative
+hidden operator and recovery target to the CVP comparison. Repeated
+companion-paper descriptions, the three-layer/runtime list and the separate
+program-boundary subsection are removed. §2.4 states the computational scope
+in one paragraph. The cellular-model opening uses direct prose without a colon.
+
+Former §§5–6 are merged into **§5, Observation Boundaries and Recovery**:
+exact-component observations and their obstruction lead to larger public
+views, frames and full-point recovery (§5.5). **§6 concludes**. The old
+projective-section TeX file is removed and its mathematical content is in the
+existing observation file. The definition of Public Observation is clarified
+as the existing classifier/cochain pair; §3.1 compares that pair directly with
+CVP's matrix/target input. No new formal object is introduced.
+
+All **106 displayed mathematical blocks, eleven proposition statements and
+eleven proofs** match `8e5bf41` exactly. Ten other definitions are unchanged;
+the only definition edit removes protocol-visibility prose from Public
+Observation. All 46 configured parity names still occur exactly once.
+Seven Lean module headers remove obsolete section-number references. Exact
+non-comment source fingerprints for all **280 files** match the preserved
+checked proof source; imports, definitions, statements, proofs, options and
+pins are unchanged. P301's 9,295-job/975-report result remains the retained
+proof-state evidence; this prose/comment revision does not claim a new build
+or kernel replay.
+
+The **36-page PDF** builds without undefined references/citations, missing
+glyphs or overfull boxes (two underfull diagnostics), and all pages pass
+render/contact review with detailed changed-body and backmatter checks.
+Canonical and stable copies match. Current Paper 1 SHA-256:
+`649219fc9a7cf92d61481c3ba5076ef4e7a3c087f2ad5a3632caf2f3706acdae`.
+Five external sources are printed; all seven bibliography records remain,
+and the 28-source correspondence ledger is unchanged. No companion theorem
+is needed for the selected Paper 1 statements.
+
+Evidence is `paper1-standalone-*` and `paper1-no-program-*` under
+`output/validation/`. Current section crosswalks and local packages are
+updated. The earlier public `66e1ad2` snapshot and protected PASS remain
+historical; this revised informal account requires its own exact-commit
+protected check before any later intake. No publication or submission occurs.
+
 ## Paper 1 abstract and motivation refinement — 2026-11-09
 
 The second abstract paragraph is removed; the first is preserved exactly.

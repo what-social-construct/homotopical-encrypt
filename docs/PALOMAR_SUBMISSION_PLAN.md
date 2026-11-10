@@ -27,20 +27,32 @@ work. Their technical packaging does not change the
 [three-paper split](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table):
 Paper 2 remains the protocol/cochain paper and Paper 3 the proximity paper.
 
-**Current back-matter revision, 2026-11-09.** Paper 1 is **38 pages**. Its
-mathematical body contains no Lean cross-reference blocks or implementation
-filenames. Section 7 is *Conclusion and Further Work*. Appendix A consolidates
-the correspondence into one parity table: four definition rows, eight main
-result groups (21 declarations), five support groups (25 declarations), and
-three external-result/assumption/contract rows. Appendix B keeps concise proof
-boundaries. All **280 Lean files are byte-identical to `dddfdd2`**, so the
-checked 9,295-job build and 975-report dependency state is retained; this
-editorial change introduces no new Lean build claim. Paper 3 remains the
-unchanged 31-page PDF. The bibliography reconciliation adds 19 records and
-maps all 28 source-ledger IDs: Paper 1 cites seven entries, while Paper 2 and
-Paper 3 retain 42 and 16 records respectively. Candidate bibliography
-membership does not imply adoption or formalization. This revision remains
-local; public `66e1ad2` and its historical protected report are unchanged.
+**Current standalone mathematics revision, 2026-11-09.** Paper 1 is
+**36 pages** and develops the recovery problem, hidden-operator difficulty,
+CVP comparison and observation limits without repeated companion-paper
+ownership notes. Section 5, *Observation Boundaries and Recovery*, combines
+the former two observation sections: exact cochains, the exact-component
+obstruction, additional public observations, frames/projective coordinates
+(§5.4), and recovery from the full point (§5.5). Section 6 is *Conclusion and
+Further Work*. Its post-conclusion parity table retains four definition rows,
+eight main groups (21 declarations), five support groups (25 declarations),
+and three background/assumption/contract rows; concise proof boundaries follow.
+Paper 1 prints five external mathematical references; its bibliography still
+has seven records, including two uncited companion entries. The 28-source
+ledger mapping remains intact; Paper 2/3 retain 42/16 bibliography records,
+and Paper 3's 31-page PDF is unchanged. Lean edits are limited to section-number
+comments; all non-comment Lean source is unchanged. The checked 9,295-job/
+975-report proof state is retained without claiming a repeated Lean build.
+The revised candidate remains local and needs its own exact-commit protected
+preflight; public `66e1ad2` and its passing report remain unchanged.
+
+**Preserved P302/P303 back-matter checkpoint, 2026-11-09.** Paper 1 then had
+38 pages, separate observation sections and a section-7 conclusion. Its parity
+table retained all 46 selected declarations, and its seven printed references
+included the two companion manuscripts. All 280 Lean files at that checkpoint
+were byte-identical to `dddfdd2`. Those exact-source facts and the earlier
+37-page P300/P301 checkpoint remain historical evidence, rather than claims
+about the current section numbering or whole-file bytes.
 
 **Earlier P300/P301 scope checkpoint, 2026-11-09.** The manuscripts followed that
 split throughout: Paper 1 was 37 pages, retaining HCP/Hodge/CVP, the actual
@@ -222,7 +234,7 @@ manuscript and metadata were frozen together in public commit
 this refreshed snapshot; its completed checks remain historical
 evidence. No Lean declarations or entry configuration names were changed by
 those wording corrections. The subsequent local 37-page P300/P301 revision and Lean comment changes
-were a different snapshot. The current 38-page parity-table revision retains
+were a different snapshot. The preserved P302/P303 38-page parity-table revision retained
 all Lean bytes from `dddfdd2`; neither editorial revision has a new protected
 preflight result.
 
@@ -263,14 +275,14 @@ indistinguishability is not asserted by these statements.
 
 | ID / manuscript statement | Selected mathematical content | Canonical implementation declarations |
 |---|---|---|
-| P1-S01 — §2.1, `prop:hodge-decomposition`; §3.3/appendix | Existence, orthogonality and uniqueness of the three Hodge components in finite real orthonormal coordinates, plus private recovery for actual cochains; coefficient recovery retains its supplied integral harmonic-lattice presentation and is noncomputable. | `Hodge_Decomposition_Theorem`; `Hodge_Decomposition_unique`; `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.harmonicOneProjection_observed`; `Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt` |
+| P1-S01 — §2, `prop:hodge-decomposition`; §§2.1, 3.3/appendix | Existence, orthogonality and uniqueness of the three Hodge components in finite real orthonormal coordinates, plus private recovery for actual cochains; coefficient recovery retains its supplied integral harmonic-lattice presentation and is noncomputable. | `Hodge_Decomposition_Theorem`; `Hodge_Decomposition_unique`; `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.harmonicOneProjection_observed`; `Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt` |
 | P1-S02 — §3.2, `prop:hcp-to-cvp` | Every finite-dimensional field-linear generated subspace is a matrix kernel; the displayed-operator solver consequence concerns the linear image, separately from the integer lattice. | `exists_matrix_ker_eq_range`; `Hodge_GeneratedSubspace_Reduction_Proof` |
 | P1-S03 — §3.3, `prop:hodge-projection-is-cvp` | For every explicit lattice Λ⊆W and every target/candidate, orthogonally projecting the target onto W preserves precisely the discrete CVP solutions. Keep the lattice inclusion and orthogonal-projection instance. | `HarmonicCVPBridge.squaredDistance_projection_decomposition`; `HarmonicCVPBridge.solution_iff_projectedTarget` |
 | P1-S04 — §3.3/appendix, actual cellular specialization | For the actual cellular sample H.encrypt(z,noise), the CVP solution is exactly H.point(z), uniquely; retain H as a supplied harmonic-lattice presentation. | `concreteSheafHCP_CVP_solution_iff_message`; `concreteSheafHCP_CVP_existsUnique` |
 | P1-S05 — §3.4, `prop:cvp-insufficient`; §3.5, `prop:cellular-axis-ambiguity` | The general separation theorem gives distinct targets, and its nontrivial cellular instance gives distinct nonzero targets at one public input. Both the manuscript soundness/exact-on-harmonics contract and its direct operative-target companion are retained. Retain the correct-CVP-oracle existence premise and the exact no-uniform-solver quantifiers. | `Hcrypt.HCPBridge.operativeTargets_ne_of_kernelSeparation`; `Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation`; `Hcrypt.HCPBridge.cvpOracle_insufficient_for_operativeTarget`; `Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets`; `Hcrypt.HCP.AxisFamily.cvp_oracle_insufficient` |
 | P1-S06 — §3.5, weighted integral example | At common b=(1,2), the original integer coefficients differ (2 versus 1); no exact public coefficient decoder exists. For each private presentation the same actual sample has a unique CVP answer equal to its operative HCP target. | `Hcrypt.HCP.AxisFamily.weighted_public_observations_eq`; `Hcrypt.HCP.AxisFamily.no_exact_encoded_message_decoder`; `Hcrypt.HCP.AxisFamily.weighted_cvp_solution_iff_operativeTarget`; `Hcrypt.HCP.AxisFamily.weighted_cvp_existsUnique` |
 | P1-B01 — §2, `prop:exact-component-obstruction` | The unrestricted exact-component view cannot retain the full residual/far region when a nonzero coexact direction is allowed. This does not prove wire factorization. | `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent`; `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent` |
-| P1-B02 — §6.2, `prop:plucker-recovery`; formal-boundaries appendix | Genuine full projective coordinates recover the subspace and its fixed-metric projector; operative-kernel identification additionally recovers the HCP target from b. Digest-only observations remain separate. | `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame`; `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame`; `Hcrypt.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent` |
+| P1-B02 — §5.5, `prop:plucker-recovery`; formal-boundaries appendix | Genuine full projective coordinates recover the subspace and its fixed-metric projector; operative-kernel identification additionally recovers the HCP target from b. Digest-only observations remain separate. | `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame`; `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame`; `Hcrypt.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent` |
 
 The concrete family uses actual integral cellular sheaves and the true
 degree-one operators. Its public classifier is the full theory of the stated
@@ -283,13 +295,12 @@ of larger released storage views, sampled secrecy, finite byte codecs and
 complexity bounds remain separate.
 
 P1-B01/B02 are explicitly named observation-boundary statements. The local
-manuscript's [observation section](../papers/paper1/sections/05-observation-boundaries.tex)
-and [projective-recovery section](../papers/paper1/sections/06-projective-observation-boundary.tex)
-retain that mathematics. Detailed construction and protocol gates now belong
-to Paper 2; quantitative RS/MCA and far-separation/calibration arguments
-belong to Paper 3. Paper 1 retains only a brief conditional application
-reference, outside the selected HCP/CVP entry; no cited-bound theorem becomes
-an axiom-free selected result through this rearrangement.
+manuscript's merged [Observation Boundaries and Recovery section](../papers/paper1/sections/05-observation-boundaries.tex)
+retains both results; full-point recovery is §5.5. No companion-manuscript
+theorem is needed for these selected HCP/CVP statements. The program allocation
+is recorded here: Paper 2 owns concrete construction/protocol gates, and Paper 3
+owns quantitative RS/MCA and distance/calibration analysis. No cited-bound
+theorem becomes an axiom-free selected result through the expositional merge.
 
 ### Paper 3: nine original coding statements and bounded application
 
@@ -452,10 +463,11 @@ The public snapshot's Paper 1 wording pass has its own rebuilt and visually insp
 paragraph's counts and unchanged-source statements remain dated baselines.
 The P300/P301 37/31-page ownership revision passed its compile/render checks,
 9,295-job local build and all 975 selected dependency reports with unchanged
-sets. The current Paper 1 is 38 pages and moves Lean correspondence to its
-post-conclusion parity table; Paper 3 and its printed bibliography remain
-unchanged. All 280 Lean files retain exact bytes from `dddfdd2`, preserving
-that checked Lean state. The new manuscript remains outside the exact
+sets. The current Paper 1 is 36 pages, merges its observation material into section 5
+and keeps Lean correspondence in its post-conclusion parity table. Paper 3
+and its printed bibliography are unchanged. All non-comment Lean source is
+unchanged; only section-reference comments are updated, retaining the checked
+proof state without claiming a repeated build. The new manuscript remains outside the exact
 historical protected-preflight baseline; a new hosted check is still required.
 
 Freeze a separate slim per-entry release with the selected proof closure,
@@ -538,9 +550,10 @@ not yet a replacement release:
    Its preferred-size advisory is within the hard caps. Prior local builds
    and the 975-report audit remain separately recorded evidence.
 5. **Local editorial revision prepared; stop before intake.** The current
-   38-page Paper 1, unchanged 31-page Paper 3 and reconciled bibliographies
+   36-page Paper 1, unchanged 31-page Paper 3 and reconciled bibliographies
    remain local. The post-conclusion parity table preserves all 46 configured
-   declarations, and all 280 Lean files retain exact bytes from `dddfdd2`.
+   declarations. Non-comment Lean source is unchanged; section-number comments
+   are aligned with the merged exposition.
    Finish the manuscript/package exact-source checks and
    prepare a refreshed slim snapshot before any future publication/preflight.
    The user explicitly deferred submission.

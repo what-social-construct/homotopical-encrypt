@@ -1,8 +1,12 @@
 \section{Semantic Classifiers and the Homological Model}\label{sec:mathematical-framework}
 
+The ambiguity theorem uses equality of public class values. We now describe
+the semantic conditions that supply this equality, before examining what
+additional observations reveal.
+
 \subsection{Fibrational Semantics}
 
-The path-object and fibrational part of this semantic layer is adapted from
+The path-object and fibrational part of this semantic setting is adapted from
 Helfer's first-order homotopical logic
 \cite[Sections~2--7]{helfer2019fol}. In particular, we use its replacement of
 diagonal equality by a path-space fibration, its Grothendieck-fibrational
@@ -26,7 +30,7 @@ We use the usual fibrational notation
   E_b=p^{-1}(b)
 \]
 for a total space of hidden data over a base of public or contextual data.
-When \(x,y\in E_b\), equality in the semantic layer is interpreted through a
+When \(x,y\in E_b\), equality in this setting is interpreted through a
 path object rather than by strict equality in the ambient presentation. We
 write \(\mathcal P_X(x,y)\) for the path object from \(x\) to \(y\) in a space
 or type \(X\), and set
@@ -42,8 +46,8 @@ fibrational transport data, a path \(\gamma\in\mathcal P_E(x,y)\) supplies the c
 \]
 Such transport is additional structure; equality of public classifier values
 alone supplies no transport map.
-The protocol realization in Paper~2 uses additional typed transport and
-observation data; no byte-level construction is inferred here.
+Concrete observation and transport maps require their own compatibility
+data; these laws do not construct a byte-level encoding.
 
 The typed interpretation assigns an object of a
 model category to each sort of an algebraic signature. Finite lists of sorts
@@ -131,9 +135,7 @@ and nonfaithful when some public fiber contains distinct hidden
 representatives. A path \(\gamma\in\mathcal P_A(x,y)\) is a hidden witness
 that \(x\) and \(y\) lie in the same path component; under path-respect, its
 public consequence is the equality \(\pi(x)=\pi(y)\). At this stage the public
-datum is only the classifier value. The protocol profile and the quantitative code-side analysis are developed
-separately in Papers~2 and~3; this paper retains their observation boundary
-in \cref{sec:projective-observation-boundary}.
+datum is only the classifier value.
 
 Path-respecting gives only the displayed forward implication. Unless a
 separate completeness condition is imposed, equality of classifier values
@@ -193,10 +195,3 @@ The generic bridge in
 hypotheses. The constructed fragment discharges its own invariance premise;
 it does not supply protocol authentication, a computational sampler or a
 security game.
-
-Protocol-specific commitment assumptions, oracle judgments, admissibility
-gates and proof-carrying state belong to Paper~2
-\cite{vanDerVlugt2026protocol}. Coding predicates, radii and quantitative
-projection comparisons belong to Paper~3 \cite{vanDerVlugt2026proximity}.
-Those developments may reuse these semantic and Hodge objects without
-becoming additional claims of this manuscript.

@@ -126,20 +126,32 @@ extension-field encoding and original-object adapters; integer casts into a
 prime subfield do not construct it. Keep this optional stronger application
 separate from the already completed native modular radius theorem.
 
-**Current back-matter revision, 2026-11-09.** Paper 1 is **38 pages**. Its
-mathematical body contains no Lean cross-reference blocks or implementation
-filenames. Section 7 is *Conclusion and Further Work*. Appendix A consolidates
-the correspondence into one parity table: four definition rows, eight main
-result groups (21 declarations), five support groups (25 declarations), and
-three external-result/assumption/contract rows. Appendix B keeps concise proof
-boundaries. All **280 Lean files are byte-identical to `dddfdd2`**, so the
-checked 9,295-job build and 975-report dependency state is retained; this
-editorial change introduces no new Lean build claim. Paper 3 remains the
-unchanged 31-page PDF. The bibliography reconciliation adds 19 records and
-maps all 28 source-ledger IDs: Paper 1 cites seven entries, while Paper 2 and
-Paper 3 retain 42 and 16 records respectively. Candidate bibliography
-membership does not imply adoption or formalization. This revision remains
-local; public `66e1ad2` and its historical protected report are unchanged.
+**Current standalone mathematics revision, 2026-11-09.** Paper 1 is
+**36 pages** and develops the recovery problem, hidden-operator difficulty,
+CVP comparison and observation limits without repeated companion-paper
+ownership notes. Section 5, *Observation Boundaries and Recovery*, combines
+the former two observation sections: exact cochains, the exact-component
+obstruction, additional public observations, frames/projective coordinates
+(§5.4), and recovery from the full point (§5.5). Section 6 is *Conclusion and
+Further Work*. Its post-conclusion parity table retains four definition rows,
+eight main groups (21 declarations), five support groups (25 declarations),
+and three background/assumption/contract rows; concise proof boundaries follow.
+Paper 1 prints five external mathematical references; its bibliography still
+has seven records, including two uncited companion entries. The 28-source
+ledger mapping remains intact; Paper 2/3 retain 42/16 bibliography records,
+and Paper 3's 31-page PDF is unchanged. Lean edits are limited to section-number
+comments; all non-comment Lean source is unchanged. The checked 9,295-job/
+975-report proof state is retained without claiming a repeated Lean build.
+The revised candidate remains local and needs its own exact-commit protected
+preflight; public `66e1ad2` and its passing report remain unchanged.
+
+**Preserved P302/P303 back-matter checkpoint, 2026-11-09.** Paper 1 then had
+38 pages, separate observation sections and a section-7 conclusion. Its parity
+table retained all 46 selected declarations, and its seven printed references
+included the two companion manuscripts. All 280 Lean files at that checkpoint
+were byte-identical to `dddfdd2`. Those exact-source facts and the earlier
+37-page P300/P301 checkpoint remain historical evidence, rather than claims
+about the current section numbering or whole-file bytes.
 
 ## Current Status And Source Of Truth
 
@@ -149,7 +161,7 @@ Paper 1 is superseded by the current editorial split.
 
 | Paper | Current structure and contribution | Reused material |
 |---|---|---|
-| 1 | HCP/Hodge recovery; discrete CVP comparisons and constructed ambiguity; the homological semantic fragment; exact-component and full-projective observation boundaries. | Cites Paper 2's concrete construction and Paper 3's quantitative comparisons. |
+| 1 | HCP/Hodge recovery; discrete CVP comparisons and constructed ambiguity; the homological semantic fragment; exact-component and full-projective observation boundaries. | Uses external mathematical sources; no Paper 2/3 theorem is needed for these selected results. The shared program allocation is recorded here. |
 | 2 | Concrete original cochain payload, encoding/visibility/validity contracts, original projection evidence, storage/rotation and one conditional resource transition. | Uses Paper 1 geometry and Paper 3 metric/coding bounds. Remains a working draft. |
 | 3 | Universal RS list/MCA/radius results and quantitative original-cochain source-to-code comparisons for the declared modular profile. | Imports Paper 2's actual construction and cites Paper 1 observation obstructions. |
 
@@ -164,25 +176,25 @@ Paper 1 is superseded by the current editorial split.
 4. **Semantic Classifiers and the Homological Model:** typed interpretations,
    path-respecting classifier fibers, proved homological tests and external
    first-order background.
-5. **Observation Boundaries:** exact cochain versus full sample, opening
-   quotient and the effect of larger released views. No wire/security construction.
-6. **Projective Observations and Recovery:** frames, full exterior/projective
-   subspace/projector recovery and operative-kernel identification; a brief
-   application boundary citing Papers 2--3.
-7. **Conclusion and Further Work:** the exact recovery/observation outcomes
-   and their computational and semantic limits.
-8. **Appendix A, Statement--Lean Parity Table:** one post-conclusion table
-   with four definition rows, eight main result groups (21 declarations),
-   five support groups (25 declarations), and three external-result,
-   assumption or contract rows.
-9. **Appendix B, proof boundaries:** concise model, observation and verification
-   scope. The mathematical body has no Lean cross-reference blocks or filenames.
+5. **Observation Boundaries and Recovery:** exact cochain versus full sample,
+   opening quotient, the exact-component obstruction and larger public views;
+   frames and full exterior/projective subspace/projector recovery, with the
+   operative-kernel identification. Frames are §5.4 and full-point recovery is
+   §5.5. No wire/security construction is asserted.
+6. **Conclusion and Further Work:** exact recovery/observation outcomes and
+   their computational and semantic limits.
+7. **Appendix A, Statement--Lean Parity Table:** one post-conclusion table
+   with four definition rows, eight main groups (21 declarations), five support
+   groups (25 declarations), and three background/assumption/contract rows.
+8. **Appendix B, proof boundaries:** concise model, observation and verification
+   scope. The mathematical body has no Lean cross-reference blocks, filenames
+   or repeated descriptions of the other manuscripts.
 
-The corresponding section files are `05-observation-boundaries.tex` and
-`06-projective-observation-boundary.tex`. The former long protocol/coding
-chapters and broad source catalogue are preserved in Git history, not repeated
-in the current Paper 1 PDF. This is an editorial allocation; no mathematical
-object is replaced or renamed.
+The merged observation source is `05-observation-boundaries.tex`; the former
+separate projective-recovery file is removed. Detailed protocol/coding
+allocation stays in this guide and the shared ownership table. The former long
+chapters and source catalogue remain in Git history. No mathematical object
+is replaced or renamed by this expositional merge.
 
 ## Paper 2 Construction and Protocol Scope
 

@@ -1,12 +1,10 @@
-\section{Observation Boundaries}\label{sec:observation-boundaries}
+\section{Observation Boundaries and Recovery}\label{sec:observation-boundaries}\label{sec:projective-observation-boundary}
 
-The recovery statements concern the public pair \((\alpha,b)\) from
-\cref{def:public-observation}. A protocol may instead expose a residue
-payload, a digest or a proof about a cochain. Those are different observation
-maps. This section records only the mathematical distinctions needed by the
-HCP argument. The construction, encoding, visibility policy and security
-contracts of the cochain commitment belong to Paper~2
-\cite{vanDerVlugt2026protocol}.
+The recovery problem fixes the public pair \((\alpha,b)\) from
+\cref{def:public-observation}. Changing the observation can change what is
+recoverable. We first examine observations of the exact component, then
+show how full projective data of the operative harmonic subspace determine
+the recovery target.
 
 \subsection{Exact Cochains and Full Hodge Samples}
 
@@ -38,7 +36,6 @@ supply a relation binding that artifact to the full sample, its operative
 operator and its classifier value. The artifact can retain an exact
 component and separately relate it to \(b\); projecting such a related record
 is not an algorithm that extracts the full sample from residue bytes.
-Paper~2 gives the concrete payload, snapshot and observation contracts.
 The argument here uses only the resulting mathematical pair.
 
 \subsection{The Exact-Component Obstruction}
@@ -58,9 +55,8 @@ This does not identify the distinct scores
   \text{a modular cochain or code distance}.
 \]
 The first measures disagreement with the harmonic subspace, while the second
-measures distance to exactness. The modular distances and their native
-normalizations are specified by the protocol profile and analyzed in
-Paper~3. No equality of those scores is assumed by the HCP/CVP comparison.
+measures distance to exactness. A modular distance requires its own carrier and normalization. No equality
+of these scores is assumed by the HCP/CVP comparison.
 
 \subsection{Additional Public Observations}
 
@@ -76,3 +72,75 @@ example of consequential additional information. At the fixed ambient inner
 product, it determines that subspace's projector and therefore the HCP target
 from \(b\). We prove this reconstruction next. A digest-only view remains a
 different observation and is not covered by the reconstruction theorem.
+
+\subsection{Frames and Projective Coordinates}
+
+Let \(V=\mathbb R^n\) have its fixed Euclidean inner product, and let
+\(w_1,\ldots,w_r\) be an independent frame spanning \(W\le V\). Its exterior
+coordinate is
+\[
+  c=w_1\wedge\cdots\wedge w_r\in\bigwedge^r V.
+\]
+An independent frame has nonzero exterior product. A different basis of the
+same subspace changes \(c\) by the nonzero determinant of its change-of-basis
+matrix. The projective class therefore depends only on \(W\):
+\[
+ c\sim c'\quad\Longleftrightarrow\quad
+ \exists u\in\mathbb R^\times,\ c'=uc.
+\]
+The formal raw carrier is the scalar-orbit quotient of the whole exterior
+power, including its zero orbit. A genuine frame determines a nonzero,
+decomposable orbit. The conclusions below use such frames; they do not
+assert that every point of the raw quotient is a Grassmannian point.
+
+A related specialized reconstruction uses restricted Pl\"ucker coordinates
+for maximal isotropic subspaces \cite{dingKim2026plucker}. The argument here
+uses the full projective point of an arbitrary real subspace and the fixed
+ambient metric; no orthogonal-matroid realization is assumed.
+
+\begin{proposition}[Projective Pl\"ucker invariance]\label{prop:plucker-invariance}
+  Two independent frames spanning the same finite-dimensional subspace have
+  equal projective exterior coordinates.
+\end{proposition}
+\begin{proof}
+  Both exterior products are nonzero elements of the one-dimensional top
+  exterior power of that subspace. They differ by a nonzero scalar and hence
+  have the same orbit.
+\end{proof}
+
+\subsection{Recovery from the Full Point}
+
+\begin{proposition}[Recovery from the full projective point]
+\label{prop:plucker-recovery}
+  Let \(w_1,\ldots,w_r\) be an independent frame for
+  \(W\subseteq\mathbb R^n\), and put
+  \(c=w_1\wedge\cdots\wedge w_r\). Then
+  \[
+    W=\{x\in\mathbb R^n:x\wedge c=0\}.
+  \]
+  This reconstruction depends only on \([c]\). Consequently, two genuine
+  rank-\(r\) frame witnesses have the same full projective point if and only
+  if they present the same subspace. At the fixed ambient inner product,
+  the full point determines \(P_W\) and \(I-P_W\).
+\end{proposition}
+\begin{proof}
+  If \(x\in W\), the frame with \(x\) adjoined is dependent and its exterior
+  product vanishes. If \(x\notin W\), the adjoined frame is independent and
+  its exterior product is nonzero. Multiplying \(c\) by a nonzero scalar
+  does not change this annihilator. The projector is the unique orthogonal
+  projection onto the reconstructed subspace.
+\end{proof}
+
+In the raw quotient the zero orbit has the whole ambient space as its
+annihilator. The frame-indexed statement avoids treating that orbit as an
+arbitrary nonzero rank-\(r\) Pl\"ucker point.
+If \(W=\ker\Delta_x\) is the operative harmonic subspace, full projective
+data together with \(b\) determine
+\[
+  h=P_Wb.
+\]
+The operative-kernel identification and the fixed inner product are essential.
+A coordinate for an unrelated subspace gives no such conclusion. The full
+point does not determine the positive spectrum of the original \(\Delta_x\).
+Nor does this exact-real reconstruction give an efficient finite byte
+algorithm or inversion of a digest.

@@ -8,7 +8,7 @@ public import Laplacian.Projection
   Injectivity of the Grassmannian Laplacian map.
 
   Paper correspondence:
-  - Paper 1 Section 6 uses the fixed-metric relationship between a harmonic
+  - Paper 1 uses the fixed-metric relationship between a harmonic
     subspace and its kernel-normalized projector.
   - This supporting lemma concerns an already presented operator; it supplies
     no public-visibility or classifier-recovery theorem.

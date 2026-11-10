@@ -11,7 +11,7 @@ public import Proximity.Concrete.PluckerCochain
   - Paper 2: a supplied encoder/realization relating a projective shadow to
     the original commitment payload.
   - Paper 3: its mathematical local-syndrome/codeword consequences under the
-    declared profile; full Plucker recovery remains Paper 1 Section 6.
+    declared profile; full Plucker recovery belongs to Paper 1.
 
   This file owns the first concrete payload boundary after the projective
   Plucker shadow. It does not choose a plane shadow or an RS field. The output

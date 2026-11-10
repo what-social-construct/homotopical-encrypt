@@ -9,7 +9,7 @@ public import Proximity.Application.Projection
 
   Paper correspondence:
   - Shared abstract shadow vocabulary, with full exterior/projective recovery
-    in Paper 1 Section 6 through the concrete owner.
+    in Paper 1 through the concrete owner.
   - Paper 3 can use a declared shadow as a projection source; this legacy
     interface alone supplies no exterior reconstruction theorem.
 

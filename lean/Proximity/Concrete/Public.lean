@@ -15,7 +15,7 @@ public import TCB.ObservationBoundary
   - Paper 2: observed payload realization, storage-root-linked views and
     authenticated evidence contracts.
   - Paper 3 supplies the underlying mathematical extraction and metric
-    statements; full projective recovery remains Paper 1 Section 6.
+    statements; full projective recovery belongs to Paper 1.
 
   Core mathematical stages stay with their objects:
 

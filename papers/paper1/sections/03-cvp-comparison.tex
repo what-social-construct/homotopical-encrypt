@@ -49,10 +49,9 @@ is the schema
     O\in\mathcal C\wedge\mathsf{CVP}_{\mathrm{corr}}(O).
 \end{aligned}
 \]
-This is the separation between the known-lattice interface and the
-hidden-operator interface: a CVP oracle receives \(B\) and \(t\), while a
-public HCP procedure sees only public class values, hashes, commitments, and
-verifier-facing artifacts unless extra hidden-operator information is supplied.
+A CVP oracle receives \(B\) and \(t\). The HCP procedures studied here
+receive \((\alpha,b)\); the operative Hodge operator and its kernel are
+withheld.
 
 \subsection{Presented Linear Images}
 
@@ -407,11 +406,10 @@ correct coefficient for both presentations. This is a finite exact-recovery
 obstruction for the specified integer encoding, not a distributional security
 experiment. Each message remains the unique CVP answer in its actual lattice.
 
-This example fixes the mathematical observation to \((p,b)\). Its equal zero
-exact components do not assert equality of complete storage records. The
-application adapter requires the actual operator and snapshot classifier to
-agree with the semantic realization before deriving message/operative-target
-and CVP agreement. Existing payload acceptance, decoder, hash and envelope
-bindings remain explicit. Paper~2 owns those concrete visibility/storage,
-rotation and key-delivery profiles; this example establishes no distributional
-anonymity or plaintext-security experiment.
+This example fixes the mathematical observation to \((p,b)\). Its equal
+zero exact components do not imply equality of complete storage records.
+A larger released view must be specified and shown to agree for both
+presentations before the same ambiguity argument applies. Transferring the
+target and CVP conclusions also requires agreement with the operative
+operator and classifier. No distributional anonymity or plaintext-security
+conclusion follows from this example.

@@ -8,7 +8,7 @@ public import Proximity.Concrete.GrassmannianPlucker
   Concrete projective Plucker instantiation.
 
   Paper correspondence:
-  - Paper 1 Section 6: the actual exterior-power quotient and projective frame
+  - Paper 1: the actual exterior-power quotient and projective frame
     invariance used by full-point recovery.
   - Paper 3 may reuse this geometry as a source object, retaining its separate
     metric/calibration obligations.

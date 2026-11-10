@@ -15,7 +15,7 @@ projection comparisons. Their current sources are `papers/paper1/main.tex`,
 
 | Former material | Current manuscript owner |
 |---|---|
-| Source observation and full Plucker subspace/projector recovery | Paper 1 §6 |
+| Source observation and full Plucker subspace/projector recovery | Paper 1 §5; full-point recovery in §5.5 |
 | Cochain realization, payload, local syndrome and extraction/codec | Paper 2 §§2--3 |
 | Protocol stage certificates, gates, evidence and persistence | Paper 2 §6 |
 | Generic calibrated metric comparisons and near/far directions | Paper 3 §7; explicit contracts consumed by Paper 2 |

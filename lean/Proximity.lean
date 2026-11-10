@@ -13,7 +13,7 @@ public import Proximity.Concrete
   Unified proximity hierarchy for the homotopical-encrypt Lean workspace.
 
   Paper correspondence:
-  - Paper 1 Section 6: full projective observations and fixed-metric
+  - Paper 1: full projective observations and fixed-metric
     subspace/projector recovery through specific geometry owners.
   - Paper 2: commitment/observation contracts, projection-stage certificates
     and evidence.
