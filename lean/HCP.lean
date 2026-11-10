@@ -213,6 +213,20 @@ variable
     {Rep : Type uRep} {N : Type} [Fintype N]
     {R : Type} [CommRing R] {P : Type}
 
+/--
+Optional reflection requirement for a realization whose public classes are
+exactly its declared semantic homotopy classes, once closed-test invariance
+supplies the forward implication.
+
+This concerns the semantic interpretations. Distinct equivalent representatives
+and different operative kernels can share a class; an equivalence transport is
+not made part of the public observation.
+-/
+def ReflectsHomotopyEquivalence
+    (X : Realization C S sem Rep N R P) : Prop :=
+  ∀ {r s : Rep}, Axioms.SamePublicClass X.classifier r s →
+    Helfer.HomotopyEquivalent (X.interpretation r) (X.interpretation s)
+
 /-- Homotopy equivalence of semantic cores gives equality of the factored classifier. -/
 theorem samePublicClass_of_homotopyEquivalent
     (X : Realization C S sem Rep N R P)
@@ -227,6 +241,32 @@ theorem samePublicClass_of_homotopyEquivalent
     _ = X.classifyTheory (Helfer.ClosedTheory sem (X.interpretation s)) := by
       rw [Helfer.closedTheory_eq sem hInv hrs]
     _ = X.classifier.π s := (X.classifier_factors s).symm
+
+/-- Closed-test invariance and optional reflection make public class equality exact. -/
+theorem samePublicClass_iff_homotopyEquivalent
+    (X : Realization C S sem Rep N R P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    (hReflect : ReflectsHomotopyEquivalence X)
+    {r s : Rep} :
+    Axioms.SamePublicClass X.classifier r s ↔
+      Helfer.HomotopyEquivalent (X.interpretation r) (X.interpretation s) := by
+  constructor
+  · intro hclass
+    exact hReflect hclass
+  · intro hequiv
+    exact samePublicClass_of_homotopyEquivalent X hInv hequiv
+
+/-- The existing public class is the semantic homotopy class under optional reflection. -/
+theorem publicClassOf_eq_setOf_homotopyEquivalent
+    (X : Realization C S sem Rep N R P)
+    (hInv : Helfer.ClosedFormulaInvariance sem)
+    (hReflect : ReflectsHomotopyEquivalence X)
+    (r : Rep) :
+    Axioms.PublicClassOf X.classifier r =
+      {s | Helfer.HomotopyEquivalent (X.interpretation s) (X.interpretation r)} := by
+  ext s
+  change Axioms.SamePublicClass X.classifier s r ↔ _
+  exact samePublicClass_iff_homotopyEquivalent X hInv hReflect
 
 /-- The representative and matrix classifiers agree on realized hidden operators. -/
 theorem publiclyEquivalent_laplacians_of_homotopyEquivalent

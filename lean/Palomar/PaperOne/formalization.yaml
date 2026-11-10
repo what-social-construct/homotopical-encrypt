@@ -11,8 +11,9 @@ project:
     signed-incidence cellular model, integral examples have equal
     cohomological public observations but distinct
     nonzero operative harmonic targets; a weighted example gives different
-    integer coefficients at the same input. On the admitted two-member family,
-    equality of public theories is equivalent to typed homotopy equivalence. The general oracle statements
+    integer coefficients at the same input. Under closed-test invariance and
+    an optional reflection condition, public fibers are exactly the declared
+    typed homotopy classes; the admitted cellular family proves that condition. The general oracle statements
     retain their invariance, separation and correct-oracle existence
     hypotheses. A derived corollary fixes the same correct rank-one oracle:
     the supplied operative lattice yields its unique answer, while a shared
@@ -103,7 +104,7 @@ status:
   validation:
     solution_build: "Latest focused HCP.AxisFamily build passed 3581 jobs; all three Solution entries passed a 3759-job build. Earlier independent PaperOne solution build: 3666 jobs."
     challenge_check: "Passed independently: lake build Palomar.PaperOne.Challenge, 3516 jobs."
-    entry_axiom_audit: "Two new classifier-converse reports each use exactly propext, Classical.choice and Quot.sound. The retained P308 audit covers 124 standard-only reports (117 exact-three/seven subsets), including all 120 configured declarations with unchanged prior sets. PaperOne retains 46 reports (44 exact-three/two subsets). No fresh 126-report audit is claimed; older 975-report/9295-job evidence remains historical."
+    entry_axiom_audit: "The latest five-endpoint classifier-profile audit uses exactly propext, Classical.choice and Quot.sound in every report. Earlier two-lemma/124-report/975-report audits retain their original scopes; no new combined all-entry audit is claimed. The retained 124-report audit includes all 120 configured declarations with unchanged prior sets; PaperOne has 46 reports (44 exact-three/two subsets)."
     local_comparator: "Historical statement/definition comparison, Lean default kernel and NanoDa passed in a macOS diagnostic with --inadvisably-no-sandbox. Current selected Challenge/Solution/configuration files remain unchanged; the latest canonical proof additions pass Lean compilation and dependency audit, with no new NanoDa replay claimed."
     protected_linux_verification: "Passed for public snapshot 66e1ad2cb726d3dd816461e4f76b1d0d9147a46d, run 42729947447: protected comparison/provenance and Lean, NanoDa and con-ron accepted. A fresh exact-commit preflight is required for the revised proofs and manuscript."
     note: >-

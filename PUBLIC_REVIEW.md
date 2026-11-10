@@ -19,32 +19,38 @@ changes described below have not been published or protected-preflighted.
 The broader archive described here remains a local review package.
 The user has explicitly deferred Palomar submission and registration.
 
-**Current P309 cleanup, 2026-11-10.** Paper 1 is **28 pages**, reduced from
-32 by removing repeated explanations and consolidating the parity appendix.
-All formal environments
-match `6b762a0` byte for byte: eleven definitions, eleven propositions, twelve
-proofs and one corollary. The duplicate Recovery Target subsection is removed,
-so Computational Scope is now §2.3; full-projective recovery (§2.2.1), the
-cellular family (§3.5), closing Corollary 3.6 and conclusion §4 retain their
-locations in the argument. Appendix A retains 46 configured declarations
-(21 main/25 support) and three canonical-consequence anchors outside that
-selection. The single appendix includes brief notes on the independent entry
-and proof axioms.
+**Current P310 classifier profile, 2026-11-10.** Paper 1 is **29 pages**.
+The optional `ReflectsHomotopyEquivalence` property is defined on the
+unchanged `Realization`. Together with closed-test invariance, it gives the classifier iff
+and identifies the existing `PublicClassOf` with the declared semantic
+homotopy class. The base interface remains available without reflection.
+The admitted `Fin 2` cellular family proves the property, and its existing
+theory iff now uses the shared generic API. Semantic completeness leaves
+the operative embedded Hodge kernel dependent on the hidden presentation.
 
-The generic semantic interface assumes the forward implication from homotopy
-equivalence to equal public labels. On the admitted `Fin 2` cellular family,
-all pairs are related by typed homotopy equivalence, and equality of the
-chosen theory is equivalent to that relation. The classifier is complete on this
-restricted family; its fixed-coordinate Hodge operators can still differ.
-Two new theorems establish this in `HCP/AxisFamily.lean`; the other 279 Lean
-files and all nine Challenge/Solution/configuration files are unchanged in
-this revision. Focused/three-Solution builds again pass 3,581/3,759 jobs.
-Both new dependency checks pass with exactly the three standard axioms, as
-recorded in the [central validation record](docs/MATH_STORAGE_VALIDATION.md). P308's 124-report audit and the older
-9,295-job/975-report baseline remain historical evidence. Bibliographies and the 28-source ledger are unchanged:
-Paper 1 prints five external sources from seven records, Paper 2/3 retain
-42/16 records, and Paper 3 remains 31 pages. This candidate remains local;
-public `66e1ad2` and its protected PASS certify their historical exact inputs.
+`HCP.lean` and `HCP/AxisFamily.lean` change; the other 278 Lean files match
+`f036a16`. The additions are one optional Prop definition and three theorems,
+with no new structures, imports or global axioms. The old family iff keeps
+its statement and has a refactored proof. All 35 main formal environments
+are unchanged: eleven definitions, eleven propositions, twelve proofs and
+one corollary. The 46 configured declarations remain selected (21 main/25
+support); the single parity appendix now maps five canonical theorem anchors
+outside that selection, plus the reflection property. Computational Scope
+is §2.3, full-projective recovery §2.2.1, the family §3.5, and Corollary 3.6
+still closes the main argument before conclusion §4.
+
+Focused and three-Solution builds pass 3,581/3,759 jobs. The five-report
+canonical audit is tracked in the [central validation record](docs/MATH_STORAGE_VALIDATION.md).
+P309's two converse reports, P308's 124-report audit and the older
+9,295-job/975-report baseline remain historical evidence. Bibliographies and
+the 28-source ledger are unchanged: Paper 1 prints five external sources
+from seven records, Paper 2/3 retain 42/16 records, and Paper 3 remains
+31 pages. This candidate remains local; public `66e1ad2` and its protected
+PASS certify their historical exact inputs.
+
+**Preserved P309 checkpoint, 2026-11-10.** The 28-page cleanup consolidated
+the parity appendix and established the admitted-family converse. Its two
+new dependency reports each used exactly the three standard axioms.
 
 **Preserved P308 checkpoint, 2026-11-10.** The 32-page semantic/family-CVP
 revision added proofs in two existing Lean files and retained the 46-target
@@ -172,9 +178,9 @@ the reviewed 37-page ownership revision. The P302/P303 38-page revision retained
 that split and consolidated the Lean correspondence after the conclusion.
 The preserved P304 36-page revision merged the observation exposition.
 P305–P308 then produced the 32-page setup, exposition and family-CVP
-checkpoints. The current 28-page revision removes repeated prose while
-preserving every formal environment and proves the restricted-family
-classifier converse in the existing Lean model.
+checkpoints. P309 consolidated the 28-page manuscript and restricted-family
+converse. The current 29-page P310 revision adds an optional generic
+reflection profile and reuses it in the existing family.
 Detailed protocol construction belongs to Paper 2 and quantitative analysis
 to Paper 3.
 Paper 1 remains the first release priority; no revised release is frozen here.
@@ -182,10 +188,10 @@ Paper 1 remains the first release priority; no revised release is frozen here.
 The implementation, build and dependency counts below retain that completed
 baseline unless a row explicitly identifies the current local manuscripts.
 P300/P301 subsequently checked the 93 documentation edits. The current
-revision adds two converse theorems only in `HCP/AxisFamily.lean`; the other
-279 Lean files and nine entry statement/configuration files are unchanged.
-Repeated focused/three-Solution builds and the new dependency checks are
-recorded separately from P308 and the older full-build baseline.
+revision changes `HCP.lean` and `HCP/AxisFamily.lean`; the other 278 Lean
+files match `f036a16`. Focused/three-Solution builds pass; current canonical
+audit evidence is tracked centrally, separately from P309/P308
+and the older full-build baseline.
 
 | Item | Current status |
 |---|---|
@@ -203,12 +209,12 @@ recorded separately from P308 and the older full-build baseline.
 | Native retrieval and full-ciphertext recovery | Actual HodgeNoise queries produce a response equal to an original full encryption observation, with original coefficient recovery and same-answer CVP comparison. Digest-checked full bytes join original bound-HCP rotation/recovery with a collision alternative. Whole-bucket O(N) reads have equal fixed-scope transcripts/distributions; conditional joint-column disclosure is separate. Efficient PIR, manifest authentication and concrete finite byte/proof profiles remain open. |
 | Canonical decision profile | Closed promises retain `(ε,δ_J)` on both sides, concrete near 2046/4096 and far 2047/4096, the original map and solver pullback. Its canonical arithmetic now uses kernel proofs. The geometric far witness and efficient solver remain explicit obligations. |
 | History/manifest anchor | The joins and fixtures pass on 4.35, and all nineteen fresh anchor reports use only the three standard Lean axioms. Concrete authentication/encoding/backend profiles remain explicit. The earlier 4.24 focused/full results are preserved in the shared register. |
-| Theorem dependencies | P308's 124-report audit was standard-only (117 exact-three/seven subsets), with all 120 configured sets unchanged. Both new restricted-converse dependency checks pass with exactly the three standard axioms, as recorded in the [validation record](docs/MATH_STORAGE_VALIDATION.md). The older 975-report audit (792 exact-three/183 subsets, 106 axiom-free) remains historical evidence. |
-| Full aggregate validation | The historical expanded union at `dddfdd2` passed 9,295 jobs, including all fifteen default roots and three Solutions; literal default 9,285 is also historical. The latest single-file converse additions again pass a 3,581-job focused build and a 3,759-job three-Solution build. These current checks do not repeat the full expanded/default build. Source identity, definition comparisons and dependency audits remain separate checks in the central record. Paper 1's historical slim snapshot passed protected preflight for its exact bytes. |
+| Theorem dependencies | The current five-report canonical audit is tracked in the [validation record](docs/MATH_STORAGE_VALIDATION.md). P309's two converse reports each used the standard three axioms. P308's 124-report audit was standard-only (117 exact-three/seven subsets), with all 120 configured sets unchanged. The older 975-report audit (792 exact-three/183 subsets, 106 axiom-free) remains historical evidence. |
+| Full aggregate validation | The historical expanded union at `dddfdd2` passed 9,295 jobs, including all fifteen default roots and three Solutions; literal default 9,285 is also historical. The current two-file reflection-profile revision passes a 3,581-job focused build and a 3,759-job three-Solution build. P309's 3,759-job three-Solution build remains its recorded evidence. These checks do not repeat the full expanded/default build. Source identity, definition comparisons and dependency audits remain separate checks in the central record. Paper 1's historical slim snapshot passed protected preflight for its exact bytes. |
 | Paper 1 independent entry | [Challenge/Solution and metadata](lean/Palomar/PaperOne/README.md) cover eight selected groups through 21 manuscript-facing and 25 supporting declarations. Earlier local Comparator/Lean/NanoDa checks remain evidence for their recorded inputs; the current Solution build and dependency-check status are reported separately above. Public commit 66e1ad2 passed the complete protected workflow, canonical source audit and Lean/NanoDa/con-ron replay for its exact historical bytes; its sole size advisory was within hard caps. |
-| Paper 3 independent entries | [Coding](lean/Palomar/PaperThree/README.md) and [original-cochain application](lean/Palomar/PaperThree/Application/README.md) retain all fourteen selected groups across two configurations. Earlier full local definition comparisons and Lean/NanoDa replays passed for their recorded inputs; the current three-Solution build passes, while P308's 120-configured-target dependency comparison remains historical evidence. Actual fields, original Context/payload/decoder and three native distances remain explicit; encoder/opening values are preserved by rfl. Protected Linux verification remains. |
-| Current local manuscripts | Paper 1 is 28 pages, focused on HCP/Hodge/CVP, the actual semantic fragment and observation/Plücker mathematics. Paper 2's working Markdown draft owns the concrete construction and protocol contracts; it has no TeX/PDF. Paper 3 is 31 pages and owns the quantitative coding, proximity, calibration and bridge results. The revisions preserve the existing three-paper split and are not a public release. |
-| Manuscript compile record | The earlier 37/31-page ownership revision compiled and passed all 68 pages of render/contact review. The current Paper 1 is 28 pages after removing repeated prose; all eleven definitions, eleven propositions, twelve proofs and one corollary are byte-identical to `6b762a0`. Computational Scope is §2.3, and Corollary 3.6 still closes the main argument before conclusion §4 and the parity table; latest PDF checks belong to the central validation record. Paper 3 and its cited bibliography output are unchanged. Mathematical preservation and selected crosswalk inventories are checked separately. These local checks do not replace protected verification. The earlier 101-page/30-page rendered reviews and matching review-copy checks remain evidence for their earlier exact artifacts. |
+| Paper 3 independent entries | [Coding](lean/Palomar/PaperThree/README.md) and [original-cochain application](lean/Palomar/PaperThree/Application/README.md) retain all fourteen selected groups across two configurations. Earlier full local definition comparisons and Lean/NanoDa replays passed for their recorded inputs; the current three-Solution build passes 3,759 jobs, while P308's 120-configured-target dependency comparison remains historical evidence. Actual fields, original Context/payload/decoder and three native distances remain explicit; encoder/opening values are preserved by rfl. Protected Linux verification remains. |
+| Current local manuscripts | Paper 1 is 29 pages, focused on HCP/Hodge/CVP, the actual semantic fragment and observation/Plücker mathematics. Paper 2's working Markdown draft owns the concrete construction and protocol contracts; it has no TeX/PDF. Paper 3 is 31 pages and owns the quantitative coding, proximity, calibration and bridge results. The revisions preserve the existing three-paper split and are not a public release. |
+| Manuscript compile record | The earlier 37/31-page ownership revision compiled and passed all 68 pages of render/contact review. The current Paper 1 is 29 pages after adding the optional generic reflection profile; its 35 main formal environments remain unchanged (eleven definitions, eleven propositions, twelve proofs and one corollary). Computational Scope is §2.3, and Corollary 3.6 still closes the main argument before conclusion §4 and the parity table; latest PDF checks belong to the central validation record. Paper 3 and its cited bibliography output are unchanged. Mathematical preservation and selected crosswalk inventories are checked separately. These local checks do not replace protected verification. The earlier 101-page/30-page rendered reviews and matching review-copy checks remain evidence for their earlier exact artifacts. |
 | Public publication | Only the approved historical Paper 1 snapshot is public. The revised manuscripts and Lean proof changes remain local and have not passed protected preflight. The broader three-paper archive and Paper 2/3 manuscripts remain unpublished here. No Palomar intake or registration was requested. |
 
 ## Prepare a local package

@@ -18,7 +18,9 @@ For a realized public value \(\alpha\), write
 \]
 For \(x\in A\), we also write
 \([x]_\pi:=A_{\pi(x)}\). Thus, whenever \(\alpha=\pi(x)\), the two
-descriptions agree: \(A_\alpha=[x]_\pi\).
+descriptions agree: \(A_\alpha=[x]_\pi\). We call the classifier
+\emph{complete for the declared homotopy equivalence} when
+\(\pi(x)=\pi(y)\) implies \(x\simeq y\) for all \(x,y\in A\).
 
 We attach Hodge data to each presentation using finite graded cell carriers,
 integer incidence numbers and face-to-coface linear stalk maps.
@@ -508,13 +510,18 @@ homological tests.
   lossiness.
 \end{proof}
 
-Under the generic factorization hypotheses in \cref{prop:helfer-hcp-bridge},
-homotopy equivalence implies equal public values; these hypotheses do not
-assert a converse. For the two-presentation family in
-\cref{prop:cellular-axis-ambiguity}, the converse also holds: equal class
-values characterize the declared homotopy equivalence within that family.
-The shared class still does not select its operative embedded harmonic
-kernel. Kernel disagreement remains an independent condition. If
+Under closed-test invariance and classifier completeness,
+\cref{prop:helfer-hcp-bridge} gives
+\[
+  \pi(x)=\pi(y)\quad\Longleftrightarrow\quad x\simeq y,
+  \qquad
+  A_{\pi(x)}=\{y\in A:y\simeq x\}.
+\]
+The implication from label equality uses completeness; the other uses
+invariance. The fiber identity follows from the definition of \(A_{\pi(x)}\).
+The family in \cref{prop:cellular-axis-ambiguity} has a complete classifier.
+Completeness concerns the semantic class; it does not select its operative
+embedded harmonic kernel. Kernel disagreement remains an independent condition. If
 \(\Delta\)-harmonicity were included in the invariant first-order signature,
 and the common coordinate \(b\) were
 named compatibly in both interpretations, Helfer's theorem would instead rule

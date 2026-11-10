@@ -8,32 +8,38 @@ drafts. The public-review package preserves the repository layout:
 
 The project [MIT license](../LICENSE) is included at the package root.
 
-**Current P309 cleanup, 2026-11-10.** Paper 1 is **28 pages**, reduced from
-32 by removing repeated explanations and consolidating the parity appendix.
-All formal environments
-match `6b762a0` byte for byte: eleven definitions, eleven propositions, twelve
-proofs and one corollary. The duplicate Recovery Target subsection is removed,
-so Computational Scope is now §2.3; full-projective recovery (§2.2.1), the
-cellular family (§3.5), closing Corollary 3.6 and conclusion §4 retain their
-locations in the argument. Appendix A retains 46 configured declarations
-(21 main/25 support) and three canonical-consequence anchors outside that
-selection. The single appendix includes brief notes on the independent entry
-and proof axioms.
+**Current P310 classifier profile, 2026-11-10.** Paper 1 is **29 pages**.
+The optional `ReflectsHomotopyEquivalence` property is defined on the
+unchanged `Realization`. Together with closed-test invariance, it gives the classifier iff
+and identifies the existing `PublicClassOf` with the declared semantic
+homotopy class. The base interface remains available without reflection.
+The admitted `Fin 2` cellular family proves the property, and its existing
+theory iff now uses the shared generic API. Semantic completeness leaves
+the operative embedded Hodge kernel dependent on the hidden presentation.
 
-The generic semantic interface assumes the forward implication from homotopy
-equivalence to equal public labels. On the admitted `Fin 2` cellular family,
-all pairs are related by typed homotopy equivalence, and equality of the
-chosen theory is equivalent to that relation. The classifier is complete on this
-restricted family; its fixed-coordinate Hodge operators can still differ.
-Two new theorems establish this in `HCP/AxisFamily.lean`; the other 279 Lean
-files and all nine Challenge/Solution/configuration files are unchanged in
-this revision. Focused/three-Solution builds again pass 3,581/3,759 jobs.
-Both new dependency checks pass with exactly the three standard axioms, as
-recorded in the [central validation record](../docs/MATH_STORAGE_VALIDATION.md). P308's 124-report audit and the older
-9,295-job/975-report baseline remain historical evidence. Bibliographies and the 28-source ledger are unchanged:
-Paper 1 prints five external sources from seven records, Paper 2/3 retain
-42/16 records, and Paper 3 remains 31 pages. This candidate remains local;
-public `66e1ad2` and its protected PASS certify their historical exact inputs.
+`HCP.lean` and `HCP/AxisFamily.lean` change; the other 278 Lean files match
+`f036a16`. The additions are one optional Prop definition and three theorems,
+with no new structures, imports or global axioms. The old family iff keeps
+its statement and has a refactored proof. All 35 main formal environments
+are unchanged: eleven definitions, eleven propositions, twelve proofs and
+one corollary. The 46 configured declarations remain selected (21 main/25
+support); the single parity appendix now maps five canonical theorem anchors
+outside that selection, plus the reflection property. Computational Scope
+is §2.3, full-projective recovery §2.2.1, the family §3.5, and Corollary 3.6
+still closes the main argument before conclusion §4.
+
+Focused and three-Solution builds pass 3,581/3,759 jobs. The five-report
+canonical audit is tracked in the [central validation record](../docs/MATH_STORAGE_VALIDATION.md).
+P309's two converse reports, P308's 124-report audit and the older
+9,295-job/975-report baseline remain historical evidence. Bibliographies and
+the 28-source ledger are unchanged: Paper 1 prints five external sources
+from seven records, Paper 2/3 retain 42/16 records, and Paper 3 remains
+31 pages. This candidate remains local; public `66e1ad2` and its protected
+PASS certify their historical exact inputs.
+
+**Preserved P309 checkpoint, 2026-11-10.** The 28-page cleanup consolidated
+the parity appendix and established the admitted-family converse. Its two
+new dependency reports each used exactly the three standard axioms.
 
 **Preserved P308 checkpoint, 2026-11-10.** The 32-page semantic/family-CVP
 revision added proofs in two existing Lean files and retained the 46-target
@@ -181,7 +187,8 @@ no active source calls remain. Historical Lean 4.35 reports contain generated
 [earlier combined audit](../docs/MATH_STORAGE_VALIDATION.md#paper-3-independent-entries--2026-11-09)
 has 975 standard-only reports and retains older records as dated evidence,
 distinct from the seven isolated cited assumptions. P308's 124-report audit
-and the two new checks using the standard axioms are recorded separately in the central validation guide. Inspect important
+and P309's two converse checks remain historical evidence. The current five-
+report audit is tracked separately in the central validation guide. Inspect important
 endpoints with `#print axioms` in a scratch file importing the relevant
 aggregate; a successful build alone does not identify a theorem's assumptions.
 

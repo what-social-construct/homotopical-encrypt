@@ -79,20 +79,6 @@ theorem theory_eq (axis otherAxis : Fin 2) : theory axis = theory otherAxis := b
   · exact theory_zero_eq_one.symm
   · rfl
 
-/-- On this admitted family, public theory equality is equivalent to actual
-typed homotopy equivalence. This does not assert generic classifier completeness
-or identify the operative harmonic kernel in the fixed comparison coordinates. -/
-theorem theory_eq_iff_homotopyEquivalent (axis otherAxis : Fin 2) :
-    theory axis = theory otherAxis ↔
-      Helfer.HomotopyEquivalent (semanticInterpretation axis)
-        (semanticInterpretation otherAxis) := by
-  constructor
-  · intro _hTheory
-    exact semanticEquivalence_all axis otherAxis
-  · intro hEquivalence
-    exact Helfer.closedTheory_eq Helfer.CochainModel.semantics
-      Helfer.CochainModel.closedTestInvariance hEquivalence
-
 /-- Extend the actual admitted-operator classifier without selecting a constant class. -/
 def publicProjection : PublicProjection Index ℝ (Set ℤ) := fun Δ =>
   if h : ∃ axis : Fin 2, laplacianMatrix axis = Δ then theory h.choose else ∅
@@ -115,6 +101,24 @@ def realization :
   classifyTheory := id
   classifier_factors _ := rfl
   operator_classifier_factors := publicProjection_laplacian
+
+/-- The public classifier reflects actual typed homotopy equivalence on the
+admitted two-member family. -/
+theorem reflectsHomotopyEquivalence :
+    HCPBridge.ReflectsHomotopyEquivalence realization := by
+  intro axis otherAxis _hClass
+  exact semanticEquivalence_all axis otherAxis
+
+/-- On this admitted family, public theory equality is equivalent to actual
+typed homotopy equivalence. This does not assert generic classifier completeness
+or identify the operative harmonic kernel in the fixed comparison coordinates. -/
+theorem theory_eq_iff_homotopyEquivalent (axis otherAxis : Fin 2) :
+    theory axis = theory otherAxis ↔
+      Helfer.HomotopyEquivalent (semanticInterpretation axis)
+        (semanticInterpretation otherAxis) := by
+  exact HCPBridge.samePublicClass_iff_homotopyEquivalent realization
+    Helfer.CochainModel.closedTestInvariance reflectsHomotopyEquivalence
+    (r := axis) (s := otherAxis)
 
 /-- The realized matrix acts by the actual cellular Hodge Laplacian. -/
 theorem operatorAction (axis : Fin 2) (b : C1) :

@@ -14,13 +14,23 @@ The generic interface is in [HCP.lean](../lean/HCP.lean), under
 | --- | --- |
 | `Realization` | Attaches a semantic interpretation and an operative matrix to each admitted representative. Its public classifier factors through the declared closed theory and agrees with the matrix-level public projection. |
 | `Helfer.ClosedFormulaInvariance sem` | Makes typed semantic equivalence imply equality of the chosen closed theories, hence equality of public class values. This is explicit input to the generic semantic comparison. |
+| `ReflectsHomotopyEquivalence X` | Optional property requiring equal public labels to imply typed semantic homotopy equivalence. It strengthens classification without changing `Realization` or selecting an operative representative or kernel. |
 | `KernelSeparationWitness` | Supplies two semantically equivalent admitted representatives and one cochain harmonic for the first operator but not the second. Equivalence alone does not assert different kernels. |
 | `HiddenHodgeWitness X observation` | Binds a representative to one public observation `(class, cochain)`. Its operative target is the actual orthogonal projection for that representative's matrix kernel. |
 
-The generic statements do not consume `CartesianLiftingPrinciple`,
+Under closed-test invariance and optional reflection,
+`samePublicClass_iff_homotopyEquivalent` gives the classification equivalence,
+and `publicClassOf_eq_setOf_homotopyEquivalent` identifies the existing
+`Axioms.PublicClassOf` set with the declared semantic homotopy class. These
+statements concern the classifier on admitted representatives. The separate
+matrix-level `publicProjection` agrees with it on realized operators; no
+classification of arbitrary matrices is asserted.
+
+The recovery obstructions retain forward closed-test invariance as their
+semantic premise; they do not require reflection or changes to the adapters.
+They do not consume `CartesianLiftingPrinciple`,
 `SigmaPiCoherent`, or the full `HelferFOLWellFormed` bundle in
-[Axioms/HelferFOL.lean](../lean/Axioms/HelferFOL.lean). The declared
-closed-test invariance premise is the semantic input they require.
+[Axioms/HelferFOL.lean](../lean/Axioms/HelferFOL.lean).
 
 ## Proof dependencies
 
@@ -76,11 +86,13 @@ closed-test invariance premise is the semantic input they require.
    invariant. In [HCP/AxisFamily.lean](../lean/HCP/AxisFamily.lean),
    `semanticEquivalence_all` supplies an actual typed equivalence for every
    pair in the admitted `Fin 2` family, using identity or coordinate-exchange
-   isomorphisms. `theory_eq_iff_homotopyEquivalent` identifies public theory
-   equality with typed homotopy equivalence on that family, even though the
-   operative embedded harmonic kernels differ. The generic interface still
-   requires only invariance and factorization. This is the stated homological
-   fragment; full Helfer first-order semantics remains external.
+   isomorphisms. `reflectsHomotopyEquivalence` proves the optional reflection
+   property for the existing realization. The preserved
+   `theory_eq_iff_homotopyEquivalent` statement now uses the generic iff API,
+   identifying public theory equality with typed homotopy equivalence on the
+   family, even though the operative embedded harmonic kernels differ. This
+   is the stated homological fragment; full Helfer first-order semantics
+   remains external.
 
 6. **Supplied member versus hidden member.**
    In `HCP/AxisFamily.lean`, `cvp_oracle_recovers_operative_component` takes
@@ -97,11 +109,12 @@ closed-test invariance premise is the semantic input they require.
 
 The final manuscript corollary `cor:lattice-member-separation` in §3.5 is a
 consequence of the existing P1-S04 sample/CVP comparison and P1-S05 ambiguity
-groups. Its three canonical recovery anchors above are not additional
-configured submission targets: the comparator still selects 46 declarations.
-The restricted-converse lemmas are also canonical support. The manuscript's
-prose consolidation preserves all existing formal environments; computational
-scope is now §2.3, with full projective recovery retained in §2.2.1.
+groups. The three canonical recovery anchors and two generic classification
+endpoints are five canonical proof anchors, outside the configured submission
+targets. The comparator still selects 46 declarations: 21 manuscript-facing
+and 25 supporting statements. The manuscript's prose consolidation preserves
+all existing formal environments; computational scope is §2.3, with full
+projective recovery in §2.2.1 and one selected-statement appendix.
 
 The strict comparison concerns supplied information and exact recovery. It is
 not a polynomial-time hardness hierarchy, a Turing nonreducibility result, a
@@ -118,11 +131,12 @@ linear algebra or auxiliary-oracle obstruction.
 
 ## Verification status
 
-The focused `HCP.AxisFamily` build passed 3,581 jobs, and the three Solution
-entries passed a 3,759-job build after the recovery and restricted-converse
-additions. The recorded combined audit covered 120 configured declarations
+After the optional reflection profile was added, the focused `HCP.AxisFamily`
+build passed 3,581 jobs and all three Solution entries passed 3,759 jobs.
+The recorded combined audit covered 120 configured declarations
 and four canonical endpoints: all 124 used only `propext`, `Quot.sound` and
 `Classical.choice`, and all 120 prior selected dependency sets were unchanged.
-That report predates `semanticEquivalence_all` and
-`theory_eq_iff_homotopyEquivalent`. A separate focused axiom audit of those
-two lemmas passed; both use exactly the same three standard axioms.
+That report predates `semanticEquivalence_all` and the initial
+`theory_eq_iff_homotopyEquivalent` proof. Their separate focused axiom audit
+passed before the optional-profile refactor, with exactly the same three
+standard axioms. The current five-endpoint audit passed, each report using exactly the same three standard axioms.

@@ -26,7 +26,9 @@ Mathlib imports only. [Solution](Solution.lean) identifies those presentations
 with the canonical project objects and reuses their proofs through explicit
 adapters. [Comparator configuration](comparator.json) selects **46 theorems**:
 **21 manuscript-facing declarations** and **25 supporting declarations**. These
-are coverage counts, rather than a count of independent research results. There are no
+are coverage counts, rather than a count of independent research results.
+Five canonical proof anchors support these selections without adding configured
+targets. There are no
 definition holes. The two pure finite-product helpers
 `Hcrypt.Helfer.contextObject` and `Hcrypt.Helfer.contextMap` are independently
 restated under their canonical names in the Challenge. They retain their
@@ -55,7 +57,8 @@ lattice and is noncomputable. The discrete comparison retains an explicit
 lattice, its inclusion in the harmonic subspace, and orthogonal projection.
 The general ambiguity statements retain closed-test invariance, a kernel
 separation witness, and the correct-oracle existence premise in the oracle
-corollaries, with their stated uniform-solver quantifiers.
+corollaries, with their stated uniform-solver quantifiers. They do not require
+the optional reflection property below.
 
 The final §3.5 corollary uses one fixed correct rank-one oracle
 `CVP.Oracle Index (Fin 1)`: supplying either actual lattice recovers its
@@ -66,17 +69,21 @@ compatible family containing the two unequal targets, with auxiliary input
 fixed. It imposes no family-cardinality or running-time premise. This corollary
 is derived from P1-S04/P1-S05 and adds no configured submission targets.
 
-The constructed family uses actual cellular restriction maps and their Hodge
-operators in the declared algebraic finite signed-incidence model. No regular
-CW or simplicial realization of its base is asserted. Its public theory
-records the nonzero-cohomology tests in each integer degree of the bounded-below
-real cochain model. In `Hcrypt.HCP.AxisFamily`, `semanticEquivalence_all` and
-`theory_eq_iff_homotopyEquivalent` prove that public theory equality and typed
-homotopy equivalence coincide within the admitted `Fin 2` family, despite its
-different operative embedded kernels. The generic classifier contract supplies
-invariance and factorization; this converse is restricted to the constructed
-family. It formalizes the declared homological fragment of Helfer's framework;
-full first-order semantics is outside this entry.
+In [HCP](../../HCP.lean), `Hcrypt.HCPBridge.ReflectsHomotopyEquivalence` is an
+optional property of the existing `Realization`. Together with closed-test
+invariance, `samePublicClass_iff_homotopyEquivalent` and
+`publicClassOf_eq_setOf_homotopyEquivalent` identify label equality with typed
+homotopy equivalence and the existing public-class set with that homotopy class.
+`Hcrypt.HCP.AxisFamily.reflectsHomotopyEquivalence` proves this profile for
+the admitted `Fin 2` family; its `theory_eq_iff_homotopyEquivalent` now uses
+the generic API, despite the different operative embedded kernels. This
+classifies admitted representatives; the matrix-level `publicProjection`
+agrees with their classifier on realized operators. The family uses actual
+integral cellular sheaves in the declared finite signed-incidence model and
+the nonzero-cohomology tests of the bounded-below real cochain model.
+`Realization` and its adapters retain their original fields and assumptions.
+The formalized semantic fragment is homological; full first-order semantics
+is outside this entry.
 The Plücker carrier is the genuine exterior power modulo nonzero real scaling,
 including the zero orbit; recovery for independent frames uses the full point
 and the fixed Euclidean metric.
@@ -106,15 +113,17 @@ declarations: 44 used exactly the three permitted axioms and two used subsets.
 The retained implementation plus entry audit has **975 reports**; all 975
 pre-revision dependency sets were unchanged in that check. The earlier expanded
 9,295-job build covered all fifteen default roots and three Solution entries.
-After the canonical recovery and restricted-converse additions, the focused
-`HCP.AxisFamily` build passed **3,581 jobs**, and all three Solution entries passed a
-**3,759-job build**. The recorded combined audit before the restricted-converse
-additions covered 120 configured declarations across the three entries and
+After the optional reflection profile was added, the focused `HCP.AxisFamily`
+build passed **3,581 jobs** and all three Solution entries passed **3,759 jobs**.
+The recorded combined audit before the restricted-converse additions covered
+120 configured declarations across the three entries and
 four focused canonical endpoints: all 124 used only the permitted standard
 axioms, and all 120 prior selected sets were unchanged. A separate focused
-axiom audit of the two restricted-converse lemmas passed; both use exactly
-the three permitted axioms. The manuscript's prose consolidation
-preserved its existing formal environments and all 46 configured selections.
+audit of the two family semantic lemmas passed before the optional-profile
+refactor. The current five-endpoint audit passed; every report uses exactly
+`propext`, `Classical.choice` and `Quot.sound`. The
+manuscript's prose consolidation preserved its existing formal environments
+and all 46 configured selections.
 Declaration counts do not measure mathematical novelty.
 
 From the repository's `lean/` project, the entry modules are

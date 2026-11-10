@@ -73,15 +73,19 @@ Canonical definitions:\par
 \\\midrule
 
 \textbf{Definitions: semantic realization.}\newline
-Section~2.2. The public classifier factors through the specified closed
+Section~2. The public classifier factors through the specified closed
 theory. The operative Hodge operator is separate presentation-level data;
-equal classifier values need not identify it. On the constructed two-member
-family, equality of public theories characterizes typed homotopy equivalence.
+equal classifier values need not identify it. Completeness adds reflection
+of the declared homotopy equivalence; with invariance, public fibers are
+exactly its classes. The constructed family proves this condition.
 &
-Canonical definitions and family theorem:\par
+Canonical definitions and classifier theorems:\par
 \lean{Hcrypt.Axioms.PublicClassifier}\par
 \lean{Hcrypt.Helfer.ClosedTheory}\par
 \lean{Hcrypt.HCPBridge.Realization}\par
+\lean{Hcrypt.HCPBridge.ReflectsHomotopyEquivalence}\par
+\lean{Hcrypt.HCPBridge.samePublicClass_iff_homotopyEquivalent}\par
+\lean{Hcrypt.HCPBridge.publicClassOf_eq_setOf_homotopyEquivalent}\par
 \lean{Hcrypt.HCP.AxisFamily.theory_eq_iff_homotopyEquivalent}
 \\\midrule
 

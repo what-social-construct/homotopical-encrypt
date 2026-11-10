@@ -27,32 +27,38 @@ work. Their technical packaging does not change the
 [three-paper split](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table):
 Paper 2 remains the protocol/cochain paper and Paper 3 the proximity paper.
 
-**Current P309 cleanup, 2026-11-10.** Paper 1 is **28 pages**, reduced from
-32 by removing repeated explanations and consolidating the parity appendix.
-All formal environments
-match `6b762a0` byte for byte: eleven definitions, eleven propositions, twelve
-proofs and one corollary. The duplicate Recovery Target subsection is removed,
-so Computational Scope is now §2.3; full-projective recovery (§2.2.1), the
-cellular family (§3.5), closing Corollary 3.6 and conclusion §4 retain their
-locations in the argument. Appendix A retains 46 configured declarations
-(21 main/25 support) and three canonical-consequence anchors outside that
-selection. The single appendix includes brief notes on the independent entry
-and proof axioms.
+**Current P310 classifier profile, 2026-11-10.** Paper 1 is **29 pages**.
+The optional `ReflectsHomotopyEquivalence` property is defined on the
+unchanged `Realization`. Together with closed-test invariance, it gives the classifier iff
+and identifies the existing `PublicClassOf` with the declared semantic
+homotopy class. The base interface remains available without reflection.
+The admitted `Fin 2` cellular family proves the property, and its existing
+theory iff now uses the shared generic API. Semantic completeness leaves
+the operative embedded Hodge kernel dependent on the hidden presentation.
 
-The generic semantic interface assumes the forward implication from homotopy
-equivalence to equal public labels. On the admitted `Fin 2` cellular family,
-all pairs are related by typed homotopy equivalence, and equality of the
-chosen theory is equivalent to that relation. The classifier is complete on this
-restricted family; its fixed-coordinate Hodge operators can still differ.
-Two new theorems establish this in `HCP/AxisFamily.lean`; the other 279 Lean
-files and all nine Challenge/Solution/configuration files are unchanged in
-this revision. Focused/three-Solution builds again pass 3,581/3,759 jobs.
-Both new dependency checks pass with exactly the three standard axioms, as
-recorded in the [central validation record](MATH_STORAGE_VALIDATION.md). P308's 124-report audit and the older
-9,295-job/975-report baseline remain historical evidence. Bibliographies and the 28-source ledger are unchanged:
-Paper 1 prints five external sources from seven records, Paper 2/3 retain
-42/16 records, and Paper 3 remains 31 pages. This candidate remains local;
-public `66e1ad2` and its protected PASS certify their historical exact inputs.
+`HCP.lean` and `HCP/AxisFamily.lean` change; the other 278 Lean files match
+`f036a16`. The additions are one optional Prop definition and three theorems,
+with no new structures, imports or global axioms. The old family iff keeps
+its statement and has a refactored proof. All 35 main formal environments
+are unchanged: eleven definitions, eleven propositions, twelve proofs and
+one corollary. The 46 configured declarations remain selected (21 main/25
+support); the single parity appendix now maps five canonical theorem anchors
+outside that selection, plus the reflection property. Computational Scope
+is §2.3, full-projective recovery §2.2.1, the family §3.5, and Corollary 3.6
+still closes the main argument before conclusion §4.
+
+Focused and three-Solution builds pass 3,581/3,759 jobs. The five-report
+canonical audit is tracked in the [central validation record](MATH_STORAGE_VALIDATION.md).
+P309's two converse reports, P308's 124-report audit and the older
+9,295-job/975-report baseline remain historical evidence. Bibliographies and
+the 28-source ledger are unchanged: Paper 1 prints five external sources
+from seven records, Paper 2/3 retain 42/16 records, and Paper 3 remains
+31 pages. This candidate remains local; public `66e1ad2` and its protected
+PASS certify their historical exact inputs.
+
+**Preserved P309 checkpoint, 2026-11-10.** The 28-page cleanup consolidated
+the parity appendix and established the admitted-family converse. Its two
+new dependency reports each used exactly the three standard axioms.
 
 **Preserved P308 checkpoint, 2026-11-10.** The 32-page semantic/family-CVP
 revision added proofs in two existing Lean files and retained the 46-target
@@ -262,11 +268,10 @@ those wording corrections. The subsequent local 37-page P300/P301 revision and L
 were a different snapshot. The preserved P302/P303 38-page parity-table revision retained
 all Lean bytes from `dddfdd2`. P304 and P305–P307 retained non-comment Lean
 source at their recorded checkpoints. P308's 32-page revision added canonical
-proofs in two existing files and passed its 124-report audit. The current
-28-page P309 cleanup preserves all formal environments and adds two restricted-
-converse theorems only in `HCP/AxisFamily.lean`, with repeated focused/three-
-Solution builds and new dependency checks tracked centrally. None of these
-later revisions has a new protected preflight result.
+proofs in two existing files and passed its 124-report audit. P309's 28-page cleanup preserved all main formal environments and added two
+restricted-converse theorems. The current 29-page P310 profile adds optional
+reflection in `HCP.lean` and proves it in `HCP/AxisFamily.lean`; focused
+and three-Solution builds pass, while the canonical audit is tracked centrally. None of these later revisions has a new protected preflight result.
 
 The local [manual workflow](../.github/workflows/paper1-palomar-preflight.yml)
 follows Jacobian's [pinned reusable workflow](https://github.com/PalomarRegistry/PalomarSubmission/blob/14aa8d6b3c2f14a8540605e37144560b9a00e7e7/.github/workflows/submission.yml) at
@@ -321,12 +326,16 @@ Every compatible family containing that pair inherits the obstruction, with
 auxiliary input fixed and no running-time or family-size premise. Appendix A
 names `Hcrypt.HCPBridge.no_solver_exactOnOperativeTarget_on_family` and
 `Hcrypt.HCP.AxisFamily.cvp_known_member_hidden_member_separation` as canonical
-consequences outside the unchanged 46-target selection. A third canonical
-anchor in the semantic-definition row is
-`Hcrypt.HCP.AxisFamily.theory_eq_iff_homotopyEquivalent`: on the admitted
-`Fin 2` family, equality of the chosen theory is equivalent to typed homotopy
-equivalence. `semanticEquivalence_all` proves every pair equivalent. This
-restricted converse does not extend the generic classifier interface.
+consequences outside the unchanged 46-target selection. The semantic row
+adds three more theorem anchors: the generic
+`Hcrypt.HCPBridge.samePublicClass_iff_homotopyEquivalent`,
+`Hcrypt.HCPBridge.publicClassOf_eq_setOf_homotopyEquivalent`, and the existing
+`Hcrypt.HCP.AxisFamily.theory_eq_iff_homotopyEquivalent`. The generic results
+require closed-test invariance and optional `ReflectsHomotopyEquivalence`.
+The admitted `Fin 2` family proves that property, and its old theory iff
+now uses the shared API. The unchanged base realization remains available
+without reflection; completeness classifies semantic interpretations rather
+than selecting their operative embedded kernels.
 
 The concrete family uses actual integral cellular sheaves and the true
 degree-one operators. Its public classifier is the full theory of the stated
@@ -507,19 +516,21 @@ The public snapshot's Paper 1 wording pass has its own rebuilt and visually insp
 paragraph's counts and unchanged-source statements remain dated baselines.
 The P300/P301 37/31-page ownership revision passed its compile/render checks,
 9,295-job local build and all 975 selected dependency reports with unchanged
-sets. The current 28-page Paper 1 removes repeated prose and the duplicate
-Recovery Target subsection; Computational Scope is now §2.3. Its eleven
-definitions, eleven propositions, twelve proofs and one corollary are
-byte-identical to `6b762a0`. Corollary 3.6 still closes §3 before conclusion §4.
-The parity table retains 46 configured declarations and separately names
-three canonical consequences. Paper 3 and its bibliography remain unchanged.
-Only `HCP/AxisFamily.lean` changes in this revision, adding two proofs of the
-actual-family converse; the other 279 Lean files and nine entry statement/
-configuration files are unchanged. Focused/three-Solution builds again pass
-3,581/3,759 jobs; both new dependency checks pass with exactly the three
-standard axioms. P308 retains its 124-report audit, and neither revision repeats the historical
-9,295-job/975-report full baseline. Fresh exact-commit protected verification
-remains required before any later intake.
+sets. The current 29-page P310 manuscript defines an optional completeness
+profile and derives the iff/fiber identity under invariance and reflection.
+Its 35 main formal environments are unchanged. Computational Scope remains
+§2.3 and Corollary 3.6 still closes §3 before conclusion §4. The single parity
+appendix retains 46 configured declarations and separately names five
+canonical theorems plus the reflection property. Paper 3 and its bibliography
+remain unchanged. `HCP.lean` and `HCP/AxisFamily.lean` change; the other
+278 Lean files match `f036a16`. The additions are one optional Prop definition
+and three theorems, without new structures, imports or global axioms; the
+old family iff keeps its statement and has a refactored proof. Focused and
+three-Solution builds pass 3,581/3,759 jobs. Current five-report audit evidence
+is tracked centrally. P309 retains its two standard-three converse reports,
+P308 its 124-report audit, and the 9,295-job/975-report full baseline remains
+historical. Fresh exact-commit protected verification remains required before
+any later intake.
 
 Freeze a separate slim per-entry release with the selected proof closure,
 corresponding manuscript evidence, statement/proof wrappers and metadata
@@ -558,10 +569,10 @@ LEAN_NUM_THREADS=1 lake build HCP Hardness Sheaf ProximityPrize
 The earlier three-entry builds, local definition comparisons, Lean/NanoDa
 replays and combined 975-report audit are completed for their recorded inputs;
 that audit preserved all 946 preceding sets. P308's 124-report selected/canonical
-audit preserved all 120 configured dependency sets. After the latest single-
-file additions, all three Solutions build again; the central validation
-guide lists both new checks using the standard axioms separately from
-those historical audits and kernel replays. The official
+audit preserved all 120 configured dependency sets. P309's single-file additions passed the three-Solution build and two converse
+reports. The current two-file profile passes focused and three-Solution
+builds; its five-report canonical audit is tracked centrally,
+separately from the historical audits and kernel replays. The official
 [Comparator helper](https://github.com/PalomarRegistry/PalomarTemplate/blob/main/scripts/verify-comparator.sh)
 confirms the command form `lake comparator --config PATH`. From `lean/`, the
 paths are `Palomar/PaperOne/comparator.json`,
@@ -605,14 +616,14 @@ not yet a replacement release:
    Its preferred-size advisory is within the hard caps. Prior local builds
    and the 975-report audit remain separately recorded evidence.
 5. **Local manuscript/proof revision prepared; stop before intake.** The current
-   28-page Paper 1, unchanged 31-page Paper 3 and reconciled bibliographies
+   29-page Paper 1, unchanged 31-page Paper 3 and reconciled bibliographies
    remain local. The post-conclusion parity table preserves all 46 configured
-   declarations, plus three separately identified canonical consequences.
-   Two restricted-converse theorems are added only in `HCP/AxisFamily.lean`;
-   the other 279 Lean files and nine entry statement/configuration files are
-   unchanged. Focused/three-Solution builds pass again; the new dependency
-   checks pass with exactly the three standard axioms. P308's 124-report audit,
-   older full builds and kernel-comparison evidence remain historical.
+   declarations, plus five separately identified canonical theorem anchors
+   and the reflection property. The current two-file profile preserves the
+   `Realization` structure; the other 278 Lean files match `f036a16`. The
+   focused and three-Solution builds pass; the five-report audit is tracked
+   centrally. P309/P308 and older full-build/kernel evidence remain
+   historical.
    Finish the manuscript/package exact-source checks and
    prepare a refreshed slim snapshot before any future publication/preflight.
    The user explicitly deferred submission.

@@ -9,6 +9,51 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Optional generic classifier-completeness profile — 2026-11-10
+
+`HCPBridge.ReflectsHomotopyEquivalence X` is an optional proposition stating
+that equal representative-classifier values imply the declared typed
+homotopy equivalence. Under closed-test invariance, the generic API now proves
+`samePublicClass_iff_homotopyEquivalent` and
+`publicClassOf_eq_setOf_homotopyEquivalent`, reusing the original class/fiber
+objects. The realization structure, its constructors and all prior HCP source
+bytes are unchanged. No new structure, typeclass, import or global axiom is
+introduced. The condition concerns admitted representatives; it does not
+classify arbitrary matrices or identify their operative embedded kernels.
+
+AxisFamily proves `reflectsHomotopyEquivalence` from its actual all-pairs
+model equivalences, then derives the unchanged theory-iff statement through
+the generic theorem. Only that old proof is refactored. The remaining 278
+Lean files and all nine entry statement/configuration files match `f036a16`.
+The import graph and 54 focused closures are unchanged. Static checks retain
+279 modules/280 files, 96 intentional Challenge holes, no implementation
+holes/native calls, and seven isolated cited-bound axioms.
+
+The manuscript defines classifier completeness before HCP, then explicitly
+states label equality iff homotopy equivalence and the public-fiber identity
+under invariance/completeness. The construction proves the condition rather
+than assuming it. Existing weaker hardness/TCB interfaces remain available.
+All **35 formal environments** are byte-identical to `f036a16`; the parity
+appendix retains 46 selected anchors, five additional canonical theorem
+anchors, and the new optional-property definition anchor.
+
+Fresh builds pass **3,581 jobs** for HCP.AxisFamily and **3,759 jobs** for all
+three Solution entries. Five focused dependency reports each use exactly
+`propext`, `Classical.choice` and `Quot.sound`. Earlier 124-report, two-lemma,
+975-report and expanded-build results retain their original scopes; no new
+combined audit, NanoDa/con-ron replay or protected preflight is claimed.
+
+The **29-page PDF** builds without undefined references/citations, missing
+glyphs or overfull boxes. All pages are rendered/reviewed; the minor final-word
+fragment found in the first render is fixed in the delivered revision.
+There is one parity appendix and the four contribution items stay together.
+Canonical/stable SHA-256:
+`2e0a8be32d59d7eae49de0f4b6006f31c1a1a8bfbe07fad9b9c61477c5af9b63`.
+Evidence is `paper1-generic-classifier-profile-*` and
+`paper1-reflection-profile-guide-audit.json` under `output/validation/`.
+Paper 3's reviewed PDF is unchanged. Local source pins/review packages are
+updated; no publication, intake or registration is performed.
+
 ## Redundancy cleanup and proved admitted-family converse — 2026-11-10
 
 Paper 1 consolidates repeated public-observation, hidden-operator, transport
