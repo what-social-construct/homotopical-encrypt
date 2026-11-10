@@ -20,51 +20,60 @@ The manuscript now follows this ownership:
 - [Paper 3](../proximity-prize/README.md) owns coding, radii and quantitative
   metric/projection comparisons for the declared original-cochain profile.
 
-The abstract now has one paragraph. Helfer's homotopical semantics opens
-the motivation, and the CVP bridge, ambiguity obstruction and cellular
-examples form one contribution item (four contribution items overall).
+The abstract has one paragraph. Helfer's homotopical semantics opens the
+motivation. The four contribution items are complete statements; the third
+states the family-CVP result concisely.
 
-The current local PDF is **32 pages**. The preserved P304 standalone
-checkpoint had 36 pages, P302/P303 had 38 pages, and P300/P301 had 37 pages;
-the original public draft had 101 pages. Their validation records remain
-historical evidence for those exact artifacts.
+The current local PDF is **32 pages**. P305–P307 were earlier 32-page
+exposition checkpoints; P304 had 36 pages, P302/P303 had 38 pages, and
+P300/P301 had 37 pages. The original public draft had 101 pages. Their
+validation records remain historical evidence for those exact artifacts.
 
-After the introduction, [§2, The Harmonic Cochain Problem](sections/02-harmonic-cochain-problem.tex)
-develops the HCP setup and construction. It includes exact-cochain
-observations (§2.1), the semantic/public-hidden setup (§2.2), and full
-projective observations and recovery (§2.2.1). The last main section,
+[§2, The Harmonic Cochain Problem](sections/02-harmonic-cochain-problem.tex)
+first introduces homotopy equivalence, its invariant public classifier and
+the possibly coarser classifier fiber. Hodge data, the sample and its integral
+lattice profile precede the public observation, hidden witness and short HCP
+definition. Exact-cochain observations remain in §2.1 and full-projective
+observations/recovery in §2.2.1. Four definitions are reworded: public
+observation, hidden witness, HCP and typed semantic realization.
+
+The last main section,
 [§3, CVP Comparison and Kernel Ambiguity](sections/03-cvp-comparison.tex),
 places the actual homological model beside the cellular example (§3.5).
-[§4, Conclusion and Further Work](sections/04-conclusion.tex) follows.
-The former separate semantic and observation sections are integrated into
-these canonical sources.
+Its closing Corollary 3.6 compares recovery with a supplied private lattice
+against non-recovery from the shared public class using the same correct
+oracle, and extends the obstruction to every compatible family retaining the
+two separated members. [§4, Conclusion and Further Work](sections/04-conclusion.tex)
+follows immediately.
 
-The mathematical body contains no Lean cross-reference blocks, implementation
-filenames or repeated companion-paper descriptions. Appendix A's single
-post-conclusion parity table has four definition rows, eight main result groups
-covering 21 declarations, five support groups covering 25 declarations, and
-three external-result/assumption/contract rows. Appendix B keeps concise proof
-boundaries. All 46 selected declarations, eleven proposition statements and
-mathematical definitions remain accounted for. One proof opening now invokes
-its stated closed-test-invariance premise; the proved concrete homological
-fragment remains distinct from that conditional semantic statement. The
-computational scope distinguishes exact recovery from an asymptotic hardness
-assumption.
+All eleven prior proposition statements and proofs are preserved, and the
+closing corollary is added. Appendix A retains four definition rows, eight
+main groups (21 declarations), five support groups (25 declarations), and
+three background/assumption/contract rows. Its two canonical-consequence
+anchors sit outside the unchanged 46-target selection. Appendix B keeps
+concise proof boundaries. The mathematical body contains no Lean declaration
+lists or repeated companion-paper descriptions. Exact recovery and its
+obstructions remain distinct from an asymptotic hardness assumption.
 
-Nine Lean header-comment edits remove stale section references; every
-non-comment source byte across all 280 Lean files is unchanged. The checked
-9,295-job build and 975-report dependency state is retained; no repeated Lean
-build is claimed for this editorial change. The
-[source ledger](../../docs/SOURCE_LEDGER.md#bibliography-correspondence)
+The existing [Hardness.lean](../../lean/Hardness.lean) and
+[HCP/AxisFamily.lean](../../lean/HCP/AxisFamily.lean) now contain actual proof
+additions and a refactored kernel argument. The other 278 Lean files match
+`048c2ea`; no modules, structures or axioms are added. Pins, default roots and
+all nine Challenge/Solution/configuration files are unchanged. Fresh focused
+and three-Solution builds pass 3,581/3,759 jobs. The fresh 124-report audit is
+standard-only (117 exact-three/seven subsets), with all 120 configured sets
+matching their previous reports. The earlier 9,295-job/975-report audit remains
+historical evidence, rather than a fresh full build or audit.
+
+The [source ledger](../../docs/SOURCE_LEDGER.md#bibliography-correspondence)
 continues to map all 28 source IDs to the three bibliographies. Paper 1 prints
-five external mathematical sources; its bibliography retains seven records,
-including two uncited companion entries. The three-paper allocation is
-recorded in the shared guide and parity register rather than repeated in the
-manuscript. Concrete protocol construction remains with Paper 2, and
-quantitative coding/metric comparisons remain with Paper 3.
+five external sources and retains seven bibliography records, including two
+uncited companion entries. The three-paper allocation is recorded in the
+shared guide and parity register. Concrete protocol construction belongs to
+Paper 2, and quantitative coding/metric comparisons belong to Paper 3.
 
 The published snapshot `66e1ad2` passed complete protected preflight. This
-revised manuscript and the aligned Lean documentation form a new local
+revised manuscript and Lean proofs form a new local
 candidate: that exact-commit pass does not certify the revision. No registry
 submission or registration is authorized. Current artifact and build checks
 are recorded in the [validation guide](../../docs/MATH_STORAGE_VALIDATION.md).

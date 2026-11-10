@@ -24,6 +24,10 @@ At the shared observation with both coordinates one, the two operative targets
 are distinct nonzero integral messages.  A separate coordinate unit witnesses
 fixed-coordinate nonstabilization and instantiates the existing HCP solver and
 explicit-CVP-oracle impossibility theorems.
+
+For the actual rank-one lattice oracle, supplying the operative lattice recovers
+its harmonic target. Withholding that member prevents exact recovery at the
+shared observation, even with the same fixed correct oracle.
 -/
 
 set_option autoImplicit false
@@ -277,6 +281,27 @@ theorem cvp_solution_iff_right_operativeTarget (v : CVP.AmbientVector Index) :
   rw [right_target_eq_message]
   exact cvp_solution_iff_message 1 v
 
+/-- A correct oracle for the actual rank-one lattices recovers each operative
+component when that member's lattice is supplied. The target is the existing
+valid cellular sample, with its integral harmonic message and Hodge noise. -/
+theorem cvp_oracle_recovers_operative_component
+    (O : CVP.Oracle Index (Fin 1)) (hO : CVP.OracleCorrect O) (axis : Fin 2) :
+    O (harmonicLatticePresentation axis).lattice observed =
+      (HCP.operativeHarmonicComponent (realization.laplacian axis) observed :
+        Index → ℝ) := by
+  have hmessage :
+      O (harmonicLatticePresentation axis).lattice observed =
+        (sample axis).message.1 := by
+    apply (cvp_solution_iff_message axis _).mp
+    change CVP.IsClosestLatticeVector (harmonicLatticePresentation axis).lattice
+      (sample axis).observed _
+    rw [sample_observed]
+    exact hO _ _
+  exact hmessage.trans
+    (congrArg WithLp.ofLp
+      ((operativeHarmonicComponent_eq axis observed).trans
+        (sample_projection axis))).symm
+
 theorem no_exact_public_solver {Aux : Type*}
     (solver : Solver Aux (Set ℤ) Index ℝ) (aux : Aux) :
     ¬ SolverExactOnOperativeTarget realization solver aux :=
@@ -299,6 +324,26 @@ theorem cvp_oracle_insufficient
         SolverExactOnOperativeTarget realization solver O :=
   cvpOracle_insufficient_for_operativeTarget realization
     Helfer.CochainModel.closedTestInvariance kernelSeparation hOracle
+
+/-- Supplying the private lattice makes its target recoverable by a correct
+rank-one CVP oracle. The same fixed oracle cannot make the shared public input
+select every compatible operative target. This compares information supplied
+to the solver and does not assert a computational CVP-hardness reduction. -/
+theorem cvp_known_member_hidden_member_separation
+    (O : CVP.Oracle Index (Fin 1)) (hO : CVP.OracleCorrect O) :
+    (∀ axis : Fin 2,
+      O (harmonicLatticePresentation axis).lattice observed =
+        (HCP.operativeHarmonicComponent (realization.laplacian axis) observed :
+          Index → ℝ)) ∧
+      ¬ ∃ solver : Solver (CVP.Oracle Index (Fin 1)) (Set ℤ) Index ℝ,
+        ∀ witness : HiddenHodgeWitness realization observation,
+          solver O observation = operativeTarget realization observation witness := by
+  refine ⟨cvp_oracle_recovers_operative_component O hO, ?_⟩
+  rintro ⟨solver, hsolver⟩
+  exact no_solver_exactOnOperativeTarget_on_family realization observation Set.univ
+    (Set.mem_univ leftWitness) (Set.mem_univ rightWitness)
+    same_observation_distinct_targets (solver := solver) (aux := O)
+    (fun witness _ => hsolver witness)
 
 /-! The following variant also separates the explicitly chosen integer
 encodings. In the unweighted example both transported lattice coefficients

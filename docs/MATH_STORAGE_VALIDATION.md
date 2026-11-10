@@ -9,6 +9,74 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Current Paper 1 primitives and lattice-member separation
+
+The construction now begins with declared homotopy equivalence and the
+homotopy-invariant public classifier/fiber, then introduces common coordinates,
+cellular Hodge data and the structured sample. Public observation and hidden
+witness precede the short HCP definition. The optional supplied integral
+lattice remains distinct from the real harmonic subspace. Four definition
+wordings change; all eleven earlier proposition statements and manuscript
+proofs are verbatim. Four introduction items use no colons, item (iii) is
+concise, and the requested foundation/scope/parity signposts are removed.
+
+Closing **Corollary 3.6** states the strict information separation for the
+constructed lattice family immediately before the conclusion. The new
+`no_solver_exactOnOperativeTarget_on_family` in Hardness proves that every
+compatible witness family containing two unequal targets at one observation
+retains the obstruction for any fixed auxiliary input. The old kernel proof
+now specializes it. Actual `cvp_oracle_recovers_operative_component` and
+`cvp_known_member_hidden_member_separation` use the same correct
+`CVP.Oracle Index (Fin 1)` for positive supplied-member recovery and negative
+shared-public-input recovery. No new structures, axioms or assumptions are
+introduced. No arbitrary discrete-CVP hardness reduction or class-size
+success-probability theorem is asserted; D54 records that quantitative extension.
+
+Only **Hardness.lean and HCP/AxisFamily.lean** change mathematical source;
+the other **278 Lean files** and all nine Challenge/Solution/configuration
+files match `048c2ea`. Pins, fifteen default roots, 279 modules/280 files,
+96 deliberate Challenge holes and seven isolated cited axioms are unchanged.
+There are no implementation holes, native calls, import cycles or unresolved
+imports; all 54 focused closures exclude Chain and CitedBounds.
+
+Fresh verification passes a **3,581-job HCP.AxisFamily build**, a **3,759-job
+three-Solution build**, and **124 standard-only dependency reports** (117
+exact-three/seven subsets). The 120 configured sets across the three entries
+are unchanged against the retained audit; four focused canonical endpoints
+are also checked. The historical 9,295-job/975-report result remains its
+original evidence, with no new full aggregate, NanoDa or con-ron replay claimed.
+
+The **32-page PDF** builds without undefined references/citations, missing
+glyphs or overfull boxes (two underfull diagnostics). All pages are rendered
+and contact-reviewed, with detailed primitives/closing-corollary/parity checks.
+All 46 selected names occur once; two canonical consequence anchors are
+identified separately in the existing S05 row. Canonical/stable SHA-256:
+`297c91e07c35d1a78a0f5a805700183c2b02c67e845beff46f3be831f13d47a8`.
+Five sources print and all seven bibliography records remain. Paper 3's
+reviewed 31-page PDF is unchanged. Evidence is `paper1-primitives-separation-*`,
+`paper1-lattice-separation-*` and `paper1-lattice-family-reader-guide-audit.json`
+under `output/validation/`. Local source pins and review packages are updated;
+no new protected preflight, publication, intake or registration occurs.
+
+## Paper 1 concise lattice-family comparison — 2026-11-09
+
+Contribution (iii) now states the main family-CVP result in one sentence.
+The actual cellular example explains that supplying both private lattices'
+unique CVP answers still does not select the operative answer at their shared
+public observation. This is independent of running time. All formal
+propositions, definitions and proofs, the 46-name appendix and all Lean source
+bytes are unchanged against `048c2ea`; no new Lean build or kernel replay is
+needed. D54 records the separately proposed quantitative hierarchy; this
+revision does not claim an infinite constructed family or a CVP-hardness reduction.
+
+The **32-page PDF** builds without undefined references, missing glyphs or
+overfull boxes (two underfull diagnostics); all pages are rendered/contact
+reviewed, with detailed introduction/example checks. Current SHA-256:
+`87854fc9b61d6784e065c4d2307b63675802b777dcedbf4342490d6cfbd4f85c`.
+Canonical/stable copies match. Evidence is `paper1-short-cvp-contribution-*`
+under `output/validation/`. Local source pins and review packages are refreshed;
+no protected preflight, publication or submission occurs.
+
 ## Paper 1 explicit homotopy-class wording — 2026-11-09
 
 The introduction now states that the public label records homotopy-class

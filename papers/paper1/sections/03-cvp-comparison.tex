@@ -395,9 +395,8 @@ background.
 
 For the same realization, the fixed coordinate \(e_1\) is harmonic for
 \(\Delta_0\) and not for \(\Delta_1\). This constructs the separation witness
-used in \cref{prop:cvp-insufficient}. The existing no-uniform-recovery theorem
-therefore applies, and its explicit-CVP-oracle corollary applies under its
-oracle-existence premise. Equality of the public theory is derived from the
+used in \cref{prop:cvp-insufficient}. Equality of the public theory is
+derived from the
 actual semantic equivalence, rather than imposed by a one-point classifier.
 The matrix-level public projection is extended from the two admitted
 operators; no semantic realization is asserted for other matrices.
@@ -421,3 +420,28 @@ presentations before the same ambiguity argument applies. Transferring the
 target and CVP conclusions also requires agreement with the operative
 operator and classifier. No distributional anonymity or plaintext-security
 conclusion follows from this example.
+
+\Needspace{8\baselineskip}
+\begin{corollary}[Strict separation for hidden lattice recovery]
+  \label{cor:lattice-member-separation}
+  Fix a correct CVP oracle for the presented rank-one lattices of the
+  constructed family. When the operative lattice is supplied, the oracle
+  recovers its unique closest vector, equal to the operative harmonic target.
+  From the shared public class and cochain alone, no solver with that same
+  fixed oracle can recover the operative target for both hidden members.
+  Every larger compatible family retaining those two members inherits this
+  exact-recovery obstruction.
+\end{corollary}
+
+\begin{proof}
+  For each supplied lattice, oracle correctness and
+  \cref{prop:cellular-axis-ambiguity} identify its answer with the harmonic
+  message. The two hidden members have the same public observation and
+  distinct operative targets. A solver receives the same observation and
+  the same oracle in either case, so its single output cannot equal both
+  targets. The argument allows arbitrary fixed auxiliary information,
+  including all candidate CVP answers, and imposes no running-time bound.
+  Any compatible family containing the pair retains this contradiction.
+\end{proof}
+
+Solving the candidate CVP instances does not select the operative HCP answer.

@@ -13,7 +13,10 @@ project:
     nonzero operative harmonic targets; a weighted example gives different
     integer coefficients at the same input. The general oracle statements
     retain their invariance, separation and correct-oracle existence
-    hypotheses. Further results show an exact-component observation
+    hypotheses. A derived corollary fixes the same correct rank-one oracle:
+    the supplied operative lattice yields its unique answer, while a shared
+    public class and cochain do not select the hidden member's answer.
+    Further results show an exact-component observation
     obstruction and recover subspaces and fixed-metric projectors from full
     projective Plucker data. These are exact mathematical comparison and
     recovery results; no asymptotic hardness or cryptographic security claim
@@ -40,8 +43,10 @@ sources:
       Immutable source for the unchanged eight selected mathematical groups.
       The revised manuscript concentrates on those Hodge/CVP and observation
       results. Its source and PDF are frozen at the commit identified above.
-      The entry adapts the unchanged canonical development's
-      proofs. Concrete cochain/protocol construction belongs to Paper 2;
+      The entry retains its selected statement types and adapts the canonical
+      development's proofs. The closing separation corollary combines the
+      selected lattice-recovery and ambiguity results, with separately
+      identified canonical consequences in the parity table. Concrete cochain/protocol construction belongs to Paper 2;
       coding and quantitative proximity development belongs to Paper 3.
   - title: "First-order homotopical logic"
     authors:
@@ -95,11 +100,11 @@ status:
     - "Quot.sound"
     - "Classical.choice"
   validation:
-    solution_build: "Passed locally: lake build Palomar.PaperOne.Solution, 3666 jobs."
+    solution_build: "Latest focused HCP.AxisFamily build passed 3581 jobs; all three Solution entries passed a 3759-job build. Earlier independent PaperOne solution build: 3666 jobs."
     challenge_check: "Passed independently: lake build Palomar.PaperOne.Challenge, 3516 jobs."
-    entry_axiom_audit: "Fresh #print axioms audit passes all 46 selected Solution declarations: 44 exact-three and two subsets. Fresh combined audit: 975 standard-only reports; all 975 pre-revision sets unchanged. Expanded documentation-revision build: 9295 jobs, including all default roots and three Solution entries."
-    local_comparator: "Passed statement/definition comparison, Lean default kernel and NanoDa; macOS diagnostic with --inadvisably-no-sandbox."
-    protected_linux_verification: "Passed for public snapshot 66e1ad2cb726d3dd816461e4f76b1d0d9147a46d, run 42729947447: protected comparison/provenance and Lean, NanoDa and con-ron accepted. A fresh exact-commit preflight is required for the manuscript-scope revision."
+    entry_axiom_audit: "Latest audit: 124 standard-only reports (117 exact-three/seven subsets), covering all 120 configured declarations across three entries and four focused canonical endpoints; all 120 prior selected sets unchanged. PaperOne retains 46 reports (44 exact-three/two subsets). The earlier 975-report audit and 9295-job expanded build remain historical evidence."
+    local_comparator: "Historical statement/definition comparison, Lean default kernel and NanoDa passed in a macOS diagnostic with --inadvisably-no-sandbox. Current selected Challenge/Solution/configuration files remain unchanged; the latest canonical proof additions pass Lean compilation and dependency audit, with no new NanoDa replay claimed."
+    protected_linux_verification: "Passed for public snapshot 66e1ad2cb726d3dd816461e4f76b1d0d9147a46d, run 42729947447: protected comparison/provenance and Lean, NanoDa and con-ron accepted. A fresh exact-commit preflight is required for the revised proofs and manuscript."
     note: >-
       Zero proof-hole counts describe Solution and exclude the 23 deliberate
       theorem placeholders in Challenge. The local diagnostic is not protected

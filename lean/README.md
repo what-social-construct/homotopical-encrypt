@@ -8,27 +8,40 @@ drafts. The public-review package preserves the repository layout:
 
 The project [MIT license](../LICENSE) is included at the package root.
 
-**Current construction-first revision, 2026-11-09.** Paper 1's local PDF is
-**32 pages**. Introduction (§1) leads to the HCP setup and construction (§2):
-exact-cochain observations are in §2.1, semantic/public-hidden data in §2.2,
-and full projective observations and recovery in §2.2.1. *CVP Comparison and
-Kernel Ambiguity* (§3) is the last main section; the actual homological model
-sits beside its cellular example in §3.5. *Conclusion and Further Work* is §4,
-followed by the statement--Lean parity table (Appendix A) and concise proof
-boundaries (Appendix B). The table retains four definition rows, eight main
-groups (21 declarations), five support groups (25 declarations), and three
-background/assumption/contract rows. All eleven proposition statements and
-the mathematical definitions are retained; one proof opening now invokes its
-stated closed-test-invariance premise, preserving the distinction from the
-proved homological fragment. Paper 1 prints five external mathematical
-references and retains seven bibliography records, including two uncited
-companion entries. The 28-source ledger mapping, Paper 2/3's 42/16 bibliography
-records and Paper 3's 31-page PDF are unchanged. Nine Lean header comments
-remove stale section references; non-comment source across all 280 Lean files
-is unchanged. The checked 9,295-job/975-report proof state is retained without
-claiming a repeated Lean build. This revised candidate is local and needs its
-own exact-commit protected preflight; public `66e1ad2` and its passing report
-remain unchanged.
+**Current semantic setup and family-CVP revision, 2026-11-10.** Paper 1's
+local PDF is **32 pages**. Section 2 introduces homotopy equivalence, the
+invariant public class and its possibly coarser fiber, then Hodge data, the
+sample and its integral lattice profile, before defining the public observation,
+hidden witness and HCP. Exact-cochain observations remain in §2.1 and full
+projective recovery in §2.2.1. The final main section, *CVP Comparison and
+Kernel Ambiguity*, ends with Corollary 3.6 in §3.5, immediately before
+conclusion §4. It compares recovery with a supplied private lattice against
+non-recovery from the shared public class using the same correct oracle;
+every compatible family containing the separated pair inherits the obstruction.
+All eleven prior proposition statements and proofs are preserved. Four
+definitions are reworded: public observation, hidden witness, HCP and typed
+semantic realization. Appendix A retains 46 configured declarations (21 main,
+25 support), with two canonical-consequence anchors outside that selection.
+
+The existing `Hardness.lean` and `HCP/AxisFamily.lean` contain actual proof
+additions and a refactored kernel argument; the other 278 Lean files match
+`048c2ea`. No modules, structures or axioms are added; pins, default roots and
+all nine Challenge/Solution/configuration files are unchanged. Fresh focused
+and three-Solution builds pass 3,581/3,759 jobs. The fresh 124-report audit is
+standard-only (117 exact-three/seven subsets), and all 120 configured dependency
+sets match their previous reports. The older 9,295-job/975-report audit remains
+historical evidence for its recorded inputs, rather than a repeated full
+check. The [central validation record](../docs/MATH_STORAGE_VALIDATION.md) gives the current evidence.
+Paper 1 still prints five external sources from seven bibliography records;
+the 28-source ledger, Paper 2/3's 42/16 records and Paper 3's 31-page PDF are
+unchanged. This revised candidate remains local; public `66e1ad2` and its
+protected PASS are historical exact-commit evidence.
+
+**Preserved P305–P307 exposition checkpoints, 2026-11-09.** Those 32-page
+revisions integrated the setup, clarified homotopy-class wording and shortened
+the family-CVP contribution without changing Lean proof source. Their
+preservation checks and retained 9,295-job/975-report evidence apply to those
+earlier inputs, before the present canonical proof additions.
 
 **Preserved P304 standalone checkpoint, 2026-11-09.** Paper 1 then had
 36 pages, one merged observation section (§5) and a section-6 conclusion.
@@ -162,9 +175,10 @@ The former `native_decide` arithmetic certificates now have kernel proofs;
 no active source calls remain. Historical Lean 4.35 reports contain generated
 `_native.native_decide.ax_` axioms, while older 4.24 reports used
 `Lean.ofReduceBool` and `Lean.trustCompiler`. The
-[last completed audit](../docs/MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
-has 975 standard-only reports and retains those older records as dated
-evidence, distinct from the seven isolated cited assumptions. Inspect important
+[earlier combined audit](../docs/MATH_STORAGE_VALIDATION.md#paper-3-independent-entries--2026-11-09)
+has 975 standard-only reports and retains older records as dated evidence,
+distinct from the seven isolated cited assumptions. The fresh focused
+124-report audit is recorded separately in the central validation guide. Inspect important
 endpoints with `#print axioms` in a scratch file importing the relevant
 aggregate; a successful build alone does not identify a theorem's assumptions.
 

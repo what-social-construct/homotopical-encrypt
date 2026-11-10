@@ -15,27 +15,40 @@ submission. **No registry intake or registration is authorized or performed.**
 The mechanical report has been inspected and retained; this passing preflight
 does not authorize an intake request.
 
-**Current construction-first revision, 2026-11-09.** Paper 1's local PDF is
-**32 pages**. Introduction (§1) leads to the HCP setup and construction (§2):
-exact-cochain observations are in §2.1, semantic/public-hidden data in §2.2,
-and full projective observations and recovery in §2.2.1. *CVP Comparison and
-Kernel Ambiguity* (§3) is the last main section; the actual homological model
-sits beside its cellular example in §3.5. *Conclusion and Further Work* is §4,
-followed by the statement--Lean parity table (Appendix A) and concise proof
-boundaries (Appendix B). The table retains four definition rows, eight main
-groups (21 declarations), five support groups (25 declarations), and three
-background/assumption/contract rows. All eleven proposition statements and
-the mathematical definitions are retained; one proof opening now invokes its
-stated closed-test-invariance premise, preserving the distinction from the
-proved homological fragment. Paper 1 prints five external mathematical
-references and retains seven bibliography records, including two uncited
-companion entries. The 28-source ledger mapping, Paper 2/3's 42/16 bibliography
-records and Paper 3's 31-page PDF are unchanged. Nine Lean header comments
-remove stale section references; non-comment source across all 280 Lean files
-is unchanged. The checked 9,295-job/975-report proof state is retained without
-claiming a repeated Lean build. This revised candidate is local and needs its
-own exact-commit protected preflight; public `66e1ad2` and its passing report
-remain unchanged.
+**Current semantic setup and family-CVP revision, 2026-11-10.** Paper 1's
+local PDF is **32 pages**. Section 2 introduces homotopy equivalence, the
+invariant public class and its possibly coarser fiber, then Hodge data, the
+sample and its integral lattice profile, before defining the public observation,
+hidden witness and HCP. Exact-cochain observations remain in §2.1 and full
+projective recovery in §2.2.1. The final main section, *CVP Comparison and
+Kernel Ambiguity*, ends with Corollary 3.6 in §3.5, immediately before
+conclusion §4. It compares recovery with a supplied private lattice against
+non-recovery from the shared public class using the same correct oracle;
+every compatible family containing the separated pair inherits the obstruction.
+All eleven prior proposition statements and proofs are preserved. Four
+definitions are reworded: public observation, hidden witness, HCP and typed
+semantic realization. Appendix A retains 46 configured declarations (21 main,
+25 support), with two canonical-consequence anchors outside that selection.
+
+The existing `Hardness.lean` and `HCP/AxisFamily.lean` contain actual proof
+additions and a refactored kernel argument; the other 278 Lean files match
+`048c2ea`. No modules, structures or axioms are added; pins, default roots and
+all nine Challenge/Solution/configuration files are unchanged. Fresh focused
+and three-Solution builds pass 3,581/3,759 jobs. The fresh 124-report audit is
+standard-only (117 exact-three/seven subsets), and all 120 configured dependency
+sets match their previous reports. The older 9,295-job/975-report audit remains
+historical evidence for its recorded inputs, rather than a repeated full
+check. The [central validation record](MATH_STORAGE_VALIDATION.md) gives the current evidence.
+Paper 1 still prints five external sources from seven bibliography records;
+the 28-source ledger, Paper 2/3's 42/16 records and Paper 3's 31-page PDF are
+unchanged. This revised candidate remains local; public `66e1ad2` and its
+protected PASS are historical exact-commit evidence.
+
+**Preserved P305–P307 exposition checkpoints, 2026-11-09.** Those 32-page
+revisions integrated the setup, clarified homotopy-class wording and shortened
+the family-CVP contribution without changing Lean proof source. Their
+preservation checks and retained 9,295-job/975-report evidence apply to those
+earlier inputs, before the present canonical proof additions.
 
 **Preserved P304 standalone checkpoint, 2026-11-09.** Paper 1 then had
 36 pages, one merged observation section (§5) and a section-6 conclusion.
@@ -138,16 +151,19 @@ not claim full upstream JSON Schema validation or protected verification.
 The local package builds reuse the existing pinned dependency caches.
 The [earlier entry checks](MATH_STORAGE_VALIDATION.md#paper-3-independent-entries--2026-11-09)
 record full local comparisons, Lean/NanoDa replay and the combined dependency
-audit for the retained formal Lean content; current section-reference comment
-updates do not change the statements or proofs.
+audit for those recorded Lean inputs. The current two-file proof additions
+have their own focused/three-Solution builds and 124-report selected/canonical
+audit in the [central validation record](MATH_STORAGE_VALIDATION.md); the older
+full build, comparisons and kernel replays remain exact-input evidence.
 
 The first frozen Paper 1 candidate, `73f9c28a4b9f8fb6a04e5b656389979be6b9cd92`,
 predates the public snapshot's manuscript and metadata wording corrections. It is a
 historical candidate. The revised TeX, PDF, README and metadata were frozen
 together in the published commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`.
 The subsequent 37-page scope checkpoint, 38-page parity-table checkpoint,
-P304 36-page standalone checkpoint and current 32-page construction-first
-revision are outside both historical public candidates. The revised packages
+P304 36-page standalone checkpoint, P305–P307 32-page exposition checkpoints
+and current 32-page semantic/family-CVP revision are outside both historical
+public candidates. The revised packages
 must carry the current manuscript and its exact source reference before any
 future publication or protected preflight.
 The final local records are `paper1-first-frozen-release.json`,

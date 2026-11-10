@@ -12,10 +12,12 @@ table after the conclusion. It records canonical definitions, all 46 selected
 theorems, and explicit assumptions/contracts; the mathematical body has no
 Lean file or declaration lists.
 
-The manuscript now follows that scope directly: §2 explains the semantic classifier and observation
-conditions within the HCP setup, including full projective recovery in
-§2.2.1. The cellular model is developed with its example in §3.5; the CVP
-comparison is the final main section before §4 concludes. Paper 2 owns the concrete cochain
+The manuscript now follows that scope directly: §2 introduces the semantic
+classifier and cellular/Hodge primitives before defining the public observation,
+hidden witness and HCP. Observation conditions follow within that setup,
+including full projective recovery in §2.2.1. The cellular model is developed
+with its example in §3.5; the CVP comparison is the final main section before
+§4 concludes. Paper 2 owns the concrete cochain
 commitment and protocol construction; Paper 3 owns the coding and quantitative
 proximity analysis. Shared definitions are identified by their existing
 canonical owners, with cross-references in place of repeated developments.
@@ -43,7 +45,7 @@ Canonical names below belong to the implementation, outside the entry namespace.
 | P1-S02 · §3.2 `prop:hcp-to-cvp` | `E.exists_matrix_ker_eq_range`, `E.Hodge_GeneratedSubspace_Reduction_Proof`: realize a field-linear image as a matrix kernel and obtain the stated image-membership consequence for a displayed-operator solver. | The same two unprefixed declaration names in [Hardness](../../Hardness.lean). This result concerns the linear image. |
 | P1-S03 · §3.3 `prop:hodge-projection-is-cvp` | `E.squaredDistance_projection_decomposition`, `E.solution_iff_projectedTarget`: projection preserves exactly the discrete CVP answers when the supplied lattice lies in the projected subspace. | `HarmonicCVPBridge.squaredDistance_projection_decomposition` and `HarmonicCVPBridge.solution_iff_projectedTarget` in [Hardness](../../Hardness.lean). |
 | P1-S04 · §3.3/appendix, cellular specialization | `E.concreteSheafHCP_CVP_solution_iff_message`, `E.concreteSheafHCP_CVP_existsUnique`: an actual encrypted cellular sample has the presented harmonic message as its unique discrete CVP answer. | The same unprefixed declaration names in [Hardness](../../Hardness.lean), using a supplied integral harmonic-lattice presentation. |
-| P1-S05 · §3.4 `prop:cvp-insufficient`; §3.5 `prop:cellular-axis-ambiguity` | `HB.operativeTargets_ne_of_kernelSeparation`, both `HB.cvpOracle_insufficient_*` declarations, `AF.cellular_axis_ambiguity`, `AF.cvp_oracle_insufficient`: general conditional separation and its constructed cellular instance. | `Hcrypt.HCPBridge` in [Hardness](../../Hardness.lean); `Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets`, `cvp_oracle_insufficient` and the same-sample recovery facts in [HCP/AxisFamily](../../HCP/AxisFamily.lean). |
+| P1-S05 · §3.4 `prop:cvp-insufficient`; §3.5 `prop:cellular-axis-ambiguity`, `cor:lattice-member-separation` | `HB.operativeTargets_ne_of_kernelSeparation`, both `HB.cvpOracle_insufficient_*` declarations, `AF.cellular_axis_ambiguity`, `AF.cvp_oracle_insufficient`: general conditional separation and its constructed cellular instance; the final corollary combines this group with P1-S04. | `Hcrypt.HCPBridge` in [Hardness](../../Hardness.lean); `Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets`, `cvp_oracle_insufficient`, and the derived `cvp_oracle_recovers_operative_component` / `cvp_known_member_hidden_member_separation` in [HCP/AxisFamily](../../HCP/AxisFamily.lean). |
 | P1-S06 · §3.5, weighted integral example | `AF.weighted_axis_recovery_obstruction`: coefficients two and one share the observation at `b=(1,2)`; one public coefficient decoder cannot recover both, while each private lattice has its own unique CVP answer. | `Hcrypt.HCP.AxisFamily.weighted_public_observations_eq`, `no_exact_encoded_message_decoder`, `weighted_cvp_solution_iff_operativeTarget`, `weighted_cvp_existsUnique` in [HCP/AxisFamily](../../HCP/AxisFamily.lean). |
 | P1-B01 · §2 `prop:exact-component-obstruction` | `CS.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent`, `not_far_preserving_exactComponent`: an allowed nonzero coexact direction prevents the full orthogonal residual from descending to the exact component. | Same terminal names under `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain` in [ObservationQuotient](../../Sheaf/ObservationQuotient.lean). |
 | P1-B02 · §2.2.1 `prop:plucker-recovery`; selected crosswalk appendix | `PL.recoverSubspace_frame`, `recoverHarmonicProjector_frame`, `recover_eq_operativeHarmonicComponent`: recover a frame's subspace and fixed-metric projector; identify the operative target when that subspace is the matrix kernel. | The first two names under `Hcrypt.Proximity.GrassmannianPlucker.Concrete` in [Reconstruction](../../Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean); the last under `Hcrypt.TCB.PluckerObservation` in [PluckerObservation](../../TCB/PluckerObservation.lean). |
@@ -55,6 +57,15 @@ lattice, its inclusion in the harmonic subspace, and orthogonal projection.
 The general ambiguity statements retain closed-test invariance, a kernel
 separation witness, and the correct-oracle existence premise in the oracle
 corollaries, with their stated uniform-solver quantifiers.
+
+The final §3.5 corollary uses one fixed correct rank-one oracle
+`CVP.Oracle Index (Fin 1)`: supplying either actual lattice recovers its
+operative component, while the same oracle and shared public observation
+cannot select every compatible hidden target. The canonical family obstruction
+`Hcrypt.HCPBridge.no_solver_exactOnOperativeTarget_on_family` holds for any
+compatible family containing the two unequal targets, with auxiliary input
+fixed. It imposes no family-cardinality or running-time premise. This corollary
+is derived from P1-S04/P1-S05 and adds no configured submission targets.
 
 The constructed family uses actual cellular restriction maps and their Hodge
 operators in the declared algebraic finite signed-incidence model. No regular
@@ -87,12 +98,17 @@ manuscript-scope revision requires a fresh exact-commit protected preflight.
 The Challenge's **23 intentional theorem placeholders** are comparison targets
 and are excluded from the Solution's zero proof-hole and definition-hole counts.
 
-A fresh `#print axioms` audit covers all **46** selected Solution declarations:
-44 use exactly the three permitted axioms and two use subsets. The retained
-implementation plus entry audit has **975 reports**; all 975 pre-revision
-dependency sets are unchanged. The documentation revision also passes the
-expanded 9,295-job build, including all fifteen default roots and three
-Solution entries. Declaration counts do not measure mathematical novelty.
+The earlier `#print axioms` audit covered all **46** selected Solution
+declarations: 44 used exactly the three permitted axioms and two used subsets.
+The retained implementation plus entry audit has **975 reports**; all 975
+pre-revision dependency sets were unchanged in that check. The earlier expanded
+9,295-job build covered all fifteen default roots and three Solution entries.
+After the canonical family/oracle additions, the focused `HCP.AxisFamily`
+build passed **3,581 jobs**, and all three Solution entries passed a
+**3,759-job build**. A fresh audit covers all 120 configured declarations
+across the three entries and four focused canonical endpoints: all 124 use
+only the permitted standard axioms, and all 120 prior selected sets are
+unchanged. Declaration counts do not measure mathematical novelty.
 
 From the repository's `lean/` project, the entry modules are
 `Palomar.PaperOne.Challenge` and `Palomar.PaperOne.Solution`; its configuration is

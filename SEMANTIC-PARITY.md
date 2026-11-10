@@ -7,6 +7,36 @@ recipient recovery/rotation, owned-resource transition and one-shot integrity
 full-ciphertext recovery, source/completion assessment and Paper 1 observation
 wording reconciliation 2026-11-08.
 
+**Primitives before HCP and proved lattice-member separation:** P308 starts
+§2 with declared homotopy equivalence, its invariant public class/fiber and
+Hodge data, followed by the sample, public observation and hidden witness;
+HCP then asks for the already defined operative target. Four definitions are
+reworded, with existing propositions/proofs preserved. The introduction has
+four complete statements without colons; contribution (iii) gives only the
+lattice-family comparison, and the requested foundation/signposting prose is
+removed. Corollary 3.6 closes the argument immediately before the conclusion.
+Its canonical Lean proof fixes the same correct rank-one CVP oracle: the
+supplied operative lattice yields its answer, but the shared public observation
+cannot select every compatible target. A generic lemma proves that any
+containing compatible family inherits the obstruction. Three new canonical
+theorems and one refactored proof change two Lean files; the other 278 and
+all nine entry statement/configuration files match `048c2ea`. Focused builds
+pass 3,581/3,759 jobs. All 124 fresh dependency reports are standard-only,
+with all 120 previously selected sets unchanged. The 32-page PDF passes build
+and layout checks; 46 selected anchors plus two separately identified canonical
+consequences appear in the parity table. No new protected preflight,
+publication or submission is claimed.
+
+**Concise class-of-lattices comparison — 2026-11-09:** P307 reduces
+contribution (iii) to the main result: compatible harmonic lattices in one
+public class have distinct unique CVP answers to the same cochain, and
+known-lattice CVP access does not select the operative answer. The example
+now explains that supplying both answers leaves this ambiguity, independent
+of running time. A strict quantitative hierarchy by target multiplicity is
+tracked separately in D54; no infinite-family or complexity-reduction theorem
+is added by this prose revision. Formal statements/proofs and Lean bytes
+remain unchanged; the local PDF remains 32 pages.
+
 **Homotopy-class wording — 2026-11-09:** P306 makes the introduction's
 homotopy-class meaning explicit: homotopy-equivalent hidden representatives
 share the public label while their Hodge operators may differ in fixed public
@@ -377,7 +407,7 @@ directories and O/T IDs; numbering does not create a new mathematical object.
 | ID | Material / canonical owner | Paper 1: HCP | Paper 2: protocol/cochains | Paper 3: proximity | Dependency / disposition |
 |---|---|---|---|---|---|
 | S01 | HCP, operative projection and Hodge decomposition; `HCP`, `Sheaf` | **Owns** foundations and recovery, §§2--3. | Uses the same Hodge objects in its protocol profile. | No HCP assumption in the universal coding theorems. | One mathematical object; no duplicate recovery contribution. |
-| S02 | Public classifier, homological Helfer fragment, ambiguity and CVP; `HCP`, `Helfer`, `Hardness`, `CVP` | **Owns** semantic and exact-recovery arguments, §§2–3. | Must account separately for its whole released view and any security experiment. | Independent coding hypotheses. | Exact non-identifiability is not an asymptotic hardness or privacy theorem. |
+| S02 | Public classifier, homological Helfer fragment, ambiguity and CVP; `HCP`, `Helfer`, `Hardness`, `CVP` | **Owns** semantic and exact-recovery arguments, §§2–3; Corollary 3.6 fixes the same rank-one oracle on both sides of the known-member/hidden-member separation. | Must account separately for its whole released view and any security experiment. | Independent coding hypotheses. | Exact non-identifiability is not an asymptotic hardness or privacy theorem. |
 | S03 | Cochain payload, opening relation, visibility and security contracts; `Sheaf/Commitment`, `Axioms/CochainCommitment` | §§2.1–2.2 contain exact-cochain/full-sample, opening-quotient and observation facts. | **Owns** construction, encoding, visibility, aggregation and supplied security interfaces; Draft §§2--3. | Imports the original payload/profile in §7 to state quantitative claims. | Citations identify the shared carrier; no replacement commitment or duplicated security contribution. |
 | S04 | Full Plucker data, cochain/plane extraction and metrics; `Proximity/Concrete` | **Owns** full-point subspace/projector/operative-target reconstruction, §2.2.1. | **Owns** payload realization, extraction/codec, snapshot and evidence contracts. | **Owns** quantitative source-to-code comparisons for the declared source. | A digest is not a full point; real/full-HCP scores are not native modular distances. |
 | S05 | Finite words, interleaving, Hamming metrics and MCA; `Proximity/Core`, `Proximity/MCA` | Cites the companion; no coding definitions or proofs developed. | Consumes the stated metric/challenge interface. | **Owns** definitions and universal coding presentation, §§2--3,6. | Minimal repeated notation is attributed; count and relative normalizations remain explicit. |
@@ -550,6 +580,7 @@ mathematical or author decisions, rather than silent copyediting.
 | D51 / P1 | Body exposition versus formal cross-references | Repeated file/declaration lists interrupted the mathematical narrative and repeated the selected appendix. | **Consolidated in P302.** The body retains its mathematics and caveats; Appendix A after the conclusion has one definition/result/support/assumption parity table. All 46 configured names occur exactly once; concise proof boundaries follow. |
 | D52 / P1 | Source ledger versus bibliography retrieval | Nineteen of the 28 ledger sources lacked a corresponding BibTeX record in an owning manuscript. | **Reconciled.** The ledger maps every source ID to its bibliography/key and reviewed/candidate role. All 19 added records have checked primary metadata; all 65 records parse through BibTeX without warnings. Uncited candidates are not forced into the PDFs or treated as adopted theorems. |
 | D53 / P0 | Public HCP input versus protocol artifact views | The §3.1 prose described hashes/commitments/artifacts although the selected HCP theorem input is the classifier/cochain pair. | **Clarified in P304.** Definition Public Observation and the CVP comparison state the existing pair directly. Larger released observations retain separate equality/factorization and binding conditions in §2.2 (integrated by P305). This clarifies the informal account; no Lean object or theorem type changed. |
+| D54 / P1 | Hidden-lattice family size versus recovery difficulty | A larger classifier fiber need not give more distinct operative answers. The present concrete family supplies two members; uniform exact impossibility alone does not provide a strict hierarchy for all larger classes. | **Fixed-oracle separation and containing-family inheritance proved in P308; quantitative hierarchy remains proposed.** Construct arbitrarily large compatible embedded harmonic-lattice families sharing a public observation and distinct targets. For a uniformly sampled hidden member independent of solver coins/oracle auxiliary data, prove the optimal success bound is largest target multiplicity divided by family size, specializing to 1/k for k distinct targets. Class cardinality alone and an unconstructed infinite enumeration give no asymptotic CVP-hardness reduction. |
 
 ## HCP theorem parity and remaining work
 
@@ -846,6 +877,8 @@ completion in the current record below.
 | P304 | Standalone HCP problem narrative and merged observations — 2026-11-09 | Remove repeated companion-program descriptions and runtime/layer lists; use direct cellular-model wording. HCP input, hidden operative target, CVP comparison and semantic equality lead to one merged §5, with full-point recovery in §5.5 and conclusion §6. Clarify Public Observation as the actual classifier/cochain pair and correct §3.1 to contrast that input with CVP (B,t). Preserve all 106 displays, 11 proposition statements, 11 proofs and 10 other definitions; retain all 46 parity names exactly once. The 36-page PDF passes build/render QA with five printed external references; seven bibliography records and the 28-source ledger remain. Seven Lean header comments remove obsolete section references; all 280 non-comment source fingerprints and all theorem/configuration bytes remain unchanged. No new kernel replay, protected preflight, publication or submission is claimed. |
 | P305 | Construction-first HCP setup; CVP comparison last — 2026-11-09 | Integrate semantic/classifier data and exact-cochain/observation facts into §2, with full-projective reconstruction in §2.2.1. Explain the actual homological model beside the cellular example in §3.5. CVP comparison/kernel ambiguity is the final main section before conclusion §4. Remove two standalone background files and three unused notation rows. All eleven proposition statements and eleven definitions are verbatim; ten proofs are verbatim, and one opening clarifies the invariant-test premise without changing formulas or argument. All 46 parity names occur once. The 32-page PDF passes build/render QA; nine Lean headers are comment-only, all 280 non-comment source fingerprints and nine entry statement/configuration files are unchanged. Retain the 9,295-job/975-report proof evidence; no new protected preflight, publication or submission. |
 | P306 | Explicit homotopy-class meaning in the introduction — 2026-11-09 | Replace the generic “homotopical framework” wording with homotopy-class information and the proved implication from homotopy equivalence to shared public value. Operator disagreement is stated in fixed public coordinates. Do not assert the converse or completeness of the classifier. Only one introductory paragraph changes; all formal statements, proofs and Lean bytes are unchanged. The local 32-page PDF builds without undefined references, missing glyphs or overfull boxes, with reflow reviewed. No new Lean build, kernel replay, protected preflight, publication or submission. |
+| P307 | Concise family-CVP contribution and explicit hidden-member obstruction — 2026-11-09 | Reduce item (iii) to one main statement about distinct unique closest vectors in compatible harmonic lattices. Beside the actual family, state that supplying both answers does not select the operative answer, even without a running-time restriction. The example needs only two compatible members. Preserve all formal statements, proofs, parity anchors and Lean bytes. The 32-page PDF passes build/render QA; no new protected preflight, publication or submission. D54 records the separate proposed quantitative family-size hierarchy. |
+| P308 | Primitives before HCP and explicit known-member/hidden-member separation | Start the setup from declared semantic homotopy equivalence and its invariant public classifier, then Hodge data/sample, public observation and hidden witness before the short HCP definition. Reword four definitions; retain all eleven earlier proposition statements/proofs. Remove colons from four concise contribution items and delete requested foundation/signposting prose. Add closing Corollary 3.6 and its Lean rank-one oracle separation, with generic containing-family inheritance. Three canonical theorems and one refactored proof change only Hardness/AxisFamily; 278 Lean files and nine entry statement/configuration files match 048c2ea. Focused builds pass 3581/3759 jobs; all 124 fresh reports are standard-only and all 120 selected sets unchanged. The 32-page PDF passes build/render QA; 46 selected anchors and two separately marked canonical consequences remain. No fresh protected preflight, publication or submission. |
 
 #### Current protocol validation
 

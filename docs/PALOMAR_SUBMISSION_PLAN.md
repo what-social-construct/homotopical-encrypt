@@ -27,27 +27,40 @@ work. Their technical packaging does not change the
 [three-paper split](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table):
 Paper 2 remains the protocol/cochain paper and Paper 3 the proximity paper.
 
-**Current construction-first revision, 2026-11-09.** Paper 1's local PDF is
-**32 pages**. Introduction (§1) leads to the HCP setup and construction (§2):
-exact-cochain observations are in §2.1, semantic/public-hidden data in §2.2,
-and full projective observations and recovery in §2.2.1. *CVP Comparison and
-Kernel Ambiguity* (§3) is the last main section; the actual homological model
-sits beside its cellular example in §3.5. *Conclusion and Further Work* is §4,
-followed by the statement--Lean parity table (Appendix A) and concise proof
-boundaries (Appendix B). The table retains four definition rows, eight main
-groups (21 declarations), five support groups (25 declarations), and three
-background/assumption/contract rows. All eleven proposition statements and
-the mathematical definitions are retained; one proof opening now invokes its
-stated closed-test-invariance premise, preserving the distinction from the
-proved homological fragment. Paper 1 prints five external mathematical
-references and retains seven bibliography records, including two uncited
-companion entries. The 28-source ledger mapping, Paper 2/3's 42/16 bibliography
-records and Paper 3's 31-page PDF are unchanged. Nine Lean header comments
-remove stale section references; non-comment source across all 280 Lean files
-is unchanged. The checked 9,295-job/975-report proof state is retained without
-claiming a repeated Lean build. This revised candidate is local and needs its
-own exact-commit protected preflight; public `66e1ad2` and its passing report
-remain unchanged.
+**Current semantic setup and family-CVP revision, 2026-11-10.** Paper 1's
+local PDF is **32 pages**. Section 2 introduces homotopy equivalence, the
+invariant public class and its possibly coarser fiber, then Hodge data, the
+sample and its integral lattice profile, before defining the public observation,
+hidden witness and HCP. Exact-cochain observations remain in §2.1 and full
+projective recovery in §2.2.1. The final main section, *CVP Comparison and
+Kernel Ambiguity*, ends with Corollary 3.6 in §3.5, immediately before
+conclusion §4. It compares recovery with a supplied private lattice against
+non-recovery from the shared public class using the same correct oracle;
+every compatible family containing the separated pair inherits the obstruction.
+All eleven prior proposition statements and proofs are preserved. Four
+definitions are reworded: public observation, hidden witness, HCP and typed
+semantic realization. Appendix A retains 46 configured declarations (21 main,
+25 support), with two canonical-consequence anchors outside that selection.
+
+The existing `Hardness.lean` and `HCP/AxisFamily.lean` contain actual proof
+additions and a refactored kernel argument; the other 278 Lean files match
+`048c2ea`. No modules, structures or axioms are added; pins, default roots and
+all nine Challenge/Solution/configuration files are unchanged. Fresh focused
+and three-Solution builds pass 3,581/3,759 jobs. The fresh 124-report audit is
+standard-only (117 exact-three/seven subsets), and all 120 configured dependency
+sets match their previous reports. The older 9,295-job/975-report audit remains
+historical evidence for its recorded inputs, rather than a repeated full
+check. The [central validation record](MATH_STORAGE_VALIDATION.md) gives the current evidence.
+Paper 1 still prints five external sources from seven bibliography records;
+the 28-source ledger, Paper 2/3's 42/16 records and Paper 3's 31-page PDF are
+unchanged. This revised candidate remains local; public `66e1ad2` and its
+protected PASS are historical exact-commit evidence.
+
+**Preserved P305–P307 exposition checkpoints, 2026-11-09.** Those 32-page
+revisions integrated the setup, clarified homotopy-class wording and shortened
+the family-CVP contribution without changing Lean proof source. Their
+preservation checks and retained 9,295-job/975-report evidence apply to those
+earlier inputs, before the present canonical proof additions.
 
 **Preserved P304 standalone checkpoint, 2026-11-09.** Paper 1 then had
 36 pages, one merged observation section (§5) and a section-6 conclusion.
@@ -244,9 +257,11 @@ this refreshed snapshot; its completed checks remain historical
 evidence. No Lean declarations or entry configuration names were changed by
 those wording corrections. The subsequent local 37-page P300/P301 revision and Lean comment changes
 were a different snapshot. The preserved P302/P303 38-page parity-table revision retained
-all Lean bytes from `dddfdd2`. The P304 36-page standalone checkpoint and
-current 32-page construction-first revision preserve non-comment Lean source;
-none of these later editorial revisions has a new protected preflight result.
+all Lean bytes from `dddfdd2`. P304 and P305–P307 retained non-comment Lean
+source at their recorded checkpoints. The current 32-page revision adds
+canonical proofs in two existing files and has fresh focused/three-Solution
+builds and a 124-report audit. None of these later revisions has a new
+protected preflight result.
 
 The local [manual workflow](../.github/workflows/paper1-palomar-preflight.yml)
 follows Jacobian's [pinned reusable workflow](https://github.com/PalomarRegistry/PalomarSubmission/blob/14aa8d6b3c2f14a8540605e37144560b9a00e7e7/.github/workflows/submission.yml) at
@@ -289,10 +304,19 @@ indistinguishability is not asserted by these statements.
 | P1-S02 — §3.2, `prop:hcp-to-cvp` | Every finite-dimensional field-linear generated subspace is a matrix kernel; the displayed-operator solver consequence concerns the linear image, separately from the integer lattice. | `exists_matrix_ker_eq_range`; `Hodge_GeneratedSubspace_Reduction_Proof` |
 | P1-S03 — §3.3, `prop:hodge-projection-is-cvp` | For every explicit lattice Λ⊆W and every target/candidate, orthogonally projecting the target onto W preserves precisely the discrete CVP solutions. Keep the lattice inclusion and orthogonal-projection instance. | `HarmonicCVPBridge.squaredDistance_projection_decomposition`; `HarmonicCVPBridge.solution_iff_projectedTarget` |
 | P1-S04 — §3.3/appendix, actual cellular specialization | For the actual cellular sample H.encrypt(z,noise), the CVP solution is exactly H.point(z), uniquely; retain H as a supplied harmonic-lattice presentation. | `concreteSheafHCP_CVP_solution_iff_message`; `concreteSheafHCP_CVP_existsUnique` |
-| P1-S05 — §3.4, `prop:cvp-insufficient`; §3.5, `prop:cellular-axis-ambiguity` | The general separation theorem gives distinct targets, and its nontrivial cellular instance gives distinct nonzero targets at one public input. Both the manuscript soundness/exact-on-harmonics contract and its direct operative-target companion are retained. Retain the correct-CVP-oracle existence premise and the exact no-uniform-solver quantifiers. | `Hcrypt.HCPBridge.operativeTargets_ne_of_kernelSeparation`; `Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation`; `Hcrypt.HCPBridge.cvpOracle_insufficient_for_operativeTarget`; `Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets`; `Hcrypt.HCP.AxisFamily.cvp_oracle_insufficient` |
+| P1-S05 — §3.4, `prop:cvp-insufficient`; §3.5, `prop:cellular-axis-ambiguity`, `cor:lattice-member-separation` | The general separation theorem gives distinct targets, and its nontrivial cellular instance gives distinct nonzero targets at one public input. Both the manuscript soundness/exact-on-harmonics contract and its direct operative-target companion are retained. Retain the correct-CVP-oracle existence premise and the exact no-uniform-solver quantifiers. | `Hcrypt.HCPBridge.operativeTargets_ne_of_kernelSeparation`; `Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation`; `Hcrypt.HCPBridge.cvpOracle_insufficient_for_operativeTarget`; `Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets`; `Hcrypt.HCP.AxisFamily.cvp_oracle_insufficient` |
 | P1-S06 — §3.5, weighted integral example | At common b=(1,2), the original integer coefficients differ (2 versus 1); no exact public coefficient decoder exists. For each private presentation the same actual sample has a unique CVP answer equal to its operative HCP target. | `Hcrypt.HCP.AxisFamily.weighted_public_observations_eq`; `Hcrypt.HCP.AxisFamily.no_exact_encoded_message_decoder`; `Hcrypt.HCP.AxisFamily.weighted_cvp_solution_iff_operativeTarget`; `Hcrypt.HCP.AxisFamily.weighted_cvp_existsUnique` |
 | P1-B01 — §2.1, `prop:exact-component-obstruction` | The unrestricted exact-component view cannot retain the full residual/far region when a nonzero coexact direction is allowed. This does not prove wire factorization. | `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent`; `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent` |
 | P1-B02 — §2.2.1, `prop:plucker-recovery`; formal-boundaries appendix | Genuine full projective coordinates recover the subspace and its fixed-metric projector; operative-kernel identification additionally recovers the HCP target from b. Digest-only observations remain separate. | `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame`; `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame`; `Hcrypt.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent` |
+
+Closing Corollary 3.6 combines P1-S04/P1-S05: one fixed correct rank-one
+oracle recovers the operative component when its private lattice is supplied,
+while the shared public observation cannot select both distinct targets.
+Every compatible family containing that pair inherits the obstruction, with
+auxiliary input fixed and no running-time or family-size premise. Appendix A
+names `Hcrypt.HCPBridge.no_solver_exactOnOperativeTarget_on_family` and
+`Hcrypt.HCP.AxisFamily.cvp_known_member_hidden_member_separation` as canonical
+consequences outside the unchanged 46-target selection.
 
 The concrete family uses actual integral cellular sheaves and the true
 degree-one operators. Its public classifier is the full theory of the stated
@@ -473,14 +497,18 @@ The public snapshot's Paper 1 wording pass has its own rebuilt and visually insp
 paragraph's counts and unchanged-source statements remain dated baselines.
 The P300/P301 37/31-page ownership revision passed its compile/render checks,
 9,295-job local build and all 975 selected dependency reports with unchanged
-sets. The current Paper 1 is 32 pages, integrates semantic/observation
-material into its HCP construction (§2), and ends the main argument with
-the CVP comparison (§3) before conclusion §4. The post-conclusion parity
-table retains all selected declarations. Paper 3 and its printed bibliography
-are unchanged. Non-comment source across all 280 Lean files is unchanged;
-nine header-comment edits remove stale section references, retaining the
-checked proof state without claiming a repeated build. The new manuscript remains outside the exact
-historical protected-preflight baseline; a new hosted check is still required.
+sets. The current 32-page Paper 1 introduces semantic/Hodge primitives before
+HCP (§2) and ends §3 with Corollary 3.6 before conclusion §4. The parity table
+retains all 46 configured declarations and separately names two canonical
+consequences. Four definitions are reworded; all eleven prior proposition
+statements/proofs remain. Paper 3 and its printed bibliography are unchanged.
+`Hardness.lean` and `HCP/AxisFamily.lean` now contain proof changes; the other
+278 Lean files match `048c2ea`. Fresh focused/three-Solution builds pass
+3,581/3,759 jobs, and the 124-report selected/canonical audit is standard-only
+with all 120 configured sets matching their previous reports. These checks
+do not repeat the historical 9,295-job/975-report full baseline. The new
+manuscript remains outside the exact historical protected-preflight baseline;
+a new hosted check is still required.
 
 Freeze a separate slim per-entry release with the selected proof closure,
 corresponding manuscript evidence, statement/proof wrappers and metadata
@@ -516,9 +544,12 @@ lake exe cache get
 LEAN_NUM_THREADS=1 lake build HCP Hardness Sheaf ProximityPrize
 ```
 
-All three entry builds, local definition comparisons, Lean/NanoDa replays and
-selected dependency reports are completed. The combined 975-report audit
-preserves every one of the 946 preceding dependency sets. The official
+The earlier three-entry builds, local definition comparisons, Lean/NanoDa
+replays and combined 975-report audit are completed for their recorded inputs;
+that audit preserved all 946 preceding sets. After the current two-file proof
+revision, all three Solutions build and the fresh 124-report selected/canonical
+audit preserves all 120 configured dependency sets. The central validation
+record distinguishes those checks from a new full audit or kernel replay. The official
 [Comparator helper](https://github.com/PalomarRegistry/PalomarTemplate/blob/main/scripts/verify-comparator.sh)
 confirms the command form `lake comparator --config PATH`. From `lean/`, the
 paths are `Palomar/PaperOne/comparator.json`,
@@ -561,11 +592,13 @@ not yet a replacement release:
    protected comparison, canonical provenance and Lean/NanoDa/con-ron checks.
    Its preferred-size advisory is within the hard caps. Prior local builds
    and the 975-report audit remain separately recorded evidence.
-5. **Local editorial revision prepared; stop before intake.** The current
+5. **Local manuscript/proof revision prepared; stop before intake.** The current
    32-page Paper 1, unchanged 31-page Paper 3 and reconciled bibliographies
    remain local. The post-conclusion parity table preserves all 46 configured
-   declarations. Non-comment Lean source across all 280 files is unchanged;
-   nine header comments are aligned with the construction-first exposition.
+   declarations, plus two separately identified canonical consequences.
+   Proofs change in two existing files; the other 278 Lean files match
+   `048c2ea`. Focused/three-Solution builds and the fresh 124-report audit pass;
+   the older full-build and kernel-comparison evidence remains historical.
    Finish the manuscript/package exact-source checks and
    prepare a refreshed slim snapshot before any future publication/preflight.
    The user explicitly deferred submission.

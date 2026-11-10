@@ -126,27 +126,40 @@ extension-field encoding and original-object adapters; integer casts into a
 prime subfield do not construct it. Keep this optional stronger application
 separate from the already completed native modular radius theorem.
 
-**Current construction-first revision, 2026-11-09.** Paper 1's local PDF is
-**32 pages**. Introduction (§1) leads to the HCP setup and construction (§2):
-exact-cochain observations are in §2.1, semantic/public-hidden data in §2.2,
-and full projective observations and recovery in §2.2.1. *CVP Comparison and
-Kernel Ambiguity* (§3) is the last main section; the actual homological model
-sits beside its cellular example in §3.5. *Conclusion and Further Work* is §4,
-followed by the statement--Lean parity table (Appendix A) and concise proof
-boundaries (Appendix B). The table retains four definition rows, eight main
-groups (21 declarations), five support groups (25 declarations), and three
-background/assumption/contract rows. All eleven proposition statements and
-the mathematical definitions are retained; one proof opening now invokes its
-stated closed-test-invariance premise, preserving the distinction from the
-proved homological fragment. Paper 1 prints five external mathematical
-references and retains seven bibliography records, including two uncited
-companion entries. The 28-source ledger mapping, Paper 2/3's 42/16 bibliography
-records and Paper 3's 31-page PDF are unchanged. Nine Lean header comments
-remove stale section references; non-comment source across all 280 Lean files
-is unchanged. The checked 9,295-job/975-report proof state is retained without
-claiming a repeated Lean build. This revised candidate is local and needs its
-own exact-commit protected preflight; public `66e1ad2` and its passing report
-remain unchanged.
+**Current semantic setup and family-CVP revision, 2026-11-10.** Paper 1's
+local PDF is **32 pages**. Section 2 introduces homotopy equivalence, the
+invariant public class and its possibly coarser fiber, then Hodge data, the
+sample and its integral lattice profile, before defining the public observation,
+hidden witness and HCP. Exact-cochain observations remain in §2.1 and full
+projective recovery in §2.2.1. The final main section, *CVP Comparison and
+Kernel Ambiguity*, ends with Corollary 3.6 in §3.5, immediately before
+conclusion §4. It compares recovery with a supplied private lattice against
+non-recovery from the shared public class using the same correct oracle;
+every compatible family containing the separated pair inherits the obstruction.
+All eleven prior proposition statements and proofs are preserved. Four
+definitions are reworded: public observation, hidden witness, HCP and typed
+semantic realization. Appendix A retains 46 configured declarations (21 main,
+25 support), with two canonical-consequence anchors outside that selection.
+
+The existing `Hardness.lean` and `HCP/AxisFamily.lean` contain actual proof
+additions and a refactored kernel argument; the other 278 Lean files match
+`048c2ea`. No modules, structures or axioms are added; pins, default roots and
+all nine Challenge/Solution/configuration files are unchanged. Fresh focused
+and three-Solution builds pass 3,581/3,759 jobs. The fresh 124-report audit is
+standard-only (117 exact-three/seven subsets), and all 120 configured dependency
+sets match their previous reports. The older 9,295-job/975-report audit remains
+historical evidence for its recorded inputs, rather than a repeated full
+check. The [central validation record](MATH_STORAGE_VALIDATION.md) gives the current evidence.
+Paper 1 still prints five external sources from seven bibliography records;
+the 28-source ledger, Paper 2/3's 42/16 records and Paper 3's 31-page PDF are
+unchanged. This revised candidate remains local; public `66e1ad2` and its
+protected PASS are historical exact-commit evidence.
+
+**Preserved P305–P307 exposition checkpoints, 2026-11-09.** Those 32-page
+revisions integrated the setup, clarified homotopy-class wording and shortened
+the family-CVP contribution without changing Lean proof source. Their
+preservation checks and retained 9,295-job/975-report evidence apply to those
+earlier inputs, before the present canonical proof additions.
 
 **Preserved P304 standalone checkpoint, 2026-11-09.** Paper 1 then had
 36 pages, one merged observation section (§5) and a section-6 conclusion.
@@ -170,28 +183,32 @@ Paper 1 is superseded by the current editorial split.
 
 | Paper | Current structure and contribution | Reused material |
 |---|---|---|
-| 1 | HCP/Hodge recovery; discrete CVP comparisons and constructed ambiguity; the homological semantic fragment; exact-component and full-projective observation boundaries. | Uses external mathematical sources; no Paper 2/3 theorem is needed for these selected results. The shared program allocation is recorded here. |
+| 1 | HCP/Hodge recovery; discrete CVP comparisons and constructed ambiguity; the homological semantic fragment; exact-component and full-projective observation boundaries; the closing private-lattice/shared-class separation corollary. | Uses external mathematical sources; no Paper 2/3 theorem is needed for these selected results. The shared program allocation is recorded here. |
 | 2 | Concrete original cochain payload, encoding/visibility/validity contracts, original projection evidence, storage/rotation and one conditional resource transition. | Uses Paper 1 geometry and Paper 3 metric/coding bounds. Remains a working draft. |
 | 3 | Universal RS list/MCA/radius results and quantitative original-cochain source-to-code comparisons for the declared modular profile. | Imports Paper 2's actual construction and cites Paper 1 observation obstructions. |
 
 ## Focused Paper 1 Outline
 
 1. **Introduction:** Helfer motivation, operative target and exact-recovery
-   comparison; the constructed nonzero/weighted examples and contribution account.
-2. **The Harmonic Cochain Problem:** the true Hodge operator, structured noise
-   and recovery construction, followed by exact-component observations (§2.1),
-   semantic/public-hidden data (§2.2) and full projective observation/recovery
-   (§2.2.1). Public input, hidden operative operator and semantic hypotheses are
-   fixed before the comparison.
+   comparison, followed by four complete contribution statements. The third
+   states the family-CVP result concisely.
+2. **The Harmonic Cochain Problem:** homotopy equivalence, the invariant public
+   class and its possibly coarser fiber, then Hodge data, the sample and its
+   integral lattice profile, followed by public observation, hidden witness
+   and HCP. Exact-cochain observations are in §2.1, further public/hidden data
+   in §2.2 and full-projective recovery in §2.2.1. Prerequisites precede use.
 3. **CVP Comparison and Kernel Ambiguity:** the last main section compares
    presented linear images and discrete lattices, proves the orthogonal
    projection identity and oracle obstruction, then places the actual
-   homological model beside the integral cellular family (§3.5).
+   homological model beside the integral cellular family (§3.5). Closing
+   Corollary 3.6 compares private-lattice recovery and shared-class ambiguity
+   with the same correct oracle, including every compatible containing family.
 4. **Conclusion and Further Work:** exact recovery/observation outcomes and
    their computational and semantic limits.
 5. **Appendix A, Statement--Lean Parity Table:** one post-conclusion table
    with four definition rows, eight main groups (21 declarations), five support
    groups (25 declarations), and three background/assumption/contract rows.
+   Two canonical-consequence anchors sit outside the unchanged selection of 46.
 6. **Appendix B, proof boundaries:** concise model, observation and verification
    scope. The mathematical body has no Lean cross-reference blocks, filenames
    or repeated descriptions of the other manuscripts.
@@ -203,9 +220,11 @@ for the actual homological model and cellular example, and
 The former standalone semantic and observation files are removed. Detailed
 protocol/coding allocation stays in this guide and the shared ownership table.
 The former long chapters and source catalogue remain in Git history. The
-restructure preserves the proposition statements and mathematical definitions;
-one proof opening cites its stated closed-test-invariance premise, while the
-concrete homological fragment retains its separate proved construction.
+current revision preserves all eleven prior proposition statements and proofs,
+rewords the public-observation, hidden-witness, HCP and typed-realization
+definitions, and adds the closing corollary. The concrete homological fragment
+retains its separate proved construction; the generic semantic bridge retains
+its explicit closed-test-invariance premise.
 
 ## Paper 2 Construction and Protocol Scope
 

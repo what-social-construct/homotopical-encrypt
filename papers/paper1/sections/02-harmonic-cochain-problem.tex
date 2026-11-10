@@ -1,17 +1,18 @@
 \section{The Harmonic Cochain Problem}\label{sec:hcp-definition}
 
-We use finite graded cell carriers, integer incidence numbers and
-face-to-coface linear stalk maps whose induced coboundaries satisfy
-\(\delta_1\delta_0=0\). This algebraic model adapts the finite Hodge
-setup of \cite{hansenGhrist2018sheaves} without assuming a regular CW or
-simplicial realization for every admitted incidence structure. All cellular
-examples below use this declared model; stronger topological realization and
-the separate simplicial-coherence conditions require additional data.
-
-Let \(A\) denote the type of hidden representatives, let \(P\) denote the type
-of public class data, and let
+Let \(A\) be the type of hidden presentations, with semantic interpretation
+\(M_x\) for each \(x\in A\). Write \(x\simeq y\) when \(M_x\) and \(M_y\)
+are homotopy equivalent in the declared semantics. Assume that this
+equivalence preserves the chosen closed tests. Let \(P\) be the type of public
+class data and choose a classifier \(\pi:A\to P\) that factors through their
+closed theory. Then
 \[
-  \pi:A\to P,\qquad
+  x\simeq y\quad\Longrightarrow\quad\pi(x)=\pi(y).
+\]
+The typed data and the invariance premise are made precise in
+\cref{def:typed-hcp-realization,prop:helfer-hcp-bridge}.
+For a realized public value \(\alpha\), write
+\[
   \alpha\in\image(\pi),\qquad
   A_\alpha=\pi^{-1}(\alpha)=\{x\in A:\pi(x)=\alpha\}.
 \]
@@ -19,67 +20,109 @@ For \(x\in A\), we also write
 \([x]_\pi:=A_{\pi(x)}\). Thus, whenever \(\alpha=\pi(x)\), the two
 descriptions agree: \(A_\alpha=[x]_\pi\).
 
-The public classifier records selected semantic information about a hidden
-presentation. In the Helfer realization below, it factors through the closed
-theory of an interpretation. A common public label specifies a fiber; it
-does not supply its operative representative or a transport map.
+A classifier fiber may be coarser than a homotopy-equivalence class. A common
+public label specifies that fiber without supplying its operative
+representative or a transport map.
 
-\begin{definition}[Harmonic Cochain Problem]\label{def:hcp}
-  The \emph{Harmonic Cochain Problem} (HCP) asks, given public data
-  \((\alpha,b)\) consisting of a realized public classifier value
-  \(\alpha\in\image(\pi)\) and a cochain-facing observation \(b\), to recover
-  the operative harmonic component
-  \[
-    h=P_{\ker(\Delta_1)}b\in\ker(\Delta_1),
-  \]
-  equivalently the harmonic term in the orthogonal Hodge decomposition of
-  \(b\). Here \(\Delta_1\) is the degree-one Hodge--Laplacian induced by the
-  operative hidden representative \(x\in A_\alpha=\pi^{-1}(\alpha)\) bound to
-  the instance by its hidden witness.
+We attach Hodge data to each presentation using finite graded cell carriers,
+integer incidence numbers and face-to-coface linear stalk maps.
+
+Fix a finite coordinate set \(N\) and let \(V=\mathbb R^N\) have its Euclidean
+inner product. Each presentation has finite-dimensional real inner-product
+cochain spaces \(C_x^0,C_x^1,C_x^2\). To compare presentations using one public
+cochain vector, fix isometric coordinate charts
+\(\iota_x:C_x^1\overset{\sim}{\longrightarrow}V\).
+We identify degree-one vectors and maps with their transported versions in
+\(V\). The charts are comparison data; they are not asserted to be
+recoverable from the public classifier.
+
+The restriction maps \(R^x_{\sigma\to\tau}\) for \(\sigma\prec\tau\),
+including vertex-to-edge and edge-to-face maps, determine adjacent
+coboundaries
+\[
+  \delta_{0,x}:C_x^0\to V,
+  \qquad
+  \delta_{1,x}:V\to C_x^2,
+  \qquad
+  \delta_{1,x}\delta_{0,x}=0.
+\]
+In these coordinates, define the degree-one Hodge--Laplacian, its harmonic
+subspace and its orthogonal projector by
+\[
+\begin{aligned}
+  \Delta_x&=\delta_{0,x}\delta_{0,x}^\ast+
+    \delta_{1,x}^\ast\delta_{1,x},\\
+  \mathcal H_x&=\ker(\Delta_x),\qquad
+    P_{\mathcal H_x}:V\to\mathcal H_x\subseteq V.
+\end{aligned}
+\]
+The stars denote adjoints. When the operative representative is fixed, we
+suppress \(x\) and also write \(\Delta_1\) or \(\Delta\) for its degree-one
+Laplacian, and \(P_H\) for its harmonic projector.
+
+In the \HE{} public-sample model, a presentation \(x\) produces a cochain
+\[
+  b=h+e,
+  \qquad
+  h\in\mathcal H_x,
+  \qquad
+  e\in\image(\delta_{0,x})\oplus\image(\delta_{1,x}^\ast).
+\]
+The message \(h\) is a harmonic representative of its degree-one cohomology
+class, and \(e\) is Hodge-structured noise. When \(x\) is also equipped with
+an explicit harmonic-lattice presentation, write
+\(\Lambda_x\subseteq\mathcal H_x\) for its discrete lattice and choose
+\(h\in\Lambda_x\). In this integral profile, the public fiber indexes a
+family of possible embedded harmonic lattices; the operative hidden member
+selects one of them. The real harmonic space and the supplied discrete
+lattice remain distinct objects.
+
+\begin{definition}[Public observation]\label{def:public-observation}
+  A public HCP observation is a pair \((\alpha,b)\) consisting of a realized
+  public classifier value \(\alpha\in\image(\pi)\) and an observed degree-one
+  cochain \(b\in V\) in the fixed comparison coordinates.
 \end{definition}
 
-In the \HE{} public-sample model, the visible cochain has the form
-\[
-  b = h + e,
-  \qquad
-  h \in \ker(\Delta_1),
-  \qquad
-  e \in \image(\delta_0) \oplus \image(\delta_1^\ast).
-\]
-Here \(h\) is the degree-one harmonic cochain, equivalently a harmonic
-representative of its degree-one cohomology class, and \(e\) is
-Hodge-structured noise. The hidden-operator ambiguity studied below is the
-condition that the public data do not determine a unique \(\Delta_1\) or
-\(\ker(\Delta_1)\).
-The algebraic recovery chain is
-\[
-  x
-  \longmapsto
-  \{R_{\sigma\to\tau}\}_{\sigma\prec\tau}
-  \longmapsto
-  (\delta_0,\delta_1)
-  \longmapsto
-  \Delta_1
-  \longmapsto
-  P_H:C^1\to\ker(\Delta_1),
-\]
-where \(x\in A_\alpha\) is a hidden representative and
-\(R_{\sigma\to\tau}\) are the face-to-coface restriction maps, including
-vertex-to-edge and edge-to-face maps, that determine the adjacent coboundaries
-\[
-  \delta_0:C^0\to C^1,
-  \qquad
-  \delta_1:C^1\to C^2,
-\]
-and
-\[
-  \Delta_1=\delta_0\delta_0^\ast+\delta_1^\ast\delta_1
-\]
-is the induced degree-one Hodge--Laplacian. The map \(P_H\) is the
-orthogonal projection onto \(\ker(\Delta_1)\). When the degree is fixed, we
-write \(\Delta\) for this operative Laplacian.
+\begin{definition}[Hidden Hodge witness]\label{def:hidden-hodge-witness}
+  A hidden Hodge witness for a public observation \((\alpha,b)\) is a hidden
+  representative \(x\in A_\alpha\), satisfying \(\pi(x)=\alpha\). Its
+  presentation data select the operative operator \(\Delta_x\). The witness
+  and \(b\) determine the coordinates
+  \[
+    h_x(b):=P_{\mathcal H_x}b,
+    \qquad
+    e_x(b):=b-h_x(b).
+  \]
+  The Hodge decomposition in \cref{prop:hodge-decomposition} gives
+  \[
+    h_x(b)\in\ker(\Delta_x),\qquad
+    e_x(b)\in
+      \image(\delta_{0,x})\oplus\image(\delta_{1,x}^\ast),\qquad
+    b=h_x(b)+e_x(b).
+  \]
+\end{definition}
+
+\begin{definition}[Harmonic Cochain Problem]\label{def:hcp}
+  The \emph{Harmonic Cochain Problem} (HCP) asks, given the public observation
+  \((\alpha,b)\), to recover the operative harmonic component
+  \[
+    h=h_x(b)\in\mathcal H_x,
+  \]
+  equivalently the harmonic term in the orthogonal Hodge decomposition of
+  \(b\) for the operative hidden witness \(x\in A_\alpha\). The witness is
+  bound to the instance but is not part of the public input.
+\end{definition}
+
+The hidden-operator ambiguity studied below is the condition that the public
+data do not determine the operative \(\Delta_x\) or its harmonic kernel.
 A concrete public artifact may commit to or certify values derived from this
-chain without revealing the restriction maps or the induced operator.
+presentation without revealing the restriction maps or the induced operator.
+
+The algebraic cellular model above adapts the finite Hodge setup of
+\cite{hansenGhrist2018sheaves} without assuming a regular CW or simplicial
+realization for every admitted incidence structure. All cellular examples
+below use this declared model; stronger topological realization and the
+separate simplicial-coherence conditions require additional data.
 
 \begin{definition}[Matrix harmonicity]\label{def:matrix-harmonicity}
   For a hidden linear Hodge operator \(\Delta\), a cochain
@@ -217,10 +260,8 @@ chain without revealing the restriction maps or the induced operator.
 
 \subsection{Hodge Encryption and Correctness}
 
-For a hidden representative \(x\), write
+For a hidden representative \(x\), define its noise space by
 \[
-  \mathcal H_x=\ker(\Delta_x),
-  \qquad
   \mathcal E_x=\mathcal H_x^\perp.
 \]
 The Hodge decomposition identifies the noise space as the orthogonal direct
@@ -287,14 +328,6 @@ instantiation, the private material selecting or opening it---determines
 is pointwise and requires no uniform distribution on an infinite noise space.
 It is not an indistinguishability or one-wayness claim; those require separate
 assumptions about key generation, randomness, and the public view.
-
-When several presentation-dependent spaces \(C_x^1\) are compared using one
-public coordinate vector, we fix isometric coordinate charts
-\(\iota_x:C_x^1\overset{\sim}{\longrightarrow}V\) into a common
-finite-dimensional real inner-product space \(V\). Operators denoted
-\(\Delta_x\in\operatorname{End}(V)\) below are the corresponding conjugated
-operators. The charts are comparison data; they are not asserted to be
-recoverable from the public classifier.
 
 \paragraph{Exact-component observations.}
 Fix one cellular Hodge system and an opening \(a\in C^0\). Its exact
@@ -365,12 +398,7 @@ by the HCP/CVP comparison.
 
 \subsection{Public and Hidden Data}\label{sec:mathematical-framework}
 
-\begin{definition}[Public observation]\label{def:public-observation}
-  The public HCP observation consists of a realized public classifier value
-  \(\alpha\) together with an observed degree-one cochain \(b\).
-\end{definition}
-
-Thus \((\alpha,b)\) is the vector-level public input. An accepted exact
+The pair \((\alpha,b)\) is the vector-level public input. An accepted exact
 payload, an opening of its exact component or a proof about that component
 does not by itself expose the full cochain \(b\). A record used to present
 this input must be bound to the operative operator, classifier and sample,
@@ -456,9 +484,9 @@ corresponding premise for its declared homological tests.
     \operatorname{Th}(M_x)
     =\{\varphi\text{ closed}:M_x\vDash\varphi\}
   \]
-  for its closed first-order theory. Use the chosen coordinate charts to
-  compare cochains in a common finite-dimensional real inner-product space
-  \(V\). A typed HCP semantic realization consists additionally of maps
+  for its closed first-order theory. Relative to the presentation data and
+  coordinate charts fixed above, a typed HCP semantic realization consists
+  additionally of maps
   \[
   \begin{aligned}
     x&\longmapsto\Delta_x\in\operatorname{End}(V),\\
@@ -584,27 +612,6 @@ the hidden presentation, this particular ambiguity would disappear.
   same operator, since equality of operators implies equality of kernels.
   Therefore the public projection identifies two distinct hidden operators.
 \end{proof}
-
-\begin{definition}[Hidden Hodge witness]\label{def:hidden-hodge-witness}
-  A hidden Hodge witness for a public observation \((\alpha,b)\) is a hidden
-  representative \(x\in A\) satisfying \(\pi(x)=\alpha\). Through the typed
-  realization, it selects the operative operator \(\Delta_x\). The witness and
-  \(b\) then determine, rather than independently assume, the coordinates
-  \[
-    h_x(b):=P_{\ker(\Delta_x)}b,
-    \qquad
-    e_x(b):=b-h_x(b).
-  \]
-  For a genuine degree-one Hodge operator
-  \(\Delta_x=\delta_{0,x}\delta_{0,x}^\ast+
-  \delta_{1,x}^\ast\delta_{1,x}\), the Hodge decomposition gives
-  \[
-    h_x(b)\in\ker(\Delta_x),\qquad
-    e_x(b)\in
-      \image(\delta_{0,x})\oplus\image(\delta_{1,x}^\ast),\qquad
-    b=h_x(b)+e_x(b).
-  \]
-\end{definition}
 
 The hidden data include the fibration representative, restriction maps, the
 induced Laplacian, its harmonic kernel, and private witness/cochain data. Public

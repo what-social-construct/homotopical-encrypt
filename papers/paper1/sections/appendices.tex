@@ -8,7 +8,9 @@ configuration, \lean{lean/Palomar/PaperOne/comparator.json}, selects 21
 manuscript-facing and 25 supporting theorem declarations. Every declaration
 appears once below. These are coverage counts, not a count of independent
 research contributions. Definition rows name canonical implementation
-objects, not additional selected theorem targets. Main-result and support
+objects, not additional selected theorem targets. Canonical consequences
+identify derived implementation lemmas outside that configured selection.
+Main-result and support
 rows are proved under their stated premises; background, assumption and
 contract rows identify the separate scope boundaries.
 
@@ -126,17 +128,22 @@ operative message is the unique closest lattice point.
 \\\midrule
 
 \textbf{Main result: P1-S05.}\newline
-\emph{Proved.} \Cref{prop:cvp-insufficient,prop:cellular-axis-ambiguity}.
+\emph{Proved.} \Cref{prop:cvp-insufficient,prop:cellular-axis-ambiguity,cor:lattice-member-separation}.
 Generic separation retains closed-test invariance and kernel separation;
 oracle corollaries also retain existence of a correct explicit-lattice
 CVP oracle. The constructed integral family has one public observation
-and distinct nonzero targets, ruling out uniformly exact public-data recovery.
+and distinct nonzero targets. Its supplied rank-one lattice is solvable by
+that same correct oracle; shared-class recovery is impossible, as is exact
+recovery in every compatible family retaining the separated pair.
 &
 \lean{HB.operativeTargets_ne_of_kernelSeparation}\par
 \lean{HB.cvpOracle_insufficient_of_kernelSeparation}\par
 \lean{HB.cvpOracle_insufficient_for_operativeTarget}\par
 \lean{AF.cellular_axis_ambiguity}\par
-\lean{AF.cvp_oracle_insufficient}
+\lean{AF.cvp_oracle_insufficient}\par
+Canonical consequences:\par
+\lean{Hcrypt.HCPBridge.no_solver_exactOnOperativeTarget_on_family}\par
+\lean{Hcrypt.HCP.AxisFamily.cvp_known_member_hidden_member_separation}
 \\\midrule
 
 \textbf{Main result: P1-S06.}\newline

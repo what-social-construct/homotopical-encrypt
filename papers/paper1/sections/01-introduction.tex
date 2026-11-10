@@ -65,7 +65,7 @@ a single proposition or construction are defined locally.
     \hline
     Symbol & Meaning \\
     \hline
-    \(\pi:A\to P\) & path-respecting public classifier \\
+    \(\pi:A\to P\) & homotopy-invariant public classifier \\
     \(\alpha=\pi(x)\in P\) & realized public classifier value \\
     \(A_\alpha=[x]_\pi\) & fiber of hidden representatives with public label \(\alpha\) \\
     \((\alpha,b)\) & public HCP observation \\
@@ -81,35 +81,21 @@ a single proposition or construction are defined locally.
 
 This paper develops this boundary through the following statements.
 \begin{enumerate}[label=(\roman*)]
-  \item The Harmonic Cochain Problem (HCP): recovery of the operative
+  \item The Harmonic Cochain Problem (HCP) asks for recovery of the operative
     component \(h=P_Hb\) for a hidden degree-one Hodge operator \(\Delta_1\).
-  \item A Hodge-structured noise model with cochain decomposition
+  \item A Hodge-structured noise model gives the cochain decomposition
     \(b = h + e\), where \(h \in \ker(\Delta_1)\) and
     \(e \in \image(\delta_0) \oplus \image(\delta_1^\ast)\).
-  \item A CVP comparison with constructed ambiguity examples. Field-linear
-    images are distinguished from discrete lattices; when
-    \(\Lambda\subseteq W\) is explicitly supplied, projection onto \(W\)
-    preserves the discrete closest-vector condition on \(\Lambda\).
-    Publicly equivalent hidden Hodge operators may nevertheless disagree on
-    harmonicity, preventing a correct explicit-lattice CVP oracle from
-    yielding a uniform exact public-data HCP solver. Integral cellular
-    examples have one homological public observation and distinct nonzero
-    harmonic targets; a weighted pair shares \(b=(1,2)\) with integer
-    coefficients two and one, with a unique CVP answer for each private lattice.
-  \item Observation boundaries: exact-component extraction can lose full
+  \item Harmonic lattices in one public class can have
+    different unique closest vectors to the same cochain, so known-lattice
+    CVP access does not determine the operative answer.
+  \item Exact-component extraction can lose the full
     Hodge residual, whereas full projective data of the operative kernel
     determine its fixed-metric projector and harmonic target.
 \end{enumerate}
 
 Finite Hodge theory follows the cellular-cochain framework of
 Hansen--Ghrist \cite{hansenGhrist2018sheaves}; the algebraic model used here is
-specified in \cref{sec:hcp-definition}. Kernel realization and the
-Pythagorean projection identity are elementary linear-algebraic foundations.
-Helfer's homotopy-invariant semantics \cite{helfer2019fol} motivates the public
-classifier; the constructed examples prove only the explicitly named
-nonzero-cohomology-test fragment. These objects support the constructed
-observation ambiguities and recovery boundaries under the stated hypotheses.
-The computational scope is specified in \cref{sec:computational-scope}.
-
-The statement correspondence and formal proof boundaries are collected in
-the parity table after the conclusion (\cref{app:selected-crosswalk}).
+specified in \cref{sec:hcp-definition}. Helfer's homotopy-invariant semantics
+\cite{helfer2019fol} motivates the public classifier; the constructed examples prove only the explicitly named
+nonzero-cohomology-test fragment.

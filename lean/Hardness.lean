@@ -36,7 +36,8 @@ This module verifies the formal comparison used by the paper:
 4. **Typed Helfer/HCP consequence**: Consumes the realization, classifier, and
    kernel-separation interfaces from `HCP.lean`. A separation witness yields
    incompatible operative targets and rules out a public solver, even with a
-   correct explicit-CVP oracle as auxiliary data.
+   correct explicit-CVP oracle as auxiliary data. The obstruction persists
+   in every compatible family containing the same separated pair.
 
 The formal proofs separate the presented-subspace projection problem, the
 discrete known-lattice CVP problem, and the hidden-operator recovery problem.
@@ -154,6 +155,29 @@ theorem operativeTargets_ne_of_kernelSeparation
   rw [hrightTarget] at hrightHarmonic
   exact witness.not_harmonic_right hrightHarmonic
 
+/--
+A compatible family containing two distinct operative targets admits no
+public solver exact on every member at their common observation.
+
+The auxiliary input, including any oracle, is held fixed across members.
+There is no running-time restriction on the solver or cardinality assumption
+on the family. Every larger compatible family retaining the two witnesses
+inherits the same exact-recovery obstruction.
+-/
+theorem no_solver_exactOnOperativeTarget_on_family
+    (X : Realization C S sem Rep N ℝ P)
+    (observation : Observation P N ℝ)
+    (family : Set (HiddenHodgeWitness X observation))
+    {leftWitness rightWitness : HiddenHodgeWitness X observation}
+    (hleft : leftWitness ∈ family)
+    (hright : rightWitness ∈ family)
+    (htargets : operativeTarget X observation leftWitness ≠
+      operativeTarget X observation rightWitness)
+    {Aux : Type uAux} {solver : Solver Aux P N ℝ} {aux : Aux}
+    (hexact : ∀ witness ∈ family,
+      solver aux observation = operativeTarget X observation witness) : False := by
+  exact htargets ((hexact leftWitness hleft).symm.trans (hexact rightWitness hright))
+
 /-- No public solver can be exact on every operative target in an ambiguous fiber. -/
 theorem no_solver_exactOnOperativeTarget_of_kernelSeparation
     (X : Realization C S sem Rep N ℝ P)
@@ -163,9 +187,9 @@ theorem no_solver_exactOnOperativeTarget_of_kernelSeparation
     (hexact : SolverExactOnOperativeTarget X solver aux) : False := by
   obtain ⟨observation, leftWitness, rightWitness, htargets⟩ :=
     operativeTargets_ne_of_kernelSeparation X hInv witness
-  exact htargets
-    ((hexact observation leftWitness).symm.trans
-      (hexact observation rightWitness))
+  exact no_solver_exactOnOperativeTarget_on_family X observation Set.univ
+    (Set.mem_univ leftWitness) (Set.mem_univ rightWitness) htargets
+    (solver := solver) (aux := aux) (fun compatible _ => hexact observation compatible)
 
 /--
 Even a correct explicit-lattice CVP oracle cannot resolve a supplied HCP
