@@ -11,8 +11,8 @@ We do not reproduce Helfer's full development of suitable model categories,
 Kan complexes, \(h^{=}\)-fibrations, or two-dimensional fibrations. Instead, we
 extract the semantic obligations consumed by HCP and add the project-specific
 public-classifier and observation boundary below. Helfer's external invariance
-theorem is cited as background rather than reproved in Lean.
-Lean does formalize the typed dependency needed to apply that result: a
+theorem is cited as background. We retain the typed data needed to apply
+that result: a
 multi-sorted algebraic signature, finite-product interpretations, homotopy
 homomorphisms coherent with every function symbol, and componentwise
 homotopy equivalence between cofibrant-fibrant interpretations. The
@@ -45,7 +45,7 @@ alone supplies no transport map.
 The protocol realization in Paper~2 uses additional typed transport and
 observation data; no byte-level construction is inferred here.
 
-The typed interpretation used in the formalization assigns an object of a
+The typed interpretation assigns an object of a
 model category to each sort of an algebraic signature. Finite lists of sorts
 are interpreted by finite products, and function symbols by maps between
 those products. A homotopy homomorphism respects those operations up to the
@@ -96,8 +96,8 @@ induced context equivalence. In particular,
 \]
 for every closed first-order formula \(\varphi\)
 \cite[Definition~7.1 and Theorem~12.3]{helfer2019fol}. We use this external
-theorem as semantic background; the local Lean interface records it as an
-obligation and does not reprove it.
+theorem as semantic background; the general HCP comparison retains its
+closed-formula consequence as an explicit premise.
 
 HCP uses this path-equality semantics as motivation for its hidden-
 representative model. The public classifier, the cryptographic hiding of a
@@ -186,19 +186,14 @@ statement of Helfer's general framework remain external background; the
 concrete example proves the named fragment rather than assuming the full
 first-order theorem.
 
-\subsection{Formalization Boundary}
+\subsection{Scope of the Semantic Model}
 
-The semantic proof owners are \lean{Helfer/Signature.lean},
-\lean{Helfer/HomotopyEquivalence.lean}, \lean{Helfer/Invariance.lean} and
-\lean{Helfer/CochainModel.lean}. The actual family and its operative-target
-comparison are in \lean{Sheaf/HCPAxisFamily.lean} and
-\lean{HCP/AxisFamily.lean}. The generic bridge in
+The generic bridge in
 \cref{prop:helfer-hcp-bridge} retains its explicit invariance and separation
 hypotheses. The constructed fragment discharges its own invariance premise;
 it does not supply protocol authentication, a computational sampler or a
 security game.
 
-The independent entry's selected theorem groups are listed in the appendix.
 Protocol-specific commitment assumptions, oracle judgments, admissibility
 gates and proof-carrying state belong to Paper~2
 \cite{vanDerVlugt2026protocol}. Coding predicates, radii and quantitative

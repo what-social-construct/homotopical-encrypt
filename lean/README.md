@@ -8,14 +8,29 @@ drafts. The public-review package preserves the repository layout:
 
 The project [MIT license](../LICENSE) is included at the package root.
 
-**Local manuscript revision, 2026-11-09.** Paper 1 is now 37 pages and focuses
+**Current back-matter revision, 2026-11-09.** Paper 1 is **38 pages**. Its
+mathematical body contains no Lean cross-reference blocks or implementation
+filenames. Section 7 is *Conclusion and Further Work*. Appendix A consolidates
+the correspondence into one parity table: four definition rows, eight main
+result groups (21 declarations), five support groups (25 declarations), and
+three external-result/assumption/contract rows. Appendix B keeps concise proof
+boundaries. All **280 Lean files are byte-identical to `dddfdd2`**, so the
+checked 9,295-job build and 975-report dependency state is retained; this
+editorial change introduces no new Lean build claim. Paper 3 remains the
+unchanged 31-page PDF. The bibliography reconciliation adds 19 records and
+maps all 28 source-ledger IDs: Paper 1 cites seven entries, while Paper 2 and
+Paper 3 retain 42 and 16 records respectively. Candidate bibliography
+membership does not imply adoption or formalization. This revision remains
+local; public `66e1ad2` and its historical protected report are unchanged.
+
+**Earlier P300/P301 scope checkpoint, 2026-11-09.** Paper 1 was 37 pages and focused
 on HCP/Hodge/CVP, the actual Helfer homological-test fragment and mathematical
 observation/Plücker recovery boundaries. Paper 2's working draft owns the
 concrete commitment/codec, visibility, gates/evidence and storage construction.
 Paper 3 is 31 pages and owns quantitative RS/proximity, calibration and metric
 bridges. The accompanying 93 Lean files change comments only. Fresh local
 validation passes the 9,295-job expanded build and all 975 selected dependency
-reports; every prior dependency set is unchanged. Both PDFs pass final
+reports; every prior dependency set is unchanged. Those PDFs passed final
 build/render/layout QA. Protected verification remains exact-commit evidence.
 
 The earlier Paper 1-only public commit

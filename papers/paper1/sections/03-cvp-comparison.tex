@@ -319,8 +319,7 @@ bridge in \cref{prop:hodge-projection-is-cvp} applies only after the operative
 harmonic subspace and the lattice inclusion have also been supplied; it does
 not determine which hidden kernel is compatible with the public data.
 
-For every dimension at least two, the Lean development also constructs the
-elementary matrix witness \(L=0\),
+For every dimension at least two, consider the elementary matrix witness \(L=0\),
 \(L'=\operatorname{diag}(1,0,\ldots,0)\), and \(b=e_1\) under the constant
 projection to a one-point public type. This is a sanity example showing that
 the abstract ambiguity predicates are inhabited. It is not used as evidence
@@ -416,38 +415,3 @@ and CVP agreement. Existing payload acceptance, decoder, hash and envelope
 bindings remain explicit. Paper~2 owns those concrete visibility/storage,
 rotation and key-delivery profiles; this example establishes no distributional
 anonymity or plaintext-security experiment.
-
-\subsection*{Lean Cross-Reference}
-
-\begin{leanledger}
-The discrete CVP definitions correspond to \lean{CVP.ExplicitLattice},
-\lean{CVP.Instance}, \lean{CVP.InExplicitLattice},
-\lean{CVP.squaredEuclideanDistance},
-\lean{CVP.IsClosestLatticeVector}, \lean{CVP.Solution},
-\lean{CVP.OracleCorrect}, and \lean{CVP.HardnessAssumption}. The separate
-field-linear comparison is \lean{exists_matrix_ker_eq_range} and
-\lean{Hodge_GeneratedSubspace_Reduction_Proof}. The explicit
-harmonic-lattice bridge is \lean{HarmonicCVPBridge},
-\lean{HarmonicCVPBridge.squaredDistance_projection_decomposition},
-\lean{HarmonicCVPBridge.isClosestLatticeVector_iff_projectedTarget},
-and \lean{HarmonicCVPBridge.solution_iff_projectedTarget}. The
-closest-harmonic and hidden-operator surfaces are
-\lean{ClosestHarmonicSolution},
-\lean{ProjectionClosestHarmonicSolution},
-\lean{matrix_harmonic_iff_projection_isHarmonic},
-\lean{Hcrypt.HCPBridge.Observation}, \lean{Hcrypt.HCPBridge.Solver},
-\lean{Hcrypt.HCPBridge.SolverSoundOn},
-\lean{Hcrypt.HCPBridge.SolverExactOnHarmonic},
-\lean{Hcrypt.HCPBridge.no_solver_on_kernelSeparation}, and
-\lean{Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation}.
-The concrete instance is \lean{Hcrypt.HCP.AxisFamily.realization},
-\lean{shared_observation_distinct_nonzero_targets},
-\lean{no_exact_public_solver}, \lean{cvp_oracle_insufficient},
-\lean{cvp_solution_iff_message}, and \lean{cvp_existsUnique} in that namespace.
-The explicit integer-encoding variant is \lean{weightedSample},
-\lean{weighted_public_observations_eq},
-\lean{weighted_cvp_solution_iff_operativeTarget}, and
-\lean{no_exact_encoded_message_decoder} in the same namespace.
-Its actual cellular objects are in \lean{Sheaf/HCPAxisFamily.lean}; the
-proved homological semantics is in \lean{Helfer/CochainModel.lean}.
-\end{leanledger}

@@ -18,6 +18,56 @@ assessment, not adoption of a construction or a claim that its theorem is
 formalized here. Cryptographic sources require a separate security review
 before their assumptions or guarantees enter a selected protocol.
 
+### Bibliography correspondence
+
+All **28 ledger sources** now have a BibTeX record in the relevant paper's
+bibliography. File membership is a retrieval aid, not adoption, proof review,
+or a claim that a source's theorem is formalized. The PDFs print sources
+actually cited in their text; candidate records are retained for later work
+without `\nocite{*}`. Paper 1 owns mathematical foundations/observation
+comparisons, Paper 2 owns construction/protocol and application candidates,
+and Paper 3 owns coding/proximity comparisons. The existing detailed rows
+below retain their review depth and applicability conditions.
+
+Here **P1** means [Paper 1 references.bib](../papers/paper1/references.bib),
+**P2** means [Paper 2 references.bib](../papers/paper2/references.bib), and
+**P3** means [Paper 3 references.bib](../papers/proximity-prize/references.bib).
+Metadata for the 19 newly added records was checked against the primary
+versioned arXiv pages on 2026-11-09. Reviewed versions are retained rather
+than silently upgraded: for example, `2611.05136v1` is the reviewed PRG
+source even though version 2 was posted on November 5.
+
+| Source ID | BibTeX key | File | Current role |
+|---|---|---|---|
+| 1312.6454 | `curryGhristNanda2015morse` | P1 | Computational comparison; retained maps/metric need justification. |
+| 1808.01513 | `hansenGhrist2018sheaves` | P1 | Cited foundation; finite cellular/Hodge part only. |
+| 1908.08944 | `helfer2019fol` | P1 | Cited semantic background; declared homological fragment only. |
+| 2601.19830 | `dingKim2026plucker` | P1 | Projective-geometry comparison; specialized coordinates not adopted. |
+| 2007.04099 | `ghristRiess2022tarski` | P2 | Candidate ordered-constraint semantics; no stalk/adjunction realization. |
+| 2011.14057 | `riessHansenGhrist2020persistence` | P2 | Optional feature/learning comparison; no classifier adoption. |
+| ePrint 2026/910 | `fischEtAl2026unifomr` | P2 | Planned retrieval comparison; metadata/abstract review only. |
+| 2110.03789 | `gebhartHansenSchrater2023knowledgeSheaves` | P2 | Candidate schema/learning application; metadata/abstract review only. |
+| 2512.00242 | `borgiSilvestriLio2025polynomialSheaf` | P2 | Candidate numerical diffusion layer; no implementation selected. |
+| 2605.06395 | `tandonEtAl2026hilbertBundles` | P2 | Candidate sheaf/learning construction; no selection. |
+| 2605.15778 | `ghrist2026liabilityNetworks` | P2 | Candidate constraint/transition pattern; no economic profile selected. |
+| 2605.26883 | `cignaraleRinconGaleana2026jointCommitments` | P2 | Candidate policy/joint-evidence semantics; no adoption. |
+| 2606.03861 | `abbadiniAlmeidaArrieta2026topos` | P2 | Candidate logical semantics; no topos construction adopted. |
+| 2608.14556 | `zhengAllenBlanchette2026cochainMetrics` | P2 | Candidate metric comparison; no metric selected. |
+| 2608.15397 | `boudourides2026harmonicCirculation` | P2 | Candidate network dynamics; no quorum/finality claim. |
+| 2610.12384 | `faergemanKjaersgaard2026localConstancy` | P2 | Candidate family/transport organization; no realization. |
+| 2610.28455 | `guadagnuoloEtAl2026bochner` | P2 | Candidate operator analysis; no kernel-preserving adapter. |
+| 2610.37061 | `grahamEtAl2026gksSecurity` | P2 | Encrypted-computation comparison only; no construction/security adoption. |
+| 2610.40746 | `odabasi2026enrichedHomotopy` | P2 | Candidate categorical organization; no adapter. |
+| 2611.04670 | `borgiEtAl2026sheafMPNN` | P2 | Candidate computation architecture; no wire/consensus refinement. |
+| 2611.05136 | `qian2026informationLoss` | P2 | Security-game comparison only; no HCP distributional reduction. |
+| 2611.05209 | `fernandezHerreroInchiostro2026relative` | P2 | Candidate relative-family framework; no realization/adapter. |
+| 0911.1298 | `beelenGhorpadeHoholdt2010affineGrassmann` | P3 | Candidate code comparison; no extraction identification. |
+| 1507.01653 | `ketiWan2016deepHoles` | P3 | Cited classical deep-hole background. |
+| ePrint 2025/2051 | `bordageEtAl2026polynomialMCA` | P3 | Cited MCA context; no quantitative bound imported. |
+| 2608.22663 | `guruswamiLiSinghal2026averageRadius` | P3 | Random-code comparison; no ensemble transfer. |
+| 2609.18098 | `liuEtAl2026hyperDerivativeAG` | P3 | Alternative-codec candidate; no metric transfer. |
+| 2611.07607 | `alrabiahGoyalGuruswami2026` | P3 | Cited novelty comparison; no Lean adoption. |
+
 ### Quick topic and ID index
 
 Source IDs are the lookup keys; each link jumps to its existing register row.
@@ -48,7 +98,7 @@ Search this file for an arXiv ID or `ePrint 2026/910` when working from a URL.
 |---|---|---|
 | <a id="source-2601-19830"></a>[*Grassmann–Plücker functions for orthogonal matroids*, 2601.19830v2](https://arxiv.org/html/2601.19830v2) | Restricted Plücker data for maximal isotropic subspaces of a split orthogonal space, with recovery of the subspace (Corollary 3.7). | A specialized algebraic comparison; our arbitrary real harmonic subspaces still have no selected orthogonal-matroid realization. **Status update, 2026-11-08:** [Reconstruction](../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) now recovers the subspace/projector and proves full-shadow equality exactly when genuine ranked points agree (`publicShadow_eq_iff_same_point`). This supersedes the initial review's soundness-only gap; digest inversion remains separate. |
 | <a id="source-0911-1298"></a>[Beelen–Ghorpade–Høholdt, *Affine Grassmann Codes*, 0911.1298v2](https://arxiv.org/abs/0911.1298v2) | Span of all minors of a finite-field matrix, evaluated on all matrices; exact length, dimension and minimum distance. Section 7 identifies the normalized big-cell connection to Grassmann/Plücker evaluation. | Direct coding reference to assess for the extraction layer. Applying its distance requires choosing that finite-field chart/evaluation code and proving the identification. The current real shadow and subsequent plane-to-RS encoding do not supply this automatically. Minimum codeword distance does not prove the missing geometric-source-to-pair far comparison. |
-| <a id="source-2609-18098"></a>[*Hyper-derivative AG Codes via Local Expansions*, 2609.18098v1](https://arxiv.org/html/2609.18098v1) | Finite-field function evaluation through local derivative jets, with an ordered NRT metric. | Alternative codec research. Current paired RS words have independent coordinates and whole-pair Hamming distance. A derivative relation, new locus/codec and metric comparison would need construction before importing bounds. |
+| <a id="source-2609-18098"></a>[*Hyper-derivative Algebraic Geometry Codes via Local Expansions*, 2609.18098v1](https://arxiv.org/html/2609.18098v1) | Finite-field function evaluation through local derivative jets, with an ordered NRT metric. | Alternative codec research. Current paired RS words have independent coordinates and whole-pair Hamming distance. A derivative relation, new locus/codec and metric comparison would need construction before importing bounds. |
 | <a id="source-2608-22663"></a>[Guruswami–Li–Singhal, *Average-Radius List-Decodability of Random Linear Codes*, 2608.22663v2](https://arxiv.org/html/2608.22663v2) | Random linear codes have a high-probability average-radius guarantee near finite-alphabet capacity, stronger than ordinary list decoding. | Paper 3 comparison source. Applying it needs an actual ensemble/transfer theorem for our fixed code; it constructs no harmonic projector or geometric-to-Hamming bridge. |
 | <a id="source-1312-6454"></a>[Curry–Ghrist–Nanda, *Discrete Morse theory for computing cellular sheaf cohomology*, 1312.6454v2](https://arxiv.org/html/1312.6454v2) | Acyclic matching with invertible differential blocks gives a reduced cochain complex and chain-homotopy equivalence (Theorem 2.6). | Potential computational reduction with retained maps/certificates. Cohomology preservation allows dimension changes and does not automatically preserve Euclidean distances or literal harmonic representatives. Preserve lifts and the original metric if the original HCP target matters. |
 | <a id="source-2011-14057"></a>[*Multidimensional Persistence Module Classification via Lattice-Theoretic Convolutions*, 2011.14057v2](https://arxiv.org/html/2011.14057v2) | Order-indexed homology/persistence features and meet/join convolutions for classification. | Optional feature/learning reference. Filtration persistence, disk retention and integral CVP lattices have separate meanings. The proposed invariants are incomplete classifiers and do not authenticate a snapshot. |
@@ -64,8 +114,8 @@ Search this file for an arXiv ID or `ePrint 2026/910` when working from a URL.
 | <a id="source-2608-14556"></a>[*Learning Discrete Riemannian Metrics for Physical Fields with Cochain-Frame Equivariance*, 2608.14556v2](https://arxiv.org/html/2608.14556v2) | Positive weights in the displayed fixed-incidence operator preserve its Euclidean harmonic kernel; the paper separately discusses intrinsic metric-dependent adjoints. | Makes the metric choice concrete. Changing the middle-degree metric can change harmonic representatives. Feature-channel orthogonal symmetry does not define cryptographic key rotation. No metric from this paper is selected. |
 | <a id="source-2605-06395"></a>[*Consistent Geometric Deep Learning via Hilbert Bundles and Cellular Sheaves*, 2605.06395v3](https://arxiv.org/html/2605.06395v3) | Hilbert fibers, connection transport, sampled graph sheaves, finite-rank projection and conditional approximation results. | Potential learning/sheaf construction source. Its finite-dimensional graph case could fit after choosing bases, incidences and maps; infinite fibers, manifold sampling and connection results are additional infrastructure. Version 3, dated November 4, is the reviewed version. |
 | <a id="source-2610-28455"></a>[*A Bochner Weitzenböck Decomposition for Cellular Sheaf Laplacians, Curvature and Neural Sheaf Diffusion*, 2610.28455v1](https://arxiv.org/html/2610.28455v1) | Uniform block operators decompose into a positive connection-like term and block-diagonal curvature. Holonomy results have invertibility/connectivity hypotheses. | Possible operator-analysis tool. Dropping curvature need not preserve the original kernel. Node-feature degree zero and HCP degree one must be identified through an actual construction. |
-| <a id="source-2512-00242"></a>[*Polynomial Neural Sheaf Diffusion*, 2512.00242v3](https://arxiv.org/html/2512.00242v3) | Polynomial spectral filters, finite-hop support and Chebyshev recurrence; stated stability bounds concern a properly scaled linear core. | Candidate efficient numerical layer. For `h` in `ker L`, `p(L)h = p(0)h`; exact preservation requires `p(0)=1`. Nonlinear gates and changing sheaves need additional analysis. |
-| <a id="source-2611-04670"></a>[*Sheaf-MPNN*, 2611.04670v1](https://arxiv.org/html/2611.04670v1) | Local endpoint restrictions, edge discrepancy, adjoint pullbacks and aggregation realize the sheaf Laplacian; buffered message-passing steps implement polynomial diffusion. | Concrete modular computation pattern. Numerical message passing needs its own wire/delivery/authentication refinement when distributed. It supplies no ledger agreement theorem. |
+| <a id="source-2512-00242"></a>[*Polynomial Neural Sheaf Diffusion: A Spectral Filtering Approach on Cellular Sheaves*, 2512.00242v3](https://arxiv.org/html/2512.00242v3) | Polynomial spectral filters, finite-hop support and Chebyshev recurrence; stated stability bounds concern a properly scaled linear core. | Candidate efficient numerical layer. For `h` in `ker L`, `p(L)h = p(0)h`; exact preservation requires `p(0)=1`. Nonlinear gates and changing sheaves need additional analysis. |
+| <a id="source-2611-04670"></a>[*Sheaf-MPNN: A Library for Sheaf Neural Networks as Message Passing*, 2611.04670v1](https://arxiv.org/html/2611.04670v1) | Local endpoint restrictions, edge discrepancy, adjoint pullbacks and aggregation realize the sheaf Laplacian; buffered message-passing steps implement polynomial diffusion. | Concrete modular computation pattern. Numerical message passing needs its own wire/delivery/authentication refinement when distributed. It supplies no ledger agreement theorem. |
 | <a id="source-2110-03789"></a>[Gebhart–Hansen–Schrater, *Knowledge Sheaves: A Sheaf-Theoretic Framework for Knowledge Graph Embedding*, 2110.03789v2](https://arxiv.org/abs/2110.03789v2) | **Primary abstract and version metadata checked only.** The March 18, 2023 version is marked AISTATS 2023. It describes knowledge-graph embeddings as approximate global sections constrained by a schema, with adaptation to composite relations. Detailed definitions, experiments and proofs are not audited here. | Candidate application/schema and relational-learning reference. A knowledge graph, cellular base, ledger history and storage index need their actual maps rather than identification by name. Composite-relation inference is not private information retrieval or a cryptographic knowledge proof. |
 
 ### Ordered constraints, transitions and cryptographic comparisons

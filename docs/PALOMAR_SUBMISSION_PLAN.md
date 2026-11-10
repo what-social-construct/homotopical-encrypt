@@ -27,16 +27,31 @@ work. Their technical packaging does not change the
 [three-paper split](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table):
 Paper 2 remains the protocol/cochain paper and Paper 3 the proximity paper.
 
-**Current local scope revision, 2026-11-09.** The manuscripts now follow that
-split throughout: Paper 1 is 37 pages, retaining HCP/Hodge/CVP, the actual
+**Current back-matter revision, 2026-11-09.** Paper 1 is **38 pages**. Its
+mathematical body contains no Lean cross-reference blocks or implementation
+filenames. Section 7 is *Conclusion and Further Work*. Appendix A consolidates
+the correspondence into one parity table: four definition rows, eight main
+result groups (21 declarations), five support groups (25 declarations), and
+three external-result/assumption/contract rows. Appendix B keeps concise proof
+boundaries. All **280 Lean files are byte-identical to `dddfdd2`**, so the
+checked 9,295-job build and 975-report dependency state is retained; this
+editorial change introduces no new Lean build claim. Paper 3 remains the
+unchanged 31-page PDF. The bibliography reconciliation adds 19 records and
+maps all 28 source-ledger IDs: Paper 1 cites seven entries, while Paper 2 and
+Paper 3 retain 42 and 16 records respectively. Candidate bibliography
+membership does not imply adoption or formalization. This revision remains
+local; public `66e1ad2` and its historical protected report are unchanged.
+
+**Earlier P300/P301 scope checkpoint, 2026-11-09.** The manuscripts followed that
+split throughout: Paper 1 was 37 pages, retaining HCP/Hodge/CVP, the actual
 Helfer homological-test fragment and observation/Plücker mathematics; Paper 2
 owns the concrete commitment/codec, visibility, gates/evidence and storage
-construction; Paper 3 is 31 pages and owns quantitative RS/proximity,
+construction; Paper 3 was 31 pages and owns quantitative RS/proximity,
 calibration and metric bridges. Paper 2 remains a working Markdown draft.
 The revised manuscripts and 93 comment-only Lean files are not part of public
 commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`, have not been published or
 protected-preflighted. Fresh local validation passes the 9,295-job expanded
-build and all 975 dependency reports with unchanged sets; both PDFs pass
+build and all 975 dependency reports with unchanged sets; those PDFs passed
 build/render/layout QA. The central validation guide records those checks.
 The historical 101-page Paper 1 release and its PASS do not validate the
 revised bytes. No registry intake or registration is authorized.
@@ -206,8 +221,10 @@ manuscript and metadata were frozen together in public commit
 `73f9c28a4b9f8fb6a04e5b656389979be6b9cd92` is superseded for publication by
 this refreshed snapshot; its completed checks remain historical
 evidence. No Lean declarations or entry configuration names were changed by
-those wording corrections. The subsequent local 37-page revision and Lean
-comment changes are a different snapshot with no protected preflight yet.
+those wording corrections. The subsequent local 37-page P300/P301 revision and Lean comment changes
+were a different snapshot. The current 38-page parity-table revision retains
+all Lean bytes from `dddfdd2`; neither editorial revision has a new protected
+preflight result.
 
 The local [manual workflow](../.github/workflows/paper1-palomar-preflight.yml)
 follows Jacobian's [pinned reusable workflow](https://github.com/PalomarRegistry/PalomarSubmission/blob/14aa8d6b3c2f14a8540605e37144560b9a00e7e7/.github/workflows/submission.yml) at
@@ -433,12 +450,13 @@ immutable release. This is evidence preparation, not a completed submission.
 The public snapshot's Paper 1 wording pass has its own rebuilt and visually inspected
 101-page PDF in the exact public snapshot linked above. The preceding
 paragraph's counts and unchanged-source statements remain dated baselines.
-The current local 37-page Paper 1 and 31-page Paper 3 apply the ownership split
-described above. Their compile checks report no undefined references/citations
-or overfull boxes. The 93 Lean comment changes and revised manuscripts are
-covered by the fresh 9,295-job local build and all 975 selected dependency
-reports with unchanged sets. They remain outside the exact historical
-protected-preflight baseline; a new hosted check is still required.
+The P300/P301 37/31-page ownership revision passed its compile/render checks,
+9,295-job local build and all 975 selected dependency reports with unchanged
+sets. The current Paper 1 is 38 pages and moves Lean correspondence to its
+post-conclusion parity table; Paper 3 and its printed bibliography remain
+unchanged. All 280 Lean files retain exact bytes from `dddfdd2`, preserving
+that checked Lean state. The new manuscript remains outside the exact
+historical protected-preflight baseline; a new hosted check is still required.
 
 Freeze a separate slim per-entry release with the selected proof closure,
 corresponding manuscript evidence, statement/proof wrappers and metadata
@@ -519,9 +537,11 @@ not yet a replacement release:
    protected comparison, canonical provenance and Lean/NanoDa/con-ron checks.
    Its preferred-size advisory is within the hard caps. Prior local builds
    and the 975-report audit remain separately recorded evidence.
-5. **Local ownership revision prepared; stop before intake.** The current
-   37-page Paper 1 and 31-page Paper 3, Paper 2 construction ledger and 93
-   Lean comment edits remain local. Finish their exact-source checks and
+5. **Local editorial revision prepared; stop before intake.** The current
+   38-page Paper 1, unchanged 31-page Paper 3 and reconciled bibliographies
+   remain local. The post-conclusion parity table preserves all 46 configured
+   declarations, and all 280 Lean files retain exact bytes from `dddfdd2`.
+   Finish the manuscript/package exact-source checks and
    prepare a refreshed slim snapshot before any future publication/preflight.
    The user explicitly deferred submission.
    Do not request registry submission or registration on the strength of a

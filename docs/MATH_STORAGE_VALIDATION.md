@@ -9,6 +9,50 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Paper 1 parity table and bibliography revision — 2026-11-09
+
+Paper 1 now places its implementation correspondence in one table after
+§7, **Conclusion and Further Work**. The mathematical body contains no Lean
+file/declaration listings. The table has four canonical-definition rows,
+eight main-result groups (21 selected declarations), five support groups
+(25 declarations), and three external-theorem/assumption/contract rows.
+Every configured name occurs exactly once. Appendix B keeps the model,
+noncomputability, observation and exact-snapshot proof boundaries.
+
+All mathematical formulas, proposition statements, definitions and proofs in
+§§1–6 match `dddfdd2` exactly. All **280 Lean files** are byte-identical;
+no imports, definitions, statements, proofs, options or pins changed. The
+previously completed 9,295-job build and 975 standard-only dependency reports
+are therefore retained as the checked proof-source state. No new Lean build
+or kernel replay is claimed for this manuscript-only revision.
+
+The revised **38-page PDF** builds with zero undefined references/citations,
+missing glyphs or overfull boxes (two underfull diagnostics). All pages are
+rendered/contact-reviewed, with detailed changed-body and table checks.
+The table's repeated headers/footers and all 46 PDF anchors are complete and
+readable; Appendix B fits on its own page. Canonical/stable copies match.
+Current Paper 1 SHA-256:
+`20d68f7c26f0e0df0ce2a1c7f754399b2ca7a5aaf4ad5f17b83d4b0efecc7504`.
+
+The [source ledger](SOURCE_LEDGER.md#bibliography-correspondence) now maps
+all **28 sources** to bibliography keys/files and explicit roles. Nineteen
+missing records were added after primary bibliographic metadata checks.
+Paper 1 cites seven sources; Paper 2/3 retain 42/16 records. An isolated
+BibTeX alpha-style check of every record in all three files passes without
+warnings. Candidate records remain distinct from adopted arguments; no
+`\nocite{*}` was added to the manuscripts. Paper 3's thirteen actually cited
+alpha-style bibliography entries are byte-identical to their prior output,
+so its reviewed 31-page PDF is unchanged. Both new Paper 1 citations retain
+the relevant scope boundary: specialized isotropic reconstruction does not
+identify the arbitrary Hodge carrier, and cohomology reduction supplies no
+automatic original-metric/harmonic-representative comparison.
+
+Local evidence is `paper1-backmatter-*` and `paper1-parity-bibliography-*`
+under `output/validation/`. Public `66e1ad2` and its protected report remain
+unchanged historical evidence. Revised informal material needs a fresh
+exact-commit protected preflight; no publication, intake or registration is
+performed by this local revision.
+
 ## Manuscript ownership revision — 2026-11-09
 
 The current local manuscripts follow the recorded three-paper split. Paper 1

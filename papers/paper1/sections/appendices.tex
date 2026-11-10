@@ -1,187 +1,300 @@
 \appendix
 
-\section{Selected Statement--Lean Crosswalk}\label{app:selected-crosswalk}
+\section{Statement--Lean Parity Table}\label{app:selected-crosswalk}
 
-This appendix identifies the mathematical statements represented by the
-independent Paper~1 entry. It records the six Hodge/CVP groups and two
-observation-boundary groups of this manuscript, rather than the full
-repository's protocol or coding development. The configuration
-\lean{lean/Palomar/PaperOne/comparator.json} selects 21 manuscript-facing
-and 25 supporting theorem declarations. These are coverage counts, not a
-count of independent research contributions.
+\Cref{tab:paper1-parity} records the correspondence for this paper's six
+Hodge/CVP groups and two observation-boundary groups. The independent entry's
+configuration, \lean{lean/Palomar/PaperOne/comparator.json}, selects 21
+manuscript-facing and 25 supporting theorem declarations. Every declaration
+appears once below. These are coverage counts, not a count of independent
+research contributions. Definition rows name canonical implementation
+objects, not additional selected theorem targets. Main-result and support
+rows are proved under their stated premises; background, assumption and
+contract rows identify the separate scope boundaries.
 
 Write \lean{E} for \lean{Hcrypt.Palomar.PaperOne},
 \lean{CS} for \lean{E.CellularSheaf},
 \lean{HB} for \lean{E.HCPBridge},
 \lean{AF} for \lean{E.AxisFamily}, and
-\lean{PL} for \lean{E.Plucker}. These abbreviations in the lists below
-expand to the exact configured declaration names.
+\lean{PL} for \lean{E.Plucker}. The abbreviated anchors expand to the
+exact configured declaration names.
 
-\subsection{The eight result groups}
+\begingroup
+\small
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.12}
+\renewcommand{\lean}[1]{\begingroup\footnotesize\Urlmuskip=0mu plus 1mu\path{#1}\endgroup}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.41\linewidth}>{\raggedright\arraybackslash}p{0.55\linewidth}@{}}
+\caption{Selected manuscript--Lean parity.}\label{tab:paper1-parity}\\
+\toprule
+\textbf{Statement, status and scope} & \textbf{Corresponding formal declarations or boundary}\\
+\midrule
+\endfirsthead
+\caption[]{Selected manuscript--Lean parity (continued).}\\
+\toprule
+\textbf{Statement, status and scope} & \textbf{Corresponding formal declarations or boundary}\\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r@{}}{\emph{Continued on the next page.}}\\
+\endfoot
+\bottomrule
+\endlastfoot
 
-\begin{leanledger}
-\begin{description}[leftmargin=2.4em,style=nextline]
-  \item[P1-S01: decomposition and private recovery.]
-    \cref{prop:hodge-decomposition} and the private recovery discussion in Sections~2--3.
-    The complex equation and actual adjoint Hodge operator give harmonic, exact and coexact components with componentwise uniqueness. Recovering integer coefficients additionally uses the supplied harmonic-lattice presentation.
-    The selected declarations are
-    \lean{E.Hodge_Decomposition_Theorem},
-    \lean{E.Hodge_Decomposition_unique},
-    \lean{CS.HodgeEncryptedCochain.harmonicOneProjection_observed},
-    \lean{CS.HarmonicLatticePresentation.decodeCoefficients_encrypt}.
-  \item[P1-S02: linear image as a kernel.]
-    \cref{prop:hcp-to-cvp}.
-    The realized object is the field-linear image of the displayed generator. The consequence is membership in that image, rather than membership in an integer lattice.
-    The selected declarations are
-    \lean{E.exists_matrix_ker_eq_range},
-    \lean{E.Hodge_GeneratedSubspace_Reduction_Proof}.
-  \item[P1-S03: projection and discrete CVP.]
-    \cref{prop:hodge-projection-is-cvp}.
-    The supplied discrete lattice lies in the projected subspace. The Pythagorean identity preserves precisely its closest-vector answers.
-    The selected declarations are
-    \lean{E.squaredDistance_projection_decomposition},
-    \lean{E.solution_iff_projectedTarget}.
-  \item[P1-S04: cellular CVP recovery.]
-    The cellular specialization of \cref{prop:hodge-projection-is-cvp}.
-    For the actual Hodge sample and supplied harmonic message lattice, the operative harmonic message is the unique closest lattice point.
-    The selected declarations are
-    \lean{E.concreteSheafHCP_CVP_solution_iff_message},
-    \lean{E.concreteSheafHCP_CVP_existsUnique}.
-  \item[P1-S05: public-target ambiguity.]
-    \cref{prop:cvp-insufficient,prop:cellular-axis-ambiguity}.
-    The generic separation retains closed-test invariance and kernel separation; the oracle corollaries retain existence of a correct explicit-lattice CVP oracle. The constructed integral family has one public observation and distinct nonzero operative targets. The stated quantifiers rule out uniformly exact public-data recovery.
-    The selected declarations are
-    \lean{HB.operativeTargets_ne_of_kernelSeparation},
-    \lean{HB.cvpOracle_insufficient_of_kernelSeparation},
-    \lean{HB.cvpOracle_insufficient_for_operativeTarget},
-    \lean{AF.cellular_axis_ambiguity},
-    \lean{AF.cvp_oracle_insufficient}.
-  \item[P1-S06: encoded integer ambiguity.]
-    The weighted example in Section~3.5.
-    The common observation has \(b=(1,2)\), while the two private encodings give integer coefficients two and one. Each privately presented lattice retains its own unique CVP answer.
-    The selected declarations are
-    \lean{AF.weighted_axis_recovery_obstruction}.
-  \item[P1-B01: exact-component observation.]
-    \cref{prop:exact-component-obstruction}.
-    An allowed nonzero coexact direction prevents the full Hodge residual from factoring through the exact component. The farness statement concerns the unrestricted noise carrier and an extraction depending only on that component.
-    The selected declarations are
-    \lean{CS.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent},
-    \lean{CS.HodgeEncryptedCochain.not_far_preserving_exactComponent}.
-  \item[P1-B02: full projective observation.]
-    \cref{prop:plucker-recovery}.
-    For a genuine independent frame, full projective exterior coordinates recover its subspace and fixed-metric projector. Recovering the operative target additionally identifies that subspace with the operative kernel. A digest-only value is a different observation.
-    The selected declarations are
-    \lean{PL.recoverSubspace_frame},
-    \lean{PL.recoverHarmonicProjector_frame},
-    \lean{PL.recover_eq_operativeHarmonicComponent}.
-\end{description}
-\end{leanledger}
+\textbf{Definitions: HCP input and target.}\newline
+Section~2. The public pair contains a classifier value and observed cochain.
+A private representative selects the operative kernel and hence the
+orthogonal-projection target.
+&
+Canonical definitions:\par
+\lean{Hcrypt.HCPBridge.Observation}\par
+\lean{Hcrypt.HCPBridge.HiddenHodgeWitness}\par
+\lean{Hcrypt.HCP.operativeHarmonicComponent}\par
+\lean{Hcrypt.HCPBridge.operativeTarget}
+\\\midrule
 
-\subsection{Supporting declarations}
+\textbf{Definitions: explicit-lattice CVP.}\newline
+Section~3.1. An injective real basis presents the lattice through integer
+coefficients. An instance adds a target; a solution is a closest discrete
+lattice point.
+&
+Canonical definitions:\par
+\lean{CVP.ExplicitLattice}\par
+\lean{CVP.Instance}\par
+\lean{CVP.Solution}
+\\\midrule
 
-The following 25 configured declarations expose the construction data used by
-the result groups. They certify the same complexes, coordinates, operators,
-integral lattices and projective quotient; none introduces a new protocol
-carrier or a coding-radius assumption.
+\textbf{Definitions: semantic realization.}\newline
+Sections~2 and~4. The public classifier factors through the specified closed
+theory. The operative Hodge operator is separate presentation-level data;
+equal classifier values need not identify it.
+&
+Canonical definitions:\par
+\lean{Hcrypt.Axioms.PublicClassifier}\par
+\lean{Hcrypt.Helfer.ClosedTheory}\par
+\lean{Hcrypt.HCPBridge.Realization}
+\\\midrule
 
-\begin{leanledger}
-\begin{description}[leftmargin=2.4em,style=nextline]
-  \item[Complex and homological-model checks.]
-    These verify the actual coboundary equation, the constructed complex isomorphism and the corresponding three-term differential.
-    \lean{CS.delta1_comp_delta0},
-    \lean{AF.cellular_complex_iso},
-    \lean{E.ThreeTermData.differential_comp},
-    \lean{AF.boundarySqZero}.
-  \item[Axis coordinates.]
-    These fix the coordinate vectors and the distinct complementary-axis choices used by the examples.
-    \lean{AF.unitCochain_apply},
-    \lean{AF.other_zero},
-    \lean{AF.other_one},
-    \lean{AF.other_ne}.
-  \item[Actual axis Hodge operators.]
-    These compute both coboundaries, the adjoint, the degree-one Laplacian and its harmonicity criterion.
-    \lean{AF.delta0_eq_zero},
-    \lean{AF.delta1_apply},
-    \lean{AF.delta1_adjoint_eq},
-    \lean{AF.degreeOneLaplacian_apply},
-    \lean{AF.harmonic_iff}.
-  \item[Integral stalks and harmonic lattice.]
-    These verify restriction-compatible stalk integrality, harmonic basis vectors, injectivity of their encoding and membership in the chosen lattice.
-    \lean{AF.standardStalkLattice_contains_iff},
-    \lean{AF.restriction_preserves},
-    \lean{AF.unitCochain_integral},
-    \lean{AF.other_unit_harmonic},
-    \lean{AF.harmonicBasis_injective},
-    \lean{AF.harmonicLatticeVector_eq},
-    \lean{AF.latticeVector_mem}.
-  \item[Projective equivalence and reconstruction.]
-    These give the scalar-orbit equivalence laws, the wedge-annihilator criterion and invariance under a nonzero scalar multiple.
-    \lean{PL.ProjectivelyEquivalent.refl},
-    \lean{PL.ProjectivelyEquivalent.symm},
-    \lean{PL.ProjectivelyEquivalent.trans},
-    \lean{PL.mem_wedgeAnnihilator_iff},
-    \lean{PL.wedgeAnnihilator_eq_of_projectivelyEquivalent}.
-\end{description}
-\end{leanledger}
+\textbf{Definitions: Hodge sample and lattice.}\newline
+Sections~2--3. The sample combines an integral harmonic message with
+exact/coexact noise. A supplied harmonic-lattice presentation has full real
+span; it need not contain every intrinsic integral harmonic cochain.
+&
+Canonical definitions:\par
+\lean{Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain}\par
+\lean{Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation}
+\\\midrule
 
+\textbf{Main result: P1-S01.}\newline
+\emph{Proved.} \Cref{prop:hodge-decomposition}; private recovery in Sections~2--3.
+The complex equation and actual adjoint Hodge operator give componentwise
+unique harmonic, exact and coexact parts. Integer coefficient recovery
+uses the supplied harmonic-lattice presentation.
+&
+\lean{E.Hodge_Decomposition_Theorem}\par
+\lean{E.Hodge_Decomposition_unique}\par
+\lean{CS.HodgeEncryptedCochain.harmonicOneProjection_observed}\par
+\lean{CS.HarmonicLatticePresentation.decodeCoefficients_encrypt}
+\\\midrule
+
+\textbf{Main result: P1-S02.}\newline
+\emph{Proved.} \Cref{prop:hcp-to-cvp}.
+A field-linear image of the displayed generator is realized as a kernel.
+The consequence concerns that image, not integer-lattice membership.
+&
+\lean{E.exists_matrix_ker_eq_range}\par
+\lean{E.Hodge_GeneratedSubspace_Reduction_Proof}
+\\\midrule
+
+\textbf{Main result: P1-S03.}\newline
+\emph{Proved.} \Cref{prop:hodge-projection-is-cvp}.
+The discrete lattice is explicitly supplied and lies in the projected
+subspace. The Pythagorean identity preserves exactly its closest-vector answers.
+&
+\lean{E.squaredDistance_projection_decomposition}\par
+\lean{E.solution_iff_projectedTarget}
+\\\midrule
+
+\textbf{Main result: P1-S04.}\newline
+\emph{Proved.} Cellular specialization of
+\cref{prop:hodge-projection-is-cvp}.
+For the actual Hodge sample and supplied harmonic message lattice, the
+operative message is the unique closest lattice point.
+&
+\lean{E.concreteSheafHCP_CVP_solution_iff_message}\par
+\lean{E.concreteSheafHCP_CVP_existsUnique}
+\\\midrule
+
+\textbf{Main result: P1-S05.}\newline
+\emph{Proved.} \Cref{prop:cvp-insufficient,prop:cellular-axis-ambiguity}.
+Generic separation retains closed-test invariance and kernel separation;
+oracle corollaries also retain existence of a correct explicit-lattice
+CVP oracle. The constructed integral family has one public observation
+and distinct nonzero targets, ruling out uniformly exact public-data recovery.
+&
+\lean{HB.operativeTargets_ne_of_kernelSeparation}\par
+\lean{HB.cvpOracle_insufficient_of_kernelSeparation}\par
+\lean{HB.cvpOracle_insufficient_for_operativeTarget}\par
+\lean{AF.cellular_axis_ambiguity}\par
+\lean{AF.cvp_oracle_insufficient}
+\\\midrule
+
+\textbf{Main result: P1-S06.}\newline
+\emph{Proved.} Weighted example in Section~3.5.
+The common observation is \(b=(1,2)\), with private integer coefficients
+two and one. Each privately presented lattice has its own unique CVP answer.
+&
+\lean{AF.weighted_axis_recovery_obstruction}
+\\\midrule
+
+\textbf{Main result: P1-B01.}\newline
+\emph{Proved.} \Cref{prop:exact-component-obstruction}.
+An allowed nonzero coexact direction prevents the full Hodge residual
+from factoring through the exact component. The farness obstruction
+uses the unrestricted noise carrier and exact-component-only extraction.
+&
+\lean{CS.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent}\par
+\lean{CS.HodgeEncryptedCochain.not_far_preserving_exactComponent}
+\\\midrule
+
+\textbf{Main result: P1-B02.}\newline
+\emph{Proved.} \Cref{prop:plucker-recovery}.
+A genuine independent frame's full projective coordinates recover its
+subspace and fixed-metric projector. Operative-target recovery additionally
+identifies that subspace with the operative kernel. A digest is a different
+observation.
+&
+\lean{PL.recoverSubspace_frame}\par
+\lean{PL.recoverHarmonicProjector_frame}\par
+\lean{PL.recover_eq_operativeHarmonicComponent}
+\\\midrule
+
+\textbf{Support: complexes and semantics.}\newline
+\emph{Proved.} Sections~2--4.
+Actual coboundary composition, the constructed complex isomorphism and
+the corresponding three-term differential.
+&
+\lean{CS.delta1_comp_delta0}\par
+\lean{AF.cellular_complex_iso}\par
+\lean{E.ThreeTermData.differential_comp}\par
+\lean{AF.boundarySqZero}
+\\\midrule
+
+\textbf{Support: axis coordinates.}\newline
+\emph{Proved.} Section~3.5.
+Coordinate vectors and the distinct complementary-axis choices in the examples.
+&
+\lean{AF.unitCochain_apply}\par
+\lean{AF.other_zero}\par
+\lean{AF.other_one}\par
+\lean{AF.other_ne}
+\\\midrule
+
+\textbf{Support: axis Hodge operators.}\newline
+\emph{Proved.} Section~3.5.
+Both coboundaries, the adjoint, the degree-one Laplacian and its harmonicity criterion.
+&
+\lean{AF.delta0_eq_zero}\par
+\lean{AF.delta1_apply}\par
+\lean{AF.delta1_adjoint_eq}\par
+\lean{AF.degreeOneLaplacian_apply}\par
+\lean{AF.harmonic_iff}
+\\\midrule
+
+\textbf{Support: integral lattice.}\newline
+\emph{Proved.} Section~3.5.
+Restriction-compatible stalk integrality, harmonic basis vectors,
+encoding injectivity and membership in the chosen lattice.
+&
+\lean{AF.standardStalkLattice_contains_iff}\par
+\lean{AF.restriction_preserves}\par
+\lean{AF.unitCochain_integral}\par
+\lean{AF.other_unit_harmonic}\par
+\lean{AF.harmonicBasis_injective}\par
+\lean{AF.harmonicLatticeVector_eq}\par
+\lean{AF.latticeVector_mem}
+\\\midrule
+
+\textbf{Support: projective quotient.}\newline
+\emph{Proved.} Section~6.
+Scalar-orbit equivalence laws, wedge-annihilator recovery and invariance
+under a nonzero scalar multiple.
+&
+\lean{PL.ProjectivelyEquivalent.refl}\par
+\lean{PL.ProjectivelyEquivalent.symm}\par
+\lean{PL.ProjectivelyEquivalent.trans}\par
+\lean{PL.mem_wedgeAnnihilator_iff}\par
+\lean{PL.wedgeAnnihilator_eq_of_projectivelyEquivalent}
+\\\midrule
+
+\textbf{External theorem and semantic premise.}\newline
+Section~4; distinct from the proved homological fragment.
+&
+Helfer's general fibrational/path-invariance theorem is cited background.
+Applying the generic bridge requires the declared invariant closed tests;
+full first-order invariance and a complete classifier for arbitrary hidden
+presentations are not proved by this entry.
+\\\midrule
+
+\textbf{Assumption: computational hardness.}\newline
+Section~3.1; distinct from the proved exact comparisons.
+&
+Known-lattice CVP hardness is an external computational interface.
+The selected algebraic comparisons and non-identifiability examples do
+not establish an asymptotic encoded-instance hardness reduction or a
+sampled encryption-security theorem.
+\\\midrule
+
+\textbf{Contract: protocol application.}\newline
+Sections~5--6; distinct from the observation theorems.
+&
+A larger released view requires its own equality or factorization proof.
+Artifact, encoding and visibility contracts belong to Paper~2; quantitative
+source-to-code comparisons belong to Paper~3. No general capacity-scale
+full-HCP comparison follows from an exact-component extraction.
+\\
+\end{longtable}
+\endgroup
+
+\clearpage
 \section{Formal Objects and Proof Boundaries}\label{app:formal-boundaries}
 
 \paragraph{Independent statements and canonical proofs.}
-\lean{Palomar.PaperOne.Challenge} uses Mathlib-only imports and ordinary
-transparent definitions. Its two finite-product interpretation helpers,
-\lean{Hcrypt.Helfer.contextObject} and \lean{Hcrypt.Helfer.contextMap}, retain
-their canonical names. \lean{Palomar.PaperOne.Solution} identifies the
-independent presentations with the canonical proof objects. It does not
-import Challenge. The 23 deliberate Challenge theorem placeholders are
+\lean{Palomar.PaperOne.Challenge} gives ordinary transparent definitions
+using Mathlib-only imports. Its finite-product helpers
+\lean{Hcrypt.Helfer.contextObject} and \lean{Hcrypt.Helfer.contextMap}
+retain their canonical names. \lean{Palomar.PaperOne.Solution} identifies
+the independent presentations with the canonical proof objects without
+importing Challenge. The 23 deliberate Challenge theorem placeholders are
 comparison targets; Solution has no proof or definition holes.
 
-\paragraph{Hodge operators and discrete lattices.}
-The finite signed-incidence cellular carrier, adjacent coboundaries and actual
-degree-one Hodge operator are owned by \lean{Sheaf/CellComplex.lean},
-\lean{Sheaf/Cellular.lean} and \lean{Sheaf/Hodge.lean}. The integral message
-presentation and coefficient decoder are in \lean{Sheaf/Integral.lean},
-\lean{Sheaf/HarmonicLattice.lean} and \lean{Sheaf/CoefficientRecovery.lean}.
-\lean{CVP.lean}, \lean{HCP.lean} and \lean{Hardness.lean} supply the explicit
-lattice, operative target and comparison arguments. A field-linear image is
-not an integer lattice. Coefficient recovery is classical and noncomputable;
-no efficient finite-byte decoder is inferred.
+\paragraph{Source objects and mathematical scope.}
+The finite cellular Hodge operators and integral message presentation are
+in the \lean{Sheaf} modules. \lean{CVP.lean}, \lean{HCP.lean} and
+\lean{Hardness.lean} supply the lattice and operative-target comparisons.
+\lean{Sheaf/HCPAxisFamily.lean}, \lean{HCP/AxisFamily.lean} and
+\lean{Helfer/CochainModel.lean} construct the actual integral examples and
+homological-test interpretation. They use the algebraic finite
+signed-incidence model; no regular CW or simplicial realization of its
+base is asserted. Integer coefficient recovery is classical and
+noncomputable. The proved semantic fragment does not supply the general
+first-order theorem or arbitrary-presentation classifier.
 
-\paragraph{The constructed semantic family.}
-\lean{Sheaf/HCPAxisFamily.lean} and \lean{HCP/AxisFamily.lean} construct the
-integral examples and their operator/target joins. The model is the declared
-algebraic finite signed-incidence model; a regular CW or simplicial
-realization of its base is not asserted. \lean{Helfer/Signature.lean},
-\lean{Helfer/HomotopyEquivalence.lean}, \lean{Helfer/Invariance.lean} and
-\lean{Helfer/CochainModel.lean} provide the actual interpretation and
-nonzero-cohomology-test fragment used by the examples. The finite complexes
-are placed in the bounded-below real cochain model; equivalence yields equal
-closed theories in that fragment. This does not formalize full first-order
-syntax, Helfer's general fibrational invariance theorem or a complete
-classifier for arbitrary hidden presentations.
-
-\paragraph{Observation boundaries.}
-\lean{Sheaf/ObservationQuotient.lean} proves the exact-component obstruction.
-\lean{Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean} reconstructs
-the full-point subspace and projector;
-\lean{TCB/PluckerObservation.lean} identifies the operative target under the
-explicit kernel agreement. The projective quotient contains the zero orbit;
-the recovery result uses genuine independent frames and full exact-real
-coordinates at a fixed ambient metric. It supplies neither digest inversion
-nor equality of richer released storage views.
+The full-point reconstruction is owned by
+\lean{Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean};
+\lean{TCB/PluckerObservation.lean} identifies the operative target under
+explicit kernel agreement. The raw projective quotient contains the zero
+orbit. Recovery uses genuine independent frames, full exact-real coordinates
+and the fixed ambient metric; it supplies neither digest inversion nor an
+efficient finite-byte decoder.
 
 \paragraph{Validation applies to exact snapshots.}
 The permitted proof axioms are \lean{propext}, \lean{Quot.sound} and
-\lean{Classical.choice}. The selected development's local dependency audit
-reports only those axioms or subsets. Complete protected preflight passed for
-the earlier public snapshot
-\lean{66e1ad2cb726d3dd816461e4f76b1d0d9147a46d}; that record does not certify
-this revised manuscript snapshot. Its eventual release requires its own
-exact-commit comparison and report. Mechanical verification is separate from
-editorial review, novelty assessment and registry registration.
-
-The physical proof/import closure and its hashes are recorded in the release
-manifest. This manuscript's crosswalk concerns the selected results, rather
-than every declaration in those supporting modules. Paper~2 owns the concrete
-cochain-commitment, observation and protocol contracts; Paper~3 owns coding
-and quantitative proximity analysis. Their full developments are not repeated
-in this Paper~1 ledger.
+\lean{Classical.choice}; the selected dependency audit reports only these
+axioms or subsets. The earlier public snapshot \lean{66e1ad2} passed
+protected preflight. That result does not certify this revised manuscript;
+its eventual release requires its own exact-commit comparison and report.
+Mechanical checking is separate from editorial review, novelty assessment
+and registry registration. The release manifest records the proof/import
+closure and hashes; the parity table identifies the selected results,
+rather than every declaration in those supporting modules.

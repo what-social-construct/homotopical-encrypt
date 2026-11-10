@@ -7,6 +7,24 @@ recipient recovery/rotation, owned-resource transition and one-shot integrity
 full-ciphertext recovery, source/completion assessment and Paper 1 observation
 wording reconciliation 2026-11-08.
 
+**Central parity table and bibliography reconciliation — 2026-11-09:** P302
+moves Paper 1's implementation references out of its mathematical text. Its
+38-page PDF now has a conclusion followed by one parity table: four canonical
+object/definition rows, eight main-result groups (21 declarations), five
+support groups (25 declarations), and three external-theorem/assumption/
+contract rows. Formal boundaries follow in Appendix B. All 46 selected names
+occur exactly once; the main body has no Lean file or declaration listings.
+All formulas, propositions, definitions and proofs in §§1–6 are preserved,
+and all 280 Lean files are byte-identical to `dddfdd2`. The checked P301
+9,295-job/975-report proof state is retained without a redundant Lean rebuild.
+The 28-source ledger now maps every source to its owning bibliography/key;
+19 missing records were added. Paper 1 cites seven sources, including the two
+new relevant comparisons; Paper 2/3 retain 42/16 records with candidate status
+explicit. Paper 3's 31-page PDF and all thirteen cited bibliography entries
+are unchanged. Current PDF/build/layout and bibliography checks pass. The
+new informal material remains local and needs its own exact-commit protected
+preflight; public `66e1ad2` and its report remain historical evidence.
+
 **Revised local validation — 2026-11-09:** P301 validates the P300 scope
 revision: the expanded build passes 9,295 jobs, including all fifteen default
 roots and three Solution entries. All 975 fresh dependency reports are
@@ -475,6 +493,8 @@ mathematical or author decisions, rather than silent copyediting.
 | D48 / P1 | Legacy spectral and likelihood appendix terminology | Equal nullity was called homotopy equivalence; density scores were described as quantum adversaries or success probabilities. | **Corrected prose.** Spectrum is not determined by nullity; the relation does not assert Helfer equivalence. Corrected Euclidean pointwise/factorization endpoints are separate from legacy supremum-norm integrals and HCP recovery games. The latter are outside the selected entry. |
 | D49 / P0 | Manuscript ownership versus shared definitions and selected entry scope | Repeated construction and coding chapters made Paper 1 broader than its selected formal entry. | **Reconciled in P300.** Paper 1 has concise mathematical observation boundaries and a selected-result appendix. Paper 2 is the canonical construction/contract account; Paper 3 recalls the same data and proves quantitative comparisons. The S01–S11 ownership table has an explicit Paper 2 column. Shared definitions retain attribution and do not become duplicate new results. |
 | D50 / P1 | Lean documentation versus the manuscript split | Old module/docstring correspondence still assigned gates, evidence or RS developments to former Paper 1 chapters. | **Documentation aligned.** Ninety-three Lean files now describe their current canonical paper owner or deferred supporting status. All 280 files have exact unchanged non-comment bytes against b917cda; imports, statements, proofs, options and pins are unchanged. The existing protected report remains tied to public snapshot 66e1ad2. |
+| D51 / P1 | Body exposition versus formal cross-references | Repeated file/declaration lists interrupted the mathematical narrative and repeated the selected appendix. | **Consolidated in P302.** The body retains its mathematics and caveats; Appendix A after the conclusion has one definition/result/support/assumption parity table. All 46 configured names occur exactly once; concise proof boundaries follow. |
+| D52 / P1 | Source ledger versus bibliography retrieval | Nineteen of the 28 ledger sources lacked a corresponding BibTeX record in an owning manuscript. | **Reconciled.** The ledger maps every source ID to its bibliography/key and reviewed/candidate role. All 19 added records have checked primary metadata; all 65 records parse through BibTeX without warnings. Uncited candidates are not forced into the PDFs or treated as adopted theorems. |
 
 ## HCP theorem parity and remaining work
 
@@ -766,6 +786,7 @@ completion in the current record below.
 | P299 | Complete protected Paper 1 preflight — 2026-11-09 | Run 42729947447 and its downloaded schema-2 mechanical report pass for exact public commit 66e1ad2cb726d3dd816461e4f76b1d0d9147a46d. All 46 configured declarations pass protected comparison with the standard three axioms; Lean, NanoDa and con-ron accept (45,899 exported declarations checked by con-ron). Exact source/config/metadata hashes, high-trust canonical Challenge provenance, palomar-standard-v1 and bubblewrap v0.12.0 are verified. The only advisory is preferred Challenge review size; 977 lines/49,234 bytes meet hard caps. Local report identity/digests and validation are retained. User authorized preflight only: no registry intake, editorial review or registration. |
 | P300 | Three-paper manuscript and Lean documentation alignment — 2026-11-09 | Paper 1 is reduced from 101 to 37 pages while preserving all eight selected mathematical groups and all 46 crosswalk declarations. Paper 2 now owns concrete payload/commitment, systematic codec, visibility, gates and storage evidence; optional syndrome and native cochain metrics remain distinct. Paper 3 retains all fourteen selected quantitative groups and recalls the existing construction with attribution; its PDF is 31 pages. The ownership table, active outlines and 93 Lean documentation files follow this split. No non-comment Lean source, selected statement, configuration or pin changed. This is a local revision; public 66e1ad2 and the P299 exact-commit report remain historical evidence. |
 | P301 | Revised manuscript validation and immutable source pins — 2026-11-09 | Expanded Lean union passes 9,295 jobs. Fresh selected audit passes 975 standard-only reports (792 exact-three/183 subsets, 106 axiom-free), with every prior 975 dependency set unchanged. All 280 Lean files retain exact non-comment bytes versus b917cda; 93 have documentation-only changes. Paper 1 §§2–3 retain all 84 displays, 289 inline formulas, nine propositions, eleven definitions and nine proofs exactly; all 46 crosswalk names occur once. Paper 3 §§2–6 and nineteen §7 displays are preserved. Revised 37/31-page PDFs build/render/visual QA passes. All three metadata source URLs pin the frozen manuscripts at adfcc14. Revised slim packages use a separate local directory; previous public 66e1ad2/report remains unchanged. Fresh protected verification is required before any later intake, which remains deferred. |
+| P302 | Paper 1 backmatter parity and source/bibliography reconciliation — 2026-11-09 | Mathematical body has no Lean cross-reference blocks or implementation-name lists. A single post-conclusion table identifies four canonical object rows, eight main groups/21 declarations, five support groups/25 declarations and three background/assumption/contract rows; every selected name occurs once. All body mathematics in §§1–6 and all 280 Lean source bytes match dddfdd2. The 38-page PDF passes build/render/detail QA with no undefined references, missing glyphs or overfull boxes. Added 19 bibliography records; all 28 ledger sources now map to an owning bib/key/status. Isolated BibTeX checks pass 7/42/16 records without warnings. P3 all13 cited alpha-style entries are byte-identical, so its31-page PDF remains unchanged. P301 proof evidence remains its exact checked baseline; new informal text still requires fresh protected preflight before any later intake. |
 
 #### Current protocol validation
 

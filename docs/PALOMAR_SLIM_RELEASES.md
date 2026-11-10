@@ -15,14 +15,29 @@ submission. **No registry intake or registration is authorized or performed.**
 The mechanical report has been inspected and retained; this passing preflight
 does not authorize an intake request.
 
-**Current local revision, 2026-11-09:** the three-paper ownership split is now
-applied to the manuscripts. Paper 1 has 37 pages rather than the public
-snapshot's 101; Paper 3 has 31 pages rather than the earlier package's 30.
-The revised manuscripts and 93 comment-only Lean edits have not been
-published, frozen in a refreshed slim package or protected-preflighted.
+**Current back-matter revision, 2026-11-09.** Paper 1 is **38 pages**. Its
+mathematical body contains no Lean cross-reference blocks or implementation
+filenames. Section 7 is *Conclusion and Further Work*. Appendix A consolidates
+the correspondence into one parity table: four definition rows, eight main
+result groups (21 declarations), five support groups (25 declarations), and
+three external-result/assumption/contract rows. Appendix B keeps concise proof
+boundaries. All **280 Lean files are byte-identical to `dddfdd2`**, so the
+checked 9,295-job build and 975-report dependency state is retained; this
+editorial change introduces no new Lean build claim. Paper 3 remains the
+unchanged 31-page PDF. The bibliography reconciliation adds 19 records and
+maps all 28 source-ledger IDs: Paper 1 cites seven entries, while Paper 2 and
+Paper 3 retain 42 and 16 records respectively. Candidate bibliography
+membership does not imply adoption or formalization. This revision remains
+local; public `66e1ad2` and its historical protected report are unchanged.
+
+**Earlier P300/P301 scope checkpoint, 2026-11-09:** the three-paper ownership split was
+applied to the manuscripts. Paper 1 had 37 pages rather than the public
+snapshot's 101; Paper 3 had 31 pages rather than the earlier package's 30.
+The revised manuscripts and 93 comment-only Lean edits remained local and
+were not protected-preflighted.
 Fresh local validation passes the 9,295-job expanded build and all 975
-selected dependency reports, preserving every prior dependency set. Both
-PDFs pass build/render/layout QA. Revised packages use the separate local
+selected dependency reports, preserving every prior dependency set. Those
+PDFs passed build/render/layout QA. Revised packages use the separate local
 `output/manuscript-split-review/` directory; no new hosted verification or
 publication is claimed. The
 published commit and PASS above apply only to their exact historical bytes.
@@ -108,7 +123,10 @@ The first frozen Paper 1 candidate, `73f9c28a4b9f8fb6a04e5b656389979be6b9cd92`,
 predates the public snapshot's manuscript and metadata wording corrections. It is a
 historical candidate. The revised TeX, PDF, README and metadata were frozen
 together in the published commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`.
-The subsequent local scope revision is not part of either frozen candidate.
+The subsequent 37-page scope checkpoint and current 38-page parity-table
+revision are outside both historical public candidates. The revised packages
+must carry the current manuscript and its exact source reference before any
+future publication or protected preflight.
 The final local records are `paper1-first-frozen-release.json`,
 `paper1-first-local-validation.json` and `paper1-first-final-checkpoint.json`
 under `output/validation/`; the hosted preflight result is separate evidence.

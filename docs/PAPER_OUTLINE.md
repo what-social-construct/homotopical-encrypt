@@ -126,6 +126,21 @@ extension-field encoding and original-object adapters; integer casts into a
 prime subfield do not construct it. Keep this optional stronger application
 separate from the already completed native modular radius theorem.
 
+**Current back-matter revision, 2026-11-09.** Paper 1 is **38 pages**. Its
+mathematical body contains no Lean cross-reference blocks or implementation
+filenames. Section 7 is *Conclusion and Further Work*. Appendix A consolidates
+the correspondence into one parity table: four definition rows, eight main
+result groups (21 declarations), five support groups (25 declarations), and
+three external-result/assumption/contract rows. Appendix B keeps concise proof
+boundaries. All **280 Lean files are byte-identical to `dddfdd2`**, so the
+checked 9,295-job build and 975-report dependency state is retained; this
+editorial change introduces no new Lean build claim. Paper 3 remains the
+unchanged 31-page PDF. The bibliography reconciliation adds 19 records and
+maps all 28 source-ledger IDs: Paper 1 cites seven entries, while Paper 2 and
+Paper 3 retain 42 and 16 records respectively. Candidate bibliography
+membership does not imply adoption or formalization. This revision remains
+local; public `66e1ad2` and its historical protected report are unchanged.
+
 ## Current Status And Source Of Truth
 
 The manuscript sources, together with the shared object/ownership table, are
@@ -154,9 +169,14 @@ Paper 1 is superseded by the current editorial split.
 6. **Projective Observations and Recovery:** frames, full exterior/projective
    subspace/projector recovery and operative-kernel identification; a brief
    application boundary citing Papers 2--3.
-7. **Scope and Further Work:** computational and semantic refinements.
-8. **Selected crosswalk and formalization boundaries:** all 21 main and 25
-   supporting declarations, without a whole-repository catalogue.
+7. **Conclusion and Further Work:** the exact recovery/observation outcomes
+   and their computational and semantic limits.
+8. **Appendix A, Statement--Lean Parity Table:** one post-conclusion table
+   with four definition rows, eight main result groups (21 declarations),
+   five support groups (25 declarations), and three external-result,
+   assumption or contract rows.
+9. **Appendix B, proof boundaries:** concise model, observation and verification
+   scope. The mathematical body has no Lean cross-reference blocks or filenames.
 
 The corresponding section files are `05-observation-boundaries.tex` and
 `06-projective-observation-boundary.tex`. The former long protocol/coding
@@ -192,7 +212,7 @@ entries for one manuscript. They are not another paper split.
 The published Paper 1 snapshot `66e1ad2` passed protected preflight; it remains
 unchanged and has not been submitted or registered. The editorial manuscript
 revision is a new candidate and must not inherit that exact-commit result.
-Rebuild and render both changed PDFs, verify the selected declaration
-crosswalks and documentation-only Lean changes, pin the final source commits,
+Rebuild and render changed PDFs, verify the selected parity table and exact
+Lean-source identity, pin the final source commits,
 and obtain a fresh protected report for a revised public candidate before any
 future intake. The user's instruction to defer submission remains in force.

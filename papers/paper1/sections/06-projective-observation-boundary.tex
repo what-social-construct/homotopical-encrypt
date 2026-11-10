@@ -26,6 +26,11 @@ power, including its zero orbit. A genuine frame determines a nonzero,
 decomposable orbit. The conclusions below use such frames; they do not
 assert that every point of the raw quotient is a Grassmannian point.
 
+A related specialized reconstruction uses restricted Pl\"ucker coordinates
+for maximal isotropic subspaces \cite{dingKim2026plucker}. The argument here
+uses the full projective point of an arbitrary real subspace and the fixed
+ambient metric; no orthogonal-matroid realization is assumed.
+
 \begin{proposition}[Projective Pl\"ucker invariance]\label{prop:plucker-invariance}
   Two independent frames spanning the same finite-dimensional subspace have
   equal projective exterior coordinates.
@@ -72,11 +77,6 @@ A coordinate for an unrelated subspace gives no such conclusion. The full
 point does not determine the positive spectrum of the original \(\Delta_x\).
 Nor does this exact-real reconstruction give an efficient finite byte
 algorithm or inversion of a digest.
-
-The proof owners are \lean{Proximity/Concrete/GrassmannianPlucker/Concrete.lean},
-\lean{Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean} and
-\lean{TCB/PluckerObservation.lean}. The latter identifies the recovered
-projector with the operative target under the stated kernel agreement.
 
 \subsection{Boundary with Protocol and Proximity Analysis}
 
