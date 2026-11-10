@@ -33,7 +33,7 @@ sources:
     authors:
       - "Chloe van der Vlugt"
     type: "paper"
-    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/1a2f72a1a60056ac001716c95c403816f9069ee0/papers/paper1/main.tex"
+    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/69ce43b0880b375b461160e86a5bfa09d062de90/papers/paper1/main.tex"
     location: "Sections 2, 3.2--3.5, 6.2 and the corresponding appendices; groups P1-S01--S06 and P1-B01--B02 in the entry README."
     relationship: "formalizes"
     note: >-
