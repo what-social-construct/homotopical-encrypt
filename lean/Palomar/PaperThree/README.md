@@ -4,7 +4,7 @@ This entry formalizes the coding results of *Capacity-Radius Proximity for
 Smooth-Domain Reed–Solomon Codes*. Its [application companion](Application/README.md)
 retains the original cochain and storage-calibration results. They are two
 verification entries for one manuscript.
-[Manuscript source](https://github.com/what-social-construct/homotopical-encrypt/blob/b7f3d6e1184b3cd3d77e5204884036ece1545d2f/papers/proximity-prize/main.tex).
+[Manuscript source](https://github.com/what-social-construct/homotopical-encrypt/blob/e5d566cfe96ceb28b9646013c724e99a0bb9acd9/papers/paper3/main.tex).
 
 [Comparator configuration](comparator.json) selects **52 declarations**:
 **36 manuscript-facing and 16 supporting**. [Challenge](Challenge.lean)
