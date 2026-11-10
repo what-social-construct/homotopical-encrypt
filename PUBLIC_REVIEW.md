@@ -88,6 +88,13 @@ application. Hodge component uniqueness is now proved; boundary/canonical
 arithmetic no longer adds native trust. Previous milestones remain dated
 baselines in the shared validation record.
 
+Paper 1's final submission pass foregrounds the concrete nonzero-target and
+weighted-coefficient examples, explicitly states the finite signed-incidence
+model and corrects legacy likelihood/nullity descriptions. Its reviewed PDF
+remains 101 pages. All Lean source bytes are unchanged. Paper 1 is the first
+release priority; the broader three-paper organization remains as recorded
+in the ownership table.
+
 | Item | Current status |
 |---|---|
 | License and dependency pins | Existing MIT license, Lean `v4.35.0`, Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679` and matching transitive manifest. |
@@ -108,7 +115,7 @@ baselines in the shared validation record.
 | Full aggregate | Literal default 9,285 jobs and expanded union with all three Solutions 9,295 jobs pass. Source/input identity, definition comparisons and dependency audits are separate checks; hosted/protected CI has not run here. |
 | Paper 1 independent entry | [Challenge/Solution and metadata](lean/Palomar/PaperOne/README.md) cover eight selected groups through 21 manuscript-facing and 25 supporting declarations. Mathlib-only independent statements and local Comparator/Lean/NanoDa checks pass. The macOS diagnostic disables Comparator's Linux sandbox; protected preflight remains. The manual-only workflow is prepared locally and has not run. |
 | Paper 3 independent entries | [Coding](lean/Palomar/PaperThree/README.md) and [original-cochain application](lean/Palomar/PaperThree/Application/README.md) retain all fourteen selected groups across two configurations. Both full local definition comparisons and Lean/NanoDa replays pass. Actual fields, original Context/payload/decoder and three native distances remain explicit; encoder/opening values are preserved by rfl. Protected Linux verification remains. |
-| Manuscripts | Paper 1's selected HCP/CVP entry follows its named propositions and includes Hodge uniqueness. Paper 3's coding/application entries and field/trust boundaries are aligned. Paper 2 remains a conditional working draft. Both manuscript PDFs are unchanged in this entry-preparation step. Slim frozen releases and concrete protocol/security implementation remain separate. |
+| Manuscripts | Paper 1's selected HCP/CVP entry follows its named propositions and includes Hodge uniqueness. Paper 3's coding/application entries and field/trust boundaries are aligned. Paper 2 remains a conditional working draft. Paper 1's final source/model/likelihood framing has been revised and its 101-page PDF reviewed; Paper 3's PDF is unchanged. The first public release selects only Paper 1; concrete protocol/security implementation remains separate. |
 | Manuscript alignment | Paper 1's 101-page PDF and Paper 3's 30-page PDF compile without undefined references/citations, missing glyphs or overfull boxes. The revised 101-page Paper 1 was rendered and visually checked after its observation and strict decision-profile corrections; Paper 3's revised 30-page summary/source-comparison pass was rendered and visually checked; some underfull-box diagnostics remain. These are recorded layout/compile checks, not final statement-alignment certification. Their ledgers include Plucker recovery, native-metric endpoints, storage owners and explicit source-profile boundaries. Canonical and stable review copies match byte-for-byte. |
 | Public publication | Not performed. Review the source package and choose the destination and timing separately. |
 

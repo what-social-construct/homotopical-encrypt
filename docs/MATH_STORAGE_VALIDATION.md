@@ -9,6 +9,49 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Paper 1 final manuscript and first-release scope — 2026-11-09
+
+Paper 1 is the first publication/submission priority. The established split
+remains Paper 1 HCP foundations, Paper 2 protocol/cochains/commitments and
+Paper 3 proximity. Its first public snapshot contains only the selected
+Paper 1 proof closure and manuscript; Paper 3's two configurations remain
+internal core/bridge verification entries for that same third manuscript.
+
+The final manuscript foregrounds the constructed nonzero-target family and
+weighted shared observation `b=(1,2)` with integer coefficients two and one.
+It distinguishes the elementary projection/CVP identities from a
+computational-hardness claim. The declared cellular carrier is the
+algebraic finite signed-incidence model; no regular CW or simplicial
+realization of the example's base is asserted. The selected theorems and
+all 279 Lean source hashes are unchanged.
+
+The appendix now describes the legacy spectral relation as equal nullity,
+and its density/`success_prob_*` interfaces as likelihood scores. The main
+text explicitly distinguishes the corrected Euclidean pointwise and
+factorization endpoints from the legacy supremum-norm integrated functions.
+The selected entry does not include those integrated endpoints. The source
+account identifies Hansen--Ghrist's published 2019 reference and the standard
+CVP reference, while retaining the proved homological-test fragment.
+
+The revised PDF remains **101 pages**, SHA-256
+`9a9c43143a24c0ea8a9717b33d9ed9bf5ac82dbedec1dcc9152aa37d96b66320`.
+Canonical and stable review copies match. The final build has zero undefined
+references/citations, missing glyphs and overfull boxes; seven underfull
+diagnostics remain. All 101 pages were rendered and inspected through six
+contact sheets; detailed inspection includes pages 1, 5, 6, 22, 36, 95,
+100 and 101. No clipping, overlap or broken glyphs was found.
+Local evidence is `paper1-final-manuscript-build.log` and
+`paper1-final-render/` under `output/validation/`.
+
+The two newly reviewed source candidates are indexed in the source ledger
+(now 28 entries): deontic simplicial joint commitments for Paper 2 and
+full-length RS list limitations for Paper 3. Neither is adopted as a Lean
+dependency or required to complete the selected Paper 1 statements.
+The earlier local comparison/kernel and 975-report dependency records remain
+evidence for unchanged Lean bytes. Protected preflight and intake are
+separate, exact-commit checks; the earlier candidate `73f9c28` is superseded
+by the final manuscript release.
+
 ## Slim entry packages — 2026-11-09
 
 The [slim release guide](PALOMAR_SLIM_RELEASES.md) records three separately

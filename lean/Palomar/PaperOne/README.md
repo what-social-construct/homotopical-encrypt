@@ -44,7 +44,8 @@ separation witness, and the correct-oracle existence premise in the oracle
 corollaries, with their stated uniform-solver quantifiers.
 
 The constructed family uses actual cellular restriction maps and their Hodge
-operators. Its public theory records the nonzero-cohomology tests in each
+operators in the declared algebraic finite signed-incidence model. No regular
+CW or simplicial realization of its base is asserted. Its public theory records the nonzero-cohomology tests in each
 integer degree of the bounded-below real cochain model. Equality of that theory
 is derived from the actual complexes. This formalizes the declared homological
 fragment of Helfer's framework; full first-order semantics is outside this entry.

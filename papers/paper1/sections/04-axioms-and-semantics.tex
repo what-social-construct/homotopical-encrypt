@@ -653,6 +653,11 @@ The likelihood is written with the Euclidean norm. The norm-convention check is
 that the default function-space norm may be the supremum norm, so the Euclidean
 likelihood must be represented by passing to the \(\ell^2\) norm explicitly. The
 mathematical surface used here is the corrected Euclidean one.
+The corrected pointwise likelihood and Gaussian factorization have Lean
+endpoints. The displayed Euclidean integrated scores are not identified with
+the legacy \lean{success_prob_*} functions, which use the function-space
+supremum-norm likelihood; those integrated endpoints are outside the selected
+Hodge/CVP entry.
 
 \begin{proposition}[Likelihood for a projection Laplacian]\label{prop:likelihood-projection-laplacian}
   For \(A=\Delta_W\), the Euclidean Gaussian likelihood is

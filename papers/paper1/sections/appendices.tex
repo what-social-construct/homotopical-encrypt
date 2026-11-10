@@ -556,14 +556,17 @@ Import-only aggregate files are listed with the files they collect.
   \item[\lean{Laplacian/Spectral.lean}.]
     Section 4 translates sheaf Laplacians, spectral fingerprints, spectral
     equivalence, scalar Laplacians, kernel and eigenvalue lemmas, scalar
-    fingerprints, homotopy-equivalent Laplacians, and the theorem that spectrum
-    is not homotopy invariant.
+    fingerprints, the legacy relation defined by equal kernel dimension, and
+    the theorem that spectrum is not determined by nullity. That relation
+    does not assert Helfer homotopy equivalence.
   \item[\lean{Laplacian/Likelihood.lean}.]
-    Section 4 records the classical and quantum adversary shapes, valid
-    quantum adversaries, Gaussian likelihoods, minimum spectral gaps,
-    normalized success probabilities, optimal-adversary likelihood, and the
-    Gaussian factorization lemmas as spectral-statistical surfaces rather than
-    HCP hardness assumptions.
+    Section 4 records classical selector and density-based likelihood
+    interfaces, Gaussian likelihoods, minimum spectral gaps, integrated
+    likelihood scores and Gaussian factorization lemmas. Legacy names such
+    as ``quantum adversary'' and \lean{success_prob_*} supply neither a
+    quantum computation model nor HCP recovery probabilities. The corrected
+    Euclidean integrated scores are not identified with the legacy
+    supremum-norm integrals. These interfaces are outside the selected entry.
   \item[\lean{Laplacian/Grassmannian.lean},
     \lean{Laplacian/Grassmannian/Injectivity.lean},
     \lean{Laplacian/Grassmannian/SearchSpace.lean}, and

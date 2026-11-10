@@ -6,6 +6,18 @@ Paper 1 now has an independent statement/proof pair, Comparator configuration,
 metadata and completed local diagnostic checks. Protected preflight, public
 release, submission and registration have not occurred.
 
+**Current priority — Paper 1 first.** Finish Paper 1's selected mathematical
+account and revised manuscript evidence, freeze its slim snapshot, publish it
+on `main` in the proposed
+`what-social-construct/homotopical-encrypt-formalizations` repository, and run
+the complete protected preflight for that exact commit. After a passing
+mechanical report, obtain the author's final confirmation of the exact
+repository/commit/configuration/relationship tuple before requesting intake.
+The two checked Paper 3 configurations remain local candidates for later
+work. Their technical packaging does not change the
+[three-paper split](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table):
+Paper 2 remains the protocol/cochain paper and Paper 3 the proximity paper.
+
 The user reports that **Jacobian Paper I passed the machine checks and is
 already under Palomar review**. They suspect that docstrings or broader
 documentation may affect the informal review; no cause has been established
@@ -32,8 +44,10 @@ current review status are separate facts.
 | Paper 3 application companion | The same manuscript's original-payload modular application; [CanonicalThreeLevel](../lean/Protocol/Storage/CanonicalThreeLevel.lean), [CanonicalCalibration](../lean/Protocol/Storage/CanonicalCalibration.lean) | `Palomar.PaperThree.Application.Challenge` and `Palomar.PaperThree.Application.Solution` |
 
 There are **three configurations for two manuscripts**: Paper 1, Paper 3
-coding, and Paper 3's application companion. Each configuration is a separate
-formalization entry; the companion does not introduce another numbered paper.
+core, and Paper 3's application/bridge companion. These are verification
+configurations, not a second manuscript split. Paper 1 alone is selected for
+the immediate publication and preflight sequence; the two Paper 3 entries
+remain checked local candidates. The companion introduces no numbered paper.
 Paper 1's completed local checks are recorded below. Paper 3's files now exist;
 its verification is recorded separately from the earlier implementation audit.
 Paper 2 has a [working Markdown draft](../papers/paper2/DRAFT.md)
@@ -159,6 +173,16 @@ preflight evidence. All 46 fresh entry dependency reports are standard-only
 one of the 900 preceding dependency sets. The
 [validation record](MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
 contains reproduction commands and the remaining boundaries.
+
+The latest manuscript pass foregrounds the constructed integral observation
+examples, states the finite signed-incidence model explicitly, and distinguishes
+the legacy nullity/likelihood vocabulary from stronger homotopy or security
+claims. The revised manuscript and metadata must be frozen together after
+PDF rebuild and inspection. The earlier Paper 1 candidate
+`73f9c28a4b9f8fb6a04e5b656389979be6b9cd92` is superseded for publication by
+this pending refreshed snapshot; its completed checks remain historical
+evidence. No Lean declarations or entry configuration names are changed by
+these wording corrections.
 
 The local [manual workflow](../.github/workflows/paper1-palomar-preflight.yml)
 follows Jacobian's [pinned reusable workflow](https://github.com/PalomarRegistry/PalomarSubmission/blob/14aa8d6b3c2f14a8540605e37144560b9a00e7e7/.github/workflows/submission.yml) at
@@ -364,8 +388,8 @@ The completed main upgrade supersedes the
 earlier proposal to keep main development on Lean 4.24.0; the earlier build
 and dependency records remain separately dated historical evidence.
 
-The current corresponding PDFs have 101 pages for Paper 1 and 30 for Paper 3;
-Paper 1's observation and strict canonical-profile corrections have been rebuilt and visually
+The preceding reviewed PDFs had 101 pages for Paper 1 and 30 for Paper 3;
+Paper 1's observation and strict canonical-profile corrections were rebuilt and visually
 reviewed. Paper 3's completed modular summary and bounded source comparison
 have also been rebuilt and visually reviewed. The earlier
 public-observation, rotation, owned-transfer, one-shot integrity, primitive,
@@ -375,6 +399,8 @@ Paper 3's trust wording/PDF. The Paper 1 entry then retained all 273 owner
 files and both PDFs unchanged. Select
 the appropriate manuscript evidence for each entry and tie it to the final
 immutable release. This is evidence preparation, not a completed submission.
+The latest Paper 1 wording pass requires its own rebuilt PDF and inspection;
+the preceding page count is not a claim about that revised artifact.
 
 Freeze a separate slim per-entry release with the selected proof closure,
 corresponding manuscript evidence, statement/proof wrappers and metadata
@@ -432,28 +458,30 @@ Select the current pipeline revision when preparing the release; do not
 silently reuse Jacobian's historical verifier pin. Require a passing complete
 mechanical report for the exact final package before intake.
 
-Remaining preparation, in order:
+Immediate sequence, with Paper 1 first:
 
-1. **Selected:** the manuscript-led tables above fix the HCP/CVP and Paper 3
-   mathematical scopes, including the complete Q08 profile. Preserve those
-   quantifiers and boundaries when constructing the independent wrappers.
-2. **All three independent surfaces completed locally:** Challenge/Solution,
-   README, crosswalk, configuration and metadata are prepared and checked.
-   The three slim proof closures are now prepared and checked locally;
-   archives, plans and other-paper claim surfaces are excluded. Retained
-   informal text and the actual pinned metadata contract have been checked.
-   See the [release guide](PALOMAR_SLIM_RELEASES.md).
-3. **Arithmetic source closure implemented:** preserve the new kernel proofs
-   and retain Paper 1's completed Solution dependency audit, including Hodge
-   uniqueness and both oracle-recovery contracts. Paper 3's actual 52/22 target
-   audits also pass. Protected Linux comparison remains separate.
-4. The generated per-entry defaults and separate Challenges build locally
-   using pinned caches. Freeze the checked snapshots, approve their public
-   destination and run the protected comparisons for the exact public commits.
-5. Choose the public repository and immutable commit, then run the official
-   full preflight for each exact configuration and project path.
-6. Present the concrete repository/commit/configuration and authorization
-   relationship for confirmation before intake. The destination is
+1. **Finish the selected Paper 1 account.** Preserve the eight HCP/CVP and
+   observation groups, their actual finite-incidence objects and explicit
+   hypotheses. Rebuild and inspect the revised manuscript; align README and
+   metadata with those statements and their source evidence.
+2. **Refresh and freeze only Paper 1 for publication.** Its exact proof closure
+   has 31 local modules, one configuration and the corresponding manuscript.
+   Exclude archives, plans and other-paper claim surfaces. The earlier three
+   technical-branch proposal is superseded; see the
+   [release guide](PALOMAR_SLIM_RELEASES.md).
+3. **Publish the new Paper 1 snapshot on `main`.** Use the proposed public
+   repository `what-social-construct/homotopical-encrypt-formalizations` with no
+   private development history. Preserve all checked Lean bytes, pins and
+   configuration paths. Paper 3's two locally checked entries remain for later;
+   Paper 2's protocol/cochain draft retains its existing place in the program.
+4. **Run the complete protected preflight.** Use the exact public repository,
+   new immutable commit, `project_path: lean` and Paper 1's configuration and
+   metadata paths. Inspect the full mechanical report and resolve any failure
+   before intake. Prior cached builds, local kernels and the 975-report audit
+   remain separate evidence for their recorded inputs.
+5. **Obtain final author confirmation before intake.** Present the concrete
+   repository, full commit, configuration and truthful authorization
+   relationship, together with the passing preflight report. The destination is
    [Palomar's submission service](https://submit.palomar-registry.org/).
    Agent access uses authenticated GitHub tag-write and secret-gist capability;
    the user handles browser sign-in. Registration is a separate decision after

@@ -1,15 +1,28 @@
-# Slim Palomar release candidates
+# Slim Palomar releases: Paper 1 first
 
-Prepared locally on 2026-11-09. Three configurations cover two manuscripts:
-Paper 1, Paper 3 coding and Paper 3's original-cochain application. Each package
-contains one configuration and its actual transitive Lean proof closure.
-Paper 2 remains outside this submission scope.
+Preparation updated on 2026-11-09. The publication priority is to finish and
+release Paper 1 first, then run its protected preflight before requesting
+Palomar intake. The proposed public destination is
+`what-social-construct/homotopical-encrypt-formalizations`, with Paper 1's slim
+snapshot on `main`.
+
+The existing [three-paper ownership table](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table)
+remains authoritative: Paper 1 owns HCP foundations, Paper 2 owns protocol and
+cochain/commitment realization, and Paper 3 owns proximity and radius analysis.
+Paper 3's core and bridge configurations are internal verification entries
+for that one manuscript. They are not additional papers or a substitute for
+Paper 2. Paper 2 remains a working draft outside this first submission.
+
+The following are technical packaging inventories, not a publication split:
 
 | Package | Local Lean modules, including Challenge | Configured declarations | Manuscript |
 |---|---:|---:|---|
-| `paper1` | 31 | 46: 21 main / 25 support | Paper 1, 101 pages |
+| `paper1` | 31 | 46: 21 main / 25 support | Paper 1; revised manuscript/PDF must be frozen together |
 | `paper3-coding` | 35 | 52: 36 main / 16 support | Paper 3, 30 pages |
 | `paper3-application` | 81 | 22: 10 main / 12 support | The same Paper 3 manuscript |
+
+Only `paper1` is selected for the first publication/preflight sequence. The
+two Paper 3 packages retain their completed local checks for later work.
 
 The [exporter](../scripts/export_palomar_entries.py) copies every selected Lean
 source, Comparator configuration, metadata file and manuscript source/PDF
@@ -51,7 +64,7 @@ identity, the exact module inventory, source limits, implementation holes,
 local links, archive identity and deterministic archive timestamps.
 Static verification does not invoke a proof checker.
 
-Local evidence under `output/validation/` records the generated project
+The preceding local evidence under `output/validation/` records the generated project
 builds, the package checks and the actual upstream metadata-contract checks
 at pipeline `14aa8d6b3c2f14a8540605e37144560b9a00e7e7`:
 `palomar-slim-local-builds.json`, `palomar-slim-package-validation.json` and
@@ -62,6 +75,12 @@ The local package builds reuse the existing pinned dependency caches.
 The [earlier entry checks](MATH_STORAGE_VALIDATION.md#paper-3-independent-entries--2026-11-09)
 record full local comparisons, Lean/NanoDa replay and the combined dependency
 audit for the unchanged Lean sources.
+
+The first frozen Paper 1 candidate, `73f9c28a4b9f8fb6a04e5b656389979be6b9cd92`,
+predates the latest manuscript and metadata wording corrections. It is a
+historical candidate, not the commit to publish. Refresh and freeze Paper 1
+after its revised TeX, PDF, README and metadata agree; retain the exact new
+commit and artifact hashes in the final release record.
 
 ## Protected preflight and publication boundary
 
@@ -81,16 +100,18 @@ against the frozen entry branch and retain the mechanical report for that
 exact commit. A passing preflight does not constitute editorial review or
 registration.
 
-The proposed publication is one new public repository containing three
-independent branches, `paper1`, `paper3-coding` and `paper3-application`.
-Each branch starts from its slim snapshot, with no private development
-history. Local release commits and a Git bundle make the exact proposed
-public content reviewable before publication. The destination and public
-upload require the user's approval. No repository creation, push, visibility
-change, workflow dispatch or registry submission is performed by the exporter.
+The earlier proposal for three technical release branches is superseded by
+the Paper 1-first sequence. Publish the refreshed Paper 1 snapshot on `main`
+in the proposed public repository, without private development history.
+Keep the checked Paper 3 candidates local until their later release step.
+The exporter performs no repository creation, push, visibility change,
+workflow dispatch or registry submission; none has occurred in preparing
+these candidates.
 
-After approval, publish only the frozen branches and run each branch's
-preflight. Inspect the complete mechanical reports and resolve any failures
-before requesting intake. Actual Palomar submission and registration remain
-separate decisions, following the
+Run the complete protected preflight for Paper 1's exact public commit and
+inspect its mechanical report. Resolve failures before intake. Then present
+the repository, full commit SHA, configuration path and truthful author or
+maintainer relationship for the author's final confirmation before requesting
+Palomar intake. Registration remains a separate decision after reading the
+review, following the
 [submission plan](PALOMAR_SUBMISSION_PLAN.md#reproducible-checks-and-remaining-steps).

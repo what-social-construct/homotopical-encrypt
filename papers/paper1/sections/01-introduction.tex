@@ -102,6 +102,10 @@ This paper develops this boundary through the following statements.
   \item A hidden-operator ambiguity theorem: publicly equivalent Hodge operators
     may disagree on harmonicity, so the CVP comparison does not make a correct
     explicit-lattice CVP oracle into a uniform public-data HCP solver.
+  \item Constructed integral examples in the finite signed-incidence model:
+    one homological public observation has distinct nonzero harmonic targets;
+    a weighted pair shares \(b=(1,2)\) with integer coefficients two and one,
+    with a unique CVP answer for each privately presented lattice.
   \item The supporting formal framework:
     fibrational identity, homotopy classes, exact Hodge/cochain invariants,
     spectral/Tsirelson admissibility, and Heyting-style public judgments.
@@ -109,6 +113,20 @@ This paper develops this boundary through the following statements.
     canonical Reed--Solomon endpoint, with a conditional far-separation gate and
     an MCA bad-challenge bound imported at an explicit cited theorem boundary.
 \end{enumerate}
+
+Finite Hodge theory follows the cellular-cochain framework of
+Hansen--Ghrist \cite{hansenGhrist2018sheaves}; the algebraic model used here is
+specified in \cref{sec:hcp-definition}. Kernel realization and the
+Pythagorean projection identity are elementary linear-algebraic foundations.
+Helfer's homotopy-invariant semantics \cite{helfer2019fol} motivates the public
+classifier; the constructed examples prove only the explicitly named
+nonzero-cohomology-test fragment. The selected formalization integrates these
+objects with the constructed observation ambiguities and recovery boundaries.
+It establishes neither an asymptotic CVP-hardness reduction nor a sampled
+encryption-security theorem. The independently stated Lean entry covers the
+six Hodge/CVP groups and two observation-boundary groups in its source
+crosswalk; the broader spectral, oracle and coding interfaces retain their
+separately stated assumptions and formalization status.
 
 The companion manuscript \emph{Capacity-Radius Proximity for Smooth-Domain
 Reed--Solomon Codes} \cite{vanDerVlugt2026proximity} develops the universal

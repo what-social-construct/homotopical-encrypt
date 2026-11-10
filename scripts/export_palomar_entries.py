@@ -230,6 +230,11 @@ def rewrite_readme(raw, relative, inventory):
 
 def root_readme(entry, config, checkpoint, selected_count, challenge_count, solution_count):
     base, paper, targets, main, title = ENTRIES[entry]
+    release_note = (
+        "Paper 1 is being prepared as the first public release. This package "
+        "contains only its selected formalization and corresponding manuscript; "
+        "the other papers remain outside this release.\n\n"
+        if entry == "paper1" else "")
     application_note = (
         "Paper 3 has two separately packaged configurations for the same manuscript. "
         "The companion is outside this package; the entry crosswalk identifies it "
@@ -244,7 +249,19 @@ and [metadata](lean/{base}/formalization.yaml) state the hypotheses and limitati
 The [configuration](lean/{base}/comparator.json) selects **{targets} declarations**:
 {main} manuscript-facing and {targets - main} supporting. These are coverage counts.
 
-The canonical [manuscript PDF]({paper}/main.pdf) and [TeX source]({paper}/main.tex)
+The manuscript program retains its recorded three-paper split:
+
+| Paper | Owns |
+|---|---|
+| 1 | HCP foundations, hidden Hodge operators, harmonic recovery and CVP comparisons. |
+| 2 | Protocol, cochains/commitments, storage, verification evidence and accepted transitions. |
+| 3 | Proximity, Reed–Solomon bounds and quantitative metric comparisons using the shared objects. |
+
+Paper 2 remains a working draft and is not included in this entry package.
+Paper 3's core and bridge configurations are two verification entries for one
+manuscript; they do not introduce another paper split.
+
+{release_note}The canonical [manuscript PDF]({paper}/main.pdf) and [TeX source]({paper}/main.tex)
 are unchanged contextual evidence. The selected formalization covers the stated
 groups, rather than every claim or future direction in the full manuscript.
 {application_note}

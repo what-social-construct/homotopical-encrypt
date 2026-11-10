@@ -7,8 +7,9 @@ project:
     We formalize finite real Hodge decomposition with unique components,
     private harmonic and presented-coefficient recovery, and the exact
     preservation of discrete closest-vector answers by projection onto a
-    subspace containing the supplied lattice. Actual integral cellular
-    examples have equal cohomological public observations but distinct
+    subspace containing the supplied lattice. In the declared algebraic finite
+    signed-incidence cellular model, integral examples have equal
+    cohomological public observations but distinct
     nonzero operative harmonic targets; a weighted example gives different
     integer coefficients at the same input. The general oracle statements
     retain their invariance, separation and correct-oracle existence
@@ -141,7 +142,9 @@ fidelity:
     General ambiguity is conditional on the declared closed-test invariance,
     kernel separation and, for the oracle corollaries, existence of a correct
     explicit-lattice CVP oracle with the stated uniform-solver quantifiers.
-    The cellular family constructs the homological test fragment, not full
+    The cellular carrier records finite graded cells and integer incidences;
+    no regular CW or simplicial realization of the example's base is asserted.
+    The family constructs the homological test fragment, not full
     first-order semantics. The exact-component obstruction requires an allowed
     nonzero coexact direction and does not prove factorization of a concrete
     wire serializer. Plucker recovery uses full exact-real projective data
