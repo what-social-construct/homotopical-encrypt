@@ -5,7 +5,7 @@ Hidden Hodge Operators and the Harmonic Cochain Problem*, organized in
 Sections 1–3: primitives, the HCP recovery problem, and comparison with the
 closest-vector problem. The constructed integral cellular families give
 concrete instances of the hidden-member recovery obstruction.
-[Manuscript source](https://github.com/what-social-construct/homotopical-encrypt/blob/d21db61ec07ede78045f0e6dca8ec3769580b360/papers/paper1/main.tex).
+[Manuscript source](https://github.com/what-social-construct/homotopical-encrypt/blob/b7f3d6e1184b3cd3d77e5204884036ece1545d2f/papers/paper1/main.tex).
 
 [Comparator configuration](comparator.json) selects **36 declarations**:
 **16 manuscript-facing and 20 supporting**. [Challenge](Challenge.lean)

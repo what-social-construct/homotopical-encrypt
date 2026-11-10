@@ -6,7 +6,7 @@ This entry formalizes the original cochain-storage application in §7 of
 analysis, sharpness examples and fixed-mix limitation. Paper 2 supplies the
 shared cochain construction, codec, visibility and protocol contracts; this
 entry proves quantitative statements about those same objects.
-[Manuscript source](https://github.com/what-social-construct/homotopical-encrypt/blob/d21db61ec07ede78045f0e6dca8ec3769580b360/papers/proximity-prize/main.tex).
+[Manuscript source](https://github.com/what-social-construct/homotopical-encrypt/blob/b7f3d6e1184b3cd3d77e5204884036ece1545d2f/papers/proximity-prize/main.tex).
 
 [Comparator configuration](comparator.json) selects **22 declarations**:
 **10 manuscript-facing and 12 supporting**. [Challenge](Challenge.lean)

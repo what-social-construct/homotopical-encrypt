@@ -32,7 +32,7 @@ sources:
     authors:
       - "Chloe van der Vlugt"
     type: "paper"
-    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/d21db61ec07ede78045f0e6dca8ec3769580b360/papers/proximity-prize/main.tex"
+    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/b7f3d6e1184b3cd3d77e5204884036ece1545d2f/papers/proximity-prize/main.tex"
     location: "Section 7; P3-A01, the storage-calibration portion of P3-A02 and P3-A03."
     relationship: "formalizes"
     note: >-
