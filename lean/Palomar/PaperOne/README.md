@@ -37,7 +37,7 @@ ordinary categorical meanings.
 In the crosswalk, `E` means `Hcrypt.Palomar.PaperOne`, `CS` means
 `E.CellularSheaf`, `HB` means `E.HCPBridge`, `AF` means `E.AxisFamily`, and
 `PL` means `E.Plucker`. The source labels refer to the
-[versioned manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/9633b39589bab8f36af36c9cfd4b23f6505a16cb/papers/paper1/main.tex).
+[versioned manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/db322feff36ae89472fefe32eb53f2d471f7916e/papers/paper1/main.tex).
 Canonical names below belong to the implementation, outside the entry namespace.
 
 | Group / manuscript source | Entry declarations and mathematical content | Canonical proof owners |
