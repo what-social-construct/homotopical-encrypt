@@ -8,15 +8,17 @@ checkpoint no public release or protected preflight had occurred. The current
 publication/run status is recorded below; registry intake and registration
 have not occurred.
 
-**Current checkpoint — Paper 1 public; preflight in progress, 2026-11-09.**
+**Current checkpoint — Paper 1 public; protected preflight passed, 2026-11-09.**
 The approved Paper 1-only snapshot is on `main` in
 [homotopical-encrypt-formalizations](https://github.com/what-social-construct/homotopical-encrypt-formalizations)
 at commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`. The complete protected
 [preflight run](https://github.com/what-social-construct/homotopical-encrypt-formalizations/actions/runs/42729947447)
-has been dispatched with request identifier `p1pf875ad70f`; no passing report
-is yet recorded here. The user approved publication and preflight only and
+completed successfully with request identifier `p1pf875ad70f`. Its downloaded
+mechanical report passes exact source/configuration/metadata/provenance checks;
+Lean, NanoDa and con-ron all accept. The only advisory is preferred Challenge
+review size, within the hard caps. The user approved publication and preflight only and
 explicitly said not to submit yet. **No registry intake or registration is
-authorized or performed.** Inspect and retain the mechanical report, then
+authorized or performed.** The mechanical report is inspected and retained;
 stop before intake. Any later submission needs a new explicit instruction
 and final confirmation of the exact
 repository/commit/configuration/relationship tuple.
@@ -485,11 +487,12 @@ Current sequence, with Paper 1 first:
    history and preserves all checked Lean bytes, pins and configuration
    paths. Paper 3's two locally checked entries remain unpublished for later;
    Paper 2's protocol/cochain draft retains its existing place in the program.
-4. **Complete protected preflight in progress.** Run `42729947447` selects the
+4. **Complete protected preflight passed.** Run `42729947447` checks the
    exact public commit, `project_path: lean` and Paper 1's configuration and
-   metadata paths. Retain `mechanical-report-p1pf875ad70f`, inspect its full
-   evidence and report the outcome. Prior cached builds, local kernels and the
-   975-report audit remain separate evidence for their recorded inputs.
+   metadata paths. The downloaded `mechanical-report-p1pf875ad70f` passes
+   protected comparison, canonical provenance and Lean/NanoDa/con-ron checks.
+   Its preferred-size advisory is within the hard caps. Prior local builds
+   and the 975-report audit remain separately recorded evidence.
 5. **Stop before intake.** The user explicitly authorized preflight only.
    Do not request registry submission or registration on the strength of a
    passing report. A later explicit submission instruction must confirm the

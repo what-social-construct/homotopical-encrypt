@@ -26,12 +26,24 @@ uses request `p1pf875ad70f`, `mode: full`, `palomar-standard-v1` and pipeline
 configuration and metadata paths are
 `lean/Palomar/PaperOne/comparator.json` and
 `lean/Palomar/PaperOne/formalization.yaml`. The remote branch SHA was verified
-before dispatch. Initial immutable-source preparation succeeded; the full
-mechanical result is **pending**. A successful workflow and its delivered
-mechanical report must both be inspected before recording a pass.
+before dispatch. The workflow and delivered schema-2 mechanical report both
+**pass**. Exact source/configuration/metadata hashes match the frozen Git
+snapshot. The canonical Challenge provenance is high-trust with no untrusted
+sources. All 46 configured declarations pass protected definition/type
+comparison with only the three permitted logical axioms. Lean's default
+kernel, NanoDa and con-ron all accept; con-ron reports 45,899 exported
+declarations checked. This is not a count of selected research results.
+
+The report records Lean 4.35.0, `palomar-standard-v1` and bubblewrap `v0.12.0`.
+Its only advisory is that the 977-line / 49,234-byte Challenge exceeds the
+preferred 300-line / 32-KiB review size; it satisfies the 1,000-line / 100-KiB
+hard limits. No formal statement was changed to remove that advisory.
 
 Local records are `paper1-protected-preflight-request.json` and
-`paper1-protected-preflight-run.json` under `output/validation/`.
+`paper1-protected-preflight-run.json`, the downloaded
+`paper1-protected-artifact/mechanical-report.json`, artifact identity/digest
+metadata and `paper1-protected-report-validation.json` under
+`output/validation/`. The artifact is `mechanical-report-p1pf875ad70f`.
 No Palomar intake, editorial review or registration has been requested.
 The user's instruction to defer submission remains in force.
 

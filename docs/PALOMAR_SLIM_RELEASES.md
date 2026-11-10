@@ -5,12 +5,14 @@ snapshot is public on `main` in
 [homotopical-encrypt-formalizations](https://github.com/what-social-construct/homotopical-encrypt-formalizations),
 at commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`. The complete protected
 [preflight run](https://github.com/what-social-construct/homotopical-encrypt-formalizations/actions/runs/42729947447)
-has been dispatched and is in progress; no passing report is recorded at this
-checkpoint. Its request identifier is `p1pf875ad70f`.
+has completed successfully. Its downloaded mechanical report passes exact
+source, configuration, metadata, canonical provenance and protected comparison
+checks. Lean, NanoDa and con-ron all accept. Its request identifier is
+`p1pf875ad70f`.
 
 The user authorized publication and preflight only and explicitly deferred
 submission. **No registry intake or registration is authorized or performed.**
-Finish by inspecting and retaining the mechanical report; a passing preflight
+The mechanical report has been inspected and retained; this passing preflight
 does not authorize an intake request.
 
 The existing [three-paper ownership table](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table)
@@ -119,9 +121,10 @@ remain local. The exporter itself performs no remote actions; the separately
 authorized repository creation, exact-snapshot push and preflight dispatch
 have now occurred. The private development remote was not changed.
 
-Retain `mechanical-report-p1pf875ad70f` from the running full preflight and
-inspect its exact source, configuration, provenance and kernel evidence.
-Report the result and stop before intake. A later submission requires a new
+The validated artifact `mechanical-report-p1pf875ad70f` is retained locally
+with `paper1-protected-report-validation.json`. Its only advisory concerns
+preferred Challenge review size: 977 lines / 49,234 bytes satisfy the hard
+1,000-line / 100-KiB limits. Stop before intake. A later submission requires a new
 explicit instruction and the author's final confirmation of the repository,
 full commit SHA, configuration path and truthful author or maintainer
 relationship. Registration remains a separate decision after reading a

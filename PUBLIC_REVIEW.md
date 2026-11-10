@@ -12,7 +12,9 @@ this broad archive retains cross-paper context for human review.
 The separate [Paper 1-only release](https://github.com/what-social-construct/homotopical-encrypt-formalizations)
 is now public at `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`.
 Its [protected preflight](https://github.com/what-social-construct/homotopical-encrypt-formalizations/actions/runs/42729947447)
-is running. The broader archive described here remains a local review package.
+passed, with protected comparison, source provenance and Lean/NanoDa/con-ron
+acceptance confirmed in its downloaded report. The broader archive described
+here remains a local review package.
 The user has explicitly deferred Palomar submission and registration.
 
 ## Included scope
@@ -118,12 +120,12 @@ in the ownership table.
 | Canonical decision profile | Closed promises retain `(ε,δ_J)` on both sides, concrete near 2046/4096 and far 2047/4096, the original map and solver pullback. Its canonical arithmetic now uses kernel proofs. The geometric far witness and efficient solver remain explicit obligations. |
 | History/manifest anchor | The joins and fixtures pass on 4.35, and all nineteen fresh anchor reports use only the three standard Lean axioms. Concrete authentication/encoding/backend profiles remain explicit. The earlier 4.24 focused/full results are preserved in the shared register. |
 | Theorem dependencies | All 975 selected reports are standard-only (792 exact-three/183 subsets, 106 axiom-free); all 946 prior sets match. No selected native, cited-bound or sorryAx dependency occurs. The [validation record](docs/MATH_STORAGE_VALIDATION.md#paper-3-independent-entries--2026-11-09) reproduces the entry checks and preserves historical audits. |
-| Full aggregate | Literal default 9,285 jobs and expanded union with all three Solutions 9,295 jobs pass. Source/input identity, definition comparisons and dependency audits are separate checks; hosted/protected CI has not run here. |
-| Paper 1 independent entry | [Challenge/Solution and metadata](lean/Palomar/PaperOne/README.md) cover eight selected groups through 21 manuscript-facing and 25 supporting declarations. Mathlib-only independent statements and local Comparator/Lean/NanoDa checks pass. The macOS diagnostic disables Comparator's Linux sandbox; protected preflight remains. The manual-only workflow is prepared locally and has not run. |
+| Full aggregate | Literal default 9,285 jobs and expanded union with all three Solutions 9,295 jobs pass. Source/input identity, definition comparisons and dependency audits are separate checks. The broader hosted aggregate has not run; Paper 1's exact slim snapshot passed protected preflight. |
+| Paper 1 independent entry | [Challenge/Solution and metadata](lean/Palomar/PaperOne/README.md) cover eight selected groups through 21 manuscript-facing and 25 supporting declarations. Mathlib-only independent statements and local Comparator/Lean/NanoDa checks pass. The prior macOS diagnostic was separate. Public commit 66e1ad2 now passes the complete protected workflow, canonical source audit and Lean/NanoDa/con-ron replay; its sole size advisory is within hard caps. |
 | Paper 3 independent entries | [Coding](lean/Palomar/PaperThree/README.md) and [original-cochain application](lean/Palomar/PaperThree/Application/README.md) retain all fourteen selected groups across two configurations. Both full local definition comparisons and Lean/NanoDa replays pass. Actual fields, original Context/payload/decoder and three native distances remain explicit; encoder/opening values are preserved by rfl. Protected Linux verification remains. |
 | Manuscripts | Paper 1's selected HCP/CVP entry follows its named propositions and includes Hodge uniqueness. Paper 3's coding/application entries and field/trust boundaries are aligned. Paper 2 remains a conditional working draft. Paper 1's final source/model/likelihood framing has been revised and its 101-page PDF reviewed; Paper 3's PDF is unchanged. The first public release selects only Paper 1; concrete protocol/security implementation remains separate. |
 | Manuscript alignment | Paper 1's 101-page PDF and Paper 3's 30-page PDF compile without undefined references/citations, missing glyphs or overfull boxes. The revised 101-page Paper 1 was rendered and visually checked after its observation and strict decision-profile corrections; Paper 3's revised 30-page summary/source-comparison pass was rendered and visually checked; some underfull-box diagnostics remain. These are recorded layout/compile checks, not final statement-alignment certification. Their ledgers include Plucker recovery, native-metric endpoints, storage owners and explicit source-profile boundaries. Canonical and stable review copies match byte-for-byte. |
-| Public publication | Not performed. Review the source package and choose the destination and timing separately. |
+| Public publication | Only the approved Paper 1 snapshot is public. The broader three-paper archive remains local; Paper 2/3 manuscripts are unpublished here. No Palomar intake or registration was requested. |
 
 ## Prepare a local package
 
@@ -142,6 +144,6 @@ full repository's Rust/Python integration jobs. The authoritative checks are
 the pinned Lean build, explicit transition examples, theorem axiom reports,
 and both manuscript builds. All three selected Solutions are included in the
 review build. The separate manual Palomar workflows have no automatic push or
-pull-request trigger and have not run. Public visibility need not wait for every future
+pull-request trigger. The published Paper 1 workflow passed; other prepared entry workflows have not run. Public visibility need not wait for every future
 research theorem or production feature, provided the stated claims and open
 obligations remain accurate.
