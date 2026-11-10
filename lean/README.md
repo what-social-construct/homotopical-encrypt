@@ -78,8 +78,8 @@ authentication, codec and snapshot assumptions; executable refinement,
 cryptographic primitive security and consensus finality require additional
 results.
 
-Current reading PDFs are under `output/pdf/` and generated review packages
-under `output/packages/` at the repository root. Historical plans and
+Current PDFs live beside their TeX sources under `papers/`; generated review
+packages are under `output/packages/` at the repository root. Historical plans and
 verification records are preserved under `archive/documentation/`.
 
 [MIT license](../LICENSE).

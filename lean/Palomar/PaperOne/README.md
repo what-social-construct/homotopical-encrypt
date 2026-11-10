@@ -51,10 +51,9 @@ This classifies admitted representatives, while the matrix-level projection
 is constrained on realized operators. The semantic fragment uses
 nonzero-cohomology tests in the bounded-below real cochain model.
 
-The preceding 38-target entry passed local comparison and Lean/NanoDa replay.
-This 36-target reduction retains an unchanged subset of those statements and
-proofs; its fresh focused build and comparison are pending. Exact verification
-scope is recorded in [metadata](formalization.yaml). From `lean/`:
+The current 36-declaration entry passed its focused local build, statement
+and definition comparison, and Lean/NanoDa replay. Exact verification scope
+is recorded in [metadata](formalization.yaml). From `lean/`:
 
 ```sh
 lake exe cache get

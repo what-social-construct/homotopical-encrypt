@@ -196,8 +196,11 @@ def rewrite_readme(raw, relative, inventory):
         label, target = match.groups()
         parsed = urlsplit(target)
         if parsed.scheme or parsed.netloc:
-            prefix = "/what-social-construct/homotopical-encrypt/blob/"
-            if parsed.netloc == "github.com" and parsed.path.startswith(prefix):
+            prefixes = ("/what-social-construct/homotopical-encrypt/blob/",
+                        "/what-social-construct/homotopical-encrypt-formalizations/blob/")
+            prefix = next((candidate for candidate in prefixes
+                           if parsed.path.startswith(candidate)), None)
+            if parsed.netloc == "github.com" and prefix is not None:
                 parts = parsed.path[len(prefix):].split("/", 1)
                 if len(parts) == 2 and parts[1] in inventory:
                     replacement = Path(os.path.relpath(ROOT / parts[1], ROOT / relative.parent)).as_posix()
@@ -222,7 +225,7 @@ def rewrite_readme(raw, relative, inventory):
             raise ValueError(f"Broken source README link: {target}")
         replacement = f"{label} (separately packaged companion; upstream path `{resolved}`)"
         changes.append({"original": target, "replacement": replacement,
-                        "reason": "Companion excluded; upstream repository is private"})
+                        "reason": "Companion is outside this entry's selected source closure"})
         return replacement
 
     return re.sub(r"(?<!!)\[([^\]]+)\]\(([^)]+)\)", replace, raw), changes
@@ -242,8 +245,7 @@ and the [formalization metadata](lean/{base}/formalization.yaml).
 Only the selected entry and its import closure are bundled: {selected_count}
 local modules, with {challenge_count} in Challenge's independent closure and
 {solution_count} in Solution's. Archives, process notes, runtime sources and
-build/dependency caches are excluded. The two Paper 3 configurations, where
-applicable, are separate entries for the same manuscript.
+build/dependency caches are excluded.
 
 From `lean/`, using the pinned toolchain:
 

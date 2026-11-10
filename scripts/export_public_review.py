@@ -135,7 +135,7 @@ def stage(destination: Path, refresh: bool):
             "scope": "current Lean sources, corresponding manuscripts and selected documentation",
             "source_checkpoint": checkpoint,
             "source": "working tree including uncommitted additions; no Git history",
-            "validation": "see PUBLIC_REVIEW.md; source presence does not assert build success",
+            "validation": "see the Lean entry READMEs and formalization metadata; source presence does not assert build success",
             "sha256": inventory,
         }, indent=2) + "\n")
         if destination.exists():

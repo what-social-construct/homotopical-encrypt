@@ -24,7 +24,7 @@ security result is claimed.
 
 Manuscripts, declaration crosswalks, Comparator configurations and formalization
 metadata must agree with the active source names. Regenerate manuscript PDFs,
-stable review copies, local package trees, ZIPs and their hash manifests after
+local package trees, ZIPs and their hash manifests after
 the rename. The slim exporter copies the selected source closure and metadata;
 the broad exporter copies its allowlisted sources and documentation. Neither
 includes `archive/runtime/` nor renames stale files already present in an
@@ -44,5 +44,7 @@ Current statement scope and local verification are recorded in the Lean
 entry READMEs and formalization metadata. Historical verification and review
 records are archived separately.
 
-This naming and archive revision has not been pushed or submitted. No registry
-intake or registration has been performed for it.
+The public Paper 1 repository contains only its selected Lean source closure,
+corresponding manuscript and entry metadata. Other manuscripts, archives and
+private Git history are excluded. Publication is separate from registry
+intake and submission.

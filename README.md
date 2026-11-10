@@ -54,8 +54,8 @@ latexmk -cd -pdf -interaction=nonstopmode -halt-on-error papers/paper1/main.tex
 latexmk -cd -pdf -interaction=nonstopmode -halt-on-error papers/proximity-prize/main.tex
 ~~~
 
-Current reading copies are under `output/pdf/`; generated review packages
-are under `output/packages/`. These commands describe how to reproduce the
+Read the compiled PDFs beside their TeX sources under `papers/`; generated
+review packages are under `output/packages/`. These commands describe how to reproduce the
 checks, rather than certifying a particular working tree.
 
 ## Layout
@@ -67,7 +67,7 @@ papers/paper2/              Protocol draft
 papers/proximity-prize/     Coding/proximity manuscript
 docs/                       Source ledger and current mathematical crosswalks
 scripts/                    Lean/manuscript checks and package generation
-output/                     Reading PDFs, packages and validation artifacts
+output/                     Review packages and validation artifacts
 archive/                    Historical prototypes, plans and review records
 ~~~
 

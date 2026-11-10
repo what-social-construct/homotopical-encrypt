@@ -5,16 +5,10 @@ public import Laplacian.Projection
 @[expose] public section
 
 /-
-  Hodge-facing Laplacian interface.
-
-  Paper correspondence:
-  - Paper 1 Sections 2--3: harmonic projection, the orthogonal residual and
-    the discrete-CVP comparison.
-  - Paper 3 can use an explicitly chosen residual as a source score only with
-    its own quantitative comparison.
+  Harmonic projection and orthogonal residual for the projection Laplacian.
 
   `Laplacian.Projection` defines the concrete Grassmannian model
-  `Δ_W = I - P_W`. This file names the Hodge/proximity-facing operations
+  `Δ_W = I - P_W`. This file names the projection and residual operations
   derived from that model:
 
     harmonic projection     P_W b
