@@ -7,6 +7,15 @@ recipient recovery/rotation, owned-resource transition and one-shot integrity
 full-ciphertext recovery, source/completion assessment and Paper 1 observation
 wording reconciliation 2026-11-08.
 
+**Homotopy-class wording — 2026-11-09:** P306 makes the introduction's
+homotopy-class meaning explicit: homotopy-equivalent hidden representatives
+share the public label while their Hodge operators may differ in fixed public
+coordinates. The label records homotopy-class information; the generic
+classifier is not asserted to distinguish every homotopy class. This preserves
+§2's one-way bridge and the concrete homological-theory classifier. Only one
+introductory paragraph changes; formal statements, proofs and all Lean source
+bytes are unchanged. The reviewed local PDF remains 32 pages.
+
 **Construction-first HCP exposition — 2026-11-09:** P305 integrates the
 semantic/classifier assumptions, exact-cochain/opening facts and observation
 choice into §2. Full-projective recovery is §2.2.1. The actual homological
@@ -836,6 +845,7 @@ completion in the current record below.
 | P303 | Paper 1 abstract and motivation refinement — 2026-11-09 | Remove only abstract paragraph two, preserving paragraph one exactly. Cite Helfer in the opening motivation; keep the explicit hypotheses and proved-fragment boundary. Consolidate the three CVP-related contribution items into one, with four items overall. All body mathematical displays, inline formulas, proposition/definition statements and proofs remain unchanged; the selected parity table, bibliography and all Lean sources are untouched. The 38-page PDF builds/renders cleanly with no undefined references, missing glyphs or overfull boxes. Updated local artifacts require their own exact-commit protected preflight before any later intake. |
 | P304 | Standalone HCP problem narrative and merged observations — 2026-11-09 | Remove repeated companion-program descriptions and runtime/layer lists; use direct cellular-model wording. HCP input, hidden operative target, CVP comparison and semantic equality lead to one merged §5, with full-point recovery in §5.5 and conclusion §6. Clarify Public Observation as the actual classifier/cochain pair and correct §3.1 to contrast that input with CVP (B,t). Preserve all 106 displays, 11 proposition statements, 11 proofs and 10 other definitions; retain all 46 parity names exactly once. The 36-page PDF passes build/render QA with five printed external references; seven bibliography records and the 28-source ledger remain. Seven Lean header comments remove obsolete section references; all 280 non-comment source fingerprints and all theorem/configuration bytes remain unchanged. No new kernel replay, protected preflight, publication or submission is claimed. |
 | P305 | Construction-first HCP setup; CVP comparison last — 2026-11-09 | Integrate semantic/classifier data and exact-cochain/observation facts into §2, with full-projective reconstruction in §2.2.1. Explain the actual homological model beside the cellular example in §3.5. CVP comparison/kernel ambiguity is the final main section before conclusion §4. Remove two standalone background files and three unused notation rows. All eleven proposition statements and eleven definitions are verbatim; ten proofs are verbatim, and one opening clarifies the invariant-test premise without changing formulas or argument. All 46 parity names occur once. The 32-page PDF passes build/render QA; nine Lean headers are comment-only, all 280 non-comment source fingerprints and nine entry statement/configuration files are unchanged. Retain the 9,295-job/975-report proof evidence; no new protected preflight, publication or submission. |
+| P306 | Explicit homotopy-class meaning in the introduction — 2026-11-09 | Replace the generic “homotopical framework” wording with homotopy-class information and the proved implication from homotopy equivalence to shared public value. Operator disagreement is stated in fixed public coordinates. Do not assert the converse or completeness of the classifier. Only one introductory paragraph changes; all formal statements, proofs and Lean bytes are unchanged. The local 32-page PDF builds without undefined references, missing glyphs or overfull boxes, with reflow reviewed. No new Lean build, kernel replay, protected preflight, publication or submission. |
 
 #### Current protocol validation
 

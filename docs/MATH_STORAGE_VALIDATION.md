@@ -9,6 +9,27 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Paper 1 explicit homotopy-class wording — 2026-11-09
+
+The introduction now states that the public label records homotopy-class
+information. Homotopy-equivalent hidden representatives share it even when
+their Hodge operators differ in the fixed public coordinates. The chosen
+classifier remains a homotopy invariant, with no converse/completeness claim;
+§2's explicit coarseness boundary and the actual homological theory are intact.
+Only that introductory paragraph changes against `82a1078`. All formal
+statements/proofs and all Lean source bytes are unchanged; the existing
+9,295-job/975-report proof evidence is retained without repeating a build.
+
+The PDF remains **32 pages**, with zero undefined references/citations,
+missing glyphs or overfull boxes (two underfull diagnostics). The changed
+and reflowed pages are visually checked; pages 2 and 15–32 have identical
+extracted layout text to the prior accepted PDF. Current SHA-256:
+`069d30efb3b52621ad8969f282d22fb990d0a0b8e06bf82a1fe2e7dd1f2b45b0`.
+The canonical and stable PDFs match. Evidence is `paper1-homotopy-class-wording-*`
+under `output/validation/`. Local packages and the immutable manuscript source
+pin are refreshed. This editorial revision performs no publication, protected
+preflight or submission.
+
 ## Paper 1 construction-first setup and final comparison — 2026-11-09
 
 The HCP setup in §2 now introduces the semantic/classifier assumptions,
