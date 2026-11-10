@@ -13,14 +13,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 MARKER = "PUBLIC_REVIEW_MANIFEST.json"
-DOCS = (
-    "CATEGORICAL_ARCHITECTURE", "COCHAIN_PROXIMITY_TRACE", "PAPER_OUTLINE", "SOURCE_LEDGER",
-    "PROJECT_NAMING",
-    "PROTOCOL_PARITY_QUEUE", "PROXIMITY", "PROXIMITY_ASSUMPTIONS",
-    "PROXIMITY_PAPER_OUTLINE", "PROXIMITY_NOVELTY_COMPARISON", "MATH_STORAGE_VALIDATION",
-    "SEMANTIC_OWNERSHIP", "SEMANTIC_PARITY_QUEUE", "PALOMAR_SUBMISSION_PLAN",
-    "PALOMAR_SLIM_RELEASES",
-)
+DOCS = ("SOURCE_LEDGER", "SEMANTIC_OWNERSHIP", "PROJECT_NAMING", "OUTPUTS")
 WORKFLOW = """name: Lean and manuscript review
 on: [push, pull_request, workflow_dispatch]
 jobs:
@@ -60,7 +53,8 @@ jobs:
 
 
 def source_files():
-    paths = [ROOT / name for name in ("LICENSE", "PUBLIC_REVIEW.md", "SEMANTIC-PARITY.md")]
+    paths = [ROOT / name for name in ("LICENSE", "README.md", "SEMANTIC-PARITY.md")]
+    paths.append(ROOT / ".github/workflows/ci.yml")
     paths.append(ROOT / ".github/workflows/paper1-palomar-preflight.yml")
     paths.append(ROOT / ".github/workflows/paper3-palomar-preflight.yml")
     paths += [ROOT / "docs" / f"{name}.md" for name in DOCS]
@@ -115,10 +109,16 @@ def stage(destination: Path, refresh: bool):
             target = tree / source.relative_to(ROOT)
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
-        shutil.copyfile(ROOT / "PUBLIC_REVIEW.md", tree / "README.md")
-        workflow = tree / ".github/workflows/review.yml"
-        workflow.parent.mkdir(parents=True, exist_ok=True)
-        workflow.write_text(WORKFLOW)
+        # Archives are omitted; render archive navigation as a readable path.
+        readme = tree / "README.md"
+        import re
+        def archive_reference(match):
+            label, target = match.groups()
+            if target.startswith("archive/") or target.startswith("docs/archive/"):
+                return f"{label} (archived at `{target}`)"
+            return match[0]
+        readme.write_text(re.sub(r"(?<!!)\[([^\]]+)\]\(([^)]+)\)",
+                                archive_reference, readme.read_text()))
         (tree / ".gitignore").write_text(
             "lean/.lake/\n.DS_Store\n*.aux\n*.bbl\n*.blg\n*.fdb_latexmk\n"
             "*.fls\n*.log\n*.out\n*.toc\n*.synctex.gz\noutput/\n")
@@ -154,7 +154,7 @@ def stage(destination: Path, refresh: bool):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path,
-                        default=ROOT / "output/public-review/lean-manuscripts-review")
+                        default=ROOT / "output/packages/human-review/lean-manuscripts-review")
     parser.add_argument("--refresh", action="store_true")
     args = parser.parse_args()
     destination, archive, count = stage(args.output, args.refresh)

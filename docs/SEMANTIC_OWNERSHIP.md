@@ -12,11 +12,10 @@ record mathematical and runtime object status.
 
 Paper 1's current independent selection has seven groups: 18 manuscript-facing
 and 20 supporting declarations (38 targets), with 20 deliberate Challenge
-placeholders. Fresh build, dependency and release-closure checks are pending
-after the namespace rename and scope change; earlier reports retain their
-recorded scopes.
+placeholders. Its Solution uses the canonical proofs without importing
+Challenge. Current verification is recorded in the entry metadata.
 
-HOMOTOPICAL_ENCRYPT separates mathematical truth, formal obligation, executable computation,
+Homotopical Encryption separates mathematical truth, formal obligation, executable computation,
 and node policy into distinct ownership layers. This keeps the proof stack
 honest: Lean can prove the algebraic and hardness facts without pretending to
 certify every runtime line, and runtime policy can remain explicit without being
@@ -55,68 +54,13 @@ mathematical object.
 | `GrassmannianPlucker.Concrete.ProjectiveShadow` | Current Lean quotient carrier. | Exterior coordinates modulo nonzero real scaling, including the zero orbit. The intended Grassmannian locus needs nonzero decomposable raw coordinates and the supplied frame/soundness conditions. | A bundled projective variety, a constructed moduli stack, or a validity guarantee from the raw quotient type alone. |
 | `PluckerCochain.PublicBinding.HashedPluckerShadow` | Current Lean semantic record. | The mathematical shadow together with a digest and explicit binding proposition. | A digest-only wire format or automatic concealment of the full harmonic subspace. |
 
-### Current status reconciliation — 2026-11-05
-
-The [history-anchor baseline](../SEMANTIC-PARITY.md#history-anchor-validation-and-pre-upgrade-baseline)
-records successful focused and aggregate builds and a separate nineteen-endpoint
-dependency audit on **Lean 4.24.0**, preserved as historical evidence. The main
-repository now pins Lean 4.35.0 and Mathlib
-`56a005855ea17e0b0958f73ec801ae140b0a1679`. The fresh aggregate/integration build
-passes **9,233 jobs**, covering all fifteen default roots and the additional
-ledger, evidence, storage, anchor and canonical-adapter targets.
-The literal default build also passes **9,228 jobs**. Fresh audits
-of **68 distinct declarations** also pass: 64 report exactly `propext`,
-`Classical.choice` and `Quot.sound`; the same four boundary/canonical endpoints
-retain native arithmetic certificate dependencies. All nineteen anchor and
-nine HCP/CVP reports are standard-only. On Lean 4.35 the native dependencies
-print as generated `_native.native_decide.ax_*` constants, rather than the
-older `Lean.ofReduceBool`/`Lean.trustCompiler` names. Current validation is
-recorded centrally in [MATH_STORAGE_VALIDATION](MATH_STORAGE_VALIDATION.md).
-
-The older one-bus-per-commit and accepted-input-only descriptions were proposed
-runtime profiles. They do not fix lifecycle granularity. `Context` retains a
-snapshot-bound original artifact with acceptance separate; the immutable
-`StateBus` is a witness-local proof record, while checkpoint consumption is a
-local transition requiring a receipt for the exact sealed manifest.
-
-The `Axioms/` name does not turn each interface into a proved construction or
-an installed axiom declaration. For example, `Foundation` names structural
-propositions, `SheafCoherence` supplies abstract cochain maps and semantic
-predicates, and commitment-security records state application obligations.
-The concrete `Sheaf/` modules construct operators and prove consequences from
-their typed data; `CochainSemantics` transports actual maps/decoding/binding
-under its explicit ambient assumptions. The separately declared cited-bound
-axioms remain their own trust boundary.
-
-The raw `ProjectiveShadow` quotient includes the zero orbit and imposes no
-decomposability predicate on its representatives.
-`FramedSystem.ValidRawCoordinate` additionally requires nonzero coordinates,
-decomposability and the selected Plucker relations; its raw quotient carrier
-alone does not impose that locus. The explicit projective soundness inputs
-remain visible. A `HashedPluckerShadow` record retains the mathematical shadow;
-neither that record nor an abstract compression/storage root constructs a
-moduli stack, a canonical public byte representation, or a hiding commitment.
-
-The exact (C^1) payload determines a degree-zero opening only modulo
-`ker δ₀`:
-
-\[
-a-a'\in\ker\delta_0
-\quad\Longleftrightarrow\quad
-\delta_0a=\delta_0a'.
-\]
-
-Accordingly, active text must state binding to the exact (C^1) value and its
-snapshot. A claim that the coboundary alone uniquely binds the chosen (C^0)
-message requires an additional gauge/reference anchor.
-
 ## Verified Categorical Register
 
 This register owns the status of the objects and arrows used in categorical
-diagrams. [`CATEGORICAL_ARCHITECTURE.md`](CATEGORICAL_ARCHITECTURE.md) is the
+diagrams. `CATEGORICAL_ARCHITECTURE.md` (archived reference: `archive/documentation/docs/CATEGORICAL_ARCHITECTURE.md`) is the
 derived relationship view; it must not introduce a stronger status than the
 rows below. The cross-language
-[`SEMANTIC_PARITY_QUEUE.md`](SEMANTIC_PARITY_QUEUE.md) separately tracks whether
+`SEMANTIC_PARITY_QUEUE.md` (archived reference: `archive/documentation/docs/SEMANTIC_PARITY_QUEUE.md`) separately tracks whether
 Python and Rust artifacts refine these Lean meanings.
 
 ### Objects

@@ -3,7 +3,7 @@
 ## Working manuscript: objects, observations and metric contracts
 
 Initial manuscript text, 2026-11-05. This draft develops the bounded
-proof-carrying transition scope in [SCOPE.md](SCOPE.md). It is not yet a full
+proof-carrying transition scope in SCOPE.md (archived reference: `archive/documentation/papers/paper2/SCOPE.md`). It is not yet a full
 protocol paper or a TeX/PDF manuscript. The [shared parity table](../../SEMANTIC-PARITY.md)
 is the current statement/proof-status register.
 
@@ -530,7 +530,7 @@ missing source model, decoder equality or far-comparison premise. The
 positive-radius claims concern the raw received carrier; accepted exact
 anchors have zero decoded exactness distance under the same interpretation.
 
-The shared [HCP object crosswalk](../../docs/COCHAIN_PROXIMITY_TRACE.md#hcp-object-accounting-rotation-and-anonymity)
+The shared HCP object crosswalk (archived reference: `archive/documentation/docs/COCHAIN_PROXIMITY_TRACE.md`)
 accounts for semantic classes, admissible presentations, integral messages,
 exact/coexact noise, the full sample, commitments, gates and retained artifacts
 (HC01--HC44). It also recovers the ephemeral/anonymity plan: generate a private
@@ -949,7 +949,7 @@ guarantees.
 
 #### 6.5. Full-intent signing and authorized issuance from existing objects
 
-The [reuse inventory](../../docs/PROTOCOL_PARITY_QUEUE.md#existing-objects-reused-for-owner-signing--2026-11-07)
+The reuse inventory (archived reference: `archive/documentation/docs/PROTOCOL_PARITY_QUEUE.md`)
 keeps the actual resource catalogue, full `Intent`/metadata, `PacketCodec`,
 selected `keyFor` function, byte-query history and released-view carrier.
 It introduces no new account registry or credential issuer. The recovered
@@ -962,13 +962,13 @@ transport agreement under a supplied path realization. The cellular-to-Helfer
 adapter already exists:
 `Helfer.CochainModel.equivalent_of_isometricCochainEquiv` applies to
 `R.rotation.integral.toIsometricCochainEquiv`. The
-[focused import map](../../docs/PROTOCOL_PARITY_QUEUE.md#native-path-signature-import-map--2026-11-07)
+focused import map (archived reference: `archive/documentation/docs/PROTOCOL_PARITY_QUEUE.md`)
 identifies these existing leaves and the optional original-HCP/storage join.
 The intended authentication target remains knowledge of the designated private
 witness bound to the exact message and authenticated credential. Here issuance
 means recording an authorized signing request and output, not issuing a
 credential. The
-[plan-to-primitive table](../../docs/PROTOCOL_PARITY_QUEUE.md#recovered-native-authentication-plan-and-existing-primitive-layer--2026-11-07)
+plan-to-primitive table (archived reference: `archive/documentation/docs/PROTOCOL_PARITY_QUEUE.md`)
 retains that distinction and the existing typed Hodge-blinded construction.
 Committee votes
 have validator targets; `ContextKey` and recipient delivery scopes are public
@@ -1172,14 +1172,14 @@ existing native certificates beyond them. None uses a cited-bound axiom or
 `sorryAx`. That record's Paper 1/Paper 3 PDFs have 97/28 pages; all 125 overview
 pages and changed pages have been inspected. Final formatting/artifact details
 and current PDF hashes belong to the
-[shared validation record](../../docs/MATH_STORAGE_VALIDATION.md), separately
+shared validation record (archived reference: `archive/documentation/docs/MATH_STORAGE_VALIDATION.md`), separately
 from the preserved pre-addition baseline. These are historical Paper 2
 implementation records. Paper 1's separate public release and protected
 preflight are recorded centrally; they do not certify this protocol draft.
 
 The actual Helfer/cellular/HCP observation wiring is a separate follow-up to
 that native-metric baseline. Its latest build and dependency outcomes belong
-to the same [central validation record](../../docs/MATH_STORAGE_VALIDATION.md);
+to the same central validation record (archived reference: `archive/documentation/docs/MATH_STORAGE_VALIDATION.md`);
 the earlier counts are not validation of the added modules.
 
 | Material / source owner | Checked endpoint and boundary |

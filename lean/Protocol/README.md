@@ -47,7 +47,7 @@ Given a supplied path-to-`PresentedRotation` realization,
 full cochains, with harmonic-projection, harmonic-invariance and recovery laws.
 `EphemeralRotation.ofPath` retains that same path's rotation; arbitrary older
 carrier values need not satisfy this alignment. The
-[native join map](../../docs/PROTOCOL_PARITY_QUEUE.md#native-path-signature-import-map--2026-11-07)
+native join map (archived reference: `archive/documentation/docs/PROTOCOL_PARITY_QUEUE.md`)
 keeps those conditional geometry results separate from credential setup,
 finite decoding algorithms and message-bound knowledge security.
 
@@ -157,11 +157,11 @@ import Protocol.Ledger.EvidenceExamples
 #print axioms HomotopicalEncryption.Protocol.Ledger.SnapshotModel.ofSheaf_accepts_decoded_isOneCocycle
 ```
 
-The [release record](../../PUBLIC_REVIEW.md) distinguishes completed checks
+The release record (archived reference: `archive/documentation/PUBLIC_REVIEW.md`) distinguishes completed checks
 from reproducible commands and records the actual axiom report. Even an
 endpoint using only standard Lean logical axioms retains its explicit
 profile and verification hypotheses.
 
-The [Paper 2 scope](../../papers/paper2/SCOPE.md) and
-[protocol parity queue](../../docs/PROTOCOL_PARITY_QUEUE.md) distinguish this
+The Paper 2 scope (archived reference: `archive/documentation/papers/paper2/SCOPE.md`) and
+protocol parity queue (archived reference: `archive/documentation/docs/PROTOCOL_PARITY_QUEUE.md`) distinguish this
 bounded kernel from the remaining protocol and implementation work.

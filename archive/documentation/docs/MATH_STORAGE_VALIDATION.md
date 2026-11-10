@@ -40,9 +40,13 @@ in their declared bibliography. Paper 1 has six BibTeX records/four printed
 sources; Paper 3 has seventeen records. The preservation evidence is
 `output/validation/project-name-manuscript-preservation.json`.
 
+The parity appendix separates main statements, support and definitions/boundaries
+into three tables, with category/status labels stated once. Paper 1 italicizes
+work titles consistently in its references.
+
 The current PDFs have 27/33 pages, zero overfull/undefined/missing-character
 warnings and completed full-page contact-sheet inspection. Paper 1 SHA-256 is
-`5c774ae50626db450b44649b27c364beebe964c69145da2fce0cc86fc3a77ad0`;
+`9f10a3999924415aad069f9375c2a30a07420f35529915fff04470d464c3e1e7`;
 Paper 3 is `132634f3732d039c4f998e2d81c287295e2b8085fab8b0193b3e915e626d9404`.
 Fresh all-module compilation, reduced-entry comparison, combined dependency
 and export results are recorded separately from the historical baselines.

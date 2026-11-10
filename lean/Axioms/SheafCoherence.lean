@@ -33,7 +33,7 @@ public import Axioms.CochainCommitment.Payload
 
     Rust:
       - planned dedicated coherence validator module
-        (current rust/oracle/src/geometry.rs covers geometric operators)
+        (current archive/runtime/rust/oracle/src/geometry.rs covers geometric operators)
 -/
 
 namespace HomotopicalEncryption

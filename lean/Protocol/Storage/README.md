@@ -6,7 +6,7 @@ gate certificates remain the existing objects. Typed manifests authenticate
 and retain those objects; storage roots and persistence receipts do not
 construct their proofs.
 
-The [validation guide](../../../docs/MATH_STORAGE_VALIDATION.md) records the
+The validation guide (archived reference: `archive/documentation/docs/MATH_STORAGE_VALIDATION.md`) records the
 current full/default builds, exact selected dependency reports and source
 scan, separately from earlier milestones. The canonical arithmetic certificates
 now use kernel proofs; explicit theorem/profile hypotheses remain.
@@ -83,7 +83,7 @@ availability, the hash implementation, finite full-ciphertext decoding and
 private delivery remain profile/runtime contracts. This layer establishes no
 efficient PIR/OMR protocol or public-key HCP encryption interface. The
 [Paper 2 account](../../../papers/paper2/DRAFT.md#67-hash-indexing-private-retrieval-and-native-hodge-queries)
-and [implementation map](../../../docs/PROTOCOL_PARITY_QUEUE.md#hash-indexed-private-retrieval-and-native-hcp-queries--2026-11-08)
+and implementation map (archived reference: `archive/documentation/docs/PROTOCOL_PARITY_QUEUE.md`)
 record those boundaries.
 
 ## Raw inputs and exact acceptance
@@ -293,7 +293,7 @@ lake build Protocol.Storage.Retrieval
 
 These commands describe validation targets; consult the shared parity record
 for the actual current results and theorem-axiom reports. The
-[Paper 2 scope](../../../papers/paper2/SCOPE.md),
-[cochain trace](../../../docs/COCHAIN_PROXIMITY_TRACE.md) and
+Paper 2 scope (archived reference: `archive/documentation/papers/paper2/SCOPE.md`),
+cochain trace (archived reference: `archive/documentation/docs/COCHAIN_PROXIMITY_TRACE.md`) and
 [Paper 3 register](../../../papers/proximity-prize/SEMANTIC_PARITY.md)
 retain the separate protocol, profile and radius obligations.

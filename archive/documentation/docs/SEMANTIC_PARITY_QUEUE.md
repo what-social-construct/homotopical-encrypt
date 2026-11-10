@@ -45,12 +45,12 @@ paths only:
 - `lean/Hardness.lean`
 - `lean/HCP.lean`
 - `lean/Sheaf/*`
-- `lean/Laplacian.lean`
+- `lean/Laplacian.lean` and `lean/Laplacian/Spectral.lean`
 - `lean/Tsirelson.lean`
 - `lean/Chain.lean`
 - `lean/Axioms/*` (assumption interfaces during proof burn-down)
 
-Avoid legacy names (`hardness_proof.lean`, `lean/Laplacian/Spectral.lean`,
+Avoid legacy names (`hardness_proof.lean`,
 `tsirelson_update.lean`, `framework_consolidation.lean`) in active source
 comments/docs. If a legacy result is historically relevant, reference it as
 "archive lineage" and pair it with the current module path.

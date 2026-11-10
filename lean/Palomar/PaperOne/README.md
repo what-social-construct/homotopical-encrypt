@@ -1,44 +1,23 @@
 # Hidden Hodge targets and discrete closest vectors
 
-This entry covers seven selected result groups from *Homotopical Encryption:
-Hidden Hodge Operators and the Harmonic Cochain Problem*. It proves finite
-Hodge decomposition and recovery, a discrete closest-vector comparison, and
-finite signed-incidence cellular examples in which one public observation has
-different hidden harmonic targets. It also records the limits of an
-exact-component observation.
+This entry formalizes seven selected groups from *Homotopical Encryption:
+Hidden Hodge Operators and the Harmonic Cochain Problem*: finite Hodge
+recovery, discrete closest-vector comparisons, actual integral cellular
+ambiguity examples, and the exact-component observation obstruction.
+[Manuscript source](https://github.com/what-social-construct/homotopical-encrypt/blob/fc69e4c256206946991ae45770f187dcf4cf9cef/papers/paper1/main.tex).
 
-The manuscript collects its implementation correspondence in one parity
-table after the conclusion. It records canonical definitions, all 38 selected
-theorems, and explicit assumptions/contracts; the mathematical body has no
-Lean file or declaration lists.
+[Comparator configuration](comparator.json) selects **38 declarations**:
+**18 manuscript-facing and 20 supporting**. [Challenge](Challenge.lean)
+uses Mathlib only and independently defines the mathematical objects.
+[Solution](Solution.lean) identifies them with canonical objects and reuses
+their proofs; its local import closure contains **22 modules**. Challenge has
+**20 intentional theorem placeholders**; Solution and all definitions have
+no proof holes. The two finite-product helpers
+`HomotopicalEncryption.Helfer.contextObject` and `contextMap` are restated
+under their canonical names in Challenge.
 
-The manuscript introduces homotopy equivalence, the public classifier and
-cellular/Hodge primitives in §2 before defining the public observation, hidden
-witness and HCP; computational scope is in §2.3. The cellular example is
-developed in §3.5, and the CVP comparison is the final main section before §4
-concludes. Paper 2 owns concrete cochain commitments, protocol construction
-and visibility. Paper 3 introduces the projective projection chain and owns
-coding and quantitative proximity. Shared definitions retain their canonical
-owners.
-
-[Challenge](Challenge.lean) gives independent mathematical definitions using
-Mathlib imports only. [Solution](Solution.lean) identifies those presentations
-with the canonical project objects and reuses their proofs through explicit
-adapters. [Comparator configuration](comparator.json) selects **38 theorems**:
-**18 manuscript-facing declarations** and **20 supporting declarations**. These
-are coverage counts, rather than a count of independent research results.
-Five canonical proof anchors support these selections without adding configured
-targets. There are no
-definition holes. The two pure finite-product helpers
-`HomotopicalEncryption.Helfer.contextObject` and `HomotopicalEncryption.Helfer.contextMap` are independently
-restated under their canonical names in the Challenge. They retain their
-ordinary categorical meanings.
-
-In the crosswalk, `E` means `HomotopicalEncryption.Palomar.PaperOne`, `CS` means
-`E.CellularSheaf`, `HB` means `E.HCPBridge`, and `AF` means `E.AxisFamily`.
-The source labels refer to the
-[versioned manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/db322feff36ae89472fefe32eb53f2d471f7916e/papers/paper1/main.tex).
-Canonical names below belong to the implementation, outside the entry namespace.
+In the crosswalk, `E` is `HomotopicalEncryption.Palomar.PaperOne`, `CS` is
+`E.CellularSheaf`, `HB` is `E.HCPBridge`, and `AF` is `E.AxisFamily`.
 
 | Group / manuscript source | Entry declarations and mathematical content | Canonical proof owners |
 | --- | --- | --- |
@@ -50,69 +29,37 @@ Canonical names below belong to the implementation, outside the entry namespace.
 | P1-S06 · §3.5, weighted integral example | `AF.weighted_axis_recovery_obstruction`: coefficients two and one share the observation at `b=(1,2)`; one public coefficient decoder cannot recover both, while each private lattice has its own unique CVP answer. | `HomotopicalEncryption.HCP.AxisFamily.weighted_public_observations_eq`, `no_exact_encoded_message_decoder`, `weighted_cvp_solution_iff_operativeTarget`, `weighted_cvp_existsUnique` in [HCP/AxisFamily](../../HCP/AxisFamily.lean). |
 | P1-B01 · §2 `prop:exact-component-obstruction` | `CS.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent`, `not_far_preserving_exactComponent`: an allowed nonzero coexact direction prevents the full orthogonal residual from descending to the exact component. | Same terminal names under `HomotopicalEncryption.Sheaf.CellularSheaf.HodgeEncryptedCochain` in [ObservationQuotient](../../Sheaf/ObservationQuotient.lean). |
 
-The Hodge statements retain the complex equation and the true cellular
-degree-one operator. Coefficient recovery uses the supplied integral harmonic
-lattice and is noncomputable. The discrete comparison retains an explicit
-lattice, its inclusion in the harmonic subspace, and orthogonal projection.
-The general ambiguity statements retain closed-test invariance, a kernel
-separation witness, and the correct-oracle existence premise in the oracle
-corollaries, with their stated uniform-solver quantifiers. They do not require
-the optional reflection property below.
+The Hodge results retain the complex equation and actual adjoint Laplacian.
+Discrete recovery uses a supplied integral harmonic-lattice presentation;
+its coefficient decoder is noncomputable. The CVP bridge requires a supplied
+lattice inside the harmonic subspace and preserves its discrete minimizers.
 
-The final §3.5 corollary uses one fixed correct rank-one oracle
-`CVP.Oracle Index (Fin 1)`: supplying either actual lattice recovers its
-operative component, while the same oracle and shared public observation
-cannot select every compatible hidden target. The canonical family obstruction
-`HomotopicalEncryption.HCPBridge.no_solver_exactOnOperativeTarget_on_family` holds for any
-compatible family containing the two unequal targets, with auxiliary input
-fixed. It imposes no family-cardinality or running-time premise. This corollary
-is derived from P1-S04/P1-S05 and adds no configured submission targets.
+The generic ambiguity results require closed-test invariance and an explicit
+kernel-separation witness; their oracle corollaries also retain the stated
+correct-oracle existence premise. For the constructed cellular family, one
+fixed correct rank-one oracle recovers the target when the operative lattice
+is supplied. At the shared public observation, the same oracle cannot select
+both distinct hidden targets. Every compatible family containing that pair
+inherits this exact-information obstruction. This is not an asymptotic
+complexity-hardness or distributional-security claim; a larger released view
+requires its own equality and binding argument.
 
-In [HCP](../../HCP.lean), `HomotopicalEncryption.HCPBridge.ReflectsHomotopyEquivalence` is an
-optional property of the existing `Realization`. Together with closed-test
-invariance, `samePublicClass_iff_homotopyEquivalent` and
-`publicClassOf_eq_setOf_homotopyEquivalent` identify label equality with typed
-homotopy equivalence and the existing public-class set with that homotopy class.
-`HomotopicalEncryption.HCP.AxisFamily.reflectsHomotopyEquivalence` proves this profile for
-the admitted `Fin 2` family; its `theory_eq_iff_homotopyEquivalent` now uses
-the generic API, despite the different operative embedded kernels. This
-classifies admitted representatives; the matrix-level `publicProjection`
-agrees with their classifier on realized operators. The family uses actual
-integral cellular sheaves in the declared finite signed-incidence model and
-the nonzero-cohomology tests of the bounded-below real cochain model.
-`Realization` and its adapters retain their original fields and assumptions.
-The formalized semantic fragment is homological; full first-order semantics
-is outside this entry.
+The optional `HomotopicalEncryption.HCPBridge.ReflectsHomotopyEquivalence`
+property in [HCP](../../HCP.lean), together with invariance, identifies public
+class equality and the existing class set with the declared typed homotopy class. The actual
+`Fin 2` family proves that property despite its different embedded kernels.
+This classifies admitted representatives, while the matrix-level projection
+is constrained on realized operators. The semantic fragment uses
+nonzero-cohomology tests in the bounded-below real cochain model.
 
-These results give exact mathematical recovery and observation obstructions.
-They do not establish an asymptotic CVP-hardness reduction, distributional
-encryption security, equality of larger released storage views, digest
-inversion, an efficient decoder or a concrete secure protocol. Coding and
-radius theorems belong to Paper 3 and are cited only at the application boundary.
-Novelty and priority are not asserted by this entry.
+Verification status and exact input scope are recorded in
+[metadata](formalization.yaml). From the repository's `lean/` directory:
 
-The Challenge has **20 intentional theorem placeholders** for comparison;
-Solution and the retained definitions contain no proof holes. The renamed,
-38-target entry awaits fresh compilation, statement/definition comparison,
-selected dependency audit and kernel replay.
+```sh
+lake exe cache get
+LEAN_NUM_THREADS=1 lake build Palomar.PaperOne.Challenge Palomar.PaperOne.Solution
+LEAN_NUM_THREADS=1 lake comparator --config Palomar/PaperOne/comparator.json
+```
 
-Historical checks apply to their recorded inputs. The earlier 46-target entry
-passed local Challenge/Solution builds (**3,516/3,666 jobs**), comparison and
-Lean/NanoDa replay with the macOS sandbox diagnostic. Protected comparison,
-provenance and Lean/NanoDa/con-ron subsequently passed for
-[public snapshot `66e1ad2`](https://github.com/what-social-construct/homotopical-encrypt-formalizations/commit/66e1ad2cb726d3dd816461e4f76b1d0d9147a46d),
-[run `42729947447`](https://github.com/what-social-construct/homotopical-encrypt-formalizations/actions/runs/42729947447).
-Those reports do not certify the current namespace or reduced selection.
-The 975-report, 124-report and five-endpoint semantic audits also retain their
-original scopes. A fresh exact-commit protected preflight remains required.
-Declaration counts do not measure mathematical novelty.
-
-From the repository's `lean/` project, the entry modules are
-`Palomar.PaperOne.Challenge` and `Palomar.PaperOne.Solution`; its configuration is
-`Palomar/PaperOne/comparator.json`. Comparator is bundled with the pinned Lean
-4.35.0 toolchain. Protected comparison requires the supported Linux sandbox.
-The earlier public snapshot has the protected report linked above; no registry
-submission or registration has been made. The revised candidate inherits no
-exact-commit preflight result merely from retaining the same Lean statements.
-[Metadata](formalization.yaml) records the source, scope and production account.
-The repository and this entry use the [MIT licence](../../../LICENSE).
+Protected comparison requires the supported Linux sandbox. These commands
+use the pinned Lean/Mathlib project. [MIT licence](../../../LICENSE).

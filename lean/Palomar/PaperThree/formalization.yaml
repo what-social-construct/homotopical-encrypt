@@ -31,7 +31,7 @@ sources:
     authors:
       - "Chloe van der Vlugt"
     type: "paper"
-    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/1a2f72a1a60056ac001716c95c403816f9069ee0/papers/proximity-prize/main.tex"
+    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/fc69e4c256206946991ae45770f187dcf4cf9cef/papers/proximity-prize/main.tex"
     location: "Sections 3--6 and the pure coding sharpness/fixed-mix results of Section 7; P3-S01--S09, P3-B01, the coding portion of P3-A02 and P3-A04."
     relationship: "formalizes"
     note: >-
@@ -57,16 +57,15 @@ status:
   sorry_in_definitions: 0
   axioms: ["propext", "Quot.sound", "Classical.choice"]
   validation:
-    solution_build: "Passed locally: 3173 jobs."
-    challenge_check: "Passed independently with Mathlib-only imports: 3138 jobs."
-    entry_axiom_audit: "Passed all 52 configured declarations: 48 exact-three and 4 standard subsets. Fresh combined probe: 975 standard-only reports; all 975 pre-revision sets unchanged. Expanded documentation-revision build: 9295 jobs."
-    local_comparator: "Passed statement/definition comparison, Lean default kernel and NanoDa; macOS diagnostic with --inadvisably-no-sandbox."
-    protected_linux_verification: "Pending; not run."
+    solution_build: "Passed locally with the renamed source and current entry configurations."
+    challenge_check: "Independent Mathlib-only Challenge statements compile; deliberate theorem placeholders are comparison targets."
+    entry_axiom_audit: "Passed: all configured declarations use only standard logical axioms; the combined audit has 982 standard-only reports."
+    local_comparator: "Current statement/definition comparison and kernel replay are being refreshed."
+    protected_linux_verification: "Not run for this revision."
     note: >-
-      Solution has zero proof and definition holes; its counts exclude the
-      51 intentional Challenge theorem placeholders. The local macOS diagnostic
-      disables Comparator's Linux sandbox and is not protected preflight evidence.
-      No metadata-schema validation, registry review or submission is claimed.
+      Validation is local. Intentional Challenge theorem placeholders are
+      excluded from Solution proof-hole counts. No registry submission,
+      registration or editorial review is claimed.
   main_results:
     - declaration: "HomotopicalEncryption.Palomar.PaperThree.planePairEquiv_inverse_laws"
     - declaration: "ProximityPrize.planePairEquiv_hammingDistance"

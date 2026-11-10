@@ -1,8 +1,8 @@
 \appendix
 
-\section{Statement--Lean Parity Table}\label{app:selected-crosswalk}\label{app:formal-boundaries}
+\section{Statement--Lean Parity Tables}\label{app:selected-crosswalk}\label{app:formal-boundaries}
 
-\Cref{tab:paper1-parity} records the correspondence for this paper's six
+\Cref{tab:paper1-parity,tab:paper1-support,tab:paper1-definitions} record the correspondence for this paper's six
 Hodge/CVP groups and one observation-boundary group. The independent entry's
 configuration, \lean{lean/Palomar/PaperOne/comparator.json}, selects 18
 manuscript-facing and 20 supporting theorem declarations. Every declaration
@@ -10,9 +10,9 @@ appears once below. These are coverage counts, not a count of independent
 research contributions. Definition rows name canonical implementation
 objects, not additional selected theorem targets. Canonical consequences
 identify derived implementation lemmas outside that configured selection.
-Main-result and support
-rows are proved under their stated premises; background, assumption and
-contract rows identify the separate scope boundaries.
+The main and supporting statements are proved under their stated premises.
+The final table records definitions, background, assumptions and application
+contracts separately.
 
 \lean{Palomar.PaperOne.Challenge} states the comparison objects independently
 using Mathlib-only imports. \lean{Palomar.PaperOne.Solution} identifies them
@@ -33,14 +33,14 @@ exact configured declaration names.
 \renewcommand{\arraystretch}{1.12}
 \renewcommand{\lean}[1]{\begingroup\footnotesize\Urlmuskip=0mu plus 1mu\path{#1}\endgroup}
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.41\linewidth}>{\raggedright\arraybackslash}p{0.55\linewidth}@{}}
-\caption{Selected manuscript--Lean parity.}\label{tab:paper1-parity}\\
+\caption{Main statement groups}\label{tab:paper1-parity}\\
 \toprule
-\textbf{Statement, status and scope} & \textbf{Corresponding formal declarations or boundary}\\
+\textbf{Statement and scope} & \textbf{Formal declarations or boundary}\\
 \midrule
 \endfirsthead
-\caption[]{Selected manuscript--Lean parity (continued).}\\
+\caption[]{Main statement groups (continued).}\\
 \toprule
-\textbf{Statement, status and scope} & \textbf{Corresponding formal declarations or boundary}\\
+\textbf{Statement and scope} & \textbf{Formal declarations or boundary}\\
 \midrule
 \endhead
 \midrule
@@ -49,58 +49,8 @@ exact configured declaration names.
 \bottomrule
 \endlastfoot
 
-\textbf{Definitions: HCP input and target.}\newline
-Section~2. The public pair contains a classifier value and observed cochain.
-A private representative selects the operative kernel and hence the
-orthogonal-projection target.
-&
-Canonical definitions:\par
-\lean{HE.HCPBridge.Observation}\par
-\lean{HE.HCPBridge.HiddenHodgeWitness}\par
-\lean{HE.HCP.operativeHarmonicComponent}\par
-\lean{HE.HCPBridge.operativeTarget}
-\\\midrule
-
-\textbf{Definitions: explicit-lattice CVP.}\newline
-Section~3.1. An injective real basis presents the lattice through integer
-coefficients. An instance adds a target; a solution is a closest discrete
-lattice point.
-&
-Canonical definitions:\par
-\lean{CVP.ExplicitLattice}\par
-\lean{CVP.Instance}\par
-\lean{CVP.Solution}
-\\\midrule
-
-\textbf{Definitions: semantic realization.}\newline
-Section~2. The public classifier factors through the specified closed
-theory. The operative Hodge operator is separate presentation-level data;
-equal classifier values need not identify it. Completeness adds reflection
-of the declared homotopy equivalence; with invariance, public fibers are
-exactly its classes. The constructed family proves this condition.
-&
-Canonical definitions and classifier theorems:\par
-\lean{HE.Axioms.PublicClassifier}\par
-\lean{HE.Helfer.ClosedTheory}\par
-\lean{HE.HCPBridge.Realization}\par
-\lean{HE.HCPBridge.ReflectsHomotopyEquivalence}\par
-\lean{HE.HCPBridge.samePublicClass_iff_homotopyEquivalent}\par
-\lean{HE.HCPBridge.publicClassOf_eq_setOf_homotopyEquivalent}\par
-\lean{HE.HCP.AxisFamily.theory_eq_iff_homotopyEquivalent}
-\\\midrule
-
-\textbf{Definitions: Hodge sample and lattice.}\newline
-Sections~2--3. The sample combines an integral harmonic message with
-exact/coexact noise. A supplied harmonic-lattice presentation has full real
-span; it need not contain every intrinsic integral harmonic cochain.
-&
-Canonical definitions:\par
-\lean{HE.Sheaf.CellularSheaf.HodgeEncryptedCochain}\par
-\lean{HE.Sheaf.CellularSheaf.HarmonicLatticePresentation}
-\\\midrule
-
-\textbf{Main result: P1-S01.}\newline
-\emph{Proved.} \Cref{prop:hodge-decomposition}; private recovery in Sections~2--3.
+\textbf{P1-S01.}\newline
+\Cref{prop:hodge-decomposition}; private recovery in Sections~2--3.
 The complex equation and actual adjoint Hodge operator give componentwise
 unique harmonic, exact and coexact parts. Integer coefficient recovery
 is classical and noncomputable in the supplied integral harmonic lattice.
@@ -111,8 +61,8 @@ is classical and noncomputable in the supplied integral harmonic lattice.
 \lean{CS.HarmonicLatticePresentation.decodeCoefficients_encrypt}
 \\\midrule
 
-\textbf{Main result: P1-S02.}\newline
-\emph{Proved.} \Cref{prop:hcp-to-cvp}.
+\textbf{P1-S02.}\newline
+\Cref{prop:hcp-to-cvp}.
 A field-linear image of the displayed generator is realized as a kernel.
 The consequence concerns that image, not integer-lattice membership.
 &
@@ -120,8 +70,8 @@ The consequence concerns that image, not integer-lattice membership.
 \lean{E.Hodge_GeneratedSubspace_Reduction_Proof}
 \\\midrule
 
-\textbf{Main result: P1-S03.}\newline
-\emph{Proved.} \Cref{prop:hodge-projection-is-cvp}.
+\textbf{P1-S03.}\newline
+\Cref{prop:hodge-projection-is-cvp}.
 The discrete lattice is explicitly supplied and lies in the projected
 subspace. The Pythagorean identity preserves exactly its closest-vector answers.
 &
@@ -129,8 +79,8 @@ subspace. The Pythagorean identity preserves exactly its closest-vector answers.
 \lean{E.solution_iff_projectedTarget}
 \\\midrule
 
-\textbf{Main result: P1-S04.}\newline
-\emph{Proved.} Cellular specialization of
+\textbf{P1-S04.}\newline
+Cellular specialization of
 \cref{prop:hodge-projection-is-cvp}.
 For the actual Hodge sample and supplied harmonic message lattice, the
 operative message is the unique closest lattice point.
@@ -139,8 +89,8 @@ operative message is the unique closest lattice point.
 \lean{E.concreteSheafHCP_CVP_existsUnique}
 \\\midrule
 
-\textbf{Main result: P1-S05.}\newline
-\emph{Proved.} \Cref{prop:cvp-insufficient,prop:cellular-axis-ambiguity,cor:lattice-member-separation}.
+\textbf{P1-S05.}\newline
+\Cref{prop:cvp-insufficient,prop:cellular-axis-ambiguity,cor:lattice-member-separation}.
 Generic separation retains closed-test invariance and kernel separation;
 oracle corollaries also retain existence of a correct explicit-lattice
 CVP oracle. The constructed integral family has one public observation
@@ -158,26 +108,44 @@ Canonical consequences:\par
 \lean{HE.HCP.AxisFamily.cvp_known_member_hidden_member_separation}
 \\\midrule
 
-\textbf{Main result: P1-S06.}\newline
-\emph{Proved.} Weighted example in Section~3.5.
+\textbf{P1-S06.}\newline
+Weighted example in Section~3.5.
 The common observation is \(b=(1,2)\), with private integer coefficients
 two and one. Each privately presented lattice has its own unique CVP answer.
 &
 \lean{AF.weighted_axis_recovery_obstruction}
 \\\midrule
 
-\textbf{Main result: P1-B01.}\newline
-\emph{Proved.} \Cref{prop:exact-component-obstruction}.
+\textbf{P1-B01.}\newline
+\Cref{prop:exact-component-obstruction}.
 An allowed nonzero coexact direction prevents the full Hodge residual
 from factoring through the exact component. The farness obstruction
 uses the unrestricted noise carrier and exact-component-only extraction.
 &
 \lean{CS.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent}\par
 \lean{CS.HodgeEncryptedCochain.not_far_preserving_exactComponent}
-\\\midrule
+\\
+\end{longtable}
 
-\textbf{Support: complexes and semantics.}\newline
-\emph{Proved.} Sections~2--3.
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.41\linewidth}>{\raggedright\arraybackslash}p{0.55\linewidth}@{}}
+\caption{Supporting statements}\label{tab:paper1-support}\\
+\toprule
+\textbf{Statement and scope} & \textbf{Formal declarations or boundary}\\
+\midrule
+\endfirsthead
+\caption[]{Supporting statements (continued).}\\
+\toprule
+\textbf{Statement and scope} & \textbf{Formal declarations or boundary}\\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r@{}}{\emph{Continued on the next page.}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\textbf{Complexes and semantics.}\newline
+Sections~2--3.
 Actual coboundary composition, the constructed complex isomorphism and
 the corresponding three-term differential.
 &
@@ -187,8 +155,8 @@ the corresponding three-term differential.
 \lean{AF.boundarySqZero}
 \\\midrule
 
-\textbf{Support: axis coordinates.}\newline
-\emph{Proved.} Section~3.5.
+\textbf{Axis coordinates.}\newline
+Section~3.5.
 Coordinate vectors and the distinct complementary-axis choices in the examples.
 &
 \lean{AF.unitCochain_apply}\par
@@ -197,8 +165,8 @@ Coordinate vectors and the distinct complementary-axis choices in the examples.
 \lean{AF.other_ne}
 \\\midrule
 
-\textbf{Support: axis Hodge operators.}\newline
-\emph{Proved.} Section~3.5.
+\textbf{Axis Hodge operators.}\newline
+Section~3.5.
 Both coboundaries, the adjoint, the degree-one Laplacian and its harmonicity criterion.
 &
 \lean{AF.delta0_eq_zero}\par
@@ -208,8 +176,8 @@ Both coboundaries, the adjoint, the degree-one Laplacian and its harmonicity cri
 \lean{AF.harmonic_iff}
 \\\midrule
 
-\textbf{Support: integral lattice.}\newline
-\emph{Proved.} Section~3.5.
+\textbf{Integral lattice.}\newline
+Section~3.5.
 Restriction-compatible stalk integrality, harmonic basis vectors,
 encoding injectivity and membership in the chosen lattice.
 &
@@ -220,6 +188,74 @@ encoding injectivity and membership in the chosen lattice.
 \lean{AF.harmonicBasis_injective}\par
 \lean{AF.harmonicLatticeVector_eq}\par
 \lean{AF.latticeVector_mem}
+\\
+\end{longtable}
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.41\linewidth}>{\raggedright\arraybackslash}p{0.55\linewidth}@{}}
+\caption{Definitions and proof boundaries}\label{tab:paper1-definitions}\\
+\toprule
+\textbf{Statement and scope} & \textbf{Formal declarations or boundary}\\
+\midrule
+\endfirsthead
+\caption[]{Definitions and proof boundaries (continued).}\\
+\toprule
+\textbf{Statement and scope} & \textbf{Formal declarations or boundary}\\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r@{}}{\emph{Continued on the next page.}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\textbf{HCP input and target.}\newline
+Section~2. The public pair contains a classifier value and observed cochain.
+A private representative selects the operative kernel and hence the
+orthogonal-projection target.
+&
+Canonical definitions:\par
+\lean{HE.HCPBridge.Observation}\par
+\lean{HE.HCPBridge.HiddenHodgeWitness}\par
+\lean{HE.HCP.operativeHarmonicComponent}\par
+\lean{HE.HCPBridge.operativeTarget}
+\\\midrule
+
+\textbf{Explicit-lattice CVP.}\newline
+Section~3.1. An injective real basis presents the lattice through integer
+coefficients. An instance adds a target; a solution is a closest discrete
+lattice point.
+&
+Canonical definitions:\par
+\lean{CVP.ExplicitLattice}\par
+\lean{CVP.Instance}\par
+\lean{CVP.Solution}
+\\\midrule
+
+\textbf{Semantic realization.}\newline
+Section~2. The public classifier factors through the specified closed
+theory. The operative Hodge operator is separate presentation-level data;
+equal classifier values need not identify it. Completeness adds reflection
+of the declared homotopy equivalence; with invariance, public fibers are
+exactly its classes. The constructed family proves this condition.
+&
+Canonical definitions and classifier theorems:\par
+\lean{HE.Axioms.PublicClassifier}\par
+\lean{HE.Helfer.ClosedTheory}\par
+\lean{HE.HCPBridge.Realization}\par
+\lean{HE.HCPBridge.ReflectsHomotopyEquivalence}\par
+\lean{HE.HCPBridge.samePublicClass_iff_homotopyEquivalent}\par
+\lean{HE.HCPBridge.publicClassOf_eq_setOf_homotopyEquivalent}\par
+\lean{HE.HCP.AxisFamily.theory_eq_iff_homotopyEquivalent}
+\\\midrule
+
+\textbf{Hodge sample and lattice.}\newline
+Sections~2--3. The sample combines an integral harmonic message with
+exact/coexact noise. A supplied harmonic-lattice presentation has full real
+span; it need not contain every intrinsic integral harmonic cochain.
+&
+Canonical definitions:\par
+\lean{HE.Sheaf.CellularSheaf.HodgeEncryptedCochain}\par
+\lean{HE.Sheaf.CellularSheaf.HarmonicLatticePresentation}
 \\\midrule
 
 \textbf{External theorem and semantic premise.}\newline
@@ -249,6 +285,7 @@ are additional application conditions. No general full-HCP distance comparison
 follows from an exact-component extraction.
 \\
 \end{longtable}
+
 \endgroup
 
 The checked declarations use only \lean{propext}, \lean{Quot.sound} and

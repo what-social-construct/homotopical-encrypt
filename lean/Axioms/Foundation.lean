@@ -30,11 +30,11 @@ namespace Axioms
 
   | Foundation field        | Python module                   | Rust module                        |
   |-------------------------|---------------------------------|------------------------------------|
-  | CochainComplex          | archived Python prototype       | rust/node/src/crypto/commitment.rs |
+  | CochainComplex          | archived Python prototype       | archive/runtime/rust/node/src/crypto/commitment.rs |
   | CoboundaryLinearity     | CochainComplex.coboundary()     | CochainComplex::apply_coboundary() |
-  | LaplacianFromCoboundary | src/geometry/sheaf_laplacian.py  | rust/oracle/src/geometry.rs        |
-  | HodgeDecomposition      | src/geometry/hodge.py           | planned: rust/oracle/src/geometry.rs |
-  | HodgeOrthogonality      | src/geometry/hodge.py           | planned: rust/oracle/src/geometry.rs |
+  | LaplacianFromCoboundary | archive/runtime/src/geometry/sheaf_laplacian.py  | archive/runtime/rust/oracle/src/geometry.rs        |
+  | HodgeDecomposition      | archive/runtime/src/geometry/hodge.py           | planned: archive/runtime/rust/oracle/src/geometry.rs |
+  | HodgeOrthogonality      | archive/runtime/src/geometry/hodge.py           | planned: archive/runtime/rust/oracle/src/geometry.rs |
   Commitment authentication, hiding, context binding, and partial-opening
   security are intentionally absent. They belong to the separate
   `Axioms.CochainCommitment` interface and are not consequences of the

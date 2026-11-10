@@ -50,7 +50,7 @@ They retain the same interpretation, snapshot and artifact through the six
 typed projection/gate levels. Controlled exact lifts prove a scaled
 decoded-source comparison when those lifts and decoder-error bounds are
 provided; storage roots do not construct that profile. The
-[cochain trace](../../docs/COCHAIN_PROXIMITY_TRACE.md) distinguishes public
+cochain trace (archived reference: `archive/documentation/docs/COCHAIN_PROXIMITY_TRACE.md`) distinguishes public
 Hamming pullback distance, decoded exactness residual and full-HCP residual,
 including the scoped exact-component obstruction. These application modules
 remain outside the standalone import boundary.

@@ -23,9 +23,9 @@ public import Axioms.Foundation
     - Čech nerve topology: β₀ = 1 ↔ connected validator network
 
   IMPLEMENTATIONS:
-    Python: src/consensus/coherence.py (CoherenceEngine)
+    Python: archive/runtime/src/consensus/coherence.py (CoherenceEngine)
             archived Python prototype (grassmann_distance, karcher_mean)
-    Rust:   rust/oracle/src/geometry.rs (GrassmannianPoint, karcher_mean,
+    Rust:   archive/runtime/rust/oracle/src/geometry.rs (GrassmannianPoint, karcher_mean,
             sheaf_laplacian_from_stalks)
 
   SEPARATION OF CONCERNS:

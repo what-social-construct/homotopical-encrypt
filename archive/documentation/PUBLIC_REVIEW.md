@@ -9,6 +9,12 @@ the preparation tooling. The [slim release guide](docs/PALOMAR_SLIM_RELEASES.md)
 records three separately generated entry packages and their local checks;
 this broad archive retains cross-paper context for human review.
 
+The active repository is the Lean development and its manuscripts. Historical
+Rust/Python prototypes, runtime prompts, examples, tests, caches and their
+Cargo/Python manifests are preserved under `archive/runtime/`. They are not
+maintained as an active implementation. The allowlisted review exports exclude
+that runtime archive.
+
 The separate [Paper 1-only release](https://github.com/what-social-construct/homotopical-encrypt-formalizations)
 is public at `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`.
 Its [protected preflight](https://github.com/what-social-construct/homotopical-encrypt-formalizations/actions/runs/42729947447)
@@ -113,8 +119,9 @@ protected PASS does not validate these changed bytes or manuscripts.
 - The MIT license, shared parity register and selected mathematical/protocol
   documentation needed to explain definitions, proof status and assumptions.
 
-Runtime implementations, private configuration, Git history, dependency/build
-caches, OS metadata and intermediate TeX outputs are outside this package.
+The historical workspace under `archive/runtime/`, private configuration, Git
+history, dependency/build caches, OS metadata and intermediate TeX outputs are
+outside this package.
 The exporter reads the working tree, so current source additions are included
 even before a commit. It uses explicit directories and file extensions rather
 than copying the whole repository.
@@ -231,12 +238,12 @@ From the repository root:
 python3 scripts/export_public_review.py
 ```
 
-This produces a repo-shaped folder and ZIP under `output/public-review/`,
-plus a SHA-256 file inventory. `--refresh` replaces only an earlier folder
+This produces `output/packages/human-review/lean-manuscripts-review/` and its
+ZIP, plus a SHA-256 file inventory. `--refresh` replaces only an earlier folder
 created by this exporter. The source repository and its history are unchanged.
 
-The package contains a small Lean/manuscript CI workflow, separate from the
-full repository's Rust/Python integration jobs. The authoritative checks are
+The active repository and review package use Lean/manuscript CI. Archived
+Rust/Python integration jobs are outside the active validation scope. The checks are
 the pinned Lean build, explicit transition examples, theorem axiom reports,
 and both manuscript builds. All three selected Solutions are included in the
 review build. The separate manual Palomar workflows have no automatic push or

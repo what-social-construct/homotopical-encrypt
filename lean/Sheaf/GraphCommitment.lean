@@ -10,7 +10,7 @@ public import Mathlib.Data.List.OfFn
 # Constant-translation ambiguity of the ordinary graph commitment
 
 This module models the restricted graph-incidence operator implemented by
-`rust/node/src/crypto/commitment.rs`: an ordered edge `(u,v)` contributes
+`archive/runtime/rust/node/src/crypto/commitment.rs`: an ordered edge `(u,v)` contributes
 `a(v,j) - a(u,j)` in each common stalk coordinate. It does not model arbitrary
 cellular restriction maps, private Hodge operators or harmonic blinding.
 

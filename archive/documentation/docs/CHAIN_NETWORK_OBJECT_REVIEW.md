@@ -86,13 +86,13 @@ The requested top-level files have the following roles:
 The blocks-as-cells idea is present in the repository. The
 [archived sheaf-storage plan](archive/SHEAF_STORAGE.md#advantages-of-sheaf-aware-storage)
 proposes blocks as zero-simplices. The legacy
-[BlockSection](../src/chain/block_section.py) assigns public/private data to
+[BlockSection](../archive/runtime/src/chain/block_section.py) assigns public/private data to
 the vertex at height `h` and uses the predecessor hash as a chain link.
 [Archived categorical architecture](archive/CATEGORICAL_ARCHITECTURE.md)
 also treats blocks as objects of a directed parent-hash diagram.
 
 Another proposal uses accounts as vertices and transactional connections as
-edges. [SheafState.compute_topology](../src/chain/sheaf_state.py) actually
+edges. [SheafState.compute_topology](../archive/runtime/src/chain/sheaf_state.py) actually
 constructs that graph with sorted endpoint pairs and no two-cells. The
 [Grassmannian interface](../lean/Axioms/Grassmannian.lean) separately describes
 validators as vertices, distance-threshold edges and pairwise-close triangles;
@@ -117,7 +117,7 @@ Directions also need names:
   have a different meaning from causal history links.
 
 The public tracing intention is particularly clear in the legacy
-[HashChain](../src/chain/sheaf_state.py): entries record claims, connections,
+[HashChain](../archive/runtime/src/chain/sheaf_state.py): entries record claims, connections,
 transfers, rotations and blocks, with predecessor hashes and optional stored
 transformation objects. Its current `verify_chain` checks stored predecessor
 links without recomputing entry digests. It is a historical runtime prototype,
@@ -177,7 +177,7 @@ existing core without choosing an application metric or dynamic geometry model:
 | Projection bus and prefixes | [Stage.StateBus](../lean/Proximity/Concrete/Gates/Stage.lean) is an immutable completed RS-stage record retaining its cochain/plane predecessors and equalities. [Storage.Projection](../lean/Protocol/Storage/Projection.lean) represents incremental typed prefixes and gates. | Give runtime allocation, scope, recovery and retirement rules. A Lean record does not itself implement a mutable process, expiration or memory erasure. |
 | Retained checkpoint artifacts | [Checkpoint](../lean/Protocol/Storage/Checkpoint.lean) retains typed payload/digest leaves, fresh-slot append, complete sealing, an exact manifest receipt and local consumption. [Anchor](../lean/Protocol/Storage/Anchor.lean) and [ProjectionAnchor](../lean/Protocol/Storage/ProjectionAnchor.lean) join an exact seal to candidate evidence and the original context under explicit profiles. | Choose public serialization and private encrypted references, concrete manifest inclusion, durability/retrieval contracts and cleanup policy. A proof record may contain private witnesses and cannot automatically be serialized publicly. |
 | Ledger state and accepted update | [Ledger.State](../lean/Protocol/Ledger/State.lean), [Transition](../lean/Protocol/Ledger/Transition.lean), [Evidence](../lean/Protocol/Evidence/Transition.lean): actual finite resource flow/nullifiers, computed successor and context-bound acceptance. | Instantiate resource/asset/authorization/nullifier/root relations. `Candidate.after` currently preserves epoch, snapshot and topology; rotation and geometry changes need additional transitions. |
-| Proposal, quorum and network | [ProposalRef](../lean/Protocol/Consensus/Vote.lean) names the same candidate's roots and round context; anchor endpoints carry the same manifest/snapshot references into a matching quorum proposal. [Rust transport](../rust/node/src/network/transport.rs) implements libp2p transport and gossip. | Refine the explicit history/gate inclusion profiles with canonical wire envelopes and actual hashes. Define rounds, locks, finality and geometry updates. Transport, local numerical agreement and authenticated ledger agreement have different contracts. |
+| Proposal, quorum and network | [ProposalRef](../lean/Protocol/Consensus/Vote.lean) names the same candidate's roots and round context; anchor endpoints carry the same manifest/snapshot references into a matching quorum proposal. [Rust transport](../archive/runtime/rust/node/src/network/transport.rs) implements libp2p transport and gossip. | Refine the explicit history/gate inclusion profiles with canonical wire envelopes and actual hashes. Define rounds, locks, finality and geometry updates. Transport, local numerical agreement and authenticated ledger agreement have different contracts. |
 
 Retaining the sheaf after retiring a bus requires access to its cell labels,
 incidences, dimensions, restriction maps and coordinate conventions, plus any

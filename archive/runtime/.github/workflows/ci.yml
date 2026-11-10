@@ -1,0 +1,139 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+  LEAN_TOOLCHAIN: leanprover/lean4:v4.35.0
+
+jobs:
+  # ─── Rust ────────────────────────────────────────────────────
+  rust:
+    name: Rust (cargo test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry + build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Build workspace
+        run: cargo build --workspace
+
+      - name: Run tests
+        run: cargo test --workspace -- --nocapture 2>&1 | tail -20
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+        continue-on-error: true
+
+      - name: Clippy
+        run: cargo clippy --workspace -- -D warnings
+        continue-on-error: true
+
+  # ─── Python ──────────────────────────────────────────────────
+  python:
+    name: Python (modules + constants)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install numpy scipy
+
+      - name: Test Geodesic ZKP module
+        run: python -m src.proofs.homotopical_zkp
+
+      - name: Test Topos Consensus module
+        run: python -m src.consensus.topos
+
+      - name: Test Coregulator DAO module
+        run: python -m src.consensus.coregulator
+
+      - name: Core crypto pipeline tests (10 tests)
+        run: python -m tests.test_crypto_pipeline
+
+      - name: Cross-language constants check
+        run: python scripts/check_constants.py
+
+  # ─── Lean ────────────────────────────────────────────────────
+  lean:
+    name: Lean (proofs)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan (Lean toolchain manager)
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache Lean build
+        uses: actions/cache@v4
+        with:
+          path: |
+            lean/.lake
+            ~/.elan/toolchains
+          key: ${{ runner.os }}-lean-${{ hashFiles('lean/lean-toolchain', 'lean/lakefile.lean', 'lean/lake-manifest.json') }}
+          restore-keys: ${{ runner.os }}-lean-
+
+      - name: Fetch pinned Mathlib cache
+        working-directory: lean
+        run: lake exe cache get
+
+      - name: Build Lean proofs
+        working-directory: lean
+        run: lake build
+        # HARD GATE: Lean proofs must build. If Mathlib is missing, fix lakefile.lean.
+
+      - name: Check protocol examples and manuscript entries
+        working-directory: lean
+        run: lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer Palomar.PaperOne.Solution Palomar.PaperThree.Solution Palomar.PaperThree.Application.Solution
+
+  # ─── Integration ─────────────────────────────────────────────
+  integration:
+    name: Integration check
+    needs: [rust, python, lean]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python deps
+        run: pip install numpy scipy
+
+      - name: Verify √2 constants across languages
+        run: python scripts/check_constants.py
+
+      - name: Summary
+        run: |
+          echo "╔══════════════════════════════════════╗"
+          echo "║  ✅ All CI checks passed             ║"
+          echo "║                                      ║"
+          echo "║  Rust:   cargo test (workspace)      ║"
+          echo "║  Python: 3 modules + constants       ║"
+          echo "║  Lean:   lake build (HARD gate)       ║"
+          echo "╚══════════════════════════════════════╝"

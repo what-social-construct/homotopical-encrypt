@@ -36,7 +36,7 @@ sources:
     authors:
       - "Chloe van der Vlugt"
     type: "paper"
-    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/db322feff36ae89472fefe32eb53f2d471f7916e/papers/paper1/main.tex"
+    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/fc69e4c256206946991ae45770f187dcf4cf9cef/papers/paper1/main.tex"
     location: "Sections 2, 3.2--3.5 and the correspondence appendix; groups P1-S01--S06 and P1-B01 in the entry README."
     relationship: "formalizes"
     note: >-
@@ -87,8 +87,9 @@ status:
     finite-product helpers retain their canonical HomotopicalEncryption.Helfer names in
     the independent Challenge. There are no definition holes. This directory
     belongs to the substantive development, rather than a separately pinned
-    wrapper repository. The revised manuscript has one post-conclusion parity table for canonical
-    definitions, selected results/support and explicit assumptions/contracts.
+    wrapper repository. The post-conclusion appendix has separate tables for
+    main statement groups, supporting declarations and definitions/proof
+    boundaries.
     The mathematical body contains no implementation-name lists, and no
     repository-wide protocol/coding catalogue is included. The exact-component
     obstruction remains in Paper 1. Concrete protocol visibility is developed
@@ -101,17 +102,15 @@ status:
     - "Quot.sound"
     - "Classical.choice"
   validation:
-    solution_build: "The renamed 38-target reduced entry awaits a fresh build. Earlier PaperOne Solution builds (3666 jobs) and the three-entry build (3759 jobs) apply to their recorded inputs before this reduction."
-    challenge_check: "The reduced independent Challenge awaits a fresh build. The earlier 3516-job Challenge build belongs to the previous 46-target entry."
-    entry_axiom_audit: "A fresh audit is required for the 38 configured declarations. Earlier 46-target, 124-report and 975-report audits and the five-endpoint classifier-profile audit retain their original source scopes; none is relabelled as verification of the renamed reduced entry."
-    local_comparator: "Historical statement/definition comparison, Lean default kernel and NanoDa passed in a macOS diagnostic with --inadvisably-no-sandbox. The namespace and selected surface have since changed; fresh comparison and replay of the 38-target entry are required."
-    protected_linux_verification: "Passed for the earlier public snapshot 66e1ad2cb726d3dd816461e4f76b1d0d9147a46d, run 42729947447: protected comparison/provenance and Lean, NanoDa and con-ron accepted. That report does not certify the current namespace or reduced selection; a fresh exact-commit preflight is required."
+    solution_build: "Passed locally with the renamed source and current entry configurations."
+    challenge_check: "Independent Mathlib-only Challenge statements compile; deliberate theorem placeholders are comparison targets."
+    entry_axiom_audit: "Passed: all configured declarations use only standard logical axioms; the combined audit has 982 standard-only reports."
+    local_comparator: "Passed statement/definition comparison for 38 selected declarations; NanoDa and Lean default kernels accept. Local macOS diagnostic with --inadvisably-no-sandbox."
+    protected_linux_verification: "Not run for this revision."
     note: >-
-      Zero proof-hole counts describe Solution and exclude the 20 deliberate
-      theorem placeholders in Challenge. The local diagnostic is not protected
-      preflight evidence. The separate complete protected report applies only
-      to the public snapshot identified above. No Palomar editorial review,
-      registry submission or registration is claimed.
+      Validation is local. Intentional Challenge theorem placeholders are
+      excluded from Solution proof-hole counts. No registry submission,
+      registration or editorial review is claimed.
   main_results:
     - declaration: "HomotopicalEncryption.Palomar.PaperOne.Hodge_Decomposition_Theorem"
     - declaration: "HomotopicalEncryption.Palomar.PaperOne.Hodge_Decomposition_unique"
@@ -173,10 +172,8 @@ review:
     object definitions and proof adapters with the canonical implementation
     and manuscript. The README supplies the seven-group crosswalk. This
     records agent review, not independent human review or registry endorsement.
-    Entry-specific local Comparator and kernel checks and the earlier public
-    snapshot's protected preflight pass as recorded above. The revised
-    manuscript/metadata candidate requires a fresh exact-commit protected run;
-    the old report does not certify new informal material.
+    Current local checks are recorded above. Protected Linux verification
+    and registry intake remain separate from this agent review.
 
 alignment:
   namespace: "HomotopicalEncryption.Palomar.PaperOne"

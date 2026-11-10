@@ -25,7 +25,8 @@ cannot determine the answer uniformly across compatible separated members.
 The conclusion follows immediately. This is exact-recovery separation, not
 an asymptotic complexity reduction.
 
-The single parity appendix maps seven selected groups to **18 main and
+The parity appendix uses separate main-statement, supporting-statement and
+definition/boundary tables. It maps seven selected groups to **18 main and
 20 supporting declarations**. Its root abbreviation is
 `HE = HomotopicalEncryption`; the independent entry uses
 `HomotopicalEncryption.Palomar.PaperOne`. Challenge has 20 intentional theorem
@@ -47,12 +48,10 @@ accounts for all 28 sources across the three bibliographies. The projective
 comparison source belongs to Paper 3; Paper 1 prints four external sources
 and retains two uncited companion records.
 
-Current builds, PDF identities, dependency audits and package checks are
-recorded in [the validation guide](../../docs/MATH_STORAGE_VALIDATION.md).
-Earlier page counts and reports describe their dated artifacts. The public
-snapshot `66e1ad2` passed protected preflight; it does not certify this local
-revision. No new publication, registry submission or registration has occurred.
-The [naming guide](../../docs/PROJECT_NAMING.md) describes canonical names and
-the boundary between current exports and historical evidence.
+The [entry README](../../lean/Palomar/PaperOne/README.md) records the selected
+statements and reproducible checks; its metadata records the current local
+verification. The [naming guide](../../docs/PROJECT_NAMING.md) fixes the formal
+namespace. Current reading copies and package locations are described in
+[the output guide](../../docs/OUTPUTS.md).
 
 Build locally with `latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex`.
