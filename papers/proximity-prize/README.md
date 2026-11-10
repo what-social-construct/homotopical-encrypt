@@ -1,8 +1,7 @@
 # Paper 3: Capacity-Radius Proximity
 
-*Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes* is the
-**33-page** manuscript in [main.pdf](main.pdf), with source in
-[main.tex](main.tex).
+*Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes* has its
+manuscript in [main.pdf](main.pdf) and source in [main.tex](main.tex).
 
 The universal coding results give the exact interleaved RS worst-list size
 `choose(n,k)` at count radius `n-k`, the next-shell lower bound and fractional
@@ -42,10 +41,19 @@ example uses `q=2^128+192513`; the canonical cochain application uses
 metric bridge does not imply a capacity-scale Euclidean or full-HCP radius,
 and arbitrary fixed nonzero scalar mixes can cancel a capacity-far pair.
 
-The optional full-frame projective reconstruction uses exact-real data and
-explicit frame/kernel hypotheses. It proves subspace/projector recovery,
-not finite-byte recovery or digest inversion, and remains auxiliary to the
-two configured selections.
+The exact-component residual obstruction in §7.3 uses the canonical
+[ObservationQuotient](../../lean/Sheaf/ObservationQuotient.lean) proof. It
+requires an unrestricted Hodge-noise carrier, a nonzero coexact direction
+and an extraction factoring through the exact component whose zero image
+has target distance zero. The canonical systematic sheaf has `δ₁=0`, so
+that nonzero-coexact premise is unavailable in this profile.
+
+That obstruction and the optional full-frame projective reconstruction
+remain auxiliary to the existing **52/22** selections. The latter uses
+exact-real data and explicit frame/kernel hypotheses to recover the
+subspace/projector; finite-byte recovery and digest inversion require
+separate constructions. The projection chain composes near-side maps;
+its source-far conclusions require the separately proved calibration.
 
 The [semantic parity register](SEMANTIC_PARITY.md) gives the complete object
 dictionary, theorem correspondences and remaining mathematical extensions.

@@ -18,10 +18,11 @@ public import TCB.PrimitiveChecks
   Trusted computing base surfaces.
 
   Paper correspondence:
-  - Paper 1: mathematical observation and full-point operative-target
-    consequences through their specific owners.
+  - Paper 1 supplies the operative HCP target used by the adapters.
   - Paper 2: payload binding, proof-carrying artifacts, byte checks, runtime
     acceptance and evidence contracts.
+  - Paper 3: full-projective recovery and source-calibration consequences
+    through their specific mathematical owners.
 
   `Axioms` owns assumptions and mathematical specification contracts.
   `TCB` owns proof-carrying artifacts, compression boundaries, runtime

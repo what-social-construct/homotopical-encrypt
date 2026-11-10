@@ -18,7 +18,6 @@ project:
     hypotheses. A derived corollary fixes the same correct rank-one oracle:
     the supplied operative lattice yields its unique answer, while a shared
     public class and cochain do not select the hidden member's answer.
-    An additional result shows an exact-component observation obstruction.
     These are exact mathematical comparison and recovery results; no
     asymptotic hardness or cryptographic security claim is made.
   authors:
@@ -36,18 +35,16 @@ sources:
     authors:
       - "Chloe van der Vlugt"
     type: "paper"
-    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/fc69e4c256206946991ae45770f187dcf4cf9cef/papers/paper1/main.tex"
-    location: "Sections 2, 3.2--3.5 and the correspondence appendix; groups P1-S01--S06 and P1-B01 in the entry README."
+    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/d21db61ec07ede78045f0e6dca8ec3769580b360/papers/paper1/main.tex"
+    location: "Sections 1--3 (primitives, the HCP recovery problem and CVP comparison) and the correspondence appendix; groups P1-S01--S06 in the entry README."
     relationship: "formalizes"
     note: >-
-      Source for the seven retained Hodge/CVP and exact-component groups.
+      Source for six retained groups covering primitives, HCP recovery and
+      comparison with CVP.
       The reduced entry preserves each remaining selected statement type and
       adapts the canonical development's proofs. The closing separation corollary combines the
       selected lattice-recovery and ambiguity results, with separately
-      identified canonical consequences in the parity table. Concrete
-      cochain/protocol construction and visibility belong to Paper 2;
-      projective projections, coding and quantitative proximity belong to
-      Paper 3.
+      identified canonical consequences in the parity table.
   - title: "First-order homotopical logic"
     authors:
       - "Joseph Helfer"
@@ -77,8 +74,9 @@ sources:
 
 status:
   scope: >-
-    One entry covers the manuscript's seven Hodge/CVP and exact-component groups
-    through 18 manuscript-facing theorem declarations and 20 supporting
+    One entry covers six groups on primitives, the HCP recovery problem and
+    comparison with CVP through 16 manuscript-facing theorem declarations and
+    20 supporting
     declarations selected by
     comparator.json. Challenge imports only Mathlib and gives transparent
     ordinary definitions of the mathematical objects. Solution identifies
@@ -91,10 +89,7 @@ status:
     main statement groups, supporting declarations and definitions/proof
     boundaries.
     The mathematical body contains no implementation-name lists, and no
-    repository-wide protocol/coding catalogue is included. The exact-component
-    obstruction remains in Paper 1. Concrete protocol visibility is developed
-    in Paper 2; the projective projection chain and quantitative proximity
-    analysis belong to Paper 3.
+    repository-wide protocol/coding catalogue is included.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms:
@@ -102,10 +97,10 @@ status:
     - "Quot.sound"
     - "Classical.choice"
   validation:
-    solution_build: "Passed locally with the renamed source and current entry configurations."
+    solution_build: "Passed locally for the current 36-declaration configuration."
     challenge_check: "Independent Mathlib-only Challenge statements compile; deliberate theorem placeholders are comparison targets."
-    entry_axiom_audit: "Passed: all configured declarations use only standard logical axioms; the combined audit has 982 standard-only reports."
-    local_comparator: "Passed statement/definition comparison for 38 selected declarations; NanoDa and Lean default kernels accept. Local macOS diagnostic with --inadvisably-no-sandbox."
+    entry_axiom_audit: "Passed: all 36 configured declarations use only standard logical axioms; the combined audit has 980 standard-only reports."
+    local_comparator: "Passed statement/definition comparison; NanoDa and Lean default kernels accept. Local macOS diagnostic with --inadvisably-no-sandbox."
     protected_linux_verification: "Not run for this revision."
     note: >-
       Validation is local. Intentional Challenge theorem placeholders are
@@ -122,8 +117,6 @@ status:
     - declaration: "HomotopicalEncryption.Palomar.PaperOne.concreteSheafHCP_CVP_existsUnique"
     - declaration: "HomotopicalEncryption.Palomar.PaperOne.CellularSheaf.HodgeEncryptedCochain.harmonicOneProjection_observed"
     - declaration: "HomotopicalEncryption.Palomar.PaperOne.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt"
-    - declaration: "HomotopicalEncryption.Palomar.PaperOne.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent"
-    - declaration: "HomotopicalEncryption.Palomar.PaperOne.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent"
     - declaration: "HomotopicalEncryption.Palomar.PaperOne.HCPBridge.operativeTargets_ne_of_kernelSeparation"
     - declaration: "HomotopicalEncryption.Palomar.PaperOne.HCPBridge.cvpOracle_insufficient_of_kernelSeparation"
     - declaration: "HomotopicalEncryption.Palomar.PaperOne.HCPBridge.cvpOracle_insufficient_for_operativeTarget"
@@ -157,9 +150,7 @@ fidelity:
     The cellular carrier records finite graded cells and integer incidences;
     no regular CW or simplicial realization of the example's base is asserted.
     The family constructs the homological test fragment, not full
-    first-order semantics. The exact-component obstruction requires an allowed
-    nonzero coexact direction and does not prove factorization of a concrete
-    wire serializer. No asymptotic hardness,
+    first-order semantics. No asymptotic hardness,
     distributional security, efficient decoding, digest inversion or novelty
     claim follows from the selected theorems.
 
@@ -170,7 +161,7 @@ review:
   notes: >-
     Agent review compared the selected statement groups, explicit hypotheses,
     object definitions and proof adapters with the canonical implementation
-    and manuscript. The README supplies the seven-group crosswalk. This
+    and manuscript. The README supplies the six-group crosswalk. This
     records agent review, not independent human review or registry endorsement.
     Current local checks are recorded above. Protected Linux verification
     and registry intake remain separate from this agent review.
@@ -189,6 +180,5 @@ alignment:
     - "P1-S04: Unique CVP recovery for actual cellular Hodge samples."
     - "P1-S05: General and constructed cellular public-target ambiguity."
     - "P1-S06: Weighted integer-coefficient recovery obstruction."
-    - "P1-B01: Exact-component observation limitation."
 
 acknowledgements: "Lean 4 and Mathlib provide the proof language and library; OpenAI Codex assisted implementation and review."

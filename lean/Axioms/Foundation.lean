@@ -8,7 +8,7 @@ public import Mathlib.Init
   Foundational assumptions for the cochain/Hodge surface.
 
   Paper correspondence:
-  - Paper 1 Section 2 uses the proved finite cellular Hodge construction in
+  - Paper 1's primitives use the proved finite cellular Hodge construction in
     Sheaf/Hodge.lean.
   - This separate assumption-oriented interface supplies named cochain/Hodge
     contracts for Paper 2; it does not replace those finite proofs.

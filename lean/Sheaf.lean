@@ -21,10 +21,10 @@ public import Sheaf.GraphCommitment
 /-!
 Shared finite cellular-sheaf import surface.
 
-Paper 1 uses the finite Hodge, integral-lattice, coefficient-recovery and
-observation-boundary owners. Paper 2 uses commitment and rotation interfaces;
-Paper 3 uses the declared modular validity/distance profile and its quantitative
-comparisons. The selected Paper 1 appendix does not catalogue this aggregate.
+Paper 1 uses the finite cellular/Hodge, integral-lattice and coefficient-recovery
+owners. Paper 2 uses commitment, opening-quotient and rotation interfaces.
+Paper 3 uses the observation-quotient boundary, declared modular validity/distance
+profile and quantitative comparisons. Each paper records its specific owners.
 
 The root import is intentionally independent of protocol/runtime modules.
 -/

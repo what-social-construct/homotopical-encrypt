@@ -8,10 +8,10 @@ public import Proximity.Application.Projection
   Plucker-coordinate shadow candidates.
 
   Paper correspondence:
-  - Shared abstract shadow vocabulary, with full exterior/projective recovery
-    in Paper 1 through the concrete owner.
-  - Paper 3 can use a declared shadow as a projection source; this legacy
-    interface alone supplies no exterior reconstruction theorem.
+  - Paper 3: abstract shadow vocabulary for the projective projection chain;
+    full exterior/projective recovery uses the concrete reconstruction owner.
+  - Paper 2 fixes the observation and realization profile used by an
+    application; this legacy interface supplies only the declared laws.
 
   The retired Python prototype has a concrete Plucker layer in
   `docs/archive/python/src/primitives/grassmann.py`:

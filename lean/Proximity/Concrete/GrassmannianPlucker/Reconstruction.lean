@@ -8,6 +8,9 @@ public import Mathlib.Analysis.InnerProductSpace.ExteriorPower
 /-!
 # Recovering the harmonic subspace from its full projective Plucker point
 
+This is the exact-coordinate reconstruction step used by Paper 3's projective
+projection chain.
+
 The annihilator of exterior multiplication reconstructs the span of an
 independent frame. It is invariant under nonzero rescaling and therefore
 descends to the existing projective quotient. No digest inversion or

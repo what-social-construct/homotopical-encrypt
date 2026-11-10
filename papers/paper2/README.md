@@ -16,7 +16,9 @@ The commitment profile retains the original cochain payload, its declared
 modulus/count/topology tag, the private cellular/Hodge interpretation and
 explicit decoding/binding contracts. An integral cellular source and complete
 coordinate codec support the modular cochain, plane-pair and RS views of that
-same payload.
+same payload. Raw coboundary openings are identified modulo `ker delta0`;
+the modular carry relation remains separate. These are commitment-construction
+objects.
 
 The base public storage view releases the original residue payload and its
 six-coordinate context key. The retained manifest adds the actual sealed root
@@ -53,18 +55,27 @@ and composes supplied failure budgets under one shared probability law.
 | Construction | Canonical entry |
 |---|---|
 | Commitment and coordinate profile | [CochainCommitment](../../lean/Axioms/CochainCommitment.lean), [CoordinateCodec](../../lean/Protocol/Storage/CoordinateCodec.lean) |
+| Generic ledger and computed transition | [Ledger.Transition](../../lean/Protocol/Ledger/Transition.lean), [Ledger.ValueFlow](../../lean/Protocol/Ledger/ValueFlow.lean) |
 | Bounded transition and checked transfer | [Protocol.Core](../../lean/Protocol/Core.lean), [Transfer](../../lean/Protocol/Transfer.lean), [protocol guide](../../lean/Protocol/README.md) |
 | Storage, public views and gates | [Storage.Core](../../lean/Protocol/Storage/Core.lean), [PublicView](../../lean/Protocol/Storage/PublicView.lean), [storage guide](../../lean/Protocol/Storage/README.md) |
 | Rotation, recovery and retrieval | [Ephemeral](../../lean/Protocol/Ephemeral.lean), [Retrieval](../../lean/Protocol/Storage/Retrieval.lean) |
+| Committee and proof/TCB envelopes | [Consensus.Quorum](../../lean/Protocol/Consensus/Quorum.lean), [TCB](../../lean/TCB.lean) |
 | Integrity and primitive contracts | [Transfer.Security](../../lean/Protocol/Transfer/Security.lean), [Transfer.Primitives](../../lean/Protocol/Transfer/Primitives.lean) |
 
 [Paper 1](../paper1/README.md) supplies HCP, harmonic lattices, semantic classes
 and known-lattice CVP comparisons. [Paper 3](../proximity-prize/README.md)
 introduces full projective reconstruction and proves the quantitative
 projection, metric and radius comparisons. Paper 2 owns the construction,
-visibility and codec profiles consumed by those comparisons.
+visibility and codec profiles consumed by those comparisons. The
+[current family inventory](DRAFT.md#7-construction-ownership-and-remaining-protocol-work)
+accounts for the checkpoint lifecycle, ledger, gates, evidence, proof/TCB and
+committee objects without promoting their supplied contracts to algorithms.
 
 ## Remaining obligations
+
+PoV/reliability policy, oracle/coregulator attachment points and the legacy
+chain model are deferred or supporting families outside the bounded
+transition claim. Authenticated quorums do not supply rounds, locking or finality.
 
 Concrete credential/proof algorithms, message-bound knowledge and
 unforgeability, finite packet/ciphertext/witness codecs, authenticated

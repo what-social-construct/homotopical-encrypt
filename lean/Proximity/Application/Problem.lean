@@ -10,9 +10,8 @@ public import Proximity.Application.Projection
   Paper correspondence:
   - Paper 3: mathematical near/far promises, calibrated gap reductions and
     solver pullback under an explicit far-preservation hypothesis.
-  - Paper 1 cites this comparison boundary briefly; Paper 2 must supply the
-    protocol observation profile rather than obtain one from the abstract
-    contract.
+  - Paper 2 supplies the protocol observation profile; Paper 3 proves the
+    quantitative consequences under that declared profile.
 
   `Projection.lean` says how a sheaf-side cochain projects to a code/evaluation
   shadow. This file names the near/far decision problem and the end-to-end

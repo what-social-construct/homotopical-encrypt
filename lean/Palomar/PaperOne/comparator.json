@@ -12,8 +12,6 @@
     "HomotopicalEncryption.Palomar.PaperOne.concreteSheafHCP_CVP_existsUnique",
     "HomotopicalEncryption.Palomar.PaperOne.CellularSheaf.HodgeEncryptedCochain.harmonicOneProjection_observed",
     "HomotopicalEncryption.Palomar.PaperOne.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt",
-    "HomotopicalEncryption.Palomar.PaperOne.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent",
-    "HomotopicalEncryption.Palomar.PaperOne.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent",
     "HomotopicalEncryption.Palomar.PaperOne.HCPBridge.operativeTargets_ne_of_kernelSeparation",
     "HomotopicalEncryption.Palomar.PaperOne.HCPBridge.cvpOracle_insufficient_of_kernelSeparation",
     "HomotopicalEncryption.Palomar.PaperOne.HCPBridge.cvpOracle_insufficient_for_operativeTarget",

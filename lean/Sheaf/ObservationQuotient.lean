@@ -7,6 +7,10 @@ public import Sheaf.HarmonicLattice
 /-!
 # What the exact-component view forgets about a full Hodge observation
 
+Paper 3 uses this obstruction at the source-calibration boundary between the
+full HCP residual and an exact-component-only observation. Paper 2 specifies
+the application observation, extraction and restricted/authenticated profile.
+
 The source score here is the existing kernel-normalized Hodge residual
 `‖F.kernelNormalizedDegreeOneLaplacian E.observed‖`; it is not replaced by
 a pullback score. A nonzero coexact direction gives an unbounded family of

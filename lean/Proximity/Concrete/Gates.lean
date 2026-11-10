@@ -12,8 +12,7 @@ public import TCB.Runtime
   - Paper 2: protocol-facing projection-stage certificates and evidence
     consumption.
   - Paper 3: the mathematical quotient/distance and far-region conditions
-    carried by those certificates. Paper 1 keeps only the abstract
-    observation/application boundary.
+    carried by those certificates, under the declared source profile.
 
   These gates name the invariants that sit between stage-local construction and
   the final RS far-region separation theorem. They are quotient-aware: collapse

@@ -31,7 +31,7 @@ sources:
     authors:
       - "Chloe van der Vlugt"
     type: "paper"
-    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/fc69e4c256206946991ae45770f187dcf4cf9cef/papers/proximity-prize/main.tex"
+    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/d21db61ec07ede78045f0e6dca8ec3769580b360/papers/proximity-prize/main.tex"
     location: "Sections 3--6 and the pure coding sharpness/fixed-mix results of Section 7; P3-S01--S09, P3-B01, the coding portion of P3-A02 and P3-A04."
     relationship: "formalizes"
     note: >-
@@ -57,10 +57,10 @@ status:
   sorry_in_definitions: 0
   axioms: ["propext", "Quot.sound", "Classical.choice"]
   validation:
-    solution_build: "Passed locally with the renamed source and current entry configurations."
+    solution_build: "Passed locally for the current 52-declaration configuration."
     challenge_check: "Independent Mathlib-only Challenge statements compile; deliberate theorem placeholders are comparison targets."
-    entry_axiom_audit: "Passed: all configured declarations use only standard logical axioms; the combined audit has 982 standard-only reports."
-    local_comparator: "Current statement/definition comparison and kernel replay are being refreshed."
+    entry_axiom_audit: "Passed: all 52 configured declarations use only standard logical axioms; the combined audit has 980 standard-only reports."
+    local_comparator: "Passed statement/definition comparison; NanoDa and Lean default kernels accept. Local macOS diagnostic with --inadvisably-no-sandbox."
     protected_linux_verification: "Not run for this revision."
     note: >-
       Validation is local. Intentional Challenge theorem placeholders are
@@ -119,6 +119,8 @@ automation:
 
 fidelity:
   divergences: >-
+    Full-projective reconstruction and the exact-component/full-residual
+    obstruction are canonical auxiliary results outside this selected entry.
     List statements retain positive interleaving width and their exact degree,
     length and budget hypotheses. The endpoint-safe regime has a nonattained
     real supremum; the middle regime's optimal smaller radius remains open.

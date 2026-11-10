@@ -24,7 +24,7 @@ All **28 ledger sources** now have a BibTeX record in the relevant paper's
 bibliography. File membership is a retrieval aid, not adoption, proof review,
 or a claim that a source's theorem is formalized. The PDFs print sources
 actually cited in their text; candidate records are retained for later work
-without `\nocite{*}`. Paper 1 owns mathematical foundations/observation
+without `\nocite{*}`. Paper 1 owns HCP primitives, recovery and CVP
 comparisons, Paper 2 owns construction/protocol and application candidates,
 and Paper 3 owns coding/proximity comparisons. The existing detailed rows
 below retain their review depth and applicability conditions.

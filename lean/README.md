@@ -31,7 +31,7 @@ projection comparisons that consume those construction profiles.
 
 | Entry | Selected statements |
 |---|---|
-| [Paper 1](Palomar/PaperOne/README.md) | Seven groups: 18 manuscript-facing and 20 supporting declarations, 38 targets. |
+| [Paper 1](Palomar/PaperOne/README.md) | Six groups: 16 manuscript-facing and 20 supporting declarations, 36 targets. |
 | [Paper 3 coding](Palomar/PaperThree/README.md) | 52 targets. |
 | [Paper 3 application](Palomar/PaperThree/Application/README.md) | 22 targets. |
 

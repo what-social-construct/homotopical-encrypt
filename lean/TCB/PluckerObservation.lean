@@ -8,6 +8,10 @@ public import Proximity.Concrete.GrassmannianPlucker.Reconstruction
 /-!
 # Full Plucker data and the operative harmonic target
 
+Paper 3 owns this full-coordinate reconstruction step in the projective
+projection chain. Paper 2's visibility profile determines whether the full
+point is among the released data.
+
 At a fixed ambient inner product, the full projective point reconstructs its
 subspace and projector. When that subspace is the operative HCP kernel, the
 same data determine the operative harmonic component. This is mathematical

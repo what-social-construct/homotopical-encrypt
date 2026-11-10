@@ -10,7 +10,6 @@ public import Mathlib.Tactic
 public import Hardness
 public import HCP.AxisFamily
 public import Sheaf.CoefficientRecovery
-public import Sheaf.ObservationQuotient
 
 @[expose] public section
 set_option autoImplicit false
@@ -550,15 +549,6 @@ theorem concreteSheafHCP_CVP_existsUnique
 end
 end HomotopicalEncryption.Palomar.PaperOne
 
-namespace HomotopicalEncryption.Palomar.PaperOne.CellularSheaf
-noncomputable section
-variable {Vertex Edge Face : Type*} [Fintype Vertex] [Fintype Edge] [Fintype Face]
-  {X : OrientedTwoComplex Vertex Edge Face}
-/-- The full orthogonal residual; it is separate from the true Hodge Laplacian. -/
-def kernelNormalizedDegreeOneLaplacian (F : CellularSheaf X) : F.C1 →ₗ[ℝ] F.C1 :=
-  F.harmonicOneSubspace.orthogonal.starProjection.toLinearMap
-end
-end HomotopicalEncryption.Palomar.PaperOne.CellularSheaf
 
 namespace HomotopicalEncryption.Palomar.PaperOne
 open CategoryTheory CategoryTheory.Limits HomotopicalAlgebra ZeroObject
@@ -1107,40 +1097,3 @@ theorem weighted_axis_recovery_obstruction :
 end AxisFamily
 end
 end HomotopicalEncryption.Palomar.PaperOne
-
-namespace HomotopicalEncryption.Palomar.PaperOne.CellularSheaf.HodgeEncryptedCochain
-noncomputable section
-variable {Vertex Edge Face : Type*} [Fintype Vertex] [Fintype Edge] [Fintype Face]
-  {X : OrientedTwoComplex Vertex Edge Face} {F : CellularSheaf X}
-
-/-- A nonzero allowed coexact direction prevents residual factorization through exact data. -/
-theorem not_residual_norm_factors_exactComponent
-    (I : IntegralStructure F) (v : F.C2) (hv : F.delta1.adjoint v ≠ 0) :
-    ¬ ∃ score : F.C1 → ℝ, ∀ E : HodgeEncryptedCochain I,
-      score E.opening.exactComponent =
-        ‖F.kernelNormalizedDegreeOneLaplacian E.observed‖ := by
-  rintro ⟨score, hs⟩
-  apply _root_.HomotopicalEncryption.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent
-    I.toOwner v hv
-  refine ⟨score, ?_⟩
-  intro E
-  exact hs ⟨⟨E.message.1, E.message.2⟩,
-    ⟨E.opening.exactOpening, E.opening.coexactOpening⟩⟩
-
-/-- The unrestricted exact view cannot preserve a positive full-HCP far region. -/
-theorem not_far_preserving_exactComponent
-    (I : IntegralStructure F) (v : F.C2) (hv : F.delta1.adjoint v ≠ 0)
-    {Target : Type*} (extract : F.C1 → Target) (targetDistance : Target → ℝ)
-    (hzero : targetDistance (extract 0) = 0)
-    (sourceRadius targetRadius : ℝ) (hTarget : 0 < targetRadius) :
-    ¬ (∀ E : HodgeEncryptedCochain I,
-      sourceRadius ≤ ‖F.kernelNormalizedDegreeOneLaplacian E.observed‖ →
-      targetRadius ≤ targetDistance (extract E.opening.exactComponent)) := by
-  intro hs
-  apply _root_.HomotopicalEncryption.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent
-    I.toOwner v hv extract targetDistance hzero sourceRadius targetRadius hTarget
-  intro E hE
-  exact hs ⟨⟨E.message.1, E.message.2⟩,
-    ⟨E.opening.exactOpening, E.opening.coexactOpening⟩⟩ hE
-end
-end HomotopicalEncryption.Palomar.PaperOne.CellularSheaf.HodgeEncryptedCochain

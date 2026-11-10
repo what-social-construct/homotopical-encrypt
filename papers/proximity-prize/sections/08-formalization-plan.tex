@@ -88,11 +88,11 @@ exact-order \(n_u\) root, and its injectively indexed subgroup for every
 All source modules in this ledger live under \lean{lean/Proximity};
 \lean{lean/ProximityPrize.lean} is only the standalone aggregate import target,
 not a second source hierarchy.
-The detailed object dictionary, theorem correspondence, and remaining-work
-queue are maintained in
+The detailed object dictionary, theorem correspondence, construction ownership
+and remaining mathematical extensions are recorded in
 \lean{papers/proximity-prize/SEMANTIC_PARITY.md}.
 
-\subsection{Projective application dependencies}
+\subsection{Auxiliary source and projective proofs}
 
 The optional geometric source in
 \cref{sec:projective-observation-boundary} uses the existing
@@ -103,10 +103,24 @@ theorems recover the full subspace and its fixed-metric projector.
 adds the explicit operative-kernel identification.
 \lean{Proximity/Concrete/ProjectionChain/Core} composes the supplied
 projective, cochain, plane and RS maps and their validity/near comparisons.
-These are canonical auxiliary results outside the two configured coding
-and native-modular application selections. They do not enter the standalone
-coding import closure. Their formal owners and the independent source metrics
-remain distinct from Paper 2's codec, visibility and authentication contracts.
+The exact-component obstruction in
+\cref{prop:exact-component-obstruction} uses the existing
+\lean{Sheaf/ObservationQuotient} proofs
+\lean{HodgeEncryptedCochain.not_residual_norm_factors_exactComponent} and
+\lean{HodgeEncryptedCochain.not_far_preserving_exactComponent}.
+They retain the unrestricted Hodge carrier, a nonzero coexact direction,
+exact-component factorization and zero target distance at the zero image.
+The canonical systematic sheaf has \(\delta_1=0\), so this nonzero-coexact
+premise is unavailable there.
+
+These source-obstruction and projective results are canonical auxiliary proofs
+outside the configured 52-target coding and 22-target native-modular
+application selections. They do not enter the standalone coding import
+closure; moving a statement into this manuscript does not add a selected
+target. Their formal owners and the independent source metrics remain
+distinct from Paper 2's codec, visibility and authentication contracts.
+The projection-chain composition gives validity and near-side handoffs;
+source-far preservation requires the separately stated calibration.
 
 \subsection{Status ledger}
 
@@ -166,6 +180,11 @@ Explicit challenge profiles & Lean-proved &
   All-good zero direction; diagonal bad set \(\{-1\}\)\\
 Arbitrary fixed-mix obstruction & Lean-proved &
   Capacity-far pair with challenged word zero\\
+Exact-component residual obstruction & Lean-proved, auxiliary &
+  Nonfactorization and no positive far transfer under the stated
+  unrestricted/nonzero-coexact hypotheses\\
+Full projective reconstruction & Lean-proved, auxiliary &
+  Subspace/projector recovery from genuine full-frame data\\
 \bottomrule
 \end{longtable}
 \endgroup

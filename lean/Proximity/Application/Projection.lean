@@ -10,8 +10,8 @@ public import Mathlib.Basic.Real.Basic
   Paper correspondence:
   - Paper 3: neutral source-to-code projections and near-side distance
     comparison.
-  - Paper 2 fixes concrete observation/extraction contracts. Paper 1 retains
-    only a brief conditional application boundary.
+  - Paper 2 fixes concrete observation/extraction contracts and the source
+    profile consumed by these mathematical comparisons.
 
   This file is intentionally lightweight. It names the abstract projection from
   a sheaf-side received-word/cochain view to a code/evaluation shadow without

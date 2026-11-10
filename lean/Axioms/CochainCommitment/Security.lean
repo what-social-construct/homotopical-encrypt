@@ -10,10 +10,9 @@ public import Axioms.Foundation
   Cochain commitment security interfaces.
 
   Paper correspondence:
-  - Paper 2: binding, hiding, homomorphic, topology-binding and
-    partial-opening assumptions, and their relation to protocol evidence.
-  - Paper 1 uses only the elementary opening quotient and observation
-    distinction; it claims no commitment security theorem from these records.
+  - Paper 2 owns the elementary opening quotient and the separate binding,
+    hiding, homomorphic, topology-binding and partial-opening assumptions,
+    together with their relation to protocol evidence.
 
   This file contains binding/hiding/homomorphism assumptions and bridge
   theorems. The wire-facing payload lives in

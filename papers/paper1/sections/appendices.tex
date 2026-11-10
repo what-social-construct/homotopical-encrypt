@@ -3,8 +3,8 @@
 \section{Statement--Lean Parity Tables}\label{app:selected-crosswalk}\label{app:formal-boundaries}
 
 \Cref{tab:paper1-parity,tab:paper1-support,tab:paper1-definitions} record the correspondence for this paper's six
-Hodge/CVP groups and one observation-boundary group. The independent entry's
-configuration, \lean{lean/Palomar/PaperOne/comparator.json}, selects 18
+Hodge/CVP groups. The independent entry's
+configuration, \lean{lean/Palomar/PaperOne/comparator.json}, selects 16
 manuscript-facing and 20 supporting theorem declarations. Every declaration
 appears once below. These are coverage counts, not a count of independent
 research contributions. Definition rows name canonical implementation
@@ -16,7 +16,7 @@ contracts separately.
 
 \lean{Palomar.PaperOne.Challenge} states the comparison objects independently
 using Mathlib-only imports. \lean{Palomar.PaperOne.Solution} identifies them
-with the canonical development without importing Challenge. Challenge's 20
+with the canonical development without importing Challenge. Challenge's 18
 deliberate theorem placeholders are comparison targets; the proved Solution
 has no holes.
 
@@ -50,7 +50,7 @@ exact configured declaration names.
 \endlastfoot
 
 \textbf{P1-S01.}\newline
-\Cref{prop:hodge-decomposition}; private recovery in Sections~2--3.
+\Cref{prop:hodge-decomposition}; private recovery in Sections~1--3.
 The complex equation and actual adjoint Hodge operator give componentwise
 unique harmonic, exact and coexact parts. Integer coefficient recovery
 is classical and noncomputable in the supplied integral harmonic lattice.
@@ -114,16 +114,6 @@ The common observation is \(b=(1,2)\), with private integer coefficients
 two and one. Each privately presented lattice has its own unique CVP answer.
 &
 \lean{AF.weighted_axis_recovery_obstruction}
-\\\midrule
-
-\textbf{P1-B01.}\newline
-\Cref{prop:exact-component-obstruction}.
-An allowed nonzero coexact direction prevents the full Hodge residual
-from factoring through the exact component. The farness obstruction
-uses the unrestricted noise carrier and exact-component-only extraction.
-&
-\lean{CS.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent}\par
-\lean{CS.HodgeEncryptedCochain.not_far_preserving_exactComponent}
 \\
 \end{longtable}
 
@@ -145,7 +135,7 @@ uses the unrestricted noise carrier and exact-component-only extraction.
 \endlastfoot
 
 \textbf{Complexes and semantics.}\newline
-Sections~2--3.
+Sections~1--3.
 Actual coboundary composition, the constructed complex isomorphism and
 the corresponding three-term differential.
 &
@@ -232,7 +222,7 @@ Canonical definitions:\par
 \\\midrule
 
 \textbf{Semantic realization.}\newline
-Section~2. The public classifier factors through the specified closed
+Sections~1--2. The public classifier factors through the specified closed
 theory. The operative Hodge operator is separate presentation-level data;
 equal classifier values need not identify it. Completeness adds reflection
 of the declared homotopy equivalence; with invariance, public fibers are
@@ -249,7 +239,7 @@ Canonical definitions and classifier theorems:\par
 \\\midrule
 
 \textbf{Hodge sample and lattice.}\newline
-Sections~2--3. The sample combines an integral harmonic message with
+Sections~1--3. The sample combines an integral harmonic message with
 exact/coexact noise. A supplied harmonic-lattice presentation has full real
 span; it need not contain every intrinsic integral harmonic cochain.
 &
@@ -259,7 +249,7 @@ Canonical definitions:\par
 \\\midrule
 
 \textbf{External theorem and semantic premise.}\newline
-Sections~2.2 and~3.5; distinct from the proved homological fragment.
+Sections~2.1 and~3.5; distinct from the proved homological fragment.
 &
 Helfer's general fibrational/path-invariance theorem is cited background.
 The generic bridge uses the declared closed-test invariance; the concrete
@@ -274,15 +264,6 @@ Known-lattice CVP hardness is an external computational interface.
 The selected algebraic comparisons and non-identifiability examples do
 not establish an asymptotic encoded-instance hardness reduction or a
 sampled encryption-security theorem.
-\\\midrule
-
-\textbf{Contract: protocol application.}\newline
-Section~2.2; distinct from the observation theorems.
-&
-A larger released view requires its own equality or factorization proof.
-Artifact binding, encoding, visibility and source-to-code metric comparisons
-are additional application conditions. No general full-HCP distance comparison
-follows from an exact-component extraction.
 \\
 \end{longtable}
 

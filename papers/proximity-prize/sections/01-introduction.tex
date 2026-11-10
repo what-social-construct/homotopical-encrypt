@@ -64,18 +64,10 @@ exponential-size field and is not a claim about every supplied smooth code.
 An application with an independently defined source metric additionally
 requires a comparison with the extracted pair-code distance.
 
-This is Paper 3 of the Homotopical Encryption program. The paper ownership is:
-\begin{description}[style=nextline]
-  \item[Paper 1 \cite{vanDerVlugt2026hcp}.]
-    HCP/Hodge/CVP foundations, the semantic fragment and mathematical
-    observation/recovery boundaries.
-  \item[Paper 2 \cite{vanDerVlugt2026protocol}.]
-    The cochain commitment construction, its concrete observation and encoding
-    profile, protocol evidence, storage, gates and state transitions.
-  \item[This paper.]
-    Universal coding bounds, radii and quantitative comparisons for the
-    declared source-to-code projection.
-\end{description}
+The source application uses the cochain construction and observation profile
+of \cite{vanDerVlugt2026protocol}. Its HCP and cellular Hodge primitives
+are those of \cite{vanDerVlugt2026hcp}; the projection, reconstruction
+and source-distance comparisons are proved here.
 The coding theorems do not assume an HCP presentation or a commitment
 protocol. A protocol using them must enforce the fixed-pair, later-challenge
 order described in Section~6. Section~7 uses Paper 2's explicit systematic

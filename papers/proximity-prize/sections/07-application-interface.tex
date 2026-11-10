@@ -4,10 +4,11 @@ Paper 2 specifies the shared cochain construction, snapshot/decoder context,
 coordinate layout and public observation profile
 \cite{vanDerVlugt2026protocol}. This section recalls only the data needed to
 state the projection and proves its quantitative validity, distance and
-challenge comparisons. It does not repeat a commitment-security construction,
-protocol gate/evidence pipeline or state-transition argument. Paper 1 supplies
-the HCP setup and exact-component observation obstruction
-\cite{vanDerVlugt2026hcp}.
+challenge comparisons. The commitment-security, protocol gate/evidence and
+state-transition contracts remain with that construction. Paper 1 supplies
+the HCP and cellular Hodge primitives \cite{vanDerVlugt2026hcp}; the
+exact-component calibration obstruction is proved in
+\cref{prop:exact-component-obstruction} below.
 
 The coding theorem is stated over the complete received-word space and does not
 depend on a particular source of observations.  An application may nevertheless
@@ -136,8 +137,9 @@ hypotheses; reconstruction of a subspace does not construct that codec.
 The projection-chain theorem composes the supplied validity and near-distance
 comparisons by applying each stage in order and using transitivity of the
 distance bounds. A source-far conclusion requires a separate comparison in
-the direction used by the application calibration. Full-coordinate
-reconstruction supplies no such quantitative inequality.
+the direction used by the application calibration; it is not manufactured
+by composing these near-side maps. Full-coordinate reconstruction supplies
+no such quantitative inequality.
 
 \subsection{The existing committed-cochain projection}
 
@@ -231,7 +233,57 @@ The canonical storage adapter identifies the real-infimum pair distance
 with the attained generic minimum and joins both comparisons to the actual
 observed artifact.
 
-\subsection{A canonical-lift obstruction and a no-wrap profile}
+\subsection{Source-metric obstructions and a no-wrap profile}
+
+Fix a real cellular cochain complex
+\(C^0\xrightarrow{\delta_0}C^1\xrightarrow{\delta_1}C^2\)
+with its chosen inner products and harmonic subspace
+\(\mathcal H=\ker\Delta_1\). The full Hodge sample
+\(b=h+\delta_0a+\delta_1^*v\) and its exact-component view
+\(\delta_0a\) retain different data.
+
+\begin{proposition}[Exact-component obstruction]
+\label{prop:exact-component-obstruction}
+  Suppose \(v\in C^2\) and \(\delta_1^*v\ne0\). On the unrestricted
+  Hodge-noise carrier, the samples
+  \[
+    b_t=t\delta_1^*v,\qquad t\in\mathbb R,
+  \]
+  have zero harmonic message and zero exact component, while
+  \[
+    \|P_{\mathcal H^\perp}b_t\|
+      =|t|\,\|\delta_1^*v\|.
+  \]
+  Thus this full-observation residual does not factor through the exact
+  component. If an extraction depends only on that component and its zero
+  image has target distance zero, it cannot preserve any positive target
+  far radius uniformly on this unrestricted carrier, at any source radius.
+\end{proposition}
+\begin{proof}
+  A coexact vector is orthogonal to \(\mathcal H\), so its orthogonal
+  projection onto \(\mathcal H^\perp\) is itself. Homogeneity gives the
+  displayed norm. The exact-component view is constantly zero, whereas
+  this norm is zero at \(t=0\) and positive at \(t=1\), proving
+  nonfactorization. For any fixed source radius, choose positive \(t\)
+  large enough to exceed it. The extracted value still has distance zero,
+  contradicting every positive target far radius.
+\end{proof}
+
+A restricted noise or realization profile may exclude this family, so a
+comparison for such a profile requires its explicit hypotheses. The scores
+\[
+  \|P_{H^\perp}b\|,\qquad
+  \operatorname{dist}(b,\image\delta_0),\qquad
+  \text{a modular cochain or code distance}
+\]
+measure harmonic residual, distance to exactness, and modular or code
+disagreement, respectively. A modular distance needs its own carrier and
+normalization.
+
+The canonical systematic profile below has no faces and satisfies
+\(\delta_1=0\), so the proposition's nonzero-coexact premise is
+unavailable in that profile.
+
 
 Canonical representatives alone do not make a finite-field RS code into a
 proper real-linear exact-cochain locus. Suppose \(q\) is prime, the evaluation
@@ -373,13 +425,12 @@ far-preservation claim therefore fails even on capacity-far pairs. The
 general protocol must bind the pair before sampling its challenge or prove
 goodness for its actual restricted line profile.
 
-The full HCP sample \(b=h+\delta_0a+\delta_1^*v\) has a different
-residual. The companion manuscript's exact-component obstruction
-\cite{vanDerVlugt2026hcp} shows that, when a nonzero coexact direction is
-allowed, this full residual need not descend to an exact-component-only
-view. Such a view needs a justified quotient or restricted source profile
-before it can support a full-HCP far-region claim. This does not establish
-factorization of a particular raw serializer through that decoded view.
+For the full HCP residual,
+\cref{prop:exact-component-obstruction} retains the nonzero-coexact and
+unrestricted-source hypotheses. An exact-component-only view needs a
+justified quotient or restricted source profile before it can support a
+full-HCP far-region claim. Applying the proposition to a serializer also
+requires proving that its extraction factors through that decoded view.
 
 For scalar transfer, the pair must remain fixed before a random challenge is
 sampled, or a chosen fixed challenge must be proved MCA-good. The canonical

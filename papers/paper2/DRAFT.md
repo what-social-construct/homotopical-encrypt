@@ -2,16 +2,16 @@
 
 ## Working manuscript: objects, observations and metric contracts
 
-Initial manuscript text, 2026-11-05. This draft develops the bounded
-proof-carrying transition scope in SCOPE.md (archived reference: `archive/documentation/papers/paper2/SCOPE.md`). It is not yet a full
-protocol paper or a TeX/PDF manuscript. The [shared parity table](../../SEMANTIC-PARITY.md)
-is the current statement/proof-status register.
+This working draft develops one snapshot-bound proof-carrying transition and
+its construction and security contracts. It is not yet a full protocol paper
+or a TeX/PDF manuscript. The [shared parity table](../../SEMANTIC-PARITY.md)
+records current statement ownership and proof status.
 
 ### 1. Scope and paper ownership
 
-Paper 1 supplies the cellular Hodge objects, the explicitly named homological
-Helfer fragment, concrete HCP families, harmonic recovery, CVP comparisons and
-the mathematical observation boundaries. Paper 2 owns the cochain commitment
+Paper 1 supplies the cellular Hodge primitives, the explicitly named
+homological Helfer fragment, concrete HCP families, harmonic recovery and CVP
+comparisons. Paper 2 owns the cochain commitment
 construction and its visibility, encoding and security contracts, the relation
 between those objects and public observations, verification evidence, retained
 artifacts and one accepted state transition.
@@ -63,10 +63,10 @@ database. Snapshot root, cochain leaf digest, gate-evidence digest, manifest
 root and block digest are separate coordinates. A matching quorum signs the
 same proposal; these joins do not by themselves prove global finality.
 
-The concrete protocol retains the following three visibility levels. They
-instantiate [Paper 1's observation distinction](../paper1/sections/02-harmonic-cochain-problem.tex)
-between an exact committed component and the full Hodge sample; their concrete
-data and access rules belong to this paper:
+The concrete protocol retains the following three visibility levels. The
+full Hodge sample from [Paper 1](../paper1/sections/02-harmonic-cochain-problem.tex)
+and the exact committed component are distinct objects; their commitment,
+disclosure and access contracts belong to this paper:
 
 | Level | Data and exposure |
 |---|---|
@@ -175,9 +175,9 @@ It requires an actual integral opening and an integer carry such that
 \delta_0 a=\mathbf z+q\mathbf m.
 \]
 
-The new systematic cellular profile constructs this relation from the actual
-coboundary and proves its equivalence with the selected finite-field RS
-code. Its definition contains neither a coding-distance comparison nor a
+The systematic cellular profile constructs this relation from the actual
+coboundary. [Paper 3](../proximity-prize/sections/07-application-interface.tex)
+proves its equivalence with the selected finite-field RS code. Its definition contains neither a coding-distance comparison nor a
 target-codeword assumption. Modular exactness and real decoded exactness
 remain different predicates. A proved no-wrap bound on the integer syndrome
 can relate them in the explicit profile; canonical scalar representatives
@@ -206,13 +206,8 @@ inequality of their operative targets rule out a decoder exact on both;
 criterion. The existing global factorization theorem is another sufficient
 criterion, not a property automatically enjoyed by public roots or proofs.
 
-Full genuine Plücker coordinates of the operative kernel give the opposite
-boundary: with the same \(b\) and fixed inner product, they determine the
-operative target, as proved in
-[PluckerObservation](../../lean/TCB/PluckerObservation.lean). A profile that
-releases those coordinates cannot also claim distinct targets under that
-identical full view. A digest-only extension requires its own analysis and
-does not inherit this exact-coordinate recovery theorem or a hiding theorem.
+Projective extensions retain the disclosure and binding conditions in
+§§2.1 and 5.
 
 #### 3.1. Payload operations and commitment interfaces
 
@@ -360,154 +355,81 @@ every modulus is admitted by the current wire-facing `SupportedModulus`
 predicate. Finite packet/witness bytes, authentication and a runtime decoder
 refinement remain separate from this declared mathematical profile.
 
-### 4. Three native metric levels
+### 4. Declared metric and calibration contracts
 
-The projection chain keeps a distance at each level. Neither a shared payload
-type nor a shared root identifies those distances.
+A projection run records the original source carrier, validity predicate,
+coordinate layout, extraction and radius normalization. Paper 3 defines and
+analyzes the distances used by that profile. The following names identify
+the protocol's selected quantities without introducing a second metric theorem.
 
-| Level | Object | Native metric in the explicit modular profile | Validity locus |
-|---|---|---|---|
-| Cochain | The original serialized cochain coordinates | Fraction of changed scalar coordinates, normalized by \(2n\) | Actual integral cellular coboundaries modulo \(q\) |
-| Plane | The two coordinates extracted at each of \(n\) positions | Fraction of changed whole pairs, normalized by \(n\) | Modularly exact integer planes in the selected layout |
-| RS | The reduced finite-field pair, followed by an affine challenge | Whole-pair RS distance; scalar RS distance after the challenge | The actual interleaved RS code, or scalar RS code respectively |
+| Level | Selected object and normalization | Required validity/profile binding |
+|---|---|---|
+| Cochain | Original scalar coordinates; `d_C` uses `2*n` coordinates | The actual integral cellular coboundary modulo `q` in §3.3 |
+| Plane | Extracted integer pairs; `d_P` uses `n` positions | The same modular source and declared coordinate order |
+| RS | Reduced finite-field pairs; `D_RS` uses `n` whole symbols | The same evaluation parameters and interleaved RS code |
 
-An explicit complete coordinate layout records both geometric and serialized
-orders, reads every scalar exactly once and uses the identity integer
-coefficient map. An arbitrary legacy extraction need not have these
-properties. The codec proves alignment from the original context's shape and
-snapshot conditions; its real decoder reads the same coordinates as its plane
-extraction.
+A complete coordinate layout alone does not identify an arbitrary decoder
+or differently ordered sheaf with this systematic source. The protocol
+retains the actual decoder equality and the geometric/serialized coordinate
+alignment from §3.3. A local-syndrome score `d_L` remains a separate profile
+field with its own adequacy and comparison contracts.
 
-The systematic native profile uses the geometric ordering built into its
-actual restriction maps. The selected canonical layout uses that same
-ordering. A different complete bijection does not by itself transport the
-geometric coboundary into the same indexed RS code; that compatibility must
-be recorded for any differently ordered geometric interpretation.
+[Paper 3's application](../proximity-prize/sections/07-application-interface.tex)
+proves the modular metric comparisons, accepted-to-native-zero result and
+scaled near/far calibrations for these original objects. The protocol consumes
+those results through the existing
+[SourceToSourceCalibration and SourceToCodeCalibration](../../lean/Proximity/Application/Calibration.lean)
+and [EvaluationProjection](../../lean/Proximity/Application/Projection.lean)
+interfaces. The
+[canonical adapters](../../lean/Protocol/Storage/CanonicalCalibration.lean)
+retain the same payload and extraction and the theorem's stated scale.
 
-[Paper 3's application analysis](../proximity-prize/sections/07-application-interface.tex)
-proves the comparison for the same original payload, complete layout and
-intrinsic modular validity locus:
+A near-distance handoff is not a far-preservation certificate. Evidence that
+uses a far conclusion must retain the applicable `noncollapse` law and its
+source model, or the actual
+[LiftControl](../../lean/Protocol/Storage/Calibration.lean) witnesses and decoder
+bound. Storage roots, exact acceptance and the existence of an extraction
+supply none of those missing inputs. Policy records whether it checks real
+`Context.Accepted`, intrinsic modular validity, or a raw-input proximity claim.
 
-\[
-\boxed{d_C\le d_P=D_{\rm RS}\le2d_C}.
-\]
+### 5. Geometric release and restricted source profiles
 
-The all-integer theorem retains coordinatewise saturation modulo `q` and the
-actual reduction map. Its representative-lifting and mismatch-count proofs
-belong to Paper 3. A separate scalar-coordinate result identifies `d_C` with
-the flattened finite-field code distance. These statements concern distance
-to validity; they do not identify arbitrary raw integer words by a pairwise
-isometry. This protocol consumes them with the declared normalization and
-layout/decoder hypotheses.
+[Paper 3](../proximity-prize/sections/07-application-interface.tex) owns full
+projective reconstruction and the geometric source-calibration obstructions.
+A protocol using its operative-target consequence must identify the released
+full shadow with the actual sample's harmonic kernel at the fixed metric.
+The existing
+[operative-target adapter](../../lean/TCB/PluckerObservation.lean) records that
+conditional use. The base visibility profile in §2.1 instead omits full
+coordinates; a digest-only extension retains its own observable fields,
+binding contract and security analysis.
 
-The optional local-syndrome score `d_L` of §3.2 is a separate profile field.
-It is not a fourth native edit metric or automatically equal to `d_C`; any
-chain that uses it must retain its actual comparison and adequacy contracts.
+A Euclidean source profile names its actual decoder, source restriction and
+comparison witnesses. If it invokes
+[NoWrapCalibration](../../lean/Protocol/Storage/NoWrapCalibration.lean), the
+bounded coordinate envelope and integer-syndrome no-wrap condition must hold
+for that same source. The canonical-lift and exact-component obstructions in
+Paper 3 prevent treating these profile inputs as consequences of a wire
+shape, canonical scalar representatives or common snapshot labels.
 
-These directions matter. The existing chain's *near* contract has a target
-distance bounded above by its source score. The native scalar distance
-\(d_C\) supports the far direction \(d_C\le d_P\). The near contract
-can consume the explicitly scaled score \(2d_C\), since
-\(d_P\le2d_C\). The metric \(d_C\) keeps its native \(2n\) normalization;
-the factor belongs to the near contract. The far implication uses the native
-unit comparison \(d_C\le D_{\rm RS}\).
-
-Paper 3 also constructs the RS witness showing that the near factor two is
-sharp. Thus protocol policy cannot replace the bound by a global native unit
-near inequality `d_P <= d_C`.
-
-In the declared systematic realization, with its complete decoder, accepted
-real-exact payloads also have modular validity and zero distance at all three
-native levels. Positive native farness is therefore a **raw-input rejection
-condition**, not a property of an already accepted anchor. Modular validity
-alone does not imply real `Context.Accepted`; that converse needs the stated
-integer-syndrome no-wrap restriction and the actual decoder relation. Policy
-and evidence must record which predicate was checked.
-
-The accepted-to-native-zero theorem itself uses the explicit equality
-`C.interpretation.decode C.cochain = layout.decode C.cochain` at this
-payload. Shape and snapshot binding alone do not prove that equality.
-
-The **upstream geometric scores stay separate**. In particular,
-
-\[
-\rho_{\rm ex}(c)=\|P_{(\operatorname{im}\delta_0)^\perp}
-                     \operatorname{dec}_F(c)\|
-\]
-
-is Euclidean distance to exact cochains. It is distinct from scalar edit
-distance, whole-pair edit distance, a frame disagreement and the full-HCP
-residual \(\|(I-P_H)b\|\). Keeping three chain metrics does not supply any
-missing comparison from these upstream quantities.
-
-### 5. Checked geometric boundaries and an explicit restricted profile
-
-For genuine frame witnesses, the full projective Plucker point reconstructs
-the harmonic subspace by exterior multiplication:
-
-\[
-W=\{x:x\wedge(w_1\wedge\cdots\wedge w_r)=0\}.
-\]
-
-This construction and both concrete projective soundness inputs are now
-proved in Lean. At the fixed inner product it recovers the harmonic projector.
-If this is the operative HCP kernel, full projective data determine the
-operative target on the observed vector. This is mathematical recovery on
-exact real coordinates, not a finite-encoding algorithm or a digest inversion
-result. A digest-only observation requires a separate visibility/binding
-profile; the current semantic hashed-shadow record also contains the shadow.
-
-For RS degree bound at least two, the canonical real lifts of affine field
-codewords span the full real coordinate space. The checked consequence is
-that a nontrivial linear decoder cannot satisfy a global Euclidean
-exactness-distance comparison with zero additive loss against unrestricted
-RS distance. This does not exclude restricted profiles, additive losses or
-separately justified threshold theorems.
-
-The explicit systematic cellular construction lifts actual RS interpolation
-coefficients to integers; its real coboundary is the resulting systematic
-generator. Paper 3's restricted-source analysis uses a bounded coordinate
-envelope and a no-wrap bound on the **integer syndrome** to obtain validity
-reflection and the coarse comparison
-
-\[
-\rho_{\rm ex}(c)\le Bn\sqrt{2n}\,D_{\rm RS}(c).
-\]
-
-This uses the independent Euclidean distance. Its finite-shell argument
-certifies at most a first-shell target radius for a nonempty source far
-region. It is not a capacity- or Johnson-scale geometric theorem. A positive
-decoded far input is a raw received context; already accepted exact anchors
-have \(\rho_{\rm ex}=0\).
+The claimed radius and far carrier must be those justified by the selected
+Paper 3 theorem. A restricted geometric comparison is not an unrestricted
+capacity-radius comparison. An accepted exact artifact and a raw received
+proximity input remain distinct roles in the protocol.
 
 ### 6. Challenges and evidence consumption
 
-A pair is fixed before a sampled affine challenge. A bound on the fraction
-of bad challenges does not certify an arbitrary fixed mix. The zero-direction
-profile has a checked stronger property: every challenge is good and the
-scalar and pair distances agree.
+The protocol binds the original payload, extracted pair and code parameters
+before sampling an affine challenge under the declared distribution. A fixed
+mix requires an authenticated restricted-line profile and the corresponding
+goodness result from Paper 3. Its challenge computations and fixed-mix
+counterexamples are not repeated here.
 
-The nonzero diagonal profile is also checked. If both columns equal the
-degree-\(k\) power evaluation word \(u\), then every
-\(\gamma\ne-1\) is MCA-good and preserves its scalar capacity distance.
-At every nonnegative tested radius, the bad set is exactly \(\{-1\}\),
-with uniform fraction \(1/q\). The quantitative proof and its canonical
-specialization are Paper 3 results.
-The canonical mix has order \(4096\), so is noncancelling on this particular
-line; its concrete adapter is tracked separately from the generic theorem.
-
-This is a restricted-line result. For any fixed nonzero \(\gamma_0\), the
-pair \((u,-\gamma_0^{-1}u)\) has native cochain and pair distance
-\((n-k)/n\), but its scalar value at \(\gamma_0\) is zero.
-A global fixed-mix far-preservation claim fails even on capacity-far inputs.
-General protocol use must bind the pair before sampling its challenge or
-authenticate a line profile with a proved goodness theorem.
-
-The final evidence object must state the source score, each metric handoff,
+The final evidence object records the source score, each metric handoff,
 radius normalization, challenge experiment and root bindings. The existing
 candidate-indexed evidence and anchor joins preserve those statements and
-objects; they do not construct an omitted source comparison or turn an
-admissibility predicate into finality.
+objects under their explicit contracts. They do not construct an omitted
+source comparison or turn an admissibility predicate into finality.
 
 #### Projection certificates and retained evidence
 
@@ -529,17 +451,6 @@ syndrome check, complete evidence array or matching root does not repair a
 missing source model, decoder equality or far-comparison premise. The
 positive-radius claims concern the raw received carrier; accepted exact
 anchors have zero decoded exactness distance under the same interpretation.
-
-The shared HCP object crosswalk (archived reference: `archive/documentation/docs/COCHAIN_PROXIMITY_TRACE.md`)
-accounts for semantic classes, admissible presentations, integral messages,
-exact/coexact noise, the full sample, commitments, gates and retained artifacts
-(HC01--HC44). It also recovers the ephemeral/anonymity plan: generate a private
-representative in the same class with a hidden path/transport, then publish
-only the selected artifact and evidence view. Class preservation for one
-supplied representative is proved under an explicitly path-respecting
-classifier. Actual integral transport and recipient recovery are specified
-below; indexed generation, lifecycle enforcement and an anonymity game remain
-separate obligations.
 
 Rotation correctness must name the semantic plaintext and its cross-presentation
 encoding: transporting harmonic coordinates can preserve the same plaintext.
@@ -892,18 +803,18 @@ already-established semantic facts: their well-formedness includes statement
 truth. Their named `Prop` fields cannot turn a successful runtime check into
 that truth. The [SNARK interface](../../lean/TCB/SNARK.lean) likewise records
 assumptions; no SNARK backend is selected by the current
-workspace `Cargo.toml`.
+archived workspace `archive/runtime/Cargo.toml`.
 
-Runtime paths below refer to the full workspace; those implementations are
-excluded from the Lean/manuscript review bundle. The implementation comparison
+Runtime paths below refer to historical prototypes under `archive/runtime/`;
+they are excluded from the Lean/manuscript review bundle. The implementation comparison
 identifies distinct signed and proved objects:
 
-| Existing implementation | Actual object and missing comparison |
+| Archived implementation | Actual object and missing comparison |
 |---|---|
-| Worker signatures in `rust/node/src/consensus/pov.rs` | Ed25519 authenticates a 69-byte spectral message: domain, fingerprint hash, gap-valid bit and three Betti numbers. It does not sign the owner transfer intent or complete final proposal. A selected key registry, message encoder and exact verifier-agreement equation are required before this algorithm can instantiate owner authorization. |
-| Bootstrap keys in `rust/node/src/main.rs` | The single-node path derives four signing seeds from the public producer fingerprint. That path does not justify an uncompromised-key assumption. An Ed25519 implementation alone supplies no authorization/error bound for this setup. |
-| Raw graph commitment in `rust/node/src/crypto/commitment.rs` | Ordered ordinary-incidence differences, without general private cellular restrictions. A global constant translation changes the vertex-zero message while preserving every edge value. Payload authentication is distinct from binding that message. |
-| Geodesic verifier in `rust/node/src/crypto/geodesic_zkp.rs` and transaction call path in `rust/node/src/consensus/pov.rs` | Sampled floating-point matrix, spectral and transcript checks. They do not receive the original cochain, trusted interpretation or owner intent required for `Context.Accepted`. No bound `2^{-n_opened}` or SNARK/zero-knowledge property is established. The audited parser/call path also does not establish the canonical, fail-closed packet contract: trailing bytes can remain unconsumed and malformed optional proofs can be skipped. |
+| Worker signatures in `archive/runtime/rust/node/src/consensus/pov.rs` | Ed25519 authenticates a 69-byte spectral message: domain, fingerprint hash, gap-valid bit and three Betti numbers. It does not sign the owner transfer intent or complete final proposal. A selected key registry, message encoder and exact verifier-agreement equation are required before this algorithm can instantiate owner authorization. |
+| Bootstrap keys in `archive/runtime/rust/node/src/main.rs` | The single-node path derives four signing seeds from the public producer fingerprint. That path does not justify an uncompromised-key assumption. An Ed25519 implementation alone supplies no authorization/error bound for this setup. |
+| Raw graph commitment in `archive/runtime/rust/node/src/crypto/commitment.rs` | Ordered ordinary-incidence differences, without general private cellular restrictions. A global constant translation changes the vertex-zero message while preserving every edge value. Payload authentication is distinct from binding that message. |
+| Geodesic verifier in `archive/runtime/rust/node/src/crypto/geodesic_zkp.rs` and transaction call path in `archive/runtime/rust/node/src/consensus/pov.rs` | Sampled floating-point matrix, spectral and transcript checks. They do not receive the original cochain, trusted interpretation or owner intent required for `Context.Accepted`. No bound `2^{-n_opened}` or SNARK/zero-knowledge property is established. The audited parser/call path also does not establish the canonical, fail-closed packet contract: trailing bytes can remain unconsumed and malformed optional proofs can be skipped. |
 
 The [graph model](../../lean/Sheaf/GraphCommitment.lean) proves the constant
 translation law over additive groups and constructs the existing modular
@@ -1157,97 +1068,58 @@ That public-key interface remains open.
 No auxiliary CRS encryption or conventional/native signature combiner is
 selected by this retrieval construction.
 
-### 7. Proof ledger and remaining protocol work
+### 7. Construction ownership and remaining protocol work
 
-The successful Lean 4.35 builds of 9,233 aggregate/integration jobs and 9,228
-default jobs, and the 68-declaration audit, are the **pre-addition baseline**.
-They do not validate the newer modules merely because the pin is unchanged.
-The completed native-metric follow-up's aggregate/integration union passes
-**9,253 jobs**, and its literal default build passes **9,248 jobs** on the same
-pin. Its
-consolidated probe through public facades passes for **139 distinct selected
-endpoints**, with sets exactly matching the individual reports: 100 use
-exactly the three standard axioms, three use a subset, and 36 retain only
-existing native certificates beyond them. None uses a cited-bound axiom or
-`sorryAx`. That record's Paper 1/Paper 3 PDFs have 97/28 pages; all 125 overview
-pages and changed pages have been inspected. Final formatting/artifact details
-and current PDF hashes belong to the
-shared validation record (archived reference: `archive/documentation/docs/MATH_STORAGE_VALIDATION.md`), separately
-from the preserved pre-addition baseline. These are historical Paper 2
-implementation records. Paper 1's separate public release and protected
-preflight are recorded centrally; they do not certify this protocol draft.
+This inventory assigns each protocol family to Paper 2 without treating every
+interface as a completed cryptographic construction. A constructed record or
+conditional preservation theorem retains all of its supplied profiles.
+The bounded central claim is the checked transfer in §6.2 and its explicitly
+scoped one-shot integrity comparison in §6.3.
 
-The actual Helfer/cellular/HCP observation wiring is a separate follow-up to
-that native-metric baseline. Its latest build and dependency outcomes belong
-to the same central validation record (archived reference: `archive/documentation/docs/MATH_STORAGE_VALIDATION.md`);
-the earlier counts are not validation of the added modules.
+| Family | Canonical modules | Status and boundary |
+|---|---|---|
+| Payload and operations | [Payload](../../lean/Axioms/CochainCommitment/Payload.lean) | Constructed shape, modulus/count/tag, compatible addition and zero; finite serialization remains separate. |
+| Snapshot, interpretation and openings | [Commitment](../../lean/Sheaf/Commitment.lean) | Constructed snapshot/payload interpretation, exact acceptance and opening equivalence modulo `ker delta0`; this is Paper 2 construction. |
+| Concrete/legacy semantics | [CochainSemantics](../../lean/Sheaf/CochainSemantics.lean), [SheafCoherence](../../lean/Axioms/SheafCoherence.lean) | Conditional carrier/decoder/coboundary alignment and acceptance equivalence; ambient coherence contracts remain supplied. |
+| Commitment, blinding, local opening and MAC | [Security](../../lean/Axioms/CochainCommitment/Security.lean), [Blinded](../../lean/Axioms/CochainCommitment/Blinded.lean) | Typed geometry and named binding/hiding/opening/MAC contracts; secure algorithms and experiments are not constructed. |
+| Ordinary graph profile | [GraphCommitment](../../lean/Sheaf/GraphCommitment.lean) | Constructed modular payload and alternative openings; its translation ambiguity limits raw message binding. |
+| Original HCP/artifact binding | [HCPObservation](../../lean/TCB/HCPObservation.lean), [HCPRealization](../../lean/TCB/HCPRealization.lean), [HCPAxisFamily](../../lean/TCB/HCPAxisFamily.lean) | Conditional joins of Paper 1's actual sample/operator/classifier to the original artifact and decoder; authentication and full-view equality remain explicit. |
+| Rotation and delivery | [Sheaf.Rotation](../../lean/Sheaf/Rotation.lean), [AxisRotation](../../lean/HCP/AxisRotation.lean), [Ephemeral](../../lean/Protocol/Ephemeral.lean) | Actual integral/sample transport, coefficient-preserving recovery and original-payload migration; secure delivery and lifecycle enforcement are supplied. |
+| Ephemeral paths and fibers | [Fibration](../../lean/Axioms/Fibration.lean), [PresentedRotation](../../lean/Protocol/Ephemeral/Rotation.lean) | Supplied admissible paths and realized transport; class equality does not construct the private path or its generation algorithm. |
+| Public visibility | [Storage.PublicView](../../lean/Protocol/Storage/PublicView.lean), [Transfer.PublicView](../../lean/Protocol/Transfer/PublicView.lean) | Actual base/header, directory, explicit HCP disclosure and transfer release; no hiding follows from omitted witness fields. |
+| Cellular source and codec | [SystematicCode](../../lean/Sheaf/SystematicCode.lean), [CoordinateCodec](../../lean/Protocol/Storage/CoordinateCodec.lean), [CanonicalSystematic](../../lean/Protocol/Storage/CanonicalSystematic.lean) | Actual source and complete original-payload layout from §3.3; Paper 3 owns the validity/code and quantitative metric comparisons. |
+| Projective/payload realization | [PublicBinding](../../lean/Proximity/Concrete/PluckerCochain/PublicBinding.lean) | Hashed handles and conditional payload/frame/observation bindings; Paper 3 owns full-point reconstruction. |
+| Storage context and checkpoint lifecycle | [Context](../../lean/Protocol/Storage/Context.lean), [Checkpoint](../../lean/Protocol/Storage/Checkpoint.lean), [Projection](../../lean/Protocol/Storage/Projection.lean) | Original context, six ordered stages, exact manifests, matching receipt and terminal consumption; no backend durability, erasure or global freshness. |
+| Projection gates and evidence | [Gates](../../lean/Gates.lean), [stage certificates](../../lean/Proximity/Concrete/Gates/Stage.lean), [GateEvidence](../../lean/Proximity/Concrete/GateEvidence.lean) | Conditional certificates and seven evidence slots retain Paper 3's mathematical laws; supplied gate facts are not validation algorithms. |
+| History and proposal anchoring | [Anchor](../../lean/Protocol/Storage/Anchor.lean), [ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean), [TransferManifest](../../lean/Protocol/Storage/TransferManifest.lean) | Same artifact, exact manifest/prefix, gate database and proposal joined under indexed binding/inclusion contracts. |
+| Generic ledger | [ValueFlow](../../lean/Protocol/Ledger/ValueFlow.lean), [State](../../lean/Protocol/Ledger/State.lean), [Transition](../../lean/Protocol/Ledger/Transition.lean) | Constructed valuation, resource flow, nullifier state, action, candidate, policy, computed successor and conditional execution/conservation/replay laws. |
+| Checked owned transfer | [OwnedResource](../../lean/Protocol/Ledger/OwnedResource.lean), [Operational](../../lean/Protocol/Transfer/Operational.lean), [Owned](../../lean/Protocol/Transfer/Owned.lean), [Anchored](../../lean/Protocol/Transfer/Anchored.lean) | The fixed-catalogue/snapshot/epoch central transition of §6.2; derived validity/update under the stated check and primitive contracts. |
+| Transcript and checked evidence | [TransferTranscript](../../lean/Protocol/Evidence/TransferTranscript.lean), [TransferCheck](../../lean/Protocol/Evidence/TransferCheck.lean), [TransferEnvelope](../../lean/Protocol/Evidence/TransferEnvelope.lean) | Acyclic intent/metadata/packet/root construction and exact checker/evidence joins; raw checks remain distinct from exact soundness interfaces. |
+| Signing and authorized issuance | [Signing](../../lean/Protocol/Transfer/Signing.lean), [Issuance](../../lean/Protocol/Transfer/Issuance.lean), [Authorization](../../lean/Protocol/Transfer/Authorization.lean) | Full-intent/domain binding, actual authorized history and fixed-policy consequences; no adaptive signing security is inferred. |
+| Native path proof and outer codec | [PathSignature](../../lean/Protocol/Transfer/PathSignature.lean), [Codec](../../lean/Protocol/Transfer/PathSignature/Codec.lean) | Conditional original credential/path witness and proof execution; concrete outer framing, with finite inner encodings, knowledge and unforgeability still required. |
+| Primitive failures and one-shot integrity | [PrimitiveChecks](../../lean/TCB/PrimitiveChecks.lean), [Primitives](../../lean/Protocol/Transfer/Primitives.lean), [Security](../../lean/Protocol/Transfer/Security.lean) | Actual verifier/history interfaces and conditional shared-PMF failure composition; primitive error estimates and adaptive games remain supplied. |
+| Proof/TCB envelopes | [ProofCarrying](../../lean/TCB/ProofCarrying.lean), [SNARK](../../lean/TCB/SNARK.lean), [CompressionBoundary](../../lean/TCB/CompressionBoundary.lean), [WitnessVerifier](../../lean/TCB/WitnessVerifier.lean), [Runtime](../../lean/TCB/Runtime.lean) | Named proof/compression/runtime contracts. Legacy well-formedness includes statement truth and cannot establish independent concrete verifier soundness. |
+| Retrieval | [Retrieval](../../lean/Protocol/Storage/Retrieval.lean) | Original Hodge query/answer correctness, digest-check/collision recovery and whole-bucket selector privacy; efficient PIR and general native-query privacy remain open. |
+| Committee and quorum kernel | [Committee](../../lean/Protocol/Consensus/Committee.lean), [Vote](../../lean/Protocol/Consensus/Vote.lean), [Quorum](../../lean/Protocol/Consensus/Quorum.lean), [Certified](../../lean/Protocol/Ledger/Certified.lean) | Registered weights, authenticated proposal-bound votes, strict quorums and conditional intersection/safety; rounds, locks and finality are not supplied. |
 
-| Material / source owner | Checked endpoint and boundary |
-|---|---|
-| [Actual cochain model and homological tests](../../lean/Helfer/CochainModel.lean) | Focused compilation and the selected dependency probe pass. The actual bounded-below Quillen model carries the cellular coboundaries; strict/isometric chain isomorphisms give typed Helfer equivalences. Nonzero-cohomology closed tests are proved invariant for all interpretations. This is an explicitly named fragment, not full Helfer first-order fibrational semantics or Theorem 12.3. |
-| [Concrete integral coexact-axis family](../../lean/Sheaf/HCPAxisFamily.lean) | The focused integration includes actual cellular restrictions, stalk lattices, a harmonic lattice presentation, the true operator with positive spectral gap one, and harmonic-message/coexact-noise samples. The shared full cochain and zero exact components are separate from equality of snapshots or public artifacts. Current validation outcomes are recorded centrally. |
-| [Actual HCP realization](../../lean/HCP/AxisFamily.lean) | The focused integration build passes for the stated endpoints. Actual matrices and the homological closed theories form `HCPBridge.Realization`, with a common `(class,b)` observation and distinct nonzero operative targets. Existing no-recovery/CVP-oracle results and positive discrete CVP recovery are reused. Coordinate-target ambiguity alone does not distinguish semantic plaintexts or supply a privacy game or equality of the full storage view; current dependency outcomes are recorded centrally. |
-| [Original bound-observation adapter](../../lean/TCB/HCPRealization.lean) | The focused adapter build passes. Operator-action and classifier alignment retain the original bound sample, payload, interpretation and artifact; kernel/projector/operative-message agreement and the stated discrete CVP comparison are derived. A richer view inherits no-recovery only under its explicit factorization hypothesis. The adapter does not manufacture snapshot, hash or verification contracts. |
-| [Concrete artifact-bound family adapter](../../lean/TCB/HCPAxisFamily.lean) | The final focused glue build passes. Actual operator alignment and the computed positive spectral gap one instantiate the declared spectral gate/window. `bindSample` retains an existing artifact and derives the same operative-target/CVP join. Acceptance, hash/snapshot binding, decoding of the zero exact component and the snapshot-classifier equality remain application inputs; the adapter does not construct a dummy artifact or equality of full public views. |
-| [Presented-coefficient recovery](../../lean/Sheaf/CoefficientRecovery.lean) | Integer encoding is injective; the exact partial decoder reads the observed cochain and private presentation. Valid encoded inputs recover their original coefficients. Full intrinsic-lattice coverage and an efficient byte algorithm are not inferred. |
-| [Integral Hodge rotation](../../lean/Sheaf/Rotation.lean) and [actual axis rotation](../../lean/HCP/AxisRotation.lean) | Actual message and exact/coexact noise transport, projector naturality, inverse and composition; an explicit integral law and all-coefficient encoding law. The concrete weighted rotation preserves two while changing the observation to `(2,1)`. |
-| [Presented recipient profile](../../lean/Protocol/Ephemeral/Rotation.lean), [delivery](../../lean/Protocol/Ephemeral/Delivery.lean) and [axis receipt](../../lean/Protocol/Ephemeral/Examples.lean) | Both recipient routes preserve plaintext; original contexts, recipient, epoch labels, actual private material and envelope index explicit authorization/delivery relations. Scope rejection supplies neither caller authentication nor replay prevention. |
-| [Original bound-sample migration](../../lean/Protocol/Ephemeral/HCP.lean) | Actual transported sample equality derives the decoder/payload migration law from existing exact-component bindings. Both routes recover the source coefficients under its presented-point equality. Target construction retains the original supplied artifact and binding/acceptance contracts. |
-| [Existing transition kernel](../../lean/Protocol/Ledger/Transition.lean), [candidate evidence](../../lean/Protocol/Evidence/Transition.lean) and [history anchor](../../lean/Protocol/Storage/Anchor.lean) | Baseline checked conservation, replay exclusion and same-object/context joins under explicit authentication, policy and backend relations. These do not instantiate a production protocol. |
-| [Owned-resource kernel](../../lean/Protocol/Ledger/OwnedResource.lean) | A positive owner/asset/amount catalogue, one-input/one-output action, source-derived public spend identifier and actual inventory-coordinate laws. Structural checks derive conservation and freshness; inventory preservation retains its initial invariant hypothesis. The positive mechanical fixture constructs no runtime, hash or owner-authorization proof. |
-| [Acyclic transcript](../../lean/Protocol/Evidence/TransferTranscript.lean) and [input manifest](../../lean/Protocol/Storage/TransferManifest.lean) | Explicit content/draft/intent/packet/block preimages and reconstruction of omitted metadata. The exact one-entry original-payload seal is prepared independently of later packet/block digests. Typed hashing supplies no injectivity, canonical-byte implementation or six-stage gate completeness. |
-| [Soundness-free packet checking](../../lean/Protocol/Evidence/TransferCheck.lean) and [exact verifier specialization](../../lean/Protocol/Evidence/TransferVerifier.lean) | Parsing, canonical bytes and complete metadata/intent equality guard the actual Boolean algorithms. Raw checked records assume no semantic soundness; exact interfaces project to the same checker and use their separately supplied contracts to derive authorization and payload exactness under the actual trusted interpretation. |
-| [Operational transfer](../../lean/Protocol/Transfer/Operational.lean), [ideal checked transfer](../../lean/Protocol/Transfer/Owned.lean) and [anchored endpoint](../../lean/Protocol/Transfer/Anchored.lean) | Local authorization and original-payload acceptance derive validity of the candidate computed from the actual parsed packet. The exact checker/policy/candidate projection preserves the ideal theorem. Complete packet, original artifact/context and input manifest remain joined; a matching whole-proposal quorum remains an external input. |
-| [Actual transfer view](../../lean/Protocol/Transfer/PublicView.lean) | Publishes this checked release's bytes, parsed packet, complete proposal and original input-manifest view. `ofOperational` reuses the same carrier for actual raw checks without perfect primitive soundness. Public input/output/signer differences distinguish records; the deterministic input-ID test needs no private witness or hash inversion. This supplies no privacy theorem or complete network transcript. |
-| [One-shot sampled integrity](../../lean/Protocol/Transfer/Security.lean) | Accepted-invalid outcomes for the actual soundness-free checker imply authorization or exact-payload verification failure. One shared PMF yields the union bound and composition of supplied error budgets without independence. `ofCheckedRelease` provides an actual released observation. No primitive estimate, adaptive oracle game, security-parameter family or privacy claim is inferred. |
-| [Actual byte-level primitive checks](../../lean/TCB/PrimitiveChecks.lean) | Selected signature/proof algorithms, exact byte-indexed backend statements, signing-query history and compromised-key predicate. Successful verification is classified without a global soundness, zero-knowledge or numerical-error assumption. Legacy TCB comments distinguish these raw checks from carriers whose well-formedness already includes statement truth. |
-| [Primitive-to-original-transfer comparison](../../lean/Protocol/Transfer/Primitives.lean) | Exact owner/key/message and payload-input check-agreement equations retain the same operational configuration and parsed packet; §6.5 constructs the owner signing equation for the selected new checker. Accepted-invalid outcomes reduce to fresh forgery, compromised key, queried unauthorized message, backend proof false acceptance or original-context statement mismatch. Their shared-PMF sum composes supplied budgets; current Rust algorithms are not claimed to discharge those contracts or estimates. |
-| [Full-intent signing](../../lean/Protocol/Transfer/Signing.lean) | The existing packet codec encodes an empty-signature/empty-proof skeleton under the literal owner domain. Equality reflects full metadata and intent; worker spectral messages have a different prefix. The codec remains supplied; no concrete Rust serialization, hash injectivity or signing algorithm is inferred. |
-| [Typed authorized issuance](../../lean/Protocol/Transfer/Issuance.lean) | Actual metadata, intent and signature bytes carry authorization for the intent-derived signer under one fixed relation. The existing key map/query history is reused, with explicit foreign non-owner-domain queries. Owner-domain query reflection recovers authorization without key injectivity; actual-signature coverage remains separate from key/message query membership. |
-| [Constructed owner authorization](../../lean/Protocol/Transfer/Authorization.lean) | The selected backend/key map construct the raw full-intent checker and a reflexive profile-agreement equation, preserving the original context/intent/candidate/policy. The actual typed history rules out queried-unauthorized mass and yields the four-term configured-experiment bound. An independently authorized release checked under this new checker can be recorded with its exact signature and `PublicTransferView.ofOperational` coverage. No secret signing execution, registration, numerical bound or general history/revocation game follows. |
-| [Path-realized transport](../../lean/Protocol/Ephemeral/Rotation.lean) | Under a supplied path-to-`PresentedRotation` realization, the existing fiber system's transport is the same path's degree-one map. Projection naturality and harmonic invariance are inherited; `EphemeralRotation.ofPath` constructs the original admissible carrier with matching transport and direct/base recovery. Arbitrary existing records and concrete realization algorithms remain separate. |
-| [Finite native witness boundary](../../lean/Protocol/Transfer/PathSignature.lean) | A partial decoder retains the original base/opening/path, actual key-indexed opening relation and admissibility. The same decoded path constructs the original rotation/recovery. Exact proof-to-signature execution uses full intent and actual `ownerSignature`; encoder reflection and backend-statement-to-witness existence are explicit conditional laws. Witness existence is not message-bound knowledge or unforgeability. |
-| [Concrete outer input codec](../../lean/Protocol/Transfer/PathSignature/Codec.lean) | Canonical byte-key/full-message encoding, parser roundtrip, injectivity and malformed-input rejection discharge the outer-injection premise in `canonical_input_subject_eq`. Typed packet, full-ciphertext and witness encodings remain separate. |
-| [Native Hodge queries and same-answer CVP](../../lean/Protocol/Storage/Retrieval/HodgeQuery.lean) | Queries and the whole integer-weighted server answer use original `HodgeNoise`/harmonic-lattice samples; weighted exact/coexact openings derive private coefficient recovery and the existing CVP solution equivalence for that same answer. Joint selector privacy remains a separate sampled-view obligation. |
-| [Retrieval privacy and authenticated recovery](../../lean/Protocol/Storage/Retrieval.lean) | Local digest/slot checks and original bound-HCP recipient recovery give correctness or an actual collision. Whole-bucket reads have exact same-bucket selector privacy at linear download cost. The separate joint-query obstruction is conditional and uses the actual structured-noise cellular family; it does not replace the original HCP/CVP quantifiers. Concrete authentication/encoding/backend and efficient private-query security remain profile work. |
-| [Ordinary graph commitment ambiguity](../../lean/Sheaf/GraphCommitment.lean) | Constant translation preserves actual modular `CochainCommitmentData`, fixed topology and every deterministic encoding while changing a designated message coordinate. The explicit path example has messages three/ten and identical edge values two/four. It refutes raw message binding for this profile, without claiming a hash collision, a hiding theorem or an obstruction for every cellular sheaf. |
-| [Semantic evidence compatibility](../../lean/Protocol/Evidence/TransferEnvelope.lean) | Packages independently derived validity/check facts in the existing TCB envelope, with the actual candidate/transfer witness and public intent shadow. Its root/inclusion and runtime facts are supplied or proved by the selected profile; it is not an additional operational verifier or security proof. |
-| [Plucker reconstruction](../../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) and [operative-target adapter](../../lean/TCB/PluckerObservation.lean) | Eight reconstruction endpoints and the observation endpoints in the 27-declaration root probe are standard-only. Recovery consumes full exact-real shadow data and an explicit operative-kernel identification; digest-only visibility is a separate profile. |
-| [Canonical-lift obstruction](../../lean/Sheaf/CanonicalLiftObstruction.lean) | Thirteen core/sheaf endpoints are standard-only. A nontrivial real-linear decoder cannot have a global zero-defect comparison against unrestricted canonical RS distance. |
-| [Systematic cellular realization](../../lean/Sheaf/SystematicCode.lean) and [integer/field checks](../../lean/Proximity/Core/Systematic.lean) | Six representative generic endpoints are standard-only. The actual coboundary realizes the selected integer-lifted generator; it is not an identification of an arbitrary HCP sheaf. |
-| [Intrinsic modular source validity](../../lean/Sheaf/SystematicCode/Modular.lean) | Eight endpoints are standard-only. Integral head-stalk openings and actual `delta0` plus integer carries prove equivalence with RS pair validity. Real acceptance remains distinct. |
-| [Full coordinate codec](../../lean/Protocol/Storage/CoordinateCodec.lean), [no-wrap criterion](../../lean/Protocol/Storage/NoWrapCalibration.lean) and [three native metrics](../../lean/Protocol/Storage/ThreeLevelMetrics.lean) | The 27-declaration root probe, also including distance reflection and the two operative-target adapters, is standard-only. It covers all-integer plane equality, separate scalar lifting, the factor-two native comparison and the coarse Euclidean no-wrap criterion. |
-| [Scalar/pair metric comparison](../../lean/Proximity/Core/InterleavedMetric.lean), [capacity-far pair](../../lean/Proximity/Core/DeepHole.lean) and [fixed-mix obstruction](../../lean/Proximity/Core/FixedChallenge.lean) | Eleven selected generic endpoints are standard-only. Both power-word columns have native distance `(n-k)/n`; arbitrary fixed nonzero mixes admit a cancelling capacity-far pair. |
-| [Sharp native near factor](../../lean/Proximity/Core/MetricSharpness.lean) | The checked actual RS pair `(deep hole,0)` has pair distance twice its scalar-coordinate distance; the global native unit near bound is false. All four selected fresh dependency reports are standard-only. |
-| [Zero-direction challenge](../../lean/Proximity/MCA/ZeroDirection.lean) and [diagonal challenge](../../lean/Proximity/MCA/Diagonal.lean) | Eleven endpoints in each probe are standard-only. All challenges are good in the zero-direction profile; diagonal non-codewords have exactly the one cancelling challenge. No global fixed-mix claim follows. |
-| [Canonical systematic profile](../../lean/Protocol/Storage/CanonicalSystematic.lean) | Fifteen selected concrete endpoints inherit the existing canonical primality/root-order native certificates. They include the original payload codec and a positive no-wrap Euclidean example; native arithmetic trust remains explicit. |
-| [Canonical native-metric and challenge adapter](../../lean/Protocol/Storage/CanonicalThreeLevel.lean) | The focused build passes (3,432 jobs). Sixteen selected reports retain existing canonical arithmetic trust. The original well-formed payload has all three native distances `3/4`; observed-artifact joins, accepted-to-native-zero, raw-far rejection and the stated canonical diagonal challenge are checked. Expanded aggregate and consolidated public-facade dependency checks pass; artifact details remain centrally recorded. |
-| [Existing calibration and near interfaces](../../lean/Protocol/Storage/CanonicalCalibration.lean) | The focused build passes (3,430 jobs). Nine selected reports split into four generic standard-only and five concrete reports with existing native certificates. Actual original-payload extraction instantiates `SourceToSourceCalibration`, `SourceToCodeCalibration.transCode` and `EvaluationProjection` with the explicit `2*d_C` near score; no metric inequality is assumed. |
-| Paper 2 security and runtime realization | The fixed-setup one-shot integrity experiment is scoped and its conditional error composition is proved. The actual primitive comparison and five-event decomposition now name check agreement, key/message history and backend/original-statement gaps. Instantiate those contracts and failure bounds; specify a parameter/key-generation family, adaptive oracle/corruption games and any privacy claim. Authenticated setup/state origin, secure delivery, persistence, dynamic geometry/key rotation, retirement, finality and runtime refinement remain obligations. |
+#### Deferred policy, compatibility and implementation families
 
-“Standard-only” means that the actual axiom report uses no dependencies beyond
-`propext`, `Classical.choice` and `Quot.sound`; some elementary identities use
-a subset. In that historical native-metric baseline the concrete canonical reports
-additionally exposed generated `_native.native_decide.ax_` certificates. The
-subsequent kernel-arithmetic update removed that native trust from the current
-selected canonical reports, as recorded centrally. These audits cover the
-listed endpoints, not every declaration or a complete protocol security claim.
+These families are accounted for in the repository but are outside the
+completed bounded transition claim.
 
-The completed native-metric baseline's static inventory contains 234 modules
-plus the Lake configuration, with no active proof holes, local import cycles or unresolved
-local imports. The same seven explicit cited-bound axioms remain isolated.
-That baseline's standalone coding closure has 33 modules, bounded protocol core
-33 and storage core 79. Current closures including the semantic observation
-follow-up are tracked centrally. A short logical-axiom list does
-not instantiate authentication, a private-frame producer or runtime refinement.
+| Family | Canonical modules | Status and boundary |
+|---|---|---|
+| Compatibility axiom/gate bundles | [Foundation](../../lean/Axioms/Foundation.lean), [Ledger](../../lean/Axioms/Ledger.lean), [Consensus](../../lean/Axioms/Consensus.lean), [StageAdmissibility](../../lean/Axioms/StageAdmissibility.lean) | Named proposition-level obligations and stage interfaces; they do not replace the proved cellular primitives, concrete ledger invariants or actual verifier agreement. |
+| Oracle and Heyting policy | [OracleModality](../../lean/Axioms/OracleModality.lean), [Heyting](../../lean/Axioms/Heyting.lean), [Protocol.Oracle](../../lean/Protocol/Oracle.lean) | Finite algebra/quotient laws and interfaces exist; authenticated operational oracle/retry behavior is outside the bounded transition. |
+| PoV, spectral geometry and reliability | [Consensus](../../lean/Consensus.lean), [SpectralBounds](../../lean/Axioms/SpectralBounds.lean), [Grassmannian](../../lean/Axioms/Grassmannian.lean) | Supporting interfaces and conditional score bounds, not secure validator selection, economic Sybil resistance or finality. |
+| Coregulator | [Coregulator interface](../../lean/Axioms/Coregulator.lean), [protocol attachment](../../lean/Protocol/Coregulator.lean) | Named predict/observe/update obligations; no constructed settling controller. |
+| Legacy chain | [Chain](../../lean/Chain.lean) | Compatibility model with spectral identity, raw cochain-sum balance and cumulative-gap fork choice; not the bounded ledger's semantics or a complete consensus/security theorem. |
+| Future geometry and lifecycle | No canonical `TaskSheaf`, block-history cellular model or presentation-stack/descent package is constructed | Explicit maps, transport, descent, generation, retirement and global lifecycle policies remain future work. |
+| Concrete cryptography and execution | [ZKP](../../lean/Axioms/ZKP.lean), [Runtime](../../lean/TCB/Runtime.lean) | Credential/proof algorithms, inner codecs, authenticated setup/directories/state origin, secure channels, primitive budgets, adaptive/privacy games and executable refinement remain obligations. |
 
-The runtime must authenticate the chosen sheaf, coefficient convention,
-coordinate layout, validity predicate and metric/radius profile. A later key
-or epoch transition must specify the authorized transport, retained encrypted
-objects and retirement conditions. Neither snapshot equality nor local bus
-consumption proves physical erasure or a geometry migration protocol.
-
-Paper 3 can consume the native-distance comparisons and its coding theorems
-without waiting for these broader runtime features. A claimed new commitment,
-MAC or encryption scheme still needs its algorithms, adversary model and
-security argument.
+Paper 1 supplies the cellular/Hodge, semantic HCP, harmonic-lattice and CVP
+prerequisites. Paper 3 supplies projective reconstruction, source-calibration
+obstructions, coding and metric/radius theorems. Their imported conclusions
+retain the actual source, layout, observation and comparison hypotheses;
+Paper 2 owns the construction, authentication and protocol consumption of
+those objects. Shared definitions do not create a second contribution.

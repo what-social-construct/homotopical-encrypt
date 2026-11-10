@@ -10,10 +10,8 @@ public import Proximity.Problem
   Runtime observation boundary.
 
   Paper correspondence:
-  - Paper 2: runtime-observed statements and their supplied
-    artifact-acceptance/extraction contracts.
-  - Paper 1 does not infer disclosure or verifier soundness from
-    acceptance of an exact payload alone.
+  - Paper 2: runtime-observed statements and their explicit artifact
+    acceptance, extraction, disclosure and verification contracts.
 
   This file names the point where a public artifact becomes an observed
   chain-facing statement. It is intentionally thinner than an oracle: an
