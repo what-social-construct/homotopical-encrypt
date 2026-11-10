@@ -13,7 +13,7 @@ The plan is **three papers and three Palomar submissions, one per paper**.
 |---|---|---|
 | [Paper 1: Hidden Hodge Operators and the Harmonic Cochain Problem](papers/paper1/README.md) | Cellular/Hodge primitives, HCP, semantic classes, harmonic lattices, known-lattice CVP comparisons and exact-recovery ambiguity. | [PDF](papers/paper1/main.pdf), [TeX](papers/paper1/main.tex) and [formalization entry](lean/Palomar/PaperOne/README.md); first planned submission. |
 | [Paper 2: Proof-Carrying Homotopical Encryption](papers/paper2/README.md) | Cochain commitments, visibility and codec contracts, storage, proof-carrying transitions and security-game obligations. | [Working Markdown draft](papers/paper2/DRAFT.md); TeX/PDF and a dedicated submission entry remain to be prepared. |
-| [Paper 3: Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes](papers/paper3/README.md) | Projective reconstruction in the projection chain, coding/list/MCA results, radii and native modular metric comparisons. | [PDF](papers/paper3/main.pdf), [TeX](papers/paper3/main.tex) and two internal verification configurations for one planned submission. |
+| [Paper 3: Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes](papers/paper3/README.md) | Projective reconstruction in the projection chain, coding/list/MCA results, radii and native modular metric comparisons. | [PDF](papers/paper3/main.pdf), [TeX](papers/paper3/main.tex); internal verification configurations: [coding](lean/Palomar/PaperThree/README.md) and [application](lean/Palomar/PaperThree/Application/README.md). |
 
 The [shared parity register](SEMANTIC-PARITY.md) assigns canonical objects and
 statements to these papers. The [source ledger](docs/SOURCE_LEDGER.md)
@@ -21,13 +21,9 @@ indexes their literature. Paper 2 supplies the cochain construction and
 protocol contracts consumed by Paper 3's application results. Paper 1's
 HCP/CVP contribution is independent of that protocol and coding development.
 
-The three existing verification entries are [Paper 1](lean/Palomar/PaperOne/README.md),
-[Paper 3 coding](lean/Palomar/PaperThree/README.md) and
-[Paper 3 application](lean/Palomar/PaperThree/Application/README.md).
-The last two are configurations for the same manuscript. Paper 2's own
-entry is still pending; the number of current configurations does not describe
-the planned submission split. Each entry's metadata records its verification
-status; preparation and local checks do not imply a completed submission.
+Paper 3's coding and application configurations check different parts of
+the same manuscript. The linked verification guides record their current
+status. Paper 2's dedicated configuration remains to be prepared.
 
 ## Mathematical focus
 
@@ -61,7 +57,7 @@ encryption security require their stated additional assumptions.
 ## Build and read
 
 The [Lean guide](lean/README.md) maps the mathematics to source modules and
-the current independent verification entries. From the repository root:
+the available verification configurations. From the repository root:
 
 ~~~sh
 cd lean
