@@ -129,6 +129,9 @@ celerybeat.pid
 
 # Environments
 .env
+.env.*
+!.env.example
+!.env.sample
 .venv
 env/
 venv/
@@ -183,6 +186,20 @@ cython_debug/
 # Lean/Lake local build artifacts and dependency cache
 lean/.lake/
 .DS_Store
+
+# Local credentials and agent state
+.aws/
+.codex/
+
+# Rebuildable TeX intermediates; manuscript PDFs stay versioned
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.toc
+*.synctex.gz
 
 # Generated validation, PDF exports and local review packages
 output/
