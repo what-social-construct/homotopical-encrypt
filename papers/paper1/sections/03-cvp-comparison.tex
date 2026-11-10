@@ -3,8 +3,6 @@
 CVP asks for a closest vector in an explicitly presented lattice
 \cite{micciancioGoldwasser2002}. HCP asks for
 the projection of \(b\) into the kernel of the operative hidden Hodge operator.
-In the \HE{} model,
-public data need not determine the corresponding harmonic kernel.
 
 \subsection{Known-Lattice CVP}
 
@@ -49,9 +47,6 @@ is the schema
     O\in\mathcal C\wedge\mathsf{CVP}_{\mathrm{corr}}(O).
 \end{aligned}
 \]
-A CVP oracle receives \(B\) and \(t\). The HCP procedures studied here
-receive \((\alpha,b)\); the operative Hodge operator and its kernel are
-withheld.
 
 \subsection{Presented Linear Images}
 
@@ -217,18 +212,12 @@ with the real subspace.
 The continuous projection \(t_W=P_Wt\) is the closest harmonic vector to
 \(t\), but it need not lie in \(\Lambda_B\). Thus projection transports the
 target to the harmonic subspace while preserving the discrete minimizers; it
-does not perform the remaining lattice search. The proposition also presumes
-that \(W\) and the inclusion \(\Lambda_B\subseteq W\) have been supplied. It
-does not discover the operative hidden subspace from public class data.
+does not perform the remaining lattice search.
 
 \subsection{Oracle Insufficiency}
 
-The oracle-insufficiency direction uses the typed realization from
-\cref{def:typed-hcp-realization}. A public Hodge solver may call an
-explicit-lattice CVP oracle and receives the actual public observation
-\((\alpha,b)\), but it receives no hidden representative or operative
-Laplacian. Correctness is required only for representatives admitted by the
-realization, rather than for every matrix of the ambient size.
+Fix a typed HCP semantic realization as in \cref{def:typed-hcp-realization}.
+The solver contracts below range over its admitted representatives.
 
 \begin{definition}[Public-data Hodge solver contract]\label{def:public-hodge-solver-contract}
   Let
@@ -311,13 +300,6 @@ realization, rather than for every matrix of the ambient size.
   \(\Delta_yb=0\), contradicting the separation hypothesis.
 \end{proof}
 
-The obstruction is kernel ambiguity: the same public observation may be
-compatible with multiple hidden operators whose harmonic kernels differ. A CVP
-oracle can solve a closest-vector problem after the lattice is presented. The
-bridge in \cref{prop:hodge-projection-is-cvp} applies only after the operative
-harmonic subspace and the lattice inclusion have also been supplied; it does
-not determine which hidden kernel is compatible with the public data.
-
 For every dimension at least two, consider the elementary matrix witness \(L=0\),
 \(L'=\operatorname{diag}(1,0,\ldots,0)\), and \(b=e_1\) under the constant
 projection to a one-point public type. This is a sanity example showing that
@@ -333,8 +315,7 @@ The preceding implication has a concrete instantiation in a stated
 homological fragment of the typed Helfer interface. Take one vertex, one edge
 and one face with incidence numbers \(\partial_1=0\), \(\partial_2=1\),
 and stalks \(0,\mathbb R^2,\mathbb R\), respectively. This is the algebraic
-finite signed-incidence model of \cref{sec:hcp-definition}; no regular CW or
-simplicial realization of this displayed base is asserted. Two cellular
+finite signed-incidence model of \cref{sec:hcp-definition}. Two cellular
 sheaves in that model have
 \[
   \delta_{0,0}=\delta_{0,1}=0,
@@ -362,13 +343,9 @@ hold for these real complexes. The model's weak equivalences are
 quasi-isomorphisms, which preserve the tests and give the required
 closed-test invariance under the declared typed Helfer equivalences.
 
-The coordinate-exchange chain isometry therefore makes the two actual
-homological theories equal, supplying the shared public class used below.
-This establishes invariance for the declared fragment; equality of its class
-values need not reconstruct a homotopy equivalence or classify arbitrary
-hidden presentations. Helfer's full first-order formula syntax, equality
-objects and general fibrational invariance theorem remain external
-background.
+The coordinate-exchange chain isometry gives the same homological theory
+to both presentations. On this admitted family, equality of the public
+theories is equivalent to typed homotopy equivalence.
 
 \Needspace{10\baselineskip}
 \begin{proposition}[One observation, two nonzero integral harmonic targets]
@@ -409,17 +386,8 @@ the encoding explicit: take \(b=e_0+2e_1\), harmonic messages \(2e_1\) and
 coefficients in the same declared lattice presentations are \(2\) and \(1\).
 Both messages are nonzero, both exact components remain zero, and the public
 observation is again shared. No function of that observation can return the
-correct coefficient for both presentations. This is a finite exact-recovery
-obstruction for the specified integer encoding, not a distributional security
-experiment. Each message remains the unique CVP answer in its actual lattice.
-
-This example fixes the mathematical observation to \((p,b)\). Its equal
-zero exact components do not imply equality of complete storage records.
-A larger released view must be specified and shown to agree for both
-presentations before the same ambiguity argument applies. Transferring the
-target and CVP conclusions also requires agreement with the operative
-operator and classifier. No distributional anonymity or plaintext-security
-conclusion follows from this example.
+correct coefficient for both presentations. Each message remains the unique
+CVP answer in its actual lattice.
 
 \Needspace{8\baselineskip}
 \begin{corollary}[Strict separation for hidden lattice recovery]

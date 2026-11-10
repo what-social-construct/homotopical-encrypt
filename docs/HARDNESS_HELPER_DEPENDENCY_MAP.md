@@ -73,10 +73,14 @@ closed-test invariance premise is the semantic input they require.
    actual complexes in the bounded-below real cochain Quillen model. Weak
    equivalences are quasi-isomorphisms, the required cofibrancy and fibrancy
    are established, and the integer-indexed nonzero-cohomology tests are proved
-   invariant. The actual chain isometry therefore gives the common public
-   theory used by [HCP/AxisFamily.lean](../lean/HCP/AxisFamily.lean). This is
-   the stated homological fragment; full Helfer first-order semantics remains
-   external.
+   invariant. In [HCP/AxisFamily.lean](../lean/HCP/AxisFamily.lean),
+   `semanticEquivalence_all` supplies an actual typed equivalence for every
+   pair in the admitted `Fin 2` family, using identity or coordinate-exchange
+   isomorphisms. `theory_eq_iff_homotopyEquivalent` identifies public theory
+   equality with typed homotopy equivalence on that family, even though the
+   operative embedded harmonic kernels differ. The generic interface still
+   requires only invariance and factorization. This is the stated homological
+   fragment; full Helfer first-order semantics remains external.
 
 6. **Supplied member versus hidden member.**
    In `HCP/AxisFamily.lean`, `cvp_oracle_recovers_operative_component` takes
@@ -93,8 +97,11 @@ closed-test invariance premise is the semantic input they require.
 
 The final manuscript corollary `cor:lattice-member-separation` in §3.5 is a
 consequence of the existing P1-S04 sample/CVP comparison and P1-S05 ambiguity
-groups. Its canonical rank-one oracle theorems above are not additional
+groups. Its three canonical recovery anchors above are not additional
 configured submission targets: the comparator still selects 46 declarations.
+The restricted-converse lemmas are also canonical support. The manuscript's
+prose consolidation preserves all existing formal environments; computational
+scope is now §2.3, with full projective recovery retained in §2.2.1.
 
 The strict comparison concerns supplied information and exact recovery. It is
 not a polynomial-time hardness hierarchy, a Turing nonreducibility result, a
@@ -112,5 +119,10 @@ linear algebra or auxiliary-oracle obstruction.
 ## Verification status
 
 The focused `HCP.AxisFamily` build passed 3,581 jobs, and the three Solution
-entries passed a 3,759-job build after the canonical additions. A fresh combined
-dependency audit is pending.
+entries passed a 3,759-job build after the recovery and restricted-converse
+additions. The recorded combined audit covered 120 configured declarations
+and four canonical endpoints: all 124 used only `propext`, `Quot.sound` and
+`Classical.choice`, and all 120 prior selected dependency sets were unchanged.
+That report predates `semanticEquivalence_all` and
+`theory_eq_iff_homotopyEquivalent`. A separate focused axiom audit of those
+two lemmas passed; both use exactly the same three standard axioms.

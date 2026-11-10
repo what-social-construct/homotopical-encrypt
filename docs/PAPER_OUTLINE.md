@@ -126,34 +126,37 @@ extension-field encoding and original-object adapters; integer casts into a
 prime subfield do not construct it. Keep this optional stronger application
 separate from the already completed native modular radius theorem.
 
-**Current semantic setup and family-CVP revision, 2026-11-10.** Paper 1's
-local PDF is **32 pages**. Section 2 introduces homotopy equivalence, the
-invariant public class and its possibly coarser fiber, then Hodge data, the
-sample and its integral lattice profile, before defining the public observation,
-hidden witness and HCP. Exact-cochain observations remain in §2.1 and full
-projective recovery in §2.2.1. The final main section, *CVP Comparison and
-Kernel Ambiguity*, ends with Corollary 3.6 in §3.5, immediately before
-conclusion §4. It compares recovery with a supplied private lattice against
-non-recovery from the shared public class using the same correct oracle;
-every compatible family containing the separated pair inherits the obstruction.
-All eleven prior proposition statements and proofs are preserved. Four
-definitions are reworded: public observation, hidden witness, HCP and typed
-semantic realization. Appendix A retains 46 configured declarations (21 main,
-25 support), with two canonical-consequence anchors outside that selection.
+**Current P309 cleanup, 2026-11-10.** Paper 1 is **28 pages**, reduced from
+32 by removing repeated explanations and consolidating the parity appendix.
+All formal environments
+match `6b762a0` byte for byte: eleven definitions, eleven propositions, twelve
+proofs and one corollary. The duplicate Recovery Target subsection is removed,
+so Computational Scope is now §2.3; full-projective recovery (§2.2.1), the
+cellular family (§3.5), closing Corollary 3.6 and conclusion §4 retain their
+locations in the argument. Appendix A retains 46 configured declarations
+(21 main/25 support) and three canonical-consequence anchors outside that
+selection. The single appendix includes brief notes on the independent entry
+and proof axioms.
 
-The existing `Hardness.lean` and `HCP/AxisFamily.lean` contain actual proof
-additions and a refactored kernel argument; the other 278 Lean files match
-`048c2ea`. No modules, structures or axioms are added; pins, default roots and
-all nine Challenge/Solution/configuration files are unchanged. Fresh focused
-and three-Solution builds pass 3,581/3,759 jobs. The fresh 124-report audit is
-standard-only (117 exact-three/seven subsets), and all 120 configured dependency
-sets match their previous reports. The older 9,295-job/975-report audit remains
-historical evidence for its recorded inputs, rather than a repeated full
-check. The [central validation record](MATH_STORAGE_VALIDATION.md) gives the current evidence.
-Paper 1 still prints five external sources from seven bibliography records;
-the 28-source ledger, Paper 2/3's 42/16 records and Paper 3's 31-page PDF are
-unchanged. This revised candidate remains local; public `66e1ad2` and its
-protected PASS are historical exact-commit evidence.
+The generic semantic interface assumes the forward implication from homotopy
+equivalence to equal public labels. On the admitted `Fin 2` cellular family,
+all pairs are related by typed homotopy equivalence, and equality of the
+chosen theory is equivalent to that relation. The classifier is complete on this
+restricted family; its fixed-coordinate Hodge operators can still differ.
+Two new theorems establish this in `HCP/AxisFamily.lean`; the other 279 Lean
+files and all nine Challenge/Solution/configuration files are unchanged in
+this revision. Focused/three-Solution builds again pass 3,581/3,759 jobs.
+Both new dependency checks pass with exactly the three standard axioms, as
+recorded in the [central validation record](MATH_STORAGE_VALIDATION.md). P308's 124-report audit and the older
+9,295-job/975-report baseline remain historical evidence. Bibliographies and the 28-source ledger are unchanged:
+Paper 1 prints five external sources from seven records, Paper 2/3 retain
+42/16 records, and Paper 3 remains 31 pages. This candidate remains local;
+public `66e1ad2` and its protected PASS certify their historical exact inputs.
+
+**Preserved P308 checkpoint, 2026-11-10.** The 32-page semantic/family-CVP
+revision added proofs in two existing Lean files and retained the 46-target
+selection with two canonical anchors. Its 124 reports were standard-only
+(117 exact-three/seven subsets), with all 120 configured sets unchanged.
 
 **Preserved P305–P307 exposition checkpoints, 2026-11-09.** Those 32-page
 revisions integrated the setup, clarified homotopy-class wording and shortened
@@ -192,15 +195,17 @@ Paper 1 is superseded by the current editorial split.
 1. **Introduction:** Helfer motivation, operative target and exact-recovery
    comparison, followed by four complete contribution statements. The third
    states the family-CVP result concisely.
-2. **The Harmonic Cochain Problem:** homotopy equivalence, the invariant public
-   class and its possibly coarser fiber, then Hodge data, the sample and its
-   integral lattice profile, followed by public observation, hidden witness
-   and HCP. Exact-cochain observations are in §2.1, further public/hidden data
-   in §2.2 and full-projective recovery in §2.2.1. Prerequisites precede use.
+2. **The Harmonic Cochain Problem:** semantic and Hodge prerequisites precede
+   the public observation, hidden witness and HCP. The generic classifier
+   preserves homotopy equivalence. Exact-cochain observations are in §2.1,
+   public/hidden data in §2.2 and full-projective recovery in §2.2.1. After
+   removing the duplicate Recovery Target subsection, Computational Scope is §2.3.
 3. **CVP Comparison and Kernel Ambiguity:** the last main section compares
    presented linear images and discrete lattices, proves the orthogonal
    projection identity and oracle obstruction, then places the actual
-   homological model beside the integral cellular family (§3.5). Closing
+   homological model beside the integral cellular family (§3.5).
+   The admitted `Fin 2` theory is complete for typed homotopy equivalence;
+   distinct fixed-coordinate Hodge operators remain possible within that class.
    Corollary 3.6 compares private-lattice recovery and shared-class ambiguity
    with the same correct oracle, including every compatible containing family.
 4. **Conclusion and Further Work:** exact recovery/observation outcomes and
@@ -208,10 +213,9 @@ Paper 1 is superseded by the current editorial split.
 5. **Appendix A, Statement--Lean Parity Table:** one post-conclusion table
    with four definition rows, eight main groups (21 declarations), five support
    groups (25 declarations), and three background/assumption/contract rows.
-   Two canonical-consequence anchors sit outside the unchanged selection of 46.
-6. **Appendix B, proof boundaries:** concise model, observation and verification
-   scope. The mathematical body has no Lean cross-reference blocks, filenames
-   or repeated descriptions of the other manuscripts.
+   Three canonical-consequence anchors sit outside the unchanged selection of 46.
+   Brief notes on the independent entry and proof axioms accompany the table
+   in this single appendix.
 
 The canonical sources are [the HCP construction](../papers/paper1/sections/02-harmonic-cochain-problem.tex)
 for cochain/semantic/observation material, [the CVP comparison](../papers/paper1/sections/03-cvp-comparison.tex)
@@ -220,11 +224,11 @@ for the actual homological model and cellular example, and
 The former standalone semantic and observation files are removed. Detailed
 protocol/coding allocation stays in this guide and the shared ownership table.
 The former long chapters and source catalogue remain in Git history. The
-current revision preserves all eleven prior proposition statements and proofs,
-rewords the public-observation, hidden-witness, HCP and typed-realization
-definitions, and adds the closing corollary. The concrete homological fragment
-retains its separate proved construction; the generic semantic bridge retains
-its explicit closed-test-invariance premise.
+current redundancy pass preserves every formal environment byte for byte
+against `6b762a0`, including eleven definitions, eleven propositions, twelve
+proofs and one corollary. The concrete homological model now has a proved
+classifier converse on its admitted `Fin 2` family; the generic semantic
+interface continues to require only the forward invariance implication.
 
 ## Paper 2 Construction and Protocol Scope
 

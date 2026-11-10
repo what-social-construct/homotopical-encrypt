@@ -20,8 +20,7 @@ recovery target is
 \]
 but the public class does not include the degree-one Hodge--Laplacian
 \(\Delta_1\), its kernel, or the restriction maps from which \(\Delta_1\) is
-built. A solver must recover the harmonic cochain selected by the operative
-hidden Hodge operator.
+built.
 
 The operator dependence can be summarized as follows. A hidden representative
 determines the restriction data, which determine the adjacent
@@ -37,24 +36,14 @@ coboundaries and hence the degree-one Hodge operator:
   \longmapsto
   \bigl(\ker\Delta_{1,x},P_{H_x}\bigr).
 \]
-The recovery operation is Hodge-theoretic. The public label records
-homotopy-class information about the hidden presentation. Homotopy-equivalent
-representatives share that label even when their Hodge operators differ in
-the fixed public coordinates. The public data can then leave the operative
-target undetermined.
+Homotopy-equivalent hidden representatives share a public label even when
+their Hodge operators differ in the fixed public coordinates.
 
 The CVP comparison makes this dependence on the input precise. A real linear
 span can be realized as the kernel of a suitable linear operator, but a discrete lattice cannot equal a
 nonzero real kernel. If an explicit lattice \(\Lambda\) is supplied inside a
 harmonic subspace \(W=\ker(\Delta_W)\), orthogonal projection of the target
-onto \(W\) preserves the closest vectors of \(\Lambda\). This gives a
-solution-preserving comparison once the harmonic subspace and lattice
-inclusion are supplied. It does not recover the operative kernel from the
-public class.
-
-Observation choice is part of the recovery problem. The setup in
-\cref{sec:hcp-definition} distinguishes exact-component observations from
-full projective data of the operative kernel.
+onto \(W\) preserves the closest vectors of \(\Lambda\).
 
 The principal notation is fixed globally as follows. Symbols used only inside
 a single proposition or construction are defined locally.
@@ -79,10 +68,11 @@ a single proposition or construction are defined locally.
   \label{tab:core-notation}
 \end{table}
 
+\Needspace{18\baselineskip}
 This paper develops this boundary through the following statements.
 \begin{enumerate}[label=(\roman*)]
-  \item The Harmonic Cochain Problem (HCP) asks for recovery of the operative
-    component \(h=P_Hb\) for a hidden degree-one Hodge operator \(\Delta_1\).
+  \item The Harmonic Cochain Problem (HCP) asks to recover the operative
+    component \(h=P_Hb\) for a hidden Hodge operator \(\Delta_1\).
   \item A Hodge-structured noise model gives the cochain decomposition
     \(b = h + e\), where \(h \in \ker(\Delta_1)\) and
     \(e \in \image(\delta_0) \oplus \image(\delta_1^\ast)\).
@@ -96,6 +86,5 @@ This paper develops this boundary through the following statements.
 
 Finite Hodge theory follows the cellular-cochain framework of
 Hansen--Ghrist \cite{hansenGhrist2018sheaves}; the algebraic model used here is
-specified in \cref{sec:hcp-definition}. Helfer's homotopy-invariant semantics
-\cite{helfer2019fol} motivates the public classifier; the constructed examples prove only the explicitly named
-nonzero-cohomology-test fragment.
+specified in \cref{sec:hcp-definition}. The constructed public theories use
+the nonzero-cohomology-test fragment.

@@ -51,6 +51,18 @@ theorem semanticEquivalence :
     Helfer.HomotopyEquivalent (semanticInterpretation 0) (semanticInterpretation 1) :=
   Helfer.CochainModel.equivalent_of_isometricCochainEquiv axisSwap
 
+/-- Every ordered pair in the admitted two-member family has an actual typed
+homotopy equivalence, obtained from identity or coordinate-exchange isomorphisms. -/
+theorem semanticEquivalence_all (axis otherAxis : Fin 2) :
+    Helfer.HomotopyEquivalent (semanticInterpretation axis)
+      (semanticInterpretation otherAxis) := by
+  fin_cases axis <;> fin_cases otherAxis
+  · exact Helfer.CochainModel.equivalent_refl _
+  · exact semanticEquivalence
+  · exact Helfer.CochainModel.equivalent_of_iso
+      (Helfer.CochainModel.strictIso_of_isometricCochainEquiv axisSwap).modelIso.symm
+  · exact Helfer.CochainModel.equivalent_refl _
+
 /-- The public class is a full theory in the selected homological closed fragment. -/
 def theory (axis : Fin 2) : Set ℤ :=
   Helfer.ClosedTheory Helfer.CochainModel.semantics (semanticInterpretation axis)
@@ -66,6 +78,20 @@ theorem theory_eq (axis otherAxis : Fin 2) : theory axis = theory otherAxis := b
   · exact theory_zero_eq_one
   · exact theory_zero_eq_one.symm
   · rfl
+
+/-- On this admitted family, public theory equality is equivalent to actual
+typed homotopy equivalence. This does not assert generic classifier completeness
+or identify the operative harmonic kernel in the fixed comparison coordinates. -/
+theorem theory_eq_iff_homotopyEquivalent (axis otherAxis : Fin 2) :
+    theory axis = theory otherAxis ↔
+      Helfer.HomotopyEquivalent (semanticInterpretation axis)
+        (semanticInterpretation otherAxis) := by
+  constructor
+  · intro _hTheory
+    exact semanticEquivalence_all axis otherAxis
+  · intro hEquivalence
+    exact Helfer.closedTheory_eq Helfer.CochainModel.semantics
+      Helfer.CochainModel.closedTestInvariance hEquivalence
 
 /-- Extend the actual admitted-operator classifier without selecting a constant class. -/
 def publicProjection : PublicProjection Index ℝ (Set ℤ) := fun Δ =>

@@ -8,34 +8,37 @@ drafts. The public-review package preserves the repository layout:
 
 The project [MIT license](../LICENSE) is included at the package root.
 
-**Current semantic setup and family-CVP revision, 2026-11-10.** Paper 1's
-local PDF is **32 pages**. Section 2 introduces homotopy equivalence, the
-invariant public class and its possibly coarser fiber, then Hodge data, the
-sample and its integral lattice profile, before defining the public observation,
-hidden witness and HCP. Exact-cochain observations remain in §2.1 and full
-projective recovery in §2.2.1. The final main section, *CVP Comparison and
-Kernel Ambiguity*, ends with Corollary 3.6 in §3.5, immediately before
-conclusion §4. It compares recovery with a supplied private lattice against
-non-recovery from the shared public class using the same correct oracle;
-every compatible family containing the separated pair inherits the obstruction.
-All eleven prior proposition statements and proofs are preserved. Four
-definitions are reworded: public observation, hidden witness, HCP and typed
-semantic realization. Appendix A retains 46 configured declarations (21 main,
-25 support), with two canonical-consequence anchors outside that selection.
+**Current P309 cleanup, 2026-11-10.** Paper 1 is **28 pages**, reduced from
+32 by removing repeated explanations and consolidating the parity appendix.
+All formal environments
+match `6b762a0` byte for byte: eleven definitions, eleven propositions, twelve
+proofs and one corollary. The duplicate Recovery Target subsection is removed,
+so Computational Scope is now §2.3; full-projective recovery (§2.2.1), the
+cellular family (§3.5), closing Corollary 3.6 and conclusion §4 retain their
+locations in the argument. Appendix A retains 46 configured declarations
+(21 main/25 support) and three canonical-consequence anchors outside that
+selection. The single appendix includes brief notes on the independent entry
+and proof axioms.
 
-The existing `Hardness.lean` and `HCP/AxisFamily.lean` contain actual proof
-additions and a refactored kernel argument; the other 278 Lean files match
-`048c2ea`. No modules, structures or axioms are added; pins, default roots and
-all nine Challenge/Solution/configuration files are unchanged. Fresh focused
-and three-Solution builds pass 3,581/3,759 jobs. The fresh 124-report audit is
-standard-only (117 exact-three/seven subsets), and all 120 configured dependency
-sets match their previous reports. The older 9,295-job/975-report audit remains
-historical evidence for its recorded inputs, rather than a repeated full
-check. The [central validation record](../docs/MATH_STORAGE_VALIDATION.md) gives the current evidence.
-Paper 1 still prints five external sources from seven bibliography records;
-the 28-source ledger, Paper 2/3's 42/16 records and Paper 3's 31-page PDF are
-unchanged. This revised candidate remains local; public `66e1ad2` and its
-protected PASS are historical exact-commit evidence.
+The generic semantic interface assumes the forward implication from homotopy
+equivalence to equal public labels. On the admitted `Fin 2` cellular family,
+all pairs are related by typed homotopy equivalence, and equality of the
+chosen theory is equivalent to that relation. The classifier is complete on this
+restricted family; its fixed-coordinate Hodge operators can still differ.
+Two new theorems establish this in `HCP/AxisFamily.lean`; the other 279 Lean
+files and all nine Challenge/Solution/configuration files are unchanged in
+this revision. Focused/three-Solution builds again pass 3,581/3,759 jobs.
+Both new dependency checks pass with exactly the three standard axioms, as
+recorded in the [central validation record](../docs/MATH_STORAGE_VALIDATION.md). P308's 124-report audit and the older
+9,295-job/975-report baseline remain historical evidence. Bibliographies and the 28-source ledger are unchanged:
+Paper 1 prints five external sources from seven records, Paper 2/3 retain
+42/16 records, and Paper 3 remains 31 pages. This candidate remains local;
+public `66e1ad2` and its protected PASS certify their historical exact inputs.
+
+**Preserved P308 checkpoint, 2026-11-10.** The 32-page semantic/family-CVP
+revision added proofs in two existing Lean files and retained the 46-target
+selection with two canonical anchors. Its 124 reports were standard-only
+(117 exact-three/seven subsets), with all 120 configured sets unchanged.
 
 **Preserved P305–P307 exposition checkpoints, 2026-11-09.** Those 32-page
 revisions integrated the setup, clarified homotopy-class wording and shortened
@@ -177,8 +180,8 @@ no active source calls remain. Historical Lean 4.35 reports contain generated
 `Lean.ofReduceBool` and `Lean.trustCompiler`. The
 [earlier combined audit](../docs/MATH_STORAGE_VALIDATION.md#paper-3-independent-entries--2026-11-09)
 has 975 standard-only reports and retains older records as dated evidence,
-distinct from the seven isolated cited assumptions. The fresh focused
-124-report audit is recorded separately in the central validation guide. Inspect important
+distinct from the seven isolated cited assumptions. P308's 124-report audit
+and the two new checks using the standard axioms are recorded separately in the central validation guide. Inspect important
 endpoints with `#print axioms` in a scratch file importing the relevant
 aggregate; a successful build alone does not identify a theorem's assumptions.
 

@@ -12,12 +12,11 @@ table after the conclusion. It records canonical definitions, all 46 selected
 theorems, and explicit assumptions/contracts; the mathematical body has no
 Lean file or declaration lists.
 
-The manuscript now follows that scope directly: §2 introduces the semantic
-classifier and cellular/Hodge primitives before defining the public observation,
-hidden witness and HCP. Observation conditions follow within that setup,
-including full projective recovery in §2.2.1. The cellular model is developed
-with its example in §3.5; the CVP comparison is the final main section before
-§4 concludes. Paper 2 owns the concrete cochain
+The 28-page manuscript introduces homotopy equivalence, the public classifier
+and cellular/Hodge primitives in §2 before defining the public observation,
+hidden witness and HCP. Full projective recovery is in §2.2.1 and computational
+scope in §2.3. The cellular example is developed in §3.5; the CVP comparison is
+the final main section before §4 concludes. Paper 2 owns the concrete cochain
 commitment and protocol construction; Paper 3 owns the coding and quantitative
 proximity analysis. Shared definitions are identified by their existing
 canonical owners, with cross-references in place of repeated developments.
@@ -70,10 +69,14 @@ is derived from P1-S04/P1-S05 and adds no configured submission targets.
 The constructed family uses actual cellular restriction maps and their Hodge
 operators in the declared algebraic finite signed-incidence model. No regular
 CW or simplicial realization of its base is asserted. Its public theory
-records the nonzero-cohomology tests in each
-integer degree of the bounded-below real cochain model. Equality of that theory
-is derived from the actual complexes. This formalizes the declared homological
-fragment of Helfer's framework; full first-order semantics is outside this entry.
+records the nonzero-cohomology tests in each integer degree of the bounded-below
+real cochain model. In `Hcrypt.HCP.AxisFamily`, `semanticEquivalence_all` and
+`theory_eq_iff_homotopyEquivalent` prove that public theory equality and typed
+homotopy equivalence coincide within the admitted `Fin 2` family, despite its
+different operative embedded kernels. The generic classifier contract supplies
+invariance and factorization; this converse is restricted to the constructed
+family. It formalizes the declared homological fragment of Helfer's framework;
+full first-order semantics is outside this entry.
 The Plücker carrier is the genuine exterior power modulo nonzero real scaling,
 including the zero orbit; recovery for independent frames uses the full point
 and the fixed Euclidean metric.
@@ -103,12 +106,16 @@ declarations: 44 used exactly the three permitted axioms and two used subsets.
 The retained implementation plus entry audit has **975 reports**; all 975
 pre-revision dependency sets were unchanged in that check. The earlier expanded
 9,295-job build covered all fifteen default roots and three Solution entries.
-After the canonical family/oracle additions, the focused `HCP.AxisFamily`
-build passed **3,581 jobs**, and all three Solution entries passed a
-**3,759-job build**. A fresh audit covers all 120 configured declarations
-across the three entries and four focused canonical endpoints: all 124 use
-only the permitted standard axioms, and all 120 prior selected sets are
-unchanged. Declaration counts do not measure mathematical novelty.
+After the canonical recovery and restricted-converse additions, the focused
+`HCP.AxisFamily` build passed **3,581 jobs**, and all three Solution entries passed a
+**3,759-job build**. The recorded combined audit before the restricted-converse
+additions covered 120 configured declarations across the three entries and
+four focused canonical endpoints: all 124 used only the permitted standard
+axioms, and all 120 prior selected sets were unchanged. A separate focused
+axiom audit of the two restricted-converse lemmas passed; both use exactly
+the three permitted axioms. The manuscript's prose consolidation
+preserved its existing formal environments and all 46 configured selections.
+Declaration counts do not measure mathematical novelty.
 
 From the repository's `lean/` project, the entry modules are
 `Palomar.PaperOne.Challenge` and `Palomar.PaperOne.Solution`; its configuration is

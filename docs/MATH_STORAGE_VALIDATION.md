@@ -9,6 +9,50 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Redundancy cleanup and proved admitted-family converse — 2026-11-10
+
+Paper 1 consolidates repeated public-observation, hidden-operator, transport
+and computational-scope explanations. The duplicate Recovery Target subsection
+is removed, making Computational Scope §2.3. The requested full-first-order
+background sentence in §3.5 is deleted; its source/premise boundary is retained
+once in the setup and parity table. Introductory and concluding recaps are
+shortened. The separate Formal Objects and Proof Boundaries appendix is
+removed, with independent-entry, noncomputability and proof-axiom notes folded
+into the single parity appendix. All four contribution items remain together.
+
+The earlier blanket converse statement is corrected. In the actual admitted
+`Fin 2` family, `semanticEquivalence_all` constructs every ordered equivalence
+using identity/exchange isomorphisms. `theory_eq_iff_homotopyEquivalent` proves
+public-theory equality iff actual typed equivalence within that family.
+The operative embedded kernels can still differ. Generic invariance and
+factorization do not assert that converse for arbitrary presentations.
+
+All **35 formal environments** (eleven definitions, eleven propositions,
+one corollary and twelve proofs) match `6b762a0` byte-for-byte. Only AxisFamily
+adds mathematical Lean source: two new theorems, with all previous bytes
+preserved. The other 279 Lean files, nine statement/configuration files,
+imports, pins and default roots are unchanged. Static audit retains 279
+modules/280 files, 96 deliberate Challenge holes, no implementation holes or
+native calls, seven isolated cited axioms, and 54 unchanged focused closures
+excluding Chain/CitedBounds.
+
+Fresh HCP.AxisFamily and three-Solution builds pass **3,581/3,759 jobs**.
+The two new classifier lemmas each use exactly the three permitted standard
+axioms. P308's 124 reports and all earlier 975-report/9,295-job checks retain
+their original scope; no fresh 126-report, NanoDa, con-ron or protected replay
+is claimed. The 46 configured anchors occur once; three canonical consequence
+anchors are identified separately.
+
+The **28-page PDF** builds without undefined references/citations, missing
+glyphs or overfull boxes. All pages are rendered and reviewed, including
+final contribution-list, classifier, closing-corollary and single-appendix
+checks. Canonical/stable SHA-256:
+`eb2d3fd52991d4658f60d19162831cdba666296db0499ca7e24b67a86469a915`.
+Paper 3's 31-page PDF is unchanged. Evidence is `paper1-redundancy-converse-*`,
+`paper1-classifier-converse-*` and `paper1-single-parity-appendix-guide-audit.json`
+under `output/validation/`. Updated local packages and source pins accompany
+this revision. No publication, protected preflight, intake or registration occurs.
+
 ## Current Paper 1 primitives and lattice-member separation
 
 The construction now begins with declared homotopy equivalence and the

@@ -1,6 +1,6 @@
 \appendix
 
-\section{Statement--Lean Parity Table}\label{app:selected-crosswalk}
+\section{Statement--Lean Parity Table}\label{app:selected-crosswalk}\label{app:formal-boundaries}
 
 \Cref{tab:paper1-parity} records the correspondence for this paper's six
 Hodge/CVP groups and two observation-boundary groups. The independent entry's
@@ -13,6 +13,12 @@ identify derived implementation lemmas outside that configured selection.
 Main-result and support
 rows are proved under their stated premises; background, assumption and
 contract rows identify the separate scope boundaries.
+
+\lean{Palomar.PaperOne.Challenge} states the comparison objects independently
+using Mathlib-only imports. \lean{Palomar.PaperOne.Solution} identifies them
+with the canonical development without importing Challenge. Challenge's 23
+deliberate theorem placeholders are comparison targets; the proved Solution
+has no holes.
 
 Write \lean{E} for \lean{Hcrypt.Palomar.PaperOne},
 \lean{CS} for \lean{E.CellularSheaf},
@@ -69,12 +75,14 @@ Canonical definitions:\par
 \textbf{Definitions: semantic realization.}\newline
 Section~2.2. The public classifier factors through the specified closed
 theory. The operative Hodge operator is separate presentation-level data;
-equal classifier values need not identify it.
+equal classifier values need not identify it. On the constructed two-member
+family, equality of public theories characterizes typed homotopy equivalence.
 &
-Canonical definitions:\par
+Canonical definitions and family theorem:\par
 \lean{Hcrypt.Axioms.PublicClassifier}\par
 \lean{Hcrypt.Helfer.ClosedTheory}\par
-\lean{Hcrypt.HCPBridge.Realization}
+\lean{Hcrypt.HCPBridge.Realization}\par
+\lean{Hcrypt.HCP.AxisFamily.theory_eq_iff_homotopyEquivalent}
 \\\midrule
 
 \textbf{Definitions: Hodge sample and lattice.}\newline
@@ -91,7 +99,7 @@ Canonical definitions:\par
 \emph{Proved.} \Cref{prop:hodge-decomposition}; private recovery in Sections~2--3.
 The complex equation and actual adjoint Hodge operator give componentwise
 unique harmonic, exact and coexact parts. Integer coefficient recovery
-uses the supplied harmonic-lattice presentation.
+is classical and noncomputable in the supplied integral harmonic lattice.
 &
 \lean{E.Hodge_Decomposition_Theorem}\par
 \lean{E.Hodge_Decomposition_unique}\par
@@ -238,9 +246,9 @@ under a nonzero scalar multiple.
 Sections~2.2 and~3.5; distinct from the proved homological fragment.
 &
 Helfer's general fibrational/path-invariance theorem is cited background.
-Applying the generic bridge requires the declared invariant closed tests;
-full first-order invariance and a complete classifier for arbitrary hidden
-presentations are not proved by this entry.
+The generic bridge uses the declared closed-test invariance; the concrete
+family proves it for its homological tests. Full first-order invariance is
+not a theorem of this entry.
 \\\midrule
 
 \textbf{Assumption: computational hardness.}\newline
@@ -263,45 +271,6 @@ follows from an exact-component extraction.
 \end{longtable}
 \endgroup
 
-\clearpage
-\section{Formal Objects and Proof Boundaries}\label{app:formal-boundaries}
-
-\paragraph{Independent statements and canonical proofs.}
-\lean{Palomar.PaperOne.Challenge} gives ordinary transparent definitions
-using Mathlib-only imports. Its finite-product helpers
-\lean{Hcrypt.Helfer.contextObject} and \lean{Hcrypt.Helfer.contextMap}
-retain their canonical names. \lean{Palomar.PaperOne.Solution} identifies
-the independent presentations with the canonical proof objects without
-importing Challenge. The 23 deliberate Challenge theorem placeholders are
-comparison targets; Solution has no proof or definition holes.
-
-\paragraph{Source objects and mathematical scope.}
-The finite cellular Hodge operators and integral message presentation are
-in the \lean{Sheaf} modules. \lean{CVP.lean}, \lean{HCP.lean} and
-\lean{Hardness.lean} supply the lattice and operative-target comparisons.
-\lean{Sheaf/HCPAxisFamily.lean}, \lean{HCP/AxisFamily.lean} and
-\lean{Helfer/CochainModel.lean} construct the actual integral examples and
-homological-test interpretation. They use the algebraic finite
-signed-incidence model; no regular CW or simplicial realization of its
-base is asserted. Integer coefficient recovery is classical and
-noncomputable. The proved semantic fragment does not supply the general
-first-order theorem or arbitrary-presentation classifier.
-
-The full-point reconstruction is owned by
-\lean{Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean};
-\lean{TCB/PluckerObservation.lean} identifies the operative target under
-explicit kernel agreement. The raw projective quotient contains the zero
-orbit. Recovery uses genuine independent frames, full exact-real coordinates
-and the fixed ambient metric; it supplies neither digest inversion nor an
-efficient finite-byte decoder.
-
-\paragraph{Validation applies to exact snapshots.}
-The permitted proof axioms are \lean{propext}, \lean{Quot.sound} and
-\lean{Classical.choice}; the selected dependency audit reports only these
-axioms or subsets. The earlier public snapshot \lean{66e1ad2} passed
-protected preflight. That result does not certify this revised manuscript;
-its eventual release requires its own exact-commit comparison and report.
-Mechanical checking is separate from editorial review, novelty assessment
-and registry registration. The release manifest records the proof/import
-closure and hashes; the parity table identifies the selected results,
-rather than every declaration in those supporting modules.
+The checked declarations use only \lean{propext}, \lean{Quot.sound} and
+\lean{Classical.choice}, or subsets. Verification applies to the exact
+source and configuration checked.
