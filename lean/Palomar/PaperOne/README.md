@@ -7,6 +7,11 @@ finite signed-incidence cellular examples in which one public observation has
 different hidden harmonic targets. It also records the limits of an exact-component observation
 and recovery from full projective Plücker coordinates.
 
+The manuscript collects its implementation correspondence in one parity
+table after the conclusion. It records canonical definitions, all 46 selected
+theorems, and explicit assumptions/contracts; the mathematical body has no
+Lean file or declaration lists.
+
 The manuscript now follows that scope directly: §5 records mathematical
 observation boundaries and §6 treats full projective observations and the
 brief conditional application boundary. Paper 2 owns the concrete cochain
@@ -28,7 +33,7 @@ ordinary categorical meanings.
 In the crosswalk, `E` means `Hcrypt.Palomar.PaperOne`, `CS` means
 `E.CellularSheaf`, `HB` means `E.HCPBridge`, `AF` means `E.AxisFamily`, and
 `PL` means `E.Plucker`. The source labels refer to the
-[versioned manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/adfcc14a22bc7134ad3d5418a14907834c29cf8f/papers/paper1/main.tex).
+[versioned manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/1a2f72a1a60056ac001716c95c403816f9069ee0/papers/paper1/main.tex).
 Canonical names below belong to the implementation, outside the entry namespace.
 
 | Group / manuscript source | Entry declarations and mathematical content | Canonical proof owners |

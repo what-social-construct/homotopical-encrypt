@@ -20,7 +20,7 @@ canonical proofs and proves two explicit equivalence-inverse wrappers under
 All definitions are ordinary transparent definitions; `definition_names` is
 empty. Both builds and local comparison/kernel checks pass.
 
-The [immutable manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/adfcc14a22bc7134ad3d5418a14907834c29cf8f/papers/proximity-prize/main.tex) supplies the statements.
+The [immutable manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/1a2f72a1a60056ac001716c95c403816f9069ee0/papers/proximity-prize/main.tex) supplies the statements.
 In the crosswalk, `RS` means `ProximityPrize.ReedSolomon.Parameters`, `BC`
 means `ProximityPrize.BlockCode`, `GF` means
 `ProximityPrize.Capacity.SmoothQuarterFamily`, `BF` means

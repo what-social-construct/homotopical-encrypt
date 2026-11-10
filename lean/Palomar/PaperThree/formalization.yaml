@@ -31,7 +31,7 @@ sources:
     authors:
       - "Chloe van der Vlugt"
     type: "paper"
-    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/adfcc14a22bc7134ad3d5418a14907834c29cf8f/papers/proximity-prize/main.tex"
+    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/1a2f72a1a60056ac001716c95c403816f9069ee0/papers/proximity-prize/main.tex"
     location: "Sections 3--6 and the pure coding sharpness/fixed-mix results of Section 7; P3-S01--S09, P3-B01, the coding portion of P3-A02 and P3-A04."
     relationship: "formalizes"
     note: >-

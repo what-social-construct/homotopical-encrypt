@@ -22,7 +22,7 @@ this separately scoped entry: **22 declarations, ten manuscript-facing and twelv
 supporting**. `definition_names` is empty. Both modules build independently;
 full comparison and dependency verification are recorded separately.
 
-The source is the [immutable manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/adfcc14a22bc7134ad3d5418a14907834c29cf8f/papers/proximity-prize/main.tex).
+The source is the [immutable manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/1a2f72a1a60056ac001716c95c403816f9069ee0/papers/proximity-prize/main.tex).
 In the crosswalk, `SC` means `Hcrypt.Sheaf.SystematicCode`, `TL` means
 `Hcrypt.Protocol.Storage.ThreeLevel`, `CC` means
 `Hcrypt.Protocol.Storage.CanonicalCalibration`, and `C3` means
