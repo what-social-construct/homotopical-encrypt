@@ -13,8 +13,10 @@ on HCP/Hodge/CVP, the actual Helfer homological-test fragment and mathematical
 observation/Plücker recovery boundaries. Paper 2's working draft owns the
 concrete commitment/codec, visibility, gates/evidence and storage construction.
 Paper 3 is 31 pages and owns quantitative RS/proximity, calibration and metric
-bridges. The accompanying 93 Lean files change comments only; validation for
-the revised source snapshot remains to be recorded.
+bridges. The accompanying 93 Lean files change comments only. Fresh local
+validation passes the 9,295-job expanded build and all 975 selected dependency
+reports; every prior dependency set is unchanged. Both PDFs pass final
+build/render/layout QA. Protected verification remains exact-commit evidence.
 
 The earlier Paper 1-only public commit
 `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d` and its protected preflight PASS

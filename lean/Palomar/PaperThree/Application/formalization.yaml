@@ -32,11 +32,13 @@ sources:
     authors:
       - "Chloe van der Vlugt"
     type: "paper"
-    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/755031469a047dd5f194f5763439c88c57c9d4ff/papers/proximity-prize/main.tex"
+    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/adfcc14a22bc7134ad3d5418a14907834c29cf8f/papers/proximity-prize/main.tex"
     location: "Section 7; P3-A01, the storage-calibration portion of P3-A02 and P3-A03."
     relationship: "formalizes"
     note: >-
-      Immutable manuscript source. The companion coding configuration retains
+      Immutable manuscript source. Paper 2 owns the shared cochain construction,
+      codec/visibility and gate/evidence contracts; Paper 3 owns their quantitative
+      coding and metric/radius analysis. The companion coding configuration retains
       all nine original coding groups, the spectrum/distance interpretation,
       pure-code factor-two sharpness and the fixed-mix limitation. Splitting
       the independently stated Challenges preserves the selected scope under
@@ -61,7 +63,7 @@ status:
   validation:
     solution_build: "Passed locally: 3434 jobs; all three unfolded calibration wrappers use change and the canonical theorem."
     challenge_check: "Passed independently with Mathlib-only imports: 3207 jobs."
-    entry_axiom_audit: "Passed all 22 configured declarations: 21 exact-three and 1 standard subset. Combined probe: 975 standard-only reports; all 946 previous sets unchanged."
+    entry_axiom_audit: "Passed all 22 configured declarations: 21 exact-three and 1 standard subset. Fresh combined probe: 975 standard-only reports; all 975 pre-revision sets unchanged. Expanded documentation-revision build: 9295 jobs."
     local_comparator: "Passed statement/definition comparison, Lean default kernel and NanoDa; macOS diagnostic with --inadvisably-no-sandbox."
     protected_linux_verification: "Pending; not run."
     note: >-

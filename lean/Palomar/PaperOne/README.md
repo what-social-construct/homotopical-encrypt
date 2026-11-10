@@ -28,7 +28,7 @@ ordinary categorical meanings.
 In the crosswalk, `E` means `Hcrypt.Palomar.PaperOne`, `CS` means
 `E.CellularSheaf`, `HB` means `E.HCPBridge`, `AF` means `E.AxisFamily`, and
 `PL` means `E.Plucker`. The source labels refer to the
-[versioned manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/299663b12ed7d4d743ec6e325ef996631f756b1c/papers/paper1/main.tex).
+[versioned manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/adfcc14a22bc7134ad3d5418a14907834c29cf8f/papers/paper1/main.tex).
 Canonical names below belong to the implementation, outside the entry namespace.
 
 | Group / manuscript source | Entry declarations and mathematical content | Canonical proof owners |
@@ -83,8 +83,10 @@ and are excluded from the Solution's zero proof-hole and definition-hole counts.
 
 A fresh `#print axioms` audit covers all **46** selected Solution declarations:
 44 use exactly the three permitted axioms and two use subsets. The retained
-implementation plus entry audit has **946 reports**; all 900 prior dependency
-sets are unchanged. Declaration counts do not measure mathematical novelty.
+implementation plus entry audit has **975 reports**; all 975 pre-revision
+dependency sets are unchanged. The documentation revision also passes the
+expanded 9,295-job build, including all fifteen default roots and three
+Solution entries. Declaration counts do not measure mathematical novelty.
 
 From the repository's `lean/` project, the entry modules are
 `Palomar.PaperOne.Challenge` and `Palomar.PaperOne.Solution`; its configuration is

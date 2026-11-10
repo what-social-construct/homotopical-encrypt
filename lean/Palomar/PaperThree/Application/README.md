@@ -8,6 +8,11 @@ The selected scope uses two Comparator configurations to fit Palomar's
 1,000-line independent Challenge limit. Together they retain the selected Paper 3 scope;
 the split does not replace the application with a supplied comparison premise.
 
+Paper 2 owns the original cochain/commitment construction, codec, visibility
+and gate/evidence contracts. This Paper 3 entry uses those same objects for
+valid-locus identification and quantitative metric/calibration results. It
+asserts no separate protocol construction or primitive security theorem.
+
 [Challenge](Challenge.lean) independently restates the actual payload,
 cellular, storage-context, codec and metric definitions using Mathlib only.
 Ordinary definitions retain their original canonical names and bodies.
@@ -17,7 +22,7 @@ this separately scoped entry: **22 declarations, ten manuscript-facing and twelv
 supporting**. `definition_names` is empty. Both modules build independently;
 full comparison and dependency verification are recorded separately.
 
-The source is the [immutable manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/755031469a047dd5f194f5763439c88c57c9d4ff/papers/proximity-prize/main.tex).
+The source is the [immutable manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/adfcc14a22bc7134ad3d5418a14907834c29cf8f/papers/proximity-prize/main.tex).
 In the crosswalk, `SC` means `Hcrypt.Sheaf.SystematicCode`, `TL` means
 `Hcrypt.Protocol.Storage.ThreeLevel`, `CC` means
 `Hcrypt.Protocol.Storage.CanonicalCalibration`, and `C3` means
@@ -64,8 +69,9 @@ efficient implementation, cryptographic or performance advantage is claimed.
 Challenge/Solution build independently (**3,207/3,434 jobs**). Local Comparator
 passes statement/definition comparison and both Lean and NanoDa kernel checks.
 The fresh audit covers all **22** selected declarations (21 exact-three/one
-subset); only `propext`, `Quot.sound` and `Classical.choice` occur. The combined
-975-report audit preserves all 946 prior dependency sets. This macOS diagnostic
+subset); only `propext`, `Quot.sound` and `Classical.choice` occur. The fresh combined
+975-report audit preserves all 975 pre-revision dependency sets.
+The expanded documentation-revision build passes 9,295 jobs. This macOS diagnostic
 uses `--inadvisably-no-sandbox`; protected Linux verification has not run.
 Challenge has **22 intentional theorem placeholders**; Solution has zero proof
 or definition holes. No metadata-schema pass, registry review or submission

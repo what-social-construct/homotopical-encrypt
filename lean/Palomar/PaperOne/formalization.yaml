@@ -33,14 +33,14 @@ sources:
     authors:
       - "Chloe van der Vlugt"
     type: "paper"
-    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/299663b12ed7d4d743ec6e325ef996631f756b1c/papers/paper1/main.tex"
+    id: "https://github.com/what-social-construct/homotopical-encrypt/blob/adfcc14a22bc7134ad3d5418a14907834c29cf8f/papers/paper1/main.tex"
     location: "Sections 2, 3.2--3.5, 6.2 and the corresponding appendices; groups P1-S01--S06 and P1-B01--B02 in the entry README."
     relationship: "formalizes"
     note: >-
       Immutable source for the unchanged eight selected mathematical groups.
       The revised manuscript concentrates on those Hodge/CVP and observation
-      results; the final revised source reference is pinned when its release
-      is frozen. The entry adapts the unchanged canonical development's
+      results. Its source and PDF are frozen at the commit identified above.
+      The entry adapts the unchanged canonical development's
       proofs. Concrete cochain/protocol construction belongs to Paper 2;
       coding and quantitative proximity development belongs to Paper 3.
   - title: "First-order homotopical logic"
@@ -96,7 +96,7 @@ status:
   validation:
     solution_build: "Passed locally: lake build Palomar.PaperOne.Solution, 3666 jobs."
     challenge_check: "Passed independently: lake build Palomar.PaperOne.Challenge, 3516 jobs."
-    entry_axiom_audit: "Fresh #print axioms audit passes all 46 selected Solution declarations: 44 exact-three and two subsets. Combined audit: 946 standard-only reports; all 900 prior sets unchanged."
+    entry_axiom_audit: "Fresh #print axioms audit passes all 46 selected Solution declarations: 44 exact-three and two subsets. Fresh combined audit: 975 standard-only reports; all 975 pre-revision sets unchanged. Expanded documentation-revision build: 9295 jobs, including all default roots and three Solution entries."
     local_comparator: "Passed statement/definition comparison, Lean default kernel and NanoDa; macOS diagnostic with --inadvisably-no-sandbox."
     protected_linux_verification: "Passed for public snapshot 66e1ad2cb726d3dd816461e4f76b1d0d9147a46d, run 42729947447: protected comparison/provenance and Lean, NanoDa and con-ron accepted. A fresh exact-commit preflight is required for the manuscript-scope revision."
     note: >-

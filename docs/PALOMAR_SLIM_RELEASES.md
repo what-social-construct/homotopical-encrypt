@@ -20,7 +20,11 @@ applied to the manuscripts. Paper 1 has 37 pages rather than the public
 snapshot's 101; Paper 3 has 31 pages rather than the earlier package's 30.
 The revised manuscripts and 93 comment-only Lean edits have not been
 published, frozen in a refreshed slim package or protected-preflighted.
-Build/audit evidence for the revised snapshot remains to be recorded. The
+Fresh local validation passes the 9,295-job expanded build and all 975
+selected dependency reports, preserving every prior dependency set. Both
+PDFs pass build/render/layout QA. Revised packages use the separate local
+`output/manuscript-split-review/` directory; no new hosted verification or
+publication is claimed. The
 published commit and PASS above apply only to their exact historical bytes.
 
 The existing [three-paper ownership table](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table)
@@ -73,18 +77,20 @@ not add a cryptographic security or deployed-system claim.
 From the development repository root:
 
 ```sh
-python3 scripts/export_palomar_entries.py --refresh
-python3 scripts/export_palomar_entries.py --verify
+python3 scripts/export_palomar_entries.py --output-dir output/manuscript-split-review --refresh
+python3 scripts/export_palomar_entries.py --output-dir output/manuscript-split-review --verify
 ```
 
-The output is `output/palomar-slim/{paper1,paper3-coding,paper3-application}`,
+The revised output is `output/manuscript-split-review/{paper1,paper3-coding,paper3-application}`,
 with one ZIP alongside each folder. `PALOMAR_PACKAGE_MANIFEST.json` records
 the exact source checkpoint, selected-input hashes, import closures,
 generated files and inventory hashes. Freeze only after
 `selected_inputs_changed_from_checkpoint` is empty. `--verify` checks source
 identity, the exact module inventory, source limits, implementation holes,
 local links, archive identity and deterministic archive timestamps.
-Static verification does not invoke a proof checker.
+Static verification does not invoke a proof checker. The earlier
+`output/palomar-slim/` packages and frozen public-release bundle are retained
+as historical evidence; revised exports use the separate directory above.
 
 The preceding local evidence under `output/validation/` records the generated project
 builds, the package checks and the actual upstream metadata-contract checks

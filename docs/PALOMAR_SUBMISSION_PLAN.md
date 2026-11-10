@@ -35,7 +35,9 @@ construction; Paper 3 is 31 pages and owns quantitative RS/proximity,
 calibration and metric bridges. Paper 2 remains a working Markdown draft.
 The revised manuscripts and 93 comment-only Lean files are not part of public
 commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`, have not been published or
-protected-preflighted, and retain a separate pending build/audit record.
+protected-preflighted. Fresh local validation passes the 9,295-job expanded
+build and all 975 dependency reports with unchanged sets; both PDFs pass
+build/render/layout QA. The central validation guide records those checks.
 The historical 101-page Paper 1 release and its PASS do not validate the
 revised bytes. No registry intake or registration is authorized.
 
@@ -434,8 +436,9 @@ paragraph's counts and unchanged-source statements remain dated baselines.
 The current local 37-page Paper 1 and 31-page Paper 3 apply the ownership split
 described above. Their compile checks report no undefined references/citations
 or overfull boxes. The 93 Lean comment changes and revised manuscripts are
-outside the completed build, dependency and protected-preflight baselines;
-their exact-snapshot validation remains to be recorded.
+covered by the fresh 9,295-job local build and all 975 selected dependency
+reports with unchanged sets. They remain outside the exact historical
+protected-preflight baseline; a new hosted check is still required.
 
 Freeze a separate slim per-entry release with the selected proof closure,
 corresponding manuscript evidence, statement/proof wrappers and metadata

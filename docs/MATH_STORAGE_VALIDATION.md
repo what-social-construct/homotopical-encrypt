@@ -41,8 +41,15 @@ whitespace. The current source scan has 279 modules, zero implementation
 holes, 96 deliberate Challenge placeholders, seven isolated cited axioms,
 no active native calls and no cycles or unresolved local imports. All 54
 focused closures retain their cited-axiom/Chain exclusion. The pinned metadata
-contract passes for all three entries. Fresh full-build and selected dependency
-results are recorded below when complete.
+contract passes for all three entries. The fresh expanded build, explicitly
+including all 15 default roots, storage/HCP/protocol integrations and all three
+Solution entries, passes **9,295 jobs**. The fresh dependency probe passes all
+**975 reports**: 792 use exactly the standard three axioms and 183 proper
+subsets, including 106 axiom-free. All 975 pre-revision dependency sets match.
+The three entries retain 46/52/22 reports (44/48/21 exact-three). No selected
+report depends on native certificates, cited-bound axioms or `sorryAx`. The
+older literal-default and independent comparison/kernel records below remain
+their own dated evidence.
 
 Evidence is retained under `output/validation/manuscript-split-*`: source and
 comment audits, preservation inventories, build logs, PDF hashes/renders and

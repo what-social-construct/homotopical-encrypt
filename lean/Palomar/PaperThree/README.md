@@ -6,6 +6,11 @@ the original cochain-payload and storage-calibration results. The selected Paper
 configurations to fit Palomar's 1,000-line independent Challenge limit. They are companion entries
 for one manuscript; the split introduces no additional research claim.
 
+Paper 2 owns the shared cochain construction, codec/visibility and protocol
+contracts. Paper 3 owns the quantitative coding and metric/radius results
+about that construction. The companion recalls the necessary data with that
+attribution; it is not a second protocol-construction claim.
+
 [Challenge](Challenge.lean) independently states the mathematical objects with
 Mathlib imports only. Its ordinary definitions retain their canonical
 `ProximityPrize` names and bodies. [Solution](Solution.lean) imports the
@@ -15,7 +20,7 @@ canonical proofs and proves two explicit equivalence-inverse wrappers under
 All definitions are ordinary transparent definitions; `definition_names` is
 empty. Both builds and local comparison/kernel checks pass.
 
-The [immutable manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/755031469a047dd5f194f5763439c88c57c9d4ff/papers/proximity-prize/main.tex) supplies the statements.
+The [immutable manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/adfcc14a22bc7134ad3d5418a14907834c29cf8f/papers/proximity-prize/main.tex) supplies the statements.
 In the crosswalk, `RS` means `ProximityPrize.ReedSolomon.Parameters`, `BC`
 means `ProximityPrize.BlockCode`, `GF` means
 `ProximityPrize.Capacity.SmoothQuarterFamily`, `BF` means
@@ -56,7 +61,8 @@ passes statement/definition comparison and both Lean and NanoDa kernel checks,
 permitting only `propext`, `Quot.sound` and `Classical.choice`. This macOS
 diagnostic used `--inadvisably-no-sandbox`; protected Linux verification has
 not run. The fresh audit passes all 52 declarations (48 exact-three/four subsets).
-The combined 975-report audit preserves all 946 prior dependency sets. The **51
+The fresh combined 975-report audit preserves all 975 pre-revision dependency sets.
+The expanded documentation-revision build passes 9,295 jobs. The **51
 intentional Challenge theorem placeholders** are comparison targets; Solution
 has no proof holes or definition holes. No metadata-schema pass, registry
 review, protected preflight or submission is claimed.
