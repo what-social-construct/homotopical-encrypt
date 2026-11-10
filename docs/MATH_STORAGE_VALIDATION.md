@@ -9,6 +9,32 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Paper 1 public protected preflight — 2026-11-09
+
+The user authorized public publication and protected preflight only, explicitly
+deferring submission. The separate public repository is
+[homotopical-encrypt-formalizations](https://github.com/what-social-construct/homotopical-encrypt-formalizations).
+Its `main` points to the exact approved Paper 1 root commit
+`66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`, with 54 files, 31 source modules
+plus Lake and no private development history. The original development
+repository remains private; its unrelated Rust edit is untouched. Paper 2 and
+Paper 3 manuscripts are outside the published snapshot.
+
+[Protected preflight run 42729947447](https://github.com/what-social-construct/homotopical-encrypt-formalizations/actions/runs/42729947447)
+uses request `p1pf875ad70f`, `mode: full`, `palomar-standard-v1` and pipeline
+`14aa8d6b3c2f14a8540605e37144560b9a00e7e7`. Its project is `lean`; the
+configuration and metadata paths are
+`lean/Palomar/PaperOne/comparator.json` and
+`lean/Palomar/PaperOne/formalization.yaml`. The remote branch SHA was verified
+before dispatch. Initial immutable-source preparation succeeded; the full
+mechanical result is **pending**. A successful workflow and its delivered
+mechanical report must both be inspected before recording a pass.
+
+Local records are `paper1-protected-preflight-request.json` and
+`paper1-protected-preflight-run.json` under `output/validation/`.
+No Palomar intake, editorial review or registration has been requested.
+The user's instruction to defer submission remains in force.
+
 ## Paper 1 final manuscript and first-release scope — 2026-11-09
 
 Paper 1 is the first publication/submission priority. The established split

@@ -1,10 +1,17 @@
 # Slim Palomar releases: Paper 1 first
 
-Preparation updated on 2026-11-09. The publication priority is to finish and
-release Paper 1 first, then run its protected preflight before requesting
-Palomar intake. The proposed public destination is
-`what-social-construct/homotopical-encrypt-formalizations`, with Paper 1's slim
-snapshot on `main`.
+Publication/preflight checkpoint, 2026-11-09: the approved Paper 1-only
+snapshot is public on `main` in
+[homotopical-encrypt-formalizations](https://github.com/what-social-construct/homotopical-encrypt-formalizations),
+at commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`. The complete protected
+[preflight run](https://github.com/what-social-construct/homotopical-encrypt-formalizations/actions/runs/42729947447)
+has been dispatched and is in progress; no passing report is recorded at this
+checkpoint. Its request identifier is `p1pf875ad70f`.
+
+The user authorized publication and preflight only and explicitly deferred
+submission. **No registry intake or registration is authorized or performed.**
+Finish by inspecting and retaining the mechanical report; a passing preflight
+does not authorize an intake request.
 
 The existing [three-paper ownership table](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table)
 remains authoritative: Paper 1 owns HCP foundations, Paper 2 owns protocol and
@@ -17,12 +24,13 @@ The following are technical packaging inventories, not a publication split:
 
 | Package | Local Lean modules, including Challenge | Configured declarations | Manuscript |
 |---|---:|---:|---|
-| `paper1` | 31 | 46: 21 main / 25 support | Paper 1; revised manuscript/PDF must be frozen together |
+| `paper1` | 31 | 46: 21 main / 25 support | Paper 1; final 101-page manuscript/PDF frozen in the public snapshot |
 | `paper3-coding` | 35 | 52: 36 main / 16 support | Paper 3, 30 pages |
 | `paper3-application` | 81 | 22: 10 main / 12 support | The same Paper 3 manuscript |
 
-Only `paper1` is selected for the first publication/preflight sequence. The
-two Paper 3 packages retain their completed local checks for later work.
+Only `paper1` has been published for this preflight. The two Paper 3 packages
+retain their completed local checks and remain unpublished; Paper 2 is also
+outside this public snapshot.
 
 The [exporter](../scripts/export_palomar_entries.py) copies every selected Lean
 source, Comparator configuration, metadata file and manuscript source/PDF
@@ -78,14 +86,18 @@ audit for the unchanged Lean sources.
 
 The first frozen Paper 1 candidate, `73f9c28a4b9f8fb6a04e5b656389979be6b9cd92`,
 predates the latest manuscript and metadata wording corrections. It is a
-historical candidate, not the commit to publish. Refresh and freeze Paper 1
-after its revised TeX, PDF, README and metadata agree; retain the exact new
-commit and artifact hashes in the final release record.
+historical candidate. The revised TeX, PDF, README and metadata were frozen
+together in the published commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`.
+The final local records are `paper1-first-frozen-release.json`,
+`paper1-first-local-validation.json` and `paper1-first-final-checkpoint.json`
+under `output/validation/`; the hosted preflight result is separate evidence.
 
 ## Protected preflight and publication boundary
 
-**Protected Linux preflight has not run.** The development remote is private,
-and this Mac has no Linux VM/container runtime. Palomar's
+At the preceding local-preparation checkpoint, protected preflight had not
+run: the development remote was private and this Mac had no Linux VM/container
+runtime. The development repository remains private; only the approved slim
+Paper 1 snapshot is now public. Palomar's
 [complete reusable workflow](https://submit.palomar-registry.org/llms.txt)
 requires the exact public repository and immutable commit. A local Comparator
 diagnostic or cached build is separate evidence.
@@ -101,17 +113,17 @@ exact commit. A passing preflight does not constitute editorial review or
 registration.
 
 The earlier proposal for three technical release branches is superseded by
-the Paper 1-first sequence. Publish the refreshed Paper 1 snapshot on `main`
-in the proposed public repository, without private development history.
-Keep the checked Paper 3 candidates local until their later release step.
-The exporter performs no repository creation, push, visibility change,
-workflow dispatch or registry submission; none has occurred in preparing
-these candidates.
+the Paper 1-first sequence. The public `main` contains only its fresh slim
+snapshot, without private development history. The checked Paper 3 candidates
+remain local. The exporter itself performs no remote actions; the separately
+authorized repository creation, exact-snapshot push and preflight dispatch
+have now occurred. The private development remote was not changed.
 
-Run the complete protected preflight for Paper 1's exact public commit and
-inspect its mechanical report. Resolve failures before intake. Then present
-the repository, full commit SHA, configuration path and truthful author or
-maintainer relationship for the author's final confirmation before requesting
-Palomar intake. Registration remains a separate decision after reading the
-review, following the
+Retain `mechanical-report-p1pf875ad70f` from the running full preflight and
+inspect its exact source, configuration, provenance and kernel evidence.
+Report the result and stop before intake. A later submission requires a new
+explicit instruction and the author's final confirmation of the repository,
+full commit SHA, configuration path and truthful author or maintainer
+relationship. Registration remains a separate decision after reading a
+future review, following the
 [submission plan](PALOMAR_SUBMISSION_PLAN.md#reproducible-checks-and-remaining-steps).

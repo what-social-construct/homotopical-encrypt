@@ -124,6 +124,13 @@ record these distinct results. The [source ledger](docs/SOURCE_LEDGER.md) and
 [three-paper completion checkpoint](docs/PAPER_OUTLINE.md#source-based-completion-checkpoint--2026-11-08)
 record reviewed sources and the next mathematical/editorial work.
 
+**Paper 1 public preflight — 2026-11-09:** P298 publishes only the approved
+Paper 1 snapshot `66e1ad2` and starts protected run 42729947447. The complete
+mechanical report is pending. The user explicitly deferred submission;
+no Palomar intake, editorial review or registration was requested. Paper 2
+and Paper 3 retain their existing ownership and remain outside this first
+public snapshot.
+
 **Paper 1 first release — 2026-11-09:** P296--P297 prioritize its selected
 eight-group submission without changing the three-paper split. The final
 101-page manuscript foregrounds the constructed ambiguity examples and
@@ -721,6 +728,7 @@ completion in the current record below.
 | P295 | Slim package and metadata validation — 2026-11-09 | Generated defaults pass 3,667/3,174/3,435 jobs and separate Challenges 3,516/3,138/3,207, using existing pinned caches in disposable copies. Exact module/source/ZIP/link/size checks and deterministic exports pass; retained informal scopes agree. The pinned upstream mechanical metadata contract accepts all three. No Lean declarations or pins change; the 975-report and kernel evidence is preserved for unchanged source bytes. Protected Linux workflow needs a public immutable snapshot; no remote creation, push, dispatch or registry action occurred. |
 | P296 | Paper 1 first-submission scope — 2026-11-09 | Preserve the authoritative three-paper split and prioritize Paper 1 only on the first public main branch. Its abstract/introduction foreground constructed nonzero-target ambiguity and weighted coefficients two/one at b=(1,2), with each private lattice retaining a unique CVP answer. Elementary projection identities, the homological-test fragment and the finite signed-incidence model are explicit; regular CW/simplicial realization, asymptotic hardness and sampled cryptographic security are not inferred. D47--D48 reconcile model and legacy appendix descriptions. |
 | P297 | Paper 1 final manuscript/source QA — 2026-11-09 | Revised 101-page PDF builds with zero undefined references/citations, missing glyphs or overfull boxes and seven underfull diagnostics. All pages rendered/contact-reviewed with detailed changed-page checks; canonical/stable copies match. Hansen--Ghrist publication metadata and the CVP citation are updated. All 279 Lean source hashes and theorem/dependency sets are preserved. Source ledger now has 28 candidates, including deontic joint commitments and recent full-length RS limitations, without adoption or blocking Paper 1. Final immutable release and protected/preflight/intake evidence are recorded separately; prior slim commits are dated baselines. |
+| P298 | Approved Paper 1 public preflight — 2026-11-09 | User approved publication and preflight only, explicitly deferring submission. The new public formalizations repository main points exactly to 66e1ad2cb726d3dd816461e4f76b1d0d9147a46d (54 files, 31 source modules plus Lake, no private history). Protected run [42729947447](https://github.com/what-social-construct/homotopical-encrypt-formalizations/actions/runs/42729947447), request p1pf875ad70f, uses full mode, palomar-standard-v1 and pinned pipeline 14aa8d6. Immutable-source preparation passed; final mechanical report pending. Original private repository and Rust edit remain intact; no Palomar intake, editorial review or registration. |
 
 #### Current protocol validation
 

@@ -3,16 +3,23 @@
 Preparation note begun 2026-11-05; Paper 1 and Paper 3 entry files prepared 2026-11-09. The
 intended public scope is the Lean development and corresponding manuscripts.
 Paper 1 now has an independent statement/proof pair, Comparator configuration,
-metadata and completed local diagnostic checks. Protected preflight, public
-release, submission and registration have not occurred.
+metadata and completed local diagnostic checks. At the preceding preparation
+checkpoint no public release or protected preflight had occurred. The current
+publication/run status is recorded below; registry intake and registration
+have not occurred.
 
-**Current priority — Paper 1 first.** Finish Paper 1's selected mathematical
-account and revised manuscript evidence, freeze its slim snapshot, publish it
-on `main` in the proposed
-`what-social-construct/homotopical-encrypt-formalizations` repository, and run
-the complete protected preflight for that exact commit. After a passing
-mechanical report, obtain the author's final confirmation of the exact
-repository/commit/configuration/relationship tuple before requesting intake.
+**Current checkpoint — Paper 1 public; preflight in progress, 2026-11-09.**
+The approved Paper 1-only snapshot is on `main` in
+[homotopical-encrypt-formalizations](https://github.com/what-social-construct/homotopical-encrypt-formalizations)
+at commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`. The complete protected
+[preflight run](https://github.com/what-social-construct/homotopical-encrypt-formalizations/actions/runs/42729947447)
+has been dispatched with request identifier `p1pf875ad70f`; no passing report
+is yet recorded here. The user approved publication and preflight only and
+explicitly said not to submit yet. **No registry intake or registration is
+authorized or performed.** Inspect and retain the mechanical report, then
+stop before intake. Any later submission needs a new explicit instruction
+and final confirmation of the exact
+repository/commit/configuration/relationship tuple.
 The two checked Paper 3 configurations remain local candidates for later
 work. Their technical packaging does not change the
 [three-paper split](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table):
@@ -92,11 +99,11 @@ remove a limitation needed to understand the result.
 The broader [Lean/manuscript public-review package](../PUBLIC_REVIEW.md) serves
 a different purpose and includes cross-paper context. Its ZIP is neither the
 slim per-entry release nor a Palomar submission. Paper 1's entry files now
-live in the development repository; a separately frozen slim release and
-protected preflight are tracked in the
-[slim release guide](PALOMAR_SLIM_RELEASES.md). Local per-entry packages are
-now prepared from the exact checked import closures; publication and hosted
-verification remain separate.
+live in the development repository. The separately frozen Paper 1 release
+and running protected preflight are tracked in the
+[slim release guide](PALOMAR_SLIM_RELEASES.md). The Paper 3 packages remain
+local; publication, hosted verification and registry intake retain their
+separate statuses.
 
 ## Paper 3 coding and application entries — 2026-11-09
 
@@ -177,10 +184,11 @@ contains reproduction commands and the remaining boundaries.
 The latest manuscript pass foregrounds the constructed integral observation
 examples, states the finite signed-incidence model explicitly, and distinguishes
 the legacy nullity/likelihood vocabulary from stronger homotopy or security
-claims. The revised manuscript and metadata must be frozen together after
-PDF rebuild and inspection. The earlier Paper 1 candidate
+claims. Its revised 101-page PDF was rebuilt and visually inspected, and the
+manuscript and metadata were frozen together in public commit
+`66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`. The earlier Paper 1 candidate
 `73f9c28a4b9f8fb6a04e5b656389979be6b9cd92` is superseded for publication by
-this pending refreshed snapshot; its completed checks remain historical
+this refreshed snapshot; its completed checks remain historical
 evidence. No Lean declarations or entry configuration names are changed by
 these wording corrections.
 
@@ -190,9 +198,11 @@ follows Jacobian's [pinned reusable workflow](https://github.com/PalomarRegistry
 commit checked on 2026-11-09. Its `project_path` is `lean`; configuration and
 metadata paths are relative to the repository root. Only `workflow_dispatch`
 is enabled, with a fresh 12-character request identifier and the selected
-commit recorded by `github.sha`. This workflow has not been pushed or run.
-Protected verification requires a public immutable source snapshot; public
-release and any registry submission are separate steps.
+commit recorded by `github.sha`. That development-repository workflow was
+not pushed or run during its local preparation. The published slim snapshot
+contains its own `.github/workflows/palomar-preflight.yml`, now dispatched
+against the exact public commit linked above. Public release, protected
+verification and registry intake remain separate steps.
 
 ## Selected manuscript statement surface — 2026-11-08
 
@@ -399,8 +409,9 @@ Paper 3's trust wording/PDF. The Paper 1 entry then retained all 273 owner
 files and both PDFs unchanged. Select
 the appropriate manuscript evidence for each entry and tie it to the final
 immutable release. This is evidence preparation, not a completed submission.
-The latest Paper 1 wording pass requires its own rebuilt PDF and inspection;
-the preceding page count is not a claim about that revised artifact.
+The latest Paper 1 wording pass has its own rebuilt and visually inspected
+101-page PDF in the exact public snapshot linked above. The preceding
+paragraph's counts and unchanged-source statements remain dated baselines.
 
 Freeze a separate slim per-entry release with the selected proof closure,
 corresponding manuscript evidence, statement/proof wrappers and metadata
@@ -458,34 +469,38 @@ Select the current pipeline revision when preparing the release; do not
 silently reuse Jacobian's historical verifier pin. Require a passing complete
 mechanical report for the exact final package before intake.
 
-Immediate sequence, with Paper 1 first:
+Current sequence, with Paper 1 first:
 
-1. **Finish the selected Paper 1 account.** Preserve the eight HCP/CVP and
-   observation groups, their actual finite-incidence objects and explicit
-   hypotheses. Rebuild and inspect the revised manuscript; align README and
-   metadata with those statements and their source evidence.
-2. **Refresh and freeze only Paper 1 for publication.** Its exact proof closure
+1. **Selected Paper 1 account completed.** The eight HCP/CVP and observation
+   groups retain their actual finite-incidence objects and explicit
+   hypotheses. The revised manuscript is rebuilt/inspected and aligned with
+   its README, metadata and source evidence.
+2. **Paper 1 snapshot frozen.** Its exact proof closure
    has 31 local modules, one configuration and the corresponding manuscript.
    Exclude archives, plans and other-paper claim surfaces. The earlier three
    technical-branch proposal is superseded; see the
    [release guide](PALOMAR_SLIM_RELEASES.md).
-3. **Publish the new Paper 1 snapshot on `main`.** Use the proposed public
-   repository `what-social-construct/homotopical-encrypt-formalizations` with no
-   private development history. Preserve all checked Lean bytes, pins and
-   configuration paths. Paper 3's two locally checked entries remain for later;
+3. **Paper 1 snapshot published on `main`.** Public commit
+   `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d` contains no private development
+   history and preserves all checked Lean bytes, pins and configuration
+   paths. Paper 3's two locally checked entries remain unpublished for later;
    Paper 2's protocol/cochain draft retains its existing place in the program.
-4. **Run the complete protected preflight.** Use the exact public repository,
-   new immutable commit, `project_path: lean` and Paper 1's configuration and
-   metadata paths. Inspect the full mechanical report and resolve any failure
-   before intake. Prior cached builds, local kernels and the 975-report audit
-   remain separate evidence for their recorded inputs.
-5. **Obtain final author confirmation before intake.** Present the concrete
-   repository, full commit, configuration and truthful authorization
+4. **Complete protected preflight in progress.** Run `42729947447` selects the
+   exact public commit, `project_path: lean` and Paper 1's configuration and
+   metadata paths. Retain `mechanical-report-p1pf875ad70f`, inspect its full
+   evidence and report the outcome. Prior cached builds, local kernels and the
+   975-report audit remain separate evidence for their recorded inputs.
+5. **Stop before intake.** The user explicitly authorized preflight only.
+   Do not request registry submission or registration on the strength of a
+   passing report. A later explicit submission instruction must confirm the
+   concrete repository, full commit, configuration and truthful authorization
    relationship, together with the passing preflight report. The destination is
    [Palomar's submission service](https://submit.palomar-registry.org/).
    Agent access uses authenticated GitHub tag-write and secret-gist capability;
    the user handles browser sign-in. Registration is a separate decision after
    reading the actual review, not an automatic sequel to preparation.
 
-No sibling files, credentials, review state, remote repository, or submission
-service state were changed in preparing this note.
+The separate Paper 1 public repository and preflight workflow changed under
+the user's explicit publication/preflight authorization. No sibling files,
+private development remote, credentials, Palomar intake, review state or
+registration state were changed. Paper 2 and Paper 3 remain unpublished.

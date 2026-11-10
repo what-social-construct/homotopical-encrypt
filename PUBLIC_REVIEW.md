@@ -9,6 +9,12 @@ the preparation tooling. The [slim release guide](docs/PALOMAR_SLIM_RELEASES.md)
 records three separately generated entry packages and their local checks;
 this broad archive retains cross-paper context for human review.
 
+The separate [Paper 1-only release](https://github.com/what-social-construct/homotopical-encrypt-formalizations)
+is now public at `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`.
+Its [protected preflight](https://github.com/what-social-construct/homotopical-encrypt-formalizations/actions/runs/42729947447)
+is running. The broader archive described here remains a local review package.
+The user has explicitly deferred Palomar submission and registration.
+
 ## Included scope
 
 - `lean/`: current source, pinned toolchain, Lake configuration/manifest and
