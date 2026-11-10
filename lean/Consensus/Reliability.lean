@@ -9,8 +9,8 @@ public import Mathlib.Tactic
   Reliability evidence and discount scores.
 
   Paper correspondence:
-  - Paper 2: validator reliability and Proof-of-Value scoring.
-  - Paper 1 appendix ledger: subsequent protocol-paper boundary only.
+  - Paper 2: validator reliability evidence and discount scores.
+  - The supporting contract does not enter Paper 1's selected HCP/CVP claims.
 
   Validators are automated, so reliability is not human effort. It is protocol
   behavior: assigned duties fulfilled correctly and on time, with no

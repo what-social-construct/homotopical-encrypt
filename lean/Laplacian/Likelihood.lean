@@ -7,10 +7,11 @@ public import Mathlib
 
 /-
   Paper correspondence:
-  - Paper 1 Section 2: public-sample likelihood intuition for hidden Hodge
-    operators.
-  - Paper 1 Section 3: adversarial comparison with known-operator recovery.
--/
+  - Supporting likelihood-score interfaces, outside Paper 1's selected
+    Hodge/CVP and observation results.
+  - Any Paper 2 security interpretation requires its own experiment. Legacy
+    supremum-norm integrals are separate from the corrected Euclidean
+    pointwise likelihood.-/
 
 set_option linter.mathlibStandardSet false
 set_option linter.unusedSectionVars false

@@ -11,8 +11,9 @@ public import Axioms.Foundation
   Grassmannian Consensus Geometry Axioms
 
   Paper correspondence:
-  - Paper 1 Sections 2--4: Hodge/Grassmannian semantic and spectral surfaces.
-  - Paper 2: consensus geometry and Proof-of-Value protocol use.
+  - Paper 2: consensus-geometry and Proof-of-Value construction contracts.
+  - Supporting Grassmannian and spectral vocabulary is not a claim that the
+    selected Paper 1 entry proves these protocol assumptions.
 
   Axiomatizes the Grassmannian geometry underlying sheaf consensus:
     - Grassmannian Gr(k,n): manifold of k-dimensional subspaces of ℝⁿ

@@ -11,7 +11,7 @@ public import Axioms.SheafCoherence
   the sheaf-semantic well-formedness contract.
 
   Paper correspondence:
-  - Paper 1 Section 5: cochain commitment payloads, topology compatibility, and
-    security interfaces.
-  - Paper 2: protocol evidence and chain consumption of commitment surfaces.
--/
+  - Paper 2: the shared cochain payload, semantic acceptance and
+    commitment-security interfaces.
+  - Paper 3 consumes the existing payload through its declared quantitative
+    source profile.-/

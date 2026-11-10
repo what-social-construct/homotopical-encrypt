@@ -34,6 +34,17 @@ in Lean. The endpoint arguments are elementary interpolation; the exponential
 alphabet and allowable lists do not establish an efficient decoder or a
 polynomial-list improvement.
 
+Recent limitations clarify this distinction. Alrabiah, Goyal and Guruswami
+\cite[Theorems~1.1, 1.2 and~1.4]{alrabiahGoyalGuruswami2026} construct
+super-polynomial lists just beyond Johnson for certain full-length
+low-characteristic codes, and growing polynomial lists below capacity for
+specified full-length prime-field codes. Their full length is the field
+cardinality. Our family instead uses \(n\) subgroup points in
+\(\mathbb F_{3^n}\), and its endpoint list \(\binom nk\) is allowed to
+grow exponentially in \(n\) while meeting a fraction-of-field budget.
+Neither that budget nor the separate pair-MCA event asserts polynomial-list
+decoding up to capacity.
+
 To resolve the first nontrivial MCA transition rather than only give a
 uniform sufficient bound, we define the exact spectrum
 \[
@@ -53,14 +64,23 @@ exponential-size field and is not a claim about every supplied smooth code.
 An application with an independently defined source metric additionally
 requires a comparison with the extracted pair-code distance.
 
-This is Paper 3 of the Homotopical Encryption program. Paper 1 develops the
-HCP foundations and its application-specific projection bridge; Paper 2
-addresses protocol evidence, commitments, and runtime verification. The
-coding theorems here do not require either paper's hidden geometry or
-commitment construction. A protocol using them must enforce the
-fixed-pair, later-challenge order described in Section~6.
-Section~7 supplies that comparison for an explicit systematic cellular model.
-It retains the original committed-cochain payload in a complete coordinate
+This is Paper 3 of the Homotopical Encryption program. The paper ownership is:
+\begin{description}[style=nextline]
+  \item[Paper 1 \cite{vanDerVlugt2026hcp}.]
+    HCP/Hodge/CVP foundations, the semantic fragment and mathematical
+    observation/recovery boundaries.
+  \item[Paper 2 \cite{vanDerVlugt2026protocol}.]
+    The cochain commitment construction, its concrete observation and encoding
+    profile, protocol evidence, storage, gates and state transitions.
+  \item[This paper.]
+    Universal coding bounds, radii and quantitative comparisons for the
+    declared source-to-code projection.
+\end{description}
+The coding theorems do not assume an HCP presentation or a commitment
+protocol. A protocol using them must enforce the fixed-pair, later-challenge
+order described in Section~6. Section~7 uses Paper 2's explicit systematic
+cellular construction and proves its source-distance comparison. It retains
+the original committed-cochain payload in a complete coordinate
 layout and defines source validity intrinsically by an integral opening and
 carry satisfying \(\delta_0a=z+qm\). Scalar cochain edits count \(2n\)
 coordinates, while plane and RS edits count \(n\) whole pairs. The proved

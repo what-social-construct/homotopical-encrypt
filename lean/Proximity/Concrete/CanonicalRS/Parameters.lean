@@ -11,7 +11,10 @@ public import Mathlib.Data.ZMod.Basic
   Lightweight canonical Reed-Solomon parameters for the concrete proximity bridge.
 
   Paper correspondence:
-  - Paper 1 Section 6: canonical RS field, length, rate, and radius constants.
+  - Paper 3: the fixed-field canonical RS parameters and their numerical
+    distinction from the large-field coding family.
+  - Paper 2's selected payload profile reuses these field and coordinate
+    constants.
 
   This file fixes the field, length, rate, and radius constants. It deliberately
   avoids the multiplicative-generator/order proof so downstream files can import

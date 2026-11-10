@@ -9,7 +9,8 @@ public import Mathlib.Init
 
   Paper correspondence:
   - Paper 2: consensus and Proof-of-Value protocol assumptions.
-  - Paper 1 appendix ledger: subsequent protocol-paper boundary only.
+  - The repository-wide status and source index is SEMANTIC-PARITY.md; this
+    module is outside Paper 1's selected crosswalk.
 
   This isolates assumptions that are currently enforced operationally in
   Python/Rust but not yet fully proved end-to-end in Lean.

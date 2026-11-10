@@ -10,8 +10,10 @@ public import Proximity.Application.Problem
   Plucker-to-cochain proximity bridge.
 
   Paper correspondence:
-  - Paper 1 Section 6: Plucker-to-committed-cochain/local-syndrome stage.
-  - Paper 1 Section 5: consumes the cochain commitment payload interface.
+  - Paper 3: the mathematical projective-shadow to cochain/local-test stage
+    under explicit realization hypotheses.
+  - Paper 2 owns the original payload and encoder/observation contracts. Paper
+    1 retains the geometric full-point recovery result.
 
   This is the next projection stage after `GrassmannianPlucker`: a valid
   Plucker/exterior shadow is encoded as the committed cochain object already

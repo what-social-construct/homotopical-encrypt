@@ -7,6 +7,14 @@ The publication numbering is Paper 1 (HCP foundations), Paper 2
 (protocol/commitments), and Paper 3 (this manuscript). The directories are
 unchanged. Product and whitepaper material is unnumbered future work.
 
+The current manuscript revision is **31 pages** and follows that ownership explicitly. Paper 1
+supplies the HCP/Hodge/CVP, semantic and observation-boundary results. Paper 2
+owns the existing cochain construction, encoding/visibility profile, gates,
+evidence and state transitions. Paper 3 recalls the source data needed for
+its actual extraction and proves the list/MCA/radius and native metric
+comparisons. Its core and bridge verification configurations are parts of
+this one paper. They are not another manuscript split.
+
 Working title:
 
 > Capacity-Radius Proximity for Smooth-Domain Reed--Solomon Codes
@@ -16,9 +24,9 @@ protocol and HCP semantics. Its primary quantifiers range over every received
 word in the ambient interleaved Reed--Solomon word space and every affine line.
 Paper 1 may later consume the resulting coding theorem through a short
 application interface.
-Completing Paper 2 is not a prerequisite for these coding proofs. The
-selected commitment-specific application uses the existing Lean commitment
-object and actual projection. The explicit systematic modular profile uses
+Completing Paper 2's protocol is not a prerequisite for these coding proofs.
+The selected commitment-specific application uses Paper 2's existing shared
+Lean commitment construction and actual projection. The explicit systematic modular profile uses
 the same original payload and
 a proved native comparison `d_C ≤ d_P = D_RS ≤ 2*d_C`. Its source validity
 is an actual integral cellular coboundary modulo a carry. A separate Euclidean
@@ -26,6 +34,15 @@ or full-HCP source score needs its own comparison. See the
 [object trace](../../docs/COCHAIN_PROXIMITY_TRACE.md). Full Rust execution,
 ledger, and consensus are not prerequisites for proving that radius theorem.
 A concrete protocol separately enforces the fixed-pair, later-challenge order.
+
+The introduction now cites the recent Alrabiah--Goyal--Guruswami full-length
+RS list limitations. Those results concern a different length/field regime
+and small-list guarantees. This paper's subgroup family has field size
+`3^n`, allows an exponential endpoint list `choose(n,k)` under a fractional
+field budget, and asserts no polynomial-list capacity theorem. The
+[source ledger](../../docs/SOURCE_LEDGER.md#source-2611-07607) records the
+targeted statement review and its limits. Manuscript/PDF QA for this revision
+is recorded separately from the dated proof and PDF baselines below.
 
 The detailed [semantic parity register](SEMANTIC_PARITY.md) matches manuscript
 objects and claims to Lean declarations, distinguishes supplied inputs from
@@ -100,10 +117,11 @@ Current status:
 The source/storage boundary retains the original sheaf interpretation,
 snapshot and public artifact. Raw binding is separate from accepted exactness;
 operator-compatible semantics and nested checkpoint/gate prefixes preserve
-the actual objects. The explicit systematic modular profile constructs
-coboundary congruence and RS compatibility, the full original-payload codec,
-three native distance comparisons and a payload with all three distances
-`3/4`. Its canonical mix is good for the diagonal family, whose only bad
+the actual objects. Paper 2 specifies the explicit systematic source,
+intrinsic coboundary-congruence relation and full original-payload coordinate
+codec. Paper 3 proves its RS compatibility and three native distance
+comparisons, and constructs a payload with all three distances `3/4`.
+Its canonical mix is good for the diagonal family, whose only bad
 challenge is `-1`. A different capacity-far family shows why arbitrary fixed
 nonzero mixing cannot preserve positive farness uniformly.
 
@@ -121,14 +139,16 @@ scans, separately from earlier milestones. The 2026-11-08 arithmetic pass
 replaces the boundary-field and canonical `q=12289` source calls to
 `native_decide` with kernel-checked proofs, preserving the field moduli,
 generators, roots, domains and theorem statements. Earlier native-dependent
-axiom reports are dated baselines. The current
+axiom reports are dated baselines. The preserved
 [P289 validation](../../docs/MATH_STORAGE_VALIDATION.md#selected-statements-and-kernel-arithmetic--2026-11-08)
 passes the full/default builds at **9,292/9,285 jobs** and all **900 selected
 dependency reports**: 724 exact-standard-three and 176 proper subsets,
 including 106 axiom-free. No report in this selection has native, cited-bound
 or `sorryAx` dependencies. The source inventory remains 273 modules / 274 Lean
-files; seven modules changed and 266 hashes still match P283. Paper 1 has 101
-reviewed pages; Paper 3 has 30 reviewed pages.
+files; seven modules changed and 266 hashes still matched P283. That historical
+checkpoint had 101/30-page reviewed PDFs for Papers 1/3; the current ownership
+revision has 37/31 pages and is recorded separately in the central validation
+guide.
 
 The historical P285 summary/source-comparison pass aligned the abstract,
 introduction, bounded related-work account and modular-application ledger.

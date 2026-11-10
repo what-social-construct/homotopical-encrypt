@@ -1,54 +1,39 @@
-# Paper 1 Draft
+# Paper 1: HCP foundations and observation boundaries
 
-This folder is the LaTeX source of truth for Paper 1: the math/formalization
-paper for Homotopical Encryption.
+This folder contains *Homotopical Encryption: Hidden Hodge Operators and the
+Harmonic Cochain Problem*, the first manuscript in the recorded
+[three-paper program](../../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table).
 
-The shared [manuscript parity register](../../SEMANTIC-PARITY.md) records
-paper ownership, definitions, notation, and outstanding proofreading issues.
-This manuscript owns the HCP foundations and the application-specific
-projection bridge. The separate [proximity manuscript](../proximity-prize/README.md)
-owns the universal coding results; it is independent of HCP assumptions.
-The protocol working draft in `papers/paper2/` is a different manuscript.
+Its contribution is the HCP/Hodge recovery model, discrete CVP comparisons,
+constructed public-target and integer-encoding ambiguity, the stated
+homological semantic fragment, exact-component observation obstruction and
+full projective subspace/projector recovery. The model is algebraic finite
+signed incidence; it asserts no regular CW/simplicial realization of every
+admitted base, asymptotic hardness or sampled encryption security.
 
-The 2026-11-08 observation reconciliation distinguishes the accepted exact
-payload, separately bound full Hodge sample, operative alignment and explicit
-disclosure in the introduction and §§2/5. It also states the full operative
-Plucker visibility consequence. The revised reviewed PDF has 101 pages. The
-[validation record](../../docs/MATH_STORAGE_VALIDATION.md#selected-statements-and-kernel-arithmetic--2026-11-08)
-links the existing Lean endpoints. The canonical decision convention now
-uses near `ε<δ_J`, with concrete near `2046/4096` and far `2047/4096`;
-its separated bridge retains the same projection and conditional solver
-pullback. The geometric far witness, cited-bound budget and efficient solver
-remain separate obligations. The canonical field/domain arithmetic now has kernel-checked certificates;
-previous native-dependency reports remain dated baselines. The current
-[statement selection](../../docs/PALOMAR_SUBMISSION_PLAN.md#selected-manuscript-statement-surface--2026-11-08)
-follows the manuscript’s main propositions, with the discrete CVP comparison,
-actual cellular recovery and kernel-ambiguity results principal.
-`Hodge_Decomposition_unique` now supplies the componentwise uniqueness in
-§2’s Hodge proposition, alongside the existing existence/orthogonality proof.
-The refreshed aggregate/dependency checks are recorded in the shared validation guide.
+The manuscript now follows this ownership:
 
-Suggested local build:
+- Paper 1 retains mathematical geometry, recovery and observation boundaries.
+- [Paper 2](../paper2/DRAFT.md) owns concrete cochain/commitment construction,
+  encoding, visibility, security contracts and protocol evidence. It remains
+  a working draft.
+- [Paper 3](../proximity-prize/README.md) owns coding, radii and quantitative
+  metric/projection comparisons for the declared original-cochain profile.
 
-```sh
-cd papers/paper1
-tectonic main.tex
-```
+The revised PDF is **37 pages**, reduced from the earlier 101-page draft.
 
-If using a full TeX installation instead of Tectonic, use:
+The former detailed commitment/RS chapters and whole-repository catalogue
+have been removed from this manuscript. Sections 5 and 6 are now
+[Observation Boundaries](sections/05-observation-boundaries.tex) and
+[Projective Observations and Recovery](sections/06-projective-observation-boundary.tex).
+The appendix accounts for all 21 main and 25 supporting declarations in the
+[independent entry](../../lean/Palomar/PaperOne/README.md), preserving all eight
+selected result groups and their explicit hypotheses.
 
-```sh
-latexmk -pdf main.tex
-```
+The published snapshot `66e1ad2` passed complete protected preflight. This
+revised manuscript and the aligned Lean documentation form a new local
+candidate: that exact-commit pass does not certify the revision. No registry
+submission or registration is authorized. Current artifact and build checks
+are recorded in the [validation guide](../../docs/MATH_STORAGE_VALIDATION.md).
 
-or:
-
-```sh
-pdflatex main.tex
-bibtex main
-pdflatex main.tex
-pdflatex main.tex
-```
-
-The planning outline remains in `docs/PAPER_OUTLINE.md`; this folder is the
-actual manuscript bundle.
+Build locally with `latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex`.

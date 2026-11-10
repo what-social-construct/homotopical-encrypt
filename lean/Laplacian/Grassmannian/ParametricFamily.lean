@@ -8,8 +8,11 @@ public import Laplacian.Grassmannian.SearchSpace
   Parametric Grassmannian families.
 
   Paper correspondence:
-  - Paper 1 Sections 2--3: families of hidden harmonic subspaces compatible
-    with public data.
+  - Supporting geometric family construction, outside Paper 1's selected
+    finite-family entry.
+  - The parameter injectivity is independent of a public classifier;
+    compatibility with a chosen public observation requires a separate
+    argument.
 
   This file builds the t ↦ span{u + t v} ⊕ W₀ family used to expose a
   continuum of candidate harmonic subspaces. It depends only on the search

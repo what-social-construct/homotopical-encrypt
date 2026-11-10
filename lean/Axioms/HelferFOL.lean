@@ -9,8 +9,11 @@ public import Helfer
   Helfer-oriented first-order homotopical logic interface.
 
   Paper correspondence:
-  - Paper 1 Section 4: fibrational semantics and public equality semantics.
-  - Paper 1 appendix ledger: Lean theorem-surface correspondence.
+  - Paper 1 Section 4: typed interpretations, closed theories and the
+    explicitly named homological fragment of the Helfer/HCP bridge.
+  - The selected Paper 1 crosswalk records the finite construction; general
+    path, lifting and first-order invariance fields remain interface
+    obligations.
 
   Provenance/scope label:
   this module is a Lean interface inspired by Helfer-style first-order

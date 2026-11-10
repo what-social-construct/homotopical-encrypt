@@ -10,9 +10,10 @@ public import Proximity.Concrete.RS.ReedSolomon
   Reed-Solomon/code-theory core layer for the proximity pipeline.
 
   Paper correspondence:
-  - Paper 1 Section 6: RS/list-decoding/correlated-agreement/MCA vocabulary.
-  - Paper 1 appendix ledger: cited theorem boundary versus Lean-proved
-    plumbing.
+  - Paper 3: finite-code, list-decoding, correlated-agreement and RS
+    compatibility vocabulary.
+  - The shared parity register distinguishes standalone proofs from
+    conditional application adapters and literature-bound inputs.
 
   This aggregate keeps the prize-side list-decoding, correlated-agreement, and
   RS code-family interfaces together. `Proximity.RS.Target` adds the final

@@ -9,7 +9,10 @@ public import Proximity.Concrete.Gates.Final
   Canonical RS bridge witnesses.
 
   Paper correspondence:
-  - Paper 1 Section 6: far-separation/non-collapse witness for the RS endpoint.
+  - Paper 3: the explicit mathematical non-collapse witness required by the
+    canonical source-to-code comparison.
+  - Paper 2 may package such a witness as protocol evidence; its existence is
+    not inferred from the word map alone.
 
   This module names the mathematical far-separation witness for the canonical
   RS endpoint. It deliberately stops before packaging that witness as a full

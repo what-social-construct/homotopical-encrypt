@@ -9,7 +9,10 @@ public import Proximity.Concrete.ProjectionChain.Core
   Canonical MCA affine lines.
 
   Paper correspondence:
-  - Paper 1 Section 6: affine-line surface for mutual correlated agreement.
+  - Paper 3: affine lines formed from canonical endpoint words and their MCA
+    interpretation.
+  - Paper 2 binds the chosen words before sampling when using that
+    mathematical event in a protocol.
 
   The generic RS layer defines the paper vocabulary for affine combinations.
   This file owns the canonical object used by the concrete projection chain:

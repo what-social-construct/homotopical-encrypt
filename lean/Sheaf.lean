@@ -19,7 +19,12 @@ public import Sheaf.GraphCommitment
 @[expose] public section
 
 /-!
-Paper 1 finite cellular-sheaf core.
+Shared finite cellular-sheaf import surface.
+
+Paper 1 uses the finite Hodge, integral-lattice, coefficient-recovery and
+observation-boundary owners. Paper 2 uses commitment and rotation interfaces;
+Paper 3 uses the declared modular validity/distance profile and its quantitative
+comparisons. The selected Paper 1 appendix does not catalogue this aggregate.
 
 The root import is intentionally independent of protocol/runtime modules.
 -/

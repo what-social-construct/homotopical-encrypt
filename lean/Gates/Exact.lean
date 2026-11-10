@@ -9,8 +9,10 @@ public import Axioms.SheafCoherence
   Exact gates.
 
   Paper correspondence:
-  - Paper 1 Section 4: exact structural preconditions.
-  - Paper 1 appendix ledger: theorem-surface row for `Gates.Exact`.
+  - Paper 2: exact structural predicates exposed through the existing
+    cochain/Hodge and coherence contract bundles.
+  - Paper 1 proves its finite Hodge statements separately; these aliases do
+    not establish a runtime validator.
 
   These are classical structural predicates: cochain-complex laws, Laplacian
   construction, Hodge decomposition/orthogonality, and sheaf-coherence shape

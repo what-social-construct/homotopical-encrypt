@@ -9,8 +9,11 @@ public import Mathlib.Init
   `docs/archive/python/src/primitives/homotopy.py`.
 
   Paper correspondence:
-  - Paper 2: runtime parity and implementation refinement surface.
-  - Paper 1 Section 4: related semantic object is `Axioms.HomotopyClass`.
+  - Paper 2: historical runtime parity and implementation-refinement
+    vocabulary.
+  - The related mathematical public-classifier interface is
+    Axioms.HomotopyClass; its provenance does not make this shim part of Paper
+    1.
 
   This file is intentionally not imported by `Axioms.lean`. The Lean-owned
   homotopy-class theory lives in `Axioms.HomotopyClass`; Python/Rust objects can

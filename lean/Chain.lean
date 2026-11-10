@@ -4,10 +4,10 @@ module
 Chain Axiomatization (Swan Table 1 #9 — Goncharov)
 
 Paper correspondence:
-- Paper 2: chain architecture, consensus consumption, and proof-of-value
+- Paper 2: chain architecture, consensus consumption and the Proof-of-Value
   protocol setting.
-- Paper 1 appendix ledger: mentioned only as a formalization boundary for the
-  subsequent protocol paper.
+- Paper 1 supplies HCP definitions and exact comparison/ambiguity results; its
+  appendix is not a catalogue of this chain specification.
 
 First-order axiomatization of the homotopical-encrypt blockchain.
 Goncharov axiomatizes "select longest chain" in first-order logic;

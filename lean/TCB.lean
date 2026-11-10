@@ -18,9 +18,10 @@ public import TCB.PrimitiveChecks
   Trusted computing base surfaces.
 
   Paper correspondence:
-  - Paper 1 Section 5 and appendix ledger: artifact/proof/runtime obligations
-    are named as boundaries.
-  - Paper 2: full runtime trust-boundary and implementation model.
+  - Paper 1: mathematical observation and full-point operative-target
+    consequences through their specific owners.
+  - Paper 2: payload binding, proof-carrying artifacts, byte checks, runtime
+    acceptance and evidence contracts.
 
   `Axioms` owns assumptions and mathematical specification contracts.
   `TCB` owns proof-carrying artifacts, compression boundaries, runtime

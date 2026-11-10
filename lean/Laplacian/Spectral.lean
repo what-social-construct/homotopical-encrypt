@@ -6,9 +6,11 @@ public import Mathlib
 
 /-
   Paper correspondence:
-  - Paper 1 Section 4: spectral public judgment interface.
-  - Paper 1 Sections 2--3: spectral fingerprints in hidden-operator ambiguity.
--/
+  - Supporting spectral-fingerprint interfaces, outside Paper 1's selected
+    statement groups.
+  - The legacy relation below records equal kernel dimension; it does not
+    assert Helfer homotopy equivalence or spectrum recovery from a public
+    classifier.-/
 
 set_option linter.mathlibStandardSet false
 

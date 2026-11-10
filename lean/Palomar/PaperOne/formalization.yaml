@@ -34,14 +34,15 @@ sources:
       - "Chloe van der Vlugt"
     type: "paper"
     id: "https://github.com/what-social-construct/homotopical-encrypt/blob/299663b12ed7d4d743ec6e325ef996631f756b1c/papers/paper1/main.tex"
-    location: "Sections 2.1, 3.2--3.5, 6.2 and the corresponding appendices; groups P1-S01--S06 and P1-B01--B02 in the entry README."
+    location: "Sections 2, 3.2--3.5, 6.2 and the corresponding appendices; groups P1-S01--S06 and P1-B01--B02 in the entry README."
     relationship: "formalizes"
     note: >-
-      Immutable manuscript source for the eight selected result groups.
-      This reference includes the final model, source and likelihood-scope
-      corrections. The entry states these groups independently and adapts
-      the unchanged canonical development's proofs;
-      separate RS/MCA, protocol and cryptographic claims are outside its scope.
+      Immutable source for the unchanged eight selected mathematical groups.
+      The revised manuscript concentrates on those Hodge/CVP and observation
+      results; the final revised source reference is pinned when its release
+      is frozen. The entry adapts the unchanged canonical development's
+      proofs. Concrete cochain/protocol construction belongs to Paper 2;
+      coding and quantitative proximity development belongs to Paper 3.
   - title: "First-order homotopical logic"
     authors:
       - "Joseph Helfer"
@@ -71,8 +72,9 @@ sources:
 
 status:
   scope: >-
-    One proposed entry covers eight manuscript groups through 21 manuscript-facing
-    theorem declarations and 25 supporting declarations selected by
+    One entry covers the manuscript's eight Hodge/CVP and observation groups
+    through 21 manuscript-facing theorem declarations and 25 supporting
+    declarations selected by
     comparator.json. Challenge imports only Mathlib and gives transparent
     ordinary definitions of the mathematical objects. Solution identifies
     those presentations with the canonical cellular, Hodge, lattice,
@@ -80,7 +82,11 @@ status:
     finite-product helpers retain their canonical Hcrypt.Helfer names in
     the independent Challenge. There are no definition holes. This directory
     belongs to the substantive development, rather than a separately pinned
-    wrapper repository.
+    wrapper repository. The revised manuscript has a concise selected-result
+    crosswalk instead of a catalogue of the repository's protocol and coding
+    declarations. Mathematical observation boundaries remain in Paper 1;
+    concrete protocol construction and quantitative proximity analysis are
+    described in Papers 2 and 3 respectively.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms:
@@ -92,11 +98,13 @@ status:
     challenge_check: "Passed independently: lake build Palomar.PaperOne.Challenge, 3516 jobs."
     entry_axiom_audit: "Fresh #print axioms audit passes all 46 selected Solution declarations: 44 exact-three and two subsets. Combined audit: 946 standard-only reports; all 900 prior sets unchanged."
     local_comparator: "Passed statement/definition comparison, Lean default kernel and NanoDa; macOS diagnostic with --inadvisably-no-sandbox."
-    protected_linux_verification: "Not run."
+    protected_linux_verification: "Passed for public snapshot 66e1ad2cb726d3dd816461e4f76b1d0d9147a46d, run 42729947447: protected comparison/provenance and Lean, NanoDa and con-ron accepted. A fresh exact-commit preflight is required for the manuscript-scope revision."
     note: >-
       Zero proof-hole counts describe Solution and exclude the 23 deliberate
       theorem placeholders in Challenge. The local diagnostic is not protected
-      preflight evidence; no Palomar review or registration is claimed.
+      preflight evidence. The separate complete protected report applies only
+      to the public snapshot identified above. No Palomar editorial review,
+      registry submission or registration is claimed.
   main_results:
     - declaration: "Hcrypt.Palomar.PaperOne.Hodge_Decomposition_Theorem"
     - declaration: "Hcrypt.Palomar.PaperOne.Hodge_Decomposition_unique"
@@ -163,8 +171,10 @@ review:
     object definitions and proof adapters with the canonical implementation
     and manuscript. The README supplies the eight-group crosswalk. This
     records agent review, not independent human review or registry endorsement.
-    Entry-specific local Comparator and kernel checks pass as recorded above;
-    protected Linux verification remains pending.
+    Entry-specific local Comparator and kernel checks and the earlier public
+    snapshot's protected preflight pass as recorded above. The revised
+    manuscript/metadata candidate requires a fresh exact-commit protected run;
+    the old report does not certify new informal material.
 
 alignment:
   namespace: "Hcrypt.Palomar.PaperOne"

@@ -8,9 +8,11 @@ public import Proximity.Application.Projection
   Gap-proximity problem vocabulary.
 
   Paper correspondence:
-  - Paper 1 Section 6: near/far proximity promise and calibrated projection
-    corollary.
-  - Paper 1 appendix ledger: proximity theorem-surface status.
+  - Paper 3: mathematical near/far promises, calibrated gap reductions and
+    solver pullback under an explicit far-preservation hypothesis.
+  - Paper 1 cites this comparison boundary briefly; Paper 2 must supply the
+    protocol observation profile rather than obtain one from the abstract
+    contract.
 
   `Projection.lean` says how a sheaf-side cochain projects to a code/evaluation
   shadow. This file names the near/far decision problem and the end-to-end

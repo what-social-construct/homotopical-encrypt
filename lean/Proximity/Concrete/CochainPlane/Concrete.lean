@@ -8,8 +8,10 @@ public import Proximity.Concrete.CochainPlane.Core
   Concrete committed-cochain to plane-shadow extraction inputs.
 
   Paper correspondence:
-  - Paper 1 Section 6: concrete cochain-to-plane projection inputs and
-    alignment obligations.
+  - Paper 2: selected-coordinate and coefficient-interpretation data for the
+    actual payload.
+  - Paper 3: mathematical alignment and distance obligations needed to use
+    that extraction in the radius analysis.
 
   `CochainPlane.Core` defines the generic projection interface. This module
   packages the concrete choices needed to instantiate that interface: selected

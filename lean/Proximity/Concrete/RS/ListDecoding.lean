@@ -9,8 +9,8 @@ public import Proximity.Core.BlockCode
 
 `ProximityPrize.BlockCode` now owns the application-independent definitions and
 proofs. This module preserves the historical `Hcrypt.Proximity` names used by
-Paper 1 and the application bridge. New coding-theory work should import the
-standalone owner directly.
+the existing application bridge. Paper 3 owns the coding statements; new
+coding-theory work should import the standalone owner directly.
 -/
 
 namespace Hcrypt

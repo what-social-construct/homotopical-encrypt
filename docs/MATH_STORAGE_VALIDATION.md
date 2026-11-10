@@ -9,6 +9,48 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Manuscript ownership revision — 2026-11-09
+
+The current local manuscripts follow the recorded three-paper split. Paper 1
+retains HCP/Hodge/CVP foundations, the actual Helfer homological fragment and
+mathematical observation/full-Plucker recovery. Its selected appendix maps all
+46 configured declarations exactly once: 21 main and 25 support across eight
+groups. Paper 2 owns concrete cochain commitment, systematic codec,
+visibility/security and protocol gate/evidence/storage contracts in its
+working draft. Paper 3 owns quantitative RS, list/MCA and metric/radius
+comparisons using that same original construction. Shared definitions are
+recalled with attribution; they are not presented as duplicate new results.
+
+Paper 1 is reduced from **101 to 37 pages**. Paper 3 is **31 pages**. Both
+PDFs build with zero undefined references/citations, missing glyphs or
+overfull boxes (two/one underfull diagnostics respectively). All 68 pages
+were rendered and contact-inspected; detailed checks cover new and revised
+sections, the selected crosswalk and references. The final bibliography
+starts on its own page, avoiding an orphan entry. Canonical and stable review
+copies match. Current SHA-256 values are:
+
+- Paper 1: `8a10b144b679f3c3573494e6fab5f5a72a1f285a0ac24d47ae7506ef5e67290f`.
+- Paper 3: `29b861942ebf168c3f7c839c45c67ba426538d5cea888bb3aaca2c9343f300dd`.
+
+All non-comment bytes in **280 Lean files**, including Lake, match `b917cda`;
+93 files have documentation-only edits assigning their current paper owner
+or deferred supporting status. No import, statement, proof, option,
+attribute, selected entry configuration or pin changed. Paper 3 §§2–6 are
+byte-identical; all 19 application display equations are preserved modulo
+whitespace. The current source scan has 279 modules, zero implementation
+holes, 96 deliberate Challenge placeholders, seven isolated cited axioms,
+no active native calls and no cycles or unresolved local imports. All 54
+focused closures retain their cited-axiom/Chain exclusion. The pinned metadata
+contract passes for all three entries. Fresh full-build and selected dependency
+results are recorded below when complete.
+
+Evidence is retained under `output/validation/manuscript-split-*`: source and
+comment audits, preservation inventories, build logs, PDF hashes/renders and
+visual QA. These checks concern the local revision. The exact historical
+public snapshot `66e1ad2` and its protected PASS below remain unchanged;
+this revised candidate needs its own exact-commit protected preflight before
+any later intake. The user continues to defer submission and registration.
+
 ## Paper 1 public protected preflight — 2026-11-09
 
 The user authorized public publication and protected preflight only, explicitly

@@ -10,8 +10,10 @@ public import Axioms.SheafCoherence
   Cochain/sheaf bridge for proximity.
 
   Paper correspondence:
-  - Paper 1 Section 6: committed cochain/local-syndrome projection stage.
-  - Paper 1 Section 5: reuses the commitment payload object defined there.
+  - Paper 2: the existing committed payload and semantic
+    acceptance/local-syndrome contracts.
+  - Paper 3: mathematical codeword and distance consequences under those
+    stated source-profile conditions.
 
   This module connects the lightweight proximity vocabulary to the existing
   concrete cochain/sheaf interfaces. It reuses `CochainCommitmentData` as the

@@ -1,6 +1,12 @@
 # Paper 2: recommended scope and completion criteria
 
 Status: **recommended first publishable scope**, reviewed 2026-11-06.
+The manuscript ownership was reconciled on 2026-11-09: this paper retains the
+concrete cochain/commitment construction and protocol/evidence contracts,
+using Paper 1's HCP and observation mathematics and Paper 3's quantitative
+coding/metric results. The construction ledger below identifies the existing
+objects; this editorial placement adds no cryptographic implementation or
+new proof.
 The [initial manuscript text](DRAFT.md) records the object and metric contracts;
 this scope map retains the wider completion criteria. A bounded conditional
 owned-resource profile is now defined below; it is not a complete secure
@@ -81,9 +87,9 @@ Lean 4.35 validation above.
 
 | Paper | Owns | Dependency |
 |---|---|---|
-| 1: Homotopical Encryption / HCP | Hidden operators, harmonic recovery, mathematical commitment interfaces, and the HCP-specific projection bridge. | Supplies mathematical objects and conditional results to Paper 2. |
-| 2: Proof-Carrying Homotopical Encryption | Concrete commitment/observation relations, public evidence, accepted state transitions, and their security/runtime boundaries. | Must identify how its public objects instantiate Paper 1's interfaces. |
-| 3: Capacity-Radius Proximity | Universal RS list-decoding and pair-MCA results, calibration, and the selected actual commitment-projection analysis. | Coding core is independent. The application needs its bounded profile and intended source identification; a distinct original-distance claim additionally needs its comparison theorem. |
+| 1: Homotopical Encryption / HCP | Hidden operators, harmonic recovery, CVP comparison, the homological semantic fragment and mathematical observation boundaries. | Supplies the Hodge/cochain objects and recovery/observation results used by Paper 2. |
+| 2: Proof-Carrying Homotopical Encryption | Concrete cochain commitment, visibility/encoding/validity and native metric contracts, projection evidence, accepted transitions and security/runtime boundaries. | Must identify its actual payload, decoder, snapshot and proof objects with the declared mathematical profiles; source comparisons are taken from Paper 3 under their hypotheses. |
+| 3: Capacity-Radius Proximity | Universal RS list-decoding and pair-MCA results, quantitative metric comparison/calibration and the selected actual commitment-projection radius analysis. | Coding core is independent. The application analyzes the shared construction/profile; a distinct original-distance claim additionally needs its comparison theorem. |
 
 Paper 3's nine generic coding statements have checked Lean endpoints. The
 shared mathematical profile now has an explicit systematic cellular
@@ -94,10 +100,47 @@ artifact maintenance remain separate. Full state-machine or
 Rust completion is not a prerequisite; a claim about another HCP geometry or
 an upstream Euclidean score retains its own comparison obligation.
 
+## Construction and contract ownership
+
+The detailed interfaces previously displayed alongside Paper 1's mathematical
+results are retained here using their existing carriers. The draft's
+[§3.1](DRAFT.md#31-payload-operations-and-commitment-interfaces),
+[§3.2](DRAFT.md#32-local-syndrome-and-accepted-payload-realization),
+[§3.3](DRAFT.md#33-the-systematic-cellular-source-and-complete-coordinate-profile)
+and [projection-evidence subsection](DRAFT.md#projection-certificates-and-retained-evidence)
+give the protocol-owned account. Paper 1 keeps the exact-component and
+full-projective disclosure results; Paper 3 keeps the quantitative proofs.
+
+| Construction / contract owned by Paper 2 | Existing object and source | Required interpretation or remaining condition |
+|---|---|---|
+| Payload layout, shape and compatible addition | [CochainCommitmentData](../../lean/Axioms/CochainCommitment/Payload.lean) | Canonical modulus/count/tag conditions are distinct from exactness, authenticated context, bounded bytes and unique message binding. |
+| Exact/modular validity and observation release | [Sheaf.Commitment](../../lean/Sheaf/Commitment.lean), [Context](../../lean/Protocol/Storage/Context.lean), [PublicView](../../lean/Protocol/Storage/PublicView.lean) and [SystematicCode.Modular](../../lean/Sheaf/SystematicCode/Modular.lean) | Retain the same original payload, snapshot, decoder and integral carry. Explicitly select the predicate and released fields; native metric normalization is fixed here and analyzed in Paper 3. |
+| Systematic source and complete coordinate codec | [SystematicCode](../../lean/Sheaf/SystematicCode.lean), [CoordinateLayout](../../lean/Protocol/Storage/CoordinateCodec.lean) and [CanonicalSystematic](../../lean/Protocol/Storage/CanonicalSystematic.lean) | The two-vertex/one-edge real restriction map uses the actual integer-lifted RS interpolation basis. The canonical modulus-12289 serializer reads all 8192 scalar coordinates with identity coefficients; decoder equality, selected ordering and snapshot authentication remain explicit. Generic prime-field construction does not change the supported wire modulus. |
+| Hodge-blinded value and cryptographic commitment interfaces | [Blinded](../../lean/Axioms/CochainCommitment/Blinded.lean) and [Security](../../lean/Axioms/CochainCommitment/Security.lean) | The accepted exact base and separately typed harmonic blinding are retained. Binding/hiding, local-opening and proposed MAC properties remain explicit contracts requiring their algorithms and games if advertised as a new construction. |
+| Proof-carrying artifact and local syndrome | [TCB.ProofCarrying](../../lean/TCB/ProofCarrying.lean), [PluckerCochain](../../lean/Proximity/Concrete/PluckerCochain.lean) and [PublicBinding](../../lean/Proximity/Concrete/PluckerCochain/PublicBinding.lean) | Keep the same original artifact and acceptance implication. A valid syndrome implies accepted source validity only under the adequacy converse. Semantic statement truth is separate from an operational verifier's soundness. |
+| Projection stages, hard/naturality/far gates and seven evidence slots | [ProjectionChain.Core](../../lean/Proximity/Concrete/ProjectionChain/Core.lean), [Gates](../../lean/Proximity/Concrete/Gates.lean) and [GateEvidence](../../lean/Proximity/Concrete/GateEvidence.lean) | Authentication and evidence consumption do not prove an omitted source metric, commuting square or quantitative far law. Consume Paper 3's proved profile rather than copying its coding argument or assuming an unrestricted HCP bridge. |
+| Six-stage prefix, persistence and history binding | [Storage.Projection](../../lean/Protocol/Storage/Projection.lean), [Checkpoint](../../lean/Protocol/Storage/Checkpoint.lean) and [ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean) | Preserve exact predecessors, the completed manifest and matching receipt. Six manifest stages differ from seven evidence slots; runtime atomicity, global freshness, erasure and finality remain separate. |
+
+This ledger assigns the construction and its contracts to the protocol paper.
+It neither duplicates the quantitative proofs nor turns a supplied security,
+coherence or runtime proposition into a concrete implementation.
+
+The following existing policy interfaces belong to Paper 2's wider protocol
+inventory but remain outside the adopted first owned-resource profile. Their
+presence in Lean does not add them to that profile or supply a concrete
+validator, oracle attestation or consensus implementation.
+
+| Deferred policy interface | Existing contract and boundary |
+|---|---|
+| [SpectralBounds](../../lean/Axioms/SpectralBounds.lean) | Defines the PoV/Tsirelson spectral window, boundary proximity and a geometry record carrying its in-bounds witness. Computing and attesting a concrete spectral gap remain separate. |
+| [StageAdmissibility](../../lean/Axioms/StageAdmissibility.lean) | Records the transaction-critical-pass-to-admissibility implication and a supplied runtime-refinement premise; non-transaction stages receive no default consensus claim. It does not construct the checks that establish its predicates. |
+| [OracleModality](../../lean/Axioms/OracleModality.lean) | Defines query/answer and public Heyting-judgment vocabulary with accept/hold/reject actions. Concrete answer validation, attestation and endpoint enforcement remain separate contracts. |
+
 ## Immediate shared commitment/projection profile
 
-The user has identified the existing cochain commitments and their actual
-projection as central to Paper 3's contribution. Start from that existing
+The existing cochain commitment construction and actual projection are shared
+with Paper 3's quantitative analysis. This paper owns their concrete
+interpretation and authenticated consumption. Start from that existing
 object, not a replacement commitment. The
 [source trace](../../docs/COCHAIN_PROXIMITY_TRACE.md) records the proved path.
 
@@ -370,7 +413,7 @@ protocol. Build and theorem-dependency outcomes are recorded separately.
 
 | Priority | Deliverable and completion criterion | Source owner / target | Current status |
 |---|---|---|---|
-| P0 | Select public observation, encoding, exact commitment and actual resource/asset/authorization/nullifier profile. Record primitive assumptions and distributions. | Paper 1 interfaces; `Storage/PublicView.lean`; `Ledger/OwnedResource.lean`; `Transfer/{Owned,PublicView,Security}.lean`. | The first public values and bounded owned-resource profile are defined: positive catalog value, actual owner label, one input/output and derived public input-ID nullifier. The exact bytes/packet/proposal/input-manifest release and fixed-setup one-shot `PMF` experiment are now specified. Production codecs/access, primitive error bounds, concrete setup/randomness selection and state-origin security remain open. |
+| P0 | Select public observation, encoding, exact commitment and actual resource/asset/authorization/nullifier profile. Record primitive assumptions and distributions. | This paper's construction and observation contracts (§§2--3), using Paper 1's mathematical observation boundaries; `Storage/PublicView.lean`; `Ledger/OwnedResource.lean`; `Transfer/{Owned,PublicView,Security}.lean`. | The first public values and bounded owned-resource profile are defined: positive catalog value, actual owner label, one input/output and derived public input-ID nullifier. The exact bytes/packet/proposal/input-manifest release and fixed-setup one-shot `PMF` experiment are now specified. Production codecs/access, primitive error bounds, concrete setup/randomness selection and state-origin security remain open. |
 | P0 | Instantiate the exact-component/full-sample relation and bounded public projection of the private witness stack. | `TCB/HCPObservation.lean`; `TCB/{HCPRealization,HCPAxisFamily}.lean`; `Storage/{HCP,PublicView}.lean`; `Sheaf/ObservationQuotient.lean`. | The same accepted exact artifact/snapshot is reused. Actual operator/classifier alignment derives operative-message and CVP agreement; the finite family instantiates its operator and actual spectral gate. The public projection and optional same-sample HCP disclosure now retain the actual payload and identifiers. Acceptance, decoder, snapshot/envelope binding implementations and richer released-view equality or factorization remain explicit. The unrestricted full-residual obstruction remains separate. |
 | P0 | State/action/candidate, computed after-state and context/root joins. | `Protocol/Ledger/{State,Transition,OwnedResource}.lean`; `Transfer/{Owned,Anchored}.lean`. | The bounded profile constructs the candidate and derives its actual computed accepted update in a fixed snapshot/epoch. Typed content/intent/evidence/block inputs and reconstruction laws name late coordinates separately. Canonical cryptographic/runtime refinement and state-origin security remain open. |
 | P0 | Candidate-validity-indexed evidence, same artifact and proposal, distinct enclosing root bindings. | `Evidence/{TransferTranscript,TransferVerifier,TransferEnvelope}.lean`; `Transfer/Anchored.lean`; existing TCB envelope. | The exact complete packet is checked independently of validity and included under its evidence hash; owner authorization signs the pre-proof intent. The same candidate/artifact/context/input manifest is joined to existing evidence and a supplied same-proposal quorum. Signature/proof/hash security, authenticated codecs and runtime refinement remain explicit. |

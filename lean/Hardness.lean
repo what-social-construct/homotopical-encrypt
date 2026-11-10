@@ -4,10 +4,11 @@ module
 Formal verification of the HCP impossibility and CVP-comparison layer.
 
 Paper correspondence:
-- Paper 1 Sections 2--3: consequences of hidden-kernel ambiguity, the
-  presented-linear-subspace comparison, and the separate discrete-CVP oracle
-  insufficiency corollary. Core HCP definitions live in `HCP.lean`.
-- Paper 1 appendix ledger: Lean theorem-surface correspondence.
+- Paper 1 Sections 2--3: hidden-kernel ambiguity, linear-image comparison and
+  the discrete-CVP oracle-insufficiency corollaries. Core definitions live in
+  HCP.lean.
+- Paper 1's selected statement crosswalk records the corresponding Hodge/CVP
+  groups and their explicit hypotheses.
 
 Terminology:
 - `CVP` := the discrete closest-vector problem from `CVP.lean`, with integer

@@ -5,7 +5,7 @@ public import Proximity.Application.Problem
 
 @[expose] public section
 
-/- Paper correspondence: Paper 1 Section 6, RS target interface for proximity. -/
+/- Paper correspondence: Paper 3: mathematical RS target and explicit coding-bound interface; Paper 2 supplies any consuming protocol profile. -/
 
 /- Reed-Solomon target layer for the concrete proximity pipeline. -/
 
@@ -96,7 +96,7 @@ theorem mutualCorrelatedAgreementErrorBoundHolds (T : Target F ι) :
       ((T.threshold : ℝ) / (Fintype.card F : ℝ)) :=
   T.mutualCorrelatedAgreementErrorBound
 
-/-- The paper Definition 4.3 MCA error bound explicitly carried by the target. -/
+/-- The cited Definition 4.3 MCA error bound explicitly carried by the target. -/
 theorem paperMutualCorrelatedAgreementErrorBoundHolds (T : Target F ι) :
     T.parameters.PaperMutualCorrelatedAgreementErrorBound
       (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)

@@ -2,9 +2,11 @@
 
 Manuscript ownership, shared notation, and cross-paper proofreading issues are
 tracked in [the manuscript parity register](../SEMANTIC-PARITY.md). The HCP
-paper owns its foundations and application bridge; the separate proximity
-paper owns universal coding results. The register below continues to own
-mathematical and runtime object status.
+paper owns HCP/Hodge/CVP foundations and observation/projective-recovery
+boundaries. Paper 2 owns the concrete cochain/commitment and protocol profile;
+Paper 3 owns coding and quantitative metric/proximity analysis. Shared
+definitions are cited as the same objects. The register below continues to
+record mathematical and runtime object status.
 
 HCRYPT separates mathematical truth, formal obligation, executable computation,
 and node policy into distinct ownership layers. This keeps the proof stack

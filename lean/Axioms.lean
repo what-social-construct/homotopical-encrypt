@@ -20,9 +20,8 @@ public import Axioms.StageAdmissibility
 
 /-
   Paper correspondence:
-  - Paper 1 Section 4: semantic, public/private, exact, oracle, and commitment
-    axiom surfaces.
-  - Paper 1 appendix ledger: axiom-module theorem-surface correspondence.
-  - Paper 2: consensus, ledger, and stage-admissibility interfaces are consumed
-    by the protocol paper.
--/
+  - Paper 1 Section 4 uses the typed Helfer/HCP fragment through its specific
+    owners, rather than this complete aggregate.
+  - Paper 2 consumes the commitment, oracle, consensus, ledger and
+    stage-admissibility interfaces. SEMANTIC-PARITY.md records their separate
+    status.-/

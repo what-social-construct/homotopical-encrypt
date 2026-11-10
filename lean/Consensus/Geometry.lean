@@ -8,8 +8,9 @@ public import Axioms.Grassmannian
   Consensus geometry façade.
 
   Paper correspondence:
-  - Paper 2: consensus geometry and Proof-of-Value assembly.
-  - Paper 1 appendix ledger: subsequent protocol-paper boundary only.
+  - Paper 2: consensus-geometry and Proof-of-Value contracts.
+  - This facade reuses Axioms.Grassmannian; it is outside Paper 1's selected
+    statement crosswalk.
 
   The underlying assumption/spec interface remains in `Axioms.Grassmannian`.
   This module exposes the same objects from the consensus assembly layer.

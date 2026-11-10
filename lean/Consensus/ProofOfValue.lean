@@ -10,8 +10,9 @@ public import Proximity.Projection
   Proof of Value scoring contract.
 
   Paper correspondence:
-  - Paper 2: Proof-of-Value scoring and consensus policy.
-  - Paper 1 appendix ledger: protocol-facing boundary only.
+  - Paper 2: conditional Proof-of-Value scoring and consensus policy.
+  - This protocol scoring contract is distinct from Paper 3's coding-distance
+    and radius theorems.
 
   PoV proves verifiable harmonic value:
 

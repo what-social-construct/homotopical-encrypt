@@ -1,12 +1,13 @@
 module
 
 /-
-Grassmannian Laplacian Hardness Proof
+Shared Grassmannian/Laplacian proof and interface aggregate
 
 Paper correspondence:
-- Paper 1 Sections 2--3: hidden Hodge operator/kernel, Hodge projection, and
-  CVP comparison.
-- Paper 1 appendix ledger: Laplacian theorem-surface correspondence.
+- Shared Laplacian support, with Paper 1's Hodge/projection/CVP arguments
+  using specific leaf modules.
+- Likelihood, spectral and parametric-family surfaces remain supporting
+  developments outside the selected Paper 1 appendix.
 
 This file is now the public import surface for the Laplacian proof stack.
 The actual formalization is split by concern:
@@ -17,8 +18,8 @@ The actual formalization is split by concern:
     .SearchSpace        -- Ω_k, Ω_1, subspace existence, nonemptiness
     .ParametricFamily   -- parametric family t ↦ span{u + t v} ⊕ W₀
     .Injectivity        -- injectivity of W ↦ Δ_W
-  Laplacian.Likelihood   -- adversaries, Gaussian likelihood, L∞/L2 correction
-  Laplacian.Spectral     -- spectral fingerprints and non-homotopy-invariance
+  Laplacian.Likelihood   -- likelihood-score interfaces and L∞/L2 distinction
+  Laplacian.Spectral     -- spectral fingerprints and the equal-nullity relation
 
 Downstream files can continue to `import Laplacian`.
 -/

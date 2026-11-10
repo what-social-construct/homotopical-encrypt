@@ -12,9 +12,10 @@ public import TCB.ObservationBoundary
   Public/storage boundary for the proximity bridge.
 
   Paper correspondence:
-  - Paper 1 Section 6: public boundary for proximity projections.
-  - Paper 1 Section 5: proof-carrying public artifacts and compressed shadows.
-  - Paper 2: storage/runtime evidence consumption.
+  - Paper 2: observed payload realization, storage-root-linked views and
+    authenticated evidence contracts.
+  - Paper 3 supplies the underlying mathematical extraction and metric
+    statements; full projective recovery remains Paper 1 Section 6.
 
   Core mathematical stages stay with their objects:
 

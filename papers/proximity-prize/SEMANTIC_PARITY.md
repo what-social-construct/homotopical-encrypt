@@ -8,9 +8,21 @@ change when another manuscript cites those results.
 Initial audit date: 2026-10-30. Historical source checkpoint: `dc89188`.
 Generic coding completion and application follow-up: **2026-11-05**.
 
-**Slim entry packages — P294--P295, 2026-11-09:** coding/application packages retain exactly 35/81 local modules, with unchanged Lean/configuration/metadata/manuscripts. Their generated default and Challenge builds pass with pinned caches; the actual upstream metadata contract passes. Public snapshot approval and protected Linux preflight remain. See the [release guide](../../docs/PALOMAR_SLIM_RELEASES.md).
+**Manuscript ownership revision — 2026-11-09:** the introduction and §7 now
+identify Paper 2 as the owner of the shared cochain construction and
+protocol/observation contracts. Paper 3 retains every selected coding and
+quantitative source-metric statement, including the actual original payload,
+intrinsic integral coboundary relation and complete coordinate layout.
+Paper 1 supplies the HCP and full-projective observation boundaries.
+Necessary definitions are recalled with attribution rather than presented as
+a second construction. The new full-length RS limitation citation is compared
+with the explicit subgroup/large-field and fractional-list regime, without
+claiming a small-list capacity theorem. No Lean declaration or selected group
+changes. Revised PDF/layout evidence is separate from the preserved baselines.
 
-**Independent coding/application entries — P292--P293, 2026-11-09:**
+**Preserved slim entry packages — P294--P295, 2026-11-09:** coding/application packages retain exactly 35/81 local modules, with unchanged Lean/configuration/metadata/manuscripts at that checkpoint. Their generated default and Challenge builds pass with pinned caches; the actual upstream metadata contract passes. Paper 3 public snapshot approval and protected Linux preflight remain. See the [release guide](../../docs/PALOMAR_SLIM_RELEASES.md).
+
+**Preserved independent coding/application entries — P292--P293, 2026-11-09:**
 The [coding entry](../../lean/Palomar/PaperThree/README.md) and
 [original-cochain companion](../../lean/Palomar/PaperThree/Application/README.md)
 retain all fourteen selected groups in the same manuscript. Both pass full
@@ -201,7 +213,7 @@ it does not solve that spectrum for arbitrary supplied smooth codes.
 | `Concrete/CanonicalRS/{Encoding,BridgeData,PublicCalibration}.lean` | Actual observed-cochain extraction, canonical pair isometry and distance calibration | Existing proved application results, inventoried in C01–C03; outside the standalone closure. Their source metric is the plane-code distance pulled back through the declared extraction. |
 | `lean/Sheaf/{Distance,CochainSemantics,ObservationQuotient}.lean`; `lean/Protocol/Storage/` | Original source geometry, semantic transport and typed storage joins | Outside the standalone closure. Decoded exactness residual, raw/accepted contexts and conditional controlled lifts are distinct from the full-HCP observation obstruction. New application-module build/audit outcomes are tracked separately. |
 | Paper 3 §7; [cochain trace](../../docs/COCHAIN_PROXIMITY_TRACE.md) | User-selected commitment-specific projection analysis | The systematic modular profile now has actual-coboundary validity, native metric comparisons and a generic capacity-far family. Canonical original-payload/observation and existing-interface specializations pass focused, expanded aggregate and consolidated dependency checks; Q08 is complete for this profile. Euclidean and arbitrary hidden-Hodge profiles remain separate; full Paper 2 is not required. |
-| Paper 1 Section 6; `docs/PROXIMITY_PAPER_OUTLINE.md` | Companion application projection design | Cross-paper context; older scope language does not override Paper 3's current §7 target. |
+| Paper 1 §6; Paper 2 §§3, 6; `docs/PROXIMITY_PAPER_OUTLINE.md` | Observation boundary, canonical construction and preserved historical projection design | Paper 1 proves full-projective recovery; Paper 2 owns the construction/contracts; Paper 3 §7 owns the quantitative comparison. The older outline is a historical implementation checklist. |
 
 ### Status and role vocabulary
 
@@ -498,6 +510,7 @@ review.
 | P3-19 | The selected Paper 3 coding and actual-cochain statements need independent review surfaces. | **Prepared and checked locally:** two companion configurations retain all fourteen groups within the Challenge size cap. Canonical objects, all radius endpoints, fields and original payload/context/decoder contracts remain explicit. Three unfolded calibration propositions use the existing proof owners. |
 | P3-20 | Entry comparison, kernel trust and source-preserving normalization must be checked separately from the implementation build. | **P293 completed locally:** coding 52/application 22 comparisons and Lean/NanoDa replays pass; combined 975 reports use only standard axioms and preserve all 946 prior sets. Encoder/opening values equal the old formulas by rfl; existing headers retained. Expanded/default 9,295/9,285 pass; no protected preflight or publication. |
 | P3-21 | Slim releases should preserve the checked coding and original-cochain objects without exposing unrelated development. | **P294--P295 prepared locally:** exact 35/81-module packages, selected source/configuration/metadata/manuscript bytes unchanged, generated defaults and separate Challenges build using pinned caches. Actual upstream metadata validation and deterministic source/ZIP checks pass. Public upload and protected Linux preflight remain pending approval. |
+| P3-22 | Manuscript scope could conflate the shared protocol construction with its quantitative proximity analysis, while recent full-length list limitations need comparison. | **Ownership revised:** Paper 2 owns cochain construction, codec/visibility and gate/evidence contracts; Paper 1 owns HCP/observation boundaries. Paper 3 recalls their necessary data and retains all fourteen selected coding/metric groups, with no replacement carrier or assumed distance bridge. The AGG full-length large-list results are explicitly separated from this subgroup/large-field fractional-budget regime. No Lean statements or proof-status claims change; revised PDF QA is tracked separately. |
 
 
 All nine named generic coding statements now have formal endpoints, with

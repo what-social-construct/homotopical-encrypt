@@ -10,8 +10,9 @@ public import Proximity.Application.Calibration
   Canonical RS bridge data.
 
   Paper correspondence:
-  - Paper 1 Section 6: canonical Reed--Solomon endpoint data.
-  - Paper 1 appendix ledger: endpoint theorem-surface row.
+  - Paper 3: canonical endpoint data, normalized metrics and explicit
+    coding-bound inputs for the quantitative comparison.
+  - Paper 2 reuses this same endpoint when constructing its protocol profile.
 
   This module packages the concrete canonical RS endpoint for the application
   proximity bridge. Reed-Solomon list-decoding and MCA bounds remain explicit
@@ -118,7 +119,7 @@ theorem mutualCorrelatedAgreementErrorBound (β : BridgeData) :
     Hcrypt.Proximity.BlockCode.relativeRadius]
     using β.bounds.mutualCorrelatedAgreementErrorBound
 
-/-- The canonical RS endpoint carries the paper Definition 4.3 MCA bound. -/
+/-- The canonical RS endpoint carries the cited Definition 4.3 MCA bound. -/
 theorem paperMutualCorrelatedAgreementErrorBound (β : BridgeData) :
     β.rsTarget.parameters.PaperMutualCorrelatedAgreementErrorBound
       β.johnsonRadiusReal

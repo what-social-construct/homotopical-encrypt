@@ -8,7 +8,9 @@ public import Proximity.Concrete.CanonicalRS.BridgeCertificate
   Canonical Johnson RS far-separation aggregate.
 
   Paper correspondence:
-  - Paper 1 Section 6: canonical far-region separation for the RS/MCA endpoint.
+  - Paper 3: canonical mathematical far-region and calibration interfaces.
+  - Paper 2: optional certificate packaging for applications that supply the
+    required witness.
 
   Import `Proximity.CanonicalRS.BridgeWitness` when only the mathematical
   far-separation witness is needed. This module keeps the historical

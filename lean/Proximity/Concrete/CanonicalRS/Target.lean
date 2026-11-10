@@ -10,7 +10,10 @@ public import Proximity.Concrete.RS.Target
   Target packaging for the canonical RS regime.
 
   Paper correspondence:
-  - Paper 1 Section 6: canonical RS target and explicit theorem slots.
+  - Paper 3: canonical code/metric target packaging with explicit
+    list-decoding and MCA theorem slots.
+  - Paper 2 consumes that endpoint under its own observation and evidence
+    contracts.
 
   The parameter regime is fixed here, while list-decoding and MCA bounds remain
   explicit theorem slots.

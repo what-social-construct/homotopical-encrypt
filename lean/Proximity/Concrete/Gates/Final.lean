@@ -8,7 +8,10 @@ public import Proximity.Concrete.Gates.Stage
   Final proximity checks for an already-orchestrated projection chain.
 
   Paper correspondence:
-  - Paper 1 Section 6: final far/non-collapse gate and calibrated RS handoff.
+  - Paper 3: final radius calibration and the explicit mathematical
+    far/non-collapse hypothesis.
+  - Paper 2: named final-certificate and gate-readiness consequences under the
+    original context/evidence contracts.
 
   `ProjectionChain.Core` owns only the stage composition. This file owns the
   radius calibration, final far/non-collapse witness, and handoff to the

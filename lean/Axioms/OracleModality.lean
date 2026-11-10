@@ -13,10 +13,10 @@ public import Axioms.StageAdmissibility
   Oracle Modality Interface
 
   Paper correspondence:
-  - Paper 1 Section 4: oracle-visible public judgment and Heyting collapse
-    needed for the HCP setup.
-  - Paper 2: oracle/worker/attestation model, consensus action, and runtime
-    enforcement.
+  - Paper 2: oracle/worker/attestation contracts, public Heyting judgments,
+    consensus actions and runtime enforcement.
+  - The oracle-modality interface is supporting protocol vocabulary; it is not
+    an extra hypothesis of Paper 1's selected Hodge/CVP results.
 
   Axiomatizes the oracle interaction layer of homotopical-encrypt using the
   modality framing from:

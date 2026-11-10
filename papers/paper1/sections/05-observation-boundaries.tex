@@ -1,0 +1,78 @@
+\section{Observation Boundaries}\label{sec:observation-boundaries}
+
+The recovery statements concern the public pair \((\alpha,b)\) from
+\cref{def:public-observation}. A protocol may instead expose a residue
+payload, a digest or a proof about a cochain. Those are different observation
+maps. This section records only the mathematical distinctions needed by the
+HCP argument. The construction, encoding, visibility policy and security
+contracts of the cochain commitment belong to Paper~2
+\cite{vanDerVlugt2026protocol}.
+
+\subsection{Exact Cochains and Full Hodge Samples}
+
+Fix one cellular Hodge system and an opening \(a\in C^0\). Its exact
+one-cochain \(c=\delta_0a\) satisfies
+\[
+  P_Hc=P_H\delta_0a=0.
+\]
+Indeed, \(\image\delta_0\) is orthogonal to the harmonic subspace.
+Thus this exact cochain is not the full sample \(b=h+e\) when the harmonic
+message \(h\) is nonzero. An encoding modulo an integer, a digest of that
+encoding and a proof about its acceptance do not, by their types alone,
+supply the full \(b\) or its relation to the operative hidden operator.
+
+There is also a distinction between the exact one-cochain and its opening.
+Linearity gives
+\[
+  \delta_0a=\delta_0a'
+  \quad\Longleftrightarrow\quad
+  a-a'\in\ker\delta_0.
+\]
+Consequently the raw coboundary determines an opening only modulo
+\(\ker\delta_0\). A unique degree-zero message encoding requires further
+application data. This elementary observation is independent of binding a
+specified exact \(C^1\) payload cryptographically.
+
+To connect a protocol artifact to the HCP observation, an application must
+supply a relation binding that artifact to the full sample, its operative
+operator and its classifier value. The artifact can retain an exact
+component and separately relate it to \(b\); projecting such a related record
+is not an algorithm that extracts the full sample from residue bytes.
+Paper~2 gives the concrete payload, snapshot and observation contracts.
+The argument here uses only the resulting mathematical pair.
+
+\subsection{The Exact-Component Obstruction}
+
+The loss of information can be quantitative. Under the hypothesis of
+\cref{prop:exact-component-obstruction}, a nonzero coexact direction gives
+samples with the same exact component and arbitrarily large full Hodge
+residual. Hence an observation depending only on that component need not
+preserve the full-sample residual or a positive far-radius condition. The
+proposition concerns the stated unrestricted Hodge-noise carrier; a
+restricted application profile requires its own comparison theorem.
+
+This does not identify the distinct scores
+\[
+  \|P_{H^\perp}b\|,\qquad
+  \operatorname{dist}(b,\image\delta_0),\qquad
+  \text{a modular cochain or code distance}.
+\]
+The first measures disagreement with the harmonic subspace, while the second
+measures distance to exactness. The modular distances and their native
+normalizations are specified by the protocol profile and analyzed in
+Paper~3. No equality of those scores is assumed by the HCP/CVP comparison.
+
+\subsection{Additional Public Observations}
+
+The constructed ambiguity examples fix \((\alpha,b)\). If a larger released
+view \(V(x,b)\) is used, the same obstruction applies only after proving
+that the two presentations also give equal values of that view. For example,
+a view factoring through \((\alpha,b)\) preserves their equality; arbitrary
+snapshot roots, full geometric coordinates or proof transcripts need not do
+so. No security conclusion for an unspecified larger record follows.
+
+The full projective point of the operative harmonic subspace is a concrete
+example of consequential additional information. At the fixed ambient inner
+product, it determines that subspace's projector and therefore the HCP target
+from \(b\). We prove this reconstruction next. A digest-only view remains a
+different observation and is not covered by the reconstruction theorem.

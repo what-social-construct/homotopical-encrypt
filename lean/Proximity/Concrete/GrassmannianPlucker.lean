@@ -10,7 +10,10 @@ public import Mathlib.LinearAlgebra.ExteriorPower.Basic
   Grassmannian-to-Plucker bridge.
 
   Paper correspondence:
-  - Paper 1 Section 6: hidden Grassmannian source to public Plucker shadow.
+  - Paper 1 Section 6: actual exterior coordinates of a frame and the full
+    projective observation of its subspace.
+  - Paper 3 quantitative uses must separately declare the source score and
+    comparison; frame invariance is proved by the concrete owner.
 
   This file records the bridge from the projection-facing Hodge/Grassmannian
   model to Plucker-coordinate public shadows. The concrete coordinate layer uses

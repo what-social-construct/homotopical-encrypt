@@ -22,8 +22,10 @@ public import Proximity.Concrete.CanonicalRS.CitedBounds
   Canonical Reed-Solomon parameter regime for the concrete proximity bridge.
 
   Paper correspondence:
-  - Paper 1 Section 6: canonical Reed--Solomon endpoint and MCA corollary.
-  - Paper 1 appendix ledger: cited-bound and endpoint theorem-surface rows.
+  - Paper 3: fixed-field endpoint, metric/radius analysis and the explicit
+    cited-bound comparison context.
+  - Paper 2: application-owned coordinate/observation and certificate
+    contracts that consume the same objects.
 
   This aggregate module re-exports the concrete field/rate/radius parameters,
   the certified power-domain construction, the canonical plane encoding, the

@@ -8,10 +8,10 @@ public import Axioms.HomotopyClass
   Fibration and ephemeral-fiber interface.
 
   Paper correspondence:
-  - Paper 1 Section 4: hidden representatives, transport, and public/private
-    semantic boundary.
-  - Paper 1 Section 5: witness material remains private behind public
-    artifacts.
+  - Paper 1 Section 4: background motivation for hidden representatives and
+    public classifier fibers.
+  - Paper 2: the dependent transport, admissibility and
+    ephemeral-representative interface used by explicit protocol realizations.
 
   This file owns the Lean-side mathematical vocabulary for fibers, transport,
   hidden fibration representatives, and ephemeral representatives.

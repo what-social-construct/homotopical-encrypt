@@ -582,12 +582,13 @@ without creating a Lean version of the mistake.
 ## Priority 2 — Proximity Evidence And Sheaf Storage
 
 4. **Original context and typed projection checkpoints**
-   - The three visibility levels are inherited from Paper 1 Section 5:
-     private Hodge/presentation data, public residue payload/modulus/count/tag,
-     and selective opening/proof disclosure. Paper 2 owns concrete bytes,
-     access, storage and recipient key delivery. The chosen mathematical
-     example grants `(class,b)`; the new TCB adapters keep any richer
-     snapshot/artifact view subject to explicit profile conditions.
+   - Paper 2 selects the three concrete visibility levels: private
+     Hodge/presentation data, public residue payload/modulus/count/tag, and
+     selective opening/proof disclosure. It owns concrete bytes, access,
+     storage and recipient key delivery, using Paper 1's mathematical
+     observation boundaries. The chosen HCP example grants `(class,b)`;
+     the TCB adapters keep any richer snapshot/artifact view subject to
+     explicit profile conditions.
    - **Mathematical source implemented:** `Storage.Context` retains the actual
      `CochainPayloadInterpretation`, snapshot and public artifact. Its key
      derives the run ID, schema version, snapshot root, cochain leaf digest,

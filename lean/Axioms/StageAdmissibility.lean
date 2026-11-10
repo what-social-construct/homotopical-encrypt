@@ -10,9 +10,9 @@ public import Axioms.Consensus
   Stage-level admissibility interface.
 
   Paper correspondence:
-  - Paper 1 Section 4 and appendix ledger: stage-admissibility interface
-    surface only.
-  - Paper 2: stage validation and protocol gate certificates.
+  - Paper 2: stage-validation contracts and protocol gate certificates.
+  - The specification implication below is distinct from Paper 3's
+    mathematical distance comparisons.
 
   Purpose:
   - encode the contract

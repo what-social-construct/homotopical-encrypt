@@ -10,9 +10,10 @@ public import Axioms.Foundation
   Cochain commitment security interfaces.
 
   Paper correspondence:
-  - Paper 1 Section 5: binding, hiding, homomorphic, topology-binding, and
-    partial-opening security interfaces.
-  - Paper 2: concrete adversary games and protocol evidence.
+  - Paper 2: binding, hiding, homomorphic, topology-binding and
+    partial-opening assumptions, and their relation to protocol evidence.
+  - Paper 1 uses only the elementary opening quotient and observation
+    distinction; it claims no commitment security theorem from these records.
 
   This file contains binding/hiding/homomorphism assumptions and bridge
   theorems. The wire-facing payload lives in
@@ -24,7 +25,7 @@ namespace Axioms
 
 /--
   Cochain commitment axioms capturing the security properties
-  that Paper 1 treats as interface assumptions.
+  that Paper 2 keeps as explicit construction/security assumptions.
 
   A value of `CochainCommitmentAxioms` records explicit assumptions for an
   authenticated wrapper around the exact `C¹` payload. The bare coboundary

@@ -1,5 +1,14 @@
 \section{Application Interface}
 
+Paper 2 specifies the shared cochain construction, snapshot/decoder context,
+coordinate layout and public observation profile
+\cite{vanDerVlugt2026protocol}. This section recalls only the data needed to
+state the projection and proves its quantitative validity, distance and
+challenge comparisons. It does not repeat a commitment-security construction,
+protocol gate/evidence pipeline or state-transition argument. Paper 1 supplies
+the distinct HCP and full-projective observation boundaries
+\cite{vanDerVlugt2026hcp}.
+
 The coding theorem is stated over the complete received-word space and does not
 depend on a particular source of observations.  An application may nevertheless
 inherit the result through a distance-aware map.
@@ -46,16 +55,18 @@ application-specific witness space.
 
 \subsection{The existing committed-cochain projection}
 
-The project-specific application starts with the commitment payload of the
-companion HCP manuscript \cite{vanDerVlugt2026hcp},
+The project-specific application uses Paper 2's existing commitment payload
+\cite{vanDerVlugt2026protocol},
 \[
   c=(q,N,\mathbf c,\tau).
 \]
 Here \(\mathbf c\) is the serialized integer edge-value list. The Lean
 carrier \lean{CommittedCochain} is an abbreviation for the same
 \lean{CochainCommitmentData} used by the commitment and artifact
-layers. A proof-carrying observation exposes that payload; it does not
-replace it with a second commitment object.
+layers. A selected observation exposes that payload; it does not replace it
+with a second commitment object. The construction and authentication
+conditions of that observation belong to Paper 2; here the payload is the
+input to the actual extraction map.
 
 Fix an extraction context consisting of an expected edge count, selected
 indices \(\iota(i,j)\), and a coefficient interpretation
@@ -170,8 +181,8 @@ by
  (G_{\mathbb R}u)_i=\sum_{s\in S}\widetilde A_{i,s}u_s,
  \qquad (Hz)_i=z_i-\sum_{s\in S}\widetilde A_{i,s}z_s.
 \]
-Use both columns and a complete coordinate layout with coefficient map the
-identity. A two-vertex, one-edge cellular sheaf realizes
+In Paper 2's systematic construction, both columns use the complete coordinate
+layout with identity coefficient map. Its two-vertex, one-edge cellular sheaf realizes
 \(\image\delta_0=\image(G_{\mathbb R}\oplus G_{\mathbb R})\); this equality is
 proved from its restriction maps. The decoder reads the same original
 integer payload into its real edge coordinates.
@@ -203,12 +214,12 @@ encryption-security claim follows from this construction.
 
 \subsection{Three native metrics for modular cochains}
 
-The same cellular construction has a global comparison in its native modular
-metrics. The generic modular result uses a prime field \(\mathbb F_q\), an
+The same shared cellular construction has a global comparison in its native
+modular metrics. The generic modular result uses a prime field \(\mathbb F_q\), an
 injective RS domain with \(0<k\le n\), and a chosen information set of size
-\(k\); subgroup smoothness is not required. Here the cochain valid locus is
-defined intrinsically by an actual
-integral opening and integer carry:
+\(k\); subgroup smoothness is not required. Recall that the shared cochain
+valid locus is specified intrinsically by an actual integral opening and
+integer carry:
 \[
  \delta_0a=z+qm.
 \]
@@ -300,11 +311,12 @@ the prime subfield, and the current wire-modulus convention is unchanged.
 
 \subsection{Scope of the instantiated application}
 
-The systematic modular profile fixes a concrete cellular model, full layout,
-identity integer coefficient map, raw payload carrier and intrinsic modular
-valid locus. Its three independently defined native metrics have a proved
-comparison, a nonempty capacity-far original-payload family and an explicit
-challenge analysis. The calibration is packaged through the existing
+Paper 2's constructed systematic profile fixes the concrete cellular model,
+full layout, identity integer coefficient map, raw payload carrier and
+intrinsic modular valid locus. The results proved here compare its three
+independently defined native metrics, construct a nonempty capacity-far
+original-payload family and analyze its challenges. The calibration is
+packaged through the existing
 source-to-source and source-to-code interfaces; the existing near projection
 uses the declared local scale \(2d_C\). The public-observation adapter retains
 the original artifact and its actual extracted pair.
@@ -327,20 +339,13 @@ generic interpretation \(a:\mathbb Z\to\mathbb Z\) is arbitrary.
 
 Position-binding vector commitments \cite{catalanoFiore2011} and linear-map
 vector commitments \cite{campanelliEtAl2022} concern authenticated coordinate
-or function outputs. Such output authentication alone does not supply the
-native source-distance comparison proved here. Applying either interface
-requires an actual commitment, opening and verifier construction, including
-binding of the field, coordinate layout and snapshot/topology metadata.
-Binding \(v\) also does not by itself bind a chosen integer representative
-or degree-zero opening; these are additional relations.
-
-WHIR's constrained-RS proximity and polynomial-commitment interfaces
-\cite{arnonChiesaFenziYogev2024} give a further comparison target. A protocol
-comparison requires a concrete polynomial/constraint encoding and the
-fixed-pair, later-challenge order. The proved fixed-mix counterfamily above
-prevents replacing that analysis by an arbitrary scalar fold. No new binding
-or hiding primitive, cryptographic security or verification-cost improvement
-is claimed. The contribution here is the explicit source relation and its
-metric calibration; priority for these constructions is not established by
-the present comparison. They are independent of completing the full Paper 2
-ledger, consensus protocol or Rust implementation.
+or function outputs. That authentication does not itself give the native
+source-distance comparison above. A comparison with WHIR's constrained-RS
+proximity interface \cite{arnonChiesaFenziYogev2024} additionally identifies
+the polynomial constraints and fixed-pair challenge experiment. The fixed-mix
+counterfamily prevents replacing this analysis by an arbitrary scalar fold.
+Commitment/opening/verifier algorithms, metadata binding and their security
+games belong to Paper 2. This paper proves the stated relation and metric
+comparisons, without a new binding/hiding primitive, priority claim or
+verification-cost advantage. These mathematical results do not require
+completion of Paper 2's ledger, consensus protocol or Rust implementation.

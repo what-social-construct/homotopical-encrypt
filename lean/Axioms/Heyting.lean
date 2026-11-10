@@ -8,9 +8,10 @@ public import Mathlib.Init
   Heyting collapse interface for runtime consensus truth values.
 
   Paper correspondence:
-  - Paper 1 Section 4: Heyting/public judgment surface used by HCP.
-  - Paper 2: full consensus policy and runtime consumption of the collapsed
-    truth value.
+  - Paper 2: constructive three-valued public judgment and its consumption by
+    oracle/consensus policy.
+  - This finite collapse is supporting protocol vocabulary, outside the
+    selected Paper 1 semantic fragment.
 
   This module is intentionally constructive at the 3-valued layer:
   - defines a concrete 3-element chain,

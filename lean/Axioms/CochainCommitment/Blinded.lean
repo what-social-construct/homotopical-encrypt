@@ -8,8 +8,10 @@ public import Axioms.SheafCoherence
   Typed exact-to-Hodge-blinded commitment bridge.
 
   Paper correspondence:
-  - Paper 1 Section 5: an accepted exact payload `δ₀ a` and a separately
-    blinded Hodge value `δ₀ a + s • H_τ`.
+  - Paper 2: the typed bridge from an accepted exact payload to a separately
+    Hodge-blinded value, with its encoding and security contracts.
+  - Paper 1 Section 5 retains only the mathematical distinction between an
+    exact component and a full Hodge observation.
 
   The wire payload remains the exact committed one-cochain.  This module does
   not identify the Hodge-blinded value with that serialized payload; it records

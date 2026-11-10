@@ -4,6 +4,6 @@ public import Proximity.Concrete.CochainPlane.Core
 
 @[expose] public section
 
-/- Paper correspondence: Paper 1 Section 6, committed-cochain to plane-shadow projection. -/
+/- Paper correspondence: Paper 3: mathematical committed-cochain to plane-shadow interface; Paper 2 supplies the original payload/extraction profile. -/
 
 /- Re-export the committed-cochain to plane-shadow core interface. -/

@@ -4,11 +4,11 @@ Preparation note begun 2026-11-05; Paper 1 and Paper 3 entry files prepared 2026
 intended public scope is the Lean development and corresponding manuscripts.
 Paper 1 now has an independent statement/proof pair, Comparator configuration,
 metadata and completed local diagnostic checks. At the preceding preparation
-checkpoint no public release or protected preflight had occurred. The current
-publication/run status is recorded below; registry intake and registration
+checkpoint no public release or protected preflight had occurred. The exact
+historical publication/run status and current local revision are recorded below; registry intake and registration
 have not occurred.
 
-**Current checkpoint — Paper 1 public; protected preflight passed, 2026-11-09.**
+**Historical release checkpoint — Paper 1 public; protected preflight passed, 2026-11-09.**
 The approved Paper 1-only snapshot is on `main` in
 [homotopical-encrypt-formalizations](https://github.com/what-social-construct/homotopical-encrypt-formalizations)
 at commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`. The complete protected
@@ -26,6 +26,18 @@ The two checked Paper 3 configurations remain local candidates for later
 work. Their technical packaging does not change the
 [three-paper split](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table):
 Paper 2 remains the protocol/cochain paper and Paper 3 the proximity paper.
+
+**Current local scope revision, 2026-11-09.** The manuscripts now follow that
+split throughout: Paper 1 is 37 pages, retaining HCP/Hodge/CVP, the actual
+Helfer homological-test fragment and observation/Plücker mathematics; Paper 2
+owns the concrete commitment/codec, visibility, gates/evidence and storage
+construction; Paper 3 is 31 pages and owns quantitative RS/proximity,
+calibration and metric bridges. Paper 2 remains a working Markdown draft.
+The revised manuscripts and 93 comment-only Lean files are not part of public
+commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`, have not been published or
+protected-preflighted, and retain a separate pending build/audit record.
+The historical 101-page Paper 1 release and its PASS do not validate the
+revised bytes. No registry intake or registration is authorized.
 
 The user reports that **Jacobian Paper I passed the machine checks and is
 already under Palomar review**. They suspect that docstrings or broader
@@ -54,8 +66,8 @@ current review status are separate facts.
 
 There are **three configurations for two manuscripts**: Paper 1, Paper 3
 core, and Paper 3's application/bridge companion. These are verification
-configurations, not a second manuscript split. Paper 1 alone is selected for
-the immediate publication and preflight sequence; the two Paper 3 entries
+configurations, not a second manuscript split. Paper 1 alone remains the
+first release priority; the two Paper 3 entries
 remain checked local candidates. The companion introduces no numbered paper.
 Paper 1's completed local checks are recorded below. Paper 3's files now exist;
 its verification is recorded separately from the earlier implementation audit.
@@ -101,8 +113,8 @@ remove a limitation needed to understand the result.
 The broader [Lean/manuscript public-review package](../PUBLIC_REVIEW.md) serves
 a different purpose and includes cross-paper context. Its ZIP is neither the
 slim per-entry release nor a Palomar submission. Paper 1's entry files now
-live in the development repository. The separately frozen Paper 1 release
-and running protected preflight are tracked in the
+live in the development repository. The separately frozen historical Paper 1 release
+and completed protected preflight are tracked in the
 [slim release guide](PALOMAR_SLIM_RELEASES.md). The Paper 3 packages remain
 local; publication, hosted verification and registry intake retain their
 separate statuses.
@@ -183,16 +195,17 @@ one of the 900 preceding dependency sets. The
 [validation record](MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
 contains reproduction commands and the remaining boundaries.
 
-The latest manuscript pass foregrounds the constructed integral observation
+The public snapshot's manuscript pass foregrounded the constructed integral observation
 examples, states the finite signed-incidence model explicitly, and distinguishes
 the legacy nullity/likelihood vocabulary from stronger homotopy or security
-claims. Its revised 101-page PDF was rebuilt and visually inspected, and the
+claims. Its 101-page PDF was rebuilt and visually inspected, and the
 manuscript and metadata were frozen together in public commit
 `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`. The earlier Paper 1 candidate
 `73f9c28a4b9f8fb6a04e5b656389979be6b9cd92` is superseded for publication by
 this refreshed snapshot; its completed checks remain historical
-evidence. No Lean declarations or entry configuration names are changed by
-these wording corrections.
+evidence. No Lean declarations or entry configuration names were changed by
+those wording corrections. The subsequent local 37-page revision and Lean
+comment changes are a different snapshot with no protected preflight yet.
 
 The local [manual workflow](../.github/workflows/paper1-palomar-preflight.yml)
 follows Jacobian's [pinned reusable workflow](https://github.com/PalomarRegistry/PalomarSubmission/blob/14aa8d6b3c2f14a8540605e37144560b9a00e7e7/.github/workflows/submission.yml) at
@@ -211,11 +224,12 @@ verification and registry intake remain separate steps.
 The manuscripts supply the main statements: Paper 1's existing named
 propositions, especially the discrete CVP comparison and kernel ambiguity,
 and Paper 3's nine named coding statements. The tables below select their
-mathematical content for two entries. These IDs organize manuscript results; the uniqueness companion completes an
-existing proposition. They are not already-created Comparator declarations.
-Each future wrapper must state the complete indicated claim, using transparent
-mathematical definitions in an independent Challenge and the existing proofs
-in its Solution. Final protected comparison and entry-size checks remain work.
+mathematical content for two entries. These IDs organize manuscript results;
+the uniqueness companion completes an existing proposition. The independent
+wrappers now exist and use transparent mathematical definitions in Challenge
+and the existing proofs in Solution. The historical Paper 1 release passed
+protected comparison and entry-size checks; the revised local documentation
+requires its own exact-snapshot checks before a refreshed release.
 
 ### Paper 1: CVP comparison and the constructed HCP family
 
@@ -237,7 +251,7 @@ indistinguishability is not asserted by these statements.
 | P1-S05 — §3.4, `prop:cvp-insufficient`; §3.5, `prop:cellular-axis-ambiguity` | The general separation theorem gives distinct targets, and its nontrivial cellular instance gives distinct nonzero targets at one public input. Both the manuscript soundness/exact-on-harmonics contract and its direct operative-target companion are retained. Retain the correct-CVP-oracle existence premise and the exact no-uniform-solver quantifiers. | `Hcrypt.HCPBridge.operativeTargets_ne_of_kernelSeparation`; `Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation`; `Hcrypt.HCPBridge.cvpOracle_insufficient_for_operativeTarget`; `Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets`; `Hcrypt.HCP.AxisFamily.cvp_oracle_insufficient` |
 | P1-S06 — §3.5, weighted integral example | At common b=(1,2), the original integer coefficients differ (2 versus 1); no exact public coefficient decoder exists. For each private presentation the same actual sample has a unique CVP answer equal to its operative HCP target. | `Hcrypt.HCP.AxisFamily.weighted_public_observations_eq`; `Hcrypt.HCP.AxisFamily.no_exact_encoded_message_decoder`; `Hcrypt.HCP.AxisFamily.weighted_cvp_solution_iff_operativeTarget`; `Hcrypt.HCP.AxisFamily.weighted_cvp_existsUnique` |
 | P1-B01 — §2, `prop:exact-component-obstruction` | The unrestricted exact-component view cannot retain the full residual/far region when a nonzero coexact direction is allowed. This does not prove wire factorization. | `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent`; `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent` |
-| P1-B02 — §6.2, `prop:plucker-recovery`; operative-observation appendix | Genuine full projective coordinates recover the subspace and its fixed-metric projector; operative-kernel identification additionally recovers the HCP target from b. Digest-only observations remain separate. | `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame`; `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame`; `Hcrypt.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent` |
+| P1-B02 — §6.2, `prop:plucker-recovery`; formal-boundaries appendix | Genuine full projective coordinates recover the subspace and its fixed-metric projector; operative-kernel identification additionally recovers the HCP target from b. Digest-only observations remain separate. | `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame`; `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame`; `Hcrypt.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent` |
 
 The concrete family uses actual integral cellular sheaves and the true
 degree-one operators. Its public classifier is the full theory of the stated
@@ -249,11 +263,14 @@ or made conclusions of new assumptions. Full first-order semantics, equality
 of larger released storage views, sampled secrecy, finite byte codecs and
 complexity bounds remain separate.
 
-P1-B01/B02 are explicitly named observation-boundary statements. The cited
-canonical RS/MCA theorem and uninstantiated geometric far-separation profile
-in §6 are supporting conditional manuscript material, outside this selected
-HCP/CVP entry. Corresponding entry prose/excerpts must say so; no theorem at
-that cited-axiom boundary is being selected as an axiom-free proof.
+P1-B01/B02 are explicitly named observation-boundary statements. The local
+manuscript's [observation section](../papers/paper1/sections/05-observation-boundaries.tex)
+and [projective-recovery section](../papers/paper1/sections/06-projective-observation-boundary.tex)
+retain that mathematics. Detailed construction and protocol gates now belong
+to Paper 2; quantitative RS/MCA and far-separation/calibration arguments
+belong to Paper 3. Paper 1 retains only a brief conditional application
+reference, outside the selected HCP/CVP entry; no cited-bound theorem becomes
+an axiom-free selected result through this rearrangement.
 
 ### Paper 3: nine original coding statements and bounded application
 
@@ -374,17 +391,17 @@ than copying Jacobian's historical metadata or its review status verbatim.
 The user has authorized upgrading the **main repository** to the current
 stable Lean/Mathlib pair. Its pins are now Lean `leanprover/lean4:v4.35.0`
 and Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679` (release `v4.35.0`).
-The expanded mathematics and integration union with all three Solutions passes
+Before the local manuscript/comment split, the expanded mathematics and integration union with all three Solutions passed
 **9,295 jobs**, covering
 all fifteen default roots and the explicit ledger, evidence, storage and HCP
-example, public-view, recipient and owned-transfer targets. The literal default build passes **9,285 jobs**.
+example, public-view, recipient and owned-transfer targets. The literal default build passed **9,285 jobs**.
 The preceding 855-declaration probe and its former trust split are historical;
 the refreshed selected-implementation checks are recorded centrally.
 The inventory has 280 Lean files: 279 public source modules and Lake, with
 zero implementation holes and 96 intentional theorem placeholders in three Challenges.
 There are no unresolved local imports or cycles. The same seven cited-bound
 axioms remain isolated; all 54 scoped closures exclude legacy Chain and
-CitedBounds. The current combined audit has 975 standard-only reports, with
+CitedBounds. That combined audit has 975 standard-only reports, with
 all 946 previous sets unchanged. The preceding 9,292/9,285-job, 839-report retrieval/codec milestone and
 9,285/9,278-job, 750-report native-path milestone,
 9,284/9,277-job, 728-report owner-signing milestone,
@@ -395,7 +412,7 @@ all 946 previous sets unchanged. The preceding 9,292/9,285-job, 839-report retri
 9,259/9,254-job, 268-report public-input milestone,
 9,258/9,253-job, 235-report cellular-HCP milestone and the native-metric
 9,253/9,248-job, 139-report and earlier 68-report snapshots remain dated
-baselines; they are distinct from the current full/default and dependency record.
+baselines; they are distinct from the last completed full/default and dependency record.
 The completed main upgrade supersedes the
 earlier proposal to keep main development on Lean 4.24.0; the earlier build
 and dependency records remain separately dated historical evidence.
@@ -411,9 +428,14 @@ Paper 3's trust wording/PDF. The Paper 1 entry then retained all 273 owner
 files and both PDFs unchanged. Select
 the appropriate manuscript evidence for each entry and tie it to the final
 immutable release. This is evidence preparation, not a completed submission.
-The latest Paper 1 wording pass has its own rebuilt and visually inspected
+The public snapshot's Paper 1 wording pass has its own rebuilt and visually inspected
 101-page PDF in the exact public snapshot linked above. The preceding
 paragraph's counts and unchanged-source statements remain dated baselines.
+The current local 37-page Paper 1 and 31-page Paper 3 apply the ownership split
+described above. Their compile checks report no undefined references/citations
+or overfull boxes. The 93 Lean comment changes and revised manuscripts are
+outside the completed build, dependency and protected-preflight baselines;
+their exact-snapshot validation remains to be recorded.
 
 Freeze a separate slim per-entry release with the selected proof closure,
 corresponding manuscript evidence, statement/proof wrappers and metadata
@@ -471,11 +493,12 @@ Select the current pipeline revision when preparing the release; do not
 silently reuse Jacobian's historical verifier pin. Require a passing complete
 mechanical report for the exact final package before intake.
 
-Current sequence, with Paper 1 first:
+Historical release sequence, with Paper 1 first; the local revision above is
+not yet a replacement release:
 
 1. **Selected Paper 1 account completed.** The eight HCP/CVP and observation
    groups retain their actual finite-incidence objects and explicit
-   hypotheses. The revised manuscript is rebuilt/inspected and aligned with
+   hypotheses. That release's manuscript was rebuilt/inspected and aligned with
    its README, metadata and source evidence.
 2. **Paper 1 snapshot frozen.** Its exact proof closure
    has 31 local modules, one configuration and the corresponding manuscript.
@@ -493,7 +516,11 @@ Current sequence, with Paper 1 first:
    protected comparison, canonical provenance and Lean/NanoDa/con-ron checks.
    Its preferred-size advisory is within the hard caps. Prior local builds
    and the 975-report audit remain separately recorded evidence.
-5. **Stop before intake.** The user explicitly authorized preflight only.
+5. **Local ownership revision prepared; stop before intake.** The current
+   37-page Paper 1 and 31-page Paper 3, Paper 2 construction ledger and 93
+   Lean comment edits remain local. Finish their exact-source checks and
+   prepare a refreshed slim snapshot before any future publication/preflight.
+   The user explicitly deferred submission.
    Do not request registry submission or registration on the strength of a
    passing report. A later explicit submission instruction must confirm the
    concrete repository, full commit, configuration and truthful authorization

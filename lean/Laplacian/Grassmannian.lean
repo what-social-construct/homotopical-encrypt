@@ -4,9 +4,10 @@ module
   Public import surface for the Grassmannian Laplacian proof stack.
 
   Paper correspondence:
-  - Paper 1 Sections 2--3: hidden Hodge operator/kernel search space and CVP
-    comparison.
-  - Paper 1 appendix ledger: Laplacian theorem-surface correspondence.
+  - Shared Grassmannian support for the projection model and later geometric
+    applications.
+  - Paper 1's selected results use their specific Hodge/CVP owners; this
+    aggregate is not an additional manuscript claim inventory.
 
   The implementation is split by concern:
 

@@ -40,9 +40,9 @@ decoder interpretation indexes proof soundness. Typed preimages separate
 owner intent, packet evidence and the completed block; no global hash
 injectivity, primitive implementation or anonymity theorem is inferred.
 
-The three visibility levels already fixed in
-[Paper 1, Section 5](../papers/paper1/sections/05-public-artifacts-and-commitments.tex)
-remain: private Hodge/restriction data, messages, noise and full cochains
+[Paper 1, Section 5](../papers/paper1/sections/05-observation-boundaries.tex)
+retains the mathematical observation distinction. The three concrete visibility
+levels are specified in [Paper 2, §2](../papers/paper2/DRAFT.md#2-maintained-geometry-temporary-processing-and-retained-artifacts): private Hodge/restriction data, messages, noise and full cochains
 unless explicitly exposed; public residue payload/modulus/count/topology tag;
 and only the declared selective opening values or proof statements. A semantic
 record may retain private witnesses even when its name contains “public”.

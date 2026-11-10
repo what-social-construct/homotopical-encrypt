@@ -8,8 +8,10 @@ public import Proximity.Concrete.CanonicalRS.MCA.Concrete
   Literature-imported bounds for the canonical RS endpoint.
 
   Paper correspondence:
-  - Paper 1 Section 6: external Johnson/list-decoding/MCA theorem boundary.
-  - Paper 1 appendix ledger: cited external theorem status row.
+  - Paper 3 comparison context: the explicit external
+    Johnson/list-decoding/MCA theorem boundary.
+  - These cited constants are separate from the standalone coding proofs.
+    SEMANTIC-PARITY.md records their assumptions and provenance.
 
   This module is the trusted boundary where externally cited RS/list-decoding
   and MCA theorems enter the Lean development. The surrounding modules prove
@@ -94,7 +96,7 @@ axiom bchksMutualCorrelatedAgreementErrorBound :
       ((citedMCAThreshold : ℝ) / (Fintype.card RSField : ℝ))
 
 /--
-Paper Definition 4.3 MCA bound at the canonical endpoint, evaluated at `s = 1`.
+Cited Definition 4.3 MCA bound at the canonical endpoint, evaluated at `s = 1`.
 
 Citation: ePrint 2026/680, Definition 4.3 and Theorem 4.12
 ([BCHKS25], Theorem 4.6). The theorem is stated for F-additive codes

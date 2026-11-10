@@ -1,6 +1,6 @@
 # Slim Palomar releases: Paper 1 first
 
-Publication/preflight checkpoint, 2026-11-09: the approved Paper 1-only
+Historical publication/preflight checkpoint, 2026-11-09: the approved Paper 1-only
 snapshot is public on `main` in
 [homotopical-encrypt-formalizations](https://github.com/what-social-construct/homotopical-encrypt-formalizations),
 at commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`. The complete protected
@@ -15,24 +15,36 @@ submission. **No registry intake or registration is authorized or performed.**
 The mechanical report has been inspected and retained; this passing preflight
 does not authorize an intake request.
 
+**Current local revision, 2026-11-09:** the three-paper ownership split is now
+applied to the manuscripts. Paper 1 has 37 pages rather than the public
+snapshot's 101; Paper 3 has 31 pages rather than the earlier package's 30.
+The revised manuscripts and 93 comment-only Lean edits have not been
+published, frozen in a refreshed slim package or protected-preflighted.
+Build/audit evidence for the revised snapshot remains to be recorded. The
+published commit and PASS above apply only to their exact historical bytes.
+
 The existing [three-paper ownership table](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table)
-remains authoritative: Paper 1 owns HCP foundations, Paper 2 owns protocol and
-cochain/commitment realization, and Paper 3 owns proximity and radius analysis.
+remains authoritative: Paper 1 owns HCP/Hodge/CVP foundations, the actual
+Helfer fragment and observation/Plücker mathematics; Paper 2 owns concrete
+cochain/commitment realization, codecs, visibility, gates/evidence and storage;
+Paper 3 owns quantitative RS/proximity, radius/calibration and metric bridges.
 Paper 3's core and bridge configurations are internal verification entries
 for that one manuscript. They are not additional papers or a substitute for
-Paper 2. Paper 2 remains a working draft outside this first submission.
+Paper 2. Paper 2 remains a working draft outside the first public entry.
 
-The following are technical packaging inventories, not a publication split:
+The following are historical technical packaging inventories, not a publication
+split or an inventory of a refreshed package for the local revision:
 
 | Package | Local Lean modules, including Challenge | Configured declarations | Manuscript |
 |---|---:|---:|---|
-| `paper1` | 31 | 46: 21 main / 25 support | Paper 1; final 101-page manuscript/PDF frozen in the public snapshot |
-| `paper3-coding` | 35 | 52: 36 main / 16 support | Paper 3, 30 pages |
+| `paper1` | 31 | 46: 21 main / 25 support | Paper 1; 101-page manuscript/PDF frozen in the exact public snapshot |
+| `paper3-coding` | 35 | 52: 36 main / 16 support | Earlier local Paper 3 package, 30 pages |
 | `paper3-application` | 81 | 22: 10 main / 12 support | The same Paper 3 manuscript |
 
-Only `paper1` has been published for this preflight. The two Paper 3 packages
-retain their completed local checks and remain unpublished; Paper 2 is also
-outside this public snapshot.
+Only the historical `paper1` snapshot has been published for this preflight.
+The two earlier Paper 3 packages retain their completed local checks and
+remain unpublished; those checks do not validate the revised 31-page
+manuscript or edited comments. Paper 2 is also outside this public snapshot.
 
 The [exporter](../scripts/export_palomar_entries.py) copies every selected Lean
 source, Comparator configuration, metadata file and manuscript source/PDF
@@ -87,9 +99,10 @@ record full local comparisons, Lean/NanoDa replay and the combined dependency
 audit for the unchanged Lean sources.
 
 The first frozen Paper 1 candidate, `73f9c28a4b9f8fb6a04e5b656389979be6b9cd92`,
-predates the latest manuscript and metadata wording corrections. It is a
+predates the public snapshot's manuscript and metadata wording corrections. It is a
 historical candidate. The revised TeX, PDF, README and metadata were frozen
 together in the published commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`.
+The subsequent local scope revision is not part of either frozen candidate.
 The final local records are `paper1-first-frozen-release.json`,
 `paper1-first-local-validation.json` and `paper1-first-final-checkpoint.json`
 under `output/validation/`; the hosted preflight result is separate evidence.
@@ -115,7 +128,7 @@ exact commit. A passing preflight does not constitute editorial review or
 registration.
 
 The earlier proposal for three technical release branches is superseded by
-the Paper 1-first sequence. The public `main` contains only its fresh slim
+the Paper 1-first sequence. The public `main` contains only its historical slim
 snapshot, without private development history. The checked Paper 3 candidates
 remain local. The exporter itself performs no remote actions; the separately
 authorized repository creation, exact-snapshot push and preflight dispatch

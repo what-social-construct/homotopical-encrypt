@@ -8,11 +8,13 @@ public import Proximity.Concrete.CanonicalRS.MCA.Line
   Concrete paper-facing MCA surface for the canonical RS endpoint.
 
   Paper correspondence:
-  - Paper 1 Section 6: MCA bad-challenge fraction and canonical bound.
-  - Paper 1 appendix ledger: Lean-proved specialization from cited bounds.
+  - Paper 3: the canonical same-set MCA bad-challenge event and conditional
+    specialization of the supplied coding bound.
+  - Paper 2 owns any transcript-binding or security experiment that consumes
+    this fraction.
 
   `CanonicalRS.MCA.Line` owns the canonical affine-line construction. This file
-  owns the paper Definition 4.3 bad-challenge fraction and the MCA bound at the
+  owns the cited Definition 4.3 bad-challenge fraction and the MCA bound at the
   canonical RS endpoint.
 -/
 
@@ -53,13 +55,13 @@ noncomputable def badChallengeFraction
     (L : Line) : ℝ :=
   challengeFraction (badChallengeSet β δ L)
 
-/-- Paper Definition 4.3 MCA error bound for the canonical RS endpoint. -/
+/-- Cited Definition 4.3 MCA error bound for the canonical RS endpoint. -/
 def PaperMCAErrorBound
     (β : BridgeData)
     (δ ε : ℝ) : Prop :=
   β.rsTarget.parameters.PaperMutualCorrelatedAgreementErrorBound δ ε
 
-/-- The canonical bridge data carries the paper Definition 4.3 MCA bound. -/
+/-- The canonical bridge data carries the cited Definition 4.3 MCA bound. -/
 theorem paperMCAErrorBound
     (β : BridgeData) :
     PaperMCAErrorBound
@@ -402,7 +404,7 @@ noncomputable def projectionBadChallengeSet
 MCA applies after the projection chain lands in final RS coordinates.
 
 For every canonical line whose base and direction are final words produced by
-the projection chain, the paper Definition 4.3 bad-challenge fraction is
+the projection chain, the cited Definition 4.3 bad-challenge fraction is
 bounded by the canonical MCA error threshold.
 -/
 theorem projectionBadChallengeFraction_le

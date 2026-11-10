@@ -11,9 +11,10 @@ is the current statement/proof-status register.
 
 Paper 1 supplies the cellular Hodge objects, the explicitly named homological
 Helfer fragment, concrete HCP families, harmonic recovery, CVP comparisons and
-the mathematical commitment interfaces. Paper 2 owns the visibility and
-encoding profile, the relation between those objects and public observations,
-verification evidence, retained artifacts and one accepted state transition.
+the mathematical observation boundaries. Paper 2 owns the cochain commitment
+construction and its visibility, encoding and security contracts, the relation
+between those objects and public observations, verification evidence, retained
+artifacts and one accepted state transition.
 Authorized recipient recovery material, representative/key rotation and
 storage migration also belong to Paper 2's protocol profile. Paper 3 owns the
 independent coding theorems and the quantitative analysis of a declared application
@@ -62,9 +63,10 @@ database. Snapshot root, cochain leaf digest, gate-evidence digest, manifest
 root and block digest are separate coordinates. A matching quorum signs the
 same proposal; these joins do not by themselves prove global finality.
 
-The three visibility levels are already fixed in
-[Paper 1, Section 5](../paper1/sections/05-public-artifacts-and-commitments.tex).
-Paper 2 preserves that separation while specifying its concrete protocol paths:
+The concrete protocol retains the following three visibility levels. They
+instantiate [Paper 1's observation distinction](../paper1/sections/05-observation-boundaries.tex)
+between an exact committed component and the full Hodge sample; their concrete
+data and access rules belong to this paper:
 
 | Level | Data and exposure |
 |---|---|
@@ -212,6 +214,152 @@ releases those coordinates cannot also claim distinct targets under that
 identical full view. A digest-only extension requires its own analysis and
 does not inherit this exact-coordinate recovery theorem or a hiding theorem.
 
+#### 3.1. Payload operations and commitment interfaces
+
+The payload is the existing
+[CochainCommitmentData](../../lean/Axioms/CochainCommitment/Payload.lean),
+not a second commitment carrier. Its declared byte layout has an eight-byte
+modulus/count header, eight bytes per edge value and a sixteen-byte topology
+tag. Lean's integer list and natural-number count do not by themselves prove
+bounded serialization or a parser refinement. `WellFormed` requires the
+canonical modulus `12289`, agreement of declared and actual counts, and a
+positive count. A zero edge vector can satisfy this shape predicate.
+
+`AddCompatible` requires both payloads to be well formed and to share modulus,
+edge count and topology tag; `add` then adds their corresponding edge values.
+These are payload-level conditions. Interpretation as one cochain addition
+also requires the same authenticated ambient sheaf/decoder profile. A matching
+topology tag alone supplies no such authentication. The raw coboundary
+identifies openings only modulo `ker delta0`:
+
+\[
+\delta_0a=\delta_0a'\quad\Longleftrightarrow\quad
+a-a'\in\ker\delta_0.
+\]
+
+The following existing interfaces state separate constructions or contracts.
+Their presence does not assert that their cryptographic assumptions have been
+instantiated:
+
+| Interface and existing owner | Construction or supplied contract | Remaining boundary |
+|---|---|---|
+| [CochainCommitmentAxioms](../../lean/Axioms/CochainCommitment/Security.lean) | Exact-payload binding, wrapper hiding, context binding, declared homomorphic operations and partial-opening soundness. | The bare coboundary proves neither uniqueness of a degree-zero opening nor a hiding game. The selected encoding, authenticated context and security experiment must justify the claimed fields. |
+| [HodgeBlindingContext and BlindedCommittedCochain](../../lean/Axioms/CochainCommitment/Blinded.lean) | An accepted exact base decodes to `delta0 a`; a separately typed value is `decode base + s • H_tau`. The chosen direction is harmonic and the exact component is orthogonal to it under the ambient Hodge contract. | The scalar `s` is distinct from the opening `a`. This real-cochain value is not identified with the serialized modular payload. Deterministic context selection, authenticated-value binding and distributional hiding remain explicit fields of `BlindedCommitmentAxioms`. |
+| `VectorCommitmentAxioms` in [Security](../../lean/Axioms/CochainCommitment/Security.lean) | Honest-opening completeness, soundness of the revealed local coboundary equations, and authenticated positions. An edge equation uses both endpoint values in the revealed set. | A boundary edge with an unrevealed endpoint needs additional authenticated data. Local equation soundness does not select a unique global degree-zero opening. |
+| `CohomologicalMACAxioms` in [Security](../../lean/Axioms/CochainCommitment/Security.lean) | Correctness, unforgeability, key binding and determinism are supplied interface propositions for the proposed Hodge-projection tag. | The cochain map for the tag, key generation, tag/verification algorithms and adversarial game are not constructed by this record. Applying harmonic projection to the same exact payload alone gives zero, so that payload cannot silently be used as a nontrivial tag input. |
+| [HashedCommittedCochain and ProofCarryingCommittedCochain](../../lean/TCB/ProofCarrying.lean) | Wrappers retain the same original payload, declared digests and proof/statement relations. | The legacy `WellFormed` predicate includes supplied statement truth. The operational checker and its indexed primitive-soundness contracts are separately specified in §§6.2–6.4. |
+
+Exact payload binding, hiding of a chosen witness, local opening soundness,
+owner authorization and harmonic-message recovery concern different objects
+and experiments. The protocol must state which of them its released record
+is intended to support.
+
+When a profile invokes
+[Axioms.ZKPWellFormed](../../lean/Axioms/ZKP.lean), completeness, soundness,
+zero knowledge and statement binding are explicit interface inputs. That
+record is not a constructed proof system. The indexed primitive checks and
+one-shot error experiment in §§6.2–6.4 state the separate assumptions used by
+the operational transfer checker.
+
+#### 3.2. Local syndrome and accepted-payload realization
+
+The local target uses the same payload carrier. For an authenticated
+interpretation `S`, let `G_S` denote its accepted coherent payloads. A
+[LocalSyndromeTarget](../../lean/Proximity/Concrete/PluckerCochain.lean)
+supplies a syndrome map `sigma`, a valid-syndrome set `Z` and a score `d_L`,
+with the implication `c in G_S -> sigma c in Z`. Its local code requires
+both acceptance and a valid syndrome. The converse from a well-formed payload
+and valid syndrome requires the separately declared `SyndromeAdequacyGate`;
+it is not a consequence of the target's definition.
+
+The legacy [SheafCoherence](../../lean/Axioms/SheafCoherence.lean) profile
+also names restriction-shape compatibility, edge and triangle naturality,
+the actual coboundary-square equation, Hodge construction/orthogonality and
+finite, simplicial and connected nerve conditions. Its
+`CommittedCochainWellFormed S c` combines payload shape, these ambient
+conditions, binding to `S` and an actual decoded exactness witness. These are
+additional profile contracts: Paper 1's algebraic finite-incidence examples
+do not automatically instantiate every nerve or runtime condition. Once
+the actual complex equation and exactness witness are available, the decoded
+payload is a cocycle; a valid wire shape alone does not imply that conclusion.
+
+The existing
+[PayloadRealization and observed binding](../../lean/Proximity/Concrete/PluckerCochain/PublicBinding.lean)
+relate the full projective datum to the original proof-carrying payload under
+an explicit acceptance implication. This relation does not construct the
+payload bytes or prove a privacy property. A deterministic encoder is one
+specialization; the storage-facing relation also permits an already retained
+artifact without changing its identity. Any use of the commitment-sum
+syndrome additionally supplies the premise that accepted payloads have zero
+sum. Its binary residual is not identified with a native Hamming distance.
+
+#### 3.3. The systematic cellular source and complete coordinate profile
+
+The selected construction uses the existing
+[systematic interpolation](../../lean/Proximity/Core/Systematic.lean) and
+[SystematicCode cellular sheaf](../../lean/Sheaf/SystematicCode.lean).
+Fix prime `q`, an RS parameter object `P` on a finite evaluation index set
+`I` of cardinality `n`, and an information set `S` of cardinality
+`k = P.degreeBound`, with `0 < k <= n` and the declared injective evaluation
+points. Let `G_is` be the actual RS interpolation basis coefficient from
+information position `s` to evaluation position `i`, and let `Ghat_is` be its
+canonical integer lift. This is the existing `integerCoefficient`; it is not
+an independently chosen generator matrix.
+
+The base has two vertices, one edge and no faces. Each vertex stalk is
+`R^(S x Fin 2)` and the edge stalk is `R^(I x Fin 2)`, with the declared
+Euclidean inner products. Integral input coordinates are embedded as below. The tail
+restriction is zero; the head restriction is the real linear map obtained
+from `Ghat`. With incidence signs `-1,+1`, the actual coboundary is
+
+\[
+(\delta_0(a_{\rm tail},a_{\rm head}))_{i,j}
+  =\sum_{s\in S}\widehat G_{is}(a_{\rm head})_{s,j},
+\qquad \delta_1=0.
+\]
+
+An integral opening `a : S -> Fin 2 -> Z` is embedded in the head stalk,
+with zero tail. The source predicate
+[ModularExact](../../lean/Sheaf/SystematicCode/Modular.lean) asserts an
+integer carry in the same original edge coordinates:
+
+\[
+\exists a\;\exists m:I\times\operatorname{Fin}2\to\mathbb Z,
+\quad \forall i,j,\quad
+(\delta_0(\operatorname{integralOpening}(a)))_{i,j}
+  =z_{i,j}+q m_{i,j}.
+\]
+
+The integer coordinates on the right are embedded in the real edge stalk.
+This defines source validity using the actual cellular map. Paper 3 proves
+its equivalence with paired RS validity and the quantitative comparisons;
+those conclusions are not premises defining this construction.
+
+The existing [CoordinateLayout](../../lean/Protocol/Storage/CoordinateCodec.lean)
+then fixes both a geometric bijection
+`(I x Fin 2) ~= TotalCoord(edge stalks)` and a serialized-coordinate bijection
+to `Fin (2*n)`. For a payload `c`, `raw c i j` reads the corresponding original
+integer list entry, with the identity coefficient map. `layout.decode c`
+reads those same integers as real coordinates, and the extracted finite-field
+pair reduces those same entries modulo `q`. A bound `Context` supplies the
+required list length; using its real interpretation additionally retains the
+actual equality between `C.interpretation.decode C.cochain` and
+`layout.decode C.cochain`. Neither that equality nor the chosen ordering is
+reconstructed from a digest.
+
+The wire specialization is
+[CanonicalSystematic](../../lean/Protocol/Storage/CanonicalSystematic.lean):
+`q=12289`, `n=4096`, `k=1024`, the first 1024 evaluation positions as information
+set, and evaluation root `11^3` of order 4096. Its one edge stalk has **8192
+scalar coordinates**; the serialized count is a coordinate count, not the
+number of geometric edges. Its mathematical serializer fixes the canonical
+modulus and uses the zero topology tag; its complete layout is used by the
+original payload/context adapters. That raw-payload fixture supplies no
+authentication of a production topology or snapshot. The generic prime-`q` mathematical construction does not imply that
+every modulus is admitted by the current wire-facing `SupportedModulus`
+predicate. Finite packet/witness bytes, authentication and a runtime decoder
+refinement remain separate from this declared mathematical profile.
+
 ### 4. Three native metric levels
 
 The projection chain keeps a distance at each level. Neither a shared payload
@@ -219,7 +367,7 @@ type nor a shared root identifies those distances.
 
 | Level | Object | Native metric in the explicit modular profile | Validity locus |
 |---|---|---|---|
-| Cochain/local syndrome | The original serialized cochain coordinates | Fraction of changed scalar coordinates, normalized by \(2n\) | Actual integral cellular coboundaries modulo \(q\) |
+| Cochain | The original serialized cochain coordinates | Fraction of changed scalar coordinates, normalized by \(2n\) | Actual integral cellular coboundaries modulo \(q\) |
 | Plane | The two coordinates extracted at each of \(n\) positions | Fraction of changed whole pairs, normalized by \(n\) | Modularly exact integer planes in the selected layout |
 | RS | The reduced finite-field pair, followed by an affine challenge | Whole-pair RS distance; scalar RS distance after the challenge | The actual interleaved RS code, or scalar RS code respectively |
 
@@ -236,37 +384,25 @@ ordering. A different complete bijection does not by itself transport the
 geometric coboundary into the same indexed RS code; that compatibility must
 be recorded for any differently ordered geometric interpretation.
 
-For corresponding scalar and pair words, let \(h_C\) count scalar mismatches
-and \(h_P\) count mismatched pairs. Then
-
-\[
-h_P\le h_C\le 2h_P.
-\]
-
-After normalization and minimization over corresponding valid codewords, the
-native distances satisfy
-
-\[
-d_C\le d_P\le 2d_C.
-\]
-
-Reduction relates the integer plane validity locus to the actual RS locus.
-The new modular theorem holds for **all integer representatives**, because
-modular exactness is saturated under coordinatewise multiples of \(q\).
-Reduction cannot create a mismatch. In the other direction, lift a nearest
-field codeword by retaining each already matching whole received integer
-pair and choosing canonical representatives at the remaining positions.
-The lift is modularly exact and has exactly the field mismatch set. Hence
+[Paper 3's application analysis](../proximity-prize/sections/07-application-interface.tex)
+proves the comparison for the same original payload, complete layout and
+intrinsic modular validity locus:
 
 \[
 \boxed{d_C\le d_P=D_{\rm RS}\le2d_C}.
 \]
 
-A separate scalar-coordinate representative lift proves equality between
-\(d_C\) and the corresponding flattened finite-field code distance. These
-are distance-to-validity theorems using explicit lifts. They do not assert a
-pairwise isometry for arbitrary raw integer words. The earlier canonical-region
-plane/field equivalence remains a stronger pointwise statement on that region.
+The all-integer theorem retains coordinatewise saturation modulo `q` and the
+actual reduction map. Its representative-lifting and mismatch-count proofs
+belong to Paper 3. A separate scalar-coordinate result identifies `d_C` with
+the flattened finite-field code distance. These statements concern distance
+to validity; they do not identify arbitrary raw integer words by a pairwise
+isometry. This protocol consumes them with the declared normalization and
+layout/decoder hypotheses.
+
+The optional local-syndrome score `d_L` of §3.2 is a separate profile field.
+It is not a fourth native edit metric or automatically equal to `d_C`; any
+chain that uses it must retain its actual comparison and adequacy contracts.
 
 These directions matter. The existing chain's *near* contract has a target
 distance bounded above by its source score. The native scalar distance
@@ -276,14 +412,9 @@ can consume the explicitly scaled score \(2d_C\), since
 the factor belongs to the near contract. The far implication uses the native
 unit comparison \(d_C\le D_{\rm RS}\).
 
-The factor two is sharp for the actual RS family. Put the degree-\(k\)
-power word in the first column and zero in the second. Then, for
-\(0<k<n\),
-\[
-d_C=\frac{n-k}{2n},\qquad d_P=D_{\rm RS}=\frac{n-k}{n}.
-\]
-Thus a global native unit near inequality \(d_P\le d_C\) is false even
-for the selected RS code.
+Paper 3 also constructs the RS witness showing that the near factor two is
+sharp. Thus protocol policy cannot replace the bound by a global native unit
+near inequality `d_P <= d_C`.
 
 In the declared systematic realization, with its complete decoder, accepted
 real-exact payloads also have modular validity and zero distance at all three
@@ -333,10 +464,11 @@ exactness-distance comparison with zero additive loss against unrestricted
 RS distance. This does not exclude restricted profiles, additive losses or
 separately justified threshold theorems.
 
-The explicit systematic cellular profile lifts actual RS interpolation
-coefficients to integers. Its real coboundary is the resulting systematic
-generator. A bounded coordinate envelope and a no-wrap bound on the **integer
-syndrome** prove validity reflection and the coarse comparison
+The explicit systematic cellular construction lifts actual RS interpolation
+coefficients to integers; its real coboundary is the resulting systematic
+generator. Paper 3's restricted-source analysis uses a bounded coordinate
+envelope and a no-wrap bound on the **integer syndrome** to obtain validity
+reflection and the coarse comparison
 
 \[
 \rho_{\rm ex}(c)\le Bn\sqrt{2n}\,D_{\rm RS}(c).
@@ -359,8 +491,8 @@ The nonzero diagonal profile is also checked. If both columns equal the
 degree-\(k\) power evaluation word \(u\), then every
 \(\gamma\ne-1\) is MCA-good and preserves its scalar capacity distance.
 At every nonnegative tested radius, the bad set is exactly \(\{-1\}\),
-with uniform fraction \(1/q\). The generic proof divides a scalar same-set
-codeword witness by \(1+\gamma\), then uses it in both pair columns.
+with uniform fraction \(1/q\). The quantitative proof and its canonical
+specialization are Paper 3 results.
 The canonical mix has order \(4096\), so is noncancelling on this particular
 line; its concrete adapter is tracked separately from the generic theorem.
 
@@ -376,6 +508,27 @@ radius normalization, challenge experiment and root bindings. The existing
 candidate-indexed evidence and anchor joins preserve those statements and
 objects; they do not construct an omitted source comparison or turn an
 admissibility predicate into finality.
+
+#### Projection certificates and retained evidence
+
+The protocol consumes the existing projection objects rather than replacing
+them with hash-named surrogates:
+
+| Existing object | Protocol-owned obligation |
+|---|---|
+| [ProjectionChain.Chain](../../lean/Proximity/Concrete/ProjectionChain/Core.lean) | Identify the same original cochain, declared plane extraction and finite-field encoding with the authenticated context. The quantitative source-to-code comparisons are the Paper 3 results consumed under their stated hypotheses. |
+| [Stage certificates and StateBus](../../lean/Proximity/Concrete/Gates/Stage.lean) | Retain each exact predecessor and its map/output identity. The selected projections supply both restriction and syndrome naturality squares at the cochain-to-plane and plane-to-RS boundaries, local layout nondegeneracy, codeword alignment, payload well-formedness/list shape, the expected coordinate count, selected-index bounds, codeword preservation and the near-distance handoffs. The accumulated certificate records these supplied conditions; it does not establish them for arbitrary extraction/encoding maps or create a far-preservation theorem. |
+| [Hard and final gates](../../lean/Proximity/Concrete/Gates.lean) | Keep the source score, projective chart, full-shadow respect, semantic alignment, structural naturality and calibrated far witness explicit. Their concrete validation is distinct from a supplied certificate record. |
+| [EvidenceDatabase and evidence records](../../lean/Proximity/Concrete/GateEvidence.lean) | Bind actual certificates to authenticated slot digests and the evidence root. The seven slots are the accumulated stage certificate, source metric, Plücker metric, public-shadow respect, semantic alignment, structural naturality and final far witness. Binding/inclusion/root facts remain indexed runtime contracts. |
+| [Storage.Projection](../../lean/Protocol/Storage/Projection.lean) | Maintain the six ordered storage stages `cochain`, `plane`, `rs`, `hard`, `naturality`, `final`, preserving the exact preceding prefix and original `Context`. These six manifest stages are distinct from the seven evidence slots. |
+| [Checkpoint](../../lean/Protocol/Storage/Checkpoint.lean) and [ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean) | Seal the exact completed manifest, require its matching persistence receipt before local consumption, and join that same prefix and evidence database to the candidate's authenticated references. Backend atomicity, global freshness, erasure and finality are not consequences of this local lifecycle. |
+
+The source/pair metric and radius laws are supplied by the declared Paper 3
+profile, while this paper owns their authentication and consumption. A
+syndrome check, complete evidence array or matching root does not repair a
+missing source model, decoder equality or far-comparison premise. The
+positive-radius claims concern the raw received carrier; accepted exact
+anchors have zero decoded exactness distance under the same interpretation.
 
 The shared [HCP object crosswalk](../../docs/COCHAIN_PROXIMITY_TRACE.md#hcp-object-accounting-rotation-and-anonymity)
 accounts for semantic classes, admissible presentations, integral messages,
@@ -1020,8 +1173,9 @@ existing native certificates beyond them. None uses a cited-bound axiom or
 pages and changed pages have been inspected. Final formatting/artifact details
 and current PDF hashes belong to the
 [shared validation record](../../docs/MATH_STORAGE_VALIDATION.md), separately
-from the preserved pre-addition baseline. No publication or Palomar protected
-preflight has been performed.
+from the preserved pre-addition baseline. These are historical Paper 2
+implementation records. Paper 1's separate public release and protected
+preflight are recorded centrally; they do not certify this protocol draft.
 
 The actual Helfer/cellular/HCP observation wiring is a separate follow-up to
 that native-metric baseline. Its latest build and dependency outcomes belong
@@ -1073,8 +1227,10 @@ the earlier counts are not validation of the added modules.
 
 “Standard-only” means that the actual axiom report uses no dependencies beyond
 `propext`, `Classical.choice` and `Quot.sound`; some elementary identities use
-a subset. The concrete canonical reports additionally expose the existing
-generated `_native.native_decide.ax_` certificates. These checks cover the
+a subset. In that historical native-metric baseline the concrete canonical reports
+additionally exposed generated `_native.native_decide.ax_` certificates. The
+subsequent kernel-arithmetic update removed that native trust from the current
+selected canonical reports, as recorded centrally. These audits cover the
 listed endpoints, not every declaration or a complete protocol security claim.
 
 The completed native-metric baseline's static inventory contains 234 modules

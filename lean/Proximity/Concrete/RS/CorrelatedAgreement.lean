@@ -8,7 +8,9 @@ public import Proximity.Concrete.RS.ListDecoding
   Correlated agreement and mutual correlated agreement.
 
   Paper correspondence:
-  - Paper 1 Section 6: CA/MCA paper-facing definitions.
+  - Paper 3: correlated-agreement and same-set MCA events on finite codes.
+  - Paper 2 must supply fixed-word/challenge ordering and transcript binding
+    for any protocol interpretation.
 
   This module keeps count-based finite lemmas as proof plumbing, and exposes
   fractional/error-rate definitions for paper-facing CA/MCA statements.
@@ -160,7 +162,7 @@ noncomputable def paperCABadParameterSet
         ¬ (C.interleaved (Fin 2)).CloseAt δint
             (pairWord L.base L.direction)
 
-/-- Membership in the paper Definition 4.1 CA bad-challenge set. -/
+/-- Membership in the paper cited Definition 4.1 CA bad-challenge set. -/
 theorem mem_paperCABadParameterSet
     (C : BlockCode ι α)
     (δfld δint : ℝ)
@@ -204,7 +206,7 @@ noncomputable def paperMCABadParameterSet
                 (pairWord L.base L.direction) S
 
 omit [DecidableEq α] in
-/-- Membership in the paper Definition 4.3 MCA bad-challenge set. -/
+/-- Membership in the cited Definition 4.3 MCA bad-challenge set. -/
 theorem mem_paperMCABadParameterSet
     (C : BlockCode ι α)
     (δ : ℝ)

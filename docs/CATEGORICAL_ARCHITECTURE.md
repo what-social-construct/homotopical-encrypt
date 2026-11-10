@@ -277,7 +277,7 @@ efficient finite-encoding algorithm.
 |---|---|---|
 | Presentation | Cellular sheaf, coordinate/basis conventions, inner products, optional integral structure and cochain. | An arbitrary change of basis requires transport of these structures; the current Hodge transport theorem assumes degreewise isometry. |
 | Grassmannian/Plucker | Harmonic subspace and its full projective exterior coordinate. | Projective rescaling forgets the frame's scalar, not the subspace. It does not supply a geometric-to-Hamming distance comparison. |
-| Public observation and authentication | Selected shadow, cochain artifact, digest, proof and manifest. `HashedPluckerShadow` retains both the mathematical shadow and digest as semantic fields. | Paper 1 §5 fixes private Hodge data, a public residue payload and selective opening/proof roles; a concrete encoding/profile still selects the released fields. A digest is not automatically a recoverable projective coordinate or a distance-preserving map. |
+| Public observation and authentication | Selected shadow, cochain artifact, digest, proof and manifest. `HashedPluckerShadow` retains both the mathematical shadow and digest as semantic fields. | Paper 1 §§5--6 establish the mathematical observation and full-projective recovery boundaries. Paper 2 fixes the concrete profile of private Hodge data, released residue payload and selective opening/proof roles. A digest is not automatically a recoverable projective coordinate or a distance-preserving map. |
 
 A moduli-groupoid or stack organization is a possible later layer: retain
 presentations together with their actual equivalences and automorphisms.
@@ -444,7 +444,7 @@ snapshot-bound original C1 artifact
   -> consume the volatile run
 ```
 
-This protocol layer follows the nested Paper 1 proof objects
+This protocol layer follows Paper 2's nested projection/evidence objects
 `PluckerCochainState -> CochainPlaneState -> StateBus` and then
 `HardGateEvidenceRecord -> NaturalityGateEvidenceRecord ->
 CalibratedFinalEvidenceRecord`. It stores those outputs; it does not recompute

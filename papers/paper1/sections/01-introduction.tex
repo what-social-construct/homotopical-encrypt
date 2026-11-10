@@ -43,7 +43,8 @@ onto \(W\) preserves the closest vectors of \(\Lambda\). That bridge does not
 make public-data HCP a known-lattice problem: public homotopy-class data
 may be compatible with distinct hidden operators, distinct kernels, and
 different harmonicity judgments.  The paper isolates this boundary and then
-separates it from the finite verifier-facing projection artifacts used later.
+separates it from the protocol observations and coding applications developed
+in the companion papers.
 The public classifier supplies the realized class value \(\alpha\).
 The full cochain \(b=h+e\) is separate from the accepted exact commitment
 payload: its decoded exact cochain has zero harmonic projection in its
@@ -55,11 +56,6 @@ The selected observation need not present \(\Delta_1\) or
 \(\ker(\Delta_1)\). If full Pl\"ucker coordinates of the operative kernel
 are additionally disclosed, however, they determine its fixed-metric
 projector and hence the HCP target from \(b\).
-The fibration ID is the spectral fingerprint
-\(\operatorname{Spec}_{\mathrm{multi}}(\Delta_1)\), obtained only after the
-relevant Hodge data have been recovered or certified; it is not part of the
-public classifier value.
-
 The principal notation is fixed globally as follows. Symbols used only inside
 a single proposition or construction are defined locally.
 \begin{table}[ht]
@@ -76,12 +72,10 @@ a single proposition or construction are defined locally.
     \(A_\alpha=[x]_\pi\) & fiber of hidden representatives with public label \(\alpha\) \\
     \((\alpha,b)\) & public HCP observation \\
     \(\Delta_A:A\to A\times A\) & diagonal map in the fibrational semantics \\
-    \(P_X\), \(F:P_X\to\mathsf{Vect}_{\R}\) & finite cell poset and its face-to-coface cellular sheaf \\
     \(a\in C^0,\ c=\delta_0a\in C^1\) & degree-zero opening and committed exact one-cochain \\
     \(\delta_0,\delta_1,\Delta_1\) & adjacent coboundaries and degree-one Hodge--Laplacian \\
     \(\ker(\Delta_1),\ P_H\) & harmonic subspace and harmonic projection \\
     \(\Delta_W=I-P_W\) & kernel-normalized projection operator associated with \(W\) \\
-    \(\mathcal L,\ \ell\) & local syndrome target and affine MCA line, respectively \\
     \hline
   \end{tabular}
   \caption{Core notation used across the semantic and HCP layers.}
@@ -106,12 +100,9 @@ This paper develops this boundary through the following statements.
     one homological public observation has distinct nonzero harmonic targets;
     a weighted pair shares \(b=(1,2)\) with integer coefficients two and one,
     with a unique CVP answer for each privately presented lattice.
-  \item The supporting formal framework:
-    fibrational identity, homotopy classes, exact Hodge/cochain invariants,
-    spectral/Tsirelson admissibility, and Heyting-style public judgments.
-  \item A projection chain through Pl\"ucker coordinates and cochain commitments to a
-    canonical Reed--Solomon endpoint, with a conditional far-separation gate and
-    an MCA bad-challenge bound imported at an explicit cited theorem boundary.
+  \item Observation boundaries: exact-component extraction can lose full
+    Hodge residual, whereas full projective data of the operative kernel
+    determine its fixed-metric projector and harmonic target.
 \end{enumerate}
 
 Finite Hodge theory follows the cellular-cochain framework of
@@ -125,16 +116,17 @@ objects with the constructed observation ambiguities and recovery boundaries.
 It establishes neither an asymptotic CVP-hardness reduction nor a sampled
 encryption-security theorem. The independently stated Lean entry covers the
 six Hodge/CVP groups and two observation-boundary groups in its source
-crosswalk; the broader spectral, oracle and coding interfaces retain their
-separately stated assumptions and formalization status.
+crosswalk; the semantic fragment and observation maps retain their explicit hypotheses.
 
 The companion manuscript \emph{Capacity-Radius Proximity for Smooth-Domain
 Reed--Solomon Codes} \cite{vanDerVlugt2026proximity} develops the universal
 list-decoding and MCA results independently of HCP. The present paper supplies
-the HCP foundations and the application-specific projection interface. Shared
-coding definitions connect the two papers; the companion's coding theorems do
-not supply the source-to-code far-separation witness required here.
+the HCP foundations and mathematical observation boundaries. Paper~2
+\cite{vanDerVlugt2026protocol} owns the concrete cochain commitment, public
+view and protocol evidence. Paper~3 owns the coding and quantitative
+projection analysis. Their necessary shared definitions are cited rather
+than repeated as new contributions; a source-to-code application still
+requires its own metric comparison.
 
-The corresponding Lean definitions, reductions, gates, theorem boundaries,
-paper-to-Lean cross-reference, and file-by-file source coverage are recorded in
-the appendices.
+The corresponding Lean definitions, comparisons, observation boundaries,
+and the selected statement-to-Lean crosswalk are recorded in the appendices.

@@ -8,8 +8,9 @@ public import Axioms.SpectralBounds
   Spectral gate.
 
   Paper correspondence:
-  - Paper 1 Section 4: spectral admissibility as an axiom/interface surface.
-  - Paper 2: Proof-of-Value gate policy and runtime boundary behavior.
+  - Paper 2: spectral admissibility and Proof-of-Value runtime policy.
+  - The gate is a named predicate, not a quantitative hardness statement in
+    Paper 1.
 
   The PoV/Tsirelson window is a hard admissibility predicate. Runtime boundary
   handling for near-boundary values lives in the oracle gate.

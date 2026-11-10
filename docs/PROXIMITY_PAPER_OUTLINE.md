@@ -1,40 +1,29 @@
 # Proximity Section Design Outline
 
-This is the detailed design outline for Section 6 of Paper 1. It preserves the
-application projection reasoning compressed into that manuscript section.
-The separate standalone coding paper now lives in
-[`papers/proximity-prize`](../papers/proximity-prize/README.md); its scope,
-Lean correspondence, and remaining work are tracked in its
-[`SEMANTIC_PARITY.md`](../papers/proximity-prize/SEMANTIC_PARITY.md).
+This is a preserved projection-design and implementation checklist. Its older
+chapter numbering describes the former broad Paper 1 draft; it is not the
+current manuscript outline. The [ownership table](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table)
+is authoritative for the current three-paper split.
 
-For the whole-paper narrative, including the hardness-first introduction and
-the three-paper scope split, see [`PAPER_OUTLINE.md`](PAPER_OUTLINE.md). This
-file is the Section 6 component outline.
+Paper 1 now keeps HCP/Hodge/CVP foundations, observation limits and full
+projective recovery. Paper 2 owns the concrete cochain/commitment, codec,
+stage/evidence and storage profile. Paper 3 owns coding, radii and quantitative
+projection comparisons. Their current sources are `papers/paper1/main.tex`,
+`papers/paper2/DRAFT.md` and `papers/proximity-prize/main.tex`.
 
-The application manuscript source of truth is
-`papers/paper1/sections/06-rs-mca-projection.tex`. It presents the formal
-projection architecture, canonical Reed--Solomon endpoint, paper-facing MCA
-surface, and trusted-boundary inventory as the verifier-facing part of the HCP
-paper. Its source-to-RS bridge obligations are distinct from the standalone
-paper's universal coding results.
+## Former Section 6 Material: Current Disposition
 
-## Current Section 6 Crosswalk
-
-| Current Paper 1 subsection | Material recovered from this design outline |
+| Former material | Current manuscript owner |
 |---|---|
-| 6.1 End-to-End Projection Contract | Introduction, background, source proximity, and the main theorem shape. |
-| 6.2 Grassmannian Source And Plucker Quotient | Source Grassmannian geometry and projective/Plucker quotienting. |
-| 6.3 Committed Cochains And Local Syndrome | Plucker-to-cochain realization, sheaf-relative accepted cocycles, public binding, and syndrome adequacy. |
-| 6.4 Plane Extraction And RS Encoding | Plane shadow and the semantic-to-finite-field encoding boundary. |
-| 6.5 Composed Chain, Gates, And Evidence | Chain composition, hard/far gates, certificates, and traceable runtime evidence. |
-| 6.6 Finite Codes, RS Targets, And MCA | Generic coding, list decoding, CA/MCA, and the paper alphabet. |
-| 6.7 Canonical Reed--Solomon Endpoint | Canonical field/domain/metric/radius data, cited bounds, and calibrated bridge certificates. |
-| 6.8 Canonical MCA Corollary | Width-one correspondence, the MCA bound, and the final proximity corollary. |
+| Source observation and full Plucker subspace/projector recovery | Paper 1 §6 |
+| Cochain realization, payload, local syndrome and extraction/codec | Paper 2 §§2--3 |
+| Protocol stage certificates, gates, evidence and persistence | Paper 2 §6 |
+| Generic calibrated metric comparisons and near/far directions | Paper 3 §7; explicit contracts consumed by Paper 2 |
+| Finite words, RS/list/MCA, canonical numerical constraints and radii | Paper 3 §§2--7 |
 
-This eight-part organization is preferable for Paper 1. The thirteen-part
-decomposition below remains useful as an implementation and proof-obligation
-checklist because it preserves obligations compressed in the manuscript, but
-it is not the current paper table of contents.
+The older design details below remain useful for tracing implementation
+obligations. They do not enlarge any manuscript's selected proved claims or
+reassign the protocol/coding material to Paper 1.
 
 ## Provenance And Scope
 
@@ -88,8 +77,10 @@ MCA/list-decoding surfaces, metric/radius normalization, and a certificate
 structure for hard gates and traceable runtime evidence. External
 Johnson/list-decoding and BCHKS MCA bounds are isolated in a cited trusted
 boundary. The remaining project-specific obligation is a concrete
-source-to-RS far-separation witness; current Paper 1 exposes that obligation
-explicitly rather than presenting it as already discharged.
+source-to-RS far-separation witness. In the current ownership split, Paper 3
+states quantitative comparisons for its declared source profiles, while
+Paper 2 retains the construction and gate/evidence contracts. An additional
+source model still needs its own far-separation theorem.
 
 ## Claims And Nonclaims
 

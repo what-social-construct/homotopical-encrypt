@@ -8,8 +8,10 @@ public import Mathlib.Init
   Foundational assumptions for the cochain/Hodge surface.
 
   Paper correspondence:
-  - Paper 1 Section 4: foundational cochain and Hodge axiom surface.
-  - Paper 1 appendix ledger: Lean theorem-surface correspondence.
+  - Paper 1 Section 2 uses the proved finite cellular Hodge construction in
+    Sheaf/Hodge.lean.
+  - This separate assumption-oriented interface supplies named cochain/Hodge
+    contracts for Paper 2; it does not replace those finite proofs.
 
   This module is intentionally assumption-oriented: it captures the exact
   preconditions the implementation relies on, even where full Lean proofs are

@@ -9,7 +9,10 @@ public import Mathlib.Algebra.Order.Archimedean.Real.Basic
   Canonical received-word metric and radius normalization.
 
   Paper correspondence:
-  - Paper 1 Section 6: Johnson-radius and received-word metric normalization.
+  - Paper 3: received-word distance normalization and the canonical
+    Johnson-radius comparison.
+  - The source metric and protocol interpretation remain explicit inputs;
+    equal names do not identify other cochain or HCP distances.
 
   The verifier-facing metric is relative Hamming distance from a received word
   to the RS code. Absolute Hamming distance remains as a low-level finite

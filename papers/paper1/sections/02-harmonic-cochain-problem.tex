@@ -340,15 +340,16 @@ to exactness with the full HCP residual.
 \end{definition}
 
 Thus \((\alpha,b)\) is the protocol-independent vector-level abstraction of
-the concrete artifact-and-commitment layer in
-\cref{sec:public-artifacts-commitments}: \(\alpha\) records the public
+the artifact-and-commitment layer developed in Paper~2
+\cite{vanDerVlugt2026protocol}: \(\alpha\) records the public
 classifier value, while \(b\) is the full cochain actually released by the
 selected observation profile. Acceptance of an exact payload, an opening of
 its exact component, or a proof about that component does not by itself
 expose \(b\). Instantiating the vector-level interface requires a relation
 binding the full sample to the artifact and an explicit disclosure or
-specified extraction of that sample. The bound-observation construction in
-\cref{sec:public-artifacts-commitments} records this distinction. The
+specified extraction of that sample. \Cref{sec:observation-boundaries}
+records the mathematical distinction; Paper~2 supplies its concrete
+bound-observation contracts. The
 hidden-kernel ambiguity comparison uses the resulting mathematical pair;
 equality of a larger artifact or storage view requires its own hypotheses.
 
@@ -595,15 +596,17 @@ The computational model separates three layers.
 \begin{enumerate}[label=(\roman*)]
   \item The mathematical layer defines public projections, hidden operator
     fibers, harmonicity, and kernel ambiguity.
-  \item External hardness assumptions and cited coding-theory theorems enter at
-    explicitly labeled theorem boundaries.
+  \item The external known-lattice CVP hardness interface records a
+    computational assumption, separate from the proved exact-recovery
+    obstruction; no asymptotic hardness reduction is asserted.
   \item Runtime requirements such as byte parsing, canonical encodings, hash
     domain separation, proof verification, and state transition are outside the
     mathematical HCP definition.
 \end{enumerate}
 
-This paper treats the first two layers. The runtime layer belongs to the
-subsequent protocol paper.
+This paper proves the mathematical comparisons and states the external CVP
+interface for context. Paper~2 owns concrete protocol and runtime claims;
+Paper~3 owns coding and proximity analysis.
 
 \subsection*{Lean Cross-Reference}
 

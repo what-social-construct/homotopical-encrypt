@@ -8,16 +8,20 @@ public import Proximity.Application.Projection
   Plucker-coordinate shadow candidates.
 
   Paper correspondence:
-  - Paper 1 Section 6: Plucker public-shadow interface.
+  - Shared abstract shadow vocabulary, with full exterior/projective recovery
+    in Paper 1 Section 6 through the concrete owner.
+  - Paper 3 can use a declared shadow as a projection source; this legacy
+    interface alone supplies no exterior reconstruction theorem.
 
   The retired Python prototype has a concrete Plucker layer in
   `docs/archive/python/src/primitives/grassmann.py`:
   `to_plucker`, `from_plucker`, `plucker_inner_product`, and
   `plucker_distance`, built from `wedge_k` in the archived `algebra.py`.
 
-  This Lean file does not formalize exterior powers yet. It records the
-  algebraic-shadow interface needed to use Plucker coordinates as a candidate
-  public projection of a hidden Grassmannian/Hodge object.
+  This legacy file leaves the raw coordinate and shadow operations abstract.
+  The actual finite exterior-power/projective construction lives in
+  `GrassmannianPlucker` and its concrete reconstruction owner. This interface
+  records only the candidate shadow operations and their supplied laws.
 -/
 
 namespace Hcrypt

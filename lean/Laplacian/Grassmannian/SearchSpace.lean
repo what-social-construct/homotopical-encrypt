@@ -8,8 +8,10 @@ public import Laplacian.Projection
   Grassmannian Laplacian search space.
 
   Paper correspondence:
-  - Paper 1 Section 2: HCP hidden-kernel search space.
-  - Paper 1 Section 3: comparison with explicitly presented CVP instances.
+  - Paper 1 Sections 2--3 use the projection model as background for
+    hidden-kernel and explicit-lattice comparison.
+  - This module's wider Grassmannian search-space facts are supporting
+    geometry, not an adversary or asymptotic hardness experiment.
 
   This file names the family Ω_k of Laplacians induced by k-dimensional
   harmonic subspaces and proves the basic shape facts needed downstream.

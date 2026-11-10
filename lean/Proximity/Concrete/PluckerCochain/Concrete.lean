@@ -8,8 +8,10 @@ public import Proximity.Concrete.PluckerCochain
   Concrete Plucker-to-committed-cochain bridge.
 
   Paper correspondence:
-  - Paper 1 Section 6: concrete Plucker-to-cochain/local-syndrome bridge.
-  - Paper 1 Section 5: consumes the cochain commitment payload shape.
+  - Paper 2: a supplied encoder/realization relating a projective shadow to
+    the original commitment payload.
+  - Paper 3: its mathematical local-syndrome/codeword consequences under the
+    declared profile; full Plucker recovery remains Paper 1 Section 6.
 
   This file owns the first concrete payload boundary after the projective
   Plucker shadow. It does not choose a plane shadow or an RS field. The output

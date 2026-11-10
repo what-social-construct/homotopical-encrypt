@@ -10,9 +10,10 @@ public import Axioms.ZKP
   Proof-carrying public artifacts.
 
   Paper correspondence:
-  - Paper 1 Section 5: proof-carrying artifacts expose well-formed payloads
-    without becoming the mathematical witness.
-  - Paper 2: proof-carrying verification as protocol evidence.
+  - Paper 2: proof-carrying payload/statement contracts and their consumption
+    as protocol evidence.
+  - Paper 1 Section 5 distinguishes those public statements from the
+    mathematical full Hodge sample.
 
   Core mathematical objects should not become hashes or SNARKs themselves.
   Instead, runtime/public layers carry commitments and certificates that bind

@@ -4,13 +4,15 @@ module
 Tsirelson-bound formalization for the homotopical-encrypt Lean workspace.
 
 Paper correspondence:
-- Paper 1 Section 4: spectral/Tsirelson public judgment interface.
-- Paper 2: oracle and Proof-of-Value gate policy.
+- Supporting spectral/Grassmannian geometry for Paper 2's oracle and
+  Proof-of-Value construction contracts.
+- This wider spectral layer is outside Paper 1's selected Hodge/CVP and
+  observation results.
 
 Role in the architecture:
   This file is the formal geometry/edge-case layer for the PoV construction.
   It is not the runtime oracle implementation and it is not the core HCP
-  hidden-operator hardness proof. Its job is to make the
+  exact-recovery and observation obstruction. Its job is to make the
   Grassmannian/Laplacian objects precise enough that the spectral gate has a
   mathematical target: admissible operators, kernels, projections, bounds, and
   ambiguity/identifiability edge cases.

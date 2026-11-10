@@ -8,18 +8,33 @@ drafts. The public-review package preserves the repository layout:
 
 The project [MIT license](../LICENSE) is included at the package root.
 
+**Local manuscript revision, 2026-11-09.** Paper 1 is now 37 pages and focuses
+on HCP/Hodge/CVP, the actual Helfer homological-test fragment and mathematical
+observation/Plücker recovery boundaries. Paper 2's working draft owns the
+concrete commitment/codec, visibility, gates/evidence and storage construction.
+Paper 3 is 31 pages and owns quantitative RS/proximity, calibration and metric
+bridges. The accompanying 93 Lean files change comments only; validation for
+the revised source snapshot remains to be recorded.
+
+The earlier Paper 1-only public commit
+`66e1ad2cb726d3dd816461e4f76b1d0d9147a46d` and its protected preflight PASS
+are exact historical evidence for the earlier 101-page manuscript and source
+bytes. The revised manuscripts and comments have not been published or
+protected-preflighted. No Palomar intake or registration is authorized.
+
 ## Start here
 
 | Surface | Entry point | Claim boundary |
 |---|---|---|
 | Paper 1: hidden operators and HCP | [HCP.lean](HCP.lean), [Hardness.lean](Hardness.lean), [CVP.lean](CVP.lean) | Hidden-operator ambiguity, public-class comparisons and discrete-CVP relationships, including the [actual integral cellular family](HCP/README.md) in a proved homological-test fragment. These structural results are not a computational security theorem; CVP hardness remains an external assumption. |
-| Paper 1 independent entry | [Challenge/Solution, metadata and crosswalk](Palomar/PaperOne/README.md) | Eight selected manuscript groups. Local statement/definition comparison, Lean/NanoDa and all 46 selected axiom reports pass. The macOS diagnostic is separate from protected Linux preflight, which has not run. |
-| Paper 3 independent entries | [Coding](Palomar/PaperThree/README.md), [original-cochain application](Palomar/PaperThree/Application/README.md) | Both full local definition comparisons and Lean/NanoDa replays pass; all 52/22 target audits are standard-only. The same original payload/context and all three metrics are retained. Protected Linux preflight remains separate. |
+| Paper 1 independent entry | [Challenge/Solution, metadata and crosswalk](Palomar/PaperOne/README.md) | Eight selected manuscript groups. Historical local statement/definition comparison, Lean/NanoDa and all 46 selected axiom reports pass. Protected Linux preflight also passed for exact public commit 66e1ad2; it has not run on the revised local manuscript/comments. |
+| Paper 3 independent entries | [Coding](Palomar/PaperThree/README.md), [original-cochain application](Palomar/PaperThree/Application/README.md) | Both full local definition comparisons and Lean/NanoDa replays passed before the local revision; all 52/22 target audits are standard-only. The same original payload/context and all three metrics are retained. Neither configuration has a protected Linux preflight. |
 | Cellular-sheaf and Hodge mathematics | [Sheaf.lean](Sheaf.lean), [Laplacian.lean](Laplacian.lean), [Helfer.lean](Helfer.lean) | Concrete cochain/Hodge constructions and stated transport/invariance results. Supplied realization and invariance hypotheses remain explicit. |
 | Paper 3: universal coding results | [ProximityPrize.lean](ProximityPrize.lean), [hierarchy guide](Proximity/README.md) | All nine named generic coding statements have Lean endpoints, including the actual all-parameter field family, phase split, real thresholds and attained distances. Its 33-module closure does not import the project's cited RS-bound axioms or require the protocol implementation. Application profile obligations remain separate. |
-| Cochain-specific proximity application | [Proximity.lean](Proximity.lean), [object trace](../docs/COCHAIN_PROXIMITY_TRACE.md) | Original-payload extraction and an explicit modular cellular profile with `d_C ≤ d_P = D_RS ≤ 2d_C`, a capacity-far payload and diagonal-family challenge guarantee. Euclidean/HCP and arbitrary fixed-challenge comparisons retain their separate boundaries. |
+| Paper 3: quantitative cochain proximity application | [Proximity.lean](Proximity.lean), [object trace](../docs/COCHAIN_PROXIMITY_TRACE.md) | Quantitative analysis of Paper 2's original-payload extraction and explicit modular cellular construction: `d_C ≤ d_P = D_RS ≤ 2d_C`, a capacity-far payload and diagonal-family challenge guarantee. Euclidean/HCP and arbitrary fixed-challenge comparisons retain their separate boundaries. |
+| Paper 2: commitment and codec construction | [CochainCommitment](Axioms/CochainCommitment.lean), [SystematicCode](Sheaf/SystematicCode.lean), [CoordinateCodec](Protocol/Storage/CoordinateCodec.lean) | Actual payload, integral source restriction, complete coordinate profile and exact/modular validity contracts. Paper 3 proves their quantitative metric comparison; authentication, finite wire encoding and cryptographic security remain explicit obligations. |
 | Paper 2: bounded protocol core | [Protocol/Core.lean](Protocol/Core.lean), [core guide](Protocol/README.md) | A conservative finite-resource transition, computed successor, conservation/replay endpoints, candidate-indexed evidence and same-proposal quorum attachment, under explicit valuation, authorization, snapshot and authentication profiles. See the [current validation record](../SEMANTIC-PARITY.md#current-protocol-validation). [Protocol.lean](Protocol.lean) retains the broader compatibility surface. |
-| Sheaf storage and projection gates | [Protocol/Storage/Core.lean](Protocol/Storage/Core.lean), [storage guide](Protocol/Storage/README.md) | One original snapshot/cochain context, six typed projection/evidence levels, exact manifests/receipts, and the same-candidate history anchor with actual gate-database inclusion. Authentication/codec profiles remain explicit; anchoring does not supply a far witness. |
+| Paper 2: sheaf storage and projection gates | [Protocol/Storage/Core.lean](Protocol/Storage/Core.lean), [storage guide](Protocol/Storage/README.md) | One original snapshot/cochain context, six typed projection/evidence levels, exact manifests/receipts, and the same-candidate history anchor with actual gate-database inclusion. Authentication/codec profiles remain explicit; anchoring does not supply a far witness. |
 | Recipient recovery and rotation | [Protocol/Ephemeral.lean](Protocol/Ephemeral.lean), [actual axis rotation](HCP/AxisRotation.lean) | Integral Hodge/sample transport and same-integer-coefficient recovery by either target or retained base key. Private delivery receipts and original bound-sample migration keep channel, authorization and decoder contracts explicit; no efficient codec, secure channel or lifecycle/privacy theorem is inferred. |
 | Conditional owned-resource transfer | [Protocol/Transfer.lean](Protocol/Transfer.lean) | Fixed-snapshot unit resource transfer, public input-derived nullifier and exact metadata/intent checks. Primitive results at the trusted decoder derive the existing update, with typed acyclic roots and original artifact/manifest/history joins. No new secure primitive, Rust refinement or consensus finality is claimed. |
 | One-shot integrity experiment | [Protocol/Transfer/Security.lean](Protocol/Transfer/Security.lean) | Shared soundness-free checks reduce actual accepted-invalid attempts to authorization/payload failures. Explicit released view, auxiliary input and one PMF give their conditional sum bound, without independence or a new primitive estimate. |
@@ -35,6 +50,11 @@ The manuscripts are [Paper 1](../papers/paper1/README.md) and
 [Paper 3](../papers/proximity-prize/README.md). Paper 2 currently has a
 [initial manuscript text](../papers/paper2/DRAFT.md), [scope map](../papers/paper2/README.md), [bounded completion plan](../papers/paper2/SCOPE.md)
 and working bibliography; it has no TeX manuscript or PDF yet.
+Its [construction ledger](../papers/paper2/SCOPE.md#construction-and-contract-ownership)
+identifies the existing carriers and the supplied conditions retained after the
+split. Paper 1's minimal mathematical definitions may be recalled by the
+companions with citations; the detailed protocol and quantitative contributions
+have their separate owners.
 
 ## Reproduce the Lean checks
 
@@ -62,7 +82,7 @@ protocol core, `lake build Protocol.Storage.Core` for the storage/gate adapters,
 or `lake build Protocol.Storage.Retrieval` for the optional native-query/read
 profiles. The Lean build needs the pinned Lean/Mathlib dependencies; Rust
 and Python prototypes are not build dependencies. The three independent entry libraries are
-nondefault: build their Solutions explicitly. The96 intentional theorem
+nondefault: build their Solutions explicitly. The 96 intentional theorem
 placeholders are isolated in the three Challenges; Solutions and implementation
 sources contain no proof holes. The
 [entry validation record](../docs/MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
@@ -104,7 +124,7 @@ The former `native_decide` arithmetic certificates now have kernel proofs;
 no active source calls remain. Historical Lean 4.35 reports contain generated
 `_native.native_decide.ax_` axioms, while older 4.24 reports used
 `Lean.ofReduceBool` and `Lean.trustCompiler`. The
-[current audit](../docs/MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
+[last completed audit](../docs/MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
 has 975 standard-only reports and retains those older records as dated
 evidence, distinct from the seven isolated cited assumptions. Inspect important
 endpoints with `#print axioms` in a scratch file importing the relevant

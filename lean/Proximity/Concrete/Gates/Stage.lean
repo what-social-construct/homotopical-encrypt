@@ -8,7 +8,10 @@ public import Proximity.Concrete.ProjectionChain.Core
   Stage-gate certificates for a projection chain.
 
   Paper correspondence:
-  - Paper 1 Section 6: projection-stage certificates.
+  - Paper 2: accumulated projection-stage certificates and their binding to
+    the selected original context.
+  - Paper 3: the underlying mathematical projection maps and metric handoff
+    statements.
 
   `ProjectionChain.Core` owns the composed maps. This file owns the accumulated
   stage certificates for those maps:

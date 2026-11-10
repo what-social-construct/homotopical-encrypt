@@ -9,9 +9,11 @@ public import Axioms.CochainCommitment.Payload
   Sheaf Coherence Axioms
 
   Paper correspondence:
-  - Paper 1 Section 4: exact structural invariants and sheaf-coherence
-    preconditions.
-  - Paper 1 Section 6: consumed by the proximity cochain/global-section bridge.
+  - Paper 2: supplied structural-coherence, simpliciality, connectedness and
+    accepted-payload contracts for the chosen protocol profile.
+  - Paper 1's finite signed-incidence Hodge model does not automatically
+    instantiate these stronger coherence fields. Paper 3 states its own
+    source-profile hypotheses.
 
   Dedicated interface for runtime sheaf-coherence checks.
 

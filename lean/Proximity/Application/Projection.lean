@@ -8,10 +8,10 @@ public import Mathlib.Basic.Real.Basic
   Generic proximity projection vocabulary.
 
   Paper correspondence:
-  - Paper 1 Section 6: abstract lossy projection from sheaf/cochain data to
-    code/evaluation shadows.
-  - Paper 1 Section 5: projection begins only after the public artifact stack is
-    fixed.
+  - Paper 3: neutral source-to-code projections and near-side distance
+    comparison.
+  - Paper 2 fixes concrete observation/extraction contracts. Paper 1 retains
+    only a brief conditional application boundary.
 
   This file is intentionally lightweight. It names the abstract projection from
   a sheaf-side received-word/cochain view to a code/evaluation shadow without

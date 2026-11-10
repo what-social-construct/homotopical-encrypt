@@ -9,7 +9,10 @@ public import Proximity.Application.Problem
   Committed-cochain to plane-shadow projection.
 
   Paper correspondence:
-  - Paper 1 Section 6: cochain-to-plane semantic-alignment stage.
+  - Paper 3: the mathematical cochain-to-plane map and its source-distance
+    handoff.
+  - Paper 2 supplies the original payload/extraction context; no new
+    commitment carrier is introduced.
 
   This file owns the semantic midpoint between local cochain/syndrome data and
   coding-theoretic interpretations. A committed cochain is projected to a

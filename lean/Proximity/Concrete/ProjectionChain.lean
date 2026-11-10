@@ -8,9 +8,9 @@ public import Proximity.Concrete.ProjectionChain.Core
   Projection-chain import surface.
 
   Paper correspondence:
-  - Paper 1 Section 6: staged projection chain from FrameWitness to canonical
-    Reed--Solomon target.
-  - Paper 1 appendix ledger: projection-chain theorem-surface row.
+  - Paper 3: mathematical projection composition into one evaluation map.
+  - Paper 2 consumes that map through stage/gate certificates and
+    original-object evidence contracts.
 
   The projection-chain package owns the typed projection map orchestration:
   Plucker/cochain data is composed through the plane-shadow and RS received-word

@@ -1,40 +1,27 @@
-\section{Future Directions}
+\section{Scope and Further Work}
 
-\subsection{Protocol Boundary}
+\subsection{The Three-Paper Boundary}
 
-The present paper stops at the mathematical and formalization boundary. A
-subsequent protocol paper should turn the commitment, oracle, proof-carrying,
-identity, storage, and proximity surfaces into explicit adversary games and
-executable verification paths. The concrete protocol must specify which
-certificates are public evidence, which witnesses remain private, and which
-runtime failures cause rejection, hold, or re-evaluation.
+Paper~2 \cite{vanDerVlugt2026protocol} develops the concrete cochain commitment,
+observation and encoding profile, verification evidence, recipient rotation
+and accepted state transitions. Paper~3 \cite{vanDerVlugt2026proximity}
+develops list decoding, MCA, radii and quantitative projection comparisons.
+Those manuscripts reuse the Hodge and semantic objects here without changing
+the public input of the HCP statements. Protocol privacy must account for its
+whole released view, and an additional source metric needs its own bridge.
 
-On the identity side, the hidden-representative/public-classifier split should
-be developed into explicit class-membership, unlinkability, and nullifier
-properties. Public identity data should remain class values, hashes, proofs, or
-oracle judgments; the private side should retain fibration representatives,
-transport data, and the Hodge operator selecting the operative kernel.
+\subsection{Complexity and Semantic Refinements}
 
-On the storage side, the commitment layer can be developed as a controlled
-system for sheaf/cochain projections. A public store may retain topology
-hashes, cochain roots, compressed public data, and proof-carrying statements, while
-full sheaf and fibration witnesses remain private or are opened only through
-dedicated proof paths.
+The proved ambiguity is a failure of uniform exact recovery from the specified
+public data. It supplies neither an asymptotic bit-model hardness reduction
+nor an average-case encryption-security experiment. Such claims require
+encoded instance families, sampling, resource bounds and a precisely stated
+adversary view. The finite examples and their independent known-lattice CVP
+answers do not discharge those obligations.
 
-The protocol-facing reference point is the higher categorical cryptoeconomics
-program \cite{higherCategoricalCryptoeconomics}. It is relevant to the design
-of protocol evidence and state semantics, but it is not used in the proofs of
-the present paper.
-
-\subsection{Complexity-Theoretic Refinements}
-
-The current formalization isolates the hidden-operator obstruction: public data
-does not canonically determine the operative Hodge--Laplacian kernel. It also
-separates the external known-lattice CVP assumption from the project-native
-hidden-operator ambiguity, gives public-data-only oracle insufficiency
-statements, records classical and quantum adversary likelihood surfaces, and
-proves infinitude results for the relevant Grassmannian/Laplacian families.
-Future work should sharpen these surfaces quantitatively: rates of growth for
-hidden-kernel families, refined leakage bounds for public classifiers, success
-probabilities for specified adversary classes, and reductions between variants
-of HCP.
+The constructed classifier proves the named homological-test fragment in the
+real cochain model. Extending it to the full first-order fibrational semantics,
+constructing richer families with a declared topological realization, and
+analyzing transported public observations are separate mathematical tasks.
+The selected results remain the exact Hodge/CVP comparisons and observation
+boundaries of this manuscript.

@@ -13,9 +13,10 @@ public import TCB.ProofCarrying
   Trusted computing base boundary.
 
   Paper correspondence:
-  - Paper 1 Section 5 and appendix ledger: TCB-owned obligations are named but
-    not proved as runtime implementation theorems.
-  - Paper 2: Rust implementation boundary and runtime trust model.
+  - Paper 2: explicit Rust/runtime trust and original-object acceptance
+    contracts.
+  - These proposition-shaped interfaces are outside Paper 1's selected proof
+    statements and do not verify a backend by themselves.
 
   This file is a naming scaffold for the Lean/Rust split. Lean owns the
   mathematical/specification side; Rust owns adversarial runtime validation,

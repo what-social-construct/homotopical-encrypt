@@ -12,7 +12,10 @@ public import Mathlib.Data.ZMod.Basic
   Reed-Solomon interpretation of cochain plane shadows.
 
   Paper correspondence:
-  - Paper 1 Section 6: plane-shadow to RS received-word stage.
+  - Paper 3: field interpretation of an already extracted plane and its RS
+    received-word map.
+  - Paper 2's codec/profile chooses the concrete coordinates and coefficient
+    interpretation.
 
   The concrete projection from committed cochains to semantic two-coordinate
   plane shadows lives in `Proximity.CochainPlane`. This file begins only after

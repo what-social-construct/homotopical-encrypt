@@ -10,8 +10,10 @@ public import Proximity.Problem
   Runtime observation boundary.
 
   Paper correspondence:
-  - Paper 1 Section 5: observed public artifacts expose bounded statements.
-  - Paper 2: runtime observation and chain-facing evidence.
+  - Paper 2: runtime-observed statements and their supplied
+    artifact-acceptance/extraction contracts.
+  - Paper 1 Section 5 does not infer disclosure or verifier soundness from
+    acceptance of an exact payload alone.
 
   This file names the point where a public artifact becomes an observed
   chain-facing statement. It is intentionally thinner than an oracle: an

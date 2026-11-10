@@ -8,8 +8,10 @@ public import Mathlib.Init
   ZKP interface assumptions.
 
   Paper correspondence:
-  - Paper 1 Section 5: proof-carrying artifact boundary.
-  - Paper 2: concrete proof system and protocol evidence.
+  - Paper 2: supplied proof-system soundness/completeness interfaces and their
+    relation to public protocol evidence.
+  - These contracts are not a concrete proof construction or a result of Paper
+    1's mathematical observation boundaries.
 
   These assumptions are intentionally abstract so different concrete proof
   systems (spectral range proof, homotopy/geodesic proof, class-membership

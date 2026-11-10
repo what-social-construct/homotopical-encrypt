@@ -8,8 +8,10 @@ public import Laplacian.Projection
   Injectivity of the Grassmannian Laplacian map.
 
   Paper correspondence:
-  - Paper 1 Section 3: hidden-operator ambiguity and what is recovered once
-    the operator is presented.
+  - Paper 1 Section 6 uses the fixed-metric relationship between a harmonic
+    subspace and its kernel-normalized projector.
+  - This supporting lemma concerns an already presented operator; it supplies
+    no public-visibility or classifier-recovery theorem.
 
   This file isolates the fact that the projection-model Laplacian remembers
   the hidden harmonic subspace: Δ_W determines W.

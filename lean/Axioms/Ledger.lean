@@ -8,8 +8,9 @@ public import Mathlib.Init
   Ledger-flow assumptions (Petri-style / conservation oriented).
 
   Paper correspondence:
-  - Paper 2: ledger/state-transition and conservation assumptions.
-  - Paper 1 appendix ledger: subsequent protocol-paper boundary only.
+  - Paper 2: ledger/state-transition and conservation contracts.
+  - The shared parity register, rather than Paper 1's selected appendix,
+    indexes this protocol interface.
 
   These assumptions align fee-flow and state-transition invariants with the
   implementation's treasury and account update rules.

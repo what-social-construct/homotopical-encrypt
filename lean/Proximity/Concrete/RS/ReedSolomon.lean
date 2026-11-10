@@ -10,7 +10,8 @@ public import Proximity.Core.ReedSolomon
 
 `ProximityPrize.ReedSolomon` owns evaluation domains, scalar/vector codewords,
 and F-additivity. This module preserves their historical `Hcrypt.Proximity`
-names and retains the Paper 1 list/CA/MCA predicate adapters.
+names and retains the conditional list/CA/MCA application adapters used by
+Paper 3. The protocol profile that consumes them belongs to Paper 2.
 -/
 
 namespace Hcrypt
@@ -172,21 +173,21 @@ section PaperErrorBounds
 
 variable [DecidableEq F]
 
-/-- RS Definition 4.1 CA error slot, including proximity loss. -/
+/-- RS cited Definition 4.1 CA error slot, including proximity loss. -/
 def PaperCorrelatedAgreementErrorBound
     (P : Parameters F ι)
     (δfld δint ε : ℝ) : Prop :=
   P.toBlockCode.PaperCorrelatedAgreementErrorBound
     (F := F) δfld δint ε
 
-/-- RS Definition 4.3 MCA error slot. -/
+/-- RS cited MCA-definition MCA error slot. -/
 def PaperMutualCorrelatedAgreementErrorBound
     (P : Parameters F ι)
     (δ ε : ℝ) : Prop :=
   P.toBlockCode.PaperMutualCorrelatedAgreementErrorBound
     (F := F) δ ε
 
-/-- Vector-valued RS Definition 4.1 CA error slot over `(F^s)^n`. -/
+/-- Vector-valued RS cited Definition 4.1 CA error slot over `(F^s)^n`. -/
 def VectorPaperCorrelatedAgreementErrorBound
     (P : Parameters F ι)
     (σ : Type*)
@@ -195,7 +196,7 @@ def VectorPaperCorrelatedAgreementErrorBound
   (P.vectorBlockCode σ).PaperCorrelatedAgreementErrorBound
     (F := F) δfld δint ε
 
-/-- Vector-valued RS Definition 4.3 MCA error slot over `(F^s)^n`. -/
+/-- Vector-valued RS cited MCA-definition MCA error slot over `(F^s)^n`. -/
 def VectorPaperMutualCorrelatedAgreementErrorBound
     (P : Parameters F ι)
     (σ : Type*)

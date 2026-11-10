@@ -9,7 +9,10 @@ public import Laplacian.Hodge
   Grassmannian proximity instance.
 
   Paper correspondence:
-  - Paper 1 Section 6: source-side proximity instance before Plucker shadow.
+  - Paper 3: an explicitly chosen projection-residual source score for
+    mathematical calibration.
+  - Paper 1 supplies the harmonic/projector identities; identifying this score
+    with another HCP or frame metric needs a separate comparison.
 
   This is the first concrete instantiation of the generic proximity interface:
   a hidden harmonic subspace `W` determines a Laplacian `Δ_W = I - P_W`, and

@@ -8,8 +8,10 @@ public import Proximity.Concrete.CanonicalRS.MCA
   Concrete canonical MCA instance.
 
   Paper correspondence:
-  - Paper 1 Section 6: width-one canonical MCA comparison.
-  - Paper 1 appendix ledger: cited-bound alignment theorem surface.
+  - Paper 3: the width-one canonical MCA statement and its exact alignment
+    with the supplied target slot.
+  - The comparison retains its coding-bound hypothesis; it is not a new
+    unconditional coding theorem.
 
   This file is the comparison layer between the actual canonical RS/MCA object
   and the target theorem slot. It does not prove the deep RS MCA theorem; it

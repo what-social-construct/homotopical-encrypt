@@ -11,8 +11,9 @@ namespace Axioms
   Spectral Bounds
 
   Paper correspondence:
-  - Paper 1 Section 4: spectral admissibility interface.
-  - Paper 2: Proof-of-Value spectral gate policy.
+  - Paper 2: the Proof-of-Value/Tsirelson spectral-gate policy.
+  - This admissibility predicate is outside Paper 1's selected HCP/CVP and
+    observation results.
 
   Canonical Lean home for the PoV/Tsirelson spectral window used by the
   homotopical-encrypt construction.
@@ -20,8 +21,8 @@ namespace Axioms
   Scope:
     * The predicate below is a hard mathematical admissibility condition.
     * Boundary/marginal runtime handling lives in `OracleModality.lean`.
-    * HCP hidden-operator hardness does not depend on this predicate; hardness
-      comes from hidden fibration / hidden Laplacian / hidden kernel ambiguity.
+    * The selected HCP exact-recovery obstruction does not depend on this
+      predicate; it uses distinct operative targets at one public observation.
 -/
 
 /-- Lower PoV/Tsirelson spectral-gap bound: `1 / sqrt 2 = sqrt 2 / 2`. -/

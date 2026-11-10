@@ -13,10 +13,12 @@ public import Proximity.Concrete
   Unified proximity hierarchy for the homotopical-encrypt Lean workspace.
 
   Paper correspondence:
-  - Paper 1 Section 6: Plucker/cochain/plane/RS projection chain and MCA
-    endpoint.
-  - Paper 1 appendix ledger: Lean theorem-surface correspondence for
-    proximity.
+  - Paper 1 Section 6: full projective observations and fixed-metric
+    subspace/projector recovery through specific geometry owners.
+  - Paper 2: commitment/observation contracts, projection-stage certificates
+    and evidence.
+  - Paper 3: universal coding proofs, source-to-code metric comparisons and
+    quantitative radius analysis.
 
   Provenance/scope label:
   `Core`, `Capacity`, `ListDecoding`, and `MCA` contain the standalone
