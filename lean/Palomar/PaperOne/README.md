@@ -12,9 +12,10 @@ table after the conclusion. It records canonical definitions, all 46 selected
 theorems, and explicit assumptions/contracts; the mathematical body has no
 Lean file or declaration lists.
 
-The manuscript now follows that scope directly: §5 combines exact-component observation
-boundaries with full projective recovery, and §6 concludes the mathematical
-exposition. Paper 2 owns the concrete cochain
+The manuscript now follows that scope directly: §2 explains the semantic classifier and observation
+conditions within the HCP setup, including full projective recovery in
+§2.2.1. The cellular model is developed with its example in §3.5; the CVP
+comparison is the final main section before §4 concludes. Paper 2 owns the concrete cochain
 commitment and protocol construction; Paper 3 owns the coding and quantitative
 proximity analysis. Shared definitions are identified by their existing
 canonical owners, with cross-references in place of repeated developments.
@@ -45,7 +46,7 @@ Canonical names below belong to the implementation, outside the entry namespace.
 | P1-S05 · §3.4 `prop:cvp-insufficient`; §3.5 `prop:cellular-axis-ambiguity` | `HB.operativeTargets_ne_of_kernelSeparation`, both `HB.cvpOracle_insufficient_*` declarations, `AF.cellular_axis_ambiguity`, `AF.cvp_oracle_insufficient`: general conditional separation and its constructed cellular instance. | `Hcrypt.HCPBridge` in [Hardness](../../Hardness.lean); `Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets`, `cvp_oracle_insufficient` and the same-sample recovery facts in [HCP/AxisFamily](../../HCP/AxisFamily.lean). |
 | P1-S06 · §3.5, weighted integral example | `AF.weighted_axis_recovery_obstruction`: coefficients two and one share the observation at `b=(1,2)`; one public coefficient decoder cannot recover both, while each private lattice has its own unique CVP answer. | `Hcrypt.HCP.AxisFamily.weighted_public_observations_eq`, `no_exact_encoded_message_decoder`, `weighted_cvp_solution_iff_operativeTarget`, `weighted_cvp_existsUnique` in [HCP/AxisFamily](../../HCP/AxisFamily.lean). |
 | P1-B01 · §2 `prop:exact-component-obstruction` | `CS.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent`, `not_far_preserving_exactComponent`: an allowed nonzero coexact direction prevents the full orthogonal residual from descending to the exact component. | Same terminal names under `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain` in [ObservationQuotient](../../Sheaf/ObservationQuotient.lean). |
-| P1-B02 · §5.5 `prop:plucker-recovery`; selected crosswalk appendix | `PL.recoverSubspace_frame`, `recoverHarmonicProjector_frame`, `recover_eq_operativeHarmonicComponent`: recover a frame's subspace and fixed-metric projector; identify the operative target when that subspace is the matrix kernel. | The first two names under `Hcrypt.Proximity.GrassmannianPlucker.Concrete` in [Reconstruction](../../Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean); the last under `Hcrypt.TCB.PluckerObservation` in [PluckerObservation](../../TCB/PluckerObservation.lean). |
+| P1-B02 · §2.2.1 `prop:plucker-recovery`; selected crosswalk appendix | `PL.recoverSubspace_frame`, `recoverHarmonicProjector_frame`, `recover_eq_operativeHarmonicComponent`: recover a frame's subspace and fixed-metric projector; identify the operative target when that subspace is the matrix kernel. | The first two names under `Hcrypt.Proximity.GrassmannianPlucker.Concrete` in [Reconstruction](../../Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean); the last under `Hcrypt.TCB.PluckerObservation` in [PluckerObservation](../../TCB/PluckerObservation.lean). |
 
 The Hodge statements retain the complex equation and the true cellular
 degree-one operator. Coefficient recovery uses the supplied integral harmonic

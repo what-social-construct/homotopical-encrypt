@@ -19,24 +19,33 @@ documentation described below have not been published or protected-preflighted.
 The broader archive described here remains a local review package.
 The user has explicitly deferred Palomar submission and registration.
 
-**Current standalone mathematics revision, 2026-11-09.** Paper 1 is
-**36 pages** and develops the recovery problem, hidden-operator difficulty,
-CVP comparison and observation limits without repeated companion-paper
-ownership notes. Section 5, *Observation Boundaries and Recovery*, combines
-the former two observation sections: exact cochains, the exact-component
-obstruction, additional public observations, frames/projective coordinates
-(§5.4), and recovery from the full point (§5.5). Section 6 is *Conclusion and
-Further Work*. Its post-conclusion parity table retains four definition rows,
-eight main groups (21 declarations), five support groups (25 declarations),
-and three background/assumption/contract rows; concise proof boundaries follow.
-Paper 1 prints five external mathematical references; its bibliography still
-has seven records, including two uncited companion entries. The 28-source
-ledger mapping remains intact; Paper 2/3 retain 42/16 bibliography records,
-and Paper 3's 31-page PDF is unchanged. Lean edits are limited to section-number
-comments; all non-comment Lean source is unchanged. The checked 9,295-job/
-975-report proof state is retained without claiming a repeated Lean build.
-The revised candidate remains local and needs its own exact-commit protected
-preflight; public `66e1ad2` and its passing report remain unchanged.
+**Current construction-first revision, 2026-11-09.** Paper 1's local PDF is
+**32 pages**. Introduction (§1) leads to the HCP setup and construction (§2):
+exact-cochain observations are in §2.1, semantic/public-hidden data in §2.2,
+and full projective observations and recovery in §2.2.1. *CVP Comparison and
+Kernel Ambiguity* (§3) is the last main section; the actual homological model
+sits beside its cellular example in §3.5. *Conclusion and Further Work* is §4,
+followed by the statement--Lean parity table (Appendix A) and concise proof
+boundaries (Appendix B). The table retains four definition rows, eight main
+groups (21 declarations), five support groups (25 declarations), and three
+background/assumption/contract rows. All eleven proposition statements and
+the mathematical definitions are retained; one proof opening now invokes its
+stated closed-test-invariance premise, preserving the distinction from the
+proved homological fragment. Paper 1 prints five external mathematical
+references and retains seven bibliography records, including two uncited
+companion entries. The 28-source ledger mapping, Paper 2/3's 42/16 bibliography
+records and Paper 3's 31-page PDF are unchanged. Nine Lean header comments
+remove stale section references; non-comment source across all 280 Lean files
+is unchanged. The checked 9,295-job/975-report proof state is retained without
+claiming a repeated Lean build. This revised candidate is local and needs its
+own exact-commit protected preflight; public `66e1ad2` and its passing report
+remain unchanged.
+
+**Preserved P304 standalone checkpoint, 2026-11-09.** Paper 1 then had
+36 pages, one merged observation section (§5) and a section-6 conclusion.
+Its statement/parity and non-comment Lean preservation checks remain evidence
+for that exact earlier revision, alongside the historical 38/37-page and
+public-`66e1ad2` records; they do not certify the current manuscript bytes.
 
 **Preserved P302/P303 back-matter checkpoint, 2026-11-09.** Paper 1 then had
 38 pages, separate observation sections and a section-7 conclusion. Its parity
@@ -143,16 +152,17 @@ signed-incidence model and corrected legacy likelihood/nullity descriptions.
 Its reviewed PDF remains 101 pages at that exact commit. P300/P301 produced
 the reviewed 37-page ownership revision. The P302/P303 38-page revision retained
 that split and consolidated the Lean correspondence after the conclusion.
-The current 36-page revision merges the observation exposition and keeps the
-manuscript focused on HCP. Detailed protocol construction belongs to Paper 2 and quantitative analysis
+The preserved P304 36-page revision merged the observation exposition.
+The current 32-page revision puts the HCP construction before the CVP
+comparison and keeps the manuscript focused on HCP. Detailed protocol construction belongs to Paper 2 and quantitative analysis
 to Paper 3.
 Paper 1 remains the first release priority; no revised release is frozen here.
 
 The implementation, build and dependency counts below retain that completed
 baseline unless a row explicitly identifies the current local manuscripts.
 P300/P301 subsequently checked the 93 documentation edits. The current
-standalone revision retains every non-comment Lean source byte, with only
-section-reference comment edits.
+construction-first revision retains every non-comment Lean source byte,
+with nine section-reference header-comment edits.
 
 | Item | Current status |
 |---|---|
@@ -171,11 +181,11 @@ section-reference comment edits.
 | Canonical decision profile | Closed promises retain `(ε,δ_J)` on both sides, concrete near 2046/4096 and far 2047/4096, the original map and solver pullback. Its canonical arithmetic now uses kernel proofs. The geometric far witness and efficient solver remain explicit obligations. |
 | History/manifest anchor | The joins and fixtures pass on 4.35, and all nineteen fresh anchor reports use only the three standard Lean axioms. Concrete authentication/encoding/backend profiles remain explicit. The earlier 4.24 focused/full results are preserved in the shared register. |
 | Theorem dependencies | All 975 selected reports are standard-only (792 exact-three/183 subsets, 106 axiom-free); all 975 pre-revision sets match. No selected native, cited-bound or sorryAx dependency occurs. The [validation record](docs/MATH_STORAGE_VALIDATION.md#manuscript-ownership-revision--2026-11-09) records current checks and preserves historical audits. |
-| Full aggregate validation | The checked expanded union at `dddfdd2` passed 9,295 jobs, including all fifteen default roots and three Solutions. The current editorial revision preserves every non-comment Lean source byte, with only section-reference comment edits, and retains that proof state. Literal default 9,285 remains the pre-revision baseline. Source/input identity, definition comparisons and dependency audits are separate checks; current local results are recorded centrally. The broader hosted aggregate has not run; Paper 1's exact historical slim snapshot passed protected preflight. |
+| Full aggregate validation | The checked expanded union at `dddfdd2` passed 9,295 jobs, including all fifteen default roots and three Solutions. The current editorial revision preserves every non-comment Lean source byte, with only nine section-reference header-comment edits, and retains that proof state. Literal default 9,285 remains the pre-revision baseline. Source/input identity, definition comparisons and dependency audits are separate checks; current local results are recorded centrally. The broader hosted aggregate has not run; Paper 1's exact historical slim snapshot passed protected preflight. |
 | Paper 1 independent entry | [Challenge/Solution and metadata](lean/Palomar/PaperOne/README.md) cover eight selected groups through 21 manuscript-facing and 25 supporting declarations. Mathlib-only independent statements and local Comparator/Lean/NanoDa checks pass. The prior macOS diagnostic was separate. Public commit 66e1ad2 now passes the complete protected workflow, canonical source audit and Lean/NanoDa/con-ron replay; its sole size advisory is within hard caps. |
 | Paper 3 independent entries | [Coding](lean/Palomar/PaperThree/README.md) and [original-cochain application](lean/Palomar/PaperThree/Application/README.md) retain all fourteen selected groups across two configurations. Both full local definition comparisons and Lean/NanoDa replays pass. Actual fields, original Context/payload/decoder and three native distances remain explicit; encoder/opening values are preserved by rfl. Protected Linux verification remains. |
-| Current local manuscripts | Paper 1 is 36 pages, focused on HCP/Hodge/CVP, the actual semantic fragment and observation/Plücker mathematics. Paper 2's working Markdown draft owns the concrete construction and protocol contracts; it has no TeX/PDF. Paper 3 is 31 pages and owns the quantitative coding, proximity, calibration and bridge results. The revisions preserve the existing three-paper split and are not a public release. |
-| Manuscript compile record | The earlier 37/31-page ownership revision compiled and passed all 68 pages of render/contact review. The current Paper 1 is 36 pages with one merged observation section and one post-conclusion parity table; latest PDF checks belong to the central validation record. Paper 3 and its cited bibliography output are unchanged. Mathematical preservation and selected crosswalk inventories are checked separately. These local checks do not replace protected verification. The earlier 101-page/30-page rendered reviews and matching review-copy checks remain evidence for their earlier exact artifacts. |
+| Current local manuscripts | Paper 1 is 32 pages, focused on HCP/Hodge/CVP, the actual semantic fragment and observation/Plücker mathematics. Paper 2's working Markdown draft owns the concrete construction and protocol contracts; it has no TeX/PDF. Paper 3 is 31 pages and owns the quantitative coding, proximity, calibration and bridge results. The revisions preserve the existing three-paper split and are not a public release. |
+| Manuscript compile record | The earlier 37/31-page ownership revision compiled and passed all 68 pages of render/contact review. The current Paper 1 is 32 pages, integrates semantic and observation material into its HCP construction, and ends the main argument with the CVP comparison before conclusion §4 and the post-conclusion parity table; latest PDF checks belong to the central validation record. Paper 3 and its cited bibliography output are unchanged. Mathematical preservation and selected crosswalk inventories are checked separately. These local checks do not replace protected verification. The earlier 101-page/30-page rendered reviews and matching review-copy checks remain evidence for their earlier exact artifacts. |
 | Public publication | Only the approved historical Paper 1 snapshot is public. The revised manuscripts and Lean documentation edits remain local and have not passed protected preflight. The broader three-paper archive and Paper 2/3 manuscripts remain unpublished here. No Palomar intake or registration was requested. |
 
 ## Prepare a local package

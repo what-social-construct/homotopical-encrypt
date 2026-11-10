@@ -19,6 +19,11 @@ For \(x\in A\), we also write
 \([x]_\pi:=A_{\pi(x)}\). Thus, whenever \(\alpha=\pi(x)\), the two
 descriptions agree: \(A_\alpha=[x]_\pi\).
 
+The public classifier records selected semantic information about a hidden
+presentation. In the Helfer realization below, it factors through the closed
+theory of an interpretation. A common public label specifies a fiber; it
+does not supply its operative representative or a transport map.
+
 \begin{definition}[Harmonic Cochain Problem]\label{def:hcp}
   The \emph{Harmonic Cochain Problem} (HCP) asks, given public data
   \((\alpha,b)\) consisting of a realized public classifier value
@@ -291,6 +296,30 @@ finite-dimensional real inner-product space \(V\). Operators denoted
 operators. The charts are comparison data; they are not asserted to be
 recoverable from the public classifier.
 
+\paragraph{Exact-component observations.}
+Fix one cellular Hodge system and an opening \(a\in C^0\). Its exact
+one-cochain \(c=\delta_0a\) satisfies
+\[
+  P_Hc=P_H\delta_0a=0.
+\]
+Indeed, \(\image\delta_0\) is orthogonal to the harmonic subspace.
+Thus this exact cochain is not the full sample \(b=h+e\) when the harmonic
+message \(h\) is nonzero. An encoding modulo an integer, a digest of that
+encoding and a proof about its acceptance do not, by their types alone,
+supply the full \(b\) or its relation to the operative hidden operator.
+
+There is also a distinction between the exact one-cochain and its opening.
+Linearity gives
+\[
+  \delta_0a=\delta_0a'
+  \quad\Longleftrightarrow\quad
+  a-a'\in\ker\delta_0.
+\]
+Consequently the raw coboundary determines an opening only modulo
+\(\ker\delta_0\). A unique degree-zero message encoding requires further
+application data. This elementary observation is independent of binding a
+specified exact \(C^1\) payload cryptographically.
+
 \begin{proposition}[Exact-component obstruction]
 \label{prop:exact-component-obstruction}
   Suppose \(v\in C^2\) and \(\delta_1^*v\ne0\). On the unrestricted
@@ -318,38 +347,49 @@ recoverable from the public classifier.
   contradicting every positive target far radius.
 \end{proof}
 
-This statement concerns a map factoring through the decoded exact
-component. Equal decoded components do not by themselves imply equal raw
-payload bytes for an arbitrary decoder. A restricted noise or authenticated
-realization profile may exclude this family; a theorem about such a profile
-requires its explicit hypotheses. The statement does not identify distance
-to exactness with the full HCP residual.
+This obstruction concerns the unrestricted Hodge-noise carrier and an
+extraction depending only on its decoded exact component. Equal decoded
+components do not by themselves imply equal raw payload bytes for an
+arbitrary decoder. A restricted noise or authenticated realization profile
+may exclude the family, so a comparison for such a profile requires its
+explicit hypotheses. The scores
+\[
+  \|P_{H^\perp}b\|,\qquad
+  \operatorname{dist}(b,\image\delta_0),\qquad
+  \text{a modular cochain or code distance}
+\]
+ask different questions. The first measures disagreement with the harmonic
+subspace, the second distance to exactness, while a modular distance needs
+its own carrier and normalization. No equality of these scores is assumed
+by the HCP/CVP comparison.
 
-\subsection{Public and Hidden Data}
+\subsection{Public and Hidden Data}\label{sec:mathematical-framework}
 
 \begin{definition}[Public observation]\label{def:public-observation}
   The public HCP observation consists of a realized public classifier value
   \(\alpha\) together with an observed degree-one cochain \(b\).
 \end{definition}
 
-Thus \((\alpha,b)\) is the protocol-independent vector-level observation.
-The value \(\alpha\) records the public
-classifier value, while \(b\) is the full cochain actually released by the
-selected observation profile. Acceptance of an exact payload, an opening of
-its exact component, or a proof about that component does not by itself
-expose \(b\). Instantiating the vector-level interface requires a relation
-binding the full sample to the artifact and an explicit disclosure or
-specified extraction of that sample. \Cref{sec:observation-boundaries}
-records this mathematical distinction. The
-hidden-kernel ambiguity comparison uses the resulting mathematical pair;
-equality of a larger artifact or storage view requires its own hypotheses.
+Thus \((\alpha,b)\) is the vector-level public input. An accepted exact
+payload, an opening of its exact component or a proof about that component
+does not by itself expose the full cochain \(b\). A record used to present
+this input must be bound to the operative operator, classifier and sample,
+with an explicit disclosure or specified extraction of the full cochain.
 
-The public observation is not the hidden Hodge system. It classifies a public
-equivalence class of possible hidden representatives. Fibrational and
-homotopical semantics enter through this distinction: public equality is
-equality after applying a public classifier, not strict equality of hidden
-representatives. Section~\ref{sec:mathematical-framework} develops this
-semantic interpretation.
+Recovery claims are relative to that chosen observation. If a larger
+released view \(\mathsf{View}(x,b)\) is used, an ambiguity argument for two candidate
+presentations also requires equality of that view. A view factoring through
+\((\alpha,b)\) preserves equality of the public pair; arbitrary snapshot
+roots, geometric coordinates or proof transcripts need not. The full
+projective observation considered below gives a concrete example of such
+additional information.
+
+Public equality is equality after applying the classifier, rather than
+identity of hidden presentations. The semantic equivalence under
+consideration must preserve this public label. The converse need not hold:
+equal labels do not supply an equivalence or its transport. Even when a fiber
+contains distinct representatives, that collision condition alone gives no
+one-wayness or indistinguishability guarantee.
 
 \begin{definition}[Hidden-operator public projection]\label{def:hidden-operator-public-projection}
   For a public class type \(P\), a public projection is a map
@@ -389,6 +429,22 @@ semantic interpretation.
     \Delta'b\ne 0.
   \]
 \end{definition}
+
+The semantic input is a typed interpretation of a multi-sorted algebraic
+signature. Its sorts are interpreted by objects of a suitable model
+category, finite contexts by products, and function symbols by the
+corresponding maps. A homotopy equivalence of interpretations must respect
+those operations up to the specified homotopies and supply componentwise
+homotopy-equivalence data between cofibrant-fibrant interpretations.
+
+Helfer's first-order semantics interprets equality through path objects.
+Under its stated categorical hypotheses, homotopy-equivalent
+interpretations satisfy the same closed formulas
+\cite[Definition~7.1 and Theorem~12.3]{helfer2019fol}. We retain invariance of
+the chosen closed tests as an explicit premise of the generic semantic
+construction below. The full first-order theorem is external background;
+the cellular example in \cref{prop:cellular-axis-ambiguity} establishes the
+corresponding premise for its declared homological tests.
 
 \begin{definition}[Typed HCP semantic realization]\label{def:typed-hcp-realization}
   Fix a multi-sorted algebraic signature \(\sigma\), a model category
@@ -441,14 +497,15 @@ semantic interpretation.
 \end{proposition}
 
 \begin{proof}
-  The closed-formula case of Helfer's homotopy-invariance theorem
-  \cite[Theorem~12.3]{helfer2019fol} gives, for every closed
+  The stated closed-test invariance premise gives, for every closed
   \(\sigma\)-formula \(\varphi\),
   \[
     M_x\vDash\varphi
     \quad\Longleftrightarrow\quad
     M_y\vDash\varphi.
   \]
+  In the full first-order setting this premise is supplied by Helfer's
+  homotopy-invariance theorem \cite[Theorem~12.3]{helfer2019fol}.
   Hence \(\operatorname{Th}(M_x)=\operatorname{Th}(M_y)\). Applying
   \(\kappa\) and then the two factorization identities gives
   \[
@@ -564,6 +621,83 @@ artifacts, but it does not present the operative kernel.
   contract; it does not deny that decryption succeeds once the operative
   private geometry is supplied.
 \end{definition}
+
+\subsubsection{Full projective observations}\label{sec:observation-boundaries}\label{sec:projective-observation-boundary}
+
+At the fixed ambient inner product, the full projective point of the
+operative harmonic subspace determines its projector and hence the target
+from \(b\). A digest-only value is a different observation and is not covered
+by this reconstruction.
+
+Let \(V=\mathbb R^n\) have its fixed Euclidean inner product, and let
+\(w_1,\ldots,w_r\) be an independent frame spanning \(W\le V\). Its exterior
+coordinate is
+\[
+  c=w_1\wedge\cdots\wedge w_r\in\bigwedge^r V.
+\]
+An independent frame has nonzero exterior product. A different basis of the
+same subspace changes \(c\) by the nonzero determinant of its change-of-basis
+matrix. The projective class therefore depends only on \(W\):
+\[
+ c\sim c'\quad\Longleftrightarrow\quad
+ \exists u\in\mathbb R^\times,\ c'=uc.
+\]
+The formal raw carrier is the scalar-orbit quotient of the whole exterior
+power, including its zero orbit. A genuine frame determines a nonzero,
+decomposable orbit. The conclusions below use such frames; they do not
+assert that every point of the raw quotient is a Grassmannian point.
+
+A related specialized reconstruction uses restricted Pl\"ucker coordinates
+for maximal isotropic subspaces \cite{dingKim2026plucker}. The argument here
+uses the full projective point of an arbitrary real subspace and the fixed
+ambient metric; no orthogonal-matroid realization is assumed.
+
+\begin{proposition}[Projective Pl\"ucker invariance]\label{prop:plucker-invariance}
+  Two independent frames spanning the same finite-dimensional subspace have
+  equal projective exterior coordinates.
+\end{proposition}
+\begin{proof}
+  Both exterior products are nonzero elements of the one-dimensional top
+  exterior power of that subspace. They differ by a nonzero scalar and hence
+  have the same orbit.
+\end{proof}
+
+\paragraph{Recovery from the full point.}
+
+\begin{proposition}[Recovery from the full projective point]
+\label{prop:plucker-recovery}
+  Let \(w_1,\ldots,w_r\) be an independent frame for
+  \(W\subseteq\mathbb R^n\), and put
+  \(c=w_1\wedge\cdots\wedge w_r\). Then
+  \[
+    W=\{x\in\mathbb R^n:x\wedge c=0\}.
+  \]
+  This reconstruction depends only on \([c]\). Consequently, two genuine
+  rank-\(r\) frame witnesses have the same full projective point if and only
+  if they present the same subspace. At the fixed ambient inner product,
+  the full point determines \(P_W\) and \(I-P_W\).
+\end{proposition}
+\begin{proof}
+  If \(x\in W\), the frame with \(x\) adjoined is dependent and its exterior
+  product vanishes. If \(x\notin W\), the adjoined frame is independent and
+  its exterior product is nonzero. Multiplying \(c\) by a nonzero scalar
+  does not change this annihilator. The projector is the unique orthogonal
+  projection onto the reconstructed subspace.
+\end{proof}
+
+In the raw quotient the zero orbit has the whole ambient space as its
+annihilator. The frame-indexed statement avoids treating that orbit as an
+arbitrary nonzero rank-\(r\) Pl\"ucker point.
+If \(W=\ker\Delta_x\) is the operative harmonic subspace, full projective
+data together with \(b\) determine
+\[
+  h=P_Wb.
+\]
+The operative-kernel identification and the fixed inner product are essential.
+A coordinate for an unrelated subspace gives no such conclusion. The full
+point does not determine the positive spectrum of the original \(\Delta_x\).
+Nor does this exact-real reconstruction give an efficient finite byte
+algorithm or inversion of a digest.
 
 \subsection{Recovery Target}
 

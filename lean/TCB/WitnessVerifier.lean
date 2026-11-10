@@ -11,7 +11,7 @@ public import TCB.ObservationBoundary
   Paper correspondence:
   - Paper 2: witness/envelope, runtime observation and evidence handoff under
     supplied acceptance contracts.
-  - Paper 1 Section 5 supplies the narrower mathematical observation
+  - Paper 1 supplies the narrower mathematical observation
     distinction, without inferring a byte-level verifier.
 
   This module assembles a semantic witness/verifier envelope:

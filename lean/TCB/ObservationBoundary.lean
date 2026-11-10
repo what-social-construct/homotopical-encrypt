@@ -12,7 +12,7 @@ public import Proximity.Problem
   Paper correspondence:
   - Paper 2: runtime-observed statements and their supplied
     artifact-acceptance/extraction contracts.
-  - Paper 1 Section 5 does not infer disclosure or verifier soundness from
+  - Paper 1 does not infer disclosure or verifier soundness from
     acceptance of an exact payload alone.
 
   This file names the point where a public artifact becomes an observed

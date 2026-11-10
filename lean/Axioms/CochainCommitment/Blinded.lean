@@ -10,7 +10,7 @@ public import Axioms.SheafCoherence
   Paper correspondence:
   - Paper 2: the typed bridge from an accepted exact payload to a separately
     Hodge-blinded value, with its encoding and security contracts.
-  - Paper 1 Section 5 retains only the mathematical distinction between an
+  - Paper 1 retains only the mathematical distinction between an
     exact component and a full Hodge observation.
 
   The wire payload remains the exact committed one-cochain.  This module does

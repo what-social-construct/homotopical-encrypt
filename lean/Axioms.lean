@@ -20,7 +20,7 @@ public import Axioms.StageAdmissibility
 
 /-
   Paper correspondence:
-  - Paper 1 Section 4 uses the typed Helfer/HCP fragment through its specific
+  - Paper 1's HCP setup uses the typed Helfer/HCP fragment through its specific
     owners, rather than this complete aggregate.
   - Paper 2 consumes the commitment, oracle, consensus, ledger and
     stage-admissibility interfaces. SEMANTIC-PARITY.md records their separate

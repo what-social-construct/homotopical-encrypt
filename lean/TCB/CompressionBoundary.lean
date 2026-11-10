@@ -10,7 +10,7 @@ public import TCB.ProofCarrying
   Paper correspondence:
   - Paper 2: concrete compression/observation, digest/root, proof and storage
     contracts.
-  - Paper 1 Section 5 supplies only the mathematical distinction between a
+  - Paper 1 supplies only the mathematical distinction between a
     full observation and a compressed or exact-component view.
 
   This module records the abstract pattern shared by hash commitments,

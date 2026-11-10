@@ -40,7 +40,7 @@ decoder interpretation indexes proof soundness. Typed preimages separate
 owner intent, packet evidence and the completed block; no global hash
 injectivity, primitive implementation or anonymity theorem is inferred.
 
-[Paper 1, Section 5](../papers/paper1/sections/05-observation-boundaries.tex)
+[Paper 1, §§2.1–2.2](../papers/paper1/sections/02-harmonic-cochain-problem.tex)
 retains the mathematical observation distinction. The three concrete visibility
 levels are specified in [Paper 2, §2](../papers/paper2/DRAFT.md#2-maintained-geometry-temporary-processing-and-retained-artifacts): private Hodge/restriction data, messages, noise and full cochains
 unless explicitly exposed; public residue payload/modulus/count/topology tag;

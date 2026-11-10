@@ -126,24 +126,33 @@ extension-field encoding and original-object adapters; integer casts into a
 prime subfield do not construct it. Keep this optional stronger application
 separate from the already completed native modular radius theorem.
 
-**Current standalone mathematics revision, 2026-11-09.** Paper 1 is
-**36 pages** and develops the recovery problem, hidden-operator difficulty,
-CVP comparison and observation limits without repeated companion-paper
-ownership notes. Section 5, *Observation Boundaries and Recovery*, combines
-the former two observation sections: exact cochains, the exact-component
-obstruction, additional public observations, frames/projective coordinates
-(§5.4), and recovery from the full point (§5.5). Section 6 is *Conclusion and
-Further Work*. Its post-conclusion parity table retains four definition rows,
-eight main groups (21 declarations), five support groups (25 declarations),
-and three background/assumption/contract rows; concise proof boundaries follow.
-Paper 1 prints five external mathematical references; its bibliography still
-has seven records, including two uncited companion entries. The 28-source
-ledger mapping remains intact; Paper 2/3 retain 42/16 bibliography records,
-and Paper 3's 31-page PDF is unchanged. Lean edits are limited to section-number
-comments; all non-comment Lean source is unchanged. The checked 9,295-job/
-975-report proof state is retained without claiming a repeated Lean build.
-The revised candidate remains local and needs its own exact-commit protected
-preflight; public `66e1ad2` and its passing report remain unchanged.
+**Current construction-first revision, 2026-11-09.** Paper 1's local PDF is
+**32 pages**. Introduction (§1) leads to the HCP setup and construction (§2):
+exact-cochain observations are in §2.1, semantic/public-hidden data in §2.2,
+and full projective observations and recovery in §2.2.1. *CVP Comparison and
+Kernel Ambiguity* (§3) is the last main section; the actual homological model
+sits beside its cellular example in §3.5. *Conclusion and Further Work* is §4,
+followed by the statement--Lean parity table (Appendix A) and concise proof
+boundaries (Appendix B). The table retains four definition rows, eight main
+groups (21 declarations), five support groups (25 declarations), and three
+background/assumption/contract rows. All eleven proposition statements and
+the mathematical definitions are retained; one proof opening now invokes its
+stated closed-test-invariance premise, preserving the distinction from the
+proved homological fragment. Paper 1 prints five external mathematical
+references and retains seven bibliography records, including two uncited
+companion entries. The 28-source ledger mapping, Paper 2/3's 42/16 bibliography
+records and Paper 3's 31-page PDF are unchanged. Nine Lean header comments
+remove stale section references; non-comment source across all 280 Lean files
+is unchanged. The checked 9,295-job/975-report proof state is retained without
+claiming a repeated Lean build. This revised candidate is local and needs its
+own exact-commit protected preflight; public `66e1ad2` and its passing report
+remain unchanged.
+
+**Preserved P304 standalone checkpoint, 2026-11-09.** Paper 1 then had
+36 pages, one merged observation section (§5) and a section-6 conclusion.
+Its statement/parity and non-comment Lean preservation checks remain evidence
+for that exact earlier revision, alongside the historical 38/37-page and
+public-`66e1ad2` records; they do not certify the current manuscript bytes.
 
 **Preserved P302/P303 back-matter checkpoint, 2026-11-09.** Paper 1 then had
 38 pages, separate observation sections and a section-7 conclusion. Its parity
@@ -167,34 +176,36 @@ Paper 1 is superseded by the current editorial split.
 
 ## Focused Paper 1 Outline
 
-1. **Introduction:** operative target, exact-recovery comparison and the
-   constructed nonzero/weighted examples; precise source and contribution account.
-2. **The Harmonic Cochain Problem:** true Hodge operator, structured noise,
-   recovery, exact-component obstruction and typed public/hidden input.
-3. **CVP Comparison and Kernel Ambiguity:** linear image versus discrete
-   lattice, orthogonal projection identity, oracle quantifiers and actual family.
-4. **Semantic Classifiers and the Homological Model:** typed interpretations,
-   path-respecting classifier fibers, proved homological tests and external
-   first-order background.
-5. **Observation Boundaries and Recovery:** exact cochain versus full sample,
-   opening quotient, the exact-component obstruction and larger public views;
-   frames and full exterior/projective subspace/projector recovery, with the
-   operative-kernel identification. Frames are §5.4 and full-point recovery is
-   §5.5. No wire/security construction is asserted.
-6. **Conclusion and Further Work:** exact recovery/observation outcomes and
+1. **Introduction:** Helfer motivation, operative target and exact-recovery
+   comparison; the constructed nonzero/weighted examples and contribution account.
+2. **The Harmonic Cochain Problem:** the true Hodge operator, structured noise
+   and recovery construction, followed by exact-component observations (§2.1),
+   semantic/public-hidden data (§2.2) and full projective observation/recovery
+   (§2.2.1). Public input, hidden operative operator and semantic hypotheses are
+   fixed before the comparison.
+3. **CVP Comparison and Kernel Ambiguity:** the last main section compares
+   presented linear images and discrete lattices, proves the orthogonal
+   projection identity and oracle obstruction, then places the actual
+   homological model beside the integral cellular family (§3.5).
+4. **Conclusion and Further Work:** exact recovery/observation outcomes and
    their computational and semantic limits.
-7. **Appendix A, Statement--Lean Parity Table:** one post-conclusion table
+5. **Appendix A, Statement--Lean Parity Table:** one post-conclusion table
    with four definition rows, eight main groups (21 declarations), five support
    groups (25 declarations), and three background/assumption/contract rows.
-8. **Appendix B, proof boundaries:** concise model, observation and verification
+6. **Appendix B, proof boundaries:** concise model, observation and verification
    scope. The mathematical body has no Lean cross-reference blocks, filenames
    or repeated descriptions of the other manuscripts.
 
-The merged observation source is `05-observation-boundaries.tex`; the former
-separate projective-recovery file is removed. Detailed protocol/coding
-allocation stays in this guide and the shared ownership table. The former long
-chapters and source catalogue remain in Git history. No mathematical object
-is replaced or renamed by this expositional merge.
+The canonical sources are [the HCP construction](../papers/paper1/sections/02-harmonic-cochain-problem.tex)
+for cochain/semantic/observation material, [the CVP comparison](../papers/paper1/sections/03-cvp-comparison.tex)
+for the actual homological model and cellular example, and
+[the conclusion](../papers/paper1/sections/04-conclusion.tex).
+The former standalone semantic and observation files are removed. Detailed
+protocol/coding allocation stays in this guide and the shared ownership table.
+The former long chapters and source catalogue remain in Git history. The
+restructure preserves the proposition statements and mathematical definitions;
+one proof opening cites its stated closed-test-invariance premise, while the
+concrete homological fragment retains its separate proved construction.
 
 ## Paper 2 Construction and Protocol Scope
 

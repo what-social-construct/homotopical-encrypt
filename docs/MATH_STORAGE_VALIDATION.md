@@ -9,6 +9,46 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Paper 1 construction-first setup and final comparison — 2026-11-09
+
+The HCP setup in §2 now introduces the semantic/classifier assumptions,
+exact-cochain and opening-quotient facts, and chosen observation. Full-projective
+reconstruction is §2.2.1. The actual homological model is described beside the
+cellular example in §3.5. **CVP Comparison and Kernel Ambiguity is the last main
+section, followed by conclusion §4.** The former standalone semantics and
+observation files are removed, and the conclusion source is renamed
+`04-conclusion.tex`. Three unused notation-table rows are removed.
+
+Against `5e74539`, all **eleven proposition statements and eleven definitions**
+are preserved verbatim. Ten proofs are verbatim; the classifier-bridge proof
+now invokes its stated closed-test invariance premise and identifies Helfer's
+full first-order theorem as the external specialization. Its formulas and
+argument are unchanged. General background diagrams are condensed into the
+setup; the named homological-fragment and classifier-completeness boundaries
+remain explicit. All **46 configured parity names occur exactly once**.
+
+Nine additional Lean module headers remove obsolete section references.
+Exact non-comment fingerprints for all **280 Lean files** match the retained
+checked source. All nine Challenge/Solution/configuration files are byte-identical;
+imports, definitions, statements, proofs, options and pins are unchanged.
+P301's expanded 9,295-job build and 975 dependency reports remain the proof-state
+evidence. No new Lean build or kernel replay is claimed for this editorial change.
+
+The **32-page PDF** builds without undefined references/citations, missing
+glyphs or overfull boxes (two underfull diagnostics). All pages are rendered
+and checked, including detailed integrated-setup, comparison and backmatter
+review. Canonical and stable copies match. Paper 1 SHA-256:
+`a7964997a4dcedfd4a368972627e6026607b77940bc43daab047619388633a77`.
+Five external sources are printed; all seven bibliography records and the
+28-source ledger remain. Paper 3's reviewed 31-page PDF is unchanged.
+
+Evidence is `paper1-integrated-setup-*` and
+`paper1-construction-reader-guide-audit.json` under `output/validation/`.
+Active guides, source links and local packages follow the new section order.
+The previous public `66e1ad2` and its protected PASS remain historical evidence;
+this new informal account needs a fresh exact-commit protected preflight before
+any later intake. No publication, intake or registration occurs.
+
 ## Paper 1 standalone exposition and merged observations — 2026-11-09
 
 Paper 1 now presents a standalone HCP recovery problem. The introduction

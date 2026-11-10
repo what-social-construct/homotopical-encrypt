@@ -24,31 +24,38 @@ The abstract now has one paragraph. Helfer's homotopical semantics opens
 the motivation, and the CVP bridge, ambiguity obstruction and cellular
 examples form one contribution item (four contribution items overall).
 
-The current PDF is **36 pages**. The earlier P302/P303 back-matter checkpoint
-had 38 pages; the P300/P301 ownership checkpoint had 37 pages, reduced from
-the original 101-page draft.
+The current local PDF is **32 pages**. The preserved P304 standalone
+checkpoint had 36 pages, P302/P303 had 38 pages, and P300/P301 had 37 pages;
+the original public draft had 101 pages. Their validation records remain
+historical evidence for those exact artifacts.
 
-The exposition follows the HCP recovery problem, the hidden operative operator,
-the CVP comparison and the effect of changing the public observation. Section 5,
-[Observation Boundaries and Recovery](sections/05-observation-boundaries.tex),
-combines the former two observation sections. Its five subsections treat exact
-cochains, the exact-component obstruction, additional observations, projective
-frames (§5.4) and full-point recovery (§5.5). The former separate projective
-section is merged into that file. Section 6 is *Conclusion and Further Work*.
+After the introduction, [§2, The Harmonic Cochain Problem](sections/02-harmonic-cochain-problem.tex)
+develops the HCP setup and construction. It includes exact-cochain
+observations (§2.1), the semantic/public-hidden setup (§2.2), and full
+projective observations and recovery (§2.2.1). The last main section,
+[§3, CVP Comparison and Kernel Ambiguity](sections/03-cvp-comparison.tex),
+places the actual homological model beside the cellular example (§3.5).
+[§4, Conclusion and Further Work](sections/04-conclusion.tex) follows.
+The former separate semantic and observation sections are integrated into
+these canonical sources.
 
 The mathematical body contains no Lean cross-reference blocks, implementation
 filenames or repeated companion-paper descriptions. Appendix A's single
 post-conclusion parity table has four definition rows, eight main result groups
 covering 21 declarations, five support groups covering 25 declarations, and
 three external-result/assumption/contract rows. Appendix B keeps concise proof
-boundaries. All 46 selected declarations and the eleven propositions/proofs
-remain accounted for; the computational scope distinguishes exact recovery
-from an asymptotic hardness assumption.
+boundaries. All 46 selected declarations, eleven proposition statements and
+mathematical definitions remain accounted for. One proof opening now invokes
+its stated closed-test-invariance premise; the proved concrete homological
+fragment remains distinct from that conditional semantic statement. The
+computational scope distinguishes exact recovery from an asymptotic hardness
+assumption.
 
-Lean edits are limited to section-number comments, with every non-comment
-source byte unchanged. The checked 9,295-job build and 975-report dependency
-state is retained; no repeated Lean build is claimed for this editorial change.
-The [source ledger](../../docs/SOURCE_LEDGER.md#bibliography-correspondence)
+Nine Lean header-comment edits remove stale section references; every
+non-comment source byte across all 280 Lean files is unchanged. The checked
+9,295-job build and 975-report dependency state is retained; no repeated Lean
+build is claimed for this editorial change. The
+[source ledger](../../docs/SOURCE_LEDGER.md#bibliography-correspondence)
 continues to map all 28 source IDs to the three bibliographies. Paper 1 prints
 five external mathematical sources; its bibliography retains seven records,
 including two uncited companion entries. The three-paper allocation is

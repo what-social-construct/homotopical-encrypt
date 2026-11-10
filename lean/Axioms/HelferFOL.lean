@@ -9,7 +9,7 @@ public import Helfer
   Helfer-oriented first-order homotopical logic interface.
 
   Paper correspondence:
-  - Paper 1 Section 4: typed interpretations, closed theories and the
+  - Paper 1: typed interpretations, closed theories and the
     explicitly named homological fragment of the Helfer/HCP bridge.
   - The selected Paper 1 crosswalk records the finite construction; general
     path, lifting and first-order invariance fields remain interface

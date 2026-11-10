@@ -64,7 +64,7 @@ root and block digest are separate coordinates. A matching quorum signs the
 same proposal; these joins do not by themselves prove global finality.
 
 The concrete protocol retains the following three visibility levels. They
-instantiate [Paper 1's observation distinction](../paper1/sections/05-observation-boundaries.tex)
+instantiate [Paper 1's observation distinction](../paper1/sections/02-harmonic-cochain-problem.tex)
 between an exact committed component and the full Hodge sample; their concrete
 data and access rules belong to this paper:
 

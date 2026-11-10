@@ -15,24 +15,33 @@ submission. **No registry intake or registration is authorized or performed.**
 The mechanical report has been inspected and retained; this passing preflight
 does not authorize an intake request.
 
-**Current standalone mathematics revision, 2026-11-09.** Paper 1 is
-**36 pages** and develops the recovery problem, hidden-operator difficulty,
-CVP comparison and observation limits without repeated companion-paper
-ownership notes. Section 5, *Observation Boundaries and Recovery*, combines
-the former two observation sections: exact cochains, the exact-component
-obstruction, additional public observations, frames/projective coordinates
-(§5.4), and recovery from the full point (§5.5). Section 6 is *Conclusion and
-Further Work*. Its post-conclusion parity table retains four definition rows,
-eight main groups (21 declarations), five support groups (25 declarations),
-and three background/assumption/contract rows; concise proof boundaries follow.
-Paper 1 prints five external mathematical references; its bibliography still
-has seven records, including two uncited companion entries. The 28-source
-ledger mapping remains intact; Paper 2/3 retain 42/16 bibliography records,
-and Paper 3's 31-page PDF is unchanged. Lean edits are limited to section-number
-comments; all non-comment Lean source is unchanged. The checked 9,295-job/
-975-report proof state is retained without claiming a repeated Lean build.
-The revised candidate remains local and needs its own exact-commit protected
-preflight; public `66e1ad2` and its passing report remain unchanged.
+**Current construction-first revision, 2026-11-09.** Paper 1's local PDF is
+**32 pages**. Introduction (§1) leads to the HCP setup and construction (§2):
+exact-cochain observations are in §2.1, semantic/public-hidden data in §2.2,
+and full projective observations and recovery in §2.2.1. *CVP Comparison and
+Kernel Ambiguity* (§3) is the last main section; the actual homological model
+sits beside its cellular example in §3.5. *Conclusion and Further Work* is §4,
+followed by the statement--Lean parity table (Appendix A) and concise proof
+boundaries (Appendix B). The table retains four definition rows, eight main
+groups (21 declarations), five support groups (25 declarations), and three
+background/assumption/contract rows. All eleven proposition statements and
+the mathematical definitions are retained; one proof opening now invokes its
+stated closed-test-invariance premise, preserving the distinction from the
+proved homological fragment. Paper 1 prints five external mathematical
+references and retains seven bibliography records, including two uncited
+companion entries. The 28-source ledger mapping, Paper 2/3's 42/16 bibliography
+records and Paper 3's 31-page PDF are unchanged. Nine Lean header comments
+remove stale section references; non-comment source across all 280 Lean files
+is unchanged. The checked 9,295-job/975-report proof state is retained without
+claiming a repeated Lean build. This revised candidate is local and needs its
+own exact-commit protected preflight; public `66e1ad2` and its passing report
+remain unchanged.
+
+**Preserved P304 standalone checkpoint, 2026-11-09.** Paper 1 then had
+36 pages, one merged observation section (§5) and a section-6 conclusion.
+Its statement/parity and non-comment Lean preservation checks remain evidence
+for that exact earlier revision, alongside the historical 38/37-page and
+public-`66e1ad2` records; they do not certify the current manuscript bytes.
 
 **Preserved P302/P303 back-matter checkpoint, 2026-11-09.** Paper 1 then had
 38 pages, separate observation sections and a section-7 conclusion. Its parity
@@ -136,8 +145,9 @@ The first frozen Paper 1 candidate, `73f9c28a4b9f8fb6a04e5b656389979be6b9cd92`,
 predates the public snapshot's manuscript and metadata wording corrections. It is a
 historical candidate. The revised TeX, PDF, README and metadata were frozen
 together in the published commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`.
-The subsequent 37-page scope checkpoint, preserved 38-page parity-table
-checkpoint and current 36-page standalone revision are outside both historical public candidates. The revised packages
+The subsequent 37-page scope checkpoint, 38-page parity-table checkpoint,
+P304 36-page standalone checkpoint and current 32-page construction-first
+revision are outside both historical public candidates. The revised packages
 must carry the current manuscript and its exact source reference before any
 future publication or protected preflight.
 The final local records are `paper1-first-frozen-release.json`,

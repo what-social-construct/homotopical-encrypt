@@ -12,7 +12,7 @@ public import Axioms.ZKP
   Paper correspondence:
   - Paper 2: proof-carrying payload/statement contracts and their consumption
     as protocol evidence.
-  - Paper 1 Section 5 distinguishes those public statements from the
+  - Paper 1 distinguishes those public statements from the
     mathematical full Hodge sample.
 
   Core mathematical objects should not become hashes or SNARKs themselves.

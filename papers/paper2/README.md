@@ -13,7 +13,7 @@ representative/key rotation and migration. Its three-level profile keeps
 private Hodge/restriction data and full cochains unless explicitly exposed,
 the public residue payload/modulus/count/tag, and only the declared selective
 openings or proof statements. These concrete choices use
-[Paper 1's mathematical observation boundary](../paper1/sections/05-observation-boundaries.tex).
+[Paper 1's mathematical observation boundary](../paper1/sections/02-harmonic-cochain-problem.tex).
 The selected
 mathematical HCP theorem uses the existing `(class,b)` observation. A richer
 storage or full-Plucker view needs its own compatibility conditions; the
