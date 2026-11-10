@@ -285,7 +285,7 @@ Homotopy proof verify      n³ + validation
 **Goal**: Interoperability and DeFi primitives
 
 **Deliverables**:
-- ✅ Solana bridge (HCRYPT ↔ SOL)
+- ✅ Solana bridge (HOMOTOPICAL_ENCRYPT ↔ SOL)
 - ✅ $REVENGE integration
 - ✅ DEX contract (homotopy-based AMM)
 - ✅ Lending protocol (spectral-based risk)

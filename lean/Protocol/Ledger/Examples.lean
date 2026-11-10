@@ -12,7 +12,7 @@ snapshot relation. It exercises the mathematical kernel without asserting
 production ownership, runtime verification, hash security, or quorum finality.
 -/
 
-namespace Hcrypt.Protocol.Ledger.Examples
+namespace HomotopicalEncryption.Protocol.Ledger.Examples
 
 noncomputable section
 
@@ -195,4 +195,4 @@ theorem wrong_snapshot_rejected : ¬ wrongSnapshot.Valid policy := by
 
 end
 
-end Hcrypt.Protocol.Ledger.Examples
+end HomotopicalEncryption.Protocol.Ledger.Examples

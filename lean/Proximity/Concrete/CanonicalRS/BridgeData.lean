@@ -20,7 +20,7 @@ public import Proximity.Application.Calibration
   obligations remain explicit theorem slots.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 
@@ -105,7 +105,7 @@ theorem listDecodingBoundAt (β : BridgeData) :
       β.rsTarget.listSize := by
   simpa [rsTarget, target, johnsonRadiusReal,
     ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius,
-    Hcrypt.Proximity.BlockCode.relativeRadius]
+    HomotopicalEncryption.Proximity.BlockCode.relativeRadius]
     using β.bounds.listDecodingBoundAt
 
 /-- The canonical RS endpoint carries the fractional MCA error bound. -/
@@ -116,7 +116,7 @@ theorem mutualCorrelatedAgreementErrorBound (β : BridgeData) :
       ((β.rsTarget.threshold : ℝ) / (Fintype.card RSField : ℝ)) := by
   simpa [rsTarget, target, johnsonRadiusReal,
     ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius,
-    Hcrypt.Proximity.BlockCode.relativeRadius]
+    HomotopicalEncryption.Proximity.BlockCode.relativeRadius]
     using β.bounds.mutualCorrelatedAgreementErrorBound
 
 /-- The canonical RS endpoint carries the cited Definition 4.3 MCA bound. -/
@@ -126,7 +126,7 @@ theorem paperMutualCorrelatedAgreementErrorBound (β : BridgeData) :
       ((β.rsTarget.threshold : ℝ) / (Fintype.card RSField : ℝ)) := by
   simpa [rsTarget, target, johnsonRadiusReal,
     ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius,
-    Hcrypt.Proximity.BlockCode.relativeRadius]
+    HomotopicalEncryption.Proximity.BlockCode.relativeRadius]
     using β.bounds.paperMutualCorrelatedAgreementErrorBound
 
 /-!
@@ -574,4 +574,4 @@ end
 
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

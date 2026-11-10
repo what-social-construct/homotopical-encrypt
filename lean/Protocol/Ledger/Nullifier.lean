@@ -12,7 +12,7 @@ Freshness is checked against the prior spent set. Any requirement that the
 body list itself has no duplicates is an additional action-validity condition.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Protocol
 namespace Ledger
 namespace Nullifiers
@@ -57,4 +57,4 @@ theorem not_fresh_consume
 end Nullifiers
 end Ledger
 end Protocol
-end Hcrypt
+end HomotopicalEncryption

@@ -23,11 +23,11 @@ supporting**. `definition_names` is empty. Both modules build independently;
 full comparison and dependency verification are recorded separately.
 
 The source is the [immutable manuscript](https://github.com/what-social-construct/homotopical-encrypt/blob/1a2f72a1a60056ac001716c95c403816f9069ee0/papers/proximity-prize/main.tex).
-In the crosswalk, `SC` means `Hcrypt.Sheaf.SystematicCode`, `TL` means
-`Hcrypt.Protocol.Storage.ThreeLevel`, `CC` means
-`Hcrypt.Protocol.Storage.CanonicalCalibration`, and `C3` means
-`Hcrypt.Protocol.Storage.CanonicalThreeLevel`; `E` means
-`Hcrypt.Palomar.PaperThree.Application`.
+In the crosswalk, `SC` means `HomotopicalEncryption.Sheaf.SystematicCode`, `TL` means
+`HomotopicalEncryption.Protocol.Storage.ThreeLevel`, `CC` means
+`HomotopicalEncryption.Protocol.Storage.CanonicalCalibration`, and `C3` means
+`HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel`; `E` means
+`HomotopicalEncryption.Palomar.PaperThree.Application`.
 
 | Group / source | Selected content and declaration anchors |
 | --- | --- |

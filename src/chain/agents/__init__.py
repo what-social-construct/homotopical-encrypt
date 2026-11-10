@@ -1,5 +1,5 @@
 """
-CLMM Agents — Sheaf-Native Market Making for HCRYPT ↔ vHCRYPT
+CLMM Agents — Sheaf-Native Market Making for HOMOTOPICAL_ENCRYPT ↔ vHOMOTOPICAL_ENCRYPT
 
 Three agents manage the CLMM pool, orchestrated through CoregulatorDAO:
 
@@ -9,7 +9,7 @@ Three agents manage the CLMM pool, orchestrated through CoregulatorDAO:
 
 MAPPING FROM REVENGE-BANANA-PROTOCOL:
 
-  revenge-banana                    hcrypt native
+  revenge-banana                    homotopical_encrypt native
   ──────────────                    ──────────────
   sheaf_descent_engine              CoregulatorDAO (Ehresmann MES)
   GeometricLearningSystem           grassmann.py Karcher mean on Gr(k,n)
@@ -22,7 +22,7 @@ METASPECIFICATION (Swan et al. / ConCert):
   The bonding curve invariant k = x·y is checked by the orchestrator
   after every swap. Properties NOT in clmm.py code:
   - k preservation across rounding (fixed-point, like spectral_bounds.py)
-  - Reserve ratio bounds (vHCRYPT should track validator demand)
+  - Reserve ratio bounds (vHOMOTOPICAL_ENCRYPT should track validator demand)
   - Slippage caps (max 5% single-swap price impact)
   - Agent action consistency (hedge + stabilize don't conflict)
 """
@@ -59,8 +59,8 @@ CLMM_K_TOLERANCE: int = 1              # Integer rounding tolerance for k = x·y
 def verify_bonding_curve_invariant(
     k_before: int,
     k_after: int,
-    reserve_hcrypt: int,
-    reserve_vhcrypt: int,
+    reserve_homotopical_encrypt: int,
+    reserve_vhomotopical_encrypt: int,
     swap_amount: int,
     tolerance: int = CLMM_K_TOLERANCE,
 ) -> tuple[bool, str]:
@@ -79,18 +79,18 @@ def verify_bonding_curve_invariant(
         return False, f"k drift: {k_before} → {k_after} (Δ={k_after - k_before})"
 
     # 2. Reserve minimums
-    total = reserve_hcrypt + reserve_vhcrypt
+    total = reserve_homotopical_encrypt + reserve_vhomotopical_encrypt
     if total > 0:
-        ratio_h = reserve_hcrypt / total
-        ratio_v = reserve_vhcrypt / total
+        ratio_h = reserve_homotopical_encrypt / total
+        ratio_v = reserve_vhomotopical_encrypt / total
         if ratio_h < CLMM_MIN_RESERVE_RATIO:
-            return False, f"HCRYPT reserve ratio {ratio_h:.3f} < {CLMM_MIN_RESERVE_RATIO}"
+            return False, f"HOMOTOPICAL_ENCRYPT reserve ratio {ratio_h:.3f} < {CLMM_MIN_RESERVE_RATIO}"
         if ratio_v < CLMM_MIN_RESERVE_RATIO:
-            return False, f"vHCRYPT reserve ratio {ratio_v:.3f} < {CLMM_MIN_RESERVE_RATIO}"
+            return False, f"vHOMOTOPICAL_ENCRYPT reserve ratio {ratio_v:.3f} < {CLMM_MIN_RESERVE_RATIO}"
 
     # 3. Slippage check
-    if reserve_hcrypt > 0 and reserve_vhcrypt > 0:
-        price_impact = swap_amount / max(reserve_hcrypt, reserve_vhcrypt)
+    if reserve_homotopical_encrypt > 0 and reserve_vhomotopical_encrypt > 0:
+        price_impact = swap_amount / max(reserve_homotopical_encrypt, reserve_vhomotopical_encrypt)
         if price_impact > CLMM_MAX_SLIPPAGE:
             return False, f"Slippage {price_impact:.3f} > {CLMM_MAX_SLIPPAGE}"
 

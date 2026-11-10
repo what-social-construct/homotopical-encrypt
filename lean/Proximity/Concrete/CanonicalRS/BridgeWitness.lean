@@ -19,7 +19,7 @@ public import Proximity.Concrete.Gates.Final
   bridge certificate.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 
@@ -288,4 +288,4 @@ end
 
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

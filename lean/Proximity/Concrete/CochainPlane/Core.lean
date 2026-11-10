@@ -20,7 +20,7 @@ public import Proximity.Application.Problem
   encoding is a later boundary.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CochainPlane
 
@@ -304,4 +304,4 @@ end
 
 end CochainPlane
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

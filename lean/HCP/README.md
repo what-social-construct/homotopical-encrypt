@@ -37,7 +37,7 @@ family's actual closed theories is derived. This is a homological test
 fragment, not a formalization of Helfer's full first-order syntax or general
 fibrational invariance theorem.
 
-The principal endpoints in `Hcrypt.HCP.AxisFamily` are:
+The principal endpoints in `HomotopicalEncryption.HCP.AxisFamily` are:
 
 - `shared_observation_distinct_nonzero_targets`: the same `(class,b)` has two
   different nonzero operative targets, each the actual sample message.

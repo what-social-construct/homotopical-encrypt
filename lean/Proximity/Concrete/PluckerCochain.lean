@@ -22,7 +22,7 @@ public import Proximity.Application.Problem
   only the Plucker -> cochain/local-test step.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace PluckerCochain
 
@@ -223,4 +223,4 @@ end
 
 end PluckerCochain
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

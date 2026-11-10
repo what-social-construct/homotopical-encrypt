@@ -190,7 +190,7 @@ full private object
   -> state-root update
 ```
 
-For hcrypt this specializes to:
+For homotopical_encrypt this specializes to:
 
 ```
 private fields of SheafState / stalk data / fibration representative

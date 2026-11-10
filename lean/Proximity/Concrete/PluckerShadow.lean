@@ -24,7 +24,7 @@ public import Proximity.Application.Projection
   records only the candidate shadow operations and their supplied laws.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace PluckerShadow
 
@@ -177,7 +177,7 @@ namespace AsCodeShadow
 
 /-- The generic code-shadow surface induced by a Plucker shadow. -/
 def toCodeShadow {P : CoordinateSystem} (S : AsCodeShadow P) :
-    Hcrypt.Proximity.CodeShadow where
+    HomotopicalEncryption.Proximity.CodeShadow where
   Word := P.Shadow
   Codeword := S.Codeword
   distanceToCode := S.distanceToCode
@@ -222,4 +222,4 @@ def CompatibleReceivedWord.Complete
 
 end PluckerShadow
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

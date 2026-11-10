@@ -1,8 +1,8 @@
-# $HCRYPT Chain Architecture
+# $HOMOTOPICAL_ENCRYPT Chain Architecture
 
 ## Philosophy: Sovereignty, Not Hiding
 
-Unlike Monero (hide everything), $HCRYPT enables **choice**:
+Unlike Monero (hide everything), $HOMOTOPICAL_ENCRYPT enables **choice**:
 - Transparent by default (auditable)
 - Private when you need it (encrypted)
 - Self-sovereign always (no KYC gatekeepers)
@@ -15,7 +15,7 @@ Unlike Monero (hide everything), $HCRYPT enables **choice**:
 
 ```
 Traditional:  Address = hash(public_key)
-$HCRYPT:      Address = spectral_fingerprint(fibration)
+$HOMOTOPICAL_ENCRYPT:      Address = spectral_fingerprint(fibration)
 
 Your address IS the eigenvalue spectrum of your secret geometry.
 - Self-generated (no issuer)
@@ -27,7 +27,7 @@ Your address IS the eigenvalue spectrum of your secret geometry.
 
 ```
 Traditional:  TX = (from, to, amount, signature)
-$HCRYPT:      TX = 0-cochain over topology nerve
+$HOMOTOPICAL_ENCRYPT:      TX = 0-cochain over topology nerve
 
 A transaction assigns data to each vertex of the connection topology.
 - Multi-party native (not just sender→receiver)
@@ -39,7 +39,7 @@ A transaction assigns data to each vertex of the connection topology.
 
 ```
 Traditional:  Block = list of transactions + header
-$HCRYPT:      Block = harmonic cochain + projection proof
+$HOMOTOPICAL_ENCRYPT:      Block = harmonic cochain + projection proof
 
 A block is the harmonic representative of all included transactions.
 - Projection to ker(Δ) is the "consensus"
@@ -51,7 +51,7 @@ A block is the harmonic representative of all included transactions.
 
 ```
 Traditional:  PoW = burn energy, PoS = lock capital
-$HCRYPT:      PoV = show spectral invariants
+$HOMOTOPICAL_ENCRYPT:      PoV = show spectral invariants
 
 You produce a block by:
 1. Collect transactions (cochains)
@@ -64,7 +64,7 @@ You produce a block by:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    HCRYPT BLOCK N                       │
+│                    HOMOTOPICAL_ENCRYPT BLOCK N                       │
 ├─────────────────────────────────────────────────────────┤
 │ header:                                                 │
 │   prev_hash: SHA256(block N-1)                         │
@@ -95,7 +95,7 @@ You produce a block by:
     "from": spectral_fingerprint,
     "to": spectral_fingerprint,
     "amount": 100.0,
-    "token": "HCRYPT",
+    "token": "HOMOTOPICAL_ENCRYPT",
     "encrypted": False,  # Anyone can see
     "signature": homotopy_signature(private_fibration)
 }
@@ -283,7 +283,7 @@ class AccountState:
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                      VALIDATORS                         │
-│  (Run full nodes, produce blocks, stake HCRYPT)         │
+│  (Run full nodes, produce blocks, stake HOMOTOPICAL_ENCRYPT)         │
 │  Requirements: Valid fibration credential               │
 └─────────────────────────────────────────────────────────┘
                           ↑↓
@@ -325,7 +325,7 @@ tx = SovereigntySetupTx(
     proof=proof
 )
 
-# Now you exist on HCRYPT with self-sovereign identity
+# Now you exist on HOMOTOPICAL_ENCRYPT with self-sovereign identity
 # No KYC, no issuer, no permission needed
 ```
 
@@ -356,7 +356,7 @@ tx = ConnectionTx(
 
 ## Token Economics
 
-### $HCRYPT Token
+### $HOMOTOPICAL_ENCRYPT Token
 
 ```
 Total Supply: Fixed (deflationary)
@@ -376,10 +376,10 @@ Utility:
 ### Fee Structure
 
 ```
-Transparent transfer:  0.001 HCRYPT (basic)
-Private transfer:      0.01 HCRYPT  (encryption overhead)
+Transparent transfer:  0.001 HOMOTOPICAL_ENCRYPT (basic)
+Private transfer:      0.01 HOMOTOPICAL_ENCRYPT  (encryption overhead)
 Sovereignty setup:     FREE (onboarding incentive)
-Multi-party agreement: 0.005 HCRYPT per party
+Multi-party agreement: 0.005 HOMOTOPICAL_ENCRYPT per party
 ```
 
 ## Implementation Roadmap
@@ -403,7 +403,7 @@ Multi-party agreement: 0.005 HCRYPT per party
 - [ ] Encrypted state channels
 
 ### Phase 4: Bridge (Weeks 13-16)
-- [ ] Solana bridge (HCRYPT ↔ SOL)
+- [ ] Solana bridge (HOMOTOPICAL_ENCRYPT ↔ SOL)
 - [ ] $REVENGE integration
 - [ ] Cross-chain sovereignty proofs
 

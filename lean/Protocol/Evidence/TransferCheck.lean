@@ -24,7 +24,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Evidence.TransferCheck
+namespace HomotopicalEncryption.Protocol.Evidence.TransferCheck
 
 open TransferTranscript
 open Sheaf CellularSheaf
@@ -161,4 +161,4 @@ theorem reject_malformed (codec : PacketCodec Owner) (expectedMetadata : ProofMe
     check codec expectedMetadata expectedIntent authorization payload bytes = false := by
   simp only [check, malformed]
 
-end Hcrypt.Protocol.Evidence.TransferCheck
+end HomotopicalEncryption.Protocol.Evidence.TransferCheck

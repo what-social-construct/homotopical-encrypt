@@ -13,7 +13,7 @@ proofs. Only the two explicit equivalence-law statements need local wrappers.
 Challenge is not imported by this module.
 -/
 
-namespace Hcrypt.Palomar.PaperThree
+namespace HomotopicalEncryption.Palomar.PaperThree
 open ProximityPrize
 theorem planePairEquiv_inverse_laws {ι F : Type*} :
     (∀ p : PlaneWord ι F, (planePairEquiv ι F).symm (planePairEquiv ι F p) = p) ∧
@@ -23,4 +23,4 @@ theorem planeLineEquiv_inverse_laws {ι F : Type*} :
     (∀ p : PlaneWord ι F, (planeLineEquiv ι F).symm (planeLineEquiv ι F p) = p) ∧
     (∀ L : AffineLine ι F, planeLineEquiv ι F ((planeLineEquiv ι F).symm L) = L) := by
   exact ⟨(planeLineEquiv ι F).left_inv, (planeLineEquiv ι F).right_inv⟩
-end Hcrypt.Palomar.PaperThree
+end HomotopicalEncryption.Palomar.PaperThree

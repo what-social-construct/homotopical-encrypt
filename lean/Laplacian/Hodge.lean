@@ -25,7 +25,7 @@ public import Laplacian.Projection
   over the existing ambient cochain vector.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Laplacian
 
 open scoped BigOperators Real Nat Classical Pointwise
@@ -190,4 +190,4 @@ theorem residual_eq_zero_iff_mem
 end
 
 end Laplacian
-end Hcrypt
+end HomotopicalEncryption

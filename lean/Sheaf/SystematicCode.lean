@@ -19,7 +19,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Sheaf.SystematicCode
+namespace HomotopicalEncryption.Sheaf.SystematicCode
 
 open CellularSheaf
 open scoped BigOperators
@@ -182,4 +182,4 @@ theorem ofWord_isExact_of_vectorCodeword_of_noWrap
   exact P.realCheck_components_eq_zero_of_vectorCodeword_of_noWrap
     S hDegree hS z hw hwrap
 
-end Hcrypt.Sheaf.SystematicCode
+end HomotopicalEncryption.Sheaf.SystematicCode

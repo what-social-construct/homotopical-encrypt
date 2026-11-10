@@ -29,7 +29,7 @@ claim and no adoption of an OMR cryptographic implementation.
 
 set_option autoImplicit false
 
-namespace Hcrypt.Protocol.Storage.Retrieval.UniformRead
+namespace HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead
 
 variable {Slot Target Coins Result View : Type*}
 
@@ -130,4 +130,4 @@ theorem event_probability_eq (manifest : PublicManifestView Slot)
 
 end
 
-end Hcrypt.Protocol.Storage.Retrieval.UniformRead
+end HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead

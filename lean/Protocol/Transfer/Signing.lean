@@ -23,17 +23,19 @@ proof of authorization, key ownership, unforgeability or transcript privacy.
 
 set_option autoImplicit false
 
-namespace Hcrypt.Protocol.Transfer.Signing
+namespace HomotopicalEncryption.Protocol.Transfer.Signing
 
 open Evidence.TransferTranscript
 
 /-- The owner-intent signing domain, represented by its exact ASCII bytes. -/
 def domain : List UInt8 :=
-  [72, 67, 82, 89, 80, 84, 95, 79, 87, 78, 69, 82, 95, 73, 78, 84, 69, 78, 84, 95, 86, 49]
+  [72, 79, 77, 79, 84, 79, 80, 73, 67, 65, 76, 95, 69, 78, 67, 82, 89, 80, 84, 95,
+    79, 87, 78, 69, 82, 95, 73, 78, 84, 69, 78, 84, 95, 86, 49]
 
 /-- The existing runtime worker-signature domain, kept distinct from owner intents. -/
 def spectralDomain : List UInt8 :=
-  [72, 67, 82, 89, 80, 84, 95, 83, 80, 69, 67, 84, 82, 65, 76, 95, 80, 82, 79, 79, 70, 95, 86, 49]
+  [72, 79, 77, 79, 84, 79, 80, 73, 67, 65, 76, 95, 69, 78, 67, 82, 89, 80, 84, 95,
+    83, 80, 69, 67, 84, 82, 65, 76, 95, 80, 82, 79, 79, 70, 95, 86, 49]
 
 /-- The existing public packet with no signature/proof output in its own preimage. -/
 def skeleton {Owner : Type} (metadata : ProofMetadata) (intent : Intent Owner) :
@@ -122,19 +124,19 @@ theorem message_inDomain (codec : Evidence.TransferCheck.PacketCodec Owner)
     InDomain (message codec metadata intent) :=
   ⟨codec.encode (skeleton metadata intent), rfl⟩
 
-/-- The first byte after `HCRYPT_` differs for owner and worker spectral messages. -/
+/-- The first byte after `HOMOTOPICAL_ENCRYPT_` differs for owner and worker spectral messages. -/
 theorem domain_append_ne_spectralDomain_append (ownerSuffix spectralSuffix : List UInt8) :
     domain ++ ownerSuffix ≠ spectralDomain ++ spectralSuffix := by
   intro same
-  have atSeven := congrArg (fun bytes : List UInt8 => bytes[7]?) same
-  have ownerByte : (domain ++ ownerSuffix)[7]? = some (79 : UInt8) := by
-    rw [List.getElem?_append_left (by decide : 7 < domain.length)]
+  have atBoundary := congrArg (fun bytes : List UInt8 => bytes[20]?) same
+  have ownerByte : (domain ++ ownerSuffix)[20]? = some (79 : UInt8) := by
+    rw [List.getElem?_append_left (by decide : 20 < domain.length)]
     rfl
-  have spectralByte : (spectralDomain ++ spectralSuffix)[7]? = some (83 : UInt8) := by
-    rw [List.getElem?_append_left (by decide : 7 < spectralDomain.length)]
+  have spectralByte : (spectralDomain ++ spectralSuffix)[20]? = some (83 : UInt8) := by
+    rw [List.getElem?_append_left (by decide : 20 < spectralDomain.length)]
     rfl
-  rw [ownerByte, spectralByte] at atSeven
-  exact (by decide : (79 : UInt8) ≠ 83) (Option.some.inj atSeven)
+  rw [ownerByte, spectralByte] at atBoundary
+  exact (by decide : (79 : UInt8) ≠ 83) (Option.some.inj atBoundary)
 
 /-- Every existing spectral-domain message is outside the owner-intent domain. -/
 theorem not_inDomain_spectralMessage (suffix : List UInt8) :
@@ -148,4 +150,4 @@ theorem message_ne_spectralMessage (codec : Evidence.TransferCheck.PacketCodec O
     message codec metadata intent ≠ spectralDomain ++ suffix :=
   domain_append_ne_spectralDomain_append (codec.encode (skeleton metadata intent)) suffix
 
-end Hcrypt.Protocol.Transfer.Signing
+end HomotopicalEncryption.Protocol.Transfer.Signing

@@ -18,7 +18,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage
+namespace HomotopicalEncryption.Protocol.Storage
 
 open Sheaf CellularSheaf
 
@@ -77,4 +77,4 @@ theorem ofHCPObservation_decodedDistance
   (Context.accepted_iff_decodedDistance_eq_zero _).1
     (ofHCPObservation_accepted O identify parameters)
 
-end Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Protocol.Storage

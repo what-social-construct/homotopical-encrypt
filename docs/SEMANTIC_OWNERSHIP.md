@@ -2,13 +2,21 @@
 
 Manuscript ownership, shared notation, and cross-paper proofreading issues are
 tracked in [the manuscript parity register](../SEMANTIC-PARITY.md). The HCP
-paper owns HCP/Hodge/CVP foundations and observation/projective-recovery
-boundaries. Paper 2 owns the concrete cochain/commitment and protocol profile;
-Paper 3 owns coding and quantitative metric/proximity analysis. Shared
+paper owns HCP/Hodge/CVP foundations and the exact-component observation
+obstruction. Paper 3 introduces full projective subspace/projector reconstruction
+in the projective projection chain and owns coding and quantitative
+metric/proximity analysis. Paper 2 owns the concrete cochain/commitment,
+visibility, codec and protocol contracts, consuming that same canonical proof. Shared
 definitions are cited as the same objects. The register below continues to
 record mathematical and runtime object status.
 
-HCRYPT separates mathematical truth, formal obligation, executable computation,
+Paper 1's current independent selection has seven groups: 18 manuscript-facing
+and 20 supporting declarations (38 targets), with 20 deliberate Challenge
+placeholders. Fresh build, dependency and release-closure checks are pending
+after the namespace rename and scope change; earlier reports retain their
+recorded scopes.
+
+HOMOTOPICAL_ENCRYPT separates mathematical truth, formal obligation, executable computation,
 and node policy into distinct ownership layers. This keeps the proof stack
 honest: Lean can prove the algebraic and hardness facts without pretending to
 certify every runtime line, and runtime policy can remain explicit without being
@@ -36,7 +44,7 @@ mathematical object.
 | `AcceptedCommittedOneCochain` | Current Lean identifier. | A wire payload `c` bound to one `SheafStateSnapshot`, with opening `a` and decoded exactness `I.decode c = F.delta0 a`; `IsExactOneCochain` names the geometric property. | The decoded geometric cochain itself, a degree-zero global section, or a uniquely determined opening `a`. |
 | `HasPathSpace.Path x y` | Current Lean interface type; no concrete path-space instance yet. | A typed path witness from representative `x` to representative `y`, intended to remain private at the protocol boundary. | A sampled matrix interpolation, equal public classifier values, or equality of a finite invariant tuple. |
 | `PathEquivalent x y` | Current Lean identifier. | Mere inhabitation of `HasPathSpace.Path x y`. | A concrete topological path model or a proved equivalence criterion for runtime objects. |
-| `PublicClassifier` / `PublicFiber` | Current Lean identifiers. | The public classifier map and the fiber over one public class value. | A path component. Lean currently proves path-to-same-class consequences only under an explicit path-respecting hypothesis; it does not prove the converse. |
+| `PublicClassifier` / `PublicFiber` | Current Lean identifiers. | The public classifier map and its inverse-image fiber. The typed HCP interface optionally adds `ReflectsHomotopyEquivalence`; with closed-test invariance, its fibers are exactly the declared semantic classes. The admitted two-member family proves this profile. | An automatic converse for arbitrary path spaces, an injective representative identifier, or a determined fixed-coordinate harmonic kernel. |
 | `Proximity.Gates.Projection.StateBus` | Current Lean proof object; runtime reset/finalization is pending. | One witness-local nested chain of already-checked cochain, plane, and RS payloads/metric handoffs, consumed by the planned protocol `SheafState`. | The persistent checkpoint store, the finalized `SheafBlock`, or an already implemented lifecycle state machine. |
 | `TaskSheaf` | Planned Paper 2 term; no Lean definition yet. | A cellular sheaf over a finite execution slice, with stalks of admissible protocol decisions/evidence. | The Paper 1 HCP sheaf, a quorum certificate, or finality by itself. |
 | `degreeOneLaplacian` / (Delta_1) | Current Lean identifier. | The true Hodge operator (delta_0delta_0^ast+delta_1^astdelta_1) on (C^1). | The normalized residual projector or network graph Laplacian. |

@@ -15,7 +15,7 @@ public import Mathlib.Init
   without committing to a specific numerical estimator inside Lean yet.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 structure Coregulator where
@@ -35,4 +35,4 @@ abbrev CoregulatorWellFormed (C : Coregulator) : Prop :=
   ∧ C.DelayPolicyMonotone
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

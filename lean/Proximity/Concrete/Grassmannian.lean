@@ -25,7 +25,7 @@ public import Laplacian.Hodge
   established Hodge objects instead of redefining them.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace Grassmannian
 
@@ -69,9 +69,9 @@ theorem disagreement_eq_laplacian_residual
     (W : Submodule ℝ (EuclideanSpace ℝ n))
     [W.HasOrthogonalProjection]
     (b : GrassmannianCochain n) :
-    disagreement W b = Hcrypt.Laplacian.residual W b := by
-  unfold disagreement Hcrypt.Laplacian.residual
-  rw [Hcrypt.Laplacian.residualVector_eq_orthogonalProjection]
+    disagreement W b = HomotopicalEncryption.Laplacian.residual W b := by
+  unfold disagreement HomotopicalEncryption.Laplacian.residual
+  rw [HomotopicalEncryption.Laplacian.residualVector_eq_orthogonalProjection]
   simp
 
 /-- Harmonic/global sections have zero Grassmannian disagreement. -/
@@ -93,15 +93,15 @@ theorem disagreement_eq_zero_iff_globalSection
     (b : GrassmannianCochain n) :
     disagreement W b = 0 ↔ GlobalSection W b := by
   rw [disagreement_eq_laplacian_residual]
-  exact Hcrypt.Laplacian.residual_eq_zero_iff_mem W b
+  exact HomotopicalEncryption.Laplacian.residual_eq_zero_iff_mem W b
 
 /-- The global-section predicate is the Hodge harmonicity predicate. -/
 theorem globalSection_iff_isHarmonic
     (W : Submodule ℝ (EuclideanSpace ℝ n))
     [W.HasOrthogonalProjection]
     (b : GrassmannianCochain n) :
-    GlobalSection W b ↔ Hcrypt.Laplacian.IsHarmonic W b :=
-  Iff.symm (Hcrypt.Laplacian.isHarmonic_iff_mem W b)
+    GlobalSection W b ↔ HomotopicalEncryption.Laplacian.IsHarmonic W b :=
+  Iff.symm (HomotopicalEncryption.Laplacian.isHarmonic_iff_mem W b)
 
 /-- The Grassmannian hidden-subspace instance of sheaf proximity. -/
 def proximityInstance
@@ -144,4 +144,4 @@ end
 
 end Grassmannian
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

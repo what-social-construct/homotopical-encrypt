@@ -19,7 +19,7 @@ public import Proximity.Concrete.Gates
   the heavier projection-chain/gate certificates that consume those facts.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 
@@ -309,7 +309,7 @@ Package a calibrated ready canonical chain as the completed calibrated RS bridge
 This is the clean handoff from the ordered hard-gate -> naturality -> RS-metric
 certificates to the generic RS bridge surface.
 -/
-def toCalibratedHcryptToRSBridge
+def toCalibratedHomotopicalEncryptionToRSBridge
     {β : BridgeData}
     {n : Type} [Fintype n] [DecidableEq n] {r : ℕ}
     {P : GrassmannianPlucker.FramedSystem n r}
@@ -321,11 +321,11 @@ def toCalibratedHcryptToRSBridge
       ProjectionChain.Chain
         P S L β.rsTarget β.metric E β.planeEncoding pluckerDisagreement}
     (Ω : RSMetricCertificate β Γ) :
-    ReedSolomonTarget.Target.CalibratedHcryptToRSBridge
+    ReedSolomonTarget.Target.CalibratedHomotopicalEncryptionToRSBridge
       (PluckerCochain.pluckerInstance P pluckerDisagreement)
       β.rsTarget
       β.metric :=
-  Gates.Projection.CalibratedEndToEndReady.toCalibratedHcryptToRSBridge
+  Gates.Projection.CalibratedEndToEndReady.toCalibratedHomotopicalEncryptionToRSBridge
     Ω.calibratedReady
     Ω.calibration.sourceGap
     Ω.calibration.targetGap
@@ -391,11 +391,11 @@ def toBridge
       (β := β) (P := P) (S := S) (L := L) (E := E)
       (pluckerDisagreement := pluckerDisagreement) (Γ := Γ))
     (χ : Gates.Projection.NaturalityGateCertificate Γ) :
-    ReedSolomonTarget.Target.CalibratedHcryptToRSBridge
+    ReedSolomonTarget.Target.CalibratedHomotopicalEncryptionToRSBridge
       (PluckerCochain.pluckerInstance P pluckerDisagreement)
       β.rsTarget
       β.metric :=
-  J.toRSMetricCertificate χ |>.toCalibratedHcryptToRSBridge
+  J.toRSMetricCertificate χ |>.toCalibratedHomotopicalEncryptionToRSBridge
 
 section Separated
 
@@ -423,9 +423,9 @@ def toSeparatedRSMetricCertificate : RSMetricCertificate β Γ :=
 
 /-- The completed bridge at the selected near radius and unchanged Johnson far radius. -/
 def toSeparatedBridge :
-    ReedSolomonTarget.Target.CalibratedHcryptToRSBridge
+    ReedSolomonTarget.Target.CalibratedHomotopicalEncryptionToRSBridge
       (PluckerCochain.pluckerInstance P pluckerDisagreement) β.rsTarget β.metric :=
-  J.toSeparatedRSMetricCertificate χ nearRadius hgap |>.toCalibratedHcryptToRSBridge
+  J.toSeparatedRSMetricCertificate χ nearRadius hgap |>.toCalibratedHomotopicalEncryptionToRSBridge
 
 /-- The completed bridge retains all four selected decision radii. -/
 @[simp] theorem toSeparatedBridge_radii :
@@ -473,4 +473,4 @@ end
 
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

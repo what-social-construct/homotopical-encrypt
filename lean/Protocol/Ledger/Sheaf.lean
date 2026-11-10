@@ -16,7 +16,7 @@ it is not identified with the payload's 16-byte topology tag.
 
 set_option autoImplicit false
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Protocol
 namespace Ledger
 namespace SnapshotModel
@@ -100,4 +100,4 @@ theorem ofSheaf_accepts_edgeValues_length
 end SnapshotModel
 end Ledger
 end Protocol
-end Hcrypt
+end HomotopicalEncryption

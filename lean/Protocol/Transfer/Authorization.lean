@@ -30,7 +30,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Transfer.Authorization
+namespace HomotopicalEncryption.Protocol.Transfer.Authorization
 
 open Sheaf CellularSheaf
 open Evidence.TransferTranscript
@@ -242,4 +242,4 @@ theorem acceptedInvalidProbability_le_of_bounds [DecidableEq Asset]
     foreignOutside payload).trans
     (add_le_add (add_le_add (add_le_add forgeryBound compromisedBound) proofBound) statementBound)
 
-end Hcrypt.Protocol.Transfer.Authorization
+end HomotopicalEncryption.Protocol.Transfer.Authorization

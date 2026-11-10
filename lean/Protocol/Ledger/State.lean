@@ -16,7 +16,7 @@ proofs that those objects are bound. The evidence layer supplies indexed
 binding relations for the actual states and artifacts.
 -/
 
-namespace Hcrypt.Protocol.Ledger
+namespace HomotopicalEncryption.Protocol.Ledger
 
 /-- Semantic state and public context for a bounded ledger transition.
 The root of the state itself is named by a proposal, not stored recursively
@@ -43,4 +43,4 @@ structure SnapshotModel (Snapshot : Type*) where
   accepts : Snapshot → Axioms.CochainCommitmentData → Prop
   topologyBound : Snapshot → TCB.Hash32 → Prop
 
-end Hcrypt.Protocol.Ledger
+end HomotopicalEncryption.Protocol.Ledger

@@ -24,7 +24,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Transfer.Owned
+namespace HomotopicalEncryption.Protocol.Transfer.Owned
 
 open Sheaf CellularSheaf
 open Evidence.TransferTranscript
@@ -221,4 +221,4 @@ def certified [DecidableEq Asset] (checked : CheckedTransfer config transfer byt
 
 end CheckedTransfer
 
-end Hcrypt.Protocol.Transfer.Owned
+end HomotopicalEncryption.Protocol.Transfer.Owned

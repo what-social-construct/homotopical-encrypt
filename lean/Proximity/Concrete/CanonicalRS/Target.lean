@@ -19,7 +19,7 @@ public import Proximity.Concrete.RS.Target
   explicit theorem slots.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 
@@ -91,4 +91,4 @@ end
 
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

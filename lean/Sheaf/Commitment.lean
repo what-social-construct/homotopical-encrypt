@@ -16,7 +16,7 @@ not a consequence of exactness or wire-shape well-formedness.
 
 set_option autoImplicit false
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Sheaf
 namespace CellularSheaf
 
@@ -127,4 +127,4 @@ end AcceptedCommittedOneCochain
 
 end CellularSheaf
 end Sheaf
-end Hcrypt
+end HomotopicalEncryption

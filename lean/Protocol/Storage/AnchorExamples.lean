@@ -23,7 +23,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.AnchorExamples
+namespace HomotopicalEncryption.Protocol.Storage.AnchorExamples
 
 open Sheaf CellularSheaf
 
@@ -300,4 +300,4 @@ theorem raw_persisted_but_not_anchorable :
   rintro ⟨A⟩
   exact Examples.raw_not_accepted A.accepted
 
-end Hcrypt.Protocol.Storage.AnchorExamples
+end HomotopicalEncryption.Protocol.Storage.AnchorExamples

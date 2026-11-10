@@ -22,7 +22,7 @@ The diagonal pairing (from Helfer's homotopical logic):
   Two credentials are "equal" iff their Betti numbers match.
 
 See: hardness_proof.lean for formal verification of Hodge-hardness.
-See: math_audit_hcrypt.lean for the audit motivating this design.
+See: lean/Laplacian/Spectral.lean for the audit motivating this design.
 See: docs/REFACTOR_PLAN.md for the full pivot rationale.
 
 Based on Helfer's homotopical logic (arXiv:1908.08944)
@@ -126,7 +126,7 @@ class SpectralFingerprint:
     PRIVATE spectral fingerprint — part of the secret key material.
     
     POST-AUDIT: This is NO LONGER public. The math audit
-    (math_audit_hcrypt.lean, Spectrum_Not_Homotopy_Invariant) proved
+    (lean/Laplacian/Spectral.lean, Spectrum_Not_Homotopy_Invariant) proved
     that eigenvalues are a FINER invariant than the homotopy class.
     Revealing them publicly reduces the anonymity set from the infinite
     homotopy class to the potentially-singleton isospectral set.
@@ -206,7 +206,7 @@ class PublicIdentity:
         This is the η₂ projection: PublicIdentity → 32 bytes.
         """
         hasher = hashlib.sha256()
-        hasher.update(b"HCRYPT_PUBLIC_IDENTITY_V1")
+        hasher.update(b"HOMOTOPICAL_ENCRYPT_PUBLIC_IDENTITY_V1")
         hasher.update(str(self.betti_numbers).encode())
         hasher.update(self.topology_hash)
         return hasher.digest()
@@ -460,14 +460,14 @@ class FibrationCredential:
     # BINARY SERIALIZATION (replaces pickle — deterministic, safe, portable)
     # =========================================================================
 
-    _MAGIC = b"HCRYPT_CRED_V1"
+    _MAGIC = b"HOMOTOPICAL_ENCRYPT_CRED_V1"
 
     def serialize(self) -> bytes:
         """
         Serialize credential to binary format for encrypted wallet storage.
 
         Format:
-          MAGIC(14) | version(u32) | hilbert_dim(u32) | modulus(u32)
+          MAGIC(len(_MAGIC)) | version(u32) | hilbert_dim(u32) | modulus(u32)
           | num_parties(u32) | parties(len-prefixed utf8)…
           | topology(nerve)
           | stalks(vertex_id → int16[d])…
@@ -578,7 +578,7 @@ class FibrationCredential:
             return chunk
 
         # ── Header ──
-        magic = read_bytes(14)
+        magic = read_bytes(len(cls._MAGIC))
         if magic != cls._MAGIC:
             raise ValueError(f"Bad magic: {magic!r}")
         version, hilbert_dim, modulus = read("<III")

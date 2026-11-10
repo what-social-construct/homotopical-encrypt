@@ -27,7 +27,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Evidence.TransferEnvelope
+namespace HomotopicalEncryption.Protocol.Evidence.TransferEnvelope
 
 open Sheaf CellularSheaf
 open TransferTranscript TransferVerifier
@@ -201,4 +201,4 @@ theorem toAcceptedUpdate
 
 end Derivation
 
-end Hcrypt.Protocol.Evidence.TransferEnvelope
+end HomotopicalEncryption.Protocol.Evidence.TransferEnvelope

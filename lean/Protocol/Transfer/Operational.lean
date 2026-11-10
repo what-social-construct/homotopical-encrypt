@@ -25,7 +25,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Transfer.Operational
+namespace HomotopicalEncryption.Protocol.Transfer.Operational
 
 open Sheaf CellularSheaf
 open Evidence.TransferTranscript
@@ -325,4 +325,4 @@ theorem not_acceptedInvalid_of_good [DecidableEq Asset]
   intro bad
   exact (acceptedInvalid_implies_failure config attempt bad).elim authorizationGood payloadGood
 
-end Hcrypt.Protocol.Transfer.Operational
+end HomotopicalEncryption.Protocol.Transfer.Operational

@@ -7,12 +7,16 @@ The publication numbering is Paper 1 (HCP foundations), Paper 2
 (protocol/commitments), and Paper 3 (this manuscript). The directories are
 unchanged. Product and whitepaper material is unnumbered future work.
 
-The current manuscript revision is **31 pages** and follows that ownership explicitly. Paper 1
-supplies the HCP/Hodge/CVP, semantic and observation-boundary results. Paper 2
+The current manuscript revision is **33 pages** and follows that ownership explicitly. Paper 1
+supplies the HCP/Hodge/CVP, semantic and exact-component obstruction results. Paper 2
 owns the existing cochain construction, encoding/visibility profile, gates,
 evidence and state transitions. Paper 3 recalls the source data needed for
 its actual extraction and proves the list/MCA/radius and native metric
-comparisons. Its core and bridge verification configurations are parts of
+comparisons. Its optional geometric source introduces full projective coordinates
+and subspace/projector recovery at the projection chain; Paper 2 consumes those
+results when specifying what a storage view reveals. Canonical reconstruction
+proofs remain auxiliary to the two existing configured selections.
+Its core and bridge verification configurations are parts of
 this one paper. They are not another manuscript split.
 
 Working title:

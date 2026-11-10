@@ -99,9 +99,9 @@ class ProtocolOrchestrator:
             state['stabilization_fund'] = self.treasury.stabilization_fund
             state['emergency_reserve'] = self.treasury.stabilization_fund  # Same fund
         if self.clmm_pool:
-            state['reserve_hcrypt'] = self.clmm_pool.reserve_hcrypt
-            state['reserve_vhcrypt'] = self.clmm_pool.reserve_vhcrypt
-            state['current_price'] = self.clmm_pool.price_hcrypt_per_vhcrypt
+            state['reserve_homotopical_encrypt'] = self.clmm_pool.reserve_homotopical_encrypt
+            state['reserve_vhomotopical_encrypt'] = self.clmm_pool.reserve_vhomotopical_encrypt
+            state['current_price'] = self.clmm_pool.price_homotopical_encrypt_per_vhomotopical_encrypt
             price = state['current_price']
 
         # =============================================
@@ -128,8 +128,8 @@ class ProtocolOrchestrator:
         resolved = self._resolve_proposals(proposals, state)
 
         # Dynamic CLMM fee recommendation
-        reserve_h = state.get('reserve_hcrypt', 0)
-        reserve_v = state.get('reserve_vhcrypt', 0)
+        reserve_h = state.get('reserve_homotopical_encrypt', 0)
+        reserve_v = state.get('reserve_vhomotopical_encrypt', 0)
         fee = compute_dynamic_fee(spectral_gap, reserve_h, reserve_v)
 
         # =============================================
@@ -187,15 +187,15 @@ class ProtocolOrchestrator:
             return False
 
         if action == 'buyback' and self.clmm_pool and self.treasury:
-            # Spend from stabilization fund → buy HCRYPT on pool
+            # Spend from stabilization fund → buy HOMOTOPICAL_ENCRYPT on pool
             if self.treasury.spend_stabilization(amount):
-                ok, received = self.clmm_pool.swap_hcrypt_for_vhcrypt(amount)
+                ok, received = self.clmm_pool.swap_homotopical_encrypt_for_vhomotopical_encrypt(amount)
                 return ok
             return False
 
         elif action == 'sell_at_resistance' and self.clmm_pool:
-            # Sell vHCRYPT → HCRYPT on pool (strengthens HCRYPT)
-            ok, received = self.clmm_pool.swap_vhcrypt_for_hcrypt(amount)
+            # Sell vHOMOTOPICAL_ENCRYPT → HOMOTOPICAL_ENCRYPT on pool (strengthens HOMOTOPICAL_ENCRYPT)
+            ok, received = self.clmm_pool.swap_vhomotopical_encrypt_for_homotopical_encrypt(amount)
             return ok
 
         elif action == 'burn' and self.treasury:
@@ -209,8 +209,8 @@ class ProtocolOrchestrator:
             # Add liquidity to pool from stabilization fund
             if self.treasury.spend_stabilization(amount):
                 half = amount // 2
-                self.clmm_pool.reserve_hcrypt += half
-                self.clmm_pool.reserve_vhcrypt += (amount - half)
+                self.clmm_pool.reserve_homotopical_encrypt += half
+                self.clmm_pool.reserve_vhomotopical_encrypt += (amount - half)
                 return True
             return False
 
@@ -267,7 +267,7 @@ class ProtocolOrchestrator:
         for p in proposals:
             if p.action_type in ('buyback', 'sell_at_resistance', 'inject_liquidity'):
                 amount = p.rationale.get('amount', 0)
-                pool_reserve = state.get('reserve_hcrypt', 0) + state.get('reserve_vhcrypt', 0)
+                pool_reserve = state.get('reserve_homotopical_encrypt', 0) + state.get('reserve_vhomotopical_encrypt', 0)
                 if pool_reserve > 0 and amount > 0:
                     ok, reason = self.stabilizer.check_swap_limit(
                         b'orchestrator', amount, pool_reserve
@@ -276,13 +276,13 @@ class ProtocolOrchestrator:
                         continue
 
             if p.action_type in ('buyback', 'sell_at_resistance'):
-                k_before = state.get('reserve_hcrypt', 0) * state.get('reserve_vhcrypt', 0)
+                k_before = state.get('reserve_homotopical_encrypt', 0) * state.get('reserve_vhomotopical_encrypt', 0)
                 if k_before > 0:
                     ok, reason = verify_bonding_curve_invariant(
                         k_before=k_before,
                         k_after=k_before,
-                        reserve_hcrypt=state.get('reserve_hcrypt', 0),
-                        reserve_vhcrypt=state.get('reserve_vhcrypt', 0),
+                        reserve_homotopical_encrypt=state.get('reserve_homotopical_encrypt', 0),
+                        reserve_vhomotopical_encrypt=state.get('reserve_vhomotopical_encrypt', 0),
                         swap_amount=p.rationale.get('amount', 0),
                     )
                     if not ok:
@@ -306,8 +306,8 @@ class ProtocolOrchestrator:
             'stabilization_fund': self.treasury.stabilization_fund if self.treasury else 0,
             'protocol_fund': self.treasury.protocol_fund if self.treasury else 0,
             'pool_reserves': {
-                'hcrypt': self.clmm_pool.reserve_hcrypt if self.clmm_pool else 0,
-                'vhcrypt': self.clmm_pool.reserve_vhcrypt if self.clmm_pool else 0,
+                'homotopical_encrypt': self.clmm_pool.reserve_homotopical_encrypt if self.clmm_pool else 0,
+                'vhomotopical_encrypt': self.clmm_pool.reserve_vhomotopical_encrypt if self.clmm_pool else 0,
             },
             'decisions': len(history),
             'last_action': history[-1].resolved_action if history else 'none',

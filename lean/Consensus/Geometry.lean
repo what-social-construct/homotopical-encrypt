@@ -16,18 +16,18 @@ public import Axioms.Grassmannian
   This module exposes the same objects from the consensus assembly layer.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Consensus
 
 /-- Validator eligibility/weight geometry interface. -/
-abbrev PluckerEligibility := Hcrypt.Axioms.PluckerEligibility
+abbrev PluckerEligibility := HomotopicalEncryption.Axioms.PluckerEligibility
 
 /-- Full consensus geometry assumption bundle. -/
-abbrev ConsensusGeometry := Hcrypt.Axioms.ConsensusGeometry
+abbrev ConsensusGeometry := HomotopicalEncryption.Axioms.ConsensusGeometry
 
 /-- Well-formedness for consensus geometry. -/
 abbrev ConsensusGeometryWellFormed :=
-  Hcrypt.Axioms.ConsensusGeometryWellFormed
+  HomotopicalEncryption.Axioms.ConsensusGeometryWellFormed
 
 end Consensus
-end Hcrypt
+end HomotopicalEncryption

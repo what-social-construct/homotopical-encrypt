@@ -36,7 +36,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Evidence.TransferTranscript
+namespace HomotopicalEncryption.Protocol.Evidence.TransferTranscript
 
 /-- State content prepared before the current block/evidence digests exist. -/
 structure StateContent where
@@ -298,4 +298,4 @@ theorem proposal_cochainRoot (hashes : HashSuite Owner) (packet : ProofPacket Ow
 
 end HashSuite
 
-end Hcrypt.Protocol.Evidence.TransferTranscript
+end HomotopicalEncryption.Protocol.Evidence.TransferTranscript

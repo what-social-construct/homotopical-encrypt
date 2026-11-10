@@ -34,7 +34,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.HCP.AxisFamily
+namespace HomotopicalEncryption.HCP.AxisFamily
 
 open CategoryTheory CategoryTheory.Limits HomotopicalAlgebra
 open Sheaf.HCPAxisFamily HCPBridge
@@ -531,4 +531,4 @@ theorem no_exact_encoded_message_decoder :
       _ = 1 := by simpa [weightedCoefficients] using h1
   norm_num at h
 
-end Hcrypt.HCP.AxisFamily
+end HomotopicalEncryption.HCP.AxisFamily

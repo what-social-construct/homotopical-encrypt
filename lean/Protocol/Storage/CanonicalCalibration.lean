@@ -28,10 +28,10 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.CanonicalCalibration
+namespace HomotopicalEncryption.Protocol.Storage.CanonicalCalibration
 
 open ProximityPrize
-open Hcrypt.Sheaf.SystematicCode
+open HomotopicalEncryption.Sheaf.SystematicCode
 
 section Generic
 
@@ -103,14 +103,14 @@ modular received-cochain validity, not `CellularSheaf.IsGlobalSection`. -/
 def scaledSheafInstanceFor (P : ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (L : CoordinateLayout (Sheaf.SystematicCode.sheaf P S) ι)
     (hDegree : 0 < P.degreeBound) (hS : S.card = P.degreeBound) :
-    Hcrypt.Proximity.SheafProximityInstance where
+    HomotopicalEncryption.Proximity.SheafProximityInstance where
   Cochain := Context (Sheaf.SystematicCode.sheaf P S)
   GlobalSection := (sourceModelFor P S L hDegree hS).Valid
   disagreement C := 2 * (sourceModelFor P S L hDegree hS).distanceToValid C
 
 def planeShadowFor (P : ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (hDegree : 0 < P.degreeBound) (hS : S.card = P.degreeBound) :
-    Hcrypt.Proximity.CodeShadow where
+    HomotopicalEncryption.Proximity.CodeShadow where
   Word := Word ι (Fin 2 → ℤ)
   Codeword := (planeModelFor P S hDegree hS).Valid
   distanceToCode := (planeModelFor P S hDegree hS).distanceToValid
@@ -120,7 +120,7 @@ def evaluationProjectionFor (P : ReedSolomon.Parameters (ZMod q) ι) (S : Finset
     (L : CoordinateLayout (Sheaf.SystematicCode.sheaf P S) ι)
     (hDegree : 0 < P.degreeBound) (hS : S.card = P.degreeBound)
     (hn : 0 < Fintype.card ι) :
-    Hcrypt.Proximity.EvaluationProjection
+    HomotopicalEncryption.Proximity.EvaluationProjection
       (scaledSheafInstanceFor P S L hDegree hS) (planeShadowFor P S hDegree hS) where
   map C := L.raw C.cochain
   preservesGlobalSections _ hC := hC
@@ -171,8 +171,8 @@ theorem calibration_extract (C : SourceObservation) :
 
 /-- The output is exactly the pre-existing finite-field extraction API. -/
 theorem calibration_extract_eq_original_pair (C : SourceObservation) :
-    calibration.extract C = Hcrypt.Protocol.Storage.Calibration.extractedPair
-      (K := Hcrypt.Proximity.CanonicalRS.RSField) CanonicalSystematic.layout.extraction C := rfl
+    calibration.extract C = HomotopicalEncryption.Protocol.Storage.Calibration.extractedPair
+      (K := HomotopicalEncryption.Proximity.CanonicalRS.RSField) CanonicalSystematic.layout.extraction C := rfl
 
 theorem extracted_codeword_of_modular_valid (C : SourceObservation)
     (hvalid : sourceModel.Valid C) : rsModel.Codeword (calibration.extract C) :=
@@ -193,6 +193,6 @@ theorem sourceFar_implies_planeFar (C : SourceObservation) (radius : ℝ)
 theorem planeNear_of_scaledSourceNear (C : SourceObservation) (epsilon : ℝ)
     (hnear : scaledSheafInstance.disagreement C ≤ epsilon) :
     planeShadow.distanceToCode (evaluationProjection.map C) ≤ epsilon :=
-  Hcrypt.Proximity.projected_near_code_of_disagreement_le evaluationProjection hnear
+  HomotopicalEncryption.Proximity.projected_near_code_of_disagreement_le evaluationProjection hnear
 
-end Hcrypt.Protocol.Storage.CanonicalCalibration
+end HomotopicalEncryption.Protocol.Storage.CanonicalCalibration

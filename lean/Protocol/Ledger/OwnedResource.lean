@@ -24,7 +24,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Ledger.OwnedResource
+namespace HomotopicalEncryption.Protocol.Ledger.OwnedResource
 
 /-- Fixed interpretation of each public resource identifier. -/
 structure Catalog (Owner Asset : Type) where
@@ -274,4 +274,4 @@ theorem after_value {Snapshot : Type*} (header : State ℕ ℕ)
 
 end Fixture
 
-end Hcrypt.Protocol.Ledger.OwnedResource
+end HomotopicalEncryption.Protocol.Ledger.OwnedResource

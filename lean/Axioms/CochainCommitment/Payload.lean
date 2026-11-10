@@ -20,7 +20,7 @@ public import Mathlib.Tactic
   well-formedness predicates, operations, and cheap lemmas.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 /-- Canonical commitment modulus used by the current Python/Rust commitment path. -/
@@ -136,4 +136,4 @@ theorem zero_wellFormed {n : ℕ} (hn : 0 < n) :
 end CochainCommitmentData
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

@@ -28,7 +28,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Ephemeral
+namespace HomotopicalEncryption.Protocol.Ephemeral
 
 open Sheaf CellularSheaf
 
@@ -299,4 +299,4 @@ theorem recover_rotated_encrypt
 
 end EphemeralRotation
 
-end Hcrypt.Protocol.Ephemeral
+end HomotopicalEncryption.Protocol.Ephemeral

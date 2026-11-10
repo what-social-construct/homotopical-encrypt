@@ -29,7 +29,7 @@ Hard problem — STRICTLY STRONGER THAN CVP:
 - Formally verified: hardness_proof.lean
 
 Anonymity set — why it's the full homotopy class:
-  math_audit_hcrypt.lean (Spectrum_Not_Homotopy_Invariant) proved that bare
+  lean/Laplacian/Spectral.lean (Spectrum_Not_Homotopy_Invariant) proved that bare
   spectral fingerprints are FINER than homotopy class — two fibrations can
   share Betti numbers but have different spectra. This system addresses that
   by using the full HomotopyClassFingerprint (spectral + cohomology +
@@ -207,7 +207,7 @@ def _fiat_shamir_challenge(
     Returns c ∈ [1, challenge_range].
     """
     h = hashlib.sha256(
-        b"HCRYPT_HODGE_ZK_V1" +
+        b"HOMOTOPICAL_ENCRYPT_HODGE_ZK_V1" +
         target_fingerprint +
         commitment_b.tobytes() +
         commitment_w.tobytes()

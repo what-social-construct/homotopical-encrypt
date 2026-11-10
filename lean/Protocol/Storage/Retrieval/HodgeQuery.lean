@@ -24,7 +24,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.Retrieval.HodgeQuery
+namespace HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery
 
 open Sheaf CellularSheaf
 open scoped BigOperators
@@ -139,4 +139,4 @@ theorem cvp_answer_iff [DecidableEq Index] (H : HarmonicLatticePresentation I Ra
   rw [answer_eq_observed]
   exact H.solution_cvpInstance_iff_eq_point _ _ _
 
-end Hcrypt.Protocol.Storage.Retrieval.HodgeQuery
+end HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery

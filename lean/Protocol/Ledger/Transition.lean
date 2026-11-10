@@ -20,7 +20,7 @@ derivation need their own application profile. They are not inferred from
 cochain linearity or the raw edge-value sum.
 -/
 
-namespace Hcrypt.Protocol.Ledger
+namespace HomotopicalEncryption.Protocol.Ledger
 
 /-- The body whose flow, replay identifiers and cochain are authenticated. -/
 structure Action (Resource Nullifier : Type) where
@@ -183,4 +183,4 @@ theorem spent_monotone {P : Policy Resource Nullifier Asset Snapshot}
 
 end Execution
 
-end Hcrypt.Protocol.Ledger
+end HomotopicalEncryption.Protocol.Ledger

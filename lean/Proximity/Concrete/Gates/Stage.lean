@@ -19,7 +19,7 @@ public import Proximity.Concrete.ProjectionChain.Core
     Plucker/cochain gate -> cochain/plane gate -> plane/RS gate
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace Gates
 namespace Projection
@@ -336,4 +336,4 @@ end
 end Projection
 end Gates
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

@@ -19,7 +19,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.TCB.PluckerObservation
+namespace HomotopicalEncryption.TCB.PluckerObservation
 
 open Proximity.GrassmannianPlucker
 open Proximity.GrassmannianPlucker.Concrete
@@ -53,4 +53,4 @@ theorem operativeHarmonicComponent_eq_of_same_full_shadow
   rw [← recover_eq_operativeHarmonicComponent W Δ hW b,
     ← recover_eq_operativeHarmonicComponent V Λ hV b, hshadow]
 
-end Hcrypt.TCB.PluckerObservation
+end HomotopicalEncryption.TCB.PluckerObservation

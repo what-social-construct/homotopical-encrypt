@@ -20,7 +20,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Sheaf.CellularSheaf
+namespace HomotopicalEncryption.Sheaf.CellularSheaf
 
 variable {Vertex Edge Face : Type*}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
@@ -157,4 +157,4 @@ theorem not_uniform_rs_distance_comparison_of_nonexact_linear_decode
   have hzero := (P.vectorBlockCode σ).relativeDistanceToCode_eq_zero_of_codeword hword
   simpa only [hzero, mul_zero] using hbound word
 
-end Hcrypt.Sheaf.CellularSheaf
+end HomotopicalEncryption.Sheaf.CellularSheaf

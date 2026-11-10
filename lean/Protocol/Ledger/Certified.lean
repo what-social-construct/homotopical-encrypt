@@ -13,7 +13,7 @@ public import Protocol.Consensus.Quorum
   It does not define rounds, locks, finality, or concrete signature verification.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Protocol
 namespace Ledger
 
@@ -111,4 +111,4 @@ end CertifiedTransition
 
 end Ledger
 end Protocol
-end Hcrypt
+end HomotopicalEncryption

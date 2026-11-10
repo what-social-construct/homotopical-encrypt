@@ -32,7 +32,7 @@ public import TCB.ProofCarrying
   represented separately in `TCB.PrimitiveChecks`.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace TCB
 
 /-- Lean-owned mathematical/specification bundle. -/
@@ -156,4 +156,4 @@ theorem accepted_oracleAnswer_implies_oraclePredicate
   h.2.2.2
 
 end TCB
-end Hcrypt
+end HomotopicalEncryption

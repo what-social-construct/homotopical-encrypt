@@ -23,7 +23,7 @@ public import Proximity.Problem
   soundness from successful byte checking alone.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace TCB
 namespace ObservationBoundary
 
@@ -138,4 +138,4 @@ end ObservedGapDecisionCertificate
 
 end ObservationBoundary
 end TCB
-end Hcrypt
+end HomotopicalEncryption

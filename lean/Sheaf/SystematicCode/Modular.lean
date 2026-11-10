@@ -23,7 +23,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Sheaf.SystematicCode
+namespace HomotopicalEncryption.Sheaf.SystematicCode
 
 open CellularSheaf
 
@@ -176,4 +176,4 @@ theorem modularExact_iff_vectorCodeword
   ⟨vectorCodeword_of_modularExact P S hDegree hS z,
     modularExact_of_vectorCodeword P S hDegree hS z⟩
 
-end Hcrypt.Sheaf.SystematicCode
+end HomotopicalEncryption.Sheaf.SystematicCode

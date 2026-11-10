@@ -17,7 +17,7 @@ public import TCB.ProofCarrying
   hidden witness satisfies a public statement about a committed object.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace TCB
 
 /--
@@ -113,4 +113,4 @@ theorem snarkCarrying_cochain_wellFormed
     (snarkCarrying_toProofCarrying_wellFormed hP)
 
 end TCB
-end Hcrypt
+end HomotopicalEncryption

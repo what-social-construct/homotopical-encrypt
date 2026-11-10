@@ -19,7 +19,7 @@ public import Axioms.HelferFOL
   these objects, but the definitions here are not Python-shaped.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 universe u
@@ -134,4 +134,4 @@ abbrev HiddenRepresentativeAmbiguity {F : Type u}
   HomotopyClassifierNonFaithful C
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

@@ -19,7 +19,7 @@ public import Proximity.Concrete.CanonicalRS.MCA
   proposition that `CanonicalRS.Bounds` expects.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 namespace MCA
@@ -502,4 +502,4 @@ end Concrete
 end MCA
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

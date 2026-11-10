@@ -19,7 +19,7 @@ public import Protocol.Consensus.Committee
   verification, and malformed-input rejection.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Protocol
 namespace Consensus
 
@@ -115,4 +115,4 @@ structure AuthenticatedVote
 
 end Consensus
 end Protocol
-end Hcrypt
+end HomotopicalEncryption

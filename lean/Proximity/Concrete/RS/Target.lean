@@ -9,7 +9,7 @@ public import Proximity.Application.Problem
 
 /- Reed-Solomon target layer for the concrete proximity pipeline. -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace ReedSolomonTarget
 
@@ -21,7 +21,7 @@ so the target stores the stronger MCA input.
 -/
 structure Target
     (F ι : Type) [Field F] [Fintype F] [Fintype ι] [DecidableEq F] where
-  parameters : Hcrypt.Proximity.ReedSolomon.Parameters F ι
+  parameters : HomotopicalEncryption.Proximity.ReedSolomon.Parameters F ι
   fAdditive :
     parameters.FAdditive
   smoothRegime : Prop
@@ -34,18 +34,18 @@ structure Target
     parameters.ListDecodingBound listRadius listSize
   listDecodingBoundAt :
     parameters.ListDecodingBoundAt
-      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) listRadius)
+      (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) listRadius)
       listSize
   mutualCorrelatedAgreementBound :
     parameters.MutualCorrelatedAgreementBound pointRadius lineRadius threshold
   mutualCorrelatedAgreementErrorBound :
     parameters.MutualCorrelatedAgreementErrorBound
-      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) pointRadius)
-      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) lineRadius)
+      (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) pointRadius)
+      (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) lineRadius)
       ((threshold : ℝ) / (Fintype.card F : ℝ))
   paperMutualCorrelatedAgreementErrorBound :
     parameters.PaperMutualCorrelatedAgreementErrorBound
-      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) pointRadius)
+      (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) pointRadius)
       ((threshold : ℝ) / (Fintype.card F : ℝ))
 
 namespace Target
@@ -54,7 +54,7 @@ variable {F ι : Type} [Field F] [Fintype F] [Fintype ι] [DecidableEq F]
 
 /-- The underlying RS block code named by the target. -/
 def blockCode (T : Target F ι) :
-    Hcrypt.Proximity.BlockCode ι F :=
+    HomotopicalEncryption.Proximity.BlockCode ι F :=
   T.parameters.toBlockCode
 
 /-- The target explicitly carries the F-additivity required by paper CA/MCA. -/
@@ -64,7 +64,7 @@ theorem fAdditiveHolds (T : Target F ι) :
 
 /-- The target as the generic additive-code interface used by paper line arguments. -/
 def toFAdditiveCode (T : Target F ι) :
-    Hcrypt.Proximity.FAdditiveCode F ι F :=
+    HomotopicalEncryption.Proximity.FAdditiveCode F ι F :=
   T.fAdditive.toFAdditiveCode
 
 /-- The list-decoding bound explicitly carried by the target. -/
@@ -75,7 +75,7 @@ theorem listDecodingBoundHolds (T : Target F ι) :
 /-- The fractional list-decoding bound explicitly carried by the target. -/
 theorem listDecodingBoundAtHolds (T : Target F ι) :
     T.parameters.ListDecodingBoundAt
-      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.listRadius)
+      (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.listRadius)
       T.listSize :=
   T.listDecodingBoundAt
 
@@ -85,21 +85,21 @@ The CA consequence available from the stored MCA input.
 theorem correlatedAgreementBound (T : Target F ι) :
     T.parameters.CorrelatedAgreementBound
       T.pointRadius T.lineRadius T.threshold :=
-  Hcrypt.Proximity.ReedSolomon.Parameters.correlatedAgreement_of_mutualCorrelatedAgreement
+  HomotopicalEncryption.Proximity.ReedSolomon.Parameters.correlatedAgreement_of_mutualCorrelatedAgreement
     T.parameters T.mutualCorrelatedAgreementBound
 
 /-- The fractional MCA error bound explicitly carried by the target. -/
 theorem mutualCorrelatedAgreementErrorBoundHolds (T : Target F ι) :
     T.parameters.MutualCorrelatedAgreementErrorBound
-      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
-      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.lineRadius)
+      (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+      (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.lineRadius)
       ((T.threshold : ℝ) / (Fintype.card F : ℝ)) :=
   T.mutualCorrelatedAgreementErrorBound
 
 /-- The cited Definition 4.3 MCA error bound explicitly carried by the target. -/
 theorem paperMutualCorrelatedAgreementErrorBoundHolds (T : Target F ι) :
     T.parameters.PaperMutualCorrelatedAgreementErrorBound
-      (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+      (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
       ((T.threshold : ℝ) / (Fintype.card F : ℝ)) :=
   T.paperMutualCorrelatedAgreementErrorBound
 
@@ -111,24 +111,24 @@ normalized distances. The shared requirement is that exact RS codewords have
 zero distance.
 -/
 structure ReceivedWordMetric (T : Target F ι) where
-  distanceToRS : Hcrypt.Proximity.Word ι F → ℝ
+  distanceToRS : HomotopicalEncryption.Proximity.Word ι F → ℝ
   codeword_zero_distance :
-    ∀ w : Hcrypt.Proximity.Word ι F,
+    ∀ w : HomotopicalEncryption.Proximity.Word ι F,
       T.parameters.Codeword w → distanceToRS w = 0
 
 namespace ReceivedWordMetric
 
 /-- The RS received-word view as a generic concrete code shadow. -/
 def codeShadow {T : Target F ι} (D : ReceivedWordMetric T) :
-    Hcrypt.Proximity.CodeShadow where
-  Word := Hcrypt.Proximity.Word ι F
+    HomotopicalEncryption.Proximity.CodeShadow where
+  Word := HomotopicalEncryption.Proximity.Word ι F
   Codeword := T.parameters.Codeword
   distanceToCode := D.distanceToRS
 
 /-- Exact RS codewords have zero target distance. -/
 theorem distance_eq_zero_of_codeword
     {T : Target F ι} (D : ReceivedWordMetric T)
-    {w : Hcrypt.Proximity.Word ι F}
+    {w : HomotopicalEncryption.Proximity.Word ι F}
     (hw : T.parameters.Codeword w) :
     D.codeShadow.distanceToCode w = 0 :=
   D.codeword_zero_distance w hw
@@ -151,7 +151,7 @@ structure RadiusNormalization
   radius_mono :
     ∀ {r s : ℕ}, r ≤ s → hammingRadiusToReal r ≤ hammingRadiusToReal s
   close_le_radius :
-    ∀ {r : ℕ} {w : Hcrypt.Proximity.Word ι F},
+    ∀ {r : ℕ} {w : HomotopicalEncryption.Proximity.Word ι F},
       T.parameters.toBlockCode.Close r w →
         D.distanceToRS w ≤ hammingRadiusToReal r
   listRadiusReal : ℝ
@@ -189,7 +189,7 @@ noncomputable def relative
     {T : Target F ι}
     (D : ReceivedWordMetric T)
     (hclose :
-      ∀ {r : ℕ} {w : Hcrypt.Proximity.Word ι F},
+      ∀ {r : ℕ} {w : HomotopicalEncryption.Proximity.Word ι F},
         T.parameters.toBlockCode.Close r w →
           D.distanceToRS w ≤ relativeHammingRadius (ι := ι) r) :
     RadiusNormalization D where
@@ -307,8 +307,8 @@ The source and target radii may differ. This is the publication-facing bridge
 shape for lossy projection chains where metric normalization changes across the
 projection boundary.
 -/
-structure CalibratedHcryptToRSBridge
-    (S : Hcrypt.Proximity.SheafProximityInstance)
+structure CalibratedHomotopicalEncryptionToRSBridge
+    (S : HomotopicalEncryption.Proximity.SheafProximityInstance)
     (T : Target F ι)
     (D : ReceivedWordMetric T) where
   sourceNearRadius : ℝ
@@ -320,24 +320,24 @@ structure CalibratedHcryptToRSBridge
   obligations : BridgeObligations T
   obligationsComplete : obligations.Complete
   projection :
-    Hcrypt.Proximity.CalibratedEndToEndGapProjection
+    HomotopicalEncryption.Proximity.CalibratedEndToEndGapProjection
       S D.codeShadow sourceNearRadius sourceFarRadius targetNearRadius targetFarRadius
 
-namespace CalibratedHcryptToRSBridge
+namespace CalibratedHomotopicalEncryptionToRSBridge
 
-variable {S : Hcrypt.Proximity.SheafProximityInstance}
+variable {S : HomotopicalEncryption.Proximity.SheafProximityInstance}
 variable {T : Target F ι} {D : ReceivedWordMetric T}
 
 /-- The source gap problem induced by a completed calibrated RS bridge. -/
-def sourceProblem (B : CalibratedHcryptToRSBridge S T D) :
-    Hcrypt.Proximity.GapProximityProblem :=
-  Hcrypt.Proximity.sheafGapProblem
+def sourceProblem (B : CalibratedHomotopicalEncryptionToRSBridge S T D) :
+    HomotopicalEncryption.Proximity.GapProximityProblem :=
+  HomotopicalEncryption.Proximity.sheafGapProblem
     S B.sourceNearRadius B.sourceFarRadius B.sourceGap
 
 /-- The RS gap problem induced by a completed calibrated bridge. -/
-def targetProblem (B : CalibratedHcryptToRSBridge S T D) :
-    Hcrypt.Proximity.GapProximityProblem :=
-  Hcrypt.Proximity.codeGapProblem
+def targetProblem (B : CalibratedHomotopicalEncryptionToRSBridge S T D) :
+    HomotopicalEncryption.Proximity.GapProximityProblem :=
+  HomotopicalEncryption.Proximity.codeGapProblem
     D.codeShadow B.targetNearRadius B.targetFarRadius B.targetGap
 
 /--
@@ -345,15 +345,15 @@ A correct RS-shadow solver pulls back to a correct source solver along a
 completed calibrated end-to-end bridge.
 -/
 theorem pullback_solver_correct
-    (B : CalibratedHcryptToRSBridge S T D)
+    (B : CalibratedHomotopicalEncryptionToRSBridge S T D)
     (solver : B.targetProblem.Solver)
     (hsolver : B.targetProblem.SolverCorrect solver) :
     B.sourceProblem.SolverCorrect
       ((B.projection.toGapReduction B.sourceGap B.targetGap).pullbackSolver solver) :=
-  Hcrypt.Proximity.CalibratedEndToEndGapProjection.pullback_code_solver_correct
+  HomotopicalEncryption.Proximity.CalibratedEndToEndGapProjection.pullback_code_solver_correct
     B.projection B.sourceGap B.targetGap solver hsolver
 
-end CalibratedHcryptToRSBridge
+end CalibratedHomotopicalEncryptionToRSBridge
 
 /--
 A completed end-to-end bridge from a concrete proximity instance to the RS target.
@@ -362,8 +362,8 @@ The bridge provides the composed projection into RS received words and records
 preservation of the selected near/far radii after all projection, encoding, and
 metric-normalization choices have been fixed.
 -/
-structure HcryptToRSBridge
-    (S : Hcrypt.Proximity.SheafProximityInstance)
+structure HomotopicalEncryptionToRSBridge
+    (S : HomotopicalEncryption.Proximity.SheafProximityInstance)
     (T : Target F ι)
     (D : ReceivedWordMetric T) where
   nearRadius : ℝ
@@ -372,23 +372,23 @@ structure HcryptToRSBridge
   obligations : BridgeObligations T
   obligationsComplete : obligations.Complete
   projection :
-    Hcrypt.Proximity.EndToEndGapProjection
+    HomotopicalEncryption.Proximity.EndToEndGapProjection
       S D.codeShadow nearRadius farRadius
 
-namespace HcryptToRSBridge
+namespace HomotopicalEncryptionToRSBridge
 
-variable {S : Hcrypt.Proximity.SheafProximityInstance}
+variable {S : HomotopicalEncryption.Proximity.SheafProximityInstance}
 variable {T : Target F ι} {D : ReceivedWordMetric T}
 
 /-- The source gap problem induced by a completed RS bridge. -/
-def sourceProblem (B : HcryptToRSBridge S T D) :
-    Hcrypt.Proximity.GapProximityProblem :=
-  Hcrypt.Proximity.sheafGapProblem S B.nearRadius B.farRadius B.gap
+def sourceProblem (B : HomotopicalEncryptionToRSBridge S T D) :
+    HomotopicalEncryption.Proximity.GapProximityProblem :=
+  HomotopicalEncryption.Proximity.sheafGapProblem S B.nearRadius B.farRadius B.gap
 
 /-- The RS gap problem induced by a completed bridge. -/
-def targetProblem (B : HcryptToRSBridge S T D) :
-    Hcrypt.Proximity.GapProximityProblem :=
-  Hcrypt.Proximity.codeGapProblem D.codeShadow B.nearRadius B.farRadius B.gap
+def targetProblem (B : HomotopicalEncryptionToRSBridge S T D) :
+    HomotopicalEncryption.Proximity.GapProximityProblem :=
+  HomotopicalEncryption.Proximity.codeGapProblem D.codeShadow B.nearRadius B.farRadius B.gap
 
 /--
 A correct RS-shadow solver pulls back to a correct source solver along a
@@ -397,42 +397,42 @@ completed end-to-end gap bridge.
 This is the reduction plumbing from an RS-shadow solver back to the source.
 -/
 theorem pullback_solver_correct
-    (B : HcryptToRSBridge S T D)
+    (B : HomotopicalEncryptionToRSBridge S T D)
     (solver : B.targetProblem.Solver)
     (hsolver : B.targetProblem.SolverCorrect solver) :
     B.sourceProblem.SolverCorrect
       ((B.projection.toGapReduction B.gap).pullbackSolver solver) :=
-  Hcrypt.Proximity.EndToEndGapProjection.pullback_code_solver_correct
+  HomotopicalEncryption.Proximity.EndToEndGapProjection.pullback_code_solver_correct
     B.projection B.gap solver hsolver
 
-end HcryptToRSBridge
+end HomotopicalEncryptionToRSBridge
 
 /-- Checklist for a concrete RS target instantiation. -/
 structure InstantiationChecklist
-    (S : Hcrypt.Proximity.SheafProximityInstance)
+    (S : HomotopicalEncryption.Proximity.SheafProximityInstance)
     (T : Target F ι)
     (D : ReceivedWordMetric T) where
-  bridge : HcryptToRSBridge S T D
+  bridge : HomotopicalEncryptionToRSBridge S T D
   rsBoundsNamed :
     T.parameters.ListDecodingBound T.listRadius T.listSize ∧
       T.parameters.ListDecodingBoundAt
-        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.listRadius)
+        (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.listRadius)
         T.listSize ∧
       T.parameters.MutualCorrelatedAgreementBound
         T.pointRadius T.lineRadius T.threshold ∧
       T.parameters.MutualCorrelatedAgreementErrorBound
-        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
-        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.lineRadius)
+        (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+        (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.lineRadius)
         ((T.threshold : ℝ) / (Fintype.card F : ℝ)) ∧
       T.parameters.PaperMutualCorrelatedAgreementErrorBound
-        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+        (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
         ((T.threshold : ℝ) / (Fintype.card F : ℝ))
   bridgeComplete : bridge.obligations.Complete
   noProtocolImport : Prop
 
 namespace InstantiationChecklist
 
-variable {S : Hcrypt.Proximity.SheafProximityInstance}
+variable {S : HomotopicalEncryption.Proximity.SheafProximityInstance}
 variable {T : Target F ι} {D : ReceivedWordMetric T}
 
 /-- A checklist exposes the completed bridge obligations. -/
@@ -444,16 +444,16 @@ theorem obligations_complete (C : InstantiationChecklist S T D) :
 theorem bounds_named (C : InstantiationChecklist S T D) :
     T.parameters.ListDecodingBound T.listRadius T.listSize ∧
       T.parameters.ListDecodingBoundAt
-        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.listRadius)
+        (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.listRadius)
         T.listSize ∧
       T.parameters.MutualCorrelatedAgreementBound
         T.pointRadius T.lineRadius T.threshold ∧
       T.parameters.MutualCorrelatedAgreementErrorBound
-        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
-        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.lineRadius)
+        (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+        (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.lineRadius)
         ((T.threshold : ℝ) / (Fintype.card F : ℝ)) ∧
       T.parameters.PaperMutualCorrelatedAgreementErrorBound
-        (Hcrypt.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
+        (HomotopicalEncryption.Proximity.BlockCode.relativeRadius (ι := ι) T.pointRadius)
         ((T.threshold : ℝ) / (Fintype.card F : ℝ)) :=
   C.rsBoundsNamed
 
@@ -463,4 +463,4 @@ end Target
 
 end ReedSolomonTarget
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

@@ -16,7 +16,7 @@ Root relations below name the actual fixture states, candidate, and artifacts;
 they are not predicates accepting every object.
 -/
 
-namespace Hcrypt.Protocol.Ledger.EvidenceExamples
+namespace HomotopicalEncryption.Protocol.Ledger.EvidenceExamples
 
 open Examples
 
@@ -255,4 +255,4 @@ theorem hold_quorum_rejected :
 
 end
 
-end Hcrypt.Protocol.Ledger.EvidenceExamples
+end HomotopicalEncryption.Protocol.Ledger.EvidenceExamples

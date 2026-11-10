@@ -26,7 +26,7 @@ import hashlib
 import time
 
 # Domain separator for transaction signature hashing (P3.4 stub)
-_TX_SIG_DOMAIN = b"HCRYPT_TX_SIG_V2"
+_TX_SIG_DOMAIN = b"HOMOTOPICAL_ENCRYPT_TX_SIG_V2"
 
 from ..crypto.credential import FibrationCredential, generate_credential
 from ..geometry.sheaf_laplacian import SheafLaplacian
@@ -222,11 +222,11 @@ class InvariantValidator:
 
 @dataclass
 class Transaction:
-    """A value transfer on the HCRYPT network."""
+    """A value transfer on the HOMOTOPICAL_ENCRYPT network."""
     sender: bytes           # Spectral fingerprint of sender
     recipient: bytes        # Spectral fingerprint of recipient
     amount: float           # Amount to transfer
-    token: str = "HCRYPT"   # Token type
+    token: str = "HOMOTOPICAL_ENCRYPT"   # Token type
     nonce: int = 0          # Anti-replay
     timestamp: int = 0      # When created
     signature: bytes = b""  # Homotopy signature
@@ -243,7 +243,7 @@ class Transaction:
 
 @dataclass
 class Block:
-    """A block in the HCRYPT chain."""
+    """A block in the HOMOTOPICAL_ENCRYPT chain."""
     height: int
     prev_hash: bytes
     transactions: List[Transaction]
@@ -571,8 +571,8 @@ def test_pov():
     }
     
     print(f"\n1. Initial state:")
-    print(f"   Alice: {pov.accounts[alice_fp]} HCRYPT")
-    print(f"   Bob: {pov.accounts[bob_fp]} HCRYPT")
+    print(f"   Alice: {pov.accounts[alice_fp]} HOMOTOPICAL_ENCRYPT")
+    print(f"   Bob: {pov.accounts[bob_fp]} HOMOTOPICAL_ENCRYPT")
     print(f"   Topology: {len(pov.topology.get(0, []))} vertices, {len(pov.topology.get(1, []))} edges")
     
     # Create transaction
@@ -583,7 +583,7 @@ def test_pov():
         timestamp=int(time.time())
     )
     
-    print(f"\n2. Transaction: Alice → Bob, 100 HCRYPT")
+    print(f"\n2. Transaction: Alice → Bob, 100 HOMOTOPICAL_ENCRYPT")
     
     # Create block
     print(f"\n3. Creating block via Proof of Value...")
@@ -605,8 +605,8 @@ def test_pov():
         pov.commit_block(block)
         
         print(f"\n6. Final state:")
-        print(f"   Alice: {pov.accounts[alice_fp]} HCRYPT")
-        print(f"   Bob: {pov.accounts[bob_fp]} HCRYPT")
+        print(f"   Alice: {pov.accounts[alice_fp]} HOMOTOPICAL_ENCRYPT")
+        print(f"   Bob: {pov.accounts[bob_fp]} HOMOTOPICAL_ENCRYPT")
         print(f"   Chain height: {pov.current_height}")
     
     print("\n" + "=" * 60)

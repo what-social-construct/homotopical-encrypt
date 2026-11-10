@@ -146,7 +146,7 @@ def check_lean():
         },
         "Hardness.lean": {
             # Hodge→CVP reduction (core security claim)
-            "Hodge_Hardness_Reduction_Proof": "breaking hcrypt ⟹ solving CVP",
+            "Hodge_Hardness_Reduction_Proof": "breaking homotopical_encrypt ⟹ solving CVP",
             # Hodge is STRICTLY harder than CVP (extra topological structure)
             "Hodge_Strictly_Harder": "CVP oracle insufficient for Hodge",
             # Ambiguity: same b can be harmonic for Δ₁ but not Δ₂

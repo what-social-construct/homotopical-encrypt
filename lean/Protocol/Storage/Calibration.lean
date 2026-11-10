@@ -20,10 +20,10 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.Calibration
+namespace HomotopicalEncryption.Protocol.Storage.Calibration
 
 open Sheaf CellularSheaf
-open Hcrypt.Proximity
+open HomotopicalEncryption.Proximity
 
 variable {Vertex Edge Face : Type*}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
@@ -103,4 +103,4 @@ theorem no_liftControl_of_nonexact_codeword
   rintro ⟨_, ⟨control⟩⟩
   exact hsource (control.accepted_of_pairCodeword htarget)
 
-end Hcrypt.Protocol.Storage.Calibration
+end HomotopicalEncryption.Protocol.Storage.Calibration

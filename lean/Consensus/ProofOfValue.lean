@@ -22,7 +22,7 @@ public import Proximity.Projection
   Proximity and reliability are discount-only multipliers.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Consensus
 
 namespace ProofOfValue
@@ -40,7 +40,7 @@ noncomputable def proximityQualityFromDisagreement
 
 /-- Proximity quality derived from a generic sheaf proximity instance. -/
 noncomputable def proximityQualityFromInstance
-    (S : Hcrypt.Proximity.SheafProximityInstance)
+    (S : HomotopicalEncryption.Proximity.SheafProximityInstance)
     (c : S.Cochain)
     (epsilon : ℝ) : ℝ :=
   proximityQualityFromDisagreement (S.disagreement c) epsilon
@@ -64,7 +64,7 @@ theorem proximityQualityFromDisagreement_bounded
 
 /-- Instance-level proximity quality is bounded when disagreement is non-negative. -/
 theorem proximityQualityFromInstance_bounded
-    (S : Hcrypt.Proximity.SheafProximityInstance)
+    (S : HomotopicalEncryption.Proximity.SheafProximityInstance)
     (c : S.Cochain)
     {epsilon : ℝ}
     (hDisagreement : 0 ≤ S.disagreement c)
@@ -273,4 +273,4 @@ theorem score_le_scoreWithoutProximity (v : ProofOfValueInput) :
 end ProofOfValueInput
 
 end Consensus
-end Hcrypt
+end HomotopicalEncryption

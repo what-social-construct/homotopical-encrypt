@@ -22,7 +22,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Sheaf
 namespace CellularSheaf
 
@@ -152,6 +152,6 @@ theorem not_far_preserving_exactComponent_of_map_zero
 end HodgeEncryptedCochain
 end CellularSheaf
 end Sheaf
-end Hcrypt
+end HomotopicalEncryption
 
 end

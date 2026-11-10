@@ -16,7 +16,7 @@ public import Mathlib.Init
   Python/Rust but not yet fully proved end-to-end in Lean.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 structure Consensus where
@@ -39,4 +39,4 @@ abbrev ConsensusWellFormed (C : Consensus) : Prop :=
   ∧ C.ToposDecisionCoherent
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

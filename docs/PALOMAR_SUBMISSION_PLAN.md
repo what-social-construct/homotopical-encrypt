@@ -2,8 +2,8 @@
 
 Preparation note begun 2026-11-05; Paper 1 and Paper 3 entry files prepared 2026-11-09. The
 intended public scope is the Lean development and corresponding manuscripts.
-Paper 1 now has an independent statement/proof pair, Comparator configuration,
-metadata and completed local diagnostic checks. At the preceding preparation
+Paper 1 has an independent statement/proof pair, Comparator configuration
+and metadata; its earlier selection completed local diagnostic checks. At the preceding preparation
 checkpoint no public release or protected preflight had occurred. The exact
 historical publication/run status and current local revision are recorded below; registry intake and registration
 have not occurred.
@@ -27,7 +27,16 @@ work. Their technical packaging does not change the
 [three-paper split](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table):
 Paper 2 remains the protocol/cochain paper and Paper 3 the proximity paper.
 
-**Current P310 classifier profile, 2026-11-10.** Paper 1 is **29 pages**.
+**Current scope update, 2026-11-10.** Paper 1 now selects seven groups:
+18 manuscript-facing and 20 supporting declarations, 38 targets in total.
+Its independent Challenge has 20 deliberate theorem placeholders. Full
+projective reconstruction belongs to Paper 3's projective projection chain;
+Paper 2 specifies visibility, codec and protocol contracts and consumes the
+same canonical proof. The HCP/CVP argument is independent of that material.
+The renamed source and reduced entry await fresh build, dependency,
+manuscript/render and package-closure checks; no refreshed result is claimed.
+
+**Preserved P310 classifier-profile checkpoint, 2026-11-10.** Paper 1 is **29 pages**.
 The optional `ReflectsHomotopyEquivalence` property is defined on the
 unchanged `Realization`. Together with closed-test invariance, it gives the classifier iff
 and identifies the existing `PublicClassOf` with the declared semantic
@@ -228,29 +237,30 @@ combined reports pass with 946 earlier sets unchanged. The
 [current validation record](MATH_STORAGE_VALIDATION.md#paper-3-independent-entries--2026-11-09)
 records exact build, source, value-preservation and dependency evidence.
 
-## Paper 1 independent entry — 2026-11-09
+## Paper 1 independent entry: current selection and historical checks
 
-The [entry README](../lean/Palomar/PaperOne/README.md) maps all eight selected
-Paper 1 groups below to **21 manuscript-facing declarations** and **25
-supporting declarations**. These are coverage counts, not 21 independent
+The [entry README](../lean/Palomar/PaperOne/README.md) maps seven selected
+Paper 1 groups below to **18 manuscript-facing declarations** and **20
+supporting declarations**, for **38 targets**. These are coverage counts, not 18 independent
 research contributions. The discrete CVP projection comparison and actual
 cellular public-target ambiguity remain central.
 
 Following the frozen Jacobian release, Challenge imports only Mathlib and
 states transparent mathematical objects independently. Solution matches those
 definitions and adapts the canonical proofs. The two pure categorical
-`Hcrypt.Helfer.contextObject/contextMap` helpers keep their canonical names
+`HomotopicalEncryption.Helfer.contextObject/contextMap` helpers keep their canonical names
 in Challenge so the recursive finite-product interpretation matches the
 implementation structurally. No project imports or definition holes are used
-in Challenge; its 23 intentional theorem placeholders are selected targets.
+in Challenge; its 20 intentional theorem placeholders are comparison targets.
 Solution contains no proof holes and imports no Challenge.
 
-Both entry modules build independently. Local Comparator accepts the selected
+At the historical 2026-11-09 checkpoint, both entry modules built independently
+for the earlier 46-target scope. Local Comparator accepted those selected
 statements, reachable definitions and permitted axioms, and both Lean and
-NanoDa accept the Solution proof export. This macOS run used the explicit
+NanoDa accepted the Solution proof export. This macOS run used the explicit
 `--inadvisably-no-sandbox` diagnostic mode; it does **not** supply protected
-preflight evidence. All 46 fresh entry dependency reports are standard-only
-(44 exact-three/two subsets); the combined 946-report audit preserves every
+preflight evidence. All 46 entry dependency reports at that checkpoint were standard-only
+(44 exact-three/two subsets); the combined 946-report audit preserved every
 one of the 900 preceding dependency sets. The
 [validation record](MATH_STORAGE_VALIDATION.md#paper-1-independent-entry--2026-11-09)
 contains reproduction commands and the remaining boundaries.
@@ -269,9 +279,12 @@ were a different snapshot. The preserved P302/P303 38-page parity-table revision
 all Lean bytes from `dddfdd2`. P304 and P305–P307 retained non-comment Lean
 source at their recorded checkpoints. P308's 32-page revision added canonical
 proofs in two existing files and passed its 124-report audit. P309's 28-page cleanup preserved all main formal environments and added two
-restricted-converse theorems. The current 29-page P310 profile adds optional
+restricted-converse theorems. The recorded 29-page P310 profile added optional
 reflection in `HCP.lean` and proves it in `HCP/AxisFamily.lean`; focused
-and three-Solution builds pass, while the canonical audit is tracked centrally. None of these later revisions has a new protected preflight result.
+and three-Solution builds passed, with its canonical audit tracked centrally.
+The renamed source and reduced 38-target selection await fresh build,
+dependency, manuscript and package checks. None of these later revisions has
+a new protected preflight result.
 
 The local [manual workflow](../.github/workflows/paper1-palomar-preflight.yml)
 follows Jacobian's [pinned reusable workflow](https://github.com/PalomarRegistry/PalomarSubmission/blob/14aa8d6b3c2f14a8540605e37144560b9a00e7e7/.github/workflows/submission.yml) at
@@ -310,27 +323,26 @@ indistinguishability is not asserted by these statements.
 
 | ID / manuscript statement | Selected mathematical content | Canonical implementation declarations |
 |---|---|---|
-| P1-S01 — §2, `prop:hodge-decomposition`; §§2.1, 3.3/appendix | Existence, orthogonality and uniqueness of the three Hodge components in finite real orthonormal coordinates, plus private recovery for actual cochains; coefficient recovery retains its supplied integral harmonic-lattice presentation and is noncomputable. | `Hodge_Decomposition_Theorem`; `Hodge_Decomposition_unique`; `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.harmonicOneProjection_observed`; `Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt` |
+| P1-S01 — §2, `prop:hodge-decomposition`; §§2.1, 3.3/appendix | Existence, orthogonality and uniqueness of the three Hodge components in finite real orthonormal coordinates, plus private recovery for actual cochains; coefficient recovery retains its supplied integral harmonic-lattice presentation and is noncomputable. | `Hodge_Decomposition_Theorem`; `Hodge_Decomposition_unique`; `HomotopicalEncryption.Sheaf.CellularSheaf.HodgeEncryptedCochain.harmonicOneProjection_observed`; `HomotopicalEncryption.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt` |
 | P1-S02 — §3.2, `prop:hcp-to-cvp` | Every finite-dimensional field-linear generated subspace is a matrix kernel; the displayed-operator solver consequence concerns the linear image, separately from the integer lattice. | `exists_matrix_ker_eq_range`; `Hodge_GeneratedSubspace_Reduction_Proof` |
 | P1-S03 — §3.3, `prop:hodge-projection-is-cvp` | For every explicit lattice Λ⊆W and every target/candidate, orthogonally projecting the target onto W preserves precisely the discrete CVP solutions. Keep the lattice inclusion and orthogonal-projection instance. | `HarmonicCVPBridge.squaredDistance_projection_decomposition`; `HarmonicCVPBridge.solution_iff_projectedTarget` |
 | P1-S04 — §3.3/appendix, actual cellular specialization | For the actual cellular sample H.encrypt(z,noise), the CVP solution is exactly H.point(z), uniquely; retain H as a supplied harmonic-lattice presentation. | `concreteSheafHCP_CVP_solution_iff_message`; `concreteSheafHCP_CVP_existsUnique` |
-| P1-S05 — §3.4, `prop:cvp-insufficient`; §3.5, `prop:cellular-axis-ambiguity`, `cor:lattice-member-separation` | The general separation theorem gives distinct targets, and its nontrivial cellular instance gives distinct nonzero targets at one public input. Both the manuscript soundness/exact-on-harmonics contract and its direct operative-target companion are retained. Retain the correct-CVP-oracle existence premise and the exact no-uniform-solver quantifiers. | `Hcrypt.HCPBridge.operativeTargets_ne_of_kernelSeparation`; `Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation`; `Hcrypt.HCPBridge.cvpOracle_insufficient_for_operativeTarget`; `Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets`; `Hcrypt.HCP.AxisFamily.cvp_oracle_insufficient` |
-| P1-S06 — §3.5, weighted integral example | At common b=(1,2), the original integer coefficients differ (2 versus 1); no exact public coefficient decoder exists. For each private presentation the same actual sample has a unique CVP answer equal to its operative HCP target. | `Hcrypt.HCP.AxisFamily.weighted_public_observations_eq`; `Hcrypt.HCP.AxisFamily.no_exact_encoded_message_decoder`; `Hcrypt.HCP.AxisFamily.weighted_cvp_solution_iff_operativeTarget`; `Hcrypt.HCP.AxisFamily.weighted_cvp_existsUnique` |
-| P1-B01 — §2.1, `prop:exact-component-obstruction` | The unrestricted exact-component view cannot retain the full residual/far region when a nonzero coexact direction is allowed. This does not prove wire factorization. | `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent`; `Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent` |
-| P1-B02 — §2.2.1, `prop:plucker-recovery`; parity appendix | Genuine full projective coordinates recover the subspace and its fixed-metric projector; operative-kernel identification additionally recovers the HCP target from b. Digest-only observations remain separate. | `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame`; `Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame`; `Hcrypt.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent` |
+| P1-S05 — §3.4, `prop:cvp-insufficient`; §3.5, `prop:cellular-axis-ambiguity`, `cor:lattice-member-separation` | The general separation theorem gives distinct targets, and its nontrivial cellular instance gives distinct nonzero targets at one public input. Both the manuscript soundness/exact-on-harmonics contract and its direct operative-target companion are retained. Retain the correct-CVP-oracle existence premise and the exact no-uniform-solver quantifiers. | `HomotopicalEncryption.HCPBridge.operativeTargets_ne_of_kernelSeparation`; `HomotopicalEncryption.HCPBridge.cvpOracle_insufficient_of_kernelSeparation`; `HomotopicalEncryption.HCPBridge.cvpOracle_insufficient_for_operativeTarget`; `HomotopicalEncryption.HCP.AxisFamily.shared_observation_distinct_nonzero_targets`; `HomotopicalEncryption.HCP.AxisFamily.cvp_oracle_insufficient` |
+| P1-S06 — §3.5, weighted integral example | At common b=(1,2), the original integer coefficients differ (2 versus 1); no exact public coefficient decoder exists. For each private presentation the same actual sample has a unique CVP answer equal to its operative HCP target. | `HomotopicalEncryption.HCP.AxisFamily.weighted_public_observations_eq`; `HomotopicalEncryption.HCP.AxisFamily.no_exact_encoded_message_decoder`; `HomotopicalEncryption.HCP.AxisFamily.weighted_cvp_solution_iff_operativeTarget`; `HomotopicalEncryption.HCP.AxisFamily.weighted_cvp_existsUnique` |
+| P1-B01 — §2.1, `prop:exact-component-obstruction` | The unrestricted exact-component view cannot retain the full residual/far region when a nonzero coexact direction is allowed. This does not prove wire factorization. | `HomotopicalEncryption.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent`; `HomotopicalEncryption.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent` |
 
 Closing Corollary 3.6 combines P1-S04/P1-S05: one fixed correct rank-one
 oracle recovers the operative component when its private lattice is supplied,
 while the shared public observation cannot select both distinct targets.
 Every compatible family containing that pair inherits the obstruction, with
 auxiliary input fixed and no running-time or family-size premise. Appendix A
-names `Hcrypt.HCPBridge.no_solver_exactOnOperativeTarget_on_family` and
-`Hcrypt.HCP.AxisFamily.cvp_known_member_hidden_member_separation` as canonical
-consequences outside the unchanged 46-target selection. The semantic row
+names `HomotopicalEncryption.HCPBridge.no_solver_exactOnOperativeTarget_on_family` and
+`HomotopicalEncryption.HCP.AxisFamily.cvp_known_member_hidden_member_separation` as canonical
+consequences outside the current 38-target selection. The semantic row
 adds three more theorem anchors: the generic
-`Hcrypt.HCPBridge.samePublicClass_iff_homotopyEquivalent`,
-`Hcrypt.HCPBridge.publicClassOf_eq_setOf_homotopyEquivalent`, and the existing
-`Hcrypt.HCP.AxisFamily.theory_eq_iff_homotopyEquivalent`. The generic results
+`HomotopicalEncryption.HCPBridge.samePublicClass_iff_homotopyEquivalent`,
+`HomotopicalEncryption.HCPBridge.publicClassOf_eq_setOf_homotopyEquivalent`, and the existing
+`HomotopicalEncryption.HCP.AxisFamily.theory_eq_iff_homotopyEquivalent`. The generic results
 require closed-test invariance and optional `ReflectsHomotopyEquivalence`.
 The admitted `Fin 2` family proves that property, and its old theory iff
 now uses the shared API. The unchanged base realization remains available
@@ -347,12 +359,13 @@ or made conclusions of new assumptions. Full first-order semantics, equality
 of larger released storage views, sampled secrecy, finite byte codecs and
 complexity bounds remain separate.
 
-P1-B01/B02 are explicitly named observation-boundary statements. The local
+P1-B01 retains the exact-component observation-boundary statement. The local
 manuscript's [HCP setup and construction](../papers/paper1/sections/02-harmonic-cochain-problem.tex)
-retains the exact-component obstruction in §2.1 and full-projective recovery
-in §2.2.1. No companion-manuscript theorem is needed for these selected HCP/CVP statements. The program allocation
-is recorded here: Paper 2 owns concrete construction/protocol gates, and Paper 3
-owns quantitative RS/MCA and distance/calibration analysis. No cited-bound
+retains the exact-component obstruction in §2.1. Full-projective reconstruction
+is introduced in Paper 3's projective projection chain, with its existing
+canonical proof; Paper 2 consumes it for visibility, codec and protocol
+contracts. No companion theorem is needed for the selected Paper 1 HCP/CVP
+results. Paper 3 also owns quantitative RS/MCA and distance/calibration analysis. No cited-bound
 theorem becomes an axiom-free selected result through this restructure.
 
 ### Paper 3: nine original coding statements and bounded application
@@ -369,9 +382,9 @@ theorem becomes an axiom-free selected result through this restructure.
 | P3-S08 — §6, `cor:explicit-family-mca` | For every u and every real radius, the actual smooth family meets the 128-bit MCA target; its greatest safe count is the full length. | `ProximityPrize.Capacity.SmoothQuarterFamily.realized_pairMCAErrorBoundAt`; `ProximityPrize.Capacity.SmoothQuarterFamily.realized_pairMCAGreatestSafe_eq_length` |
 | P3-S09 — §6, `thm:mca-boundary-threshold` | For the actual prime q=2^128+192513 and [4096,1024] domain: B(0)=1, B(1)≥2, greatest-safe/first-unsafe counts 0/1, exact real safe set [0,1/4096), excluded supremum and no maximum. Primality and root order are proved rather than supplied. | `ProximityPrize.MCA.BoundaryField.modulus_prime`; `ProximityPrize.MCA.BoundaryField.candidateRootUnit_order`; `ProximityPrize.MCA.BoundaryField.paperMCABadSpectrum_zero_eq_one`; `ProximityPrize.MCA.BoundaryField.two_le_paperMCABadSpectrum_one`; `ProximityPrize.MCA.BoundaryField.pairMCA_exact_128_bit_threshold`; `ProximityPrize.MCA.BoundaryField.pairMCA_safeRelativeRadii_128_eq_Ico`; `ProximityPrize.MCA.BoundaryField.pairMCA_real_128_threshold` |
 | P3-B01 — §6, operational spectrum and endpoint-distance interpretation | For a supplied finite code, keep the exact real-error/integer-spectrum iff and the matching upper-bound/next-line threshold criterion. Good-challenge farness and covering use the actual attained code distance. | `ProximityPrize.BlockCode.pairMCAErrorBoundAt_relativeRadius_invPow_iff_spectrum_budget`; `ProximityPrize.BlockCode.pairMCAThreshold_eq_of_countBound_and_badLine`; `ProximityPrize.BlockCode.scalarDistance_ge_of_pairDistance_ge_of_good`; `ProximityPrize.ReedSolomon.Parameters.scalarDistance_eq_capacity_of_pairFar_of_good` |
-| P3-A01 — §7, intrinsic modular source and three metrics | Actual integral δ₀a=z+qm validity, independently defined scalar/pair/RS distances, and d_C≤d_P=D_RS≤2d_C. Keep prime q, the information set, full identity layout and 2n/n normalizations. | `Hcrypt.Sheaf.SystematicCode.modularExact_iff_vectorCodeword`; `Hcrypt.Protocol.Storage.ThreeLevel.three_native_distance_comparison`; `Hcrypt.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance` |
-| P3-A02 — §7, sharp near factor and original-payload calibration | For proper RS codes with `0<k<n`, the (power word,0) witness makes the near factor two sharp. The canonical calibration reads the same original payload; far transfer has unit scale and the near API explicitly uses 2d_C. | `ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_pairDistance_eq_capacity`; `ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_flatDistance_eq_half_capacity`; `ProximityPrize.ReedSolomon.Parameters.no_unit_pair_distance_bound_by_flat_distance`; `Hcrypt.Protocol.Storage.CanonicalCalibration.calibration_extract_eq_original_pair`; `Hcrypt.Protocol.Storage.CanonicalCalibration.sourceFar_implies_rsFar`; `Hcrypt.Protocol.Storage.CanonicalCalibration.planeNear_of_scaledSourceNear` |
-| P3-A03 — §7, raw canonical capacity payload and restricted challenge profile | The original q=12289 payload is well formed and has all three native distances 3/4; its diagonal line has bad fraction 1/q at nonnegative radius. Accepted exact anchors instead have zero native distances under the equality of the actual interpretation decoder and layout decoder at that same payload. | `Hcrypt.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity`; `Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction`; `Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_scalarDistance`; `Hcrypt.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero` |
+| P3-A01 — §7, intrinsic modular source and three metrics | Actual integral δ₀a=z+qm validity, independently defined scalar/pair/RS distances, and d_C≤d_P=D_RS≤2d_C. Keep prime q, the information set, full identity layout and 2n/n normalizations. | `HomotopicalEncryption.Sheaf.SystematicCode.modularExact_iff_vectorCodeword`; `HomotopicalEncryption.Protocol.Storage.ThreeLevel.three_native_distance_comparison`; `HomotopicalEncryption.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance` |
+| P3-A02 — §7, sharp near factor and original-payload calibration | For proper RS codes with `0<k<n`, the (power word,0) witness makes the near factor two sharp. The canonical calibration reads the same original payload; far transfer has unit scale and the near API explicitly uses 2d_C. | `ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_pairDistance_eq_capacity`; `ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_flatDistance_eq_half_capacity`; `ProximityPrize.ReedSolomon.Parameters.no_unit_pair_distance_bound_by_flat_distance`; `HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.calibration_extract_eq_original_pair`; `HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.sourceFar_implies_rsFar`; `HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.planeNear_of_scaledSourceNear` |
+| P3-A03 — §7, raw canonical capacity payload and restricted challenge profile | The original q=12289 payload is well formed and has all three native distances 3/4; its diagonal line has bad fraction 1/q at nonnegative radius. Accepted exact anchors instead have zero native distances under the equality of the actual interpretation decoder and layout decoder at that same payload. | `HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity`; `HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction`; `HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_scalarDistance`; `HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero` |
 | P3-A04 — §7, fixed-mix limitation | For each fixed nonzero scalar challenge, a capacity-far pair can cancel. Retain the distinction between binding the full pair before sampling and an independently justified restricted line. | `ProximityPrize.ReedSolomon.Parameters.no_fixedChallenge_pair_far_preservation`; `ProximityPrize.ReedSolomon.Parameters.no_fixedChallenge_flat_far_preservation` |
 
 P3-S01--S09 cover all nine original named coding statements; P3-B01 records
@@ -516,7 +529,7 @@ The public snapshot's Paper 1 wording pass has its own rebuilt and visually insp
 paragraph's counts and unchanged-source statements remain dated baselines.
 The P300/P301 37/31-page ownership revision passed its compile/render checks,
 9,295-job local build and all 975 selected dependency reports with unchanged
-sets. The current 29-page P310 manuscript defines an optional completeness
+sets. The recorded 29-page P310 manuscript defined an optional completeness
 profile and derives the iff/fiber identity under invariance and reflection.
 Its 35 main formal environments are unchanged. Computational Scope remains
 §2.3 and Corollary 3.6 still closes §3 before conclusion §4. The single parity
@@ -526,7 +539,7 @@ remain unchanged. `HCP.lean` and `HCP/AxisFamily.lean` change; the other
 278 Lean files match `f036a16`. The additions are one optional Prop definition
 and three theorems, without new structures, imports or global axioms; the
 old family iff keeps its statement and has a refactored proof. Focused and
-three-Solution builds pass 3,581/3,759 jobs. Current five-report audit evidence
+three-Solution builds passed 3,581/3,759 jobs. Its five-report audit evidence
 is tracked centrally. P309 retains its two standard-three converse reports,
 P308 its 124-report audit, and the 9,295-job/975-report full baseline remains
 historical. Fresh exact-commit protected verification remains required before
@@ -570,7 +583,7 @@ The earlier three-entry builds, local definition comparisons, Lean/NanoDa
 replays and combined 975-report audit are completed for their recorded inputs;
 that audit preserved all 946 preceding sets. P308's 124-report selected/canonical
 audit preserved all 120 configured dependency sets. P309's single-file additions passed the three-Solution build and two converse
-reports. The current two-file profile passes focused and three-Solution
+reports. The P310 two-file profile passed focused and three-Solution
 builds; its five-report canonical audit is tracked centrally,
 separately from the historical audits and kernel replays. The official
 [Comparator helper](https://github.com/PalomarRegistry/PalomarTemplate/blob/main/scripts/verify-comparator.sh)
@@ -615,15 +628,13 @@ not yet a replacement release:
    protected comparison, canonical provenance and Lean/NanoDa/con-ron checks.
    Its preferred-size advisory is within the hard caps. Prior local builds
    and the 975-report audit remain separately recorded evidence.
-5. **Local manuscript/proof revision prepared; stop before intake.** The current
-   29-page Paper 1, unchanged 31-page Paper 3 and reconciled bibliographies
-   remain local. The post-conclusion parity table preserves all 46 configured
-   declarations, plus five separately identified canonical theorem anchors
-   and the reflection property. The current two-file profile preserves the
-   `Realization` structure; the other 278 Lean files match `f036a16`. The
-   focused and three-Solution builds pass; the five-report audit is tracked
-   centrally. P309/P308 and older full-build/kernel evidence remain
-   historical.
+5. **Current scope revision; stop before intake.** Paper 1 now selects seven
+   groups and 38 targets (18 manuscript-facing/20 supporting), with 20
+   deliberate Challenge placeholders. Full-projective reconstruction belongs
+   to Paper 3's projection chain; Paper 2 consumes it for visibility and codec
+   contracts. The renamed source, revised manuscripts and reduced entry need
+   fresh build, dependency, render and package-closure checks. P310/P309/P308
+   and older full-build/kernel evidence retain their historical scopes.
    Finish the manuscript/package exact-source checks and
    prepare a refreshed slim snapshot before any future publication/preflight.
    The user explicitly deferred submission.

@@ -82,7 +82,7 @@ public import Axioms.StageAdmissibility
   ───────────────────────────────────────────────────────────────────────────────
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 universe u
@@ -978,4 +978,4 @@ theorem oracle_answer_witnesses_zkp_soundness
   exact hZ.2.1
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

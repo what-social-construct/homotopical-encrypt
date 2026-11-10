@@ -21,7 +21,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.Examples
+namespace HomotopicalEncryption.Protocol.Storage.Examples
 
 open Sheaf CellularSheaf
 
@@ -297,4 +297,4 @@ theorem second_consumption_rejected (after : Checkpoint scheme rawContext) :
     ¬ Checkpoint.Step (.consumed (sealed rawContext) (receipt rawContext)) after :=
   Checkpoint.no_step_from_consumed _ _
 
-end Hcrypt.Protocol.Storage.Examples
+end HomotopicalEncryption.Protocol.Storage.Examples

@@ -92,6 +92,22 @@ The detailed object dictionary, theorem correspondence, and remaining-work
 queue are maintained in
 \lean{papers/proximity-prize/SEMANTIC_PARITY.md}.
 
+\subsection{Projective application dependencies}
+
+The optional geometric source in
+\cref{sec:projective-observation-boundary} uses the existing
+\lean{Proximity/Concrete/GrassmannianPlucker/Reconstruction} module.
+Its \lean{recoverSubspace_frame} and \lean{recoverHarmonicProjector_frame}
+theorems recover the full subspace and its fixed-metric projector.
+\lean{TCB/PluckerObservation.recover_eq_operativeHarmonicComponent}
+adds the explicit operative-kernel identification.
+\lean{Proximity/Concrete/ProjectionChain/Core} composes the supplied
+projective, cochain, plane and RS maps and their validity/near comparisons.
+These are canonical auxiliary results outside the two configured coding
+and native-modular application selections. They do not enter the standalone
+coding import closure. Their formal owners and the independent source metrics
+remain distinct from Paper 2's codec, visibility and authentication contracts.
+
 \subsection{Status ledger}
 
 \begingroup

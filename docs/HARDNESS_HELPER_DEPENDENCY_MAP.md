@@ -2,13 +2,15 @@
 
 This map records the proved mathematical dependencies of Paper 1. The
 [submission crosswalk](../lean/Palomar/PaperOne/README.md) identifies the
-46 configured declarations. Protocol and runtime obligations are separate;
+seven groups and 38 configured declarations: 18 manuscript-facing and 20
+supporting targets, with 20 deliberate independent-Challenge placeholders.
+Protocol and runtime obligations are separate;
 they are not premises of the recovery obstructions below.
 
 ## Objects and semantic premises
 
 The generic interface is in [HCP.lean](../lean/HCP.lean), under
-`Hcrypt.HCPBridge`.
+`HomotopicalEncryption.HCPBridge`.
 
 | Object or premise | Role |
 | --- | --- |
@@ -111,10 +113,13 @@ The final manuscript corollary `cor:lattice-member-separation` in §3.5 is a
 consequence of the existing P1-S04 sample/CVP comparison and P1-S05 ambiguity
 groups. The three canonical recovery anchors and two generic classification
 endpoints are five canonical proof anchors, outside the configured submission
-targets. The comparator still selects 46 declarations: 21 manuscript-facing
-and 25 supporting statements. The manuscript's prose consolidation preserves
-all existing formal environments; computational scope is §2.3, with full
-projective recovery in §2.2.1 and one selected-statement appendix.
+targets. Paper 1 retains the HCP/CVP comparisons and exact-component obstruction;
+its independent entry selects seven groups and 38 targets. The source package
+has 22 local Solution-closure modules and one independent Challenge module.
+Full projective reconstruction belongs to Paper 3's projective projection chain.
+Paper 2 consumes the same canonical proof for visibility and codec contracts.
+Neither the core imports nor the HCP/CVP argument depend on that projective
+development.
 
 The strict comparison concerns supplied information and exact recovery. It is
 not a polynomial-time hardness hierarchy, a Turing nonreducibility result, a
@@ -131,12 +136,14 @@ linear algebra or auxiliary-oracle obstruction.
 
 ## Verification status
 
-After the optional reflection profile was added, the focused `HCP.AxisFamily`
-build passed 3,581 jobs and all three Solution entries passed 3,759 jobs.
+At the historical P310 optional-reflection checkpoint, the focused
+`HCP.AxisFamily` build passed 3,581 jobs and all three Solution entries passed 3,759 jobs.
 The recorded combined audit covered 120 configured declarations
 and four canonical endpoints: all 124 used only `propext`, `Quot.sound` and
 `Classical.choice`, and all 120 prior selected dependency sets were unchanged.
 That report predates `semanticEquivalence_all` and the initial
 `theory_eq_iff_homotopyEquivalent` proof. Their separate focused axiom audit
 passed before the optional-profile refactor, with exactly the same three
-standard axioms. The current five-endpoint audit passed, each report using exactly the same three standard axioms.
+standard axioms. P310's five-endpoint audit passed, each report using exactly
+the same three standard axioms. Fresh build, dependency and package checks
+for the renamed source and reduced entry are pending.

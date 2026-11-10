@@ -71,16 +71,16 @@ status:
       Existing canonical proofs are separate evidence. No metadata-schema
       validation, protected preflight, registry review or submission is claimed.
   main_results:
-    - declaration: "Hcrypt.Sheaf.SystematicCode.modularExact_iff_vectorCodeword"
-    - declaration: "Hcrypt.Protocol.Storage.ThreeLevel.three_native_distance_comparison"
-    - declaration: "Hcrypt.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance"
-    - declaration: "Hcrypt.Palomar.PaperThree.Application.calibration_extract_eq_original_pair_unfolded"
-    - declaration: "Hcrypt.Palomar.PaperThree.Application.sourceFar_implies_rsFar_unfolded"
-    - declaration: "Hcrypt.Palomar.PaperThree.Application.planeNear_of_scaledSourceNear_unfolded"
-    - declaration: "Hcrypt.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity"
-    - declaration: "Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction"
-    - declaration: "Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_scalarDistance"
-    - declaration: "Hcrypt.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero"
+    - declaration: "HomotopicalEncryption.Sheaf.SystematicCode.modularExact_iff_vectorCodeword"
+    - declaration: "HomotopicalEncryption.Protocol.Storage.ThreeLevel.three_native_distance_comparison"
+    - declaration: "HomotopicalEncryption.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance"
+    - declaration: "HomotopicalEncryption.Palomar.PaperThree.Application.calibration_extract_eq_original_pair_unfolded"
+    - declaration: "HomotopicalEncryption.Palomar.PaperThree.Application.sourceFar_implies_rsFar_unfolded"
+    - declaration: "HomotopicalEncryption.Palomar.PaperThree.Application.planeNear_of_scaledSourceNear_unfolded"
+    - declaration: "HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity"
+    - declaration: "HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction"
+    - declaration: "HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_scalarDistance"
+    - declaration: "HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero"
 
 automation:
   methods:
@@ -119,9 +119,9 @@ review:
     This records preparation rather than external human or registry review.
 
 alignment:
-  namespace: "Hcrypt.Protocol.Storage"
-  source_namespace: "Hcrypt.Sheaf.SystematicCode"
-  wrapper_namespace: "Hcrypt.Palomar.PaperThree.Application"
+  namespace: "HomotopicalEncryption.Protocol.Storage"
+  source_namespace: "HomotopicalEncryption.Sheaf.SystematicCode"
+  wrapper_namespace: "HomotopicalEncryption.Palomar.PaperThree.Application"
   challenge_module: "Palomar.PaperThree.Application.Challenge"
   solution_module: "Palomar.PaperThree.Application.Solution"
   proof_file: "lean/Palomar/PaperThree/Application/Solution.lean"

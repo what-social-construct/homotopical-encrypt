@@ -68,10 +68,10 @@ status:
       disables Comparator's Linux sandbox and is not protected preflight evidence.
       No metadata-schema validation, registry review or submission is claimed.
   main_results:
-    - declaration: "Hcrypt.Palomar.PaperThree.planePairEquiv_inverse_laws"
+    - declaration: "HomotopicalEncryption.Palomar.PaperThree.planePairEquiv_inverse_laws"
     - declaration: "ProximityPrize.planePairEquiv_hammingDistance"
     - declaration: "ProximityPrize.planePairEquiv_relativeHammingDistance"
-    - declaration: "Hcrypt.Palomar.PaperThree.planeLineEquiv_inverse_laws"
+    - declaration: "HomotopicalEncryption.Palomar.PaperThree.planeLineEquiv_inverse_laws"
     - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorListSizeBoundAt_capacityGrid"
     - declaration: "ProximityPrize.ReedSolomon.Parameters.capacityReceived_ballCardAt_eq_choose"
     - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorFractionalListSizeBoundAt_capacityGrid_iff"
@@ -139,7 +139,7 @@ review:
 
 alignment:
   namespace: "ProximityPrize"
-  wrapper_namespace: "Hcrypt.Palomar.PaperThree"
+  wrapper_namespace: "HomotopicalEncryption.Palomar.PaperThree"
   challenge_module: "Palomar.PaperThree.Challenge"
   solution_module: "Palomar.PaperThree.Solution"
   proof_file: "lean/Palomar/PaperThree/Solution.lean"

@@ -50,7 +50,7 @@ paths only:
 - `lean/Chain.lean`
 - `lean/Axioms/*` (assumption interfaces during proof burn-down)
 
-Avoid legacy names (`hardness_proof.lean`, `math_audit_hcrypt.lean`,
+Avoid legacy names (`hardness_proof.lean`, `lean/Laplacian/Spectral.lean`,
 `tsirelson_update.lean`, `framework_consolidation.lean`) in active source
 comments/docs. If a legacy result is historically relevant, reference it as
 "archive lineage" and pair it with the current module path.
@@ -449,8 +449,8 @@ Grassmannian/economic metaphors, or the current float tokenomics.
 
 Python and Rust do not presently share a protocol:
 
-- Python uses `HCRYPT_BLOCK_V2`, a custom `BLK2` encoding, and Merkle-like
-  roots over assorted transaction blobs. Rust uses `HCRYPT_BLOCK_V1`,
+- Python uses `HOMOTOPICAL_ENCRYPT_BLOCK_V2`, a custom `BLK2` encoding, and Merkle-like
+  roots over assorted transaction blobs. Rust uses `HOMOTOPICAL_ENCRYPT_BLOCK_V1`,
   `bincode`, and a hash of modularly accumulated edge vectors.
 - The Python transaction encoding cannot be parsed as the Rust cochain payload.
   Python omits state-affecting fields from its hash; Rust hashes opaque data
@@ -524,12 +524,12 @@ classes:
 | Surface | What it actually denotes | Verdict and disposition |
 |---|---|---|
 | Archived `archive/python/src/primitives/algebra.py` and the forward `to_plucker` path in `archive/python/src/primitives/grassmann.py` | Numerical minors/exterior coordinates for a supplied frame. | Potential numerical refinement of the raw coordinate only. It still needs a fixed coordinate ordering, coefficient/domain contract, rank and decomposability checks, projective sign/scale handling, and parity vectors against `Proximity.GrassmannianPlucker`. It is not a public shadow or commitment binding. |
-| Archived `archive/python/src/primitives/grassmann.py::from_plucker` | An attempted inverse from arbitrary coordinates to a frame. | Quarantine. General inputs need not satisfy the Plucker relations, the inverse is not canonical, and the current general-\(k\) update is dimensionally invalid. The Paper 1 verifier does not need to reconstruct the private frame from its public projective class. |
-| `src/consensus/{coherence,validator_selection}.py` and `src/chain/block_producer.py` | Grassmannian distance from a submitted projector to a Karcher-style consensus projector, converted to a scalar weight. | Misnamed legacy Paper 2 geometry. `compute_plucker_centrality` never computes a Plucker coordinate; `to_plucker` is imported but unused. Rename this family to `GrassmannianDivergenceCentrality`/`GrassmannianDivergenceEligibility` if retained. Do not bind it to the Paper 1 Plucker shadow. |
+| Archived `archive/python/src/primitives/grassmann.py::from_plucker` | An attempted inverse from arbitrary coordinates to a frame. | Quarantine. General inputs need not satisfy the Plucker relations, the inverse is not canonical, and the current general-\(k\) update is dimensionally invalid. The projective-chain verifier does not need to reconstruct the private frame from its public projective class. |
+| `src/consensus/{coherence,validator_selection}.py` and `src/chain/block_producer.py` | Grassmannian distance from a submitted projector to a Karcher-style consensus projector, converted to a scalar weight. | Misnamed legacy Paper 2 geometry. `compute_plucker_centrality` never computes a Plucker coordinate; `to_plucker` is imported but unused. Rename this family to `GrassmannianDivergenceCentrality`/`GrassmannianDivergenceEligibility` if retained. Do not bind it to the Paper 3 Plucker shadow. |
 | `src/consensus/validator_selection.py::filter_eligible` | Purported binary Plucker divergence gate. | Not implemented as documented: it accepts the previously normalized weights and never applies `MAX_DIVERGENCE`; the separate `CoherenceEngine.check_eligibility` gate is not consumed here and fails open when no consensus is available. |
 | `rust/node/src/consensus/validator_set.rs` | An externally supplied scalar called `plucker_centrality`. | Misnamed and unauthenticated. Rust receives no frame, exterior coordinate, projective shadow, distance, threshold witness, or proximity evidence root. The update only range-checks a float, while `is_plucker_eligible` checks the combined fallback selection weight. Rename and redesign as a proof/evidence-bound Paper 2 score if selected. |
 | `lean/Axioms/Grassmannian.lean::PluckerEligibility` and `lean/Consensus/Geometry.lean` | An abstract validator divergence/weight interface; it contains no Plucker coordinate or projective quotient. | Overloaded legacy name. Rename to `GrassmannianDivergenceEligibility` and keep it on the Paper 2 side. Its oracle-binding proposition does not identify it with `Proximity.PluckerCochain.PublicBinding`. |
-| Root import surfaces, current proximity documentation, Paper 1 Sections 5--6, and the Paper 2 reuse note | Cross-references to the canonical `lean/Proximity/` frame, quotient, binding, and projection chain. | Legitimate. Section 5 should consistently say **projective class/public shadow**, not imply that unit-norm normalization alone removes the sign/scale ambiguity. Concrete canonical bytes and digest binding remain runtime obligations. |
+| Root import surfaces, current proximity documentation, Paper 3 §7.1, and the Paper 2 reuse note | Cross-references to the canonical `lean/Proximity/` frame, quotient, binding, and projection chain. | Legitimate. The projective-chain section should consistently say **projective class/public shadow**, not imply that unit-norm normalization alone removes the sign/scale ambiguity. Concrete canonical bytes and digest binding remain runtime obligations. |
 
 The naming rule following this audit is:
 
@@ -596,7 +596,7 @@ described as though they were that object, but none has the required coverage.
 | `chain/block.py`: `BlockHeader`, `cochain_root` | A conventional block hash plus transaction and legacy cochain/spectral fields. The Python cochain root aggregates transaction amount commitments; it is not the digest of the Lean accepted exact \(C^1\) artifact. | Preserve the generic header/serialization idea, but replace the root schema. It lacks snapshot, Plucker/plane, RS/parameter, evidence, and presentation-handle coordinates. |
 | `chain/chain_store.py`: section storage | Mutable filesystem directories that write the fabricated public/private stalks and cochain root under a height. The private float array is written in plaintext. | Reject as the privacy-preserving sheaf store. Retain ordinary I/O patterns only after introducing immutable content addressing, encrypted private objects, canonical manifests, and atomic verification. |
 | `chain/homotopy_transaction.py` and `chain/account.py` | Mixed legacy identity, proof, amount, account, and topology fields. They carry no finalized projection-artifact root and do not bind a hidden presentation to the accepted exact cochain. | Paper 2 migration source, not Paper 1 mathematics. Rewrite against typed credential lifecycle, ledger, nullifier, and storage-anchor interfaces. |
-| `primitives/{algebra,grassmann}.py`, `consensus/{coherence,validator_selection}.py`, `chain/block_producer.py` | Plucker numerics used by the older consensus-centrality/eligibility path. | Do not identify these values with `Proximity/PluckerCochain/PublicBinding`. The Paper 1 Plucker shadow has no Python storage refinement yet. |
+| `primitives/{algebra,grassmann}.py`, `consensus/{coherence,validator_selection}.py`, `chain/block_producer.py` | Plucker numerics used by the older consensus-centrality/eligibility path. | Do not identify these values with `Proximity/PluckerCochain/PublicBinding`. The Paper 3 Plucker shadow has no Python storage refinement yet. |
 | Canonical RS projection/storage | No Python object was found for the Paper 1 plane-to-RS received word, target, distance bridge, or its persisted digest. | **Unmapped.** Lean is the only current owner. Add a runtime refinement only after the canonical derivation and manifest fields are fixed. |
 
 The competing Python hash coordinates are therefore distinct:
@@ -968,7 +968,7 @@ prototype into a new secure commitment.
   vertex indices instead of account→vertex mapping. No `account_vertices`
   dict existed. Test imports failed on missing `_TX_SIG_DOMAIN`.
 - **Fix:**
-  - Added `_TX_SIG_DOMAIN = b"HCRYPT_TX_SIG_V2"` domain separator constant.
+  - Added `_TX_SIG_DOMAIN = b"HOMOTOPICAL_ENCRYPT_TX_SIG_V2"` domain separator constant.
   - `_validate_transaction`: verifies provided signatures via
     `sha256(_TX_SIG_DOMAIN + tx.hash())`. Empty signature still allowed for
     backwards compatibility.

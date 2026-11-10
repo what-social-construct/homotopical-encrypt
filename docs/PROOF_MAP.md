@@ -15,7 +15,7 @@ lineage, but no Python row below establishes a theorem or security claim.
 | `SpectralFingerprint L` (multiset of eigenvalues) | `src/crypto/credential.py::SpectralFingerprint` | ⚠️ Numerical array container only; raw-float encoding and credential semantics are noncanonical |
 | `SpectrallyEquivalent L1 L2` | `SpectralFingerprint.matches()` | ⚠️ Approximate spectrum comparison only; it is not homotopy equivalence or a classifier proof |
 | `MatrixIsHarmonic Δ h := Δ·h = 0` (`lean/HCP.lean`) | Historical prototype: `docs/archive/python/src/invariants/harmonic.py::is_harmonic()` | ✅ Lean owns abstract hidden-operator harmonicity; the archived tolerance check is not a current runtime refinement |
-| `Hcrypt.Laplacian.IsHarmonic W h` (`lean/Laplacian/Hodge.lean`) | `src/geometry/hodge.py` / archived invariant helpers | ⚠️ Historical numerical lineage; no current runtime refinement |
+| `HomotopicalEncryption.Laplacian.IsHarmonic W h` (`lean/Laplacian/Hodge.lean`) | `src/geometry/hodge.py` / archived invariant helpers | ⚠️ Historical numerical lineage; no current runtime refinement |
 | `CVP.Instance` / `ExplicitLattice` / `CVPOracleCorrect` (`lean/CVP.lean`) | `src/crypto/hardness.py::LatticeInstance` | ❌ Different object: the Python class is an LWE-looking floating experiment, not the Lean CVP instance |
 | HCP hidden-operator instance (`lean/HCP.lean`) | `src/crypto/hardness.py` | ❌ Narrative analogy only; it does not implement the Lean realization or reduction hypotheses |
 | `GrothendieckFibration p` | `src/geometry/fiber_bundle.py::FiberBundle` | ❌ A graph of orthogonal matrices is not a Cartesian-lift witness |
@@ -103,7 +103,7 @@ must not collapse into target-near RS words.
 - `⟨h, e1⟩ = 0`, `⟨h, e2⟩ = 0`, `⟨e1, e2⟩ = 0` (pairwise orthogonal)
 
 At the structured projection level, `lean/Laplacian/Hodge.lean` uses
-`Hcrypt.Laplacian.IsHarmonic W h` for the canonical Grassmannian/subspace model
+`HomotopicalEncryption.Laplacian.IsHarmonic W h` for the canonical Grassmannian/subspace model
 with `Delta_W = I - P_W`. `lean/Hardness.lean` links the two by
 `matrix_harmonic_iff_projection_isHarmonic` when the abstract hidden operator is
 the projection Laplacian.
@@ -269,7 +269,7 @@ effective_threshold = max(max_eig * 1e-10, zero_threshold)
 ```
 
 This matches the Lean proof's abstract `MatrixIsHarmonic Δ h := Δ·h = 0`; in the
-projection model this is linked to `Hcrypt.Laplacian.IsHarmonic W h`. The runtime
+projection model this is linked to `HomotopicalEncryption.Laplacian.IsHarmonic W h`. The runtime
 threshold is only accounting for floating-point arithmetic on large-scale
 matrices.
 

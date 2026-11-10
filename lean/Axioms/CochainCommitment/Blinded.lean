@@ -18,7 +18,7 @@ public import Axioms.SheafCoherence
   the extra typed data needed to construct the latter from the former.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 /--
@@ -128,4 +128,4 @@ theorem exists_exact_harmonic_decomposition
 end BlindedCommittedCochain
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

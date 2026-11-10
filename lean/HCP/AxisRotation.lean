@@ -23,7 +23,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.HCP.AxisRotation
+namespace HomotopicalEncryption.HCP.AxisRotation
 
 open Sheaf CellularSheaf Sheaf.HCPAxisFamily
 
@@ -170,4 +170,4 @@ theorem rotatedWeightedSample_ne_fixedSample :
   rw [rotatedWeightedSample_coordinates.1, AxisFamily.weightedSample_observed] at h
   norm_num [AxisFamily.weightedObserved] at h
 
-end Hcrypt.HCP.AxisRotation
+end HomotopicalEncryption.HCP.AxisRotation

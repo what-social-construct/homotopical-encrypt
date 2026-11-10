@@ -3,9 +3,9 @@
 \section{Statement--Lean Parity Table}\label{app:selected-crosswalk}\label{app:formal-boundaries}
 
 \Cref{tab:paper1-parity} records the correspondence for this paper's six
-Hodge/CVP groups and two observation-boundary groups. The independent entry's
-configuration, \lean{lean/Palomar/PaperOne/comparator.json}, selects 21
-manuscript-facing and 25 supporting theorem declarations. Every declaration
+Hodge/CVP groups and one observation-boundary group. The independent entry's
+configuration, \lean{lean/Palomar/PaperOne/comparator.json}, selects 18
+manuscript-facing and 20 supporting theorem declarations. Every declaration
 appears once below. These are coverage counts, not a count of independent
 research contributions. Definition rows name canonical implementation
 objects, not additional selected theorem targets. Canonical consequences
@@ -16,15 +16,15 @@ contract rows identify the separate scope boundaries.
 
 \lean{Palomar.PaperOne.Challenge} states the comparison objects independently
 using Mathlib-only imports. \lean{Palomar.PaperOne.Solution} identifies them
-with the canonical development without importing Challenge. Challenge's 23
+with the canonical development without importing Challenge. Challenge's 20
 deliberate theorem placeholders are comparison targets; the proved Solution
 has no holes.
 
-Write \lean{E} for \lean{Hcrypt.Palomar.PaperOne},
+Write \lean{HE} for \lean{HomotopicalEncryption} and
+\lean{E} for \lean{HE.Palomar.PaperOne},
 \lean{CS} for \lean{E.CellularSheaf},
 \lean{HB} for \lean{E.HCPBridge},
-\lean{AF} for \lean{E.AxisFamily}, and
-\lean{PL} for \lean{E.Plucker}. The abbreviated anchors expand to the
+and \lean{AF} for \lean{E.AxisFamily}. The abbreviated anchors expand to the
 exact configured declaration names.
 
 \begingroup
@@ -55,10 +55,10 @@ A private representative selects the operative kernel and hence the
 orthogonal-projection target.
 &
 Canonical definitions:\par
-\lean{Hcrypt.HCPBridge.Observation}\par
-\lean{Hcrypt.HCPBridge.HiddenHodgeWitness}\par
-\lean{Hcrypt.HCP.operativeHarmonicComponent}\par
-\lean{Hcrypt.HCPBridge.operativeTarget}
+\lean{HE.HCPBridge.Observation}\par
+\lean{HE.HCPBridge.HiddenHodgeWitness}\par
+\lean{HE.HCP.operativeHarmonicComponent}\par
+\lean{HE.HCPBridge.operativeTarget}
 \\\midrule
 
 \textbf{Definitions: explicit-lattice CVP.}\newline
@@ -80,13 +80,13 @@ of the declared homotopy equivalence; with invariance, public fibers are
 exactly its classes. The constructed family proves this condition.
 &
 Canonical definitions and classifier theorems:\par
-\lean{Hcrypt.Axioms.PublicClassifier}\par
-\lean{Hcrypt.Helfer.ClosedTheory}\par
-\lean{Hcrypt.HCPBridge.Realization}\par
-\lean{Hcrypt.HCPBridge.ReflectsHomotopyEquivalence}\par
-\lean{Hcrypt.HCPBridge.samePublicClass_iff_homotopyEquivalent}\par
-\lean{Hcrypt.HCPBridge.publicClassOf_eq_setOf_homotopyEquivalent}\par
-\lean{Hcrypt.HCP.AxisFamily.theory_eq_iff_homotopyEquivalent}
+\lean{HE.Axioms.PublicClassifier}\par
+\lean{HE.Helfer.ClosedTheory}\par
+\lean{HE.HCPBridge.Realization}\par
+\lean{HE.HCPBridge.ReflectsHomotopyEquivalence}\par
+\lean{HE.HCPBridge.samePublicClass_iff_homotopyEquivalent}\par
+\lean{HE.HCPBridge.publicClassOf_eq_setOf_homotopyEquivalent}\par
+\lean{HE.HCP.AxisFamily.theory_eq_iff_homotopyEquivalent}
 \\\midrule
 
 \textbf{Definitions: Hodge sample and lattice.}\newline
@@ -95,8 +95,8 @@ exact/coexact noise. A supplied harmonic-lattice presentation has full real
 span; it need not contain every intrinsic integral harmonic cochain.
 &
 Canonical definitions:\par
-\lean{Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain}\par
-\lean{Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation}
+\lean{HE.Sheaf.CellularSheaf.HodgeEncryptedCochain}\par
+\lean{HE.Sheaf.CellularSheaf.HarmonicLatticePresentation}
 \\\midrule
 
 \textbf{Main result: P1-S01.}\newline
@@ -154,8 +154,8 @@ recovery in every compatible family retaining the separated pair.
 \lean{AF.cellular_axis_ambiguity}\par
 \lean{AF.cvp_oracle_insufficient}\par
 Canonical consequences:\par
-\lean{Hcrypt.HCPBridge.no_solver_exactOnOperativeTarget_on_family}\par
-\lean{Hcrypt.HCP.AxisFamily.cvp_known_member_hidden_member_separation}
+\lean{HE.HCPBridge.no_solver_exactOnOperativeTarget_on_family}\par
+\lean{HE.HCP.AxisFamily.cvp_known_member_hidden_member_separation}
 \\\midrule
 
 \textbf{Main result: P1-S06.}\newline
@@ -174,18 +174,6 @@ uses the unrestricted noise carrier and exact-component-only extraction.
 &
 \lean{CS.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent}\par
 \lean{CS.HodgeEncryptedCochain.not_far_preserving_exactComponent}
-\\\midrule
-
-\textbf{Main result: P1-B02.}\newline
-\emph{Proved.} \Cref{prop:plucker-recovery}.
-A genuine independent frame's full projective coordinates recover its
-subspace and fixed-metric projector. Operative-target recovery additionally
-identifies that subspace with the operative kernel. A digest is a different
-observation.
-&
-\lean{PL.recoverSubspace_frame}\par
-\lean{PL.recoverHarmonicProjector_frame}\par
-\lean{PL.recover_eq_operativeHarmonicComponent}
 \\\midrule
 
 \textbf{Support: complexes and semantics.}\newline
@@ -232,18 +220,6 @@ encoding injectivity and membership in the chosen lattice.
 \lean{AF.harmonicBasis_injective}\par
 \lean{AF.harmonicLatticeVector_eq}\par
 \lean{AF.latticeVector_mem}
-\\\midrule
-
-\textbf{Support: projective quotient.}\newline
-\emph{Proved.} Section~2.2.1.
-Scalar-orbit equivalence laws, wedge-annihilator recovery and invariance
-under a nonzero scalar multiple.
-&
-\lean{PL.ProjectivelyEquivalent.refl}\par
-\lean{PL.ProjectivelyEquivalent.symm}\par
-\lean{PL.ProjectivelyEquivalent.trans}\par
-\lean{PL.mem_wedgeAnnihilator_iff}\par
-\lean{PL.wedgeAnnihilator_eq_of_projectivelyEquivalent}
 \\\midrule
 
 \textbf{External theorem and semantic premise.}\newline

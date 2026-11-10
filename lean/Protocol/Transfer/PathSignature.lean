@@ -28,7 +28,7 @@ remain separate obligations. The original cochain payload proof is unchanged.
 
 set_option autoImplicit false
 
-namespace Hcrypt.Protocol.Transfer.PathSignature
+namespace HomotopicalEncryption.Protocol.Transfer.PathSignature
 
 open Sheaf CellularSheaf
 open Evidence.TransferTranscript
@@ -210,4 +210,4 @@ theorem checked_signature_verified (base : Operational.Config F Owner Asset Rece
 
 end Operational
 
-end Hcrypt.Protocol.Transfer.PathSignature
+end HomotopicalEncryption.Protocol.Transfer.PathSignature

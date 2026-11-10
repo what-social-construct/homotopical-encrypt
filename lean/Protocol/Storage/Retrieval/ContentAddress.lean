@@ -24,7 +24,7 @@ authorization, availability or selector-privacy theorem is assumed here.
 
 set_option autoImplicit false
 
-namespace Hcrypt.Protocol.Storage.Retrieval.ContentAddress
+namespace HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress
 
 open TCB.PrimitiveChecks
 
@@ -291,4 +291,4 @@ theorem decodeByDigest_original_or_collision {Decoded : Type*} (hash : Bytes →
 
 end Digests
 
-end Hcrypt.Protocol.Storage.Retrieval.ContentAddress
+end HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress

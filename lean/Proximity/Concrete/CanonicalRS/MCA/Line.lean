@@ -20,7 +20,7 @@ public import Proximity.Concrete.ProjectionChain.Core
   implicit in the types and exposed by definitional lemmas.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 namespace MCA
@@ -262,4 +262,4 @@ end
 end MCA
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

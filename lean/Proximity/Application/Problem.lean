@@ -24,7 +24,7 @@ public import Proximity.Application.Projection
   after their concrete code family, distance, and gap bounds are supplied.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 
 /-- The output of a promised gap-proximity decision procedure. -/
@@ -279,4 +279,4 @@ theorem sheaf_far_of_projected_far
   le_trans hfar (η.distanceControlled c)
 
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

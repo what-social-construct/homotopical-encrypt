@@ -20,7 +20,7 @@ public import Axioms.Foundation
   `Axioms.CochainCommitment.Payload`.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 /--
@@ -204,4 +204,4 @@ theorem canonical_commitment_wellformed
   refine ⟨hb, hh, hF.2.1, hF.2.1, ht, hp⟩
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

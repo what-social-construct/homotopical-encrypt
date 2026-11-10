@@ -12,7 +12,7 @@ CONTEXTS (from hardness hierarchy):
   vertex). The TOTAL credential size also includes restriction maps
   (d×d matrix per edge) and metadata — see size estimates below.
 
-  PRIVATE (hcrypt level, per-vertex dim = λ = 256):
+  PRIVATE (homotopical_encrypt level, per-vertex dim = λ = 256):
     Full fibration secret. Recovering this requires solving
     Hodge-hardness: find h ∈ ker(Δ) from b = h + e without
     knowing Δ. Strictly harder than CVP (Hodge_Strictly_Harder).
@@ -87,9 +87,9 @@ import hashlib
 class StalkContext(Enum):
     """
     Stalk context — reflects the hardness hierarchy:
-    PRIVATE (hcrypt) → ZK (CVP) → PUBLIC (SHA-256)
+    PRIVATE (homotopical_encrypt) → ZK (CVP) → PUBLIC (SHA-256)
     """
-    PRIVATE = "private"      # Full fibration secret (hcrypt level)
+    PRIVATE = "private"      # Full fibration secret (homotopical_encrypt level)
     ZK = "zk"               # Lattice projection (CVP level)
     PUBLIC = "public"        # Hash commitment (SHA-256 level)
     
@@ -121,7 +121,7 @@ PRIVATE_STALK = StalkSpec(
     context=StalkContext.PRIVATE,
     dimension=256,
     name="PrivateStalk",
-    description="Full fibration secret (hcrypt level)",
+    description="Full fibration secret (homotopical_encrypt level)",
     fields={
         "harmonic_secret": 128,  # Harmonic component h ∈ ker(Δ)
         "hodge_noise": 64,       # Noise margin in im(δ)⊕im(δ*)

@@ -22,13 +22,13 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage
+namespace HomotopicalEncryption.Protocol.Storage
 
 open Sheaf CellularSheaf
-open Hcrypt.Proximity
-open Hcrypt.Proximity.GrassmannianPlucker
-open Hcrypt.Proximity.Gates.Projection
-open Hcrypt.Proximity.GateEvidence.Projection
+open HomotopicalEncryption.Proximity
+open HomotopicalEncryption.Proximity.GrassmannianPlucker
+open HomotopicalEncryption.Proximity.Gates.Projection
+open HomotopicalEncryption.Proximity.GateEvidence.Projection
 
 variable {Vertex Edge Face : Type*}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
@@ -166,4 +166,4 @@ theorem target_far
 
 end ProjectionAnchor
 
-end Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Protocol.Storage

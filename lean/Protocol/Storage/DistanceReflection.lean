@@ -40,10 +40,10 @@ theorem one_le_length_mul_relativeDistanceToCode_of_not_codeword
 
 end ProximityPrize.BlockCode
 
-namespace Hcrypt.Protocol.Storage.Calibration
+namespace HomotopicalEncryption.Protocol.Storage.Calibration
 
 open Sheaf CellularSheaf
-open Hcrypt.Proximity
+open HomotopicalEncryption.Proximity
 
 variable {Vertex Edge Face : Type*}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
@@ -101,4 +101,4 @@ theorem decodedFar_implies_pairFar_of_reflection
     (decodedDistance_le_scaled_pairDistance_of_reflection
       C E code hcode hn hbound.le hnorm hreflect)
 
-end Hcrypt.Protocol.Storage.Calibration
+end HomotopicalEncryption.Protocol.Storage.Calibration

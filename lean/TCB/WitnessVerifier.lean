@@ -31,7 +31,7 @@ public import TCB.ObservationBoundary
   and protocol adapters own that separate implication and its error events.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace TCB
 namespace WitnessVerifier
 
@@ -151,4 +151,4 @@ end WitnessVerifierEnvelope
 
 end WitnessVerifier
 end TCB
-end Hcrypt
+end HomotopicalEncryption

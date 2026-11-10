@@ -1,4 +1,4 @@
-# Archived Categorical Comparison: HCRYPT vs Privacy Chains
+# Archived Categorical Comparison: HOMOTOPICAL_ENCRYPT vs Privacy Chains
 
 > Historical comparison notebook. It preserves useful questions and working
 > tables, but its spectral-stake, global-state-section, unique-message-binding,
@@ -8,7 +8,7 @@
 ## Why This Comparison is Categorical 
 
 Every privacy chain makes the same promise: "transactions are private."
-This document compares the mathematical objects of hcrypt and other privacy chains. 
+This document compares the mathematical objects of Homotopical Encrypt and other privacy chains.
 
 ---
 
@@ -39,7 +39,7 @@ Monero (Ring-signature-based):
     Logic         := Boolean {valid, invalid}
     Trust         := none (transparent)
 
-HCRYPT:
+HOMOTOPICAL_ENCRYPT:
     Credentials   := fibers of a Grothendieck fibration p: E → B
     State         := global sections Γ(X, F_hash) of the hash sheaf
     Commitments   := coboundary δ: C⁰(X, ℤ_q) → C¹(X, ℤ_q), q = 12289
@@ -55,7 +55,7 @@ HCRYPT:
 The structural difference: Zcash and Monero use algebraic geometry
 as a **proof mechanism** (pairings, discrete log). Their protocol
 objects (notes, UTXOs) are set-theoretic — flat tuples with no
-geometric structure. HCRYPT's protocol IS a presheaf topos: objects
+geometric structure. HOMOTOPICAL_ENCRYPT's protocol IS a presheaf topos: objects
 (fibrations), morphisms (coboundaries), logic (Heyting Ω), and
 hardness (CVP on cochain lattices) all live in the same categorical
 structure. Security properties are theorems about the topos.
@@ -65,7 +65,7 @@ structure. Security properties are theorems about the topos.
 ## Comparison Table
 
 ```
-                    Zcash              Monero             HCRYPT
+                    Zcash              Monero             HOMOTOPICAL_ENCRYPT
 ─────────────────────────────────────────────────────────────────────
 State model         UTXO               UTXO (RingCT)      Sheaf sections
                     (note commitments) (key images)        Γ(X, F_hash)
@@ -131,7 +131,7 @@ SNARK proof object:
     Proof      := group elements π ∈ E(𝔽_p)³ (Groth16) or hash chain (STARK)
     Verifier   := bilinear pairing e: E×E → G_T or hash recomputation
 
-HCRYPT proof object:
+HOMOTOPICAL_ENCRYPT proof object:
     Statement  := homotopy class [F] and spectral fingerprint σ(Δ)
     Witness    := path γ(t) in space of fibrations with matching invariants
     Commitment := coboundary δ(m ∥ r) ∈ C¹(X, ℤ_q)
@@ -140,7 +140,7 @@ HCRYPT proof object:
 ```
 
 The SNARK pipeline requires 6 translations (geometry → field elements →
-circuit → polynomial → commitment → pairing). HCRYPT requires 3
+circuit → polynomial → commitment → pairing). HOMOTOPICAL_ENCRYPT requires 3
 (geometry → coboundary → spectral invariants → Heyting judgment).
 Geometry is preserved throughout.
 
@@ -151,7 +151,7 @@ SNARK chains need special primitives that exist only for circuit efficiency:
 - Jubjub curve (SNARK-friendly, replaces secp256k1)
 - ~100K R1CS constraints per basic transfer
 
-HCRYPT's primitives are native to the geometry:
+HOMOTOPICAL_ENCRYPT's primitives are native to the geometry:
 - Spectral fingerprint IS the hash (topological invariant, not a hash function)
 - SO(n) IS the group (no special curve needed)
 - Verification = eigenvalue comparison (O(1) after spectral cache)
@@ -190,12 +190,12 @@ Account: State = { address → balance }
          Transition = debit sender, credit receiver
          Balance = lookup
 
-HCRYPT:  State = Γ(X, F_hash)  (global sections of hash sheaf)
+HOMOTOPICAL_ENCRYPT:  State = Γ(X, F_hash)  (global sections of hash sheaf)
          Transition = δ(tx): coboundary moves value along nerve edges
          Balance = harmonic projection π_H(stalk(account))
 ```
 
-The HCRYPT state model is **more expressive** than both:
+The HOMOTOPICAL_ENCRYPT state model is **more expressive** than both:
 - It captures UTXO-like unlinkability (ephemeral fibers = one-time outputs)
 - It captures account-like identity (spectral fingerprint persists)
 - It adds topological information (nerve structure, Betti numbers)
@@ -205,7 +205,7 @@ The HCRYPT state model is **more expressive** than both:
 
 UTXO and account models use **boolean logic**: transaction valid or not.
 
-HCRYPT uses **Heyting 3-valued logic**: Valid / Undetermined / Invalid.
+HOMOTOPICAL_ENCRYPT uses **Heyting 3-valued logic**: Valid / Undetermined / Invalid.
 
 The `Undetermined` state is not a bug — it's the **boundary zone**
 where genuine measurement uncertainty exists (spectral gap near √2
@@ -216,7 +216,7 @@ bounds). This is physically meaningful:
 - `Undetermined`: near boundary → request recomputation / more evidence
 
 No other chain has this. Monero and Zcash are boolean: valid or not.
-The Heyting semantics give HCRYPT a principled way to handle the
+The Heyting semantics give HOMOTOPICAL_ENCRYPT a principled way to handle the
 **gray zone** that every real system has but others handle ad-hoc.
 
 ---
@@ -226,7 +226,7 @@ The Heyting semantics give HCRYPT a principled way to handle the
 Monero's privacy comes from **combinatorial ambiguity** (ring signatures):
 pick N decoy keys, prove one of them is yours. The anonymity set = N.
 
-HCRYPT's privacy comes from **geometric ambiguity** (homotopy class):
+HOMOTOPICAL_ENCRYPT's privacy comes from **geometric ambiguity** (homotopy class):
 prove your fibration is in a homotopy class without revealing which one.
 The anonymity set = all fibrations in the class (infinite).
 
@@ -237,7 +237,7 @@ Monero ring signature:
     Anonymity: |ring| = 16 (fixed, small)
     Linkability: key images link same-key spends
 
-HCRYPT homotopy proof:
+HOMOTOPICAL_ENCRYPT homotopy proof:
     Statement: "my fibration ∈ [F] for some homotopy class [F]"
     Proof: Path(commitment, [F]) inhabited on SO(n)
     Anonymity: |[F]| = ∞ (all fibrations with same spectrum)
@@ -246,10 +246,10 @@ HCRYPT homotopy proof:
 
 Both prevent double-spending via key images. But Monero's anonymity
 is bounded by ring size (currently 16 — known to be attackable with
-timing analysis). HCRYPT's anonymity is the entire homotopy class.
+timing analysis). HOMOTOPICAL_ENCRYPT's anonymity is the entire homotopy class.
 
 **Post-quantum**: Monero is entirely broken by quantum computers
-(ECDL on Ed25519). HCRYPT's spectral hardness reduces to LWE,
+(ECDL on Ed25519). HOMOTOPICAL_ENCRYPT's spectral hardness reduces to LWE,
 which is believed quantum-resistant.
 
 ---
@@ -266,7 +266,7 @@ Note = (value, recipient_key, randomness)
     → Groth16/Halo2 proof  (elliptic curve pairing)
 ```
 
-HCRYPT's pipeline:
+HOMOTOPICAL_ENCRYPT's pipeline:
 ```
 Credential = FibrationCredential(topology, restriction_maps, Laplacian)
     → Cochain commitment = δ(m ∥ r)  (coboundary, adjacent composites vanish)
@@ -276,10 +276,10 @@ Credential = FibrationCredential(topology, restriction_maps, Laplacian)
 ```
 
 Zcash translates geometry INTO circuits, then proves circuit satisfiability.
-HCRYPT stays IN the geometry and proves geometric facts directly.
+HOMOTOPICAL_ENCRYPT stays IN the geometry and proves geometric facts directly.
 
 **Consequence**: Zcash needs a SNARK-friendly hash (Poseidon) because
-generic hashes are expensive in circuits. HCRYPT doesn't need any
+generic hashes are expensive in circuits. HOMOTOPICAL_ENCRYPT doesn't need any
 special hash because the "hash" IS the spectral fingerprint (eigenvalues
 of the Laplacian) — this is a topological invariant, not a hash function.
 
@@ -303,7 +303,7 @@ tables, hashed key-sharding, and a security story involving hidden
 subgraphs and homological properties. The comparison below therefore treats
 HFHE as Octra's own hypergraph construction, not as ordinary LWE-based FHE.
 
-HCRYPT's analogous object is `SheafState`, but the boundary is different:
+HOMOTOPICAL_ENCRYPT's analogous object is `SheafState`, but the boundary is different:
 
 ```
 Octra:
@@ -312,7 +312,7 @@ Octra:
       → proof-heavy spend/decrypt/stealth path
       → node validates encrypted-state transition
 
-HCRYPT:
+HOMOTOPICAL_ENCRYPT:
     SheafState / typed state sheaf
       → private stalk or fibration representative
       → public stalk, cochain commitment, or homotopy shadow
@@ -331,18 +331,18 @@ private/confidential state
 
 There is also a useful monoidal analogy. Both systems organize private work
 into composable public updates: encrypted state updates in Octra, and
-cochain/sheaf-state transitions in HCRYPT. In HCRYPT this is explicit in the
+cochain/sheaf-state transitions in HOMOTOPICAL_ENCRYPT. In HOMOTOPICAL_ENCRYPT this is explicit in the
 cochain layer: commitments compose by addition, state transitions compose as
 HashChain/sheaf morphisms, and public artifacts compress larger private
 witnesses into reusable named objects. This is close in spirit to the
 compression-monoid viewpoint of "Compression is all you need": useful structure
 comes from short composable handles whose expansion carries much richer
 semantics. The analogy is structural; it is not a claim that Octra's HFHE
-updates and HCRYPT's cochains are the same algebraic construction.
+updates and HOMOTOPICAL_ENCRYPT's cochains are the same algebraic construction.
 
 The difference is the semantics of the private state:
 
-| Layer | Octra | HCRYPT |
+| Layer | Octra | HOMOTOPICAL_ENCRYPT |
 |---|---|---|
 | Confidential state container | Circle / encrypted balance state | `SheafState` with private/public/ZK stalk contexts |
 | Privacy mechanism | FHE/HFHE encrypted computation and encrypted balance updates | lossy sheaf projection, Hodge/cochain hardness, homotopy-class ambiguity |
@@ -354,7 +354,7 @@ So `SheafState` is not an encrypted container in the Octra sense. It is a
 typed state sheaf whose private stalks, public stalks, cochains, and proof
 artifacts expose only the projections needed for consensus.
 
-This is why HCRYPT does not need the same encrypted boundary Octra uses.
+This is why HOMOTOPICAL_ENCRYPT does not need the same encrypted boundary Octra uses.
 Encryption is still useful for transport, wallet state, onion routing, and
 optional private execution, but the consensus-visible privacy boundary is
 geometric:
@@ -370,7 +370,7 @@ Useful reference points:
 - Octra overview: https://docs.octra.org/
 - Octra encrypted balances: https://docs.octra.org/user-docs/encrypting-the-balance
 - Octra stealth transactions: https://docs.octra.org/user-docs/stealth-transactions
-- HCRYPT implementation hooks: `src/chain/sheaf_state.py`, `src/chain/homotopy_transaction.py`,
+- HOMOTOPICAL_ENCRYPT implementation hooks: `src/chain/sheaf_state.py`, `src/chain/homotopy_transaction.py`,
   `src/geometry/fiber_bundle.py`, `src/network/onion_service.py`
 
 ---
@@ -378,7 +378,7 @@ Useful reference points:
 ## vs StarkNet/Cairo: Closest Philosophical Cousin
 
 STARKs (Scalable Transparent Arguments of Knowledge) are the closest
-to HCRYPT's philosophy:
+to HOMOTOPICAL_ENCRYPT's philosophy:
 - No trusted setup (transparent)
 - Hash-based (post-quantum friendly)
 - Algebraically structured (AIR constraints → polynomial IOPs)
@@ -388,13 +388,13 @@ constraints. The difference:
 
 ```
 STARK: execution trace → AIR constraints → FRI commitment → verify
-HCRYPT: fibration → coboundary → spectral invariants → Heyting judgment
+HOMOTOPICAL_ENCRYPT: fibration → coboundary → spectral invariants → Heyting judgment
 ```
 
 STARKs prove "this computation was executed correctly."
-HCRYPT proves "this geometric object has these invariants."
+HOMOTOPICAL_ENCRYPT proves "this geometric object has these invariants."
 
-If HCRYPT ever needs to verify arbitrary computation (WASM smart
+If HOMOTOPICAL_ENCRYPT ever needs to verify arbitrary computation (WASM smart
 contracts), STARKs would be the natural fit — they're the only
 proof system that doesn't introduce quantum vulnerability.
 
@@ -421,7 +421,7 @@ Poseidon hash (Zcash Orchard, StarkNet):
     Group: 𝔽_p               (prime field)
     Operations: field arithmetic (SNARK-friendly)
 
-Cochain commitment (HCRYPT):
+Cochain commitment (HOMOTOPICAL_ENCRYPT):
     C = δ(m ∥ r) mod q    on cochain lattice ℤ_q^n
     Binding: SVP-hard         (post-quantum — lattice)
     Hiding: LWE-hard          (post-quantum — lattice)
@@ -494,7 +494,7 @@ Standard lattice commitments (like BDLOP) use:
     C = A·m + r·G    (mod q)    where A is random
 ```
 
-HCRYPT's cochain commitment uses:
+HOMOTOPICAL_ENCRYPT's cochain commitment uses:
 ```
     C = δ(m ∥ r)     (mod q)    where δ encodes topology
 ```
@@ -518,7 +518,7 @@ structureless. Cochain commitments are at least as hard (Hodge-hardness
 ### Parameter Comparison
 
 ```
-                    Zcash (Jubjub)    Kyber (NIST)     HCRYPT
+                    Zcash (Jubjub)    Kyber (NIST)     HOMOTOPICAL_ENCRYPT
 ────────────────────────────────────────────────────────────────
 Field/modulus       p ≈ 2²⁵⁵          q = 3329         q = 12289
 Dimension           1 (scalar)        256 (vector)     512 (vector)
@@ -556,11 +556,11 @@ Zcash:     Discrete log on elliptic curves (ECDL)
 Monero:    Discrete log on Ed25519 (ECDL)
            → broken by Shor's algorithm (quantum)
 
-HCRYPT:    Homotopical search > Hodge-hardness > CVP on q-ary lattices
+HOMOTOPICAL_ENCRYPT:    Homotopical search > Hodge-hardness > CVP on q-ary lattices
            → ALL layers resist quantum (lattice problems)
 ```
 
-In the hidden-operator model, HCRYPT has a **strict hardness hierarchy** with
+In the hidden-operator model, HOMOTOPICAL_ENCRYPT has a **strict hardness hierarchy** with
 three levels:
 
 ```
@@ -606,7 +606,7 @@ Standard lattice schemes (Kyber, Dilithium, NTRU):
     Break: solve LWE/CVP on the lattice defined by A
 ```
 
-HCRYPT:
+HOMOTOPICAL_ENCRYPT:
 ```
     Secret: fibration (parallel transport maps R_{v→e})
     Public: class fingerprint / commitments + b = h + e
@@ -617,7 +617,7 @@ HCRYPT:
 ```
 
 The critical difference: in standard LWE, the attacker KNOWS the
-lattice (it's defined by the public matrix A). In HCRYPT, the attacker
+lattice (it's defined by the public matrix A). In HOMOTOPICAL_ENCRYPT, the attacker
 doesn't know which lattice to attack — the relevant sublattice ker(Δ)
 is determined by the hidden fibration/restriction maps.
 
@@ -634,7 +634,7 @@ Hodge-hardness:  attacker must identify the hidden lattice/kernel before
 From `src/crypto/hardness.py`, `lean/CVP.lean`, and `lean/Hardness.lean`:
 
 ```
-Claim: Breaking HCRYPT is at least as hard as CVP on q-ary lattices.
+Claim: Breaking HOMOTOPICAL_ENCRYPT is at least as hard as CVP on q-ary lattices.
 
 Proof sketch:
 1. Given any CVP instance (basis B, target t), embed it as:
@@ -660,7 +660,7 @@ Result: CVP < Hodge-hardness < homotopical search
 ### Comparison: Hardness Across Chains
 
 ```
-                    Zcash           Monero          HCRYPT
+                    Zcash           Monero          HOMOTOPICAL_ENCRYPT
 ────────────────────────────────────────────────────────────────
 Core hard problem   ECDL            ECDL            Hodge-hardness
                     (elliptic       (elliptic       (lattice +
@@ -713,7 +713,7 @@ The geometric structure is a lattice problem, not a wrapper around one."
 │  SNARK chains: geometry serves the proof system                 │
 │  (translate data → circuits → polynomials → verify via curves)  │
 │                                                                  │
-│  HCRYPT: geometry IS the protocol                               │
+│  HOMOTOPICAL_ENCRYPT: geometry IS the protocol                               │
 │  (data = fibrations, state = sheaf, proof = path, logic = Ω)   │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -734,5 +734,5 @@ The state model doesn't need UTXO because:
 5. Unlinkability = ephemeral fibers (one-time stalks per output)
 6. Consensus = Heyting judgment (3-valued, handles boundary zones)
 
-**HCRYPT is a presheaf topos with Heyting subobject classifier.**
+**HOMOTOPICAL_ENCRYPT is a presheaf topos with Heyting subobject classifier.**
 Everything else follows from that categorical structure.

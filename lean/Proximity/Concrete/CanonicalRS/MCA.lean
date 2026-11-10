@@ -18,7 +18,7 @@ public import Proximity.Concrete.CanonicalRS.MCA.Line
   canonical RS endpoint.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 namespace MCA
@@ -426,4 +426,4 @@ end
 end MCA
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

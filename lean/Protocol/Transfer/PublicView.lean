@@ -29,7 +29,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Transfer.Owned
+namespace HomotopicalEncryption.Protocol.Transfer.Owned
 
 open Sheaf CellularSheaf
 open Evidence.TransferTranscript
@@ -238,4 +238,4 @@ theorem publicView_eq (first second : CheckedTransfer config transfer bytes) :
 
 end CheckedTransfer
 
-end Hcrypt.Protocol.Transfer.Owned
+end HomotopicalEncryption.Protocol.Transfer.Owned

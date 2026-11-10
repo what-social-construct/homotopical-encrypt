@@ -193,14 +193,14 @@ def diagonalPowerPair (P : Parameters F ι) : Word ι (Fin 2 → F) := fun i _ =
 
 end ReedSolomon.Parameters
 end ProximityPrize
-namespace Hcrypt.Axioms
+namespace HomotopicalEncryption.Axioms
 
 /-- The original wire commitment modulus is 12289. -/
 def canonicalCochainModulus : ℕ := 12289
 
-end Hcrypt.Axioms
+end HomotopicalEncryption.Axioms
 
-namespace Hcrypt.Proximity.ReedSolomon
+namespace HomotopicalEncryption.Proximity.ReedSolomon
 
 /-- The historical application name for the standalone injective evaluation domain. -/
 abbrev EvaluationDomain (F ι : Type*) :=
@@ -210,9 +210,9 @@ abbrev EvaluationDomain (F ι : Type*) :=
 abbrev Parameters (F ι : Type*) [Field F] [Fintype ι] :=
   ProximityPrize.ReedSolomon.Parameters F ι
 
-end Hcrypt.Proximity.ReedSolomon
+end HomotopicalEncryption.Proximity.ReedSolomon
 
-namespace Hcrypt.Proximity.CanonicalRS
+namespace HomotopicalEncryption.Proximity.CanonicalRS
 noncomputable section
 
 /-- The actual residue field at the existing wire commitment modulus. -/
@@ -335,7 +335,7 @@ def canonicalSmoothDomain : SmoothDomain :=
   canonicalPowerRoot.smoothDomain
 
 end
-end Hcrypt.Proximity.CanonicalRS
+end HomotopicalEncryption.Proximity.CanonicalRS
 noncomputable section
 open scoped BigOperators RealInnerProductSpace
 
@@ -420,15 +420,15 @@ def realEncode (P : Parameters (ZMod q) ι) (S : Finset ι)
     (data : {a // a ∈ S} → ℝ) : ι → ℝ :=
   fun i => ∑ a, data a * (P.integerCoefficient S i a : ℝ)
 end ProximityPrize.ReedSolomon.Parameters
-namespace Hcrypt.Axioms
+namespace HomotopicalEncryption.Axioms
 /-- Original cochain payload: modulus, declared count, full integer list and topology tag. -/
 structure CochainCommitmentData where
   modulus : ℕ
   n_edge_values : ℕ
   edge_values : List ℤ
   topology_hash : Fin 16 → UInt8
-end Hcrypt.Axioms
-namespace Hcrypt.Axioms.CochainCommitmentData
+end HomotopicalEncryption.Axioms
+namespace HomotopicalEncryption.Axioms.CochainCommitmentData
 /-- The declared coordinate count equals the list length. -/
 def EdgeCountMatches (c : CochainCommitmentData) : Prop :=
   c.n_edge_values = c.edge_values.length
@@ -441,8 +441,8 @@ def SupportedModulus (c : CochainCommitmentData) : Prop :=
 /-- The existing wire-shape predicate; it does not assert exactness or authentication. -/
 def WellFormed (c : CochainCommitmentData) : Prop :=
   SupportedModulus c ∧ EdgeCountMatches c ∧ NonemptyEdges c
-end Hcrypt.Axioms.CochainCommitmentData
-namespace Hcrypt.TCB
+end HomotopicalEncryption.Axioms.CochainCommitmentData
+namespace HomotopicalEncryption.TCB
 /-- The original 32-byte public hash carrier. -/
 abbrev Hash32 := Fin 32 → UInt8
 /-- The original payload and digest with an explicitly supplied binding proposition. -/
@@ -454,8 +454,8 @@ structure HashedCommittedCochain where
 def HashedCommittedCochain.WellFormed
     (H : HashedCommittedCochain) : Prop :=
   H.cochain.WellFormed ∧ H.Binds
-end Hcrypt.TCB
-namespace Hcrypt.Sheaf
+end HomotopicalEncryption.TCB
+namespace HomotopicalEncryption.Sheaf
 /-- Integer cellular incidences satisfying their actual boundary-square equation. -/
 structure OrientedTwoComplex
     (Vertex Edge Face : Type*)
@@ -468,12 +468,12 @@ structure OrientedTwoComplex
         (fun e => incidence01 v e * incidence12 e f) = 0
 /-- A real Euclidean coordinate stalk. -/
 abbrev Coord (n : ℕ) := EuclideanSpace ℝ (Fin n)
-end Hcrypt.Sheaf
+end HomotopicalEncryption.Sheaf
 universe u_1 u_2 u_3
 variable {Vertex : Type u_1} {Edge : Type u_2} {Face : Type u_3}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
-  {X : Hcrypt.Sheaf.OrientedTwoComplex Vertex Edge Face}
-namespace Hcrypt.Sheaf.OrientedTwoComplex
+  {X : HomotopicalEncryption.Sheaf.OrientedTwoComplex Vertex Edge Face}
+namespace HomotopicalEncryption.Sheaf.OrientedTwoComplex
 variable (X : OrientedTwoComplex Vertex Edge Face)
 /-- A vertex-edge incidence is present when its integer incidence is nonzero. -/
 def VertexEdgeIncident (v : Vertex) (e : Edge) : Prop :=
@@ -484,8 +484,8 @@ def EdgeFaceIncident (e : Edge) (f : Face) : Prop :=
 /-- The actual vertex-edge incidence cast to the real coefficient field. -/
 def incidence01Real (v : Vertex) (e : Edge) : ℝ :=
   X.incidence01 v e
-end Hcrypt.Sheaf.OrientedTwoComplex
-namespace Hcrypt.Sheaf
+end HomotopicalEncryption.Sheaf.OrientedTwoComplex
+namespace HomotopicalEncryption.Sheaf
 /-- Finite stalks and restriction maps composing on incident cellular flags. -/
 structure CellularSheaf
     {Vertex : Type u_1} {Edge : Type u_2} {Face : Type u_3}
@@ -505,9 +505,9 @@ structure CellularSheaf
       X.VertexEdgeIncident v e →
       X.EdgeFaceIncident e f →
       (restrict12 e f).comp (restrict01 v e) = restrict02 v f
-end Hcrypt.Sheaf
-open Hcrypt.Sheaf Hcrypt.Sheaf.CellularSheaf
-namespace Hcrypt.Sheaf.CellularSheaf
+end HomotopicalEncryption.Sheaf
+open HomotopicalEncryption.Sheaf HomotopicalEncryption.Sheaf.CellularSheaf
+namespace HomotopicalEncryption.Sheaf.CellularSheaf
 /-- Flattened stalk coordinates indexed by their cells. -/
 abbrev TotalCoord (Cell : Type*) (dim : Cell → ℕ) :=
   Σ c : Cell, Fin (dim c)
@@ -567,13 +567,13 @@ structure CochainPayloadInterpretation (F : CellularSheaf X) where
   decode : Axioms.CochainCommitmentData → F.C1
   /-- External payload/snapshot authentication; the topology tag alone does not establish it. -/
   PayloadBindsSnapshot : Axioms.CochainCommitmentData → Prop
-end Hcrypt.Sheaf.CellularSheaf
-namespace Hcrypt.Sheaf.CellularSheaf.SheafStateSnapshot
+end HomotopicalEncryption.Sheaf.CellularSheaf
+namespace HomotopicalEncryption.Sheaf.CellularSheaf.SheafStateSnapshot
 /-- The snapshot canonical-encoding and cellular-sheaf binding obligations. -/
 def WellFormed {F : CellularSheaf X} (s : SheafStateSnapshot F) : Prop :=
   s.CanonicallyEncoded ∧ s.RootBindsCellularSheaf
-end Hcrypt.Sheaf.CellularSheaf.SheafStateSnapshot
-namespace Hcrypt.Sheaf.CellularSheaf.CochainPayloadInterpretation
+end HomotopicalEncryption.Sheaf.CellularSheaf.SheafStateSnapshot
+namespace HomotopicalEncryption.Sheaf.CellularSheaf.CochainPayloadInterpretation
 variable {F : CellularSheaf X}
 /-- Snapshot validity, full coordinate count, topology tag and supplied payload binding. -/
 def BoundToSnapshot
@@ -583,8 +583,8 @@ def BoundToSnapshot
     c.n_edge_values = F.edgeCoordinateCount ∧
     c.topology_hash = I.snapshot.topologyHash ∧
     I.PayloadBindsSnapshot c
-end Hcrypt.Sheaf.CellularSheaf.CochainPayloadInterpretation
-namespace Hcrypt.Sheaf.CellularSheaf
+end HomotopicalEncryption.Sheaf.CellularSheaf.CochainPayloadInterpretation
+namespace HomotopicalEncryption.Sheaf.CellularSheaf
 /-- Exact accepted payloads require wire shape, snapshot binding and an actual cellular opening. -/
 structure AcceptedCommittedOneCochain
     {F : CellularSheaf X}
@@ -593,8 +593,8 @@ structure AcceptedCommittedOneCochain
   wireWellFormed : c.WellFormed
   boundToSnapshot : I.BoundToSnapshot c
   representsExact : ∃ a : F.C0, I.decode c = F.delta0 a
-end Hcrypt.Sheaf.CellularSheaf
-namespace Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Sheaf.CellularSheaf
+namespace HomotopicalEncryption.Protocol.Storage
 /-- The original immutable interpretation, snapshot-bound artifact, run and parameter context. -/
 structure Context (F : CellularSheaf X) where
   runId : TCB.Hash32
@@ -603,8 +603,8 @@ structure Context (F : CellularSheaf X) where
   artifactWellFormed : artifact.WellFormed
   boundToSnapshot : interpretation.BoundToSnapshot artifact.cochain
   parameterSet : TCB.Hash32
-end Hcrypt.Protocol.Storage
-namespace Hcrypt.Protocol.Storage.Context
+end HomotopicalEncryption.Protocol.Storage
+namespace HomotopicalEncryption.Protocol.Storage.Context
 variable {F : CellularSheaf X}
 /-- The exact payload retained by this original context. -/
 def cochain (C : Context F) : Axioms.CochainCommitmentData :=
@@ -612,9 +612,9 @@ def cochain (C : Context F) : Axioms.CochainCommitmentData :=
 /-- Exact-payload acceptance in this very interpretation and snapshot. -/
 def Accepted (C : Context F) : Prop :=
   AcceptedCommittedOneCochain C.interpretation C.cochain
-end Hcrypt.Protocol.Storage.Context
+end HomotopicalEncryption.Protocol.Storage.Context
 
-namespace Hcrypt.Proximity
+namespace HomotopicalEncryption.Proximity
 /-- The original application name for the same block-code predicate. -/
 abbrev BlockCode (ι : Type u_1) (α : Type u_2) :=
   ProximityPrize.BlockCode ι α
@@ -622,13 +622,13 @@ abbrev BlockCode (ι : Type u_1) (α : Type u_2) :=
 abbrev FAdditiveCode
     (F : Type u_1) (ι : Type u_2) (α : Type u_3) [Zero α] [Add α] [SMul F α] :=
   ProximityPrize.FAdditiveCode F ι α
-end Hcrypt.Proximity
-namespace Hcrypt.Proximity.ReedSolomon
+end HomotopicalEncryption.Proximity
+namespace HomotopicalEncryption.Proximity.ReedSolomon
 /-- The historical vector-symbol name used by the original application. -/
 abbrev VectorSymbol (F : Type u_1) (σ : Type u_2) :=
   ProximityPrize.ReedSolomon.VectorSymbol F σ
-end Hcrypt.Proximity.ReedSolomon
-namespace Hcrypt.Proximity.ReedSolomon.Parameters
+end HomotopicalEncryption.Proximity.ReedSolomon
+namespace HomotopicalEncryption.Proximity.ReedSolomon.Parameters
 variable {F : Type u_1} {ι : Type u_2} [Field F] [Fintype ι]
 /-- The historical scalar-code projection used by the original canonical payload metrics. -/
 abbrev toBlockCode (P : Parameters F ι) : BlockCode ι F :=
@@ -646,8 +646,8 @@ abbrev fAdditive_of_degreeBound_pos
     (hDegree : 0 < P.degreeBound) :
     P.FAdditive :=
   ProximityPrize.ReedSolomon.Parameters.fAdditive_of_degreeBound_pos P hDegree
-end Hcrypt.Proximity.ReedSolomon.Parameters
-namespace Hcrypt.Proximity.ReedSolomon.Parameters.FAdditive
+end HomotopicalEncryption.Proximity.ReedSolomon.Parameters
+namespace HomotopicalEncryption.Proximity.ReedSolomon.Parameters.FAdditive
 variable {F : Type u_1} {ι : Type u_2} [Field F] [Fintype ι]
 /-- The historical additive-code projection used by the original challenge profile. -/
 abbrev toFAdditiveCode
@@ -655,9 +655,9 @@ abbrev toFAdditiveCode
     (hP : P.FAdditive) :
     FAdditiveCode F ι F :=
   ProximityPrize.ReedSolomon.Parameters.FAdditive.toFAdditiveCode hP
-end Hcrypt.Proximity.ReedSolomon.Parameters.FAdditive
+end HomotopicalEncryption.Proximity.ReedSolomon.Parameters.FAdditive
 run_cmd Lean.modifyEnv fun env => Lean.Meta.auxLemmasExt.setState env {}
-namespace Hcrypt.Sheaf.SystematicCode
+namespace HomotopicalEncryption.Sheaf.SystematicCode
 variable {q : ℕ} [Fact q.Prime] {ι : Type u_1} [Fintype ι] [DecidableEq ι]
 /-- The original two-vertex, one-edge cellular base with no faces. -/
 def complex : OrientedTwoComplex Bool Unit Empty where
@@ -728,18 +728,18 @@ theorem modularExact_iff_vectorCodeword
     (z : ι → Fin 2 → ℤ) :
     ModularExact P S z ↔
       P.VectorCodeword (Fin 2) (fun i j => (z i j : ZMod q)) := by sorry
-end Hcrypt.Sheaf.SystematicCode
-namespace Hcrypt.Proximity
+end HomotopicalEncryption.Sheaf.SystematicCode
+namespace HomotopicalEncryption.Proximity
 /-- Compatibility name for the same indexed coding word. -/
 abbrev Word (ι : Type u_1) (α : Type u_2) :=
   ProximityPrize.Word ι α
-end Hcrypt.Proximity
-open Hcrypt.Proximity
-namespace Hcrypt.Proximity.CochainBridge
+end HomotopicalEncryption.Proximity
+open HomotopicalEncryption.Proximity
+namespace HomotopicalEncryption.Proximity.CochainBridge
 /-- Compatibility name for the original cochain payload. -/
 abbrev CommittedCochain := Axioms.CochainCommitmentData
-end Hcrypt.Proximity.CochainBridge
-namespace Hcrypt.Proximity.CochainPlane
+end HomotopicalEncryption.Proximity.CochainBridge
+namespace HomotopicalEncryption.Proximity.CochainPlane
 variable {R ι : Type}
 /-- Both semantic coordinates at each evaluation position. -/
 abbrev PlaneShadow (R ι : Type) :=
@@ -749,8 +749,8 @@ structure PlaneExtractionContext (R ι : Type) where
   edgeCount : ℕ
   edgeIndex : ι → Fin 2 → ℕ
   coefficient : ℤ → R
-end Hcrypt.Proximity.CochainPlane
-namespace Hcrypt.Proximity.CochainPlane.PlaneExtractionContext
+end HomotopicalEncryption.Proximity.CochainPlane
+namespace HomotopicalEncryption.Proximity.CochainPlane.PlaneExtractionContext
 variable {R ι : Type}
 /-- Read the original payload coordinates using the existing total getD operation. -/
 def projectedPlane
@@ -758,16 +758,16 @@ def projectedPlane
     (c : CochainBridge.CommittedCochain) :
     PlaneShadow R ι :=
   fun i j => E.coefficient (c.edge_values.getD (E.edgeIndex i j) 0)
-end Hcrypt.Proximity.CochainPlane.PlaneExtractionContext
-namespace Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Proximity.CochainPlane.PlaneExtractionContext
+namespace HomotopicalEncryption.Protocol.Storage
 variable {F : CellularSheaf X} {ι : Type} [Fintype ι]
 /-- Full geometric and serialized coordinate equivalences for the same original payload. -/
 structure CoordinateLayout (F : CellularSheaf X) (ι : Type) where
   coordinate : (ι × Fin 2) ≃ TotalCoord Edge F.edgeDim
   serialized : TotalCoord Edge F.edgeDim ≃ Fin F.edgeCoordinateCount
-end Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Protocol.Storage
 run_cmd Lean.modifyEnv fun env => Lean.Meta.auxLemmasExt.setState env {}
-namespace Hcrypt.Protocol.Storage.CoordinateLayout
+namespace HomotopicalEncryption.Protocol.Storage.CoordinateLayout
 variable {F : CellularSheaf X} {ι : Type} [Fintype ι]
 /-- The full original edge layout with identity integer coefficients. -/
 def extraction (L : CoordinateLayout F ι) : CochainPlane.PlaneExtractionContext ℤ ι where
@@ -781,11 +781,11 @@ def raw (L : CoordinateLayout F ι) (c : Axioms.CochainCommitmentData) :
 def decode (L : CoordinateLayout F ι) (c : Axioms.CochainCommitmentData) : F.C1 :=
   WithLp.toLp 2 fun coordinate =>
     (c.edge_values.getD (L.serialized coordinate).val 0 : ℝ)
-end Hcrypt.Protocol.Storage.CoordinateLayout
+end HomotopicalEncryption.Protocol.Storage.CoordinateLayout
 run_cmd Lean.modifyEnv fun env => Lean.Meta.auxLemmasExt.setState env {}
-namespace Hcrypt.Protocol.Storage.ThreeLevel
+namespace HomotopicalEncryption.Protocol.Storage.ThreeLevel
 open ProximityPrize
-open Hcrypt.Sheaf.SystematicCode
+open HomotopicalEncryption.Sheaf.SystematicCode
 variable {q : ℕ} [Fact q.Prime] {ι : Type} [Fintype ι] [DecidableEq ι]
 /-- One integer column is valid precisely when its actual cellular lift is modularly exact. -/
 def integerScalarCode (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
@@ -814,17 +814,17 @@ theorem flatDistance_eq_rsFlatDistance
     (integerScalarCode P S).flattenedPairCode.relativeDistanceToCode (ProximityPrize.BlockCode.flattenPair z) =
       P.toBlockCode.flattenedPairCode.relativeDistanceToCode
         (ProximityPrize.BlockCode.flattenPair (reducePair z)) := by sorry
-end Hcrypt.Protocol.Storage.ThreeLevel
-namespace Hcrypt.Protocol.Storage.CanonicalSystematic
+end HomotopicalEncryption.Protocol.Storage.ThreeLevel
+namespace HomotopicalEncryption.Protocol.Storage.CanonicalSystematic
 /-- The original 4096 evaluation positions. -/
-abbrev Index := Fin Hcrypt.Proximity.CanonicalRS.length
+abbrev Index := Fin HomotopicalEncryption.Proximity.CanonicalRS.length
 /-- The same certified canonical power-domain RS parameters. -/
-def parameters := Hcrypt.Proximity.CanonicalRS.canonicalSmoothDomain.parameters
+def parameters := HomotopicalEncryption.Proximity.CanonicalRS.canonicalSmoothDomain.parameters
 /-- The original dimension bound is no larger than the actual domain length. -/
 theorem degreeBound_le_length :
-    Hcrypt.Proximity.CanonicalRS.degreeBound ≤ Hcrypt.Proximity.CanonicalRS.length := by sorry
+    HomotopicalEncryption.Proximity.CanonicalRS.degreeBound ≤ HomotopicalEncryption.Proximity.CanonicalRS.length := by sorry
 /-- The original embedding of the first 1024 information coordinates. -/
-def informationIndex (a : Fin Hcrypt.Proximity.CanonicalRS.degreeBound) : Index :=
+def informationIndex (a : Fin HomotopicalEncryption.Proximity.CanonicalRS.degreeBound) : Index :=
   Fin.castLE degreeBound_le_length a
 /-- The original first-1024-position information set. -/
 def informationSet : Finset Index := Finset.univ.image informationIndex
@@ -841,8 +841,8 @@ def systematicLayout {q : ℕ} [Fact q.Prime] {ι : Type}
   serialized := Fintype.equivFin _
 /-- That same layout at the canonical field, information set and sheaf. -/
 def layout : CoordinateLayout sheaf Index := systematicLayout parameters informationSet
-end Hcrypt.Protocol.Storage.CanonicalSystematic
-namespace Hcrypt.Protocol.Storage.CanonicalSystematic
+end HomotopicalEncryption.Protocol.Storage.CanonicalSystematic
+namespace HomotopicalEncryption.Protocol.Storage.CanonicalSystematic
 variable {F : CellularSheaf X} {ι : Type} [Fintype ι]
 /-- Serialize every original integer coordinate once, with the original modulus and topology tag. -/
 def serializePayload (L : CoordinateLayout F ι) (z : ι → Fin 2 → ℤ) :
@@ -853,20 +853,20 @@ def serializePayload (L : CoordinateLayout F ι) (z : ι → Fin 2 → ℤ) :
     let p := L.coordinate.symm (L.serialized.symm i)
     z p.1 p.2
   topology_hash := fun _ => 0
-end Hcrypt.Protocol.Storage.CanonicalSystematic
-namespace Hcrypt.Protocol.Storage.CanonicalSystematic
+end HomotopicalEncryption.Protocol.Storage.CanonicalSystematic
+namespace HomotopicalEncryption.Protocol.Storage.CanonicalSystematic
 /-- The existing original canonical payload serializer. -/
 def payload (z : Index → Fin 2 → ℤ) : Axioms.CochainCommitmentData :=
   serializePayload layout z
-end Hcrypt.Protocol.Storage.CanonicalSystematic
-namespace Hcrypt.Protocol.Storage.Calibration
+end HomotopicalEncryption.Protocol.Storage.CanonicalSystematic
+namespace HomotopicalEncryption.Protocol.Storage.Calibration
 variable {Fsheaf : CellularSheaf X} {K ι : Type} [Field K] [Fintype ι] [DecidableEq K]
 /-- The original extraction API reads and reduces both coordinates of this same context payload. -/
 def extractedPair (E : CochainPlane.PlaneExtractionContext ℤ ι)
     (C : Context Fsheaf) : ProximityPrize.Word ι (Fin 2 → K) :=
   fun i j => ((E.projectedPlane C.cochain i j : ℤ) : K)
-end Hcrypt.Protocol.Storage.Calibration
-namespace Hcrypt.Proximity.CochainReedSolomon
+end HomotopicalEncryption.Protocol.Storage.Calibration
+namespace HomotopicalEncryption.Proximity.CochainReedSolomon
 variable {R F ι : Type}
 variable [Field F] [Fintype F] [Fintype ι] [DecidableEq F]
 /-- The same existing finite field at the original payload modulus. -/
@@ -879,8 +879,8 @@ instance canonicalCochainModulus_prime :
 /-- The existing map from an integer plane symbol into a field symbol. -/
 structure PlaneEncoding (R F : Type) where
   encodePoint : (Fin 2 → R) → F
-end Hcrypt.Proximity.CochainReedSolomon
-namespace Hcrypt.Proximity.CochainReedSolomon.PlaneEncoding
+end HomotopicalEncryption.Proximity.CochainReedSolomon
+namespace HomotopicalEncryption.Proximity.CochainReedSolomon.PlaneEncoding
 variable {R F ι : Type}
 variable [Field F] [Fintype F] [Fintype ι] [DecidableEq F]
 /-- Apply the existing point encoding independently at each original evaluation position. -/
@@ -896,8 +896,8 @@ def integerCanonical
     (mix : CanonicalField) :
     PlaneEncoding ℤ CanonicalField where
   encodePoint p := ((p 0 : ℤ) : CanonicalField) + mix * ((p 1 : ℤ) : CanonicalField)
-end Hcrypt.Proximity.CochainReedSolomon.PlaneEncoding
-namespace Hcrypt.Proximity.CanonicalRS
+end HomotopicalEncryption.Proximity.CochainReedSolomon.PlaneEncoding
+namespace HomotopicalEncryption.Proximity.CanonicalRS
 /-- The original fixed challenge is the certified canonical root value. -/
 def canonicalMix : RSField :=
   candidateRoot
@@ -906,8 +906,8 @@ def integerPlaneEncodingAt
     (gamma : RSField) :
     CochainReedSolomon.PlaneEncoding ℤ RSField :=
   CochainReedSolomon.PlaneEncoding.integerCanonical gamma
-end Hcrypt.Proximity.CanonicalRS
-namespace Hcrypt.Protocol.Storage.CanonicalThreeLevel
+end HomotopicalEncryption.Proximity.CanonicalRS
+namespace HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel
 open CanonicalSystematic
 open ProximityPrize
 /-- Native distance on all original 2n scalar payload coordinates. -/
@@ -930,17 +930,17 @@ def capacityPayload : Axioms.CochainCommitmentData := payload capacityIntegerWor
 run_cmd Lean.modifyEnv fun env => Lean.Meta.auxLemmasExt.setState env {}
 /-- The affine line read from the same two original serialized integer coordinates. -/
 def extractedLine (c : Axioms.CochainCommitmentData) :
-    AffineLine Index Hcrypt.Proximity.CanonicalRS.RSField where
-  base i := (layout.raw c i 0 : Hcrypt.Proximity.CanonicalRS.RSField)
-  direction i := (layout.raw c i 1 : Hcrypt.Proximity.CanonicalRS.RSField)
+    AffineLine Index HomotopicalEncryption.Proximity.CanonicalRS.RSField where
+  base i := (layout.raw c i 0 : HomotopicalEncryption.Proximity.CanonicalRS.RSField)
+  direction i := (layout.raw c i 1 : HomotopicalEncryption.Proximity.CanonicalRS.RSField)
 /-- The original scalar challenge encoding of this same integer payload. -/
 def receivedWord (c : Axioms.CochainCommitmentData)
-    (γ : Hcrypt.Proximity.CanonicalRS.RSField) :
-    ProximityPrize.Word Index Hcrypt.Proximity.CanonicalRS.RSField :=
-  (Hcrypt.Proximity.CanonicalRS.integerPlaneEncodingAt γ).receivedWord (layout.raw c)
+    (γ : HomotopicalEncryption.Proximity.CanonicalRS.RSField) :
+    ProximityPrize.Word Index HomotopicalEncryption.Proximity.CanonicalRS.RSField :=
+  (HomotopicalEncryption.Proximity.CanonicalRS.integerPlaneEncodingAt γ).receivedWord (layout.raw c)
 /-- The same positive-degree scalar RS code through its additive interface. -/
-def additiveCode : ProximityPrize.FAdditiveCode Hcrypt.Proximity.CanonicalRS.RSField Index
-    Hcrypt.Proximity.CanonicalRS.RSField :=
+def additiveCode : ProximityPrize.FAdditiveCode HomotopicalEncryption.Proximity.CanonicalRS.RSField Index
+    HomotopicalEncryption.Proximity.CanonicalRS.RSField :=
   (parameters.fAdditive_of_degreeBound_pos degreeBound_pos).toFAdditiveCode
 /-- The named diagonal capacity payload has the original wire shape. -/
 theorem capacityPayload_wellFormed : capacityPayload.WellFormed := by sorry
@@ -962,7 +962,7 @@ theorem capacityPayload_badChallengeFraction (δ : ℝ) (hδ : 0 ≤ δ) :
 /-- The original fixed challenge retains scalar distance 3/4 for this actual diagonal payload. -/
 theorem capacityPayload_canonicalMix_scalarDistance :
     parameters.toBlockCode.relativeDistanceToCode
-      (receivedWord capacityPayload Hcrypt.Proximity.CanonicalRS.canonicalMix) =
+      (receivedWord capacityPayload HomotopicalEncryption.Proximity.CanonicalRS.canonicalMix) =
         (3 : ℝ) / 4 := by sorry
 /-- Actual exact acceptance has zero native distances under equality of the two decoders at this same payload. -/
 theorem accepted_nativeDistances_zero
@@ -971,13 +971,13 @@ theorem accepted_nativeDistances_zero
     (haccepted : C.Accepted) :
     cochainDistance C.cochain = 0 ∧ planeDistance C.cochain = 0 ∧
       rsPairDistance C.cochain = 0 := by sorry
-end Hcrypt.Protocol.Storage.CanonicalThreeLevel
-namespace Hcrypt.Palomar.PaperThree.Application
-open Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel
+namespace HomotopicalEncryption.Palomar.PaperThree.Application
+open HomotopicalEncryption.Protocol.Storage
 /-- The actual two-step extraction equals the existing original-payload pair API. -/
 theorem calibration_extract_eq_original_pair_unfolded (C : Context CanonicalSystematic.sheaf) :
     ThreeLevel.reducePair (CanonicalSystematic.layout.raw C.cochain) =
-      Calibration.extractedPair (K := Hcrypt.Proximity.CanonicalRS.RSField)
+      Calibration.extractedPair (K := HomotopicalEncryption.Proximity.CanonicalRS.RSField)
         CanonicalSystematic.layout.extraction C := by sorry
 /-- Original scalar-coordinate farness transfers to the same payload's RS pair with unit scale. -/
 theorem sourceFar_implies_rsFar_unfolded (C : Context CanonicalSystematic.sheaf) (radius : ℝ)
@@ -987,6 +987,6 @@ theorem sourceFar_implies_rsFar_unfolded (C : Context CanonicalSystematic.sheaf)
 theorem planeNear_of_scaledSourceNear_unfolded (C : Context CanonicalSystematic.sheaf) (epsilon : ℝ)
     (hnear : 2 * CanonicalThreeLevel.cochainDistance C.cochain ≤ epsilon) :
     CanonicalThreeLevel.planeDistance C.cochain ≤ epsilon := by sorry
-end Hcrypt.Palomar.PaperThree.Application
+end HomotopicalEncryption.Palomar.PaperThree.Application
 
 end

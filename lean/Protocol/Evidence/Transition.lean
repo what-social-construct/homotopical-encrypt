@@ -15,7 +15,7 @@ public import TCB.WitnessVerifier
   runtime refinement obligations.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Protocol
 namespace Evidence
 
@@ -121,4 +121,4 @@ end Transition
 
 end Evidence
 end Protocol
-end Hcrypt
+end HomotopicalEncryption

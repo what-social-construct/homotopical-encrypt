@@ -29,7 +29,7 @@ not an adaptive oracle execution or a chronological issuance state machine.
 
 set_option autoImplicit false
 
-namespace Hcrypt.Protocol.Transfer.Issuance
+namespace HomotopicalEncryption.Protocol.Transfer.Issuance
 
 open Evidence.TransferTranscript
 open TCB.PrimitiveChecks
@@ -227,4 +227,4 @@ theorem queried_append (codec : Evidence.TransferCheck.PacketCodec Owner)
   · exact (queried_iff codec keyFor (left ++ right) foreignQueries compromised key message).2
       (Or.inr foreign)
 
-end Hcrypt.Protocol.Transfer.Issuance
+end HomotopicalEncryption.Protocol.Transfer.Issuance

@@ -63,7 +63,7 @@ DEFAULT_N_SAMPLES = 16       # Number of path samples in commitment
 DEFAULT_N_OPENED = 8         # Number opened in response (soundness = 2^{-8})
 SPECTRAL_TOL = 1e-4          # Eigenvalue matching tolerance
 CONTINUITY_BOUND = 1.0       # Max ‖L(tᵢ₊₁) - L(tᵢ)‖ / (step_size × n)
-DOMAIN_SEP = b"HCRYPT_GEODESIC_ZKP_V1"
+DOMAIN_SEP = b"HOMOTOPICAL_ENCRYPT_GEODESIC_ZKP_V1"
 
 
 # =============================================================================

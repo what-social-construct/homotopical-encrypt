@@ -208,7 +208,7 @@ exact-component keys does not identify full encrypted observations.
 
 The [path-signature codec](../lean/Protocol/Transfer/PathSignature/Codec.lean)
 encodes public credential bytes and the complete signing message under
-`HCRYPT_PATH_SIGNATURE_V1`; it does not encode a general real Hodge sample or
+`HOMOTOPICAL_ENCRYPT_PATH_SIGNATURE_V1`; it does not encode a general real Hodge sample or
 private continuous path. The remaining shared work is to select the finite
 ciphertext/witness profile, authenticated directory and delivery producers,
 then analyze the intended joint transcript and noise distribution. These

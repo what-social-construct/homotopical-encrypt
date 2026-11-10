@@ -15,7 +15,7 @@ attribution; it is not a second protocol-construction claim.
 Mathlib imports only. Its ordinary definitions retain their canonical
 `ProximityPrize` names and bodies. [Solution](Solution.lean) imports the
 canonical proofs and proves two explicit equivalence-inverse wrappers under
-`Hcrypt.Palomar.PaperThree`. The [configuration](comparator.json) selects
+`HomotopicalEncryption.Palomar.PaperThree`. The [configuration](comparator.json) selects
 **52 declarations: 36 manuscript-facing and 16 supporting**.
 All definitions are ordinary transparent definitions; `definition_names` is
 empty. Both builds and local comparison/kernel checks pass.
@@ -24,7 +24,7 @@ The [immutable manuscript](https://github.com/what-social-construct/homotopical-
 In the crosswalk, `RS` means `ProximityPrize.ReedSolomon.Parameters`, `BC`
 means `ProximityPrize.BlockCode`, `GF` means
 `ProximityPrize.Capacity.SmoothQuarterFamily`, `BF` means
-`ProximityPrize.MCA.BoundaryField`, and `E` means `Hcrypt.Palomar.PaperThree`.
+`ProximityPrize.MCA.BoundaryField`, and `E` means `HomotopicalEncryption.Palomar.PaperThree`.
 
 | Group / source | Selected content and declaration anchors |
 | --- | --- |

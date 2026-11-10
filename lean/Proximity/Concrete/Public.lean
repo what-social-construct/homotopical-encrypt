@@ -34,7 +34,7 @@ public import TCB.ObservationBoundary
   fields. Rust owns their concrete verification.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CochainPlane
 namespace PublicBinding
@@ -189,4 +189,4 @@ end
 end PublicBinding
 end CochainPlane
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

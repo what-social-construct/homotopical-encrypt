@@ -24,7 +24,7 @@ public import TCB.ProofCarrying
   obligations that compression must preserve.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace TCB
 namespace CompressionBoundary
 
@@ -136,4 +136,4 @@ end CompressionContract
 
 end CompressionBoundary
 end TCB
-end Hcrypt
+end HomotopicalEncryption

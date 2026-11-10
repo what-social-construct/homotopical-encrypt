@@ -36,8 +36,8 @@ public import Helfer
   - Σ/Π behavior at the level of proof obligations,
   - homotopy-invariance of first-order statements.
 
-  Role in the hcrypt stack:
-  - importing this file also re-exports the typed `Hcrypt.Helfer` signature,
+  Role in the homotopical_encrypt stack:
+  - importing this file also re-exports the typed `HomotopicalEncryption.Helfer` signature,
     interpretation, homotopy-equivalence, and explicit invariance boundary;
   - this file owns the hidden semantic layer: equality is witnessed by paths,
     not by strict syntactic identity;
@@ -59,7 +59,7 @@ public import Helfer
     equality of classifier values.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 universe u v w
@@ -308,4 +308,4 @@ abbrev HelferFOLWellFormed (H : HelferFOL) : Prop :=
   ∧ H.ClassWitnessSound
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

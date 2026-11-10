@@ -17,7 +17,7 @@ public import Mathlib.Tactic
   equivocation or invalid-block evidence. Reliability is a discount only.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Consensus
 
 /-- Runtime evidence summary for validator reliability. -/
@@ -77,4 +77,4 @@ theorem smoothedReliability_bounded
     nlinarith
 
 end Consensus
-end Hcrypt
+end HomotopicalEncryption

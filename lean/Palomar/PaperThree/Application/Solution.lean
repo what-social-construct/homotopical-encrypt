@@ -12,12 +12,12 @@ The three local statements unfold the existing interfaces definitionally.
 Their proofs use `change` and the original canonical owners.
 -/
 
-namespace Hcrypt.Palomar.PaperThree.Application
-open Hcrypt.Protocol.Storage
+namespace HomotopicalEncryption.Palomar.PaperThree.Application
+open HomotopicalEncryption.Protocol.Storage
 /-- The actual two-step extraction equals the existing original-payload pair API. -/
 theorem calibration_extract_eq_original_pair_unfolded (C : Context CanonicalSystematic.sheaf) :
     ThreeLevel.reducePair (CanonicalSystematic.layout.raw C.cochain) =
-      Calibration.extractedPair (K := Hcrypt.Proximity.CanonicalRS.RSField)
+      Calibration.extractedPair (K := HomotopicalEncryption.Proximity.CanonicalRS.RSField)
         CanonicalSystematic.layout.extraction C := by
   change CanonicalCalibration.calibration.extract C = _
   exact CanonicalCalibration.calibration_extract_eq_original_pair C
@@ -35,4 +35,4 @@ theorem planeNear_of_scaledSourceNear_unfolded (C : Context CanonicalSystematic.
   change CanonicalCalibration.planeShadow.distanceToCode
     (CanonicalCalibration.evaluationProjection.map C) ≤ epsilon
   exact CanonicalCalibration.planeNear_of_scaledSourceNear C epsilon hnear
-end Hcrypt.Palomar.PaperThree.Application
+end HomotopicalEncryption.Palomar.PaperThree.Application

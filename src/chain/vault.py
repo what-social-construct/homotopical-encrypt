@@ -1,14 +1,14 @@
 """
 Vault Token — Validator Participation Commitment
 
-Separate from native HCRYPT token. vHCRYPT represents validator
+Separate from native HOMOTOPICAL_ENCRYPT token. vHOMOTOPICAL_ENCRYPT represents validator
 commitment to the network.
 
 Design:
   - Bond is a FLAT THRESHOLD (eligibility gate), not a selection weight
   - Selection weight = harmonic projection weight (‖π_H(stalk)‖/‖stalk‖)
-  - Slashing removes bonded vHCRYPT for misbehavior
-  - Earned vHCRYPT accumulates from block rewards + fee distribution
+  - Slashing removes bonded vHOMOTOPICAL_ENCRYPT for misbehavior
+  - Earned vHOMOTOPICAL_ENCRYPT accumulates from block rewards + fee distribution
 
 See docs/CONSENSUS.md for the full design.
 """
@@ -24,7 +24,7 @@ import time
 # CONSTANTS
 # =============================================================================
 
-MINIMUM_VAULT_BOND: int = 1000          # Minimum vHCRYPT to become validator
+MINIMUM_VAULT_BOND: int = 1000          # Minimum vHOMOTOPICAL_ENCRYPT to become validator
 EQUIVOCATION_SLASH_PCT: float = 0.50    # 50% of bond
 INVALID_PROOF_SLASH_PCT: float = 0.10   # 10% of bond
 INACTIVITY_LEAK_PCT: float = 0.01       # 1% per epoch
@@ -58,16 +58,16 @@ class Vault:
     Same fingerprint = same identity. The wallet holds:
       - FibrationCredential (secret key)
       - SovereignAccount (identity + connections)
-      - Vault (vHCRYPT bond + earned)
-      - HCRYPT balance (native token, separate from vault)
+      - Vault (vHOMOTOPICAL_ENCRYPT bond + earned)
+      - HOMOTOPICAL_ENCRYPT balance (native token, separate from vault)
 
     Vault is linked to the account via fingerprint — no separate
     identity system. When a wallet creates a sovereignty claim,
-    it can also bond vHCRYPT into the vault at the same time.
+    it can also bond vHOMOTOPICAL_ENCRYPT into the vault at the same time.
     """
     fingerprint: bytes             # Same as SovereignAccount.fingerprint
 
-    # Token balances (vHCRYPT — separate from HCRYPT)
+    # Token balances (vHOMOTOPICAL_ENCRYPT — separate from HOMOTOPICAL_ENCRYPT)
     bonded: int = 0                # Locked collateral (slashable)
     earned: int = 0                # Accumulated rewards (withdrawable)
 
@@ -89,7 +89,7 @@ class Vault:
 
     @property
     def total_balance(self) -> int:
-        """Total vHCRYPT in vault (bonded + earned)."""
+        """Total vHOMOTOPICAL_ENCRYPT in vault (bonded + earned)."""
         return self.bonded + self.earned
 
     @property
@@ -111,11 +111,11 @@ class VaultRegistry:
     Manages all validator vaults.
 
     Operations:
-      - bond: Lock vHCRYPT as collateral → become eligible
+      - bond: Lock vHOMOTOPICAL_ENCRYPT as collateral → become eligible
       - unbond: Start unbonding period → withdraw after delay
       - earn: Receive rewards (block production, fee share)
-      - withdraw: Move earned vHCRYPT out
-      - slash: Remove bonded vHCRYPT for misbehavior
+      - withdraw: Move earned vHOMOTOPICAL_ENCRYPT out
+      - slash: Remove bonded vHOMOTOPICAL_ENCRYPT for misbehavior
     """
 
     def __init__(self):
@@ -140,11 +140,11 @@ class VaultRegistry:
         block_height: int,
     ) -> Tuple[bool, str]:
         """
-        Bond vHCRYPT into vault. If threshold met, activate validator.
+        Bond vHOMOTOPICAL_ENCRYPT into vault. If threshold met, activate validator.
 
         Args:
             fingerprint: Validator identity
-            amount: vHCRYPT to bond
+            amount: vHOMOTOPICAL_ENCRYPT to bond
             stalk_commitment: Hash of validator's stalk data
             block_height: Current block height
         """
@@ -162,7 +162,7 @@ class VaultRegistry:
             vault.activated_height = block_height
 
         status = "activated" if (not was_active and vault.is_active) else "bonded"
-        return (True, f"{status}: bonded={vault.bonded} vHCRYPT")
+        return (True, f"{status}: bonded={vault.bonded} vHOMOTOPICAL_ENCRYPT")
 
     def start_unbond(
         self,
@@ -192,7 +192,7 @@ class VaultRegistry:
         if not vault.meets_bond_threshold:
             vault.is_active = False
 
-        return (True, f"Unbonding {amount} vHCRYPT (available epoch {current_epoch + UNBONDING_DELAY_EPOCHS})")
+        return (True, f"Unbonding {amount} vHOMOTOPICAL_ENCRYPT (available epoch {current_epoch + UNBONDING_DELAY_EPOCHS})")
 
     def complete_unbond(
         self,
@@ -226,7 +226,7 @@ class VaultRegistry:
     # =========================================================================
 
     def earn(self, fingerprint: bytes, amount: int) -> bool:
-        """Add earned vHCRYPT to vault (from rewards/fees)."""
+        """Add earned vHOMOTOPICAL_ENCRYPT to vault (from rewards/fees)."""
         if amount <= 0:
             return False
         vault = self.get_or_create(fingerprint)
@@ -234,7 +234,7 @@ class VaultRegistry:
         return True
 
     def withdraw(self, fingerprint: bytes, amount: int) -> Tuple[bool, str]:
-        """Withdraw earned vHCRYPT from vault."""
+        """Withdraw earned vHOMOTOPICAL_ENCRYPT from vault."""
         if fingerprint not in self.vaults:
             return (False, "Vault not found")
 
@@ -243,7 +243,7 @@ class VaultRegistry:
             return (False, f"Insufficient earned: {vault.earned} < {amount}")
 
         vault.earned -= amount
-        return (True, f"Withdrew {amount} vHCRYPT")
+        return (True, f"Withdrew {amount} vHOMOTOPICAL_ENCRYPT")
 
     # =========================================================================
     # SLASH
@@ -312,7 +312,7 @@ class VaultRegistry:
             f"VaultRegistry:\n"
             f"  Total vaults: {len(self.vaults)}\n"
             f"  Active: {active}\n"
-            f"  Total bonded: {total_bonded} vHCRYPT\n"
-            f"  Total earned: {total_earned} vHCRYPT\n"
+            f"  Total bonded: {total_bonded} vHOMOTOPICAL_ENCRYPT\n"
+            f"  Total earned: {total_earned} vHOMOTOPICAL_ENCRYPT\n"
             f"  Slashing events: {len(self.slash_log)}"
         )

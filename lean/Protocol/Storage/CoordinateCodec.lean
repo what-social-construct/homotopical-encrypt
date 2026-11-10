@@ -19,10 +19,10 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage
+namespace HomotopicalEncryption.Protocol.Storage
 
 open Sheaf CellularSheaf
-open Hcrypt.Proximity
+open HomotopicalEncryption.Proximity
 
 variable {Vertex Edge Face : Type*}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
@@ -132,4 +132,4 @@ theorem decodedFar_implies_pairFar
   · exact hfar
 
 end CoordinateLayout
-end Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Protocol.Storage

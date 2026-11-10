@@ -39,7 +39,7 @@ def Hodge_Instance (N : Type) [Fintype N] (R : Type) [CommRing R] :=
 Matrix-level harmonicity for an abstract hidden operator.
 
 This is the generic predicate used by hidden-operator hardness theorems. The
-structured projection-model predicate is `Hcrypt.Laplacian.IsHarmonic`; the two
+structured projection-model predicate is `HomotopicalEncryption.Laplacian.IsHarmonic`; the two
 are connected below by `matrix_harmonic_iff_projection_isHarmonic` when
 `Δ = Δ_W`.
 -/
@@ -166,7 +166,7 @@ theorem kernelAmbiguous_of_publicCompatibleHodgeAmbiguity
 -- Typed Helfer semantics / HCP hidden-operator bridge
 -- ═════════════════════════════════════════════════════════════════════
 
-namespace Hcrypt.HCPBridge
+namespace HomotopicalEncryption.HCPBridge
 
 open CategoryTheory CategoryTheory.Limits HomotopicalAlgebra
 
@@ -353,13 +353,13 @@ def SolverExactOnHarmonic
     _root_.MatrixIsHarmonic (X.laplacian r) b →
       solver aux (X.classifier.π r, b) = b
 
-end Hcrypt.HCPBridge
+end HomotopicalEncryption.HCPBridge
 
 -- ═══════════════════════════════════════════════════════════════════════
 -- Hodge encryption/decryption and the operative HCP recovery target
 -- ═══════════════════════════════════════════════════════════════════════
 
-namespace Hcrypt.HCP
+namespace HomotopicalEncryption.HCP
 
 open scoped RealInnerProductSpace
 
@@ -492,9 +492,9 @@ theorem operativeHarmonicComponent_eq_self_of_harmonic
   operativeHarmonicComponent_eq_self_of_harmonic Δ _
     (operativeHarmonicComponent_is_harmonic Δ b)
 
-end Hcrypt.HCP
+end HomotopicalEncryption.HCP
 
-namespace Hcrypt.HCPBridge
+namespace HomotopicalEncryption.HCPBridge
 
 open CategoryTheory CategoryTheory.Limits HomotopicalAlgebra
 
@@ -766,4 +766,4 @@ theorem noExactRepresentativeDecoder_of_kernelSeparation
         witness.semanticEquivalence]
     _ = witness.right := hdecoder witness.right
 
-end Hcrypt.HCPBridge
+end HomotopicalEncryption.HCPBridge

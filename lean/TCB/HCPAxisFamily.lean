@@ -24,7 +24,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.TCB.HCPAxisFamily
+namespace HomotopicalEncryption.TCB.HCPAxisFamily
 
 open Sheaf CellularSheaf Sheaf.HCPAxisFamily
 open HCPRealization
@@ -124,4 +124,4 @@ theorem cvp_solution_iff_operativeTarget
   rw [sample_eq]
   exact sample_message_eq_point axis
 
-end Hcrypt.TCB.HCPAxisFamily
+end HomotopicalEncryption.TCB.HCPAxisFamily

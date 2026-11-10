@@ -21,7 +21,7 @@ public import TCB.ProofCarrying
   certificate.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace GateEvidence
 
@@ -413,4 +413,4 @@ end
 
 end GateEvidence
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

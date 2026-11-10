@@ -31,7 +31,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction
+namespace HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction
 
 variable {R I V W : Type*} [Semiring R]
   [AddCommMonoid V] [Module R V]
@@ -243,4 +243,4 @@ theorem cvp_solution_iff_message (index : Fin 3) (v : CVP.AmbientVector Index) :
 
 end AxisExample
 
-end Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction
+end HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction

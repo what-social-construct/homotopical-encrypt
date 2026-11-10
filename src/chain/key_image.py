@@ -56,7 +56,7 @@ class HomotopyKeyImage:
         cls,
         credential: 'FibrationCredential',
         path: HomotopyPath,
-        domain_separator: bytes = b"HCRYPT_HOMOTOPY_KEY_IMAGE_V2"
+        domain_separator: bytes = b"HOMOTOPICAL_ENCRYPT_HOMOTOPY_KEY_IMAGE_V2"
     ) -> 'HomotopyKeyImage':
         """
         Compute key image from credential and homotopy path.
@@ -139,7 +139,7 @@ class HomotopyKeyImage:
 def compute_key_image(
     eigenvectors: np.ndarray,
     connection_coefficients: Optional[np.ndarray] = None,
-    domain_separator: bytes = b"HCRYPT_KEY_IMAGE_V1"
+    domain_separator: bytes = b"HOMOTOPICAL_ENCRYPT_KEY_IMAGE_V1"
 ) -> bytes:
     """
     Compute key image from fibration data (legacy).

@@ -23,7 +23,7 @@ public import Mathlib.Basic.Real.Basic
   as a promised decision problem.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 
 /--
@@ -109,4 +109,4 @@ structure ListShadow (C : CodeShadow) where
   listBound : ℝ → ℕ → Prop
 
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

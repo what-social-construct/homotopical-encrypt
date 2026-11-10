@@ -8,7 +8,7 @@ public import Proximity.Concrete.GrassmannianPlucker
   Concrete projective Plucker instantiation.
 
   Paper correspondence:
-  - Paper 1: the actual exterior-power quotient and projective frame
+  - Paper 3: the actual exterior-power quotient and projective frame
     invariance used by full-point recovery.
   - Paper 3 may reuse this geometry as a source object, retaining its separate
     metric/calibration obligations.
@@ -24,7 +24,7 @@ public import Proximity.Concrete.GrassmannianPlucker
       equivalent exterior coordinates.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace GrassmannianPlucker
 namespace Concrete
@@ -181,4 +181,4 @@ end
 end Concrete
 end GrassmannianPlucker
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

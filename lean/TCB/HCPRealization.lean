@@ -26,7 +26,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.TCB.HCPRealization
+namespace HomotopicalEncryption.TCB.HCPRealization
 
 open CategoryTheory CategoryTheory.Limits HomotopicalAlgebra
 open Sheaf CellularSheaf
@@ -207,4 +207,4 @@ theorem no_exact_view_solver_of_factorization
 
 end PublicViews
 
-end Hcrypt.TCB.HCPRealization
+end HomotopicalEncryption.TCB.HCPRealization

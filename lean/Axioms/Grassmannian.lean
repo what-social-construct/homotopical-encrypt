@@ -51,7 +51,7 @@ public import Axioms.Foundation
     Hansen & Ghrist (2019) arXiv:1808.01513 (sheaf Laplacian)
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 universe u
@@ -384,4 +384,4 @@ def ConsensusGeometryWellFormed (G : ConsensusGeometry) : Prop :=
     ∧ G.WeightsNormalized
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

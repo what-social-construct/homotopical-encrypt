@@ -34,7 +34,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Transfer.Security
+namespace HomotopicalEncryption.Protocol.Transfer.Security
 
 open Sheaf CellularSheaf
 open scoped ENNReal
@@ -188,4 +188,4 @@ theorem ofCheckedRelease_attempt
     (ofCheckedRelease config release auxiliary coins adversary).attempt coin =
       adversary release.publicView auxiliary coin := rfl
 
-end Hcrypt.Protocol.Transfer.Security
+end HomotopicalEncryption.Protocol.Transfer.Security

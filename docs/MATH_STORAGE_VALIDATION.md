@@ -9,6 +9,45 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Current naming and Paper 1 selection — 2026-11-10
+
+P311 renames the formal namespace to `HomotopicalEncryption` across current
+sources, three Comparator configurations, formalization metadata and manuscript
+crosswalks. Canonical module paths, Lake package, Lean/Mathlib pins and
+mathematical owners remain unchanged. The longer Lean protocol-domain bytes
+also update their distinguishing index and length theorem; this is separate
+from Paper 1. The naming guide distinguishes current review exports from
+immutable historical evidence. At the user's request, Rust/Cargo are restored
+to their starting state, and runtime verification is outside this revision.
+The existing `sheaf_store.rs` work is preserved (SHA-256
+`b93a7e4278b45b759eb5a14781dbd274f9f4c8771fffb3e2e0de832332638de7`).
+
+Paper 1 retains S01–S06 and B01, with 18 main and 20 supporting targets,
+20 deliberate Challenge placeholders and a 22-module Solution closure plus
+one independent Challenge module. B02's three main and five support wrappers
+are removed. The canonical Plücker construction/proofs remain in their
+original modules and are introduced in Paper 3 §7.1's projective chain;
+Paper 2 owns visibility, codecs and authentication. These auxiliary results
+do not change Paper 3's configured 52/22 coding/application targets.
+
+Source preservation passes: Paper 1 §3 and Paper 3 §§2–6 are byte-identical
+to `514dfcf`; the moved two propositions/two proofs and bibliography record
+are byte-identical. All 31 retained Paper 1 formal environments and their
+formula sequence are preserved, with only the permitted nonmathematical
+solver aside removed. Every one of the 38 selected parity anchors appears
+once, all local labels/citations resolve and all 28 source-ledger keys occur
+in their declared bibliography. Paper 1 has six BibTeX records/four printed
+sources; Paper 3 has seventeen records. The preservation evidence is
+`output/validation/project-name-manuscript-preservation.json`.
+
+The current PDFs have 27/33 pages, zero overfull/undefined/missing-character
+warnings and completed full-page contact-sheet inspection. Paper 1 SHA-256 is
+`5c774ae50626db450b44649b27c364beebe964c69145da2fce0cc86fc3a77ad0`;
+Paper 3 is `132634f3732d039c4f998e2d81c287295e2b8085fab8b0193b3e915e626d9404`.
+Fresh all-module compilation, reduced-entry comparison, combined dependency
+and export results are recorded separately from the historical baselines.
+No new protected preflight, publication or registry intake has occurred.
+
 ## Optional generic classifier-completeness profile — 2026-11-10
 
 `HCPBridge.ReflectsHomotopyEquivalence X` is an optional proposition stating
@@ -651,8 +690,8 @@ separate from dependency and kernel verification.
 
 All compared definitions have ordinary transparent meanings. In particular,
 the independent Challenge restates the two pure finite-product helpers
-`Hcrypt.Helfer.contextObject/contextMap` under their canonical names; the
-remaining statement vocabulary lives in `Hcrypt.Palomar.PaperOne`. Structural
+`HomotopicalEncryption.Helfer.contextObject/contextMap` under their canonical names; the
+remaining statement vocabulary lives in `HomotopicalEncryption.Palomar.PaperOne`. Structural
 comparison checks the actual context construction, incidence maps, integral
 stalks, Hodge operators, public theory, explicit lattices and genuine exterior
 quotient. The private adapters do not replace these objects with abstract
@@ -812,28 +851,28 @@ import Proximity.Concrete.CanonicalRS.MCA.Spectrum
 
 #print axioms Hodge_Decomposition_Theorem
 #print axioms Hodge_Decomposition_unique
-#print axioms Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.harmonicOneProjection_observed
-#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.HodgeEncryptedCochain.harmonicOneProjection_observed
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt
 #print axioms exists_matrix_ker_eq_range
 #print axioms Hodge_GeneratedSubspace_Reduction_Proof
 #print axioms HarmonicCVPBridge.squaredDistance_projection_decomposition
 #print axioms HarmonicCVPBridge.solution_iff_projectedTarget
 #print axioms concreteSheafHCP_CVP_solution_iff_message
 #print axioms concreteSheafHCP_CVP_existsUnique
-#print axioms Hcrypt.HCPBridge.operativeTargets_ne_of_kernelSeparation
-#print axioms Hcrypt.HCPBridge.cvpOracle_insufficient_of_kernelSeparation
-#print axioms Hcrypt.HCPBridge.cvpOracle_insufficient_for_operativeTarget
-#print axioms Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets
-#print axioms Hcrypt.HCP.AxisFamily.cvp_oracle_insufficient
-#print axioms Hcrypt.HCP.AxisFamily.weighted_public_observations_eq
-#print axioms Hcrypt.HCP.AxisFamily.no_exact_encoded_message_decoder
-#print axioms Hcrypt.HCP.AxisFamily.weighted_cvp_solution_iff_operativeTarget
-#print axioms Hcrypt.HCP.AxisFamily.weighted_cvp_existsUnique
-#print axioms Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent
-#print axioms Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame
-#print axioms Hcrypt.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent
+#print axioms HomotopicalEncryption.HCPBridge.operativeTargets_ne_of_kernelSeparation
+#print axioms HomotopicalEncryption.HCPBridge.cvpOracle_insufficient_of_kernelSeparation
+#print axioms HomotopicalEncryption.HCPBridge.cvpOracle_insufficient_for_operativeTarget
+#print axioms HomotopicalEncryption.HCP.AxisFamily.shared_observation_distinct_nonzero_targets
+#print axioms HomotopicalEncryption.HCP.AxisFamily.cvp_oracle_insufficient
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weighted_public_observations_eq
+#print axioms HomotopicalEncryption.HCP.AxisFamily.no_exact_encoded_message_decoder
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weighted_cvp_solution_iff_operativeTarget
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weighted_cvp_existsUnique
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame
+#print axioms HomotopicalEncryption.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent
 #print axioms ProximityPrize.planePairEquiv
 #print axioms ProximityPrize.planePairEquiv_hammingDistance
 #print axioms ProximityPrize.planePairEquiv_relativeHammingDistance
@@ -865,19 +904,19 @@ import Proximity.Concrete.CanonicalRS.MCA.Spectrum
 #print axioms ProximityPrize.BlockCode.pairMCAThreshold_eq_of_countBound_and_badLine
 #print axioms ProximityPrize.BlockCode.scalarDistance_ge_of_pairDistance_ge_of_good
 #print axioms ProximityPrize.ReedSolomon.Parameters.scalarDistance_eq_capacity_of_pairFar_of_good
-#print axioms Hcrypt.Sheaf.SystematicCode.modularExact_iff_vectorCodeword
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.three_native_distance_comparison
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.modularExact_iff_vectorCodeword
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.three_native_distance_comparison
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance
 #print axioms ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_pairDistance_eq_capacity
 #print axioms ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_flatDistance_eq_half_capacity
 #print axioms ProximityPrize.ReedSolomon.Parameters.no_unit_pair_distance_bound_by_flat_distance
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.calibration_extract_eq_original_pair
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.sourceFar_implies_rsFar
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.planeNear_of_scaledSourceNear
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_scalarDistance
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.calibration_extract_eq_original_pair
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.sourceFar_implies_rsFar
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.planeNear_of_scaledSourceNear
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_scalarDistance
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero
 #print axioms ProximityPrize.ReedSolomon.Parameters.no_fixedChallenge_pair_far_preservation
 #print axioms ProximityPrize.ReedSolomon.Parameters.no_fixedChallenge_flat_far_preservation
 LEAN
@@ -950,15 +989,15 @@ import Protocol.Storage.CanonicalCalibration
 import Protocol.Storage.CanonicalThreeLevel
 import Proximity.Core.MetricSharpness
 
-#print axioms Hcrypt.Sheaf.SystematicCode.modularExact_iff_vectorCodeword
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.three_native_distance_comparison
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.calibration_extract_eq_original_pair
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.sourceFar_implies_rsFar
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.planeNear_of_scaledSourceNear
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.modularExact_iff_vectorCodeword
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.three_native_distance_comparison
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.calibration_extract_eq_original_pair
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.sourceFar_implies_rsFar
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.planeNear_of_scaledSourceNear
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero
 #print axioms ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_pairDistance_eq_capacity
 #print axioms ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_flatDistance_eq_half_capacity
 #print axioms ProximityPrize.ReedSolomon.Parameters.no_unit_pair_distance_bound_by_flat_distance
@@ -1042,22 +1081,22 @@ LEAN_NUM_THREADS=4 lake build Proximity.Concrete.CanonicalRS.BridgeCertificate
 cat > /tmp/strict-gap-new-axioms.lean <<'LEAN'
 import Proximity.Concrete.CanonicalRS.BridgeCertificate
 
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration_radii
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration_sourceStrictGap
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration_targetStrictGap
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal_nonneg
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal_lt_farRadius
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal_lt_johnsonRadiusReal
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.RSMetricCertificate.of_separatedJohnsonRSFarSeparation
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.RSMetricCertificate.of_separatedJohnsonRSFarSeparation_calibration
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedRSMetricCertificate
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedBridge
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedBridge_radii
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedGapReduction
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedGapReduction_map
-#print axioms Hcrypt.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.pullbackSeparatedSolverCorrect
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration_radii
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration_sourceStrictGap
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.separatedJohnsonRadiusCalibration_targetStrictGap
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal_nonneg
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal_lt_farRadius
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.decisionNearRadiusReal_lt_johnsonRadiusReal
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.RSMetricCertificate.of_separatedJohnsonRSFarSeparation
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.RSMetricCertificate.of_separatedJohnsonRSFarSeparation_calibration
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedRSMetricCertificate
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedBridge
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedBridge_radii
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedGapReduction
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.toSeparatedGapReduction_map
+#print axioms HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.JohnsonRSFarSeparation.pullbackSeparatedSolverCorrect
 LEAN
 lake env lean /tmp/strict-gap-new-axioms.lean
 ```
@@ -1111,16 +1150,16 @@ import TCB.HCPRealization
 import Protocol.Storage.PublicView
 import TCB.PluckerObservation
 
-#check Hcrypt.TCB.BoundHCPObservation.toObservation
-#check Hcrypt.TCB.BoundHCPObservation.decodedExactComponent
-#print axioms Hcrypt.TCB.BoundHCPObservation.harmonicProjection_cochainObject
-#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment.operativeTarget_eq_message
-#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_observation
-#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_eq_iff
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame
-#print axioms Hcrypt.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent
-#print axioms Hcrypt.TCB.PluckerObservation.operativeHarmonicComponent_eq_of_same_full_shadow
+#check HomotopicalEncryption.TCB.BoundHCPObservation.toObservation
+#check HomotopicalEncryption.TCB.BoundHCPObservation.decodedExactComponent
+#print axioms HomotopicalEncryption.TCB.BoundHCPObservation.harmonicProjection_cochainObject
+#print axioms HomotopicalEncryption.TCB.HCPRealization.BoundObservationAlignment.operativeTarget_eq_message
+#print axioms HomotopicalEncryption.Protocol.Storage.hcpDisclosure_observation
+#print axioms HomotopicalEncryption.Protocol.Storage.hcpDisclosure_eq_iff
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame
+#print axioms HomotopicalEncryption.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent
+#print axioms HomotopicalEncryption.TCB.PluckerObservation.operativeHarmonicComponent_eq_of_same_full_shadow
 LEAN
 lake env lean /tmp/paper1-observation-axioms.lean
 ```
@@ -1192,95 +1231,95 @@ cat > /tmp/retrieval-new-axioms.lean <<'LEAN'
 import Protocol.Storage.Retrieval
 import Protocol.Transfer
 
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.domain
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.frame
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.parseFrame
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.encode
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.parseFrame_frame
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode_encode
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode_eq_some_iff
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.encode_injective
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.frame_length
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.encode_length
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode_rejects_invalid_tag
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode_rejects_truncated_key
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.Codec.decode_rejects_wrong_domain
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_eq_some_iff
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_members
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_none_of_directory_missing
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_none_of_bytes_missing
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_none_of_wrong_digest
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_eq_some_of_matching
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_original_or_collision
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readLocal_eq_original_of_no_collision
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeLocal
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeLocal_eq_some_iff
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeLocal_none_of_read_none
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeLocal_original_or_collision
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest_sound
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest_none_of_unlisted
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest_none_of_no_match
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest_complete
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.readByDigest_original_or_collision
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeByDigest
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeByDigest_eq_some_iff
-#print axioms Hcrypt.Protocol.Storage.Retrieval.ContentAddress.decodeByDigest_original_or_collision
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.request
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.honestReply
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.transcript
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.run
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.view
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.request_eq
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.transcript_eq
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.run_public_eq
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.view_eq
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.honestReply_eq
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.honestReply_payloadBytes
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.distribution
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.distribution_eq
-#print axioms Hcrypt.Protocol.Storage.Retrieval.UniformRead.event_probability_eq
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.EssentialColumn
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.selected_essential
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.essential_iff_selected
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.query_ne_of_selected_ne
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.public_predicate_separates
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.harmonic_essential_iff_selected
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.encrypted_essential_iff_selected
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.coefficients
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.queryNoise
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.queryNoise_value
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.querySample
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.selected_sample_eq_original
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.query
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.query_eq
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.selected_projection
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.others_projection
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.others_redundant
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.selected_is_publicly_identified
-#print axioms Hcrypt.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.cvp_solution_iff_message
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.point_zero
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.point_int_mul
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.sample
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.query
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.query_projection
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.answer
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.answerNoise
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.answerNoise_value
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.answerSample
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.answer_eq_observed
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.decode_answer
-#print axioms Hcrypt.Protocol.Storage.Retrieval.HodgeQuery.cvp_answer_iff
-#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest
-#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_none_of_unlisted
-#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_none_of_scope_ne
-#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_of_original
-#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_correct_or_collision
-#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_rotated_or_collision
-#print axioms Hcrypt.Protocol.Storage.Retrieval.Recovery.recoverByDigest_bound_observation_or_collision
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.canonical_input_subject_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.domain
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.frame
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.parseFrame
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.encode
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.decode
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.parseFrame_frame
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.decode_encode
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.decode_eq_some_iff
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.encode_injective
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.frame_length
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.encode_length
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.decode_rejects_invalid_tag
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.decode_rejects_truncated_key
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec.decode_rejects_wrong_domain
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readLocal
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readLocal_eq_some_iff
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readLocal_members
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readLocal_none_of_directory_missing
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readLocal_none_of_bytes_missing
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readLocal_none_of_wrong_digest
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readLocal_eq_some_of_matching
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readLocal_original_or_collision
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readLocal_eq_original_of_no_collision
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.decodeLocal
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.decodeLocal_eq_some_iff
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.decodeLocal_none_of_read_none
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.decodeLocal_original_or_collision
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readByDigest
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readByDigest_sound
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readByDigest_none_of_unlisted
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readByDigest_none_of_no_match
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readByDigest_complete
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.readByDigest_original_or_collision
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.decodeByDigest
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.decodeByDigest_eq_some_iff
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.ContentAddress.decodeByDigest_original_or_collision
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.request
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.honestReply
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.transcript
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.run
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.view
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.request_eq
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.transcript_eq
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.run_public_eq
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.view_eq
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.honestReply_eq
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.honestReply_payloadBytes
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.distribution
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.distribution_eq
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.UniformRead.event_probability_eq
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.EssentialColumn
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.selected_essential
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.essential_iff_selected
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.query_ne_of_selected_ne
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.public_predicate_separates
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.harmonic_essential_iff_selected
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.encrypted_essential_iff_selected
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.coefficients
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.queryNoise
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.queryNoise_value
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.querySample
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.selected_sample_eq_original
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.query
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.query_eq
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.selected_projection
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.others_projection
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.others_redundant
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.selected_is_publicly_identified
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.LinearQueryObstruction.AxisExample.cvp_solution_iff_message
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.point_zero
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.point_int_mul
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.sample
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.query
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.query_projection
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.answer
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.answerNoise
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.answerNoise_value
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.answerSample
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.answer_eq_observed
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.decode_answer
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.HodgeQuery.cvp_answer_iff
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.Recovery.recoverByDigest
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.Recovery.recoverByDigest_none_of_unlisted
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.Recovery.recoverByDigest_none_of_scope_ne
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.Recovery.recoverByDigest_of_original
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.Recovery.recoverByDigest_correct_or_collision
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.Recovery.recoverByDigest_rotated_or_collision
+#print axioms HomotopicalEncryption.Protocol.Storage.Retrieval.Recovery.recoverByDigest_bound_observation_or_collision
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.canonical_input_subject_eq
 LEAN
 lake env lean /tmp/retrieval-new-axioms.lean
 ```
@@ -1354,28 +1393,28 @@ LEAN_NUM_THREADS=4 lake build Protocol.Transfer
 cat > /tmp/native-path-new-axioms.lean <<'LEAN'
 import Protocol.Transfer
 
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.pathFiberSystem
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.pathFiberSystem_transport
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.pathFiberSystem_harmonicProjection
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.pathFiberSystem_preserves_harmonic
-#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.ofPath
-#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.ofPath_rotation
-#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.ofPath_rotateObserved
-#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.decode_path_transport
-#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.recover_path_transport
-#print axioms Hcrypt.TCB.PrimitiveChecks.ProofVerifier.asSignatureVerifier
-#print axioms Hcrypt.TCB.PrimitiveChecks.ProofVerifier.asSignatureVerifier_verify
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.WitnessRelation
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.witnessRelation_iff_of_decode
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.witnessRelation_credential
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.witnessRelation_class
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.rotationOfWitness
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.rotationOfWitness_transport
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.rotationOfWitness_recovery
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.input_subject_eq
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.checker_verify
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.verified_witness_or_falseAccept
-#print axioms Hcrypt.Protocol.Transfer.PathSignature.checked_signature_verified
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.pathFiberSystem
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.pathFiberSystem_transport
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.pathFiberSystem_harmonicProjection
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.pathFiberSystem_preserves_harmonic
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.EphemeralRotation.ofPath
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.EphemeralRotation.ofPath_rotation
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.EphemeralRotation.ofPath_rotateObserved
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.EphemeralRotation.decode_path_transport
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.EphemeralRotation.recover_path_transport
+#print axioms HomotopicalEncryption.TCB.PrimitiveChecks.ProofVerifier.asSignatureVerifier
+#print axioms HomotopicalEncryption.TCB.PrimitiveChecks.ProofVerifier.asSignatureVerifier_verify
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.WitnessRelation
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.witnessRelation_iff_of_decode
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.witnessRelation_credential
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.witnessRelation_class
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.rotationOfWitness
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.rotationOfWitness_transport
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.rotationOfWitness_recovery
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.input_subject_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.checker_verify
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.verified_witness_or_falseAccept
+#print axioms HomotopicalEncryption.Protocol.Transfer.PathSignature.checked_signature_verified
 LEAN
 LEAN_NUM_THREADS=4 lake env lean /tmp/native-path-new-axioms.lean
 ```
@@ -1455,67 +1494,67 @@ LEAN_NUM_THREADS=4 lake build Protocol.Transfer
 cat > /tmp/owner-signing-new-axioms.lean <<'LEAN'
 import Protocol.Transfer
 
-#print axioms Hcrypt.Protocol.Transfer.Signing.domain
-#print axioms Hcrypt.Protocol.Transfer.Signing.spectralDomain
-#print axioms Hcrypt.Protocol.Transfer.Signing.skeleton
-#print axioms Hcrypt.Protocol.Transfer.Signing.message
-#print axioms Hcrypt.Protocol.Transfer.Signing.InDomain
-#print axioms Hcrypt.Protocol.Transfer.Signing.skeleton_metadata
-#print axioms Hcrypt.Protocol.Transfer.Signing.skeleton_intent
-#print axioms Hcrypt.Protocol.Transfer.Signing.skeleton_ownerSignature
-#print axioms Hcrypt.Protocol.Transfer.Signing.skeleton_proofBytes
-#print axioms Hcrypt.Protocol.Transfer.Signing.message_eq_iff
-#print axioms Hcrypt.Protocol.Transfer.Signing.message_metadata_eq
-#print axioms Hcrypt.Protocol.Transfer.Signing.message_intent_eq
-#print axioms Hcrypt.Protocol.Transfer.Signing.message_injective
-#print axioms Hcrypt.Protocol.Transfer.Signing.message_ne_of_metadata_ne
-#print axioms Hcrypt.Protocol.Transfer.Signing.message_ne_of_intent_ne
-#print axioms Hcrypt.Protocol.Transfer.Signing.message_inDomain
-#print axioms Hcrypt.Protocol.Transfer.Signing.domain_append_ne_spectralDomain_append
-#print axioms Hcrypt.Protocol.Transfer.Signing.not_inDomain_spectralMessage
-#print axioms Hcrypt.Protocol.Transfer.Signing.message_ne_spectralMessage
-#print axioms Hcrypt.Protocol.Transfer.Issuance.Issued
-#print axioms Hcrypt.Protocol.Transfer.Issuance.Issued.query
-#print axioms Hcrypt.Protocol.Transfer.Issuance.Issued.query_key
-#print axioms Hcrypt.Protocol.Transfer.Issuance.Issued.query_message
-#print axioms Hcrypt.Protocol.Transfer.Issuance.typedQueries
-#print axioms Hcrypt.Protocol.Transfer.Issuance.mem_typedQueries_iff
-#print axioms Hcrypt.Protocol.Transfer.Issuance.typedQuery_mem
-#print axioms Hcrypt.Protocol.Transfer.Issuance.typedQueries_append
-#print axioms Hcrypt.Protocol.Transfer.Issuance.history
-#print axioms Hcrypt.Protocol.Transfer.Issuance.history_queries
-#print axioms Hcrypt.Protocol.Transfer.Issuance.history_compromised
-#print axioms Hcrypt.Protocol.Transfer.Issuance.queried_iff
-#print axioms Hcrypt.Protocol.Transfer.Issuance.issued_queried
-#print axioms Hcrypt.Protocol.Transfer.Issuance.queried_issued
-#print axioms Hcrypt.Protocol.Transfer.Issuance.queried_authorized
-#print axioms Hcrypt.Protocol.Transfer.Issuance.Covers
-#print axioms Hcrypt.Protocol.Transfer.Issuance.covers_record
-#print axioms Hcrypt.Protocol.Transfer.Issuance.covers_cons
-#print axioms Hcrypt.Protocol.Transfer.Issuance.Covers.authorization
-#print axioms Hcrypt.Protocol.Transfer.Issuance.Covers.queried
-#print axioms Hcrypt.Protocol.Transfer.Issuance.Covers.append_left
-#print axioms Hcrypt.Protocol.Transfer.Issuance.Covers.append_right
-#print axioms Hcrypt.Protocol.Transfer.Issuance.queried_append
-#print axioms Hcrypt.Protocol.Transfer.Authorization.checker
-#print axioms Hcrypt.Protocol.Transfer.Authorization.configure
-#print axioms Hcrypt.Protocol.Transfer.Authorization.configure_context
-#print axioms Hcrypt.Protocol.Transfer.Authorization.configure_intent
-#print axioms Hcrypt.Protocol.Transfer.Authorization.configure_policy
-#print axioms Hcrypt.Protocol.Transfer.Authorization.configure_candidate
-#print axioms Hcrypt.Protocol.Transfer.Authorization.signatureProfile
-#print axioms Hcrypt.Protocol.Transfer.Authorization.payloadProfile
-#print axioms Hcrypt.Protocol.Transfer.Authorization.not_queriedUnauthorized
-#print axioms Hcrypt.Protocol.Transfer.Authorization.issueOfChecked
-#print axioms Hcrypt.Protocol.Transfer.Authorization.issueOfChecked_verified
-#print axioms Hcrypt.Protocol.Transfer.Authorization.issueOfChecked_covers
-#print axioms Hcrypt.Protocol.Transfer.Authorization.issueOfChecked_covers_view
-#print axioms Hcrypt.Protocol.Transfer.Authorization.experiment
-#print axioms Hcrypt.Protocol.Transfer.Authorization.experiment_attempt
-#print axioms Hcrypt.Protocol.Transfer.Authorization.queriedUnauthorizedProbability_eq_zero
-#print axioms Hcrypt.Protocol.Transfer.Authorization.acceptedInvalidProbability_le
-#print axioms Hcrypt.Protocol.Transfer.Authorization.acceptedInvalidProbability_le_of_bounds
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ofOperational
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.domain
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.spectralDomain
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.skeleton
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.message
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.InDomain
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.skeleton_metadata
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.skeleton_intent
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.skeleton_ownerSignature
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.skeleton_proofBytes
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.message_eq_iff
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.message_metadata_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.message_intent_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.message_injective
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.message_ne_of_metadata_ne
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.message_ne_of_intent_ne
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.message_inDomain
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.domain_append_ne_spectralDomain_append
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.not_inDomain_spectralMessage
+#print axioms HomotopicalEncryption.Protocol.Transfer.Signing.message_ne_spectralMessage
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.Issued
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.Issued.query
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.Issued.query_key
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.Issued.query_message
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.typedQueries
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.mem_typedQueries_iff
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.typedQuery_mem
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.typedQueries_append
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.history
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.history_queries
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.history_compromised
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.queried_iff
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.issued_queried
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.queried_issued
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.queried_authorized
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.Covers
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.covers_record
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.covers_cons
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.Covers.authorization
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.Covers.queried
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.Covers.append_left
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.Covers.append_right
+#print axioms HomotopicalEncryption.Protocol.Transfer.Issuance.queried_append
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.checker
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.configure
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.configure_context
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.configure_intent
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.configure_policy
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.configure_candidate
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.signatureProfile
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.payloadProfile
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.not_queriedUnauthorized
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.issueOfChecked
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.issueOfChecked_verified
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.issueOfChecked_covers
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.issueOfChecked_covers_view
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.experiment
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.experiment_attempt
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.queriedUnauthorizedProbability_eq_zero
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.acceptedInvalidProbability_le
+#print axioms HomotopicalEncryption.Protocol.Transfer.Authorization.acceptedInvalidProbability_le_of_bounds
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.ofOperational
 LEAN
 LEAN_NUM_THREADS=4 lake env lean /tmp/owner-signing-new-axioms.lean
 ```
@@ -1603,68 +1642,68 @@ import TCB.PrimitiveChecks
 import Protocol.Transfer.Primitives
 import Sheaf.GraphCommitment
 
-#print axioms Hcrypt.TCB.PrimitiveChecks.Bytes
-#print axioms Hcrypt.TCB.PrimitiveChecks.SignatureVerifier
-#print axioms Hcrypt.TCB.PrimitiveChecks.SignatureHistory
-#print axioms Hcrypt.TCB.PrimitiveChecks.SignatureHistory.Queried
-#print axioms Hcrypt.TCB.PrimitiveChecks.SignatureHistory.Forgery
-#print axioms Hcrypt.TCB.PrimitiveChecks.SignatureHistory.verified_cases
-#print axioms Hcrypt.TCB.PrimitiveChecks.ProofVerifier
-#print axioms Hcrypt.TCB.PrimitiveChecks.ProofVerifier.FalseAccept
-#print axioms Hcrypt.TCB.PrimitiveChecks.ProofVerifier.verified_cases
-#print axioms Hcrypt.Protocol.Transfer.Primitives.SignatureProfile
-#print axioms Hcrypt.Protocol.Transfer.Primitives.PayloadProfile
-#print axioms Hcrypt.Protocol.Transfer.Primitives.ParsedFor
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Forgery
-#print axioms Hcrypt.Protocol.Transfer.Primitives.CompromisedKey
-#print axioms Hcrypt.Protocol.Transfer.Primitives.QueriedUnauthorized
-#print axioms Hcrypt.Protocol.Transfer.Primitives.ProofFalseAccept
-#print axioms Hcrypt.Protocol.Transfer.Primitives.StatementMismatch
-#print axioms Hcrypt.Protocol.Transfer.Primitives.authorizationFailure_implies_cases
-#print axioms Hcrypt.Protocol.Transfer.Primitives.payloadFailure_implies_cases
-#print axioms Hcrypt.Protocol.Transfer.Primitives.acceptedInvalid_implies_cases
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.forgeryEvent
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.compromisedKeyEvent
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.queriedUnauthorizedEvent
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.proofFalseAcceptEvent
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.statementMismatchEvent
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.forgeryProbability
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.compromisedKeyProbability
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.queriedUnauthorizedProbability
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.proofFalseAcceptProbability
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.statementMismatchProbability
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.acceptedInvalidEvent_subset_cases
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.acceptedInvalidProbability_le
-#print axioms Hcrypt.Protocol.Transfer.Primitives.Experiment.acceptedInvalidProbability_le_of_bounds
-#print axioms Hcrypt.Sheaf.GraphCommitment.Layout
-#print axioms Hcrypt.Sheaf.GraphCommitment.Assignment
-#print axioms Hcrypt.Sheaf.GraphCommitment.edgeCoordinates
-#print axioms Hcrypt.Sheaf.GraphCommitment.translate
-#print axioms Hcrypt.Sheaf.GraphCommitment.edgeCoordinates_length
-#print axioms Hcrypt.Sheaf.GraphCommitment.edgeCoordinates_translate
-#print axioms Hcrypt.Sheaf.GraphCommitment.translate_coordinate_ne
-#print axioms Hcrypt.Sheaf.GraphCommitment.observe_translate
-#print axioms Hcrypt.Sheaf.GraphCommitment.alternative_observed_opening
-#print axioms Hcrypt.Sheaf.GraphCommitment.not_injective_observe
-#print axioms Hcrypt.Sheaf.GraphCommitment.payload
-#print axioms Hcrypt.Sheaf.GraphCommitment.payload_edgeCountMatches
-#print axioms Hcrypt.Sheaf.GraphCommitment.payload_wellFormed
-#print axioms Hcrypt.Sheaf.GraphCommitment.payload_translate
-#print axioms Hcrypt.Sheaf.GraphCommitment.encoded_payload_translate
-#print axioms Hcrypt.Sheaf.GraphCommitment.alternative_payload_opening
-#print axioms Hcrypt.Sheaf.GraphCommitment.not_messageBinding
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.layout
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.original
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.shifted
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.shifted_values
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.original_edges
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.shifted_edges
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.messages_differ
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.payload_collision
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.original_payload_edges
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.original_payload_wellFormed
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.shifted_payload_wellFormed
-#print axioms Hcrypt.Sheaf.GraphCommitment.PathThree.encoded_collision
+#print axioms HomotopicalEncryption.TCB.PrimitiveChecks.Bytes
+#print axioms HomotopicalEncryption.TCB.PrimitiveChecks.SignatureVerifier
+#print axioms HomotopicalEncryption.TCB.PrimitiveChecks.SignatureHistory
+#print axioms HomotopicalEncryption.TCB.PrimitiveChecks.SignatureHistory.Queried
+#print axioms HomotopicalEncryption.TCB.PrimitiveChecks.SignatureHistory.Forgery
+#print axioms HomotopicalEncryption.TCB.PrimitiveChecks.SignatureHistory.verified_cases
+#print axioms HomotopicalEncryption.TCB.PrimitiveChecks.ProofVerifier
+#print axioms HomotopicalEncryption.TCB.PrimitiveChecks.ProofVerifier.FalseAccept
+#print axioms HomotopicalEncryption.TCB.PrimitiveChecks.ProofVerifier.verified_cases
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.SignatureProfile
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.PayloadProfile
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.ParsedFor
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Forgery
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.CompromisedKey
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.QueriedUnauthorized
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.ProofFalseAccept
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.StatementMismatch
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.authorizationFailure_implies_cases
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.payloadFailure_implies_cases
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.acceptedInvalid_implies_cases
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.forgeryEvent
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.compromisedKeyEvent
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.queriedUnauthorizedEvent
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.proofFalseAcceptEvent
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.statementMismatchEvent
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.forgeryProbability
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.compromisedKeyProbability
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.queriedUnauthorizedProbability
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.proofFalseAcceptProbability
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.statementMismatchProbability
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.acceptedInvalidEvent_subset_cases
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.acceptedInvalidProbability_le
+#print axioms HomotopicalEncryption.Protocol.Transfer.Primitives.Experiment.acceptedInvalidProbability_le_of_bounds
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.Layout
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.Assignment
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.edgeCoordinates
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.translate
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.edgeCoordinates_length
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.edgeCoordinates_translate
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.translate_coordinate_ne
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.observe_translate
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.alternative_observed_opening
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.not_injective_observe
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.payload
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.payload_edgeCountMatches
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.payload_wellFormed
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.payload_translate
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.encoded_payload_translate
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.alternative_payload_opening
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.not_messageBinding
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.layout
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.original
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.shifted
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.shifted_values
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.original_edges
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.shifted_edges
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.messages_differ
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.payload_collision
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.original_payload_edges
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.original_payload_wellFormed
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.shifted_payload_wellFormed
+#print axioms HomotopicalEncryption.Sheaf.GraphCommitment.PathThree.encoded_collision
 LEAN
 LEAN_NUM_THREADS=4 lake env lean /tmp/primitive-new-axioms.lean
 ```
@@ -1747,111 +1786,111 @@ LEAN_NUM_THREADS=4 lake build Protocol.Transfer
 cat > /tmp/security-new-axioms.lean <<'LEAN'
 import Protocol.Transfer
 
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.Authorization
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.PayloadVerifier
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.PacketCodec
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.PacketCodec.encode_injective
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.check
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.check_sound
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket.ofCheck
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket.check_true
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket.packet_eq
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket.signatureVerified_expected
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.CheckedPacket.proofVerified_expected
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.check_true_iff
-#print axioms Hcrypt.Protocol.Evidence.TransferCheck.reject_malformed
-#print axioms Hcrypt.Protocol.Transfer.Operational.ResourceTransfer
-#print axioms Hcrypt.Protocol.Transfer.Operational.ResourceChecks
-#print axioms Hcrypt.Protocol.Transfer.Operational.Config
-#print axioms Hcrypt.Protocol.Transfer.Operational.Config.manifest
-#print axioms Hcrypt.Protocol.Transfer.Operational.Config.cochainRoot
-#print axioms Hcrypt.Protocol.Transfer.Operational.Config.draftFor
-#print axioms Hcrypt.Protocol.Transfer.Operational.Config.intentFor
-#print axioms Hcrypt.Protocol.Transfer.Operational.Config.subject
-#print axioms Hcrypt.Protocol.Transfer.Operational.Config.candidateFor
-#print axioms Hcrypt.Protocol.Transfer.Operational.Config.policy
-#print axioms Hcrypt.Protocol.Transfer.Operational.Prechecks
-#print axioms Hcrypt.Protocol.Transfer.Operational.check
-#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer
-#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.ofCheck
-#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.check_true
-#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.candidate
-#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.candidate_eq
-#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.successor_eq
-#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.draft_eq
-#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.subject_eq
-#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.valid
-#print axioms Hcrypt.Protocol.Transfer.Operational.CheckedTransfer.accepted_update
-#print axioms Hcrypt.Protocol.Transfer.Operational.Attempt
-#print axioms Hcrypt.Protocol.Transfer.Operational.AcceptedInvalid
-#print axioms Hcrypt.Protocol.Transfer.Operational.AuthorizationFailure
-#print axioms Hcrypt.Protocol.Transfer.Operational.PayloadFailure
-#print axioms Hcrypt.Protocol.Transfer.Operational.acceptedInvalid_implies_failure
-#print axioms Hcrypt.Protocol.Transfer.Operational.not_acceptedInvalid_of_good
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ext
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.eq_iff
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.transfer
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.base
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.metadata
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.nullifiers
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_packetBytes_ne
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_transfer_ne
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_input_ne
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_output_ne
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_signer_ne
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_metadata_ne
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_base_ne
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_proposal_ne
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.ne_of_manifest_ne
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.inputTest
-#print axioms Hcrypt.Protocol.Transfer.Owned.PublicTransferView.inputTest_distinguishes
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_bytes
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_decoded
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_canonical
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_intent
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_transfer
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_metadata
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_base
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest_base
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest_root
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest_directory
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_proposal
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_proposal_computed
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_proposal_draft
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_source_evidence
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_nullifiers
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.publicView_eq
-#print axioms Hcrypt.Protocol.Transfer.Security.Adversary
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.attempt
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidEvent
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.authorizationFailureEvent
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.payloadFailureEvent
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.authorizationFailureProbability
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.payloadFailureProbability
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidEvent_subset_failures
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_le
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_le_of_bounds
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_eq_zero_of_no_failures
-#print axioms Hcrypt.Protocol.Transfer.Security.ofCheckedRelease
-#print axioms Hcrypt.Protocol.Transfer.Security.ofCheckedRelease_view
-#print axioms Hcrypt.Protocol.Transfer.Security.ofCheckedRelease_attempt
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.Authorization.operational
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.PayloadVerifier.operational
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.PacketCodec.operational
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.check_eq_operational
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.operational
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.ofOperational
-#print axioms Hcrypt.Protocol.Transfer.Owned.Config.operational
-#print axioms Hcrypt.Protocol.Transfer.Owned.check_eq_operational
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.operational
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.operational_candidate
-#print axioms Hcrypt.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_eq_zero_of_exact_config
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.Authorization
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.PayloadVerifier
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.PacketCodec
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.PacketCodec.encode_injective
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.check
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.CheckedPacket
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.check_sound
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.CheckedPacket.ofCheck
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.CheckedPacket.check_true
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.CheckedPacket.packet_eq
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.CheckedPacket.signatureVerified_expected
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.CheckedPacket.proofVerified_expected
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.check_true_iff
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferCheck.reject_malformed
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.ResourceTransfer
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.ResourceChecks
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.Config
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.Config.manifest
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.Config.cochainRoot
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.Config.draftFor
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.Config.intentFor
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.Config.subject
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.Config.candidateFor
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.Config.policy
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.Prechecks
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.check
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.CheckedTransfer
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.CheckedTransfer.ofCheck
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.CheckedTransfer.check_true
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.CheckedTransfer.candidate
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.CheckedTransfer.candidate_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.CheckedTransfer.successor_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.CheckedTransfer.draft_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.CheckedTransfer.subject_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.CheckedTransfer.valid
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.CheckedTransfer.accepted_update
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.Attempt
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.AcceptedInvalid
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.AuthorizationFailure
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.PayloadFailure
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.acceptedInvalid_implies_failure
+#print axioms HomotopicalEncryption.Protocol.Transfer.Operational.not_acceptedInvalid_of_good
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.ext
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.eq_iff
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.transfer
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.base
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.metadata
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.nullifiers
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.ne_of_packetBytes_ne
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.ne_of_transfer_ne
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.ne_of_input_ne
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.ne_of_output_ne
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.ne_of_signer_ne
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.ne_of_metadata_ne
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.ne_of_base_ne
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.ne_of_proposal_ne
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.ne_of_manifest_ne
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.inputTest
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.PublicTransferView.inputTest_distinguishes
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_bytes
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_decoded
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_canonical
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_intent
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_transfer
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_metadata
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_base
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest_base
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest_root
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_manifest_directory
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_proposal
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_proposal_computed
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_proposal_draft
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_source_evidence
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_nullifiers
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.publicView_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Adversary
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.attempt
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.acceptedInvalidEvent
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.authorizationFailureEvent
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.payloadFailureEvent
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.authorizationFailureProbability
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.payloadFailureProbability
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.acceptedInvalidEvent_subset_failures
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_le
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_le_of_bounds
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_eq_zero_of_no_failures
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.ofCheckedRelease
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.ofCheckedRelease_view
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.ofCheckedRelease_attempt
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.Authorization.operational
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.PayloadVerifier.operational
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.PacketCodec.operational
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.check_eq_operational
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.CheckedPacket.operational
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.CheckedPacket.ofOperational
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.Config.operational
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.check_eq_operational
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.operational
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.operational_candidate
+#print axioms HomotopicalEncryption.Protocol.Transfer.Security.Experiment.acceptedInvalidProbability_eq_zero_of_exact_config
 LEAN
 LEAN_NUM_THREADS=4 lake env lean /tmp/security-new-axioms.lean
 ```
@@ -1944,151 +1983,151 @@ LEAN_NUM_THREADS=4 lake build Protocol.Transfer Protocol.Core \
 cat > /tmp/transfer-new-axioms.lean <<'LEAN'
 import Protocol.Transfer
 
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Catalog
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Transfer
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.values
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.value_single
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Transfer.flow
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Transfer.action
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Transfer.nullifiers_nonempty
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Transfer.nullifiers_nodup
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.InventoryInvariant
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.enabled
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.conserves
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.fresh
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.flow_input
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.flow_output
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.flow_other
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.after_input
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.after_output
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.after_other
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.preserves_inventory
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.input_spent_after
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.reused_input_rejected
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Checks.reused_output_rejected
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.catalog
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.transfer
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.before
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.checks
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.inventory
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.candidate
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.after_marking
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.before_value
-#print axioms Hcrypt.Protocol.Ledger.OwnedResource.Fixture.after_value
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.ofState
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.restore
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.reconstruct
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.ofState_restore
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.afterFor
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.StateContent.ofState_after
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProposalDraft
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProposalDraft.ofProposal
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProposalDraft.complete
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProposalDraft.reconstruct
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProposalDraft.ofProposal_complete
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.Intent
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProofMetadata
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProofMetadata.ext
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProofMetadata.eq_iff
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ProofPacket
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ManifestPreimage
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ManifestPreimage.ofView
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ManifestPreimage.toView
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.ManifestPreimage.reconstruct
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.BlockPreimage
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.blockPreimage
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_draft
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_evidenceRoot
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_blockDigest
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_parentDigest
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_beforeStateRoot
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_afterStateRoot
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_snapshotRoot
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_topologyRoot
-#print axioms Hcrypt.Protocol.Evidence.TransferTranscript.HashSuite.proposal_cochainRoot
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.Authorization
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.PayloadVerifier
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.PacketCodec
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.PacketCodec.encode_injective
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.check
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.check_sound
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.ofCheck
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.check_true
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.authorized
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.CheckedPacket.accepted
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.check_true_iff
-#print axioms Hcrypt.Protocol.Evidence.TransferVerifier.reject_malformed
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.inputItem
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.preimage
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.scheme
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_items
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_root
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_publicView
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_publicView_base
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_publicView_root
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_publicView_directory
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.sealed_publicView_preimage
-#print axioms Hcrypt.Protocol.Storage.TransferManifest.persisted_of_receipt
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.compression
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.compressed
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.proof
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.proof_wellFormed
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.observation
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.envelope
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence_artifact
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence_witness
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence_shadow
-#print axioms Hcrypt.Protocol.Evidence.TransferEnvelope.Derivation.toAcceptedUpdate
-#print axioms Hcrypt.Protocol.Transfer.Owned.Config
-#print axioms Hcrypt.Protocol.Transfer.Owned.Config.manifest
-#print axioms Hcrypt.Protocol.Transfer.Owned.Config.cochainRoot
-#print axioms Hcrypt.Protocol.Transfer.Owned.Config.draftFor
-#print axioms Hcrypt.Protocol.Transfer.Owned.Config.intentFor
-#print axioms Hcrypt.Protocol.Transfer.Owned.Config.subject
-#print axioms Hcrypt.Protocol.Transfer.Owned.Config.policy
-#print axioms Hcrypt.Protocol.Transfer.Owned.Prechecks
-#print axioms Hcrypt.Protocol.Transfer.Owned.check
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.ofCheck
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.check_true
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.candidate
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.candidate_eq
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.successor_eq
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.draft_eq
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.subject_eq
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.valid
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.accepted_update
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.value_preserved
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.input_consumed
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.output_created
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.inventory_preserved
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.replay_rejected
-#print axioms Hcrypt.Protocol.Transfer.Owned.check_implies_accepted_update
-#print axioms Hcrypt.Protocol.Transfer.Owned.Config.bindings
-#print axioms Hcrypt.Protocol.Transfer.Owned.Config.history
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.packet_transfer
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.packet_metadata
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.packet_included
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.source_reconstruct
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.successor_reconstruct
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.before_root_bound
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.after_root_bound
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.transition_bound
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.cochain_included
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.artifact_included
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.derivation
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.evidence
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.anchor
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.anchored_update
-#print axioms Hcrypt.Protocol.Transfer.Owned.CheckedTransfer.certified
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Catalog
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Transfer
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.values
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.value_single
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Transfer.flow
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Transfer.action
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Transfer.nullifiers_nonempty
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Transfer.nullifiers_nodup
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.InventoryInvariant
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.enabled
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.conserves
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.fresh
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.flow_input
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.flow_output
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.flow_other
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.after_input
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.after_output
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.after_other
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.preserves_inventory
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.input_spent_after
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.reused_input_rejected
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Checks.reused_output_rejected
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Fixture.catalog
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Fixture.transfer
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Fixture.before
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Fixture.checks
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Fixture.inventory
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Fixture.candidate
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Fixture.after_marking
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Fixture.before_value
+#print axioms HomotopicalEncryption.Protocol.Ledger.OwnedResource.Fixture.after_value
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.StateContent
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.StateContent.ofState
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.StateContent.restore
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.StateContent.reconstruct
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.StateContent.ofState_restore
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.StateContent.afterFor
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.StateContent.ofState_after
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ProposalDraft
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ProposalDraft.ofProposal
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ProposalDraft.complete
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ProposalDraft.reconstruct
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ProposalDraft.ofProposal_complete
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.Intent
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ProofMetadata
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ProofMetadata.ext
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ProofMetadata.eq_iff
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ProofPacket
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ManifestPreimage
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ManifestPreimage.ofView
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ManifestPreimage.toView
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.ManifestPreimage.reconstruct
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.BlockPreimage
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite.blockPreimage
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite.proposal
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite.proposal_draft
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite.proposal_evidenceRoot
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite.proposal_blockDigest
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite.proposal_parentDigest
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite.proposal_beforeStateRoot
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite.proposal_afterStateRoot
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite.proposal_snapshotRoot
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite.proposal_topologyRoot
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferTranscript.HashSuite.proposal_cochainRoot
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.Authorization
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.PayloadVerifier
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.PacketCodec
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.PacketCodec.encode_injective
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.check
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.CheckedPacket
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.check_sound
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.CheckedPacket.ofCheck
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.CheckedPacket.check_true
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.CheckedPacket.authorized
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.CheckedPacket.accepted
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.check_true_iff
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferVerifier.reject_malformed
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.inputItem
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.preimage
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.scheme
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.sealed
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.sealed_items
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.sealed_root
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.sealed_publicView
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.sealed_publicView_base
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.sealed_publicView_root
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.sealed_publicView_directory
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.sealed_publicView_preimage
+#print axioms HomotopicalEncryption.Protocol.Storage.TransferManifest.persisted_of_receipt
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation.compression
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation.compressed
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation.proof
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation.proof_wellFormed
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation.observation
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation.envelope
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence_artifact
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence_witness
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation.toEvidence_shadow
+#print axioms HomotopicalEncryption.Protocol.Evidence.TransferEnvelope.Derivation.toAcceptedUpdate
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.Config
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.Config.manifest
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.Config.cochainRoot
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.Config.draftFor
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.Config.intentFor
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.Config.subject
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.Config.policy
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.Prechecks
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.check
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.ofCheck
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.check_true
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.candidate
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.candidate_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.successor_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.draft_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.subject_eq
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.valid
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.accepted_update
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.value_preserved
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.input_consumed
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.output_created
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.inventory_preserved
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.replay_rejected
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.check_implies_accepted_update
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.Config.bindings
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.Config.history
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.packet_transfer
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.packet_metadata
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.packet_included
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.source_reconstruct
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.successor_reconstruct
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.before_root_bound
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.after_root_bound
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.transition_bound
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.cochain_included
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.artifact_included
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.derivation
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.evidence
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.anchor
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.anchored_update
+#print axioms HomotopicalEncryption.Protocol.Transfer.Owned.CheckedTransfer.certified
 LEAN
 LEAN_NUM_THREADS=2 lake env lean /tmp/transfer-new-axioms.lean
 ```
@@ -2176,93 +2215,93 @@ cat > /tmp/rotation-new-axioms.lean <<'LEAN'
 import Protocol.Ephemeral
 import Protocol.Ephemeral.Examples
 
-#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.point_injective
-#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients
-#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_eq_some_iff
-#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_eq_none_iff
-#print axioms Hcrypt.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt
-#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.refl
-#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.symm
-#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.trans
-#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.harmonicOneProjection_naturality
-#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise
-#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_exactComponent
-#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_coexactComponent
-#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_value
-#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_refl
-#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_symm
-#print axioms Hcrypt.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_trans
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.refl
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.symm
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.trans
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.harmonicOne_iff
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.harmonicLatticeEquiv
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_message
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_opening
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_observed
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_projection
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_refl
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_symm
-#print axioms Hcrypt.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_trans
-#print axioms Hcrypt.HCP.AxisRotation.integralOne_iff
-#print axioms Hcrypt.HCP.AxisRotation.integralAxisSwap
-#print axioms Hcrypt.HCP.AxisRotation.point_naturality
-#print axioms Hcrypt.HCP.AxisRotation.transport_encrypt_eq_encrypt
-#print axioms Hcrypt.HCP.AxisRotation.decode_rotated_encrypt
-#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample
-#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_observed
-#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_coordinates
-#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_message
-#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_decode
-#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_pullback
-#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_pullback_decode
-#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_coefficient_two
-#print axioms Hcrypt.HCP.AxisRotation.fixedWeightedSample_decode_one
-#print axioms Hcrypt.HCP.AxisRotation.rotatedWeightedSample_ne_fixedSample
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.rotateObserved
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.recoverWithBase
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.pullback_rotateObserved
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.transport_encrypt
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.decode_rotated_encrypt
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.recoverWithBase_rotated_encrypt
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.recovery_routes_agree
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.refl
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.symm
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.trans
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.rotateObserved_trans
-#print axioms Hcrypt.Protocol.Ephemeral.PresentedRotation.rotateObserved_symm
-#print axioms Hcrypt.Protocol.Ephemeral.PayloadRotation
-#print axioms Hcrypt.Protocol.Ephemeral.PayloadRotation.target_accepted
-#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation
-#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.samePublicFingerprint
-#print axioms Hcrypt.Protocol.Ephemeral.EphemeralRotation.recover_rotated_encrypt
-#print axioms Hcrypt.Protocol.Ephemeral.DeliveryScope
-#print axioms Hcrypt.Protocol.Ephemeral.DeliveryScope.forContexts
-#print axioms Hcrypt.Protocol.Ephemeral.DeliveryContract
-#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery
-#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.scope
-#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor
-#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_rotated_encrypt
-#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_eq_none_of_scope_ne
-#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_recipient
-#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_sourceEpoch
-#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_targetEpoch
-#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_sourceKey
-#print axioms Hcrypt.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_targetKey
-#print axioms Hcrypt.Protocol.Ephemeral.BoundSampleRotation
-#print axioms Hcrypt.Protocol.Ephemeral.BoundSampleRotation.cochainObject_eq
-#print axioms Hcrypt.Protocol.Ephemeral.BoundSampleRotation.payloadRotation
-#print axioms Hcrypt.Protocol.Ephemeral.BoundSampleRotation.decode_target
-#print axioms Hcrypt.Protocol.Ephemeral.BoundSampleRotation.recover_with_base
-#print axioms Hcrypt.Protocol.Ephemeral.bindRotatedSample
-#print axioms Hcrypt.Protocol.Ephemeral.bindRotatedSample_artifact
-#print axioms Hcrypt.Protocol.Ephemeral.boundSampleRotation_bindRotatedSample
-#print axioms Hcrypt.Protocol.Ephemeral.Examples.axisPresentedRotation
-#print axioms Hcrypt.Protocol.Ephemeral.Examples.receipt_recovers_weighted_two
-#print axioms Hcrypt.Protocol.Ephemeral.Examples.receipt_rejects_other_epoch
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.HarmonicLatticePresentation.point_injective
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_eq_some_iff
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_eq_none_iff
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.HarmonicLatticePresentation.decodeCoefficients_encrypt
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IsometricCochainEquiv.refl
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IsometricCochainEquiv.symm
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IsometricCochainEquiv.trans
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IsometricCochainEquiv.harmonicOneProjection_naturality
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_exactComponent
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_coexactComponent
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_value
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_refl
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_symm
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IsometricCochainEquiv.transportNoise_trans
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.refl
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.symm
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.trans
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.harmonicOne_iff
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.harmonicLatticeEquiv
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_message
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_opening
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_observed
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_projection
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_refl
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_symm
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.IntegralCochainEquiv.transportSample_trans
+#print axioms HomotopicalEncryption.HCP.AxisRotation.integralOne_iff
+#print axioms HomotopicalEncryption.HCP.AxisRotation.integralAxisSwap
+#print axioms HomotopicalEncryption.HCP.AxisRotation.point_naturality
+#print axioms HomotopicalEncryption.HCP.AxisRotation.transport_encrypt_eq_encrypt
+#print axioms HomotopicalEncryption.HCP.AxisRotation.decode_rotated_encrypt
+#print axioms HomotopicalEncryption.HCP.AxisRotation.rotatedWeightedSample
+#print axioms HomotopicalEncryption.HCP.AxisRotation.rotatedWeightedSample_observed
+#print axioms HomotopicalEncryption.HCP.AxisRotation.rotatedWeightedSample_coordinates
+#print axioms HomotopicalEncryption.HCP.AxisRotation.rotatedWeightedSample_message
+#print axioms HomotopicalEncryption.HCP.AxisRotation.rotatedWeightedSample_decode
+#print axioms HomotopicalEncryption.HCP.AxisRotation.rotatedWeightedSample_pullback
+#print axioms HomotopicalEncryption.HCP.AxisRotation.rotatedWeightedSample_pullback_decode
+#print axioms HomotopicalEncryption.HCP.AxisRotation.rotatedWeightedSample_coefficient_two
+#print axioms HomotopicalEncryption.HCP.AxisRotation.fixedWeightedSample_decode_one
+#print axioms HomotopicalEncryption.HCP.AxisRotation.rotatedWeightedSample_ne_fixedSample
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.rotateObserved
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.recoverWithBase
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.pullback_rotateObserved
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.transport_encrypt
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.decode_rotated_encrypt
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.recoverWithBase_rotated_encrypt
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.recovery_routes_agree
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.refl
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.symm
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.trans
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.rotateObserved_trans
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PresentedRotation.rotateObserved_symm
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PayloadRotation
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.PayloadRotation.target_accepted
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.EphemeralRotation
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.EphemeralRotation.samePublicFingerprint
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.EphemeralRotation.recover_rotated_encrypt
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.DeliveryScope
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.DeliveryScope.forContexts
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.DeliveryContract
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.RecoveryDelivery
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.RecoveryDelivery.scope
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.RecoveryDelivery.recoverFor
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.RecoveryDelivery.recoverFor_rotated_encrypt
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.RecoveryDelivery.recoverFor_eq_none_of_scope_ne
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_recipient
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_sourceEpoch
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_targetEpoch
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_sourceKey
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.RecoveryDelivery.recoverFor_wrong_targetKey
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.BoundSampleRotation
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.BoundSampleRotation.cochainObject_eq
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.BoundSampleRotation.payloadRotation
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.BoundSampleRotation.decode_target
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.BoundSampleRotation.recover_with_base
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.bindRotatedSample
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.bindRotatedSample_artifact
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.boundSampleRotation_bindRotatedSample
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.Examples.axisPresentedRotation
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.Examples.receipt_recovers_weighted_two
+#print axioms HomotopicalEncryption.Protocol.Ephemeral.Examples.receipt_rejects_other_epoch
 LEAN
 LEAN_NUM_THREADS=2 lake env lean /tmp/rotation-new-axioms.lean
 ```
@@ -2338,39 +2377,39 @@ cat > /tmp/public-observation-new-axioms.lean <<'LEAN'
 import Protocol.Storage
 import TCB
 
-#print axioms Hcrypt.Protocol.Storage.PublicPayloadView
-#print axioms Hcrypt.Protocol.Storage.PublicPayloadView.ext
-#print axioms Hcrypt.Protocol.Storage.PublicPayloadView.eq_iff
-#print axioms Hcrypt.Protocol.Storage.PublicPayloadView.ne_of_key_ne
-#print axioms Hcrypt.Protocol.Storage.Context.publicView
-#print axioms Hcrypt.Protocol.Storage.Context.publicView_eq_iff
-#print axioms Hcrypt.Protocol.Storage.Context.publicView_topologyTag_matches
-#print axioms Hcrypt.Protocol.Storage.Context.publicView_ne_of_key_ne
-#print axioms Hcrypt.Protocol.Storage.Context.publicView_ne_of_snapshot_ne
-#print axioms Hcrypt.Protocol.Storage.Context.publicView_ne_of_runId_ne
-#print axioms Hcrypt.Protocol.Storage.Context.publicView_ne_of_parameters_ne
-#print axioms Hcrypt.Protocol.Storage.PublicManifestView
-#print axioms Hcrypt.Protocol.Storage.PublicManifestView.ext
-#print axioms Hcrypt.Protocol.Storage.PublicManifestView.eq_iff
-#print axioms Hcrypt.Protocol.Storage.SealedManifest.publicView
-#print axioms Hcrypt.Protocol.Storage.SealedManifest.publicView_base
-#print axioms Hcrypt.Protocol.Storage.SealedManifest.publicView_directory_slots
-#print axioms Hcrypt.Protocol.Storage.SealedManifest.publicView_directory_slots_nodup
-#print axioms Hcrypt.Protocol.Storage.HCPDisclosure
-#print axioms Hcrypt.Protocol.Storage.HCPDisclosure.forget
-#print axioms Hcrypt.Protocol.Storage.HCPDisclosure.ext
-#print axioms Hcrypt.Protocol.Storage.HCPDisclosure.eq_iff
-#print axioms Hcrypt.Protocol.Storage.HCPDisclosure.ne_of_base_ne
-#print axioms Hcrypt.Protocol.Storage.hcpDisclosure
-#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_forget
-#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_cochain
-#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_leafDigest
-#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_snapshotRoot
-#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_runId
-#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_observation
-#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_eq_iff
-#print axioms Hcrypt.Protocol.Storage.hcpDisclosure_same_observation_distinct_parameters
-#print axioms Hcrypt.TCB.HCPRealization.no_exact_view_decoder_of_same_view
+#print axioms HomotopicalEncryption.Protocol.Storage.PublicPayloadView
+#print axioms HomotopicalEncryption.Protocol.Storage.PublicPayloadView.ext
+#print axioms HomotopicalEncryption.Protocol.Storage.PublicPayloadView.eq_iff
+#print axioms HomotopicalEncryption.Protocol.Storage.PublicPayloadView.ne_of_key_ne
+#print axioms HomotopicalEncryption.Protocol.Storage.Context.publicView
+#print axioms HomotopicalEncryption.Protocol.Storage.Context.publicView_eq_iff
+#print axioms HomotopicalEncryption.Protocol.Storage.Context.publicView_topologyTag_matches
+#print axioms HomotopicalEncryption.Protocol.Storage.Context.publicView_ne_of_key_ne
+#print axioms HomotopicalEncryption.Protocol.Storage.Context.publicView_ne_of_snapshot_ne
+#print axioms HomotopicalEncryption.Protocol.Storage.Context.publicView_ne_of_runId_ne
+#print axioms HomotopicalEncryption.Protocol.Storage.Context.publicView_ne_of_parameters_ne
+#print axioms HomotopicalEncryption.Protocol.Storage.PublicManifestView
+#print axioms HomotopicalEncryption.Protocol.Storage.PublicManifestView.ext
+#print axioms HomotopicalEncryption.Protocol.Storage.PublicManifestView.eq_iff
+#print axioms HomotopicalEncryption.Protocol.Storage.SealedManifest.publicView
+#print axioms HomotopicalEncryption.Protocol.Storage.SealedManifest.publicView_base
+#print axioms HomotopicalEncryption.Protocol.Storage.SealedManifest.publicView_directory_slots
+#print axioms HomotopicalEncryption.Protocol.Storage.SealedManifest.publicView_directory_slots_nodup
+#print axioms HomotopicalEncryption.Protocol.Storage.HCPDisclosure
+#print axioms HomotopicalEncryption.Protocol.Storage.HCPDisclosure.forget
+#print axioms HomotopicalEncryption.Protocol.Storage.HCPDisclosure.ext
+#print axioms HomotopicalEncryption.Protocol.Storage.HCPDisclosure.eq_iff
+#print axioms HomotopicalEncryption.Protocol.Storage.HCPDisclosure.ne_of_base_ne
+#print axioms HomotopicalEncryption.Protocol.Storage.hcpDisclosure
+#print axioms HomotopicalEncryption.Protocol.Storage.hcpDisclosure_forget
+#print axioms HomotopicalEncryption.Protocol.Storage.hcpDisclosure_cochain
+#print axioms HomotopicalEncryption.Protocol.Storage.hcpDisclosure_leafDigest
+#print axioms HomotopicalEncryption.Protocol.Storage.hcpDisclosure_snapshotRoot
+#print axioms HomotopicalEncryption.Protocol.Storage.hcpDisclosure_runId
+#print axioms HomotopicalEncryption.Protocol.Storage.hcpDisclosure_observation
+#print axioms HomotopicalEncryption.Protocol.Storage.hcpDisclosure_eq_iff
+#print axioms HomotopicalEncryption.Protocol.Storage.hcpDisclosure_same_observation_distinct_parameters
+#print axioms HomotopicalEncryption.TCB.HCPRealization.no_exact_view_decoder_of_same_view
 LEAN
 LEAN_NUM_THREADS=2 lake env lean /tmp/public-observation-new-axioms.lean
 ```
@@ -2453,102 +2492,102 @@ LEAN_NUM_THREADS=4 lake build HCP.AxisFamily TCB.HCPAxisFamily \
 cat > /tmp/cellular-hcp-new-axioms.lean <<'LEAN'
 import TCB
 
-#print axioms Hcrypt.Helfer.CochainModel.boundedContainsZero
-#print axioms Hcrypt.Helfer.CochainModel.Data.differential_comp
-#print axioms Hcrypt.Helfer.CochainModel.Data.strictlyGE
-#print axioms Hcrypt.Helfer.CochainModel.Data.StrictIso.complexIso
-#print axioms Hcrypt.Helfer.CochainModel.Data.StrictIso.modelIso
-#print axioms Hcrypt.Helfer.CochainModel.module_injective
-#print axioms Hcrypt.Helfer.CochainModel.model_isFibrant
-#print axioms Hcrypt.Helfer.CochainModel.model_isCofibrant
-#print axioms Hcrypt.Helfer.CochainModel.homologyIso
-#print axioms Hcrypt.Helfer.CochainModel.closedTestInvariance
-#print axioms Hcrypt.Helfer.CochainModel.homotopyEquivalence_of_iso
-#print axioms Hcrypt.Helfer.CochainModel.equivalent_of_iso
-#print axioms Hcrypt.Helfer.CochainModel.equivalent_refl
-#print axioms Hcrypt.Helfer.CochainModel.Data.StrictIso.equivalent
-#print axioms Hcrypt.Helfer.CochainModel.ofSheaf
-#print axioms Hcrypt.Helfer.CochainModel.strictIso_of_isometricCochainEquiv
-#print axioms Hcrypt.Helfer.CochainModel.equivalent_of_isometricCochainEquiv
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.delta0_eq_zero
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.delta1_adjoint_eq
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.degreeOneLaplacian_apply
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.harmonic_iff
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.standardStalkLattice
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.integralStructure
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_observed
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_exactComponent
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_messages_ne
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_noise_orthogonal
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_projection
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.laplacianMatrix_mulVec
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.laplacianMatrix_eq_diagonal
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.axisSwap
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.eigenvalue_eq_zero_or_one
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.positiveSpectralGap_eq_one
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.harmonicLatticePresentation
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.harmonicLatticePresentation_point
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_message_eq_point
-#print axioms Hcrypt.Sheaf.HCPAxisFamily.sample_eq_encrypt_one
-#print axioms Hcrypt.HCP.AxisFamily.semanticEquivalence
-#print axioms Hcrypt.HCP.AxisFamily.theory_zero_eq_one
-#print axioms Hcrypt.HCP.AxisFamily.publicProjection_laplacian
-#print axioms Hcrypt.HCP.AxisFamily.realization
-#print axioms Hcrypt.HCP.AxisFamily.operatorAction
-#print axioms Hcrypt.HCP.AxisFamily.matrixHarmonicSubspace_eq
-#print axioms Hcrypt.HCP.AxisFamily.operativeHarmonicComponent_eq
-#print axioms Hcrypt.HCP.AxisFamily.isometricPresentation
-#print axioms Hcrypt.HCP.AxisFamily.fixedCoordinateNonstabilization
-#print axioms Hcrypt.HCP.AxisFamily.kernelSeparation
-#print axioms Hcrypt.HCP.AxisFamily.same_public_class
-#print axioms Hcrypt.HCP.AxisFamily.kernel_ambiguous
-#print axioms Hcrypt.HCP.AxisFamily.classifier_nonfaithful
-#print axioms Hcrypt.HCP.AxisFamily.no_exact_representative_decoder
-#print axioms Hcrypt.HCP.AxisFamily.left_target_eq_message
-#print axioms Hcrypt.HCP.AxisFamily.right_target_eq_message
-#print axioms Hcrypt.HCP.AxisFamily.same_observation_distinct_targets
-#print axioms Hcrypt.HCP.AxisFamily.both_targets_nonzero
-#print axioms Hcrypt.HCP.AxisFamily.sample_observation_and_exact_component
-#print axioms Hcrypt.HCP.AxisFamily.sample_public_observations_eq
-#print axioms Hcrypt.HCP.AxisFamily.shared_observation_distinct_nonzero_targets
-#print axioms Hcrypt.HCP.AxisFamily.cvp_solution_iff_message
-#print axioms Hcrypt.HCP.AxisFamily.cvp_existsUnique
-#print axioms Hcrypt.HCP.AxisFamily.cvp_solution_iff_left_operativeTarget
-#print axioms Hcrypt.HCP.AxisFamily.cvp_solution_iff_right_operativeTarget
-#print axioms Hcrypt.HCP.AxisFamily.no_exact_public_solver
-#print axioms Hcrypt.HCP.AxisFamily.no_sound_and_harmonic_exact_public_solver
-#print axioms Hcrypt.HCP.AxisFamily.cvp_oracle_insufficient
-#print axioms Hcrypt.HCP.AxisFamily.weightedSample_message
-#print axioms Hcrypt.HCP.AxisFamily.weightedOpening_value
-#print axioms Hcrypt.HCP.AxisFamily.weightedSample_observed
-#print axioms Hcrypt.HCP.AxisFamily.weightedSample_exactComponent
-#print axioms Hcrypt.HCP.AxisFamily.weighted_public_observations_eq
-#print axioms Hcrypt.HCP.AxisFamily.weighted_coefficients_values
-#print axioms Hcrypt.HCP.AxisFamily.weighted_coefficients_ne
-#print axioms Hcrypt.HCP.AxisFamily.weightedSample_messages_ne
-#print axioms Hcrypt.HCP.AxisFamily.weightedSample_message_ne_zero
-#print axioms Hcrypt.HCP.AxisFamily.weighted_target_eq_message
-#print axioms Hcrypt.HCP.AxisFamily.weighted_same_observation_distinct_targets
-#print axioms Hcrypt.HCP.AxisFamily.weighted_both_targets_nonzero
-#print axioms Hcrypt.HCP.AxisFamily.weighted_cvp_solution_iff_operativeTarget
-#print axioms Hcrypt.HCP.AxisFamily.weighted_cvp_existsUnique
-#print axioms Hcrypt.HCP.AxisFamily.no_exact_encoded_message_decoder
-#print axioms Hcrypt.TCB.HCPRealization.CellularOperatorAlignment
-#print axioms Hcrypt.TCB.HCPRealization.CellularOperatorAlignment.matrixHarmonicSubspace_eq
-#print axioms Hcrypt.TCB.HCPRealization.CellularOperatorAlignment.operativeHarmonicComponent_eq
-#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment
-#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment.hiddenWitness
-#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment.operativeTarget_eq_projection
-#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment.operativeTarget_eq_message
-#print axioms Hcrypt.TCB.HCPRealization.BoundObservationAlignment.cvp_solution_iff_operativeTarget
-#print axioms Hcrypt.TCB.HCPRealization.no_exact_view_solver_of_factorization
-#print axioms Hcrypt.TCB.HCPAxisFamily.operatorAlignment
-#print axioms Hcrypt.TCB.HCPAxisFamily.actualSpectralGate
-#print axioms Hcrypt.TCB.HCPAxisFamily.observationAlignment
-#print axioms Hcrypt.TCB.HCPAxisFamily.bindSample
-#print axioms Hcrypt.TCB.HCPAxisFamily.bindSample_artifact
-#print axioms Hcrypt.TCB.HCPAxisFamily.operativeTarget_eq_original_message
-#print axioms Hcrypt.TCB.HCPAxisFamily.cvp_solution_iff_operativeTarget
+#print axioms HomotopicalEncryption.Helfer.CochainModel.boundedContainsZero
+#print axioms HomotopicalEncryption.Helfer.CochainModel.Data.differential_comp
+#print axioms HomotopicalEncryption.Helfer.CochainModel.Data.strictlyGE
+#print axioms HomotopicalEncryption.Helfer.CochainModel.Data.StrictIso.complexIso
+#print axioms HomotopicalEncryption.Helfer.CochainModel.Data.StrictIso.modelIso
+#print axioms HomotopicalEncryption.Helfer.CochainModel.module_injective
+#print axioms HomotopicalEncryption.Helfer.CochainModel.model_isFibrant
+#print axioms HomotopicalEncryption.Helfer.CochainModel.model_isCofibrant
+#print axioms HomotopicalEncryption.Helfer.CochainModel.homologyIso
+#print axioms HomotopicalEncryption.Helfer.CochainModel.closedTestInvariance
+#print axioms HomotopicalEncryption.Helfer.CochainModel.homotopyEquivalence_of_iso
+#print axioms HomotopicalEncryption.Helfer.CochainModel.equivalent_of_iso
+#print axioms HomotopicalEncryption.Helfer.CochainModel.equivalent_refl
+#print axioms HomotopicalEncryption.Helfer.CochainModel.Data.StrictIso.equivalent
+#print axioms HomotopicalEncryption.Helfer.CochainModel.ofSheaf
+#print axioms HomotopicalEncryption.Helfer.CochainModel.strictIso_of_isometricCochainEquiv
+#print axioms HomotopicalEncryption.Helfer.CochainModel.equivalent_of_isometricCochainEquiv
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.delta0_eq_zero
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.delta1_adjoint_eq
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.degreeOneLaplacian_apply
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.harmonic_iff
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.standardStalkLattice
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.integralStructure
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.sample_observed
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.sample_exactComponent
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.sample_messages_ne
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.sample_noise_orthogonal
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.sample_projection
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.laplacianMatrix_mulVec
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.laplacianMatrix_eq_diagonal
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.axisSwap
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.eigenvalue_eq_zero_or_one
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.positiveSpectralGap_eq_one
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.harmonicLatticePresentation
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.harmonicLatticePresentation_point
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.sample_message_eq_point
+#print axioms HomotopicalEncryption.Sheaf.HCPAxisFamily.sample_eq_encrypt_one
+#print axioms HomotopicalEncryption.HCP.AxisFamily.semanticEquivalence
+#print axioms HomotopicalEncryption.HCP.AxisFamily.theory_zero_eq_one
+#print axioms HomotopicalEncryption.HCP.AxisFamily.publicProjection_laplacian
+#print axioms HomotopicalEncryption.HCP.AxisFamily.realization
+#print axioms HomotopicalEncryption.HCP.AxisFamily.operatorAction
+#print axioms HomotopicalEncryption.HCP.AxisFamily.matrixHarmonicSubspace_eq
+#print axioms HomotopicalEncryption.HCP.AxisFamily.operativeHarmonicComponent_eq
+#print axioms HomotopicalEncryption.HCP.AxisFamily.isometricPresentation
+#print axioms HomotopicalEncryption.HCP.AxisFamily.fixedCoordinateNonstabilization
+#print axioms HomotopicalEncryption.HCP.AxisFamily.kernelSeparation
+#print axioms HomotopicalEncryption.HCP.AxisFamily.same_public_class
+#print axioms HomotopicalEncryption.HCP.AxisFamily.kernel_ambiguous
+#print axioms HomotopicalEncryption.HCP.AxisFamily.classifier_nonfaithful
+#print axioms HomotopicalEncryption.HCP.AxisFamily.no_exact_representative_decoder
+#print axioms HomotopicalEncryption.HCP.AxisFamily.left_target_eq_message
+#print axioms HomotopicalEncryption.HCP.AxisFamily.right_target_eq_message
+#print axioms HomotopicalEncryption.HCP.AxisFamily.same_observation_distinct_targets
+#print axioms HomotopicalEncryption.HCP.AxisFamily.both_targets_nonzero
+#print axioms HomotopicalEncryption.HCP.AxisFamily.sample_observation_and_exact_component
+#print axioms HomotopicalEncryption.HCP.AxisFamily.sample_public_observations_eq
+#print axioms HomotopicalEncryption.HCP.AxisFamily.shared_observation_distinct_nonzero_targets
+#print axioms HomotopicalEncryption.HCP.AxisFamily.cvp_solution_iff_message
+#print axioms HomotopicalEncryption.HCP.AxisFamily.cvp_existsUnique
+#print axioms HomotopicalEncryption.HCP.AxisFamily.cvp_solution_iff_left_operativeTarget
+#print axioms HomotopicalEncryption.HCP.AxisFamily.cvp_solution_iff_right_operativeTarget
+#print axioms HomotopicalEncryption.HCP.AxisFamily.no_exact_public_solver
+#print axioms HomotopicalEncryption.HCP.AxisFamily.no_sound_and_harmonic_exact_public_solver
+#print axioms HomotopicalEncryption.HCP.AxisFamily.cvp_oracle_insufficient
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weightedSample_message
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weightedOpening_value
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weightedSample_observed
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weightedSample_exactComponent
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weighted_public_observations_eq
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weighted_coefficients_values
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weighted_coefficients_ne
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weightedSample_messages_ne
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weightedSample_message_ne_zero
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weighted_target_eq_message
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weighted_same_observation_distinct_targets
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weighted_both_targets_nonzero
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weighted_cvp_solution_iff_operativeTarget
+#print axioms HomotopicalEncryption.HCP.AxisFamily.weighted_cvp_existsUnique
+#print axioms HomotopicalEncryption.HCP.AxisFamily.no_exact_encoded_message_decoder
+#print axioms HomotopicalEncryption.TCB.HCPRealization.CellularOperatorAlignment
+#print axioms HomotopicalEncryption.TCB.HCPRealization.CellularOperatorAlignment.matrixHarmonicSubspace_eq
+#print axioms HomotopicalEncryption.TCB.HCPRealization.CellularOperatorAlignment.operativeHarmonicComponent_eq
+#print axioms HomotopicalEncryption.TCB.HCPRealization.BoundObservationAlignment
+#print axioms HomotopicalEncryption.TCB.HCPRealization.BoundObservationAlignment.hiddenWitness
+#print axioms HomotopicalEncryption.TCB.HCPRealization.BoundObservationAlignment.operativeTarget_eq_projection
+#print axioms HomotopicalEncryption.TCB.HCPRealization.BoundObservationAlignment.operativeTarget_eq_message
+#print axioms HomotopicalEncryption.TCB.HCPRealization.BoundObservationAlignment.cvp_solution_iff_operativeTarget
+#print axioms HomotopicalEncryption.TCB.HCPRealization.no_exact_view_solver_of_factorization
+#print axioms HomotopicalEncryption.TCB.HCPAxisFamily.operatorAlignment
+#print axioms HomotopicalEncryption.TCB.HCPAxisFamily.actualSpectralGate
+#print axioms HomotopicalEncryption.TCB.HCPAxisFamily.observationAlignment
+#print axioms HomotopicalEncryption.TCB.HCPAxisFamily.bindSample
+#print axioms HomotopicalEncryption.TCB.HCPAxisFamily.bindSample_artifact
+#print axioms HomotopicalEncryption.TCB.HCPAxisFamily.operativeTarget_eq_original_message
+#print axioms HomotopicalEncryption.TCB.HCPAxisFamily.cvp_solution_iff_operativeTarget
 LEAN
 LEAN_NUM_THREADS=2 lake env lean /tmp/cellular-hcp-new-axioms.lean
 ```
@@ -2694,98 +2733,98 @@ import Sheaf
 import Protocol.Storage
 import TCB.PluckerObservation
 
-#print axioms Hcrypt.Protocol.Storage.Calibration.decodedDistance_le_norm
-#print axioms Hcrypt.Protocol.Storage.Calibration.decodedDistance_le_scaled_pairDistance_of_reflection
-#print axioms Hcrypt.Protocol.Storage.Calibration.decodedFar_implies_pairFar_of_reflection
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.calibrationFor
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.calibration_extract_eq_original_pair
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.cochainToPlaneFor
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.evaluationProjectionFor
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.extracted_codeword_of_modular_valid
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.planeNear_of_scaledSourceNear
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.planeToRSFor
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.sourceFar_implies_planeFar
-#print axioms Hcrypt.Protocol.Storage.CanonicalCalibration.sourceFar_implies_rsFar
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.accepted_iff_pairCodeword
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.decodedFar_implies_pairFar
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.exactDistance_eq_harmonicProjection_norm
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.exists_positive_source_payload
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.harmonicOneSubspace_eq_exactOrthogonal
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.informationSet_card
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.model
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.observed_decodedFar_implies_pairFar
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.raw_payload
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.unitPayload_context_pairFar
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.unitPayload_context_sourceDistance_pos
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.unitPayload_noWrap
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.unitPayload_not_exact
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.unitPayload_sourceDistance_pos
-#print axioms Hcrypt.Protocol.Storage.CanonicalSystematic.unitPayload_wellFormed
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.canonicalMix_ne_neg_one
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallenges
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_good
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_scalarDistance
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_cochainDistance
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_planeDistance
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_rsPairDistance
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.capacityPayload_wellFormed
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.cochainFar_implies_observed_pairFar
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.native_distance_comparison
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.not_accepted_of_positive_cochainFar
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.observed_planeDistance_eq_pairDistance
-#print axioms Hcrypt.Protocol.Storage.CanonicalThreeLevel.observed_planeDistance_eq_publicSourceDistance
-#print axioms Hcrypt.Protocol.Storage.CoordinateLayout.aligned
-#print axioms Hcrypt.Protocol.Storage.CoordinateLayout.coordinateCount
-#print axioms Hcrypt.Protocol.Storage.CoordinateLayout.decode_coordinate
-#print axioms Hcrypt.Protocol.Storage.CoordinateLayout.decodedFar_implies_pairFar
-#print axioms Hcrypt.Protocol.Storage.CoordinateLayout.locallyNondegenerate
-#print axioms Hcrypt.Protocol.Storage.CoordinateLayout.norm_decode_le
-#print axioms Hcrypt.Protocol.Storage.CoordinateLayout.norm_decode_sq_le
-#print axioms Hcrypt.Protocol.Storage.SystematicModel.accepted_of_pairCodeword
-#print axioms Hcrypt.Protocol.Storage.SystematicModel.decodedFar_implies_pairFar
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.integerPairCode_codeword_iff_modularExact
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.integerPairCode_codeword_iff_reduced
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.integerScalarCode_codeword_iff
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.integerScalarCode_nonempty
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.liftMatching_hamming
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.liftMatching_pair_eq_iff
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.planeDistance_eq_rsDistance
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.reduce_liftMatching
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.reduced_hamming_le
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.scalar_reduction_distance_eq
-#print axioms Hcrypt.Protocol.Storage.ThreeLevel.three_native_distance_comparison
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.harmonicProjector_eq_of_publicShadow_eq
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.projectiveFramedSystem_sound
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.projectiveSoundInputs
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.publicShadow_eq_iff_same_point
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_zero
-#print axioms Hcrypt.Proximity.GrassmannianPlucker.Concrete.toLaplacian_eq_of_publicShadow_eq
-#print axioms Hcrypt.Sheaf.CellularSheaf.all_linear_decodes_exact_of_canonical_interleaved_rs_lifts
-#print axioms Hcrypt.Sheaf.CellularSheaf.all_linear_decodes_exact_of_canonical_rs_lifts
-#print axioms Hcrypt.Sheaf.CellularSheaf.exactOneSubspace_eq_top_of_surjective_canonical_rs_decoder
-#print axioms Hcrypt.Sheaf.CellularSheaf.linear_decode_exactDistance_eq_zero_of_canonical_interleaved_rs_lifts
-#print axioms Hcrypt.Sheaf.CellularSheaf.linear_decode_exactDistance_eq_zero_of_canonical_rs_lifts
-#print axioms Hcrypt.Sheaf.CellularSheaf.not_all_canonical_interleaved_rs_lifts_exact_of_nonexact_linear_decode
-#print axioms Hcrypt.Sheaf.CellularSheaf.not_all_canonical_rs_lifts_exact_of_nonexact_linear_decode
-#print axioms Hcrypt.Sheaf.CellularSheaf.not_uniform_rs_distance_comparison_of_nonexact_linear_decode
-#print axioms Hcrypt.Sheaf.SystematicCode.delta0_integralOpening_coordinate
-#print axioms Hcrypt.Sheaf.SystematicCode.intCast_integerCoboundary
-#print axioms Hcrypt.Sheaf.SystematicCode.integralOpening_head
-#print axioms Hcrypt.Sheaf.SystematicCode.integralOpening_tail
-#print axioms Hcrypt.Sheaf.SystematicCode.isExact_iff_realCheck_eq_zero
-#print axioms Hcrypt.Sheaf.SystematicCode.modularExact_iff_integerCoboundary_residue
-#print axioms Hcrypt.Sheaf.SystematicCode.modularExact_iff_vectorCodeword
-#print axioms Hcrypt.Sheaf.SystematicCode.modularExact_of_vectorCodeword
-#print axioms Hcrypt.Sheaf.SystematicCode.ofWord_isExact_of_vectorCodeword_of_noWrap
-#print axioms Hcrypt.Sheaf.SystematicCode.vectorCodeword_of_modularExact
-#print axioms Hcrypt.TCB.PluckerObservation.operativeHarmonicComponent_eq_of_same_full_shadow
-#print axioms Hcrypt.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent
+#print axioms HomotopicalEncryption.Protocol.Storage.Calibration.decodedDistance_le_norm
+#print axioms HomotopicalEncryption.Protocol.Storage.Calibration.decodedDistance_le_scaled_pairDistance_of_reflection
+#print axioms HomotopicalEncryption.Protocol.Storage.Calibration.decodedFar_implies_pairFar_of_reflection
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.calibrationFor
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.calibration_extract_eq_original_pair
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.cochainToPlaneFor
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.evaluationProjectionFor
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.extracted_codeword_of_modular_valid
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.planeNear_of_scaledSourceNear
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.planeToRSFor
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.sourceFar_implies_planeFar
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalCalibration.sourceFar_implies_rsFar
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.accepted_iff_pairCodeword
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.decodedFar_implies_pairFar
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.exactDistance_eq_harmonicProjection_norm
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.exists_positive_source_payload
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.harmonicOneSubspace_eq_exactOrthogonal
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.informationSet_card
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.model
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.observed_decodedFar_implies_pairFar
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.raw_payload
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.unitPayload_context_pairFar
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.unitPayload_context_sourceDistance_pos
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.unitPayload_noWrap
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.unitPayload_not_exact
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.unitPayload_sourceDistance_pos
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.unitPayload_wellFormed
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.accepted_nativeDistances_zero
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.canonicalMix_ne_neg_one
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallengeFraction
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_badChallenges
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_good
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_canonicalMix_scalarDistance
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_cochainDistance
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_planeDistance
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_rsPairDistance
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_wellFormed
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.cochainFar_implies_observed_pairFar
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.exists_payload_at_capacity
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.native_distance_comparison
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.not_accepted_of_positive_cochainFar
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.observed_planeDistance_eq_pairDistance
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.observed_planeDistance_eq_publicSourceDistance
+#print axioms HomotopicalEncryption.Protocol.Storage.CoordinateLayout.aligned
+#print axioms HomotopicalEncryption.Protocol.Storage.CoordinateLayout.coordinateCount
+#print axioms HomotopicalEncryption.Protocol.Storage.CoordinateLayout.decode_coordinate
+#print axioms HomotopicalEncryption.Protocol.Storage.CoordinateLayout.decodedFar_implies_pairFar
+#print axioms HomotopicalEncryption.Protocol.Storage.CoordinateLayout.locallyNondegenerate
+#print axioms HomotopicalEncryption.Protocol.Storage.CoordinateLayout.norm_decode_le
+#print axioms HomotopicalEncryption.Protocol.Storage.CoordinateLayout.norm_decode_sq_le
+#print axioms HomotopicalEncryption.Protocol.Storage.SystematicModel.accepted_of_pairCodeword
+#print axioms HomotopicalEncryption.Protocol.Storage.SystematicModel.decodedFar_implies_pairFar
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.flatDistance_eq_rsFlatDistance
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.integerPairCode_codeword_iff_modularExact
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.integerPairCode_codeword_iff_reduced
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.integerScalarCode_codeword_iff
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.integerScalarCode_nonempty
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.liftMatching_hamming
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.liftMatching_pair_eq_iff
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.planeDistance_eq_rsDistance
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.reduce_liftMatching
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.reduced_hamming_le
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.scalar_reduction_distance_eq
+#print axioms HomotopicalEncryption.Protocol.Storage.ThreeLevel.three_native_distance_comparison
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.harmonicProjector_eq_of_publicShadow_eq
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.projectiveFramedSystem_sound
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.projectiveSoundInputs
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.publicShadow_eq_iff_same_point
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.recoverHarmonicProjector_frame
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_frame
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.recoverSubspace_zero
+#print axioms HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete.toLaplacian_eq_of_publicShadow_eq
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.all_linear_decodes_exact_of_canonical_interleaved_rs_lifts
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.all_linear_decodes_exact_of_canonical_rs_lifts
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.exactOneSubspace_eq_top_of_surjective_canonical_rs_decoder
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.linear_decode_exactDistance_eq_zero_of_canonical_interleaved_rs_lifts
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.linear_decode_exactDistance_eq_zero_of_canonical_rs_lifts
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.not_all_canonical_interleaved_rs_lifts_exact_of_nonexact_linear_decode
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.not_all_canonical_rs_lifts_exact_of_nonexact_linear_decode
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.not_uniform_rs_distance_comparison_of_nonexact_linear_decode
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.delta0_integralOpening_coordinate
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.intCast_integerCoboundary
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.integralOpening_head
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.integralOpening_tail
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.isExact_iff_realCheck_eq_zero
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.modularExact_iff_integerCoboundary_residue
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.modularExact_iff_vectorCodeword
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.modularExact_of_vectorCodeword
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.ofWord_isExact_of_vectorCodeword_of_noWrap
+#print axioms HomotopicalEncryption.Sheaf.SystematicCode.vectorCodeword_of_modularExact
+#print axioms HomotopicalEncryption.TCB.PluckerObservation.operativeHarmonicComponent_eq_of_same_full_shadow
+#print axioms HomotopicalEncryption.TCB.PluckerObservation.recover_eq_operativeHarmonicComponent
 #print axioms ProximityPrize.AffineLine.point_eq_base_of_direction_eq_zero
 #print axioms ProximityPrize.AffineLine.point_eq_scale_of_diagonal
 #print axioms ProximityPrize.AffineLine.point_neg_one_eq_zero_of_diagonal
@@ -2941,31 +2980,31 @@ history/gate inclusion, snapshot interpretation, verifier and backend
 hypotheses; a short logical-axiom list does not instantiate those profiles.
 
 ```sh
-cat > /tmp/hcrypt-anchor-axioms.lean <<'LEAN'
+cat > /tmp/homotopical-encrypt-anchor-axioms.lean <<'LEAN'
 import Protocol.Storage.Core
 import Protocol.Storage.AnchorExamples
 
-#print axioms Hcrypt.Protocol.Storage.TransitionAnchor.accepted
-#print axioms Hcrypt.Protocol.Storage.TransitionAnchor.snapshot_root_matches
-#print axioms Hcrypt.Protocol.Storage.TransitionAnchor.cochain_included
-#print axioms Hcrypt.Protocol.Storage.TransitionAnchor.manifest_anchored
-#print axioms Hcrypt.Protocol.Storage.TransitionAnchor.decodedDistance_eq_zero
-#print axioms Hcrypt.Protocol.Storage.TransitionAnchor.quorum_manifest_anchored
-#print axioms Hcrypt.Protocol.Storage.TransitionAnchor.quorum_snapshot_matches
-#print axioms Hcrypt.Protocol.Storage.ProjectionAnchor.word_matches_candidate
-#print axioms Hcrypt.Protocol.Storage.ProjectionAnchor.exact_prefix_anchored
-#print axioms Hcrypt.Protocol.Storage.ProjectionAnchor.gate_database_included
-#print axioms Hcrypt.Protocol.Storage.ProjectionAnchor.target_far
-#print axioms Hcrypt.Protocol.Storage.AnchorExamples.anchored_update
-#print axioms Hcrypt.Protocol.Storage.AnchorExamples.anchored_positive_value
-#print axioms Hcrypt.Protocol.Storage.AnchorExamples.quorum_anchors_same_manifest
-#print axioms Hcrypt.Protocol.Storage.AnchorExamples.quorum_names_same_snapshot
-#print axioms Hcrypt.Protocol.Storage.AnchorExamples.anchored_manifest_persisted
-#print axioms Hcrypt.Protocol.Storage.AnchorExamples.other_run_rejected
-#print axioms Hcrypt.Protocol.Storage.AnchorExamples.other_snapshot_rejected
-#print axioms Hcrypt.Protocol.Storage.AnchorExamples.raw_persisted_but_not_anchorable
+#print axioms HomotopicalEncryption.Protocol.Storage.TransitionAnchor.accepted
+#print axioms HomotopicalEncryption.Protocol.Storage.TransitionAnchor.snapshot_root_matches
+#print axioms HomotopicalEncryption.Protocol.Storage.TransitionAnchor.cochain_included
+#print axioms HomotopicalEncryption.Protocol.Storage.TransitionAnchor.manifest_anchored
+#print axioms HomotopicalEncryption.Protocol.Storage.TransitionAnchor.decodedDistance_eq_zero
+#print axioms HomotopicalEncryption.Protocol.Storage.TransitionAnchor.quorum_manifest_anchored
+#print axioms HomotopicalEncryption.Protocol.Storage.TransitionAnchor.quorum_snapshot_matches
+#print axioms HomotopicalEncryption.Protocol.Storage.ProjectionAnchor.word_matches_candidate
+#print axioms HomotopicalEncryption.Protocol.Storage.ProjectionAnchor.exact_prefix_anchored
+#print axioms HomotopicalEncryption.Protocol.Storage.ProjectionAnchor.gate_database_included
+#print axioms HomotopicalEncryption.Protocol.Storage.ProjectionAnchor.target_far
+#print axioms HomotopicalEncryption.Protocol.Storage.AnchorExamples.anchored_update
+#print axioms HomotopicalEncryption.Protocol.Storage.AnchorExamples.anchored_positive_value
+#print axioms HomotopicalEncryption.Protocol.Storage.AnchorExamples.quorum_anchors_same_manifest
+#print axioms HomotopicalEncryption.Protocol.Storage.AnchorExamples.quorum_names_same_snapshot
+#print axioms HomotopicalEncryption.Protocol.Storage.AnchorExamples.anchored_manifest_persisted
+#print axioms HomotopicalEncryption.Protocol.Storage.AnchorExamples.other_run_rejected
+#print axioms HomotopicalEncryption.Protocol.Storage.AnchorExamples.other_snapshot_rejected
+#print axioms HomotopicalEncryption.Protocol.Storage.AnchorExamples.raw_persisted_but_not_anchorable
 LEAN
-LEAN_NUM_THREADS=1 lake env lean /tmp/hcrypt-anchor-axioms.lean
+LEAN_NUM_THREADS=1 lake env lean /tmp/homotopical-encrypt-anchor-axioms.lean
 ```
 
 ## Read the dependency report
@@ -3044,44 +3083,44 @@ before this file has actually run successfully. -/
 #print axioms ProximityPrize.ReedSolomon.Parameters.scalarDistance_eq_capacity_of_pairFar_of_good
 
 -- Concrete/legacy semantics and the full-HCP information-loss obstruction (4).
-#print axioms Hcrypt.Sheaf.CellularSheaf.CochainSemantics.accepted_iff
-#print axioms Hcrypt.Sheaf.CellularSheaf.CochainPayloadInterpretation.identitySemantics
-#print axioms Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent
-#print axioms Hcrypt.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.CochainSemantics.accepted_iff
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.CochainPayloadInterpretation.identitySemantics
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_residual_norm_factors_exactComponent
+#print axioms HomotopicalEncryption.Sheaf.CellularSheaf.HodgeEncryptedCochain.not_far_preserving_exactComponent
 
 -- Context identity, exact acceptance and local manifest lifecycle (5).
-#print axioms Hcrypt.Protocol.Storage.Context.accepted_iff_decodedDistance_eq_zero
-#print axioms Hcrypt.Protocol.Storage.ofHCPObservation_decodedDistance
-#print axioms Hcrypt.Protocol.Storage.OpenManifest.entry_eq_of_slot_eq
-#print axioms Hcrypt.Protocol.Storage.Checkpoint.persisted_of_step_from_sealed
-#print axioms Hcrypt.Protocol.Storage.Checkpoint.consumed_terminal
+#print axioms HomotopicalEncryption.Protocol.Storage.Context.accepted_iff_decodedDistance_eq_zero
+#print axioms HomotopicalEncryption.Protocol.Storage.ofHCPObservation_decodedDistance
+#print axioms HomotopicalEncryption.Protocol.Storage.OpenManifest.entry_eq_of_slot_eq
+#print axioms HomotopicalEncryption.Protocol.Storage.Checkpoint.persisted_of_step_from_sealed
+#print axioms HomotopicalEncryption.Protocol.Storage.Checkpoint.consumed_terminal
 
 -- Granular original projection states and controlled exact-lift comparison (6).
-#print axioms Hcrypt.Protocol.Storage.Projection.Prefix.items_append_of_step
-#print axioms Hcrypt.Protocol.Storage.Projection.SealedProjection.certifiedStateBus
-#print axioms Hcrypt.Protocol.Storage.Projection.SealedProjection.target_far
-#print axioms Hcrypt.Protocol.Storage.Calibration.LiftControl.decodedFar_implies_pairFar
-#print axioms Hcrypt.Protocol.Storage.Calibration.LiftControl.accepted_of_pairCodeword
-#print axioms Hcrypt.Protocol.Storage.Calibration.no_liftControl_of_nonexact_codeword
+#print axioms HomotopicalEncryption.Protocol.Storage.Projection.Prefix.items_append_of_step
+#print axioms HomotopicalEncryption.Protocol.Storage.Projection.SealedProjection.certifiedStateBus
+#print axioms HomotopicalEncryption.Protocol.Storage.Projection.SealedProjection.target_far
+#print axioms HomotopicalEncryption.Protocol.Storage.Calibration.LiftControl.decodedFar_implies_pairFar
+#print axioms HomotopicalEncryption.Protocol.Storage.Calibration.LiftControl.accepted_of_pairCodeword
+#print axioms HomotopicalEncryption.Protocol.Storage.Calibration.no_liftControl_of_nonexact_codeword
 
 -- Optional canonical application: actual artifact, pair and geometric bound (3).
-#print axioms Hcrypt.Protocol.Storage.CanonicalRS.pairDistance_eq_generic
-#print axioms Hcrypt.Protocol.Storage.CanonicalRS.Observation.extractedPair_matches
-#print axioms Hcrypt.Protocol.Storage.CanonicalRS.Observation.decodedFar_implies_pairFar
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalRS.pairDistance_eq_generic
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalRS.Observation.extractedPair_matches
+#print axioms HomotopicalEncryption.Protocol.Storage.CanonicalRS.Observation.decodedFar_implies_pairFar
 
 -- Concrete nonexact input, accepted zero and object-indexed storage fixtures (6).
-#print axioms Hcrypt.Protocol.Storage.Examples.raw_decodedDistance_pos
-#print axioms Hcrypt.Protocol.Storage.Examples.zero_accepted
-#print axioms Hcrypt.Protocol.Storage.Examples.complete_execution
-#print axioms Hcrypt.Protocol.Storage.Examples.changed_run_receipt_rejected
-#print axioms Hcrypt.Protocol.Storage.Examples.payload_transplant_rejected
-#print axioms Hcrypt.Protocol.Storage.Examples.second_consumption_rejected
+#print axioms HomotopicalEncryption.Protocol.Storage.Examples.raw_decodedDistance_pos
+#print axioms HomotopicalEncryption.Protocol.Storage.Examples.zero_accepted
+#print axioms HomotopicalEncryption.Protocol.Storage.Examples.complete_execution
+#print axioms HomotopicalEncryption.Protocol.Storage.Examples.changed_run_receipt_rejected
+#print axioms HomotopicalEncryption.Protocol.Storage.Examples.payload_transplant_rejected
+#print axioms HomotopicalEncryption.Protocol.Storage.Examples.second_consumption_rejected
 
 -- D03: overlap, solver inconsistency and unchanged-object strict-gap view (4).
-#print axioms Hcrypt.Proximity.GapProximityProblem.near_and_far_iff
-#print axioms Hcrypt.Proximity.GapProximityProblem.not_exists_correctSolver_of_boundary_attained
-#print axioms Hcrypt.Proximity.GapProximityProblem.exists_correctSolver_iff_promisesDisjoint
-#print axioms Hcrypt.Proximity.SeparatedGapProblem.promisesDisjoint
+#print axioms HomotopicalEncryption.Proximity.GapProximityProblem.near_and_far_iff
+#print axioms HomotopicalEncryption.Proximity.GapProximityProblem.not_exists_correctSolver_of_boundary_attained
+#print axioms HomotopicalEncryption.Proximity.GapProximityProblem.exists_correctSolver_iff_promisesDisjoint
+#print axioms HomotopicalEncryption.Proximity.SeparatedGapProblem.promisesDisjoint
 LEAN
 LEAN_NUM_THREADS=1 lake env lean /tmp/math-storage-axiom-audit.lean
 ```
@@ -3097,9 +3136,9 @@ Fresh report outcome: **passed**, with the following dependency classes:
 The four native-arithmetic endpoints are:
 
 - `ProximityPrize.MCA.BoundaryField.pairMCA_real_128_threshold`.
-- `Hcrypt.Protocol.Storage.CanonicalRS.pairDistance_eq_generic`.
-- `Hcrypt.Protocol.Storage.CanonicalRS.Observation.extractedPair_matches`.
-- `Hcrypt.Protocol.Storage.CanonicalRS.Observation.decodedFar_implies_pairFar`.
+- `HomotopicalEncryption.Protocol.Storage.CanonicalRS.pairDistance_eq_generic`.
+- `HomotopicalEncryption.Protocol.Storage.CanonicalRS.Observation.extractedPair_matches`.
+- `HomotopicalEncryption.Protocol.Storage.CanonicalRS.Observation.decodedFar_implies_pairFar`.
 
 All selected generic-family, semantic-transport, HCP-obstruction, storage-core,
 fixture and gap-boundary endpoints are in the standard-only class. This is
@@ -3117,20 +3156,20 @@ squared distance; they introduce no source-radius or authentication profile.
 From `lean/`:
 
 ```sh
-cat > /tmp/hcrypt-hcp-axioms.lean <<'LEAN'
+cat > /tmp/homotopical-encrypt-hcp-axioms.lean <<'LEAN'
 import Hardness
 
-#print axioms Hcrypt.HCP.decrypt_eq_orthogonalProjection
-#print axioms Hcrypt.HCPBridge.IsometricPresentationEquivalence.harmonic_iff_transport
-#print axioms Hcrypt.HCPBridge.IsometricPresentationEquivalence.operativeHarmonicComponent_naturality
-#print axioms Hcrypt.HCPBridge.operativeTargets_ne_of_kernelSeparation
-#print axioms Hcrypt.HCPBridge.no_solver_exactOnOperativeTarget_of_kernelSeparation
-#print axioms Hcrypt.HCPBridge.cvpOracle_insufficient_for_operativeTarget
+#print axioms HomotopicalEncryption.HCP.decrypt_eq_orthogonalProjection
+#print axioms HomotopicalEncryption.HCPBridge.IsometricPresentationEquivalence.harmonic_iff_transport
+#print axioms HomotopicalEncryption.HCPBridge.IsometricPresentationEquivalence.operativeHarmonicComponent_naturality
+#print axioms HomotopicalEncryption.HCPBridge.operativeTargets_ne_of_kernelSeparation
+#print axioms HomotopicalEncryption.HCPBridge.no_solver_exactOnOperativeTarget_of_kernelSeparation
+#print axioms HomotopicalEncryption.HCPBridge.cvpOracle_insufficient_for_operativeTarget
 #print axioms HarmonicCVPBridge.solution_iff_projectedTarget
 #print axioms concreteSheafHCP_CVP_solution_iff_message
 #print axioms concreteSheafHCP_CVP_existsUnique
 LEAN
-LEAN_NUM_THREADS=1 lake env lean /tmp/hcrypt-hcp-axioms.lean
+LEAN_NUM_THREADS=1 lake env lean /tmp/homotopical-encrypt-hcp-axioms.lean
 ```
 
 The [storage guide](../lean/Protocol/Storage/README.md) explains the preserved

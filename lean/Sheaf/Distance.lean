@@ -16,7 +16,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Sheaf.CellularSheaf
+namespace HomotopicalEncryption.Sheaf.CellularSheaf
 
 variable {Vertex Edge Face : Type*}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
@@ -70,4 +70,4 @@ theorem abs_exactDistance_sub_le (F : CellularSheaf X) (b c : F.C1) :
     _ ≤ ‖b - c‖ :=
       F.exactOneSubspace.orthogonal.norm_starProjection_apply_le _
 
-end Hcrypt.Sheaf.CellularSheaf
+end HomotopicalEncryption.Sheaf.CellularSheaf

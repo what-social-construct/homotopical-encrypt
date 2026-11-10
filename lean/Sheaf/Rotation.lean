@@ -24,7 +24,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Sheaf.CellularSheaf
+namespace HomotopicalEncryption.Sheaf.CellularSheaf
 
 variable {Vertex Edge Face : Type*}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
@@ -256,4 +256,4 @@ theorem transportSample_trans
 
 end IntegralCochainEquiv
 
-end Hcrypt.Sheaf.CellularSheaf
+end HomotopicalEncryption.Sheaf.CellularSheaf

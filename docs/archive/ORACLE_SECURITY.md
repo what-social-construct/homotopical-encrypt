@@ -114,7 +114,7 @@ Why this works:
 
 If your Oracle goes down:
 - Your wallet still has the credential (Layer 3)
-- You can run a local Oracle (it's just `cargo run --bin hcrypt-oracle`)
+- You can run a local Oracle (it's just `cargo run --bin homotopical-encrypt-oracle`)
 - Or use any other Oracle — they all verify the same math
 - No state is lost because the Oracle is stateless
 

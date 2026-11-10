@@ -22,7 +22,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Ephemeral.Examples
+namespace HomotopicalEncryption.Protocol.Ephemeral.Examples
 
 open Sheaf CellularSheaf Sheaf.HCPAxisFamily
 
@@ -68,4 +68,4 @@ theorem receipt_rejects_other_epoch
     delivery.recoverFor request HCP.AxisRotation.rotatedWeightedSample.observed = none :=
   delivery.recoverFor_wrong_targetEpoch request h _
 
-end Hcrypt.Protocol.Ephemeral.Examples
+end HomotopicalEncryption.Protocol.Ephemeral.Examples

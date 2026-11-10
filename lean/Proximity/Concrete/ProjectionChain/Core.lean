@@ -21,7 +21,7 @@ public import Proximity.Concrete.CochainPlane.ReedSolomon
   live in separate files.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace ProjectionChain
 
@@ -131,4 +131,4 @@ end
 
 end ProjectionChain
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

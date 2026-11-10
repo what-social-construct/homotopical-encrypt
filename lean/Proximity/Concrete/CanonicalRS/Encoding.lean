@@ -14,7 +14,7 @@ public import Proximity.Concrete.CochainPlane.ReedSolomon
   - Paper 3: the mathematical plane-to-field map used by the quantitative
     source-to-code comparison.-/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 
@@ -234,4 +234,4 @@ end
 
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

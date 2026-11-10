@@ -3,10 +3,16 @@
 Status: **recommended first publishable scope**, reviewed 2026-11-06.
 The manuscript ownership was reconciled on 2026-11-09: this paper retains the
 concrete cochain/commitment construction and protocol/evidence contracts,
-using Paper 1's HCP and observation mathematics and Paper 3's quantitative
-coding/metric results. The construction ledger below identifies the existing
+using Paper 1's HCP and exact-component observation mathematics and Paper 3's
+projective reconstruction and quantitative coding/metric results. The
+construction ledger below identifies the existing
 objects; this editorial placement adds no cryptographic implementation or
 new proof.
+The current Paper 1 entry has seven groups and 38 targets (18 manuscript-facing,
+20 supporting), with 20 deliberate Challenge placeholders. Full projective
+reconstruction is introduced in Paper 3's projective projection chain. This
+paper specifies the released view and codec contracts that consume the same
+canonical result. Fresh validation after the namespace and scope changes is pending.
 The [initial manuscript text](DRAFT.md) records the object and metric contracts;
 this scope map retains the wider completion criteria. A bounded conditional
 owned-resource profile is now defined below; it is not a complete secure
@@ -87,9 +93,9 @@ Lean 4.35 validation above.
 
 | Paper | Owns | Dependency |
 |---|---|---|
-| 1: Homotopical Encryption / HCP | Hidden operators, harmonic recovery, CVP comparison, the homological semantic fragment and mathematical observation boundaries. | Supplies the Hodge/cochain objects and recovery/observation results used by Paper 2. |
+| 1: Homotopical Encryption / HCP | Hidden operators, harmonic recovery, CVP comparison, the homological semantic fragment and exact-component observation limitation. | Supplies the Hodge/cochain objects and recovery/observation results used by Paper 2. |
 | 2: Proof-Carrying Homotopical Encryption | Concrete cochain commitment, visibility/encoding/validity and native metric contracts, projection evidence, accepted transitions and security/runtime boundaries. | Must identify its actual payload, decoder, snapshot and proof objects with the declared mathematical profiles; source comparisons are taken from Paper 3 under their hypotheses. |
-| 3: Capacity-Radius Proximity | Universal RS list-decoding and pair-MCA results, quantitative metric comparison/calibration and the selected actual commitment-projection radius analysis. | Coding core is independent. The application analyzes the shared construction/profile; a distinct original-distance claim additionally needs its comparison theorem. |
+| 3: Capacity-Radius Proximity | Full projective reconstruction in the projection chain, universal RS list-decoding and pair-MCA results, quantitative metric comparison/calibration and the selected actual commitment-projection radius analysis. | The geometric preliminaries and coding core are independent. The application analyzes Paper 2's shared construction/profile; a distinct original-distance claim additionally needs its comparison theorem. |
 
 Paper 3's nine generic coding statements have checked Lean endpoints. The
 shared mathematical profile now has an explicit systematic cellular
@@ -108,8 +114,10 @@ results are retained here using their existing carriers. The draft's
 [§3.2](DRAFT.md#32-local-syndrome-and-accepted-payload-realization),
 [§3.3](DRAFT.md#33-the-systematic-cellular-source-and-complete-coordinate-profile)
 and [projection-evidence subsection](DRAFT.md#projection-certificates-and-retained-evidence)
-give the protocol-owned account. Paper 1 keeps the exact-component and
-full-projective disclosure results; Paper 3 keeps the quantitative proofs.
+give the protocol-owned account. Paper 1 keeps the exact-component observation
+obstruction. Paper 3 owns full projective reconstruction in the projective
+chain and the quantitative proofs; Paper 2 uses them when specifying visibility,
+encoding and protocol contracts.
 
 | Construction / contract owned by Paper 2 | Existing object and source | Required interpretation or remaining condition |
 |---|---|---|
@@ -297,7 +305,7 @@ sender anonymity or anonymous-nullifier security.
 | `lean/Protocol/Storage/{Checkpoint,Projection}.lean` | Context-indexed actual payload/digest leaves, fresh-slot append, complete sealing, matching persistence receipts and terminal local consumption; exact nested projection/gate prefixes and their coherent final manifest. | Concrete hash/inclusion/backend verification, atomic advancement/seal/cleanup, physical erasure or global replay/anti-cloning policy. The mathematical history join is now supplied by the new anchor source below. |
 | `lean/Protocol/Storage/{Anchor,ProjectionAnchor,AnchorExamples}.lean` | Same-candidate history join to the actual interpretation, original public artifact and exact sealed manifest; accepted-context and matching quorum consequences; projection-prefix and actual gate-database inclusion under explicit authentication relations. Fixtures combine the concrete sheaf/receipt with a positive transfer and reject substitutions. **Lean 4.35 aggregate/integration build and all nineteen selected standard-only anchor audits pass.** | A selected block-body inclusion or dedicated anchor coordinate, canonical bytes, cryptographic inclusion/binding, a real backend, global freshness or an authorized change of `X`/`F`. |
 | `lean/Protocol/Storage/{Calibration,CanonicalRS}.lean` | Controlled exact lifts derive a scaled decoded-source-to-pair comparison. The optional canonical adapter retains the existing public observation by full artifact equality and identifies its legacy real-infimum distance with the attained generic minimum. | A constructed codec/layout/lift profile, valid-source mapping and nonempty far image, or a fixed-challenge guarantee. `BridgeData` bounds stay explicit. |
-| `lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean`; `TCB/PluckerObservation.lean` | Full-point subspace/projector recovery and operative-target equality under explicit kernel identification; focused standard-only reports pass. | A digest-only encoding, efficient finite-coordinate recovery algorithm, secrecy or public-view choice. |
+| `lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean`; `TCB/PluckerObservation.lean` | Paper 3's full-point subspace/projector recovery and operative-target equality under explicit kernel identification. Paper 2 consumes this canonical proof for visibility and codec contracts; earlier focused standard-only reports retain their historical scope. | A digest-only encoding, efficient finite-coordinate recovery algorithm, secrecy or public-view choice. |
 | `lean/Sheaf/{CanonicalLiftObstruction,SystematicCode}.lean`; `Sheaf/SystematicCode/Modular.lean` | Checked real-linear obstruction, actual systematic cellular realization and intrinsic integral-coboundary congruence equivalent to RS validity. | A capacity-scale Euclidean comparison or identification of an arbitrary existing HCP presentation with this constructed profile. |
 | `lean/Protocol/Storage/{CoordinateCodec,NoWrapCalibration,ThreeLevelMetrics}.lean` | The complete codec retains the original payload; integer no-wrap gives a coarse Euclidean criterion, while explicit saturated representative lifts prove the global native three-level comparison. The 27-endpoint root probe is standard-only. | Public byte/hash authentication, parser/backend refinement and an arbitrary hidden-source metric comparison. Real `Accepted` remains distinct from modular validity. |
 | `lean/Proximity/Core/{InterleavedMetric,DeepHole,FixedChallenge}.lean`; `Proximity/MCA/{ZeroDirection,Diagonal}.lean` | Native scalar/pair normalization, a monomial capacity-far family, exact restricted challenge guarantees and fixed-mix cancellation counterfamilies have standard-only focused reports. | A global fixed-mix guarantee for arbitrary pairs or a cryptographic sampling/binding experiment. |

@@ -22,7 +22,7 @@ public import Mathlib.Init
   establish the properties of a runtime backend from its name alone.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 structure ZKP where
@@ -43,4 +43,4 @@ abbrev ZKPWellFormed (Z : ZKP) : Prop :=
   ∧ Z.StatementBinding
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

@@ -37,7 +37,7 @@ USAGE:
 The √2 bounds arise from the geometric construction: orthogonal restriction
 maps (SO(n) parallel transport) on bounded-degree nerves constrain the
 eigenvalue range of the sheaf Laplacian Δ = δ*δ + δδ*. The math audit
-(math_audit_hcrypt.lean) showed that ARBITRARY Laplacians (e.g., scalar c=3)
+(lean/Laplacian/Spectral.lean) showed that ARBITRARY Laplacians (e.g., scalar c=3)
 can violate these bounds — but those are not valid sheaf Laplacians
 constructed from coboundary operators on a finite nerve.
 

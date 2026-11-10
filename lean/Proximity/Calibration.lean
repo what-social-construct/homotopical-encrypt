@@ -12,7 +12,7 @@ public import Proximity.Application.Calibration
 
 @[expose] public section
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 
 universe u v
@@ -85,4 +85,4 @@ def ofPullback
 end SourceToSourceCalibration
 
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

@@ -24,7 +24,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage
+namespace HomotopicalEncryption.Protocol.Storage
 
 open Sheaf CellularSheaf
 
@@ -206,4 +206,4 @@ theorem quorum_snapshot_matches
   exact A.snapshot_root_matches
 
 end TransitionAnchor
-end Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Protocol.Storage

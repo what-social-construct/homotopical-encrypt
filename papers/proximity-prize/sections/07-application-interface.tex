@@ -6,7 +6,7 @@ coordinate layout and public observation profile
 state the projection and proves its quantitative validity, distance and
 challenge comparisons. It does not repeat a commitment-security construction,
 protocol gate/evidence pipeline or state-transition argument. Paper 1 supplies
-the distinct HCP and full-projective observation boundaries
+the HCP setup and exact-component observation obstruction
 \cite{vanDerVlugt2026hcp}.
 
 The coding theorem is stated over the complete received-word space and does not
@@ -52,6 +52,92 @@ are intentionally outside the proof of
 Such developments may cite the two coding theorems through the interface
 above; neither theorem assumes that every received word comes from an
 application-specific witness space.
+
+\subsection{Projective coordinates in the projection chain}\label{sec:projective-observation-boundary}
+
+Let \(V=\mathbb R^n\) have its fixed Euclidean inner product, and let
+\(w_1,\ldots,w_r\) be an independent frame spanning \(W\le V\). Its exterior
+coordinate is
+\[
+  c=w_1\wedge\cdots\wedge w_r\in\bigwedge^r V.
+\]
+An independent frame has nonzero exterior product. A different basis of the
+same subspace changes \(c\) by the nonzero determinant of its change-of-basis
+matrix. The projective class therefore depends only on \(W\):
+\[
+ c\sim c'\quad\Longleftrightarrow\quad
+ \exists u\in\mathbb R^\times,\ c'=uc.
+\]
+The raw carrier is the scalar-orbit quotient of the whole exterior power,
+including its zero orbit. The conclusions below use the nonzero decomposable
+orbits determined by genuine frames.
+
+A related specialized reconstruction uses restricted Pl\"ucker coordinates
+for maximal isotropic subspaces \cite{dingKim2026plucker}. The argument here
+uses the full projective point of an arbitrary real subspace at the fixed
+ambient metric.
+
+\begin{proposition}[Projective Pl\"ucker invariance]\label{prop:plucker-invariance}
+  Two independent frames spanning the same finite-dimensional subspace have
+  equal projective exterior coordinates.
+\end{proposition}
+\begin{proof}
+  Both exterior products are nonzero elements of the one-dimensional top
+  exterior power of that subspace. They differ by a nonzero scalar and hence
+  have the same orbit.
+\end{proof}
+
+\paragraph{Recovery from the full point.}
+
+\begin{proposition}[Recovery from the full projective point]
+\label{prop:plucker-recovery}
+  Let \(w_1,\ldots,w_r\) be an independent frame for
+  \(W\subseteq\mathbb R^n\), and put
+  \(c=w_1\wedge\cdots\wedge w_r\). Then
+  \[
+    W=\{x\in\mathbb R^n:x\wedge c=0\}.
+  \]
+  This reconstruction depends only on \([c]\). Consequently, two genuine
+  rank-\(r\) frame witnesses have the same full projective point if and only
+  if they present the same subspace. At the fixed ambient inner product,
+  the full point determines \(P_W\) and \(I-P_W\).
+\end{proposition}
+\begin{proof}
+  If \(x\in W\), the frame with \(x\) adjoined is dependent and its exterior
+  product vanishes. If \(x\notin W\), the adjoined frame is independent and
+  its exterior product is nonzero. Multiplying \(c\) by a nonzero scalar
+  does not change this annihilator. The projector is the unique orthogonal
+  projection onto the reconstructed subspace.
+\end{proof}
+
+The zero orbit has the whole ambient space as its annihilator, which is why
+the statement requires a genuine frame. For the operative harmonic subspace
+\(W=\ker\Delta_x\), the reconstructed projector and \(b\) give
+\[
+  h=P_Wb.
+\]
+The positive spectrum of \(\Delta_x\) remains additional operator data.
+Replacing the full real coordinates by encoded data or a digest requires a
+separate reconstruction procedure.
+
+The geometric source can enter the existing extraction chain through
+\[
+  [w_1\wedge\cdots\wedge w_r]
+  \xrightarrow{\operatorname{enc}} c
+  \xrightarrow{E} p_c
+  \xrightarrow{\bmod q} \bar p_c
+  \xrightarrow{\gamma} y_\gamma.
+\]
+Here \(\operatorname{enc}\) is the supplied projective-to-cochain map,
+\(c\) is the original commitment payload, and the remaining maps are the
+actual plane extraction, coefficient reduction and challenge evaluation
+specified below. The first map requires its own realization and validity
+hypotheses; reconstruction of a subspace does not construct that codec.
+The projection-chain theorem composes the supplied validity and near-distance
+comparisons by applying each stage in order and using transitivity of the
+distance bounds. A source-far conclusion requires a separate comparison in
+the direction used by the application calibration. Full-coordinate
+reconstruction supplies no such quantitative inequality.
 
 \subsection{The existing committed-cochain projection}
 

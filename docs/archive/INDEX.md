@@ -60,7 +60,7 @@ here solely for provenance.
 ### ⛓️ Chain Layer
 | Doc | Focus |
 |-----|-------|
-| [CHAIN_ARCHITECTURE.md](CHAIN_ARCHITECTURE.md) | $HCRYPT chain, PoV consensus, transaction types |
+| [CHAIN_ARCHITECTURE.md](CHAIN_ARCHITECTURE.md) | $HOMOTOPICAL_ENCRYPT chain, PoV consensus, transaction types |
 | [PRIVACY_CHAIN_DESIGN.md](PRIVACY_CHAIN_DESIGN.md) | Ring sigs, stealth addresses, RingCT, key images |
 | [PROOF_OF_VALUE.md](PROOF_OF_VALUE.md) | √2 spectral bounds, economic properties |
 

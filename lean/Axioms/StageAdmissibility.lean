@@ -23,7 +23,7 @@ public import Axioms.Consensus
     while full constructive end-to-end proofs are still being completed.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 /-- Pipeline stages mirrored from Python stage-gated validation. -/
@@ -139,4 +139,4 @@ theorem python_refined_transaction_implies_admissible
   exact hWF.1 hTx
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

@@ -2,10 +2,10 @@
   "challenge_module": "Palomar.PaperThree.Challenge",
   "solution_module": "Palomar.PaperThree.Solution",
   "theorem_names": [
-    "Hcrypt.Palomar.PaperThree.planePairEquiv_inverse_laws",
+    "HomotopicalEncryption.Palomar.PaperThree.planePairEquiv_inverse_laws",
     "ProximityPrize.planePairEquiv_hammingDistance",
     "ProximityPrize.planePairEquiv_relativeHammingDistance",
-    "Hcrypt.Palomar.PaperThree.planeLineEquiv_inverse_laws",
+    "HomotopicalEncryption.Palomar.PaperThree.planeLineEquiv_inverse_laws",
     "ProximityPrize.ReedSolomon.Parameters.vectorListSizeBoundAt_capacityGrid",
     "ProximityPrize.ReedSolomon.Parameters.capacityReceived_ballCardAt_eq_choose",
     "ProximityPrize.ReedSolomon.Parameters.vectorFractionalListSizeBoundAt_capacityGrid_iff",

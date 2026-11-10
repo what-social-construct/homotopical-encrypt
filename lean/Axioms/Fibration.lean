@@ -24,7 +24,7 @@ public import Axioms.HomotopyClass
       consensus authority for ephemeral-fiber lifecycle behavior.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 universe u v
@@ -179,4 +179,4 @@ abbrev RuntimeAccepted {F : Type u} [HasPathSpace F]
 end EphemeralFiberTCBContract
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

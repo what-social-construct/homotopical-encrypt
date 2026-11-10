@@ -143,18 +143,18 @@ run `lake env lean <file.lean>` from `lean/`:
 import Protocol.Core
 import Protocol.Ledger.EvidenceExamples
 
-#print axioms Hcrypt.Protocol.Ledger.ResourceFlow.value_apply
-#print axioms Hcrypt.Protocol.Ledger.Candidate.not_valid_replay
-#print axioms Hcrypt.Protocol.Ledger.AcceptedUpdate.deterministic
-#print axioms Hcrypt.Protocol.Ledger.Execution.value_preserved
-#print axioms Hcrypt.Protocol.Ledger.Execution.spent_monotone
-#print axioms Hcrypt.Protocol.Evidence.Transition.valid
-#print axioms Hcrypt.Protocol.Evidence.Transition.toAcceptedUpdate
-#print axioms Hcrypt.Protocol.Ledger.CertifiedTransition.toAcceptedUpdate
-#print axioms Hcrypt.Protocol.Ledger.EvidenceExamples.certified_positive_value
-#print axioms Hcrypt.Protocol.Ledger.EvidenceExamples.valid_other_block_old_envelope_rejected
-#print axioms Hcrypt.Protocol.Ledger.EvidenceExamples.valid_other_block_old_quorum_rejected
-#print axioms Hcrypt.Protocol.Ledger.SnapshotModel.ofSheaf_accepts_decoded_isOneCocycle
+#print axioms HomotopicalEncryption.Protocol.Ledger.ResourceFlow.value_apply
+#print axioms HomotopicalEncryption.Protocol.Ledger.Candidate.not_valid_replay
+#print axioms HomotopicalEncryption.Protocol.Ledger.AcceptedUpdate.deterministic
+#print axioms HomotopicalEncryption.Protocol.Ledger.Execution.value_preserved
+#print axioms HomotopicalEncryption.Protocol.Ledger.Execution.spent_monotone
+#print axioms HomotopicalEncryption.Protocol.Evidence.Transition.valid
+#print axioms HomotopicalEncryption.Protocol.Evidence.Transition.toAcceptedUpdate
+#print axioms HomotopicalEncryption.Protocol.Ledger.CertifiedTransition.toAcceptedUpdate
+#print axioms HomotopicalEncryption.Protocol.Ledger.EvidenceExamples.certified_positive_value
+#print axioms HomotopicalEncryption.Protocol.Ledger.EvidenceExamples.valid_other_block_old_envelope_rejected
+#print axioms HomotopicalEncryption.Protocol.Ledger.EvidenceExamples.valid_other_block_old_quorum_rejected
+#print axioms HomotopicalEncryption.Protocol.Ledger.SnapshotModel.ofSheaf_accepts_decoded_isOneCocycle
 ```
 
 The [release record](../../PUBLIC_REVIEW.md) distinguishes completed checks

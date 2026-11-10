@@ -24,7 +24,7 @@ public import Proximity.Concrete.PluckerCochain
   serialization follows from the projective quotient alone.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace PluckerCochain
 namespace Concrete
@@ -260,4 +260,4 @@ end
 end Concrete
 end PluckerCochain
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

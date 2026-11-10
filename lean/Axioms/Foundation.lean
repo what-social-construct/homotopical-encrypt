@@ -18,7 +18,7 @@ public import Mathlib.Init
   still in progress in other modules.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 /--
@@ -60,4 +60,4 @@ abbrev FoundationWellFormed (F : Foundation) : Prop :=
   ∧ F.HodgeOrthogonality
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

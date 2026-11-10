@@ -23,11 +23,11 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.CanonicalRS
+namespace HomotopicalEncryption.Protocol.Storage.CanonicalRS
 
 open Sheaf CellularSheaf
-open Hcrypt.Proximity
-open Hcrypt.Proximity.CanonicalRS
+open HomotopicalEncryption.Proximity
+open HomotopicalEncryption.Proximity.CanonicalRS
 
 private theorem legacyRelativeDistanceToCode_eq_generic
     {α : Type} [DecidableEq α]
@@ -40,13 +40,13 @@ private theorem legacyRelativeDistanceToCode_eq_generic
   apply le_antisymm
   · calc
       BridgeData.PlanePair.relativeDistanceToCode code word ≤
-          Hcrypt.Proximity.BlockCode.relativeHammingDistance nearest word :=
+          HomotopicalEncryption.Proximity.BlockCode.relativeHammingDistance nearest word :=
         BridgeData.PlanePair.relativeDistanceToCode_le_of_codeword code hnearest
       _ = code.relativeDistanceToCode word := by
-        simpa only [Hcrypt.Proximity.BlockCode.relativeHammingDistance] using hmin.symm
+        simpa only [HomotopicalEncryption.Proximity.BlockCode.relativeHammingDistance] using hmin.symm
   · unfold BridgeData.PlanePair.relativeDistanceToCode
     apply le_csInf
-    · exact ⟨Hcrypt.Proximity.BlockCode.relativeHammingDistance nearest word,
+    · exact ⟨HomotopicalEncryption.Proximity.BlockCode.relativeHammingDistance nearest word,
         nearest, hnearest, rfl⟩
     · intro distance hdistance
       rcases hdistance with ⟨other, hother, rfl⟩
@@ -155,4 +155,4 @@ theorem decodedFar_implies_pairFar
   exact control.decodedFar_implies_pairFar (pairCode_nonempty β) hscale sourceRadius hfar
 
 end Observation
-end Hcrypt.Protocol.Storage.CanonicalRS
+end HomotopicalEncryption.Protocol.Storage.CanonicalRS

@@ -24,7 +24,7 @@ public import Axioms.SheafCoherence
   `Proximity` owns the projection/proximity interpretation of those contracts.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CochainBridge
 
@@ -124,4 +124,4 @@ end CommittedCochain
 
 end CochainBridge
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

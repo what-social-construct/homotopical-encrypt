@@ -26,7 +26,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.TransferManifest
+namespace HomotopicalEncryption.Protocol.Storage.TransferManifest
 
 open Sheaf CellularSheaf
 
@@ -116,4 +116,4 @@ theorem persisted_of_receipt
     persisted C [inputItem C] (hashes.manifest (preimage C)) receipt.receipt :=
   receipt.persisted
 
-end Hcrypt.Protocol.Storage.TransferManifest
+end HomotopicalEncryption.Protocol.Storage.TransferManifest

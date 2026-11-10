@@ -487,7 +487,7 @@ theorem no_fixedChallenge_flat_far_preservation (P : Parameters F ι) (hDegree :
 end ReedSolomon.Parameters
 end ProximityPrize
 
-namespace Hcrypt.Palomar.PaperThree
+namespace HomotopicalEncryption.Palomar.PaperThree
 open ProximityPrize
 /-- Both inverse laws hold on all ambient plane and pair words. -/
 theorem planePairEquiv_inverse_laws {ι F : Type*} :
@@ -497,7 +497,7 @@ theorem planePairEquiv_inverse_laws {ι F : Type*} :
 theorem planeLineEquiv_inverse_laws {ι F : Type*} :
     (∀ p : PlaneWord ι F, (planeLineEquiv ι F).symm (planeLineEquiv ι F p) = p) ∧
     (∀ L : AffineLine ι F, planeLineEquiv ι F ((planeLineEquiv ι F).symm L) = L) := by sorry
-end Hcrypt.Palomar.PaperThree
+end HomotopicalEncryption.Palomar.PaperThree
 
 namespace ProximityPrize
 namespace Capacity.SmoothQuarterFamily

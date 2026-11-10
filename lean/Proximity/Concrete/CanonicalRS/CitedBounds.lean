@@ -19,7 +19,7 @@ public import Proximity.Concrete.CanonicalRS.MCA.Concrete
   are recorded here as named theorem constants with citations.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 namespace CitedBounds
@@ -146,4 +146,4 @@ end
 end CitedBounds
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

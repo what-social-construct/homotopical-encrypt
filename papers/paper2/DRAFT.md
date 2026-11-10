@@ -980,7 +980,7 @@ signing authority or secret key custody.
 
 \[
 \operatorname{SignBytes}(\mu,\iota)
-=\texttt{HCRYPT\_OWNER\_INTENT\_V1}\mathbin\Vert
+=\texttt{HOMOTOPICAL_ENCRYPT\_OWNER\_INTENT\_V1}\mathbin\Vert
 \operatorname{encode}(\operatorname{skeleton}(\mu,\iota)),
 \]
 

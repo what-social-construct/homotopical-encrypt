@@ -236,7 +236,7 @@ do not make their objects interchangeable.
 
 The public identity encodings are a separate versioned-wire obligation.
 Python `PublicIdentity.identity_hash` hashes
-`HCRYPT_PUBLIC_IDENTITY_V1 || str(betti_tuple) || topology_hash`, whereas the
+`HOMOTOPICAL_ENCRYPT_PUBLIC_IDENTITY_V1 || str(betti_tuple) || topology_hash`, whereas the
 Oracle hashes `i32LE(β₀) || i32LE(β₁) || i32LE(β₂) || topology_hash`.
 For the fixed public fixture `(1,0,0)` and topology bytes `01` repeated 32 times,
 the hashes begin `fba80c47` and `4655e105`, respectively. Even these existing
@@ -247,7 +247,7 @@ The bounded wiring is implemented by
 [Issuance](../lean/Protocol/Transfer/Issuance.lean) and
 [Authorization](../lean/Protocol/Transfer/Authorization.lean). Signing uses the
 existing packet codec on a skeleton with empty signature/proof fields under
-`HCRYPT_OWNER_INTENT_V1`; equal bytes reflect the full metadata and intent.
+`HOMOTOPICAL_ENCRYPT_OWNER_INTENT_V1`; equal bytes reflect the full metadata and intent.
 Issuance derives the owner from the intent signer and projects authorized
 records to the existing query history, while retaining foreign queries outside
 that domain. Authorization constructs the raw checker and its reflexive backend
@@ -629,7 +629,7 @@ without creating a Lean version of the mistake.
      a storage root does not prove that witness.
    - **Concrete profile still required:** give the sealed public encoding one
      canonical SHA-256 content address, for example the planned
-     `SHA256("HCRYPT:SHEAF-BLOCK:v1" || canonical_manifest_bytes)`.
+     `SHA256("HOMOTOPICAL_ENCRYPT:SHEAF-BLOCK:v1" || canonical_manifest_bytes)`.
      The manifest's child coordinates must include the
      `SheafStateSnapshot` root, original cochain leaf digest, Plucker-shadow
      digest, plane view, canonical RS derivation/received-target binding,

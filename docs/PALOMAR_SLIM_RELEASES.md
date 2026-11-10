@@ -15,7 +15,16 @@ submission. **No registry intake or registration is authorized or performed.**
 The mechanical report has been inspected and retained; this passing preflight
 does not authorize an intake request.
 
-**Current P310 classifier profile, 2026-11-10.** Paper 1 is **29 pages**.
+**Current scope update, 2026-11-10.** Paper 1 now selects seven groups:
+18 manuscript-facing and 20 supporting declarations, 38 targets in total.
+Its independent Challenge has 20 deliberate theorem placeholders. Full
+projective reconstruction belongs to Paper 3's projective projection chain;
+Paper 2 specifies visibility, codec and protocol contracts and consumes the
+same canonical proof. The HCP/CVP argument is independent of that material.
+The renamed source and reduced entry await fresh build, dependency,
+manuscript/render and package-closure checks; no refreshed result is claimed.
+
+**Preserved P310 classifier-profile checkpoint, 2026-11-10.** Paper 1 is **29 pages**.
 The optional `ReflectsHomotopyEquivalence` property is defined on the
 unchanged `Realization`. Together with closed-test invariance, it gives the classifier iff
 and identifies the existing `PublicClassOf` with the declared semantic
@@ -87,9 +96,11 @@ published commit and PASS above apply only to their exact historical bytes.
 
 The existing [three-paper ownership table](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table)
 remains authoritative: Paper 1 owns HCP/Hodge/CVP foundations, the actual
-Helfer fragment and observation/Plücker mathematics; Paper 2 owns concrete
-cochain/commitment realization, codecs, visibility, gates/evidence and storage;
-Paper 3 owns quantitative RS/proximity, radius/calibration and metric bridges.
+Helfer fragment and exact-component observation limitation. Paper 3 introduces
+full projective reconstruction in its projection chain and owns quantitative
+RS/proximity, radius/calibration and metric bridges. Paper 2 owns concrete
+cochain/commitment realization, codecs, visibility, gates/evidence and storage,
+and consumes the same canonical projective proof.
 Paper 3's core and bridge configurations are internal verification entries
 for that one manuscript. They are not additional papers or a substitute for
 Paper 2. Paper 2 remains a working draft outside the first public entry.
@@ -162,10 +173,11 @@ The [earlier entry checks](MATH_STORAGE_VALIDATION.md#paper-3-independent-entrie
 record full local comparisons, Lean/NanoDa replay and the combined dependency
 audit for those recorded Lean inputs. P308's two-file proof additions have
 their own 124-report audit, and P309 has two standard-three converse reports.
-The current two-file reflection profile passes its focused/three-Solution
-builds (3,581/3,759 jobs); the five-report canonical audit is tracked in the
+The P310 two-file reflection profile passed its focused/three-Solution
+builds (3,581/3,759 jobs); its five-report canonical audit is tracked in the
 [central validation record](MATH_STORAGE_VALIDATION.md). Older full builds,
-comparisons and kernel replays remain exact-input evidence.
+comparisons and kernel replays remain exact-input evidence. Fresh checks and
+package-closure inventories for the renamed source and reduced entry are pending.
 
 The first frozen Paper 1 candidate, `73f9c28a4b9f8fb6a04e5b656389979be6b9cd92`,
 predates the public snapshot's manuscript and metadata wording corrections. It is a
@@ -173,7 +185,7 @@ historical candidate. The revised TeX, PDF, README and metadata were frozen
 together in the published commit `66e1ad2cb726d3dd816461e4f76b1d0d9147a46d`.
 The subsequent 37-page scope checkpoint, 38-page parity-table checkpoint,
 P304 36-page standalone checkpoint, P305–P308 32-page checkpoints, P309
-28-page cleanup and current P310 29-page reflection profile are outside both
+28-page cleanup and recorded P310 29-page reflection profile are outside both
 historical public candidates. The revised packages
 must carry the current manuscript and its exact source reference before any
 future publication or protected preflight.

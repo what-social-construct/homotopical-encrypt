@@ -31,48 +31,48 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.CanonicalSystematic
+namespace HomotopicalEncryption.Protocol.Storage.CanonicalSystematic
 
 open Sheaf CellularSheaf
 
-abbrev Index := Fin Hcrypt.Proximity.CanonicalRS.length
+abbrev Index := Fin HomotopicalEncryption.Proximity.CanonicalRS.length
 
 /-- Exactly the existing canonical subgroup evaluation parameters. -/
-def parameters := Hcrypt.Proximity.CanonicalRS.canonicalSmoothDomain.parameters
+def parameters := HomotopicalEncryption.Proximity.CanonicalRS.canonicalSmoothDomain.parameters
 
 theorem degreeBound_le_length :
-    Hcrypt.Proximity.CanonicalRS.degreeBound ≤ Hcrypt.Proximity.CanonicalRS.length := by
-  norm_num [Hcrypt.Proximity.CanonicalRS.degreeBound, Hcrypt.Proximity.CanonicalRS.length]
+    HomotopicalEncryption.Proximity.CanonicalRS.degreeBound ≤ HomotopicalEncryption.Proximity.CanonicalRS.length := by
+  norm_num [HomotopicalEncryption.Proximity.CanonicalRS.degreeBound, HomotopicalEncryption.Proximity.CanonicalRS.length]
 
 /-- Embed the first 1024 information indices in the existing 4096-position domain. -/
-def informationIndex (a : Fin Hcrypt.Proximity.CanonicalRS.degreeBound) : Index :=
+def informationIndex (a : Fin HomotopicalEncryption.Proximity.CanonicalRS.degreeBound) : Index :=
   Fin.castLE degreeBound_le_length a
 
 def informationSet : Finset Index := Finset.univ.image informationIndex
 
 theorem informationSet_card : informationSet.card = parameters.degreeBound := by
-  change informationSet.card = Hcrypt.Proximity.CanonicalRS.degreeBound
+  change informationSet.card = HomotopicalEncryption.Proximity.CanonicalRS.degreeBound
   unfold informationSet informationIndex
   rw [Finset.card_image_of_injective _ (Fin.castLE_injective degreeBound_le_length)]
   simp only [Finset.card_univ, Fintype.card_fin]
 
 theorem degreeBound_pos : 0 < parameters.degreeBound := by
-  change 0 < Hcrypt.Proximity.CanonicalRS.degreeBound
-  norm_num [Hcrypt.Proximity.CanonicalRS.degreeBound]
+  change 0 < HomotopicalEncryption.Proximity.CanonicalRS.degreeBound
+  norm_num [HomotopicalEncryption.Proximity.CanonicalRS.degreeBound]
 
 theorem length_pos : 0 < Fintype.card Index := by
   simp only [Index, Fintype.card_fin]
-  norm_num [Hcrypt.Proximity.CanonicalRS.length]
+  norm_num [HomotopicalEncryption.Proximity.CanonicalRS.length]
 
 /-- The first parity position, strictly outside the information coordinates. -/
 def outside : Index :=
-  ⟨Hcrypt.Proximity.CanonicalRS.degreeBound, by
-    norm_num [Hcrypt.Proximity.CanonicalRS.degreeBound, Hcrypt.Proximity.CanonicalRS.length]⟩
+  ⟨HomotopicalEncryption.Proximity.CanonicalRS.degreeBound, by
+    norm_num [HomotopicalEncryption.Proximity.CanonicalRS.degreeBound, HomotopicalEncryption.Proximity.CanonicalRS.length]⟩
 
 theorem outside_not_mem : outside ∉ informationSet := by
   rintro h
   obtain ⟨a, _ha, heq⟩ := Finset.mem_image.mp h
-  have hval : a.val = Hcrypt.Proximity.CanonicalRS.degreeBound :=
+  have hval : a.val = HomotopicalEncryption.Proximity.CanonicalRS.degreeBound :=
     congrArg Fin.val heq
   exact (Nat.ne_of_lt a.isLt) hval
 
@@ -102,7 +102,7 @@ theorem model : SystematicModel layout parameters informationSet :=
 
 theorem coordinateCount : sheaf.edgeCoordinateCount = 8192 := by
   rw [layout.coordinateCount]
-  norm_num [Index, Hcrypt.Proximity.CanonicalRS.length]
+  norm_num [Index, HomotopicalEncryption.Proximity.CanonicalRS.length]
 
 theorem delta1_zero : sheaf.delta1 = 0 := by
   apply LinearMap.ext
@@ -245,10 +245,10 @@ theorem pairCodeword_of_accepted
     (hdecode : C.interpretation.decode C.cochain = layout.decode C.cochain)
     (haccepted : C.Accepted) :
     (parameters.vectorBlockCode (Fin 2)).Codeword
-      (Calibration.extractedPair (K := Hcrypt.Proximity.CanonicalRS.RSField)
+      (Calibration.extractedPair (K := HomotopicalEncryption.Proximity.CanonicalRS.RSField)
         layout.extraction C) := by
   change parameters.VectorCodeword (Fin 2)
-    (fun i j => (layout.raw C.cochain i j : Hcrypt.Proximity.CanonicalRS.RSField))
+    (fun i j => (layout.raw C.cochain i j : HomotopicalEncryption.Proximity.CanonicalRS.RSField))
   apply (parameters.vectorCodeword_iff_systematicCheck_eq_zero informationSet
     degreeBound_pos informationSet_card _).mpr
   have hexact : sheaf.IsExactOneCochain (layout.decode C.cochain) := by
@@ -257,7 +257,7 @@ theorem pairCodeword_of_accepted
   intro j
   funext i
   change parameters.systematicCheck informationSet
-    (fun a => (layout.raw C.cochain a j : Hcrypt.Proximity.CanonicalRS.RSField)) i = 0
+    (fun a => (layout.raw C.cochain a j : HomotopicalEncryption.Proximity.CanonicalRS.RSField)) i = 0
   have hreal := congrFun ((model.exact_iff _).mp hexact j) i
   have hcast : (parameters.integerCheck informationSet
       (fun a => layout.raw C.cochain a j) i : ℝ) = 0 := by
@@ -274,7 +274,7 @@ theorem accepted_iff_pairCodeword
     (hdecode : C.interpretation.decode C.cochain = layout.decode C.cochain)
     (hwrap : model.NoWrap C) :
     C.Accepted ↔ (parameters.vectorBlockCode (Fin 2)).Codeword
-      (Calibration.extractedPair (K := Hcrypt.Proximity.CanonicalRS.RSField)
+      (Calibration.extractedPair (K := HomotopicalEncryption.Proximity.CanonicalRS.RSField)
         layout.extraction C) :=
   ⟨pairCodeword_of_accepted C hdecode,
     model.accepted_of_pairCodeword C degreeBound_pos informationSet_card hdecode hwrap⟩
@@ -289,12 +289,12 @@ theorem decodedFar_implies_pairFar
     (sourceRadius : ℝ) (hfar : sourceRadius ≤ C.decodedDistance) :
     sourceRadius / (Real.sqrt (8192 * bound ^ 2) * 4096) ≤
       (parameters.vectorBlockCode (Fin 2)).relativeDistanceToCode
-        (Calibration.extractedPair (K := Hcrypt.Proximity.CanonicalRS.RSField)
+        (Calibration.extractedPair (K := HomotopicalEncryption.Proximity.CanonicalRS.RSField)
           layout.extraction C) := by
   have h := model.decodedFar_implies_pairFar C degreeBound_pos informationSet_card
     length_pos hdecode hwrap hbound hcoords sourceRadius hfar
   convert h using 1;
-    norm_num only [coordinateCount, Fintype.card_fin, Hcrypt.Proximity.CanonicalRS.length,
+    norm_num only [coordinateCount, Fintype.card_fin, HomotopicalEncryption.Proximity.CanonicalRS.length,
       Nat.cast_ofNat]
 
 /-- The same nonempty raw family remains positive in any context naming that payload. -/
@@ -312,7 +312,7 @@ theorem unitPayload_context_pairFar (C : Context sheaf)
     (hdecode : C.interpretation.decode C.cochain = layout.decode C.cochain) :
     C.decodedDistance / (Real.sqrt 8192 * 4096) ≤
       (parameters.vectorBlockCode (Fin 2)).relativeDistanceToCode
-        (Calibration.extractedPair (K := Hcrypt.Proximity.CanonicalRS.RSField)
+        (Calibration.extractedPair (K := HomotopicalEncryption.Proximity.CanonicalRS.RSField)
           layout.extraction C) := by
   have hwrap : model.NoWrap C := by
     intro j
@@ -332,16 +332,16 @@ The supplied bound package is used only to name its existing canonical pair code
 theorem observed_decodedFar_implies_pairFar
     (C : Context sheaf) {runtime : TCB.RuntimeBoundary}
     (O : Storage.CanonicalRS.Observation C runtime layout.extraction)
-    (β : Hcrypt.Proximity.CanonicalRS.BridgeData)
+    (β : HomotopicalEncryption.Proximity.CanonicalRS.BridgeData)
     (hdecode : C.interpretation.decode C.cochain = layout.decode C.cochain)
     (hwrap : model.NoWrap C)
     {bound : ℝ} (hbound : 0 < bound)
     (hcoords : ∀ i j, |(layout.raw C.cochain i j : ℝ)| ≤ bound)
     (sourceRadius : ℝ) (hfar : sourceRadius ≤ C.decodedDistance) :
     sourceRadius / (Real.sqrt (8192 * bound ^ 2) * 4096) ≤
-      Hcrypt.Proximity.CanonicalRS.BridgeData.PlanePair.pairDistance β
-        (Hcrypt.Proximity.CanonicalRS.PublicCalibration.extractedPair O.publicObservation) := by
+      HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.PlanePair.pairDistance β
+        (HomotopicalEncryption.Proximity.CanonicalRS.PublicCalibration.extractedPair O.publicObservation) := by
   rw [O.extractedPair_matches, Storage.CanonicalRS.pairDistance_eq_generic]
   exact decodedFar_implies_pairFar C hdecode hwrap hbound hcoords sourceRadius hfar
 
-end Hcrypt.Protocol.Storage.CanonicalSystematic
+end HomotopicalEncryption.Protocol.Storage.CanonicalSystematic

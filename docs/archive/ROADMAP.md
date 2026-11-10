@@ -360,7 +360,7 @@ rust/contracts/
 
 ---
 
-## Native Token: HCRYPT
+## Native Token: HOMOTOPICAL_ENCRYPT
 
 ### Use Cases
 
@@ -369,12 +369,12 @@ rust/contracts/
 - Oracle computation rewards
 
 **Validator Staking**:
-- Stake HCRYPT to become validator
+- Stake HOMOTOPICAL_ENCRYPT to become validator
 - Earn block rewards
 - Get slashed for misbehavior
 
 **Oracle Worker Staking**:
-- Stake HCRYPT to become worker
+- Stake HOMOTOPICAL_ENCRYPT to become worker
 - Earn computation rewards
 - Get slashed for invalid results
 

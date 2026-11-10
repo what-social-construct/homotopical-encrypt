@@ -26,7 +26,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Transfer.Owned
+namespace HomotopicalEncryption.Protocol.Transfer.Owned
 
 open Sheaf CellularSheaf
 open Evidence.TransferTranscript
@@ -244,4 +244,4 @@ theorem check_implies_accepted_update [DecidableEq Asset]
       (CheckedTransfer.ofCheck accepted).candidate.after :=
   (CheckedTransfer.ofCheck accepted).accepted_update
 
-end Hcrypt.Protocol.Transfer.Owned
+end HomotopicalEncryption.Protocol.Transfer.Owned

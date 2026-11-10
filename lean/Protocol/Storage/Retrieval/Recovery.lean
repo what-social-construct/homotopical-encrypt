@@ -27,7 +27,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.Retrieval.Recovery
+namespace HomotopicalEncryption.Protocol.Storage.Retrieval.Recovery
 
 open Sheaf CellularSheaf
 open TCB.PrimitiveChecks
@@ -163,4 +163,4 @@ theorem recoverByDigest_bound_observation_or_collision (hash : Bytes → TCB.Has
 
 end OriginalObservations
 
-end Hcrypt.Protocol.Storage.Retrieval.Recovery
+end HomotopicalEncryption.Protocol.Storage.Retrieval.Recovery

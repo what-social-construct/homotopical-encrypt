@@ -16,7 +16,7 @@ insecure.  Monotonicity therefore leaves no secure point on the Hamming-count
 grid: the greatest safe radius is bottom and the first unsafe radius is zero.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 namespace MCA
@@ -121,4 +121,4 @@ end Spectrum
 end MCA
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

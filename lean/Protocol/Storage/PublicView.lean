@@ -31,7 +31,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage
+namespace HomotopicalEncryption.Protocol.Storage
 
 open Sheaf CellularSheaf
 
@@ -275,4 +275,4 @@ theorem hcpDisclosure_same_observation_distinct_parameters
   refine ⟨rfl, HCPDisclosure.ne_of_base_ne ?_⟩
   exact Context.publicView_ne_of_parameters_ne _ _ hne
 
-end Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Protocol.Storage

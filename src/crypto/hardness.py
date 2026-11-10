@@ -54,7 +54,7 @@ a CVP oracle doesn't help unless you already know ker(Δ).
 
 REVERSE REDUCTION (proving hardness > CVP/LWE):
 
-    Claim: Breaking hcrypt is at least as hard as CVP on q-ary lattices.
+    Claim: Breaking homotopical_encrypt is at least as hard as CVP on q-ary lattices.
     Proof sketch:
     1. Given any CVP instance (basis B, target t), embed it as:
        - Topology X = complete graph on dim(B) vertices
@@ -88,7 +88,7 @@ REVERSE REDUCTION (proving hardness > CVP/LWE):
     - Hodge_Decomposition_Theorem: C^k = ker(Δ) ⊕ im(δ) ⊕ im(δ*)
     - Hodge_Projection_Is_CVP: closest harmonic form = CVP solution
 
-    MATH AUDIT (math_audit_hcrypt.lean) — reconciliation:
+    MATH AUDIT (lean/Laplacian/Spectral.lean) — reconciliation:
     - Spectrum_Not_Homotopy_Invariant: proved that bare spectral fingerprints
       are FINER than homotopy class (two Laplacians with same Betti numbers
       can have different spectra). This system addresses the finding by using

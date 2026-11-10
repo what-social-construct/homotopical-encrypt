@@ -32,7 +32,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Transfer.Primitives
+namespace HomotopicalEncryption.Protocol.Transfer.Primitives
 
 open Sheaf CellularSheaf
 open Evidence.TransferTranscript
@@ -268,4 +268,4 @@ theorem acceptedInvalidProbability_le_of_bounds [DecidableEq Asset]
 
 end Experiment
 
-end Hcrypt.Protocol.Transfer.Primitives
+end HomotopicalEncryption.Protocol.Transfer.Primitives

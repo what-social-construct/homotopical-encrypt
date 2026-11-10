@@ -12,7 +12,7 @@ produced resources; explicit minting and burning policies belong in later
 protocol refinements.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Protocol
 namespace Ledger
 
@@ -68,4 +68,4 @@ end ResourceFlow
 
 end Ledger
 end Protocol
-end Hcrypt
+end HomotopicalEncryption

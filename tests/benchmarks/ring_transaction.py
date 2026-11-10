@@ -88,7 +88,7 @@ class Transaction:
     
     def tx_hash(self) -> bytes:
         """Compute transaction hash (unique identifier)."""
-        hasher = hashlib.sha256(b"HCRYPT_TX_V1")
+        hasher = hashlib.sha256(b"HOMOTOPICAL_ENCRYPT_TX_V1")
         hasher.update(self.version.to_bytes(4, 'little'))
         hasher.update(len(self.inputs).to_bytes(4, 'little'))
         for inp in self.inputs:

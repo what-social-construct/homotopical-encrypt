@@ -18,7 +18,7 @@ public import Proximity.Concrete.Gates.Stage
   generic gap/RS bridge surfaces.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace Gates
 namespace Projection
@@ -316,7 +316,7 @@ def toCalibratedEndToEndGapProjection
   preservesFar := hΓ.farNonCollapse
 
 /-- Package a calibrated ready chain as the completed calibrated RS bridge surface. -/
-def toCalibratedHcryptToRSBridge
+def toCalibratedHomotopicalEncryptionToRSBridge
     {Γ : ProjectionChain.Chain P S L T D E Φ pluckerDisagreement}
     {sourceNearRadius sourceFarRadius targetNearRadius targetFarRadius : ℝ}
     (hΓ :
@@ -326,7 +326,7 @@ def toCalibratedHcryptToRSBridge
     (htarget : targetNearRadius ≤ targetFarRadius)
     (obligations : ReedSolomonTarget.Target.BridgeObligations T)
     (hobligations : obligations.Complete) :
-    ReedSolomonTarget.Target.CalibratedHcryptToRSBridge
+    ReedSolomonTarget.Target.CalibratedHomotopicalEncryptionToRSBridge
       (PluckerCochain.pluckerInstance P pluckerDisagreement)
       T
       D where
@@ -347,4 +347,4 @@ end
 end Projection
 end Gates
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

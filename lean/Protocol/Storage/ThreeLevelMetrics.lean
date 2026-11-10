@@ -23,10 +23,10 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.ThreeLevel
+namespace HomotopicalEncryption.Protocol.Storage.ThreeLevel
 
 open ProximityPrize
-open Hcrypt.Sheaf.SystematicCode
+open HomotopicalEncryption.Sheaf.SystematicCode
 
 variable {q : ℕ} [Fact q.Prime] {ι : Type} [Fintype ι] [DecidableEq ι]
 
@@ -254,4 +254,4 @@ theorem flatDistance_eq_rsFlatDistance
     change P.Codeword (fun _ => 0)
     exact (P.fAdditive_of_degreeBound_pos hDegree).zero_mem
 
-end Hcrypt.Protocol.Storage.ThreeLevel
+end HomotopicalEncryption.Protocol.Storage.ThreeLevel

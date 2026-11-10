@@ -20,7 +20,7 @@ public import Mathlib.Init
   later be checked against that theory once the runtime orchestration settles.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 /-- Python-facing snapshot (mirrors the current `HomotopyInvariants` shape). -/
@@ -43,4 +43,4 @@ def RefinesPythonHomotopySnapshot
   ∧ py.harmonicDim = sp.harmonicDim
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

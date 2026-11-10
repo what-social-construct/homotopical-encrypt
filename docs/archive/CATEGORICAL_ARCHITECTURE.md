@@ -306,7 +306,7 @@ SheafProximityInstance ── EvaluationProjection ──▶ CodeShadow
 
 The intended contract is deliberately modest: global sections project to
 codewords/shadow-valid words, and projected distance is controlled by
-sheaf-side disagreement. This keeps proximity comparisons internal to hcrypt
+sheaf-side disagreement. This keeps proximity comparisons internal to homotopical_encrypt
 first. RS/code-proximity targets live under `lean/Proximity/` and become useful
 when the projection and distance bounds are explicit.
 

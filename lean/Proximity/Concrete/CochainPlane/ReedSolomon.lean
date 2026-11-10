@@ -23,7 +23,7 @@ public import Mathlib.Data.ZMod.Basic
   interprets the resulting indexed family as an RS received word.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CochainReedSolomon
 
@@ -429,4 +429,4 @@ end
 
 end CochainReedSolomon
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

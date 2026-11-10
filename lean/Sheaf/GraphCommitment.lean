@@ -29,7 +29,7 @@ these theorems concern the stated modular incidence computation.
 
 set_option autoImplicit false
 
-namespace Hcrypt.Sheaf.GraphCommitment
+namespace HomotopicalEncryption.Sheaf.GraphCommitment
 
 /-- The actual edge order and common stalk dimension of the runtime graph. -/
 structure Layout (Vertex : Type*) where
@@ -219,4 +219,4 @@ theorem encoded_collision (encode : Axioms.CochainCommitmentData → Encoded)
 
 end PathThree
 
-end Hcrypt.Sheaf.GraphCommitment
+end HomotopicalEncryption.Sheaf.GraphCommitment

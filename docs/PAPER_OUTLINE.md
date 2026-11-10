@@ -24,7 +24,7 @@ for the revised local candidate.
 
 | Paper | Selected proved core | Required completion work |
 |---|---|---|
-| **1 — HCP foundations** | Actual cellular Hodge noise/recovery, finite integral family for the homological fragment of Helfer semantics, encoded-message ambiguity, precise known-lattice CVP comparison and hidden-operator oracle obstruction; full genuine Plucker/projector reconstruction. Independent eight-group entry with local statement/definition comparison, Lean and NanoDa checks. | The observation and strict near/far convention are reconciled. Keep the geometric application conditional. The focused source/scope account and final 101-page manuscript QA are complete. Publish the refreshed Paper 1-only slim snapshot and run protected Linux preflight; the local macOS diagnostic is separate. |
+| **1 — HCP foundations** | Actual cellular Hodge noise/recovery, finite integral family for the homological fragment of Helfer semantics, encoded-message ambiguity, precise known-lattice CVP comparison, hidden-operator oracle obstruction and exact-component observation limitation. The current entry selects seven groups and 38 declarations. | The renamed source and reduced entry await fresh validation and manuscript/package checks. Earlier local and protected reports apply to their recorded selections and artifacts. |
 | **2 — protocol/commitments** | One fixed-snapshot/epoch public-resource transition and conditional one-shot integrity; actual rotation and original-object evidence/history joins; native structured-noise query/answer/CVP identity; hash-addressed recovery; whole-bucket private-read reference and joint-view obstruction under explicit noise-column redundancy. | Instantiate one finite original-object profile and its visibility, packet/ciphertext/witness bytes, hash preimages and authenticated initial state. Supply a genuine credential/proof construction if native authentication security is advertised. If efficient private reads are claimed, choose and analyze the whole query sampler/view; the whole-bucket reference supports a bounded first scope. Complete one bounded verifier/persistence path if runtime implementation is claimed, and turn the Markdown working text into a theorem-led manuscript/TeX/PDF. |
 | **3 — capacity-radius proximity** | All nine named coding claims, Q04--Q07 and Q08 for the actual modular cochain profile, including native metric comparison and nonempty capacity-far examples. | Summary and bounded prior-work/actual-projection comparison are now aligned. The nine core statement groups and bounded application are selected; kernel arithmetic certificates replace the native proofs. Independent coding/application entries now pass local comparison, Lean/NanoDa replay and the 975-report retained audit. Freeze slim entry packages and run protected Linux preflight. Q10--Q12 are extensions, not required missing proofs. |
 
@@ -126,7 +126,16 @@ extension-field encoding and original-object adapters; integer casts into a
 prime subfield do not construct it. Keep this optional stronger application
 separate from the already completed native modular radius theorem.
 
-**Current P310 classifier profile, 2026-11-10.** Paper 1 is **29 pages**.
+**Current scope update, 2026-11-10.** Paper 1 now selects seven groups:
+18 manuscript-facing and 20 supporting declarations, 38 targets in total.
+Its independent Challenge has 20 deliberate theorem placeholders. Full
+projective reconstruction belongs to Paper 3's projective projection chain;
+Paper 2 specifies visibility, codec and protocol contracts and consumes the
+same canonical proof. The HCP/CVP argument is independent of that material.
+The renamed source and reduced entry await fresh build, dependency,
+manuscript/render and package-closure checks; no refreshed result is claimed.
+
+**Preserved P310 classifier-profile checkpoint, 2026-11-10.** Paper 1 is **29 pages**.
 The optional `ReflectsHomotopyEquivalence` property is defined on the
 unchanged `Realization`. Together with closed-test invariance, it gives the classifier iff
 and identifies the existing `PublicClassOf` with the declared semantic
@@ -192,9 +201,9 @@ Paper 1 is superseded by the current editorial split.
 
 | Paper | Current structure and contribution | Reused material |
 |---|---|---|
-| 1 | HCP/Hodge recovery; discrete CVP comparisons and constructed ambiguity; the homological semantic fragment; exact-component and full-projective observation boundaries; the closing private-lattice/shared-class separation corollary. | Uses external mathematical sources; no Paper 2/3 theorem is needed for these selected results. The shared program allocation is recorded here. |
-| 2 | Concrete original cochain payload, encoding/visibility/validity contracts, original projection evidence, storage/rotation and one conditional resource transition. | Uses Paper 1 geometry and Paper 3 metric/coding bounds. Remains a working draft. |
-| 3 | Universal RS list/MCA/radius results and quantitative original-cochain source-to-code comparisons for the declared modular profile. | Imports Paper 2's actual construction and cites Paper 1 observation obstructions. |
+| 1 | HCP/Hodge recovery; discrete CVP comparisons and constructed ambiguity; the homological semantic fragment; exact-component observation limitation; the closing private-lattice/shared-class separation corollary. | Uses external mathematical sources; no Paper 2/3 theorem is needed for these selected results. Seven groups select 18 manuscript-facing and 20 supporting declarations. |
+| 2 | Concrete original cochain payload, encoding/visibility/validity contracts, original projection evidence, storage/rotation and one conditional resource transition. | Uses Paper 1 geometry and Paper 3 projective reconstruction and metric/coding results. Remains a working draft. |
+| 3 | Full projective reconstruction within the projective projection chain; universal RS list/MCA/radius results and quantitative original-cochain source-to-code comparisons for the declared modular profile. | Uses the existing canonical geometric proof, imports Paper 2's actual construction and cites Paper 1 observation obstructions. |
 
 ## Focused Paper 1 Outline
 
@@ -206,8 +215,8 @@ Paper 1 is superseded by the current editorial split.
    preserves homotopy equivalence under closed-test invariance. Optional
    reflection adds the converse and identifies the existing public fiber with
    its semantic class. Exact-cochain observations are in §2.1,
-   public/hidden data in §2.2 and full-projective recovery in §2.2.1. After
-   removing the duplicate Recovery Target subsection, Computational Scope is §2.3.
+   and public/hidden data in §2.2. Full-projective reconstruction is deferred
+   to Paper 3 and is not a premise of the Paper 1 HCP/CVP argument.
 3. **CVP Comparison and Kernel Ambiguity:** the last main section compares
    presented linear images and discrete lattices, proves the orthogonal
    projection identity and oracle obstruction, then places the actual
@@ -219,9 +228,9 @@ Paper 1 is superseded by the current editorial split.
 4. **Conclusion and Further Work:** exact recovery/observation outcomes and
    their computational and semantic limits.
 5. **Appendix A, Statement--Lean Parity Table:** one post-conclusion table
-   with four definition rows, eight main groups (21 declarations), five support
-   groups (25 declarations), and three background/assumption/contract rows.
-   Five canonical theorem anchors sit outside the unchanged selection of 46;
+   with seven main groups (18 declarations) and supporting results
+   (20 declarations), plus definitions and background/assumption/contract rows.
+   Five canonical theorem anchors sit outside the reduced selection of 38;
    the semantic row also names the optional reflection property.
    Brief notes on the independent entry and proof axioms accompany the table
    in this single appendix.
@@ -233,7 +242,7 @@ for the actual homological model and cellular example, and
 The former standalone semantic and observation files are removed. Detailed
 protocol/coding allocation stays in this guide and the shared ownership table.
 The former long chapters and source catalogue remain in Git history. The
-current P310 profile preserves all 35 main formal environments: eleven
+recorded P310 profile preserved all 35 main formal environments: eleven
 definitions, eleven propositions, twelve proofs and one corollary. The generic
 iff and fiber identity require both closed-test invariance and optional
 reflection. The concrete homological family proves reflection and reuses
@@ -247,11 +256,15 @@ and fixed wire specialization. It separately states blinding/vector-commitment/
 MAC assumptions, local syndrome adequacy, original state bus, stage/naturality/
 far certificates, evidence slots, sealed manifests and accepted transitions.
 It records the native metric normalizations and the contracts its checker
-consumes; Paper 3 owns their quantitative proofs. Conditional primitive,
+consumes; Paper 3 owns projective reconstruction and the quantitative proofs.
+Visibility and codec choices use that canonical geometric result. Conditional primitive,
 authentication, state-origin, runtime and finality obligations remain explicit.
 
 ## Paper 3 Coding and Quantitative Scope
 
+Paper 3 introduces the full projective subspace/projector reconstruction in
+its projective projection chain, using the existing canonical Lean proof.
+Paper 2 consumes the result for visibility and encoding contracts.
 The universal received-word and affine-line results remain independent of HCP
 and protocol completion. Paper 3 keeps all nine coding groups, spectrum and
 attained-distance interpretation, native modular comparisons, sharpness,

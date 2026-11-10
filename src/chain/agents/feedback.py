@@ -42,7 +42,7 @@ class GeometricAttribution:
     Full geometric attribution for one agent at one decision.
     NO SCALAR REWARDS — sheaf structure directly.
 
-    Each field maps to an actual computation in hcrypt:
+    Each field maps to an actual computation in homotopical_encrypt:
       edge_gluing_quality  → CoherenceEngine sheaf Laplacian off-diag
       h1_magnitude         → CohomologyInvariants.h1 (first cohomology dim)
       projection_strain    → harmonic projection residual ‖v - π_H(v)‖

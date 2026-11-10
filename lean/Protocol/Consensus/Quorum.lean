@@ -18,7 +18,7 @@ public import Protocol.Consensus.Vote
   an acceptance quorum to finality remain separate protocol work.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Protocol
 namespace Consensus
 
@@ -151,4 +151,4 @@ end QuorumCertificate
 
 end Consensus
 end Protocol
-end Hcrypt
+end HomotopicalEncryption

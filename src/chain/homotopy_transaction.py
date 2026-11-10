@@ -207,7 +207,7 @@ class HomotopyTransaction:
         commitment that anchors Layer 2 (commitments) and Layer 3
         (proofs) into the SHA-256 chain.
         """
-        hasher = hashlib.sha256(b"HCRYPT_HTX_V2")
+        hasher = hashlib.sha256(b"HOMOTOPICAL_ENCRYPT_HTX_V2")
         hasher.update(self.version.to_bytes(4, 'little'))
         
         for inp in self.inputs:

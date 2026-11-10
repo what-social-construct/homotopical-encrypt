@@ -84,12 +84,12 @@ Also:
 | Canonical RS encoding | `lean/Proximity/Concrete/CanonicalRS/Encoding.lean` | `canonicalMix`, `integerPlaneEncoding` |
 | Canonical RS target | `lean/Proximity/Concrete/CanonicalRS/Target.lean` | `Bounds`, `target` |
 | Canonical RS metric | `lean/Proximity/Concrete/CanonicalRS/Metric.lean` | `hammingDistanceToCode`, `absoluteHammingMetric`, `absoluteRadiusNormalization` |
-| Canonical RS bridge data | `lean/Proximity/Concrete/CanonicalRS/BridgeData.lean` | `BridgeData`, `BridgeTheoremSlots`, `BridgeCertificate`, `RSMetricCertificate`, `RSMetricCertificate.calibratedFinalGateCertificate`, `RSMetricCertificate.toCalibratedHcryptToRSBridge` |
+| Canonical RS bridge data | `lean/Proximity/Concrete/CanonicalRS/BridgeData.lean` | `BridgeData`, `BridgeTheoremSlots`, `BridgeCertificate`, `RSMetricCertificate`, `RSMetricCertificate.calibratedFinalGateCertificate`, `RSMetricCertificate.toCalibratedHomotopicalEncryptionToRSBridge` |
 | Public observation calibration | `lean/Proximity/Concrete/CanonicalRS/PublicCalibration.lean` | `Observation`, `sourceDistanceToValid`, `extractedPair`, `sourceFar_implies_pairFar` |
 | Canonical RS far separation | `lean/Proximity/Concrete/CanonicalRS/FarSeparation.lean` | `JohnsonRSFarSeparation`, `JohnsonRSFarSeparation.toRSMetricCertificate`, `JohnsonRSFarSeparation.finalGate`, `JohnsonRSFarSeparation.toBridge` |
 | Canonical RS aggregate | `lean/Proximity/Concrete/CanonicalRS.lean` | Re-exports the canonical RS modules |
 | RS/code aggregate | `lean/Proximity/Concrete/RS.lean` | Re-exports list-decoding, correlated-agreement, and RS core modules |
-| RS target | `lean/Proximity/Concrete/RS/Target.lean` | `Target`, `ReceivedWordMetric`, `RadiusNormalization`, `BridgeObligations`, `HcryptToRSBridge`, `CalibratedHcryptToRSBridge` |
+| RS target | `lean/Proximity/Concrete/RS/Target.lean` | `Target`, `ReceivedWordMetric`, `RadiusNormalization`, `BridgeObligations`, `HomotopicalEncryptionToRSBridge`, `CalibratedHomotopicalEncryptionToRSBridge` |
 
 The formal split is:
 
@@ -107,7 +107,7 @@ final metric/radius comparison
   checked in Gates/Final.lean
 
 final promised proximity comparison
-  expressed by CalibratedEndToEndGapProjection / CalibratedHcryptToRSBridge
+  expressed by CalibratedEndToEndGapProjection / CalibratedHomotopicalEncryptionToRSBridge
 ```
 
 ## Projection Stages
@@ -553,7 +553,7 @@ RSMetricCertificate.of_johnsonRSFarSeparation
 RSMetricCertificate.of_separatedJohnsonRSFarSeparation
 RSMetricCertificate.toBridgeCertificate
 RSMetricCertificate.calibratedFinalGateCertificate
-RSMetricCertificate.toCalibratedHcryptToRSBridge
+RSMetricCertificate.toCalibratedHomotopicalEncryptionToRSBridge
 JohnsonRSFarSeparation.of_farSeparation
 JohnsonRSFarSeparation.of_distanceLowerBound
 JohnsonRSFarSeparation.of_distanceEquality
@@ -657,7 +657,7 @@ Remaining obligations:
 
 10. **Verifier Boundary**
 
-   Explain how the final `HcryptToRSBridge` becomes a verifier-facing artifact:
+   Explain how the final `HomotopicalEncryptionToRSBridge` becomes a verifier-facing artifact:
    Lean owns the mathematical bridge, Rust owns runtime validation and canonical
    encodings, and SNARK/hash commitments can compress proof objects without
    becoming the source of the mathematical claim.

@@ -24,7 +24,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Ephemeral
+namespace HomotopicalEncryption.Protocol.Ephemeral
 
 open Sheaf CellularSheaf
 
@@ -160,4 +160,4 @@ theorem boundSampleRotation_bindRotatedSample
       (bindRotatedSample R source context artifact accepted artifact_binding
         decoded_transport observation_binding) := ⟨rfl⟩
 
-end Hcrypt.Protocol.Ephemeral
+end HomotopicalEncryption.Protocol.Ephemeral

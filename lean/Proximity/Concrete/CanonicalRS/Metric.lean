@@ -20,7 +20,7 @@ public import Mathlib.Algebra.Order.Archimedean.Real.Basic
   proximity-prize statements.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 
@@ -211,4 +211,4 @@ end
 
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

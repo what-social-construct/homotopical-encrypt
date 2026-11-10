@@ -33,7 +33,7 @@ public import Mathlib.Init
   - Runtime consensus only consumes the quotient/collapse, not the hidden object.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 universe u
@@ -216,4 +216,4 @@ theorem collapse_residuation {Ω : Type u} (H : AbstractHeyting Ω)
   simpa using himp_residuation (C.π a) (C.π b) (C.π c)
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

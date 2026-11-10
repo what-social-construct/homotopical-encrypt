@@ -19,7 +19,16 @@ changes described below have not been published or protected-preflighted.
 The broader archive described here remains a local review package.
 The user has explicitly deferred Palomar submission and registration.
 
-**Current P310 classifier profile, 2026-11-10.** Paper 1 is **29 pages**.
+**Current scope update, 2026-11-10.** Paper 1 now selects seven groups:
+18 manuscript-facing and 20 supporting declarations, 38 targets in total.
+Its independent Challenge has 20 deliberate theorem placeholders. Full
+projective reconstruction belongs to Paper 3's projective projection chain;
+Paper 2 specifies visibility, codec and protocol contracts and consumes the
+same canonical proof. The HCP/CVP argument is independent of that material.
+The renamed source and reduced entry await fresh build, dependency,
+manuscript/render and package-closure checks; no refreshed result is claimed.
+
+**Preserved P310 classifier-profile checkpoint, 2026-11-10.** Paper 1 is **29 pages**.
 The optional `ReflectsHomotopyEquivalence` property is defined on the
 unchanged `Realization`. Together with closed-test invariance, it gives the classifier iff
 and identifies the existing `PublicClassOf` with the declared semantic
@@ -148,9 +157,9 @@ The important distinctions remain visible:
   encoder. All 96 selected new reports are standard-only. Full first-order
   semantics, a complete public storage-view privacy result and a sampling
   security game are separate claims.
-- Full genuine Plucker coordinates reconstruct the subspace and its fixed-metric
-  projector. Operative-target recovery requires identification with that kernel;
-  no efficient finite encoding or recovery from a digest is claimed.
+- Paper 3 introduces full projective subspace/projector reconstruction in its
+  projection chain. Paper 2 uses that canonical result when specifying released
+  views and codecs; the Paper 1 HCP/CVP argument does not require it.
 - On unrestricted Hodge samples with a nonzero coexact direction, extraction
   through the decoded exact component cannot preserve a positive full-HCP
   far radius uniformly. A restricted authenticated/noise profile needs its
@@ -179,27 +188,24 @@ that split and consolidated the Lean correspondence after the conclusion.
 The preserved P304 36-page revision merged the observation exposition.
 P305–P308 then produced the 32-page setup, exposition and family-CVP
 checkpoints. P309 consolidated the 28-page manuscript and restricted-family
-converse. The current 29-page P310 revision adds an optional generic
+converse. The recorded 29-page P310 revision added an optional generic
 reflection profile and reuses it in the existing family.
 Detailed protocol construction belongs to Paper 2 and quantitative analysis
 to Paper 3.
 Paper 1 remains the first release priority; no revised release is frozen here.
 
-The implementation, build and dependency counts below retain that completed
-baseline unless a row explicitly identifies the current local manuscripts.
-P300/P301 subsequently checked the 93 documentation edits. The current
-revision changes `HCP.lean` and `HCP/AxisFamily.lean`; the other 278 Lean
-files match `f036a16`. Focused/three-Solution builds pass; current canonical
-audit evidence is tracked centrally, separately from P309/P308
-and the older full-build baseline.
+The completed build and dependency records below retain their historical
+inputs. P300/P301 checked 93 documentation edits; P310 changed two Lean files
+and passed its focused checks. The subsequent namespace rename and reduced
+38-target Paper 1 entry require fresh validation and package inventories.
 
 | Item | Current status |
 |---|---|
 | License and dependency pins | Existing MIT license, Lean `v4.35.0`, Mathlib `56a005855ea17e0b0958f73ec801ae140b0a1679` and matching transitive manifest. |
 | Last completed Lean source scan | 280 Lean files including Lake (279 public modules); zero implementation holes, with 96 deliberate theorem placeholders isolated in three independent Challenges. Solutions import no Challenge. Seven global custom axioms remain isolated in CitedBounds. No native calls, cycles or unresolved imports. |
 | Generic coding mathematics | All nine named standalone statements have Lean endpoints. Q04--Q07 are complete; the 33-module standalone closure excludes project cited-bound axioms and legacy `Chain`. |
-| Conservative core and integration examples | The current 4.35 aggregate includes `Protocol.Core`, ledger and evidence examples, sheaf adapters and same-proposal quorum joins. All pass with their explicit profile inputs. |
-| Sheaf storage and gates | The current build includes `Storage.Core`, its fixtures, public payload/header and sealed-root/directory projections, explicit HCP disclosure and optional canonical observation adapter. Roots, decoded exactness and pair distance retain their separate definitions. The public views are semantic projections, not serializers or hiding proofs. |
+| Conservative core and integration examples | The recorded 4.35 aggregate included `Protocol.Core`, ledger and evidence examples, sheaf adapters and same-proposal quorum joins, checked with their explicit profile inputs. The renamed source awaits fresh validation. |
+| Sheaf storage and gates | The recorded build included `Storage.Core`, its fixtures, public payload/header and sealed-root/directory projections, explicit HCP disclosure and optional canonical observation adapter. Roots, decoded exactness and pair distance retain their separate definitions. The public views are semantic projections, not serializers or hiding proofs. |
 | Recipient recovery and rotation | Actual integral/encoded rotation, both same-coefficient recipient routes and original bound-HCP payload migration pass. Scoped receipts index actual material, recipient, epoch labels and original contexts under supplied channel/authorization contracts. Matching public labels authenticate no caller and prevent no replay; the decoder is classical/noncomputable. |
 | Conditional owned-resource transfer | Public input-ID nullifiers, fixed owned catalog, actual byte/metadata/intent checks and trusted-decoder primitive results derive one computed update. Typed hash inputs, full packet evidence, original input manifest and optional complete-proposal quorum retain their exact objects. Primitive implementations, authentic state origin, runtime refinement and finality remain contracts. |
 | One-shot sampled integrity | The same soundness-free operational checker reduces actual accepted-invalid attempts to authorization or exact-payload false acceptance. A selected actual release, explicit auxiliary data and shared PMF support a conditional sum bound, without independence. Primitive error estimates, adaptive signing/corruption experiments, setup security and privacy remain open. |
@@ -209,12 +215,12 @@ and the older full-build baseline.
 | Native retrieval and full-ciphertext recovery | Actual HodgeNoise queries produce a response equal to an original full encryption observation, with original coefficient recovery and same-answer CVP comparison. Digest-checked full bytes join original bound-HCP rotation/recovery with a collision alternative. Whole-bucket O(N) reads have equal fixed-scope transcripts/distributions; conditional joint-column disclosure is separate. Efficient PIR, manifest authentication and concrete finite byte/proof profiles remain open. |
 | Canonical decision profile | Closed promises retain `(ε,δ_J)` on both sides, concrete near 2046/4096 and far 2047/4096, the original map and solver pullback. Its canonical arithmetic now uses kernel proofs. The geometric far witness and efficient solver remain explicit obligations. |
 | History/manifest anchor | The joins and fixtures pass on 4.35, and all nineteen fresh anchor reports use only the three standard Lean axioms. Concrete authentication/encoding/backend profiles remain explicit. The earlier 4.24 focused/full results are preserved in the shared register. |
-| Theorem dependencies | The current five-report canonical audit is tracked in the [validation record](docs/MATH_STORAGE_VALIDATION.md). P309's two converse reports each used the standard three axioms. P308's 124-report audit was standard-only (117 exact-three/seven subsets), with all 120 configured sets unchanged. The older 975-report audit (792 exact-three/183 subsets, 106 axiom-free) remains historical evidence. |
-| Full aggregate validation | The historical expanded union at `dddfdd2` passed 9,295 jobs, including all fifteen default roots and three Solutions; literal default 9,285 is also historical. The current two-file reflection-profile revision passes a 3,581-job focused build and a 3,759-job three-Solution build. P309's 3,759-job three-Solution build remains its recorded evidence. These checks do not repeat the full expanded/default build. Source identity, definition comparisons and dependency audits remain separate checks in the central record. Paper 1's historical slim snapshot passed protected preflight for its exact bytes. |
-| Paper 1 independent entry | [Challenge/Solution and metadata](lean/Palomar/PaperOne/README.md) cover eight selected groups through 21 manuscript-facing and 25 supporting declarations. Earlier local Comparator/Lean/NanoDa checks remain evidence for their recorded inputs; the current Solution build and dependency-check status are reported separately above. Public commit 66e1ad2 passed the complete protected workflow, canonical source audit and Lean/NanoDa/con-ron replay for its exact historical bytes; its sole size advisory was within hard caps. |
-| Paper 3 independent entries | [Coding](lean/Palomar/PaperThree/README.md) and [original-cochain application](lean/Palomar/PaperThree/Application/README.md) retain all fourteen selected groups across two configurations. Earlier full local definition comparisons and Lean/NanoDa replays passed for their recorded inputs; the current three-Solution build passes 3,759 jobs, while P308's 120-configured-target dependency comparison remains historical evidence. Actual fields, original Context/payload/decoder and three native distances remain explicit; encoder/opening values are preserved by rfl. Protected Linux verification remains. |
-| Current local manuscripts | Paper 1 is 29 pages, focused on HCP/Hodge/CVP, the actual semantic fragment and observation/Plücker mathematics. Paper 2's working Markdown draft owns the concrete construction and protocol contracts; it has no TeX/PDF. Paper 3 is 31 pages and owns the quantitative coding, proximity, calibration and bridge results. The revisions preserve the existing three-paper split and are not a public release. |
-| Manuscript compile record | The earlier 37/31-page ownership revision compiled and passed all 68 pages of render/contact review. The current Paper 1 is 29 pages after adding the optional generic reflection profile; its 35 main formal environments remain unchanged (eleven definitions, eleven propositions, twelve proofs and one corollary). Computational Scope is §2.3, and Corollary 3.6 still closes the main argument before conclusion §4 and the parity table; latest PDF checks belong to the central validation record. Paper 3 and its cited bibliography output are unchanged. Mathematical preservation and selected crosswalk inventories are checked separately. These local checks do not replace protected verification. The earlier 101-page/30-page rendered reviews and matching review-copy checks remain evidence for their earlier exact artifacts. |
+| Theorem dependencies | P310's five-report canonical audit is tracked in the [validation record](docs/MATH_STORAGE_VALIDATION.md). P309's two converse reports each used the standard three axioms. P308's 124-report audit was standard-only (117 exact-three/seven subsets), with all 120 configured sets unchanged. The older 975-report audit (792 exact-three/183 subsets, 106 axiom-free) remains historical evidence. Fresh renamed/reduced-entry checks are pending. |
+| Full aggregate validation | The historical expanded union at `dddfdd2` passed 9,295 jobs, including all fifteen default roots and three Solutions; literal default 9,285 is also historical. P310 passed a 3,581-job focused build and a 3,759-job three-Solution build. Fresh checks for the renamed source and reduced entry are pending. Paper 1's earlier slim snapshot passed protected preflight for its exact bytes. |
+| Paper 1 independent entry | [Challenge/Solution and metadata](lean/Palomar/PaperOne/README.md) cover seven groups through 18 manuscript-facing and 20 supporting declarations, with 20 deliberate Challenge placeholders. The reduced 38-target entry awaits fresh validation. Public commit 66e1ad2 passed the complete protected workflow for its historical 46-target scope; that report does not certify the new selection. |
+| Paper 3 independent entries | [Coding](lean/Palomar/PaperThree/README.md) and [original-cochain application](lean/Palomar/PaperThree/Application/README.md) retain their fourteen selected groups across two configurations. Earlier comparisons, kernel replays and P310's 3,759-job three-Solution build retain their recorded scopes. The new projective-chain exposition does not add targets to those configurations. Fresh renamed-source checks and protected Linux verification remain. |
+| Current local manuscripts | Paper 1 retains HCP/Hodge/CVP, the actual semantic fragment and the exact-component obstruction. Paper 2 owns concrete construction, visibility and protocol contracts. Paper 3 introduces full projective reconstruction in its projection chain and owns quantitative coding/proximity comparisons. Fresh manuscript builds and layout checks are pending; this is not a public release. |
+| Manuscript compile record | Earlier page counts and render reviews, including P310's 29-page manuscript, apply to their recorded artifacts. Removing Paper 1's full-projective section changes that artifact and its selected crosswalk; fresh compile/render and exact-source checks are pending. |
 | Public publication | Only the approved historical Paper 1 snapshot is public. The revised manuscripts and Lean proof changes remain local and have not passed protected preflight. The broader three-paper archive and Paper 2/3 manuscripts remain unpublished here. No Palomar intake or registration was requested. |
 
 ## Prepare a local package

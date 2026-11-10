@@ -21,7 +21,7 @@ public import Mathlib.Data.ZMod.Basic
   the parameter regime without paying for the power-domain construction.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 
@@ -143,4 +143,4 @@ end
 
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

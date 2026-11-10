@@ -186,8 +186,8 @@ def kinematics_check(
 
 def compute_dynamic_fee(
     spectral_gap: float,
-    reserve_hcrypt: int,
-    reserve_vhcrypt: int,
+    reserve_homotopical_encrypt: int,
+    reserve_vhomotopical_encrypt: int,
     base_fee: float = BASE_FEE,
 ) -> float:
     """
@@ -210,9 +210,9 @@ def compute_dynamic_fee(
         gap_stress *= 2.0  # Double penalty near/outside bounds
 
     # Pool imbalance: abs(ratio - 0.5) / 0.5
-    total = reserve_hcrypt + reserve_vhcrypt
+    total = reserve_homotopical_encrypt + reserve_vhomotopical_encrypt
     if total > 0:
-        ratio = reserve_hcrypt / total
+        ratio = reserve_homotopical_encrypt / total
         imbalance = abs(ratio - 0.5) / 0.5  # 0 = balanced, 1 = fully one-sided
     else:
         imbalance = 0.0
@@ -275,11 +275,11 @@ class StabilizerAgent:
 
         State:
           - spectral_gap: float (network health, target = 1.0)
-          - current_price: float (HCRYPT price)
+          - current_price: float (HOMOTOPICAL_ENCRYPT price)
           - block_height: int
           - stabilization_fund: int
           - emergency_reserve: int
-          - pool: CLMMPool (or reserve_hcrypt, reserve_vhcrypt)
+          - pool: CLMMPool (or reserve_homotopical_encrypt, reserve_vhomotopical_encrypt)
           - total_supply: int
           - validator_stakes: Dict[bytes, int]
         """

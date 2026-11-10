@@ -16,7 +16,7 @@ public import Mathlib.Init
   implementation's treasury and account update rules.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 structure Ledger where
@@ -36,4 +36,4 @@ abbrev LedgerWellFormed (L : Ledger) : Prop :=
   ∧ L.KeyImageMonotone
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

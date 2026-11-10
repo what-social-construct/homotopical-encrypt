@@ -5,7 +5,7 @@ PETRI NET MODEL (Swan Table 2, Pinna/Zaitsev):
   Places (L1):  Node accounts with token balances
   Transitions:  Fee collection → distribution (firing event)
   Firing rule:  Tokens flow to places proportional to harmonic weight
-  Colored tokens: HCRYPT (native) vs vHCRYPT (vault) — two token colors
+  Colored tokens: HOMOTOPICAL_ENCRYPT (native) vs vHOMOTOPICAL_ENCRYPT (vault) — two token colors
   Pre-arcs:     Transaction fees → Treasury (collect)
   Post-arcs:    Treasury → holder accounts (harmonic-weighted distribute)
 
@@ -14,7 +14,7 @@ The VRF slot winner assembles the block but gets no special bonus —
 value IS the harmonic projection weight ‖π_H(stalk)‖, period.
 
 Fee flow (Petri net firing):
-  Transaction fee (HCRYPT) → Treasury
+  Transaction fee (HOMOTOPICAL_ENCRYPT) → Treasury
     ├── 50% → All holders (harmonic-weighted by ‖π_H(stalk)‖)
     ├── 25% → Stabilization fund (ProtocolOrchestrator agents)
     ├── 15% → Protocol fund (LP growth, development)
@@ -161,7 +161,7 @@ class Treasury:
     """
 
     # Petri net place markings (token balances)
-    balance_hcrypt: int = 0           # Undistributed fees (pre-firing)
+    balance_homotopical_encrypt: int = 0           # Undistributed fees (pre-firing)
     stabilization_fund: int = 0       # Agent-managed stabilization budget
     protocol_fund: int = 0            # Long-term protocol fund
     total_burned: int = 0             # Cumulative burn (removed from supply)
@@ -176,7 +176,7 @@ class Treasury:
     def collect_fee(self, amount: int) -> None:
         """Pre-arc: transaction fee flows into treasury place."""
         if amount > 0:
-            self.balance_hcrypt += amount
+            self.balance_homotopical_encrypt += amount
 
     def collect_slash(self, amount: int) -> None:
         """Pre-arc: slashing proceeds flow to stabilization."""
@@ -197,17 +197,17 @@ class Treasury:
 
         Args:
             harmonic_weights: All holder harmonic weights
-            vault_registry: Where to deposit vHCRYPT
+            vault_registry: Where to deposit vHOMOTOPICAL_ENCRYPT
             epoch: Current epoch (Petri net clock)
 
         Returns:
             account → amount distributed
         """
-        if self.balance_hcrypt <= 0:
+        if self.balance_homotopical_encrypt <= 0:
             return {}
 
-        pool = self.balance_hcrypt
-        self.balance_hcrypt = 0
+        pool = self.balance_homotopical_encrypt
+        self.balance_homotopical_encrypt = 0
 
         # Split into buckets (Petri net branching post-arcs)
         holder_pool = int(pool * HOLDER_SHARE)
@@ -258,10 +258,10 @@ class Treasury:
     def summary(self) -> str:
         return (
             f"Treasury (Petri net accumulator):\n"
-            f"  Pending fees: {self.balance_hcrypt} HCRYPT\n"
-            f"  Stabilization fund: {self.stabilization_fund} HCRYPT\n"
-            f"  Protocol fund: {self.protocol_fund} HCRYPT\n"
-            f"  Total distributed: {self.total_distributed} vHCRYPT\n"
-            f"  Total burned: {self.total_burned} HCRYPT\n"
+            f"  Pending fees: {self.balance_homotopical_encrypt} HOMOTOPICAL_ENCRYPT\n"
+            f"  Stabilization fund: {self.stabilization_fund} HOMOTOPICAL_ENCRYPT\n"
+            f"  Protocol fund: {self.protocol_fund} HOMOTOPICAL_ENCRYPT\n"
+            f"  Total distributed: {self.total_distributed} vHOMOTOPICAL_ENCRYPT\n"
+            f"  Total burned: {self.total_burned} HOMOTOPICAL_ENCRYPT\n"
             f"  Firings: {len(self.distributions)}"
         )

@@ -8,12 +8,12 @@ public import Proximity.Core.BlockCode
 # Compatibility surface for finite block-code vocabulary
 
 `ProximityPrize.BlockCode` now owns the application-independent definitions and
-proofs. This module preserves the historical `Hcrypt.Proximity` names used by
+proofs. This module preserves the historical `HomotopicalEncryption.Proximity` names used by
 the existing application bridge. Paper 3 owns the coding statements; new
 coding-theory work should import the standalone owner directly.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 
 /-- Compatibility alias for standalone received words. -/
@@ -140,4 +140,4 @@ theorem linear_combination_mem
 end FAdditiveCode
 
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

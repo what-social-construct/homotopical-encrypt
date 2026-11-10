@@ -28,7 +28,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace TCB
 
 open Sheaf CellularSheaf
@@ -134,4 +134,4 @@ theorem harmonicProjection_cochainObject
 end BoundHCPObservation
 
 end TCB
-end Hcrypt
+end HomotopicalEncryption

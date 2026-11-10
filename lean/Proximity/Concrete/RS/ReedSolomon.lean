@@ -9,12 +9,12 @@ public import Proximity.Core.ReedSolomon
 # Compatibility and application predicates for Reed--Solomon codes
 
 `ProximityPrize.ReedSolomon` owns evaluation domains, scalar/vector codewords,
-and F-additivity. This module preserves their historical `Hcrypt.Proximity`
+and F-additivity. This module preserves their historical `HomotopicalEncryption.Proximity`
 names and retains the conditional list/CA/MCA application adapters used by
 Paper 3. The protocol profile that consumes them belongs to Paper 2.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace ReedSolomon
 
@@ -222,4 +222,4 @@ end CorrelatedAgreement
 end Parameters
 end ReedSolomon
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

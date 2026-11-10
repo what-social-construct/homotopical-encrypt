@@ -22,7 +22,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Sheaf
 namespace CellularSheaf
 
@@ -249,6 +249,6 @@ end DirectRealization
 
 end CellularSheaf
 end Sheaf
-end Hcrypt
+end HomotopicalEncryption
 
 end

@@ -48,7 +48,7 @@ policy. Those remain with:
 
 These are the main objects we would want to model.
 
-| HCRYPT concept | CatColab-facing object idea | Notes |
+| HOMOTOPICAL_ENCRYPT concept | CatColab-facing object idea | Notes |
 |---------------|-----------------------------|-------|
 | Finite face poset `P_X` | Base category | Indexes the Paper 1 cellular sheaf |
 | Fibration `F` | Structured object over `X` | Secret geometry |
@@ -65,7 +65,7 @@ These are the main objects we would want to model.
 
 ## Core Morphisms
 
-| HCRYPT morphism | Role |
+| HOMOTOPICAL_ENCRYPT morphism | Role |
 |----------------|------|
 | `R_{v→e}` | Local restriction / transport |
 | `δ_k` | Pushes local data to disagreements on higher cells |
@@ -186,5 +186,5 @@ Keep these elsewhere:
 ## One-Sentence Summary
 
 CatColab looks like a plausible future home for the **categorical semantic map**
-of hcrypt, especially the sheaf/cochain/oracle/colimit diagrams, but only as a
+of homotopical_encrypt, especially the sheaf/cochain/oracle/colimit diagrams, but only as a
 documentation-modeling layer above the existing Lean/Rust/Python split.

@@ -37,7 +37,7 @@ open Matrix Real InnerProductSpace
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /--
-Projection-facing Grassmannian point for hcrypt.
+Projection-facing Grassmannian point for homotopical_encrypt.
 
 This uses the subspace convention directly: a rank-`r` harmonic subspace of the
 ambient cochain space. This is the object whose orthogonal complement defines

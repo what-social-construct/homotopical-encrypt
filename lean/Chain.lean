@@ -92,7 +92,7 @@ structure Transaction where
   sender : ℕ
   recipient : ℕ
   key_image : ℕ              -- unique per fibration, prevents double-spend
-  cochain_commitment : Hcrypt.Axioms.CochainCommitmentData
+  cochain_commitment : HomotopicalEncryption.Axioms.CochainCommitmentData
 
 /-- Summary scalar for balance proofs: Σᵢ edge_values[i]. -/
 def Transaction.commitment_sum (t : Transaction) : ℤ :=
@@ -180,7 +180,7 @@ def TransactionWellFormed (tx : Transaction) : Prop :=
 
 /-- A transaction whose commitment satisfies the full sheaf-semantic contract. -/
 def TransactionCochainCoherent
-    (S : Hcrypt.Axioms.SheafCoherence)
+    (S : HomotopicalEncryption.Axioms.SheafCoherence)
     (tx : Transaction) : Prop :=
   tx.cochain_commitment.CoherentWith S
 
@@ -200,19 +200,19 @@ def TransactionAccepted (spent_key_images : Set ℕ) (tx : Transaction) : Prop :
 
 /-- Consensus acceptance refined by commitment coherence with a concrete sheaf. -/
 def TransactionAcceptedInSheaf
-    (S : Hcrypt.Axioms.SheafCoherence)
+    (S : HomotopicalEncryption.Axioms.SheafCoherence)
     (spent_key_images : Set ℕ)
     (tx : Transaction) : Prop :=
   TransactionCochainCoherent S tx ∧ TransactionFresh spent_key_images tx
 
 /-- Sheaf-coherent transaction acceptance inherits ordinary acceptance. -/
 theorem transactionAccepted_of_acceptedInSheaf
-    {S : Hcrypt.Axioms.SheafCoherence}
+    {S : HomotopicalEncryption.Axioms.SheafCoherence}
     {spent_key_images : Set ℕ}
     {tx : Transaction}
     (h : TransactionAcceptedInSheaf S spent_key_images tx) :
     TransactionAccepted spent_key_images tx :=
-  ⟨Hcrypt.Axioms.cochain_wellFormed_of_committedCochainWellFormed h.1, h.2⟩
+  ⟨HomotopicalEncryption.Axioms.cochain_wellFormed_of_committedCochainWellFormed h.1, h.2⟩
 
 /-- Every transaction in the block has the abstract well-formed shape. -/
 def BlockWellFormed (b : Block) : Prop :=
@@ -220,18 +220,18 @@ def BlockWellFormed (b : Block) : Prop :=
 
 /-- Every transaction commitment in the block is coherent with one sheaf. -/
 def BlockCochainsCoherent
-    (S : Hcrypt.Axioms.SheafCoherence)
+    (S : HomotopicalEncryption.Axioms.SheafCoherence)
     (b : Block) : Prop :=
   ∀ tx ∈ b.transactions, TransactionCochainCoherent S tx
 
 /-- Semantic block coherence inherits ordinary payload well-formedness. -/
 theorem blockWellFormed_of_cochainsCoherent
-    {S : Hcrypt.Axioms.SheafCoherence}
+    {S : HomotopicalEncryption.Axioms.SheafCoherence}
     {b : Block}
     (h : BlockCochainsCoherent S b) :
     BlockWellFormed b := by
   intro tx htx
-  exact Hcrypt.Axioms.cochain_wellFormed_of_committedCochainWellFormed (h tx htx)
+  exact HomotopicalEncryption.Axioms.cochain_wellFormed_of_committedCochainWellFormed (h tx htx)
 
 /--
 All cochain payloads in a block are bound to the same topology hash.
@@ -500,16 +500,16 @@ def zero_tx_n (n : ℕ) : Transaction :=
   { sender := 0
   , recipient := 0
   , key_image := 0
-  , cochain_commitment := Hcrypt.Axioms.CochainCommitmentData.zero n }
+  , cochain_commitment := HomotopicalEncryption.Axioms.CochainCommitmentData.zero n }
 
 /-- Right identity: composing t with zero_tx_n preserves commitment sum. -/
 theorem tx_compose_identity_right_sum (t : Transaction) :
     (tx_compose t (zero_tx_n t.cochain_commitment.edge_values.length)).commitment_sum
     = t.commitment_sum := by
   simp only [tx_compose, zero_tx_n, Transaction.commitment_sum,
-    Hcrypt.Axioms.CochainCommitmentData.add,
-    Hcrypt.Axioms.CochainCommitmentData.zero,
-    Hcrypt.Axioms.CochainCommitmentData.commitment_sum]
+    HomotopicalEncryption.Axioms.CochainCommitmentData.add,
+    HomotopicalEncryption.Axioms.CochainCommitmentData.zero,
+    HomotopicalEncryption.Axioms.CochainCommitmentData.commitment_sum]
   rw [zipWith_add_replicate_zero_right]
 
 /-- Left identity: composing zero_tx_n with t preserves commitment sum. -/
@@ -517,9 +517,9 @@ theorem tx_compose_identity_left_sum (t : Transaction) :
     (tx_compose (zero_tx_n t.cochain_commitment.edge_values.length) t).commitment_sum
     = t.commitment_sum := by
   simp only [tx_compose, zero_tx_n, Transaction.commitment_sum,
-    Hcrypt.Axioms.CochainCommitmentData.add,
-    Hcrypt.Axioms.CochainCommitmentData.zero,
-    Hcrypt.Axioms.CochainCommitmentData.commitment_sum]
+    HomotopicalEncryption.Axioms.CochainCommitmentData.add,
+    HomotopicalEncryption.Axioms.CochainCommitmentData.zero,
+    HomotopicalEncryption.Axioms.CochainCommitmentData.commitment_sum]
   rw [zipWith_add_replicate_zero_left]
 
 

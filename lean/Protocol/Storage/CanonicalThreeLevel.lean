@@ -28,7 +28,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.CanonicalThreeLevel
+namespace HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel
 
 open CanonicalSystematic
 open ProximityPrize
@@ -59,10 +59,10 @@ theorem native_distance_comparison (c : Axioms.CochainCommitmentData) :
 theorem observed_planeDistance_eq_pairDistance
     (C : Context sheaf) {runtime : TCB.RuntimeBoundary}
     (O : Storage.CanonicalRS.Observation C runtime layout.extraction)
-    (β : Hcrypt.Proximity.CanonicalRS.BridgeData) :
+    (β : HomotopicalEncryption.Proximity.CanonicalRS.BridgeData) :
     planeDistance C.cochain =
-      Hcrypt.Proximity.CanonicalRS.BridgeData.PlanePair.pairDistance β
-        (Hcrypt.Proximity.CanonicalRS.PublicCalibration.extractedPair O.publicObservation) := by
+      HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.PlanePair.pairDistance β
+        (HomotopicalEncryption.Proximity.CanonicalRS.PublicCalibration.extractedPair O.publicObservation) := by
   rw [O.extractedPair_matches, Storage.CanonicalRS.pairDistance_eq_generic]
   exact (native_distance_comparison C.cochain).2.1
 
@@ -70,9 +70,9 @@ theorem observed_planeDistance_eq_pairDistance
 theorem observed_planeDistance_eq_publicSourceDistance
     (C : Context sheaf) {runtime : TCB.RuntimeBoundary}
     (O : Storage.CanonicalRS.Observation C runtime layout.extraction)
-    (β : Hcrypt.Proximity.CanonicalRS.BridgeData) :
+    (β : HomotopicalEncryption.Proximity.CanonicalRS.BridgeData) :
     planeDistance C.cochain =
-      Hcrypt.Proximity.CanonicalRS.PublicCalibration.sourceDistanceToValid β O.publicObservation := by
+      HomotopicalEncryption.Proximity.CanonicalRS.PublicCalibration.sourceDistanceToValid β O.publicObservation := by
   rw [O.publicSourceDistance_eq_pairDistance, Storage.CanonicalRS.pairDistance_eq_generic]
   change planeDistance C.cochain = rsPairDistance C.cochain
   exact (native_distance_comparison C.cochain).2.1
@@ -81,10 +81,10 @@ theorem observed_planeDistance_eq_publicSourceDistance
 theorem cochainFar_implies_observed_pairFar
     (C : Context sheaf) {runtime : TCB.RuntimeBoundary}
     (O : Storage.CanonicalRS.Observation C runtime layout.extraction)
-    (β : Hcrypt.Proximity.CanonicalRS.BridgeData) (radius : ℝ)
+    (β : HomotopicalEncryption.Proximity.CanonicalRS.BridgeData) (radius : ℝ)
     (hfar : radius ≤ cochainDistance C.cochain) :
-    radius ≤ Hcrypt.Proximity.CanonicalRS.BridgeData.PlanePair.pairDistance β
-      (Hcrypt.Proximity.CanonicalRS.PublicCalibration.extractedPair O.publicObservation) := by
+    radius ≤ HomotopicalEncryption.Proximity.CanonicalRS.BridgeData.PlanePair.pairDistance β
+      (HomotopicalEncryption.Proximity.CanonicalRS.PublicCalibration.extractedPair O.publicObservation) := by
   rw [← observed_planeDistance_eq_pairDistance C O β]
   exact hfar.trans (native_distance_comparison C.cochain).1
 
@@ -120,14 +120,14 @@ theorem not_accepted_of_positive_cochainFar
   linarith
 
 theorem degreeBound_le_card : parameters.degreeBound ≤ Fintype.card Index := by
-  change Hcrypt.Proximity.CanonicalRS.degreeBound ≤ Fintype.card Index
+  change HomotopicalEncryption.Proximity.CanonicalRS.degreeBound ≤ Fintype.card Index
   simpa only [Index, Fintype.card_fin] using degreeBound_le_length
 
 theorem capacityRadius_eq_three_quarters :
     BlockCode.relativeRadius (ι := Index) (Fintype.card Index - parameters.degreeBound) =
       (3 : ℝ) / 4 := by
   have hn : Fintype.card Index = 4096 := by
-    norm_num [Index, Hcrypt.Proximity.CanonicalRS.length]
+    norm_num [Index, HomotopicalEncryption.Proximity.CanonicalRS.length]
   have hk : parameters.degreeBound = 1024 := rfl
   rw [BlockCode.relativeRadius, hn, hk]
   norm_num
@@ -185,18 +185,18 @@ theorem exists_payload_at_capacity :
 
 /-- The affine line is extracted from the same two original integer coordinates. -/
 def extractedLine (c : Axioms.CochainCommitmentData) :
-    AffineLine Index Hcrypt.Proximity.CanonicalRS.RSField where
-  base i := (layout.raw c i 0 : Hcrypt.Proximity.CanonicalRS.RSField)
-  direction i := (layout.raw c i 1 : Hcrypt.Proximity.CanonicalRS.RSField)
+    AffineLine Index HomotopicalEncryption.Proximity.CanonicalRS.RSField where
+  base i := (layout.raw c i 0 : HomotopicalEncryption.Proximity.CanonicalRS.RSField)
+  direction i := (layout.raw c i 1 : HomotopicalEncryption.Proximity.CanonicalRS.RSField)
 
 /-- The existing integer-plane challenge encoding on the original stored payload. -/
 def receivedWord (c : Axioms.CochainCommitmentData)
-    (γ : Hcrypt.Proximity.CanonicalRS.RSField) :
-    Word Index Hcrypt.Proximity.CanonicalRS.RSField :=
-  (Hcrypt.Proximity.CanonicalRS.integerPlaneEncodingAt γ).receivedWord (layout.raw c)
+    (γ : HomotopicalEncryption.Proximity.CanonicalRS.RSField) :
+    Word Index HomotopicalEncryption.Proximity.CanonicalRS.RSField :=
+  (HomotopicalEncryption.Proximity.CanonicalRS.integerPlaneEncodingAt γ).receivedWord (layout.raw c)
 
 theorem extractedLine_point (c : Axioms.CochainCommitmentData)
-    (γ : Hcrypt.Proximity.CanonicalRS.RSField) :
+    (γ : HomotopicalEncryption.Proximity.CanonicalRS.RSField) :
     (extractedLine c).point γ = receivedWord c γ := rfl
 
 @[simp] theorem capacityLine_base : (extractedLine capacityPayload).base =
@@ -216,22 +216,22 @@ theorem capacityLine_diagonal :
   rw [capacityLine_base, capacityLine_direction]
 
 /-- The canonical order-4096 root cannot be the cancelling challenge. -/
-theorem canonicalMix_ne_neg_one : Hcrypt.Proximity.CanonicalRS.canonicalMix ≠ -1 := by
+theorem canonicalMix_ne_neg_one : HomotopicalEncryption.Proximity.CanonicalRS.canonicalMix ≠ -1 := by
   intro hneg
-  have hroot : (Hcrypt.Proximity.CanonicalRS.canonicalPowerRoot.root :
-      Hcrypt.Proximity.CanonicalRS.RSField) = -1 :=
-    Hcrypt.Proximity.CanonicalRS.canonicalPowerRoot_root_coe.trans hneg
-  have hpow : Hcrypt.Proximity.CanonicalRS.canonicalPowerRoot.root ^ 2 = 1 := by
+  have hroot : (HomotopicalEncryption.Proximity.CanonicalRS.canonicalPowerRoot.root :
+      HomotopicalEncryption.Proximity.CanonicalRS.RSField) = -1 :=
+    HomotopicalEncryption.Proximity.CanonicalRS.canonicalPowerRoot_root_coe.trans hneg
+  have hpow : HomotopicalEncryption.Proximity.CanonicalRS.canonicalPowerRoot.root ^ 2 = 1 := by
     apply Units.ext
-    change (Hcrypt.Proximity.CanonicalRS.canonicalPowerRoot.root :
-      Hcrypt.Proximity.CanonicalRS.RSField) ^ 2 = 1
+    change (HomotopicalEncryption.Proximity.CanonicalRS.canonicalPowerRoot.root :
+      HomotopicalEncryption.Proximity.CanonicalRS.RSField) ^ 2 = 1
     rw [hroot]
     ring
   have hdiv := orderOf_dvd_of_pow_eq_one hpow
-  rw [Hcrypt.Proximity.CanonicalRS.canonicalPowerRoot.order_eq_length] at hdiv
-  norm_num [Hcrypt.Proximity.CanonicalRS.length] at hdiv
+  rw [HomotopicalEncryption.Proximity.CanonicalRS.canonicalPowerRoot.order_eq_length] at hdiv
+  norm_num [HomotopicalEncryption.Proximity.CanonicalRS.length] at hdiv
 
-theorem capacityPayload_fold_distance (γ : Hcrypt.Proximity.CanonicalRS.RSField)
+theorem capacityPayload_fold_distance (γ : HomotopicalEncryption.Proximity.CanonicalRS.RSField)
     (hne : γ ≠ -1) :
     parameters.toBlockCode.relativeDistanceToCode (receivedWord capacityPayload γ) =
       (3 : ℝ) / 4 := by
@@ -247,23 +247,23 @@ theorem capacityPayload_fold_distance (γ : Hcrypt.Proximity.CanonicalRS.RSField
 
 theorem capacityPayload_canonicalMix_scalarDistance :
     parameters.toBlockCode.relativeDistanceToCode
-      (receivedWord capacityPayload Hcrypt.Proximity.CanonicalRS.canonicalMix) =
+      (receivedWord capacityPayload HomotopicalEncryption.Proximity.CanonicalRS.canonicalMix) =
         (3 : ℝ) / 4 :=
   capacityPayload_fold_distance _ canonicalMix_ne_neg_one
 
-def additiveCode : FAdditiveCode Hcrypt.Proximity.CanonicalRS.RSField Index
-    Hcrypt.Proximity.CanonicalRS.RSField :=
+def additiveCode : FAdditiveCode HomotopicalEncryption.Proximity.CanonicalRS.RSField Index
+    HomotopicalEncryption.Proximity.CanonicalRS.RSField :=
   (parameters.fAdditive_of_degreeBound_pos degreeBound_pos).toFAdditiveCode
 
 /-- Goodness holds for this actual diagonal payload at every noncancelling challenge. -/
 theorem capacityPayload_goodChallenge (δ : ℝ)
-    (γ : Hcrypt.Proximity.CanonicalRS.RSField) (hne : γ ≠ -1) :
+    (γ : HomotopicalEncryption.Proximity.CanonicalRS.RSField) (hne : γ ≠ -1) :
     γ ∉ additiveCode.asBlockCode.badChallengeSetAt δ (extractedLine capacityPayload) :=
   additiveCode.not_mem_badChallengeSetAt_of_diagonal_of_ne_neg_one
     (extractedLine capacityPayload) capacityLine_diagonal δ γ hne
 
 theorem capacityPayload_canonicalMix_good (δ : ℝ) :
-    Hcrypt.Proximity.CanonicalRS.canonicalMix ∉
+    HomotopicalEncryption.Proximity.CanonicalRS.canonicalMix ∉
       additiveCode.asBlockCode.badChallengeSetAt δ (extractedLine capacityPayload) :=
   capacityPayload_goodChallenge δ _ canonicalMix_ne_neg_one
 
@@ -292,11 +292,11 @@ theorem capacityPayload_badChallengeFraction (δ : ℝ) (hδ : 0 ≤ δ) :
       (extractedLine capacityPayload)) = (1 : ℝ) / 12289 := by
   rw [capacityPayload_badChallenges δ hδ]
   simp only [BlockCode.challengeFraction, Finset.card_singleton, Nat.cast_one]
-  have hq : Fintype.card Hcrypt.Proximity.CanonicalRS.RSField = 12289 := by
+  have hq : Fintype.card HomotopicalEncryption.Proximity.CanonicalRS.RSField = 12289 := by
     change Fintype.card (ZMod Axioms.canonicalCochainModulus) = 12289
     rw [ZMod.card]
     rfl
   rw [hq]
   norm_num
 
-end Hcrypt.Protocol.Storage.CanonicalThreeLevel
+end HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel

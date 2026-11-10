@@ -4,7 +4,7 @@ public import Mathlib.Analysis.Real.Sqrt
 
 @[expose] public section
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 /-
@@ -80,4 +80,4 @@ noncomputable abbrev tsirelsonUpper : ℝ := povSpectralUpper
 abbrev NearTsirelsonBoundary : ℝ → ℝ → Prop := NearPoVSpectralBoundary
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

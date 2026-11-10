@@ -29,7 +29,7 @@ neither successful verification nor a proof-system label alone supplies truth.
 
 set_option autoImplicit false
 
-namespace Hcrypt.TCB.PrimitiveChecks
+namespace HomotopicalEncryption.TCB.PrimitiveChecks
 
 /-- Concrete message, signature, proof or public-input bytes. -/
 abbrev Bytes := List UInt8
@@ -115,4 +115,4 @@ theorem verified_cases (backend : ProofVerifier) (input proof : Bytes)
 
 end ProofVerifier
 
-end Hcrypt.TCB.PrimitiveChecks
+end HomotopicalEncryption.TCB.PrimitiveChecks

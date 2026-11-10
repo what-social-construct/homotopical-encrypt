@@ -18,7 +18,7 @@ it provides no executable, efficient or cryptographic decision procedure.
 This concrete-application leaf is outside the standalone coding aggregate.
 -/
 
-namespace Hcrypt.Proximity
+namespace HomotopicalEncryption.Proximity
 
 namespace GapProximityProblem
 
@@ -187,4 +187,4 @@ def toSeparatedGapReduction
   projection.toGapReduction hsource.le htarget.le
 
 end CalibratedEndToEndGapProjection
-end Hcrypt.Proximity
+end HomotopicalEncryption.Proximity

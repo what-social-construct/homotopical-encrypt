@@ -19,7 +19,7 @@ public import TCB.ProofCarrying
   thresholds, and floor-rounding ambiguity at the protocol boundary.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Protocol
 namespace Consensus
 
@@ -198,4 +198,4 @@ end Committee
 
 end Consensus
 end Protocol
-end Hcrypt
+end HomotopicalEncryption

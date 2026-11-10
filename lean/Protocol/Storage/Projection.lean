@@ -19,13 +19,13 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage.Projection
+namespace HomotopicalEncryption.Protocol.Storage.Projection
 
 open Sheaf CellularSheaf
-open Hcrypt.Proximity
-open Hcrypt.Proximity.GrassmannianPlucker
-open Hcrypt.Proximity.Gates.Projection
-open Hcrypt.Proximity.GateEvidence.Projection
+open HomotopicalEncryption.Proximity
+open HomotopicalEncryption.Proximity.GrassmannianPlucker
+open HomotopicalEncryption.Proximity.Gates.Projection
+open HomotopicalEncryption.Proximity.GateEvidence.Projection
 
 variable {Vertex Edge Face : Type*}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
@@ -356,4 +356,4 @@ theorem target_far (block : SealedProjection input runtime κ scheme)
   exact block.evidence.finalWitness.noncollapse W hfar
 
 end SealedProjection
-end Hcrypt.Protocol.Storage.Projection
+end HomotopicalEncryption.Protocol.Storage.Projection

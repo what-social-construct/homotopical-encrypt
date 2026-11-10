@@ -19,7 +19,7 @@ public import Mathlib.GroupTheory.OrderOfElement
   root used for the smooth power-domain evaluation points.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 
@@ -214,4 +214,4 @@ end
 
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

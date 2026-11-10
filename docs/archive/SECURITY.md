@@ -36,7 +36,7 @@ private witness / SheafState
   -> simulatable covers
 ```
 
-This is the security reading for hcrypt's public-shadow pattern:
+This is the security reading for homotopical_encrypt's public-shadow pattern:
 
 - public shadows and proof transcripts are local views;
 - a zero-knowledge proof means those local views are simulatable without the
@@ -54,7 +54,7 @@ them separate:
 | Storage/state sheaf | Honest valid state should glue to coherent global sections. |
 | Attacker-observation sheaf | Public views should not determine a private global section. |
 
-Equivalently: hcrypt uses global sections for validity, but prevents public
+Equivalently: homotopical_encrypt uses global sections for validity, but prevents public
 observer data from selecting the private representative.
 
 ```

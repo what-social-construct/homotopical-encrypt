@@ -18,7 +18,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Proximity.GrassmannianPlucker.Concrete
+namespace HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete
 
 open scoped RealInnerProductSpace
 
@@ -201,4 +201,4 @@ theorem toLaplacian_eq_of_publicShadow_eq {W V : FrameWitness n r}
     W.point.toLaplacian = V.point.toLaplacian := by
   rw [(publicShadow_eq_iff_same_point W V).mp hshadow]
 
-end Hcrypt.Proximity.GrassmannianPlucker.Concrete
+end HomotopicalEncryption.Proximity.GrassmannianPlucker.Concrete

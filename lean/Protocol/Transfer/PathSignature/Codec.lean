@@ -7,7 +7,7 @@ public import Protocol.Transfer.Signing
 /-!
 # Concrete credential/message public-input bytes
 
-The format is the ASCII domain `HCRYPT_PATH_SIGNATURE_V1`, followed by `[1,b]`
+The format is the ASCII domain `HOMOTOPICAL_ENCRYPT_PATH_SIGNATURE_V1`, followed by `[1,b]`
 for each credential byte `b`, a single `[0]` delimiter and the complete message
 bytes. Tag bytes inside a credential are data and require no special case.
 After the delimiter all remaining bytes belong to the message.
@@ -21,12 +21,12 @@ not a credential-generation, opening or cryptographic proof construction.
 
 set_option autoImplicit false
 
-namespace Hcrypt.Protocol.Transfer.PathSignature.Codec
+namespace HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec
 
 /-- Exact ASCII bytes of the native path-signature public-input domain. -/
 def domain : List UInt8 :=
-  [72, 67, 82, 89, 80, 84, 95, 80, 65, 84, 72, 95,
-    83, 73, 71, 78, 65, 84, 85, 82, 69, 95, 86, 49]
+  [72, 79, 77, 79, 84, 79, 80, 73, 67, 65, 76, 95, 69, 78, 67, 82, 89, 80, 84, 95,
+    80, 65, 84, 72, 95, 83, 73, 71, 78, 65, 84, 85, 82, 69, 95, 86, 49]
 
 /-- Tag every public-credential byte, then delimit the complete raw message. -/
 def frame : List UInt8 → List UInt8 → List UInt8
@@ -107,9 +107,9 @@ theorem frame_length (key message : List UInt8) :
 
 /-- The complete format has fixed domain overhead and linear length. -/
 theorem encode_length (key message : List UInt8) :
-    (encode key message).length = 24 + 2 * key.length + 1 + message.length := by
+    (encode key message).length = 37 + 2 * key.length + 1 + message.length := by
   simp only [encode, List.length_append, frame_length]
-  have domain_length : domain.length = 24 := rfl
+  have domain_length : domain.length = 37 := rfl
   rw [domain_length]
   omega
 
@@ -134,4 +134,4 @@ theorem decode_rejects_wrong_domain (bytes : List UInt8)
     apply wrong
     rw [canonical, encode, List.take_left]
 
-end Hcrypt.Protocol.Transfer.PathSignature.Codec
+end HomotopicalEncryption.Protocol.Transfer.PathSignature.Codec

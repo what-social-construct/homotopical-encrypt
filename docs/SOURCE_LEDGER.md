@@ -42,7 +42,7 @@ source even though version 2 was posted on November 5.
 | 1312.6454 | `curryGhristNanda2015morse` | P1 | Computational comparison; retained maps/metric need justification. |
 | 1808.01513 | `hansenGhrist2018sheaves` | P1 | Cited foundation; finite cellular/Hodge part only. |
 | 1908.08944 | `helfer2019fol` | P1 | Cited semantic background; declared homological fragment only. |
-| 2601.19830 | `dingKim2026plucker` | P1 | Projective-geometry comparison; specialized coordinates not adopted. |
+| 2601.19830 | `dingKim2026plucker` | P3 | Projective-chain reconstruction comparison; specialized coordinates not adopted. |
 | 2007.04099 | `ghristRiess2022tarski` | P2 | Candidate ordered-constraint semantics; no stalk/adjunction realization. |
 | 2011.14057 | `riessHansenGhrist2020persistence` | P2 | Optional feature/learning comparison; no classifier adoption. |
 | ePrint 2026/910 | `fischEtAl2026unifomr` | P2 | Planned retrieval comparison; metadata/abstract review only. |

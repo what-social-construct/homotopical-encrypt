@@ -104,7 +104,7 @@ class BlockHeader:
     
     def hash(self) -> bytes:
         """Compute block header hash — includes VRF data for fork prevention."""
-        hasher = hashlib.sha256(b"HCRYPT_BLOCK_V2")
+        hasher = hashlib.sha256(b"HOMOTOPICAL_ENCRYPT_BLOCK_V2")
         hasher.update(self.version.to_bytes(4, 'little'))
         hasher.update(self.height.to_bytes(8, 'little'))
         hasher.update(self.prev_hash)

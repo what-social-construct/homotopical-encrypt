@@ -1,5 +1,14 @@
 # Paper 3: proximity manuscript--Lean semantic parity
 
+**Projective-chain ownership — 2026-11-10:** §7.1 now introduces full Plücker
+coordinates and proves subspace/projector reconstruction before the shared
+cochain/plane/RS extraction. These canonical auxiliary results move from Paper 1
+to this paper; the two existing coding/native-modular configured selections
+remain unchanged. Paper 2 retains codec, visibility and authentication contracts.
+Full-coordinate reconstruction is separate from a digest and does not supply
+an upstream far-distance comparison.
+
+
 The shared [manuscript ownership and notation register](../../SEMANTIC-PARITY.md)
 records the HCP/proximity split and cross-paper definition issues. This file
 retains the detailed coding object and theorem IDs; its proof statuses do not
@@ -13,7 +22,8 @@ identify Paper 2 as the owner of the shared cochain construction and
 protocol/observation contracts. Paper 3 retains every selected coding and
 quantitative source-metric statement, including the actual original payload,
 intrinsic integral coboundary relation and complete coordinate layout.
-Paper 1 supplies the HCP and full-projective observation boundaries.
+Paper 1 supplies HCP and the exact-component obstruction. Full projective
+reconstruction is now introduced in this paper’s projection chain (§7.1).
 The revised 31-page PDF passes final build/render/layout QA. P301 records a
 fresh 9,295-job expanded build and 975 standard-only dependency reports, with
 all 975 preceding sets unchanged. Its immutable manuscript source is
@@ -217,7 +227,7 @@ it does not solve that spectrum for arbitrary supplied smooth codes.
 | `Concrete/CanonicalRS/{Encoding,BridgeData,PublicCalibration}.lean` | Actual observed-cochain extraction, canonical pair isometry and distance calibration | Existing proved application results, inventoried in C01–C03; outside the standalone closure. Their source metric is the plane-code distance pulled back through the declared extraction. |
 | `lean/Sheaf/{Distance,CochainSemantics,ObservationQuotient}.lean`; `lean/Protocol/Storage/` | Original source geometry, semantic transport and typed storage joins | Outside the standalone closure. Decoded exactness residual, raw/accepted contexts and conditional controlled lifts are distinct from the full-HCP observation obstruction. New application-module build/audit outcomes are tracked separately. |
 | Paper 3 §7; [cochain trace](../../docs/COCHAIN_PROXIMITY_TRACE.md) | User-selected commitment-specific projection analysis | The systematic modular profile now has actual-coboundary validity, native metric comparisons and a generic capacity-far family. Canonical original-payload/observation and existing-interface specializations pass focused, expanded aggregate and consolidated dependency checks; Q08 is complete for this profile. Euclidean and arbitrary hidden-Hodge profiles remain separate; full Paper 2 is not required. |
-| Paper 1 §§2.1, 2.2.1; Paper 2 §§3, 6; `docs/PROXIMITY_PAPER_OUTLINE.md` | Observation boundary, canonical construction and preserved historical projection design | Paper 1 proves full-projective recovery; Paper 2 owns the construction/contracts; Paper 3 §7 owns the quantitative comparison. The older outline is a historical implementation checklist. |
+| Paper 1 §2.1; Paper 2 §§3, 6; Paper 3 §7.1; `docs/PROXIMITY_PAPER_OUTLINE.md` | Observation boundary, canonical construction and projective chain | Paper 1 proves the exact-component obstruction; Paper 2 owns construction/visibility/contracts; Paper 3 owns full-projective reconstruction and the quantitative comparison. The older outline retains historical implementation provenance. |
 
 ### Status and role vocabulary
 
@@ -285,7 +295,7 @@ standalone TeX sections, not Paper 1. In prose, `Parameters` abbreviates
 `ReedSolomon.Parameters` and `SmoothQuarterFamily` abbreviates
 `Capacity.SmoothQuarterFamily`. Linked claim anchors below use the full
 namespace within `ProximityPrize`.
-Application O41–O50/C01–C11 instead use the existing `Hcrypt` namespaces and
+Application O41–O50/C01–C11 instead use the existing `HomotopicalEncryption` namespaces and
 their linked source owners; they are outside `ProximityPrize`.
 
 | ID | TeX object / source | Lean owner and representation | Identity / hypotheses / guardrail | Role |
@@ -388,7 +398,7 @@ their linked source owners; they are outside `ProximityPrize`.
 | T13 | Same theorem, real set `[0,1/4096)` and unattained supremum | [MCA.BoundaryField.pairMCA_safeRelativeRadii_128_eq_Ico](../../lean/Proximity/MCA/RealThreshold.lean#L133); [pairMCA_real_128_threshold](../../lean/Proximity/MCA/RealThreshold.lean#L141); [BlockCode.largeAgreementSetAt_iff_count_of_mem_shell](../../lean/Proximity/MCA/RealThreshold.lean#L18) | **exact**. Real-shell constancy and relative-radius monotonicity transport the adjacent safe/unsafe count certificates. The real cut is excluded and no greatest real safe radius exists. |
 | T14 | §6 distance implication for a good challenge | [BlockCode.pairDistance_le_scalarDistance_of_good](../../lean/Proximity/Application/DistanceCalibration.lean#L101); [scalarDistance_ge_of_pairDistance_ge_of_good](../../lean/Proximity/Application/DistanceCalibration.lean#L126); [BlockCode.exists_nearest_codeword_relative](../../lean/Proximity/Core/Distance.lean#L114) | **exact generic standalone endpoint** for nonempty codes and positive length. Goodness and `D₁≤δ` give `D₂≤D₁`; the strict-nearness contrapositive proves `D₂≥δ → D₁≥δ`, including the non-strict boundary. The separate canonical transfer C04 is retained. |
 | T15 | §7 source-far implies target-far | [Application.SourceToCodeCalibration.sourceFar_implies_targetFar](../../lean/Proximity/Application/Calibration.lean#L116) | **exact** given `noncollapse`; **parameterized** for an independent application metric. The canonical public pullback calibration is already proved as C03, and its concrete scalar transfer uses C04. The generic standalone distance endpoint is T14; the selected native source is instantiated by T24–T34; a different upstream geometric score remains a separate theorem. |
-| T16 | §6 runtime-field aside `q=12289` has no safe count at 128 bits | [Hcrypt.Proximity.CanonicalRS.MCA.Spectrum.canonical_pairMCA_threshold_128](../../lean/Proximity/Concrete/CanonicalRS/MCA/Spectrum.lean#L94) | Separate **APPLICATION** result, outside `ProximityPrize`, checked by its own module import. The runtime field is unrelated to the standalone large-field and boundary-field instances. |
+| T16 | §6 runtime-field aside `q=12289` has no safe count at 128 bits | [HomotopicalEncryption.Proximity.CanonicalRS.MCA.Spectrum.canonical_pairMCA_threshold_128](../../lean/Proximity/Concrete/CanonicalRS/MCA/Spectrum.lean#L94) | Separate **APPLICATION** result, outside `ProximityPrize`, checked by its own module import. The runtime field is unrelated to the standalone large-field and boundary-field instances. |
 | T17 | §6 endpoint interpretation: scalar/pair covering and good-challenge equality | [ReedSolomon.Parameters.relativeDistanceToCode_le_capacity](../../lean/Proximity/Application/DistanceCalibration.lean#L203); [vector_relativeDistanceToCode_le_capacity](../../lean/Proximity/Application/DistanceCalibration.lean#L213); [scalarDistance_eq_capacity_of_pairFar_of_good](../../lean/Proximity/Application/DistanceCalibration.lean#L224) | **exact generic standalone endpoint**. Interpolation proves scalar/interleaved covering by `(n-k)/n`; pair farness and a good endpoint challenge force scalar distance equal to that endpoint. No stronger beyond-capacity farness or independently chosen source comparison is asserted. |
 | T18 | §§4,6 ordered-certificate count equals `(k+1) choose(n,k+1)` | `Nat.choose_succ_right_eq` (Mathlib); [ReedSolomon.Parameters.card_certificate](../../lean/Proximity/MCA/Pair.lean#L635); [ReedSolomon.Parameters.card_compressedCertificate](../../lean/Proximity/MCA/Pair.lean#L660) | **exact** combinatorial identity, used in the compressed family budget proof. This compares certificate-space cardinalities, not the numbers of certificates selected for a particular line. |
 | T19 | §§3,6 the finite error fraction is for a pair fixed before the challenge | [BlockCode.PairMCAErrorBoundAt](../../lean/Proximity/MCA/Definitions.lean#L249) | **exact quantifier order**. A uniform bound for each fixed line does not quantify over a line selected after observing the challenge. A PMF model, adversarial transcript, or cryptographic binding theorem would be separate work outside this target. |

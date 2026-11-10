@@ -30,7 +30,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Ephemeral
+namespace HomotopicalEncryption.Protocol.Ephemeral
 
 open Sheaf CellularSheaf
 
@@ -183,4 +183,4 @@ theorem recoverFor_wrong_targetKey
 
 end RecoveryDelivery
 
-end Hcrypt.Protocol.Ephemeral
+end HomotopicalEncryption.Protocol.Ephemeral

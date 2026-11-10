@@ -36,7 +36,7 @@ public import Axioms.CochainCommitment.Payload
         (current rust/oracle/src/geometry.rs covers geometric operators)
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Axioms
 
 /-- Restriction maps are shape-compatible on incidences v ≤ e ≤ t. -/
@@ -224,4 +224,4 @@ theorem oneCocycle_of_committedCochainWellFormed
       (sheaf_wellFormed_of_committedCochainWellFormed h)).1 x
 
 end Axioms
-end Hcrypt
+end HomotopicalEncryption

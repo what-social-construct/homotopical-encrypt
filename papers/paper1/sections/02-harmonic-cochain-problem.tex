@@ -1,10 +1,10 @@
 \section{The Harmonic Cochain Problem}\label{sec:hcp-definition}
 
 Let \(A\) be the type of hidden presentations, with semantic interpretation
-\(M_x\) for each \(x\in A\). Write \(x\simeq y\) when \(M_x\) and \(M_y\)
-are homotopy equivalent in the declared semantics. Assume that this
-equivalence preserves the chosen closed tests. Let \(P\) be the type of public
-class data and choose a classifier \(\pi:A\to P\) that factors through their
+\(M_x\) for each \(x\in A\). Write \(x\simeq y\) for homotopy equivalence
+of \(M_x\) and \(M_y\) in Helfer's sense \cite[Definition~7.1]{helfer2019fol}.
+Assume that this equivalence preserves the chosen closed tests. Let \(P\) be
+the type of public class data and choose a classifier \(\pi:A\to P\) that factors through their
 closed theory. Then
 \[
   x\simeq y\quad\Longrightarrow\quad\pi(x)=\pi(y).
@@ -381,9 +381,7 @@ raw payload bytes.
 
 For a larger released view \(\mathsf{View}(x,b)\), an ambiguity argument
 requires equality of that view. Factoring through \((\alpha,b)\) suffices;
-otherwise equality must be established for the actual released fields. Full
-projective data below illustrate how an enlarged observation changes the
-recovery problem.
+otherwise equality must be established for the actual released fields.
 
 \begin{definition}[Hidden-operator public projection]\label{def:hidden-operator-public-projection}
   For a public class type \(P\), a public projection is a map
@@ -423,19 +421,6 @@ recovery problem.
     \Delta'b\ne 0.
   \]
 \end{definition}
-
-In the typed semantics, sorts are interpreted by objects of a model
-category, contexts by products, and function symbols by maps. A homotopy
-equivalence must respect those operations up to the specified homotopies and
-supply componentwise equivalences between cofibrant-fibrant interpretations.
-
-Helfer's first-order semantics interprets equality through path objects and,
-under its stated categorical hypotheses, preserves closed-formula truth
-under homotopy equivalence \cite[Definition~7.1 and Theorem~12.3]{helfer2019fol}.
-The generic construction retains this invariance as a premise. The full
-first-order theorem is background; the cellular example in
-\cref{prop:cellular-axis-ambiguity} establishes the premise for its declared
-homological tests.
 
 \begin{definition}[Typed HCP semantic realization]\label{def:typed-hcp-realization}
   Fix a multi-sorted algebraic signature \(\sigma\), a model category
@@ -585,77 +570,8 @@ the private transport \(U_1\) neither revealed nor applied.
   \(h'=h_x(b)=P_{\ker(\Delta_x)}b\). A public-data-only solver is
   \emph{uniformly exact}
   if the same output has this value for every hidden witness compatible with
-  its public input. The hidden-operator separation concerns this uniform
-  contract; it does not deny that decryption succeeds once the operative
-  private geometry is supplied.
+  its public input.
 \end{definition}
-
-\subsubsection{Full projective observations}\label{sec:observation-boundaries}\label{sec:projective-observation-boundary}
-
-Let \(V=\mathbb R^n\) have its fixed Euclidean inner product, and let
-\(w_1,\ldots,w_r\) be an independent frame spanning \(W\le V\). Its exterior
-coordinate is
-\[
-  c=w_1\wedge\cdots\wedge w_r\in\bigwedge^r V.
-\]
-An independent frame has nonzero exterior product. A different basis of the
-same subspace changes \(c\) by the nonzero determinant of its change-of-basis
-matrix. The projective class therefore depends only on \(W\):
-\[
- c\sim c'\quad\Longleftrightarrow\quad
- \exists u\in\mathbb R^\times,\ c'=uc.
-\]
-The raw carrier is the scalar-orbit quotient of the whole exterior power,
-including its zero orbit. The conclusions below use the nonzero decomposable
-orbits determined by genuine frames.
-
-A related specialized reconstruction uses restricted Pl\"ucker coordinates
-for maximal isotropic subspaces \cite{dingKim2026plucker}. The argument here
-uses the full projective point of an arbitrary real subspace at the fixed
-ambient metric.
-
-\begin{proposition}[Projective Pl\"ucker invariance]\label{prop:plucker-invariance}
-  Two independent frames spanning the same finite-dimensional subspace have
-  equal projective exterior coordinates.
-\end{proposition}
-\begin{proof}
-  Both exterior products are nonzero elements of the one-dimensional top
-  exterior power of that subspace. They differ by a nonzero scalar and hence
-  have the same orbit.
-\end{proof}
-
-\paragraph{Recovery from the full point.}
-
-\begin{proposition}[Recovery from the full projective point]
-\label{prop:plucker-recovery}
-  Let \(w_1,\ldots,w_r\) be an independent frame for
-  \(W\subseteq\mathbb R^n\), and put
-  \(c=w_1\wedge\cdots\wedge w_r\). Then
-  \[
-    W=\{x\in\mathbb R^n:x\wedge c=0\}.
-  \]
-  This reconstruction depends only on \([c]\). Consequently, two genuine
-  rank-\(r\) frame witnesses have the same full projective point if and only
-  if they present the same subspace. At the fixed ambient inner product,
-  the full point determines \(P_W\) and \(I-P_W\).
-\end{proposition}
-\begin{proof}
-  If \(x\in W\), the frame with \(x\) adjoined is dependent and its exterior
-  product vanishes. If \(x\notin W\), the adjoined frame is independent and
-  its exterior product is nonzero. Multiplying \(c\) by a nonzero scalar
-  does not change this annihilator. The projector is the unique orthogonal
-  projection onto the reconstructed subspace.
-\end{proof}
-
-The zero orbit has the whole ambient space as its annihilator, which is why
-the statement requires a genuine frame. For the operative harmonic subspace
-\(W=\ker\Delta_x\), the reconstructed projector and \(b\) give
-\[
-  h=P_Wb.
-\]
-The positive spectrum of \(\Delta_x\) remains additional operator data.
-Replacing the full real coordinates by encoded data or a digest requires a
-separate reconstruction procedure.
 
 \subsection{Computational Scope}\label{sec:computational-scope}
 

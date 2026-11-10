@@ -70,7 +70,7 @@ class HashChain:
     
     def _genesis_hash(self) -> str:
         """Initial hash (genesis block)."""
-        return hashlib.sha256(b"hcrypt_genesis_v1").hexdigest()
+        return hashlib.sha256(b"homotopical_encrypt_genesis_v1").hexdigest()
     
     def _add_entry(
         self,
@@ -1175,7 +1175,7 @@ class SheafState:
             epoch: Current epoch (Petri net clock)
             
         Returns:
-            account → vHCRYPT allocated
+            account → vHOMOTOPICAL_ENCRYPT allocated
         """
         return self.treasury.distribute(
             harmonic_weights=harmonic_weights,
@@ -1195,8 +1195,8 @@ class SheafState:
             f"  Hash chain: {self.hash_chain.height()} entries\n"
             f"  Spectral gap: {self.spectral_cache.spectral_gap or 'not computed'}\n"
             f"  Active vaults: {active_vaults}\n"
-            f"  Treasury pending: {self.treasury.balance_hcrypt} HCRYPT\n"
-            f"  Treasury burned: {self.treasury.total_burned} HCRYPT"
+            f"  Treasury pending: {self.treasury.balance_homotopical_encrypt} HOMOTOPICAL_ENCRYPT\n"
+            f"  Treasury burned: {self.treasury.total_burned} HOMOTOPICAL_ENCRYPT"
         )
 
 

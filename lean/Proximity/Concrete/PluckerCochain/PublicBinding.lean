@@ -28,7 +28,7 @@ public import TCB.ObservationBoundary
       observed CochainCommitmentData c
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace PluckerCochain
 namespace PublicBinding
@@ -235,4 +235,4 @@ end
 end PublicBinding
 end PluckerCochain
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

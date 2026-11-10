@@ -411,7 +411,7 @@ class BlockProducer:
                 block_height=self.current_epoch,
                 details=f"Two blocks at epoch {self.current_epoch}"
             )
-            # Vault slash: lose bonded vHCRYPT (economic penalty)
+            # Vault slash: lose bonded vHOMOTOPICAL_ENCRYPT (economic penalty)
             self.state.vault_registry.slash(
                 producer_identity, SlashReason.EQUIVOCATION
             )

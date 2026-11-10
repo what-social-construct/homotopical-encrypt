@@ -16,7 +16,7 @@ public import Proximity.Concrete.RS.ListDecoding
   fractional/error-rate definitions for paper-facing CA/MCA statements.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 
 /-- An affine line of received words: `base + γ • direction`. -/
@@ -369,4 +369,4 @@ theorem correlatedAgreement_of_mutualCorrelatedAgreement
 end BlockCode
 
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

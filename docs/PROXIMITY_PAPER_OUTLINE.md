@@ -5,17 +5,22 @@ chapter numbering describes the former broad Paper 1 draft; it is not the
 current manuscript outline. The [ownership table](../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table)
 is authoritative for the current three-paper split.
 
-Paper 1 now keeps HCP/Hodge/CVP foundations, observation limits and full
-projective recovery. Paper 2 owns the concrete cochain/commitment, codec,
-stage/evidence and storage profile. Paper 3 owns coding, radii and quantitative
-projection comparisons. Their current sources are `papers/paper1/main.tex`,
+Paper 1 keeps HCP/Hodge/CVP foundations and the exact-component observation
+limitation. Its entry selects seven groups: 18 manuscript-facing and 20
+supporting declarations (38 targets), with 20 deliberate Challenge placeholders.
+Paper 3 introduces full projective reconstruction in its projective projection
+chain and owns coding, radii and quantitative comparisons. Paper 2 owns the
+concrete cochain/commitment, visibility, codec, stage/evidence and storage
+contracts, consuming the same canonical projective proof.
+Their current sources are `papers/paper1/main.tex`,
 `papers/paper2/DRAFT.md` and `papers/proximity-prize/main.tex`.
 
 ## Former Section 6 Material: Current Disposition
 
 | Former material | Current manuscript owner |
 |---|---|
-| Source observation and full Plucker subspace/projector recovery | Paper 1 §2.1; full-projective recovery in §2.2.1 |
+| HCP source and exact-component observation limitation | Paper 1 §§2--3 |
+| Full Plucker subspace/projector recovery in the projective chain | Paper 3; Paper 2 consumes it for visibility and codec contracts |
 | Cochain realization, payload, local syndrome and extraction/codec | Paper 2 §§2--3 |
 | Protocol stage certificates, gates, evidence and persistence | Paper 2 §6 |
 | Generic calibrated metric comparisons and near/far directions | Paper 3 §7; explicit contracts consumed by Paper 2 |
@@ -29,7 +34,7 @@ reassign the protocol/coding material to Paper 1.
 
 This outline separates three kinds of Lean content:
 
-- **Original hcrypt formalization:** projection-chain orchestration, Plucker to
+- **Original homotopical_encrypt formalization:** projection-chain orchestration, Plucker to
   cochain to plane to RS bridge interfaces, gates, certificates, and final
   calibrated bridge plumbing.
 - **Formalized external-paper vocabulary:** list decoding, correlated
@@ -62,12 +67,12 @@ Candidate titles:
 
 ## Reusable Section 6 Summary Draft
 
-We formalize a quotient-aware projection chain from the hcrypt sheaf/Hodge
+We formalize a quotient-aware projection chain from the homotopical_encrypt sheaf/Hodge
 proximity problem to a finite Reed-Solomon received-word target. The construction
 passes through Plucker shadows, committed cochains with local syndrome tests, a
 field-agnostic two-coordinate plane shadow, and an explicit finite-field
 encoding boundary. The paper-facing coding endpoint supports words in
-`(F^s)^n`; the canonical hcrypt endpoint evaluates this at `s = 1` and proves
+`(F^s)^n`; the canonical homotopical_encrypt endpoint evaluates this at `s = 1` and proves
 the scalar RS bad-challenge set agrees with the width-one paper MCA endpoint.
 The projection is intentionally lossy along private representative directions;
 the verifier-facing claim is instead a calibrated far-region separation theorem
@@ -86,7 +91,7 @@ source model still needs its own far-separation theorem.
 
 Section 6 can claim:
 
-- A formal projection-chain interface from hcrypt proximity data to an RS target.
+- A formal projection-chain interface from homotopical_encrypt proximity data to an RS target.
 - A quotient-aware invariant discipline: private representative collapse is
   allowed, but public proximity collapse is isolated as the final theorem
   obligation.
@@ -131,7 +136,7 @@ field-agnostic. The RS field appears only at the encoding boundary.
 
 Purpose:
 
-- Explain why proximity matters for hcrypt: verifier-facing state, routing,
+- Explain why proximity matters for homotopical_encrypt: verifier-facing state, routing,
   latency, load, and proof-carrying execution.
 - State the analogy to known proximity/list-decoding problems carefully.
 - Emphasize that the work builds a precise reduction-style target rather than
@@ -190,8 +195,9 @@ What to state:
 - The exterior product gives the Plucker coordinate.
 - The concrete projective shadow quotients by nonzero scalar/unit rescaling.
 - Decomposability is already tied to the exterior-product construction.
-- Remaining algebraic facts are exactly the nonzero exterior product and
-  same-point projective equivalence obligations.
+- `GrassmannianPlucker/Reconstruction` proves the nonzero exterior product,
+  same-point projective equivalence and full-point subspace/projector recovery.
+  Operative-target recovery additionally identifies the carrier with the HCP kernel.
 
 Important invariant:
 
@@ -360,7 +366,7 @@ ProjectionStageGateCertificate
   -> HardGateCertificate
   -> RSMetricCertificate
   -> CalibratedFinalGateCertificate
-  -> CalibratedHcryptToRSBridge
+  -> CalibratedHomotopicalEncryptionToRSBridge
 ```
 
 ### 11. Traceability And Runtime Boundary
@@ -387,11 +393,11 @@ What to state:
 Prose theorem:
 
 ```text
-Given a well-formed hcrypt proximity instance, a valid Plucker/cochain/plane/RS
+Given a well-formed homotopical_encrypt proximity instance, a valid Plucker/cochain/plane/RS
 projection chain, hard-gate evidence, cited canonical RS/list-decoding/MCA
 bounds, radius calibration, and the canonical source-to-RS far-separation
 theorem, the composed projection is a calibrated end-to-end gap projection from
-the hcrypt source problem to the canonical Reed-Solomon received-word target.
+the homotopical_encrypt source problem to the canonical Reed-Solomon received-word target.
 ```
 
 Lean theorem dependency sketch:
@@ -406,7 +412,7 @@ ProjectiveSoundInputs
   -> Gates.Projection.HardGateCertificate
   -> CanonicalRS.CitedBounds.bounds
   -> CanonicalRS.BridgeData.RSMetricCertificate
-  -> RS.Target.CalibratedHcryptToRSBridge
+  -> RS.Target.CalibratedHomotopicalEncryptionToRSBridge
 ```
 
 ### 13. Relationship To The Proximity Prize
@@ -415,7 +421,7 @@ Careful wording:
 
 - The canonical endpoint is RS-specific and prize-relevant.
 - The formalized endpoint uses the paper alphabet `C ⊆ (F^s)^n`; the concrete
-  hcrypt instance is the verified `s = 1` ordinary RS slice.
+  homotopical_encrypt instance is the verified `s = 1` ordinary RS slice.
 - The current contribution is a formal projection path into that endpoint plus
   a verified paper-MCA comparison layer.
 - A prize-level claim requires completing the final source-to-RS far-separation
@@ -447,9 +453,12 @@ Do not include:
 
 ## Current Lean Obligation Ledger
 
-1. **Open:** complete the concrete Plucker exterior-algebra facts, including
-   nonzero exterior product from independence and same-point projective
-   equivalence.
+1. **Resolved mathematics, Paper 3 ownership:** the existing
+   `GrassmannianPlucker/Reconstruction` constructs nonzero exterior products,
+   same-point projective equivalence and full-point reconstruction.
+   `TCB/PluckerObservation` identifies the operative target under explicit
+   kernel agreement. Earlier focused reports are historical; the renamed
+   source awaits fresh validation.
 2. **Partially resolved:** the cochain layer now uses the existing commitment
    payload and sheaf-relative exact/cocycle semantics; the concrete
    Plucker-payload encoder and syndrome map remain explicit inputs.
@@ -461,7 +470,7 @@ Do not include:
    obligations still live in coarse `ProjectionStageGateCertificate` fields
    rather than dedicated commuting-square structures.
 6. **Resolved policy:** `CitedBounds` remains a named, documented trusted
-   literature boundary for Paper 1.
+   literature boundary for Paper 3's concrete coding application.
 7. **Open:** supply a concrete `JohnsonRSFarSeparation` witness proving final
    source-to-RS far non-collapse.
 8. **Resolved plumbing:** once that witness is supplied, the certificate-to-

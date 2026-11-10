@@ -23,7 +23,7 @@ serializing private witness fields merely because a Lean record retains them.
 
 set_option autoImplicit false
 
-namespace Hcrypt.Protocol.Storage
+namespace HomotopicalEncryption.Protocol.Storage
 
 open Sheaf CellularSheaf
 
@@ -223,4 +223,4 @@ theorem not_execution_consumed_to_sealed
   cases hterminal
 
 end Checkpoint
-end Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Protocol.Storage

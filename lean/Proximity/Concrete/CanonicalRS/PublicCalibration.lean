@@ -20,7 +20,7 @@ equality, and composition with the plane-to-pair calibration proves the desired
 all-radius implication for public observations.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CanonicalRS
 namespace PublicCalibration
@@ -143,4 +143,4 @@ end
 end PublicCalibration
 end CanonicalRS
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

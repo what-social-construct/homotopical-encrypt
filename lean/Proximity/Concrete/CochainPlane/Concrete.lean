@@ -19,7 +19,7 @@ public import Proximity.Concrete.CochainPlane.Core
   alignment/distance obligations.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace CochainPlane
 namespace Concrete
@@ -114,4 +114,4 @@ end
 end Concrete
 end CochainPlane
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

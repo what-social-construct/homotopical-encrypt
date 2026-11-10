@@ -10,7 +10,7 @@ public import Mathlib.LinearAlgebra.ExteriorPower.Basic
   Grassmannian-to-Plucker bridge.
 
   Paper correspondence:
-  - Paper 1: actual exterior coordinates of a frame and the full
+  - Paper 3: actual exterior coordinates of a frame and the full
     projective observation of its subspace.
   - Paper 3 quantitative uses must separately declare the source score and
     comparison; frame invariance is proved by the concrete owner.
@@ -23,7 +23,7 @@ public import Mathlib.LinearAlgebra.ExteriorPower.Basic
   of the private frame choice.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace GrassmannianPlucker
 
@@ -192,4 +192,4 @@ end
 
 end GrassmannianPlucker
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

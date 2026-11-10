@@ -30,7 +30,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage
+namespace HomotopicalEncryption.Protocol.Storage
 
 open Sheaf CellularSheaf
 
@@ -98,4 +98,4 @@ theorem decodedFar_implies_pairFar
   · exact hfar
 
 end SystematicModel
-end Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Protocol.Storage

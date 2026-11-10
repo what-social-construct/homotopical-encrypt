@@ -343,7 +343,7 @@ security:
 
 ```
 Traditional:  Address = hash(public_key)
-$HCRYPT:      Address = spectral_fingerprint(fibration)
+$HOMOTOPICAL_ENCRYPT:      Address = spectral_fingerprint(fibration)
 
 Your address IS the eigenvalue spectrum of your secret geometry.
 - Self-generated (no issuer)
@@ -355,7 +355,7 @@ Your address IS the eigenvalue spectrum of your secret geometry.
 
 ```
 Traditional:  TX = (from, to, amount, signature)
-$HCRYPT:      TX = (fingerprint, key_image, amount_commitment, spectral_proof)
+$HOMOTOPICAL_ENCRYPT:      TX = (fingerprint, key_image, amount_commitment, spectral_proof)
 
 Proves class membership and commits to amount. See homotopy_transaction.py.
 - Staged verification: key image → structure → spectral → invariants
@@ -367,7 +367,7 @@ Proves class membership and commits to amount. See homotopy_transaction.py.
 
 ```
 Traditional:  Block = list of transactions + header
-$HCRYPT:      Block = harmonic cochain + projection proof
+$HOMOTOPICAL_ENCRYPT:      Block = harmonic cochain + projection proof
 
 A block is the harmonic representative of all included transactions.
 - Projection to ker(Δ) is the "consensus"
@@ -379,7 +379,7 @@ A block is the harmonic representative of all included transactions.
 
 ```
 Traditional:  PoW = burn energy, PoS = lock capital
-$HCRYPT:      PoV = show spectral invariants
+$HOMOTOPICAL_ENCRYPT:      PoV = show spectral invariants
 
 You produce a block by:
 1. Collect transactions (cochains)
@@ -483,7 +483,7 @@ projection in the sheaf's natural transformation chain.
 ├──────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  STORES:                                                         │
-│  • Block headers: SHA256("HCRYPT_BLOCK_V1" + fields)            │
+│  • Block headers: SHA256("HOMOTOPICAL_ENCRYPT_BLOCK_V1" + fields)            │
 │  • Key image set (spent tracking, double-spend gate)             │
 │  • Cochain roots: SHA256(Σ verified commitments)                 │
 │  • Chain tip + height (canonical chain selection)                │
@@ -577,7 +577,7 @@ without the ability to reverse-engineer amounts or identities.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    HCRYPT BLOCK N                       │
+│                    HOMOTOPICAL_ENCRYPT BLOCK N                       │
 ├─────────────────────────────────────────────────────────┤
 │ header:                                                 │
 │   prev_hash: SHA256(block N-1)                         │
@@ -608,7 +608,7 @@ without the ability to reverse-engineer amounts or identities.
     "from": spectral_fingerprint,
     "to": spectral_fingerprint,
     "amount": 100.0,
-    "token": "HCRYPT",
+    "token": "HOMOTOPICAL_ENCRYPT",
     "encrypted": False,  # Anyone can see
     "signature": homotopy_signature(private_fibration)
 }

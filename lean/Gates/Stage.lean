@@ -16,34 +16,34 @@ public import Axioms.StageAdmissibility
   encryption, transaction, and block contexts.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Gates
 
 /-- Pipeline stages mirrored from runtime validation. -/
-abbrev PipelineStage := Hcrypt.Axioms.PipelineStage
+abbrev PipelineStage := HomotopicalEncryption.Axioms.PipelineStage
 
 /-- Stage-to-consensus admissibility contract. -/
-abbrev StageAdmissibility := Hcrypt.Axioms.StageAdmissibility
+abbrev StageAdmissibility := HomotopicalEncryption.Axioms.StageAdmissibility
 
 /-- Well-formedness for stage admissibility. -/
 abbrev StageAdmissibilityWellFormed :=
-  Hcrypt.Axioms.StageAdmissibilityWellFormed
+  HomotopicalEncryption.Axioms.StageAdmissibilityWellFormed
 
 /-- Transaction-stage critical invariant bundle. -/
 abbrev TransactionCriticalInvariantBundle :=
-  Hcrypt.Axioms.TransactionCriticalInvariantBundle
+  HomotopicalEncryption.Axioms.TransactionCriticalInvariantBundle
 
 /-- Canonical stage admissibility record induced by current axiom bundles. -/
 abbrev StageAdmissibilityFromAxioms :=
-  Hcrypt.Axioms.StageAdmissibilityFromAxioms
+  HomotopicalEncryption.Axioms.StageAdmissibilityFromAxioms
 
 /-- Python/reference validation snapshot projected to stage-gate facts. -/
 abbrev PythonStageValidationSnapshot :=
-  Hcrypt.Axioms.PythonStageValidationSnapshot
+  HomotopicalEncryption.Axioms.PythonStageValidationSnapshot
 
 /-- Refinement predicate from runtime snapshot to Lean critical-pass fact. -/
 abbrev RefinesTransactionCriticalPass :=
-  Hcrypt.Axioms.RefinesTransactionCriticalPass
+  HomotopicalEncryption.Axioms.RefinesTransactionCriticalPass
 
 /-- A refined transaction-stage pass implies consensus admissibility. -/
 theorem refined_transaction_implies_admissible
@@ -51,11 +51,11 @@ theorem refined_transaction_implies_admissible
     (S : StageAdmissibility) :
     StageAdmissibilityWellFormed S →
     RefinesTransactionCriticalPass py S →
-    py.stage = Hcrypt.Axioms.PipelineStage.transaction →
+    py.stage = HomotopicalEncryption.Axioms.PipelineStage.transaction →
     py.passed = true →
     py.criticalFailures = 0 →
     S.ConsensusAdmissible :=
-  Hcrypt.Axioms.python_refined_transaction_implies_admissible py S
+  HomotopicalEncryption.Axioms.python_refined_transaction_implies_admissible py S
 
 end Gates
-end Hcrypt
+end HomotopicalEncryption

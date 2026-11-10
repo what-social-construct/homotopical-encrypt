@@ -20,7 +20,7 @@ public import TCB.Runtime
   along intended directions is allowed, while far-to-near collapse is not.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace Proximity
 namespace Gates
 
@@ -740,4 +740,4 @@ end
 
 end Gates
 end Proximity
-end Hcrypt
+end HomotopicalEncryption

@@ -1,7 +1,7 @@
 """
 Benchmarks - Legacy Components for Comparison
 
-These modules are NOT part of the main hcrypt system.
+These modules are NOT part of the main homotopical_encrypt system.
 They exist ONLY for benchmarking against traditional approaches:
 
 - ring_transaction.py: Ring signature transactions (like Monero)

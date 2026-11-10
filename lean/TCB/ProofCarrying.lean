@@ -26,7 +26,7 @@ public import Axioms.ZKP
   and byte-indexed failure events live in `TCB.PrimitiveChecks`.
 -/
 
-namespace Hcrypt
+namespace HomotopicalEncryption
 namespace TCB
 
 /-- Canonical 32-byte hash/digest shape used by public chain artifacts. -/
@@ -122,4 +122,4 @@ theorem proofCarrying_cochain_wellFormed
   hP.1.1
 
 end TCB
-end Hcrypt
+end HomotopicalEncryption

@@ -19,7 +19,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Hcrypt.Protocol.Storage
+namespace HomotopicalEncryption.Protocol.Storage
 
 open Sheaf CellularSheaf
 
@@ -138,4 +138,4 @@ theorem key_ne_of_runId_ne (C D : Context F)
   exact h (congrArg ContextKey.runId heq)
 
 end Context
-end Hcrypt.Protocol.Storage
+end HomotopicalEncryption.Protocol.Storage
