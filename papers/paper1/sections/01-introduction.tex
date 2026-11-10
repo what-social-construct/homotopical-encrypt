@@ -2,6 +2,14 @@
 
 \subsection{Motivation and Contributions}
 
+Helfer's first-order homotopical logic \cite{helfer2019fol} provides the
+original semantic motivation for this framework: equality is interpreted
+through path objects and, under the stated hypotheses, closed-formula truth
+is invariant under homotopy equivalence of interpretations. This motivates
+distinguishing a hidden presentation from the semantic information retained
+by a public classifier. HCP asks how that distinction interacts with the
+harmonic target determined by a hidden Hodge operator.
+
 \HE{} studies recovery from public homotopy-class data when the Hodge operator
 whose kernel is the message space is not part of the public input.  In a
 known-lattice closest-vector problem, the lattice is presented before the
@@ -89,17 +97,16 @@ This paper develops this boundary through the following statements.
   \item A Hodge-structured noise model with cochain decomposition
     \(b = h + e\), where \(h \in \ker(\Delta_1)\) and
     \(e \in \image(\delta_0) \oplus \image(\delta_1^\ast)\).
-  \item A CVP comparison separating field-linear image from discrete lattice:
-    generated subspaces can be realized as kernels, and, when
-    \(\Lambda\subseteq W\) is explicitly supplied, projecting the target onto
-    \(W\) preserves the discrete closest-vector condition on \(\Lambda\).
-  \item A hidden-operator ambiguity theorem: publicly equivalent Hodge operators
-    may disagree on harmonicity, so the CVP comparison does not make a correct
-    explicit-lattice CVP oracle into a uniform public-data HCP solver.
-  \item Constructed integral examples in the finite signed-incidence model:
-    one homological public observation has distinct nonzero harmonic targets;
-    a weighted pair shares \(b=(1,2)\) with integer coefficients two and one,
-    with a unique CVP answer for each privately presented lattice.
+  \item A CVP comparison with constructed ambiguity examples. Field-linear
+    images are distinguished from discrete lattices; when
+    \(\Lambda\subseteq W\) is explicitly supplied, projection onto \(W\)
+    preserves the discrete closest-vector condition on \(\Lambda\).
+    Publicly equivalent hidden Hodge operators may nevertheless disagree on
+    harmonicity, preventing a correct explicit-lattice CVP oracle from
+    yielding a uniform exact public-data HCP solver. Integral cellular
+    examples have one homological public observation and distinct nonzero
+    harmonic targets; a weighted pair shares \(b=(1,2)\) with integer
+    coefficients two and one, with a unique CVP answer for each private lattice.
   \item Observation boundaries: exact-component extraction can lose full
     Hodge residual, whereas full projective data of the operative kernel
     determine its fixed-metric projector and harmonic target.

@@ -7,6 +7,18 @@ recipient recovery/rotation, owned-resource transition and one-shot integrity
 full-ciphertext recovery, source/completion assessment and Paper 1 observation
 wording reconciliation 2026-11-08.
 
+**Abstract, semantic motivation and contribution grouping — 2026-11-09:**
+P303 removes Paper 1's second abstract paragraph while preserving the first
+exactly. Helfer's first-order homotopical logic now opens the motivation as
+the original semantic source. The CVP bridge, hidden-operator obstruction and
+integral cellular examples are grouped into one contribution item, reducing
+the enumeration from six to four without changing mathematical claims.
+The stated hypotheses, homological-fragment and security boundaries remain.
+All body formulas, proposition/definition statements and proofs, the parity
+table and Lean sources are unchanged. The 38-page PDF passes build and
+render/layout QA. This remains a local revision, with the prior protected
+preflight tied to public snapshot `66e1ad2`.
+
 **Central parity table and bibliography reconciliation — 2026-11-09:** P302
 moves Paper 1's implementation references out of its mathematical text. Its
 38-page PDF now has a conclusion followed by one parity table: four canonical
@@ -787,6 +799,7 @@ completion in the current record below.
 | P300 | Three-paper manuscript and Lean documentation alignment — 2026-11-09 | Paper 1 is reduced from 101 to 37 pages while preserving all eight selected mathematical groups and all 46 crosswalk declarations. Paper 2 now owns concrete payload/commitment, systematic codec, visibility, gates and storage evidence; optional syndrome and native cochain metrics remain distinct. Paper 3 retains all fourteen selected quantitative groups and recalls the existing construction with attribution; its PDF is 31 pages. The ownership table, active outlines and 93 Lean documentation files follow this split. No non-comment Lean source, selected statement, configuration or pin changed. This is a local revision; public 66e1ad2 and the P299 exact-commit report remain historical evidence. |
 | P301 | Revised manuscript validation and immutable source pins — 2026-11-09 | Expanded Lean union passes 9,295 jobs. Fresh selected audit passes 975 standard-only reports (792 exact-three/183 subsets, 106 axiom-free), with every prior 975 dependency set unchanged. All 280 Lean files retain exact non-comment bytes versus b917cda; 93 have documentation-only changes. Paper 1 §§2–3 retain all 84 displays, 289 inline formulas, nine propositions, eleven definitions and nine proofs exactly; all 46 crosswalk names occur once. Paper 3 §§2–6 and nineteen §7 displays are preserved. Revised 37/31-page PDFs build/render/visual QA passes. All three metadata source URLs pin the frozen manuscripts at adfcc14. Revised slim packages use a separate local directory; previous public 66e1ad2/report remains unchanged. Fresh protected verification is required before any later intake, which remains deferred. |
 | P302 | Paper 1 backmatter parity and source/bibliography reconciliation — 2026-11-09 | Mathematical body has no Lean cross-reference blocks or implementation-name lists. A single post-conclusion table identifies four canonical object rows, eight main groups/21 declarations, five support groups/25 declarations and three background/assumption/contract rows; every selected name occurs once. All body mathematics in §§1–6 and all 280 Lean source bytes match dddfdd2. The 38-page PDF passes build/render/detail QA with no undefined references, missing glyphs or overfull boxes. Added 19 bibliography records; all 28 ledger sources now map to an owning bib/key/status. Isolated BibTeX checks pass 7/42/16 records without warnings. P3 all13 cited alpha-style entries are byte-identical, so its31-page PDF remains unchanged. P301 proof evidence remains its exact checked baseline; new informal text still requires fresh protected preflight before any later intake. |
+| P303 | Paper 1 abstract and motivation refinement — 2026-11-09 | Remove only abstract paragraph two, preserving paragraph one exactly. Cite Helfer in the opening motivation; keep the explicit hypotheses and proved-fragment boundary. Consolidate the three CVP-related contribution items into one, with four items overall. All body mathematical displays, inline formulas, proposition/definition statements and proofs remain unchanged; the selected parity table, bibliography and all Lean sources are untouched. The 38-page PDF builds/renders cleanly with no undefined references, missing glyphs or overfull boxes. Updated local artifacts require their own exact-commit protected preflight before any later intake. |
 
 #### Current protocol validation
 

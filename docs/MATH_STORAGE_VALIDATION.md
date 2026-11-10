@@ -9,6 +9,29 @@ profile, an efficient gap solver or a storage backend.
 
 
 
+## Paper 1 abstract and motivation refinement — 2026-11-09
+
+The second abstract paragraph is removed; the first is preserved exactly.
+The motivation now begins with Helfer's first-order homotopical logic,
+including the path-object and conditional homotopy-invariance account.
+Three CVP-related contribution items are consolidated into one; the
+introduction has four contribution items overall. The lattice inclusion,
+correct-oracle obstruction, common homological observation and nonzero/
+weighted cellular examples retain their qualifications. The introduction
+starts on its own page after the contents.
+
+All mathematical formulas, proposition statements, definitions and proofs
+in §§1–6 are unchanged against `c677b73`; the parity table, bibliography and
+Lean sources are unchanged. This prose/layout revision needs no repeated
+Lean build. The **38-page PDF** builds with zero undefined references,
+missing glyphs or overfull boxes (two underfull diagnostics), and passes
+render/contact/detail review. Current Paper 1 SHA-256:
+`21b4b9429dac7413b0910a33ee587c06fd9979b8e47548cd1e1825f0816f61ba`.
+Canonical/stable copies match. Local evidence is
+`paper1-abstract-helfer-*` under `output/validation/`.
+The earlier protected result remains exact evidence for public `66e1ad2`;
+no new hosted verification, publication or submission is claimed.
+
 ## Paper 1 parity table and bibliography revision — 2026-11-09
 
 Paper 1 now places its implementation correspondence in one table after

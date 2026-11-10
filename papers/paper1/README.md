@@ -20,6 +20,10 @@ The manuscript now follows this ownership:
 - [Paper 3](../proximity-prize/README.md) owns coding, radii and quantitative
   metric/projection comparisons for the declared original-cochain profile.
 
+The abstract now has one paragraph. Helfer's homotopical semantics opens
+the motivation, and the CVP bridge, ambiguity obstruction and cellular
+examples form one contribution item (four contribution items overall).
+
 The current PDF is **38 pages**. The earlier P300/P301 ownership checkpoint
 was 37 pages, reduced from the original 101-page draft.
 
