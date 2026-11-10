@@ -36,7 +36,7 @@ abbrev IntegerOpening (S : Finset ι) := {s // s ∈ S} → Fin 2 → ℤ
 /-- The integer opening embedded in the actual cellular degree-zero carrier.
 The head contains its coefficients and the tail is zero. -/
 def integralOpening
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (a : IntegerOpening S) : (sheaf P S).C0 :=
   WithLp.toLp ((2 : ℕ) : ENNReal) fun coordinate =>
     let p := (Fintype.equivFin ({s // s ∈ S} × Fin 2)).symm coordinate.2
@@ -44,7 +44,7 @@ def integralOpening
 
 @[simp]
 theorem integralOpening_head
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (a : IntegerOpening S) (s : {s // s ∈ S}) (j : Fin 2) :
     integralOpening P S a
       ⟨true, (Fintype.equivFin ({s // s ∈ S} × Fin 2)) (s, j)⟩ = (a s j : ℝ) := by
@@ -52,7 +52,7 @@ theorem integralOpening_head
 
 @[simp]
 theorem integralOpening_tail
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (a : IntegerOpening S) (s : {s // s ∈ S}) (j : Fin 2) :
     integralOpening P S a
       ⟨false, (Fintype.equivFin ({s // s ∈ S} × Fin 2)) (s, j)⟩ = 0 := by
@@ -60,38 +60,38 @@ theorem integralOpening_tail
 
 /-- Integer coordinates of the actual coboundary, proved below from `delta0`. -/
 def integerCoboundary
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (a : IntegerOpening S) : ι → Fin 2 → ℤ :=
   fun i j => P.integerEncode S (fun s => a s j) i
 
 /-- The original cellular differential, not a separately supplied syndrome,
 computes this integer encoding in each edge-stalk coordinate. -/
 theorem delta0_integralOpening_coordinate
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (a : IntegerOpening S) (i : ι) (j : Fin 2) :
     (sheaf P S).delta0 (integralOpening P S a) (layout (i, j)) =
       (integerCoboundary P S a i j : ℝ) := by
   rw [delta0_apply]
   simp [integerCoboundary,
-    ProximityPrize.ReedSolomon.Parameters.realEncode,
-    ProximityPrize.ReedSolomon.Parameters.integerEncode]
+    ProximityCoding.ReedSolomon.Parameters.realEncode,
+    ProximityCoding.ReedSolomon.Parameters.integerEncode]
 
 /-- Reducing the actual integral coboundary gives the original finite-field
 systematic encoder with the reduced head-stalk opening. -/
 theorem intCast_integerCoboundary
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (a : IntegerOpening S) (i : ι) (j : Fin 2) :
     (integerCoboundary P S a i j : ZMod q) =
       P.systematicEncode S (fun s => (a s j : ZMod q)) i := by
   simp [integerCoboundary,
-    ProximityPrize.ReedSolomon.Parameters.integerEncode,
-    ProximityPrize.ReedSolomon.Parameters.systematicEncode,
+    ProximityCoding.ReedSolomon.Parameters.integerEncode,
+    ProximityCoding.ReedSolomon.Parameters.systematicEncode,
     P.intCast_integerCoefficient]
 
 /-- Modular source validity: an actual integral cellular coboundary equals
 the raw cochain plus an integer `q`-multiple in each coordinate. -/
 def ModularExact
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (z : ι → Fin 2 → ℤ) : Prop :=
   ∃ a : IntegerOpening S, ∃ carry : ι → Fin 2 → ℤ, ∀ i j,
     (sheaf P S).delta0 (integralOpening P S a) (layout (i, j)) =
@@ -100,7 +100,7 @@ def ModularExact
 /-- The intrinsic coboundary-congruence predicate has an equivalent explicit
 integer-coordinate witness form. Neither side mentions target codewords. -/
 theorem modularExact_iff_integerCoboundary_residue
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (z : ι → Fin 2 → ℤ) :
     ModularExact P S z ↔ ∃ a : IntegerOpening S, ∀ i j,
       (integerCoboundary P S a i j : ZMod q) = (z i j : ZMod q) := by
@@ -131,7 +131,7 @@ theorem modularExact_iff_integerCoboundary_residue
 /-- Finite-field validity follows from actual integral cellular exactness
 modulo `q`, using the original interpolation coefficients. -/
 theorem vectorCodeword_of_modularExact
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (hDegree : 0 < P.degreeBound) (hS : S.card = P.degreeBound)
     (z : ι → Fin 2 → ℤ) (hz : ModularExact P S z) :
     P.VectorCodeword (Fin 2) (fun i j => (z i j : ZMod q)) := by
@@ -148,7 +148,7 @@ theorem vectorCodeword_of_modularExact
 /-- Each actual RS pair has an integral head opening: choose canonical
 representatives only for its information coordinates. -/
 theorem modularExact_of_vectorCodeword
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (hDegree : 0 < P.degreeBound) (hS : S.card = P.degreeBound)
     (z : ι → Fin 2 → ℤ)
     (hz : P.VectorCodeword (Fin 2) (fun i j => (z i j : ZMod q))) :
@@ -168,7 +168,7 @@ theorem modularExact_of_vectorCodeword
 /-- The source/field validity bridge is a theorem about the actual cellular
 differential; it is not the definition of modular source validity. -/
 theorem modularExact_iff_vectorCodeword
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (hDegree : 0 < P.degreeBound) (hS : S.card = P.degreeBound)
     (z : ι → Fin 2 → ℤ) :
     ModularExact P S z ↔

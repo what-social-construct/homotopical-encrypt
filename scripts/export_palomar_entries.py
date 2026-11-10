@@ -24,9 +24,9 @@ PIPELINE = "14aa8d6b3c2f14a8540605e37144560b9a00e7e7"
 ENTRIES = {
     "paper1": ("Palomar/PaperOne", "papers/paper1", 36, 16,
                "Hidden Hodge targets and discrete closest vectors"),
-    "paper3-coding": ("Palomar/PaperThree", "papers/proximity-prize", 52, 36,
+    "paper3-coding": ("Palomar/PaperThree", "papers/paper3", 52, 36,
                       "Capacity-radius proximity: coding entry"),
-    "paper3-application": ("Palomar/PaperThree/Application", "papers/proximity-prize", 22, 10,
+    "paper3-application": ("Palomar/PaperThree/Application", "papers/paper3", 22, 10,
                            "Capacity-radius proximity: original-cochain application"),
 }
 

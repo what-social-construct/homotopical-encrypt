@@ -31,5 +31,5 @@ jobs:
         working-directory: papers/paper1
         run: latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
       - name: Build Paper 3
-        working-directory: papers/proximity-prize
+        working-directory: papers/paper3
         run: latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex

@@ -97,7 +97,7 @@ def sourceDistanceToValid
 /-- The public-observation source model is the pullback of the canonical plane model. -/
 def sourceValidityModel
     (β : BridgeData) :
-    ProximityPrize.Application.SourceValidityModel :=
+    ProximityCoding.Application.SourceValidityModel :=
   (BridgeData.PlanePair.sourceValidityModel β).pullback
     (toAdmissibleWord (runtime := runtime) (E := E))
 
@@ -107,7 +107,7 @@ pullback.
 -/
 def sourceToPairCalibration
     (β : BridgeData) :
-    ProximityPrize.Application.SourceToCodeCalibration
+    ProximityCoding.Application.SourceToCodeCalibration
       (sourceValidityModel (runtime := runtime) (E := E) β)
       (BridgeData.PlanePair.pairCodeShadow β) :=
   (BridgeData.PlanePair.sourceToPairCalibration β).pullback

@@ -13,7 +13,7 @@ capacity-grid list theorem and the pair-MCA certificate budget.  The coding
 theorems themselves live in their dedicated modules.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace Capacity
 
 /-- The list-decoding capacity benchmark at rate `ρ`. -/
@@ -277,4 +277,4 @@ theorem base_length_dvd_fieldCard_sub_one :
 end SmoothQuarterFamily
 
 end Capacity
-end ProximityPrize
+end ProximityCoding

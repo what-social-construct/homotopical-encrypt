@@ -15,7 +15,7 @@ coordinates, a two-spike line realizes the distinct bad challenges `0` and
 the first nontrivial exact MCA threshold for small fields.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace ReedSolomon.Parameters
 
 open BlockCode
@@ -423,4 +423,4 @@ theorem pairMCABottomThreshold_of_field_lt_one_challenge_budget
     simpa using Nat.mul_le_mul_left (2 ^ securityBits) hcard)
 
 end ReedSolomon.Parameters
-end ProximityPrize
+end ProximityCoding

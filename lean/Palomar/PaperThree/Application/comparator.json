@@ -15,7 +15,7 @@
     "HomotopicalEncryption.Proximity.CanonicalRS.FullGenerator.orderOf_root",
     "HomotopicalEncryption.Proximity.CanonicalRS.PowerRoot.injective_point",
     "HomotopicalEncryption.Proximity.CanonicalRS.candidateGeneratorUnit_order",
-    "ProximityPrize.ReedSolomon.Parameters.fAdditive_of_degreeBound_pos",
+    "ProximityCoding.ReedSolomon.Parameters.fAdditive_of_degreeBound_pos",
     "HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.degreeBound_le_length",
     "HomotopicalEncryption.Protocol.Storage.CanonicalSystematic.degreeBound_pos",
     "HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel.capacityPayload_wellFormed",

@@ -30,7 +30,7 @@ The original cochain application is a separate companion configuration.
 
 /- Generic coding definitions and exact selected statements, independently restated.
 All definitions retain their original canonical names and source bodies. -/
-namespace ProximityPrize
+namespace ProximityCoding
 
 /-- A word indexed by `ι` with symbols in `α`. -/
 abbrev Word (ι α : Type*) := ι → α
@@ -485,10 +485,10 @@ theorem no_fixedChallenge_flat_far_preservation (P : Parameters F ι) (hDegree :
     sorry
 
 end ReedSolomon.Parameters
-end ProximityPrize
+end ProximityCoding
 
 namespace HomotopicalEncryption.Palomar.PaperThree
-open ProximityPrize
+open ProximityCoding
 /-- Both inverse laws hold on all ambient plane and pair words. -/
 theorem planePairEquiv_inverse_laws {ι F : Type*} :
     (∀ p : PlaneWord ι F, (planePairEquiv ι F).symm (planePairEquiv ι F p) = p) ∧
@@ -499,7 +499,7 @@ theorem planeLineEquiv_inverse_laws {ι F : Type*} :
     (∀ L : AffineLine ι F, planeLineEquiv ι F ((planeLineEquiv ι F).symm L) = L) := by sorry
 end HomotopicalEncryption.Palomar.PaperThree
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace Capacity.SmoothQuarterFamily
 noncomputable section
 
@@ -768,4 +768,4 @@ theorem pairMCA_real_128_threshold :
 
 end
 end MCA.BoundaryField
-end ProximityPrize
+end ProximityCoding

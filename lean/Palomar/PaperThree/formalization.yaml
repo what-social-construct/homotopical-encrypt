@@ -46,20 +46,20 @@ sources:
 status:
   scope: >-
     The Comparator surface contains 36 manuscript-facing and 16
-    supporting declarations. Original canonical ProximityPrize definitions
+    supporting declarations. Original canonical ProximityCoding definitions
     are independently restated using Mathlib only; Solution imports the
     canonical proof owners and adds two explicit inverse-law wrappers.
     Definitions remain ordinary and transparent, with no definition holes.
     This is part of the substantive development, not a separate wrapper
-    repository. Local comparison, kernel checks and the separately recorded
-    combined dependency audit pass.
+    repository. Local comparison, kernel checks and the selected-declaration
+    dependency audit pass after the coding namespace rename.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: ["propext", "Quot.sound", "Classical.choice"]
   validation:
     solution_build: "Passed locally for the current 52-declaration configuration."
     challenge_check: "Independent Mathlib-only Challenge statements compile; deliberate theorem placeholders are comparison targets."
-    entry_axiom_audit: "Passed: all 52 configured declarations use only standard logical axioms; the combined audit has 980 standard-only reports."
+    entry_axiom_audit: "Passed: all 52 configured declarations use only standard logical axioms; rechecked after the coding namespace rename."
     local_comparator: "Passed statement/definition comparison; NanoDa and Lean default kernels accept. Local macOS diagnostic with --inadvisably-no-sandbox."
     protected_linux_verification: "Not run for this revision."
     note: >-
@@ -68,41 +68,41 @@ status:
       registration or editorial review is claimed.
   main_results:
     - declaration: "HomotopicalEncryption.Palomar.PaperThree.planePairEquiv_inverse_laws"
-    - declaration: "ProximityPrize.planePairEquiv_hammingDistance"
-    - declaration: "ProximityPrize.planePairEquiv_relativeHammingDistance"
+    - declaration: "ProximityCoding.planePairEquiv_hammingDistance"
+    - declaration: "ProximityCoding.planePairEquiv_relativeHammingDistance"
     - declaration: "HomotopicalEncryption.Palomar.PaperThree.planeLineEquiv_inverse_laws"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorListSizeBoundAt_capacityGrid"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.capacityReceived_ballCardAt_eq_choose"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorFractionalListSizeBoundAt_capacityGrid_iff"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.fieldCard_pow_le_nextShell_ballCardAt"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorFractionalListPhaseSplit"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorFractionalListGridThreshold"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.vectorFractionalListRealThreshold"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.badChallengeSetAt_card_le_choose_succ"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.pairMCAErrorBoundAt_of_compressed_budget"
-    - declaration: "ProximityPrize.BlockCode.pairMCAErrorBoundAt_relativeRadius_invPow_iff_spectrum_budget"
-    - declaration: "ProximityPrize.BlockCode.pairMCAThreshold_eq_of_countBound_and_badLine"
-    - declaration: "ProximityPrize.BlockCode.scalarDistance_ge_of_pairDistance_ge_of_good"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.scalarDistance_eq_capacity_of_pairFar_of_good"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_pairDistance_eq_capacity"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.zeroDirectionPowerLine_flatDistance_eq_half_capacity"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.no_unit_pair_distance_bound_by_flat_distance"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.no_fixedChallenge_pair_far_preservation"
-    - declaration: "ProximityPrize.ReedSolomon.Parameters.no_fixedChallenge_flat_far_preservation"
-    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.rootUnit_order"
-    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_fractionalListSizeBoundAt_capacity"
-    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_listSafeRelativeRadii_eq_Ico"
-    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_listGridThreshold"
-    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_listRealThreshold"
-    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_pairMCAErrorBoundAt"
-    - declaration: "ProximityPrize.Capacity.SmoothQuarterFamily.realized_pairMCAGreatestSafe_eq_length"
-    - declaration: "ProximityPrize.MCA.BoundaryField.modulus_prime"
-    - declaration: "ProximityPrize.MCA.BoundaryField.candidateRootUnit_order"
-    - declaration: "ProximityPrize.MCA.BoundaryField.two_le_paperMCABadSpectrum_one"
-    - declaration: "ProximityPrize.MCA.BoundaryField.paperMCABadSpectrum_zero_eq_one"
-    - declaration: "ProximityPrize.MCA.BoundaryField.pairMCA_exact_128_bit_threshold"
-    - declaration: "ProximityPrize.MCA.BoundaryField.pairMCA_safeRelativeRadii_128_eq_Ico"
-    - declaration: "ProximityPrize.MCA.BoundaryField.pairMCA_real_128_threshold"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.vectorListSizeBoundAt_capacityGrid"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.capacityReceived_ballCardAt_eq_choose"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.vectorFractionalListSizeBoundAt_capacityGrid_iff"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.fieldCard_pow_le_nextShell_ballCardAt"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.vectorFractionalListPhaseSplit"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.vectorFractionalListGridThreshold"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.vectorFractionalListRealThreshold"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.badChallengeSetAt_card_le_choose_succ"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.pairMCAErrorBoundAt_of_compressed_budget"
+    - declaration: "ProximityCoding.BlockCode.pairMCAErrorBoundAt_relativeRadius_invPow_iff_spectrum_budget"
+    - declaration: "ProximityCoding.BlockCode.pairMCAThreshold_eq_of_countBound_and_badLine"
+    - declaration: "ProximityCoding.BlockCode.scalarDistance_ge_of_pairDistance_ge_of_good"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.scalarDistance_eq_capacity_of_pairFar_of_good"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.zeroDirectionPowerLine_pairDistance_eq_capacity"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.zeroDirectionPowerLine_flatDistance_eq_half_capacity"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.no_unit_pair_distance_bound_by_flat_distance"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.no_fixedChallenge_pair_far_preservation"
+    - declaration: "ProximityCoding.ReedSolomon.Parameters.no_fixedChallenge_flat_far_preservation"
+    - declaration: "ProximityCoding.Capacity.SmoothQuarterFamily.rootUnit_order"
+    - declaration: "ProximityCoding.Capacity.SmoothQuarterFamily.realized_fractionalListSizeBoundAt_capacity"
+    - declaration: "ProximityCoding.Capacity.SmoothQuarterFamily.realized_listSafeRelativeRadii_eq_Ico"
+    - declaration: "ProximityCoding.Capacity.SmoothQuarterFamily.realized_listGridThreshold"
+    - declaration: "ProximityCoding.Capacity.SmoothQuarterFamily.realized_listRealThreshold"
+    - declaration: "ProximityCoding.Capacity.SmoothQuarterFamily.realized_pairMCAErrorBoundAt"
+    - declaration: "ProximityCoding.Capacity.SmoothQuarterFamily.realized_pairMCAGreatestSafe_eq_length"
+    - declaration: "ProximityCoding.MCA.BoundaryField.modulus_prime"
+    - declaration: "ProximityCoding.MCA.BoundaryField.candidateRootUnit_order"
+    - declaration: "ProximityCoding.MCA.BoundaryField.two_le_paperMCABadSpectrum_one"
+    - declaration: "ProximityCoding.MCA.BoundaryField.paperMCABadSpectrum_zero_eq_one"
+    - declaration: "ProximityCoding.MCA.BoundaryField.pairMCA_exact_128_bit_threshold"
+    - declaration: "ProximityCoding.MCA.BoundaryField.pairMCA_safeRelativeRadii_128_eq_Ico"
+    - declaration: "ProximityCoding.MCA.BoundaryField.pairMCA_real_128_threshold"
 
 automation:
   methods:
@@ -139,7 +139,7 @@ review:
     This records preparation rather than external human or registry review.
 
 alignment:
-  namespace: "ProximityPrize"
+  namespace: "ProximityCoding"
   wrapper_namespace: "HomotopicalEncryption.Palomar.PaperThree"
   challenge_module: "Palomar.PaperThree.Challenge"
   solution_module: "Palomar.PaperThree.Solution"

@@ -15,7 +15,7 @@ that interval, its excluded supremum, and the other two field-size regimes.
 The intermediate regime is deliberately not assigned an unknown optimum.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 
 namespace CapacityList
 
@@ -201,4 +201,4 @@ theorem vectorFractionalListPhaseSplit
   · exact P.vectorFractionalListSafeRelativeRadii_eq_Ico hε hDegree hn hk
 
 end ReedSolomon.Parameters
-end ProximityPrize
+end ProximityCoding

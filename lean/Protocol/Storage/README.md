@@ -295,5 +295,5 @@ These commands describe validation targets; consult the shared parity record
 for the actual current results and theorem-axiom reports. The
 Paper 2 scope (archived reference: `archive/documentation/papers/paper2/SCOPE.md`),
 cochain trace (archived reference: `archive/documentation/docs/COCHAIN_PROXIMITY_TRACE.md`) and
-[Paper 3 register](../../../papers/proximity-prize/SEMANTIC_PARITY.md)
+[Paper 3 register](../../../papers/paper3/SEMANTIC_PARITY.md)
 retain the separate protocol, profile and radius obligations.

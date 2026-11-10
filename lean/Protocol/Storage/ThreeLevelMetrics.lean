@@ -25,7 +25,7 @@ noncomputable section
 
 namespace HomotopicalEncryption.Protocol.Storage.ThreeLevel
 
-open ProximityPrize
+open ProximityCoding
 open HomotopicalEncryption.Sheaf.SystematicCode
 
 variable {q : ℕ} [Fact q.Prime] {ι : Type} [Fintype ι] [DecidableEq ι]

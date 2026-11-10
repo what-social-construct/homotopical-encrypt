@@ -14,7 +14,7 @@ explicitly require a nonempty code. Relative distance uses the existing block
 length normalization and the same whole-symbol Hamming count as `CloseAt`.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace BlockCode
 
 variable {ι α : Type*} [Fintype ι] [DecidableEq α]
@@ -160,4 +160,4 @@ theorem relativeDistanceToCode_eq_zero_iff
   exact hzero.trans (C.hammingDistanceToCode_eq_zero_iff hC w)
 
 end BlockCode
-end ProximityPrize
+end ProximityCoding

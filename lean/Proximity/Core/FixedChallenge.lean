@@ -18,7 +18,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace ProximityPrize.ReedSolomon.Parameters
+namespace ProximityCoding.ReedSolomon.Parameters
 
 open BlockCode
 
@@ -216,4 +216,4 @@ theorem no_fixedChallenge_flat_far_preservation
   rw [P.fixedCancellingLine_scalarDistance_eq_zero hDegree γ₀ hγ] at hcollapsed
   exact (not_le_of_gt htarget) hcollapsed
 
-end ProximityPrize.ReedSolomon.Parameters
+end ProximityCoding.ReedSolomon.Parameters

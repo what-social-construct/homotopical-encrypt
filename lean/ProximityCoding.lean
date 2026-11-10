@@ -19,7 +19,7 @@ public import Proximity.Capacity.ListPhase
 /-!
 # Capacity-radius proximity: proved infrastructure
 
-This aggregate is the standalone Lean surface for the proximity-prize paper.
+This aggregate is the standalone Lean surface for the proximity paper.
 It exports proved definitions, equivalences, arithmetic, and the universal
 capacity-grid list equality with its exact fractional-target criterion. It
 also exports the sharpened uniform pair-MCA certificate theorem

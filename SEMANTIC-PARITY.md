@@ -20,7 +20,7 @@ The manuscript split is:
 |---|---|---|---|
 | **1** | [Homotopical Encryption](papers/paper1/README.md); LaTeX and PDF | Exactly three numbered themes: **1 Primitives, 2 The Harmonic Cochain Problem, 3 CVP Comparison and Kernel Ambiguity**; Introduction and Conclusion are unnumbered | Supplies cellular/Hodge/semantic HCP/lattice/CVP prerequisites; no commitment, storage, projective or source-calibration contribution. |
 | **2** | [Proof-Carrying Homotopical Encryption](papers/paper2/README.md); [working manuscript](papers/paper2/DRAFT.md) and bibliography; no TeX/PDF bundle | Payload/opening/commitment construction, actual source/codec, released-view binding, storage/evidence, rotation/retrieval, checked transitions and explicit security/runtime contracts | Uses Paper 1's actual primitives and HCP model; supplies the construction data consumed by Paper 3. |
-| **3** | [Capacity-Radius Proximity](papers/proximity-prize/README.md); LaTeX, PDF and independent coding/application entries | RS/list/MCA results, radii, full projective reconstruction/chain, source-calibration obstructions and quantitative native-metric comparisons | Generic coding is independent of protocol completion; application theorems retain Paper 2's actual source, codec and binding/profile data. |
+| **3** | [Capacity-Radius Proximity](papers/paper3/README.md); LaTeX, PDF and independent coding/application entries | RS/list/MCA results, radii, full projective reconstruction/chain, source-calibration obstructions and quantitative native-metric comparisons | Generic coding is independent of protocol completion; application theorems retain Paper 2's actual source, codec and binding/profile data. |
 
 | ID | Material / canonical owner | Paper 1: HCP | Paper 2: protocol/cochains | Paper 3: proximity | Dependency / disposition |
 |---|---|---|---|---|---|
@@ -227,7 +227,7 @@ objects without repeating every declaration. Ownership follows the object or
 result, not its physical module: a file under `Protocol/Storage` can own a
 Paper 3 metric theorem, and a file under `Proximity/Concrete` can carry Paper 2
 binding data. The [Paper 2 inventory](papers/paper2/DRAFT.md#7-construction-ownership-and-remaining-protocol-work)
-and [Paper 3 detailed register](papers/proximity-prize/SEMANTIC_PARITY.md)
+and [Paper 3 detailed register](papers/paper3/SEMANTIC_PARITY.md)
 provide the finer crosswalks.
 
 ### Paper 2 construction and consumption families

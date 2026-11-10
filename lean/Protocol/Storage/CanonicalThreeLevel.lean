@@ -31,7 +31,7 @@ noncomputable section
 namespace HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel
 
 open CanonicalSystematic
-open ProximityPrize
+open ProximityCoding
 
 /-- Native distance on all `2n` original scalar cochain positions. -/
 def cochainDistance (c : Axioms.CochainCommitmentData) : ℝ :=
@@ -154,7 +154,7 @@ theorem capacityPayload_wellFormed : capacityPayload.WellFormed :=
 theorem capacityPayload_rsPairDistance : rsPairDistance capacityPayload = (3 : ℝ) / 4 := by
   unfold rsPairDistance
   rw [reduce_capacityPayload, ← capacityRadius_eq_three_quarters]
-  have h := ProximityPrize.ReedSolomon.Parameters.diagonalPowerPair_relativeDistanceToCode_eq_capacity
+  have h := ProximityCoding.ReedSolomon.Parameters.diagonalPowerPair_relativeDistanceToCode_eq_capacity
     parameters degreeBound_pos degreeBound_le_card
   convert h using 1
 
@@ -171,7 +171,7 @@ theorem capacityPayload_cochainDistance : cochainDistance capacityPayload = (3 :
       simpa only [cochainDistance, reduce_capacityPayload] using hlift
     _ = (3 : ℝ) / 4 := by
       rw [← capacityRadius_eq_three_quarters]
-      have h := ProximityPrize.ReedSolomon.Parameters.flat_diagonalPowerPair_relativeDistanceToCode_eq_capacity
+      have h := ProximityCoding.ReedSolomon.Parameters.flat_diagonalPowerPair_relativeDistanceToCode_eq_capacity
         parameters degreeBound_pos degreeBound_le_card
       convert h using 1
 
@@ -241,7 +241,7 @@ theorem capacityPayload_fold_distance (γ : HomotopicalEncryption.Proximity.Cano
       γ * (extractedLine capacityPayload).direction i) = (3 : ℝ) / 4
   rw [capacityLine_base, capacityLine_direction]
   rw [← capacityRadius_eq_three_quarters]
-  have h := ProximityPrize.ReedSolomon.Parameters.diagonalPowerPair_fold_distance_eq_capacity
+  have h := ProximityCoding.ReedSolomon.Parameters.diagonalPowerPair_fold_distance_eq_capacity
     parameters degreeBound_pos degreeBound_le_card γ hne
   convert h using 1
 
@@ -273,7 +273,7 @@ theorem capacityPower_not_codeword : ¬ parameters.Codeword parameters.powerRece
   have hcap : parameters.toBlockCode.relativeDistanceToCode parameters.powerReceivedWord =
       (3 : ℝ) / 4 := by
     rw [← capacityRadius_eq_three_quarters]
-    have h := ProximityPrize.ReedSolomon.Parameters.powerReceivedWord_relativeDistanceToCode_eq_capacity
+    have h := ProximityCoding.ReedSolomon.Parameters.powerReceivedWord_relativeDistanceToCode_eq_capacity
       parameters degreeBound_pos degreeBound_le_card
     convert h using 1
   linarith

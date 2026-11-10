@@ -22,7 +22,7 @@ and quantitative metric comparisons for that source.
 
 Canonical proofs and selections:
 
-- [ProximityPrize.lean](../../lean/ProximityPrize.lean) and the
+- [ProximityCoding.lean](../../lean/ProximityCoding.lean) and the
   [generic coding modules](../../lean/Proximity/README.md) own the universal
   list, family, MCA, distance and calibration results.
 - [CanonicalThreeLevel.lean](../../lean/Protocol/Storage/CanonicalThreeLevel.lean)

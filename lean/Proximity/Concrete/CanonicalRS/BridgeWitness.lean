@@ -93,7 +93,7 @@ theorem decisionNearRadiusReal_lt_johnsonRadiusReal (β : BridgeData) :
   have hfar : β.johnsonRadiusReal = (2047 : ℝ) / 4096 := by
     norm_num [johnsonRadiusReal,
       ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius,
-      ProximityPrize.BlockCode.relativeRadius, johnsonBelowRadius, length]
+      ProximityCoding.BlockCode.relativeRadius, johnsonBelowRadius, length]
   rw [hfar]
   exact decisionNearRadiusReal_lt_farRadius
 

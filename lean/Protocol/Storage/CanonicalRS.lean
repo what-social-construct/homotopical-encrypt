@@ -31,9 +31,9 @@ open HomotopicalEncryption.Proximity.CanonicalRS
 
 private theorem legacyRelativeDistanceToCode_eq_generic
     {α : Type} [DecidableEq α]
-    (code : ProximityPrize.BlockCode (Fin length) α)
+    (code : ProximityCoding.BlockCode (Fin length) α)
     (hcode : ∃ word, code.Codeword word)
-    (word : ProximityPrize.Word (Fin length) α) :
+    (word : ProximityCoding.Word (Fin length) α) :
     BridgeData.PlanePair.relativeDistanceToCode code word =
       code.relativeDistanceToCode word := by
   obtain ⟨nearest, hnearest, hmin⟩ := code.exists_nearest_codeword_relative hcode word

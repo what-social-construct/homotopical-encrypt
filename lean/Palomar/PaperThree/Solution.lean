@@ -1,6 +1,6 @@
 module
 
-public import ProximityPrize
+public import ProximityCoding
 
 @[expose] public section
 set_option autoImplicit false
@@ -14,7 +14,7 @@ Challenge is not imported by this module.
 -/
 
 namespace HomotopicalEncryption.Palomar.PaperThree
-open ProximityPrize
+open ProximityCoding
 theorem planePairEquiv_inverse_laws {ι F : Type*} :
     (∀ p : PlaneWord ι F, (planePairEquiv ι F).symm (planePairEquiv ι F p) = p) ∧
     (∀ w : PairWord ι F, planePairEquiv ι F ((planePairEquiv ι F).symm w) = w) := by

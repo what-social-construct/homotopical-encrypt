@@ -13,7 +13,7 @@ The plan is **three papers and three Palomar submissions, one per paper**.
 |---|---|---|
 | [Paper 1: Hidden Hodge Operators and the Harmonic Cochain Problem](papers/paper1/README.md) | Cellular/Hodge primitives, HCP, semantic classes, harmonic lattices, known-lattice CVP comparisons and exact-recovery ambiguity. | [PDF](papers/paper1/main.pdf), [TeX](papers/paper1/main.tex) and [formalization entry](lean/Palomar/PaperOne/README.md); first planned submission. |
 | [Paper 2: Proof-Carrying Homotopical Encryption](papers/paper2/README.md) | Cochain commitments, visibility and codec contracts, storage, proof-carrying transitions and security-game obligations. | [Working Markdown draft](papers/paper2/DRAFT.md); TeX/PDF and a dedicated submission entry remain to be prepared. |
-| [Paper 3: Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes](papers/proximity-prize/README.md) | Projective reconstruction in the projection chain, coding/list/MCA results, radii and native modular metric comparisons. | [PDF](papers/proximity-prize/main.pdf), [TeX](papers/proximity-prize/main.tex) and two internal verification configurations for one planned submission. |
+| [Paper 3: Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes](papers/paper3/README.md) | Projective reconstruction in the projection chain, coding/list/MCA results, radii and native modular metric comparisons. | [PDF](papers/paper3/main.pdf), [TeX](papers/paper3/main.tex) and two internal verification configurations for one planned submission. |
 
 The [shared parity register](SEMANTIC-PARITY.md) assigns canonical objects and
 statements to these papers. The [source ledger](docs/SOURCE_LEDGER.md)
@@ -74,7 +74,7 @@ With a full TeX installation, run separately from the repository root:
 
 ~~~sh
 latexmk -cd -pdf -interaction=nonstopmode -halt-on-error papers/paper1/main.tex
-latexmk -cd -pdf -interaction=nonstopmode -halt-on-error papers/proximity-prize/main.tex
+latexmk -cd -pdf -interaction=nonstopmode -halt-on-error papers/paper3/main.tex
 ~~~
 
 Read the compiled PDFs beside their TeX sources under `papers/`; generated
@@ -88,7 +88,7 @@ checks; they do not certify a particular working tree.
 lean/                       Definitions, proofs and verification entries
 papers/paper1/              HCP foundations manuscript
 papers/paper2/              Protocol draft
-papers/proximity-prize/     Coding/proximity manuscript
+papers/paper3/              Coding/proximity manuscript
 docs/                       Source ledger and current mathematical crosswalks
 scripts/                    Lean/manuscript checks and package generation
 output/                     Review packages and validation artifacts

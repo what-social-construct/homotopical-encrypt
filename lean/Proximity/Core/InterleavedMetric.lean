@@ -16,7 +16,7 @@ comparison. Neither metric is defined as the other metric's pullback.
 
 set_option autoImplicit false
 
-namespace ProximityPrize.BlockCode
+namespace ProximityCoding.BlockCode
 
 variable {ι α : Type*}
 
@@ -193,4 +193,4 @@ theorem pairFar_of_flatFar
 
 end Normalized
 
-end ProximityPrize.BlockCode
+end ProximityCoding.BlockCode

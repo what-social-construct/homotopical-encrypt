@@ -13,7 +13,7 @@ on each half-open interval `[r/n,(r+1)/n)`. The lemmas here make that rounding
 boundary explicit without selecting a floor operation or a coding instance.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 
 namespace RadiusShell
 
@@ -150,4 +150,4 @@ theorem one_le_ballCardAt_self
 
 end FiniteAlphabet
 end BlockCode
-end ProximityPrize
+end ProximityCoding

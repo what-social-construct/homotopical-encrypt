@@ -17,7 +17,7 @@ public import Mathlib.Algebra.Order.Archimedean.Real.Basic
   The verifier-facing metric is relative Hamming distance from a received word
   to the RS code. Absolute Hamming distance remains as a low-level finite
   helper; the bridge exposes the normalized `δ ∈ [0,1]` convention used by the
-  proximity-prize statements.
+  proximity statements.
 -/
 
 namespace HomotopicalEncryption
@@ -179,7 +179,7 @@ theorem relativeHammingDistanceToCode_le_of_close
       (Nat.cast_nonneg length)
   unfold relativeHammingDistanceToCode
   unfold ReedSolomonTarget.Target.RadiusNormalization.relativeHammingRadius
-  unfold ProximityPrize.BlockCode.relativeRadius
+  unfold ProximityCoding.BlockCode.relativeRadius
   simpa only [Fintype.card_fin] using h
 
 /-- Canonical relative Hamming received-word metric. -/

@@ -82,7 +82,7 @@ def sheaf := Sheaf.SystematicCode.sheaf parameters informationSet
 /-- Construct the layout before specializing the finite coordinate cardinality. -/
 def systematicLayout {q : ℕ} [Fact q.Prime] {ι : Type}
     [Fintype ι] [DecidableEq ι]
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
     CoordinateLayout (Sheaf.SystematicCode.sheaf P S) ι where
   coordinate := Sheaf.SystematicCode.layout
   serialized := Fintype.equivFin _
@@ -92,7 +92,7 @@ def layout : CoordinateLayout sheaf Index := systematicLayout parameters informa
 /-- Prove the structural model before specializing large finite dimensions. -/
 theorem systematicModel {q : ℕ} [Fact q.Prime] {ι : Type}
     [Fintype ι] [DecidableEq ι]
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
     SystematicModel (systematicLayout P S) P S where
   exact_iff := Sheaf.SystematicCode.isExact_iff_realCheck_eq_zero P S
 
@@ -177,7 +177,7 @@ theorem payload_wellFormed (z : Index → Fin 2 → ℤ) : (payload z).WellForme
 
 theorem payload_not_exact_of_nonzero_syndrome
     {q : ℕ} [Fact q.Prime] {ι : Type} [Fintype ι] [DecidableEq ι]
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (z : ι → Fin 2 → ℤ) (j : Fin 2)
     (hcheck : P.realCheck S (fun i => (z i j : ℝ)) ≠ 0) :
     ¬ (Sheaf.SystematicCode.sheaf P S).IsExactOneCochain
@@ -208,8 +208,8 @@ theorem unitPayload_noWrap (j : Fin 2) :
     simpa only [unitWord, and_true] using
       (parameters.single_outside_noWrap_nonzero informationSet outside outside_not_mem).1
   · intro i
-    simp [ProximityPrize.ReedSolomon.Parameters.integerCheck,
-      ProximityPrize.ReedSolomon.Parameters.integerEncode, unitWord, hj,
+    simp [ProximityCoding.ReedSolomon.Parameters.integerCheck,
+      ProximityCoding.ReedSolomon.Parameters.integerEncode, unitWord, hj,
       Axioms.canonicalCochainModulus]
 
 /-- Positive source distance is geometric nonexactness in the constructed sheaf. -/

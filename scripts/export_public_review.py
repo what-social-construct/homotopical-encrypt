@@ -47,7 +47,7 @@ jobs:
         working-directory: papers/paper1
         run: latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
       - name: Build Paper 3
-        working-directory: papers/proximity-prize
+        working-directory: papers/paper3
         run: latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 """
 
@@ -63,7 +63,7 @@ def source_files():
     scanned_roots = []
     for folder, extensions in (("lean", {".lean", ".md"}),
                                ("papers/paper1", {".tex", ".bib", ".md", ".pdf"}),
-                               ("papers/proximity-prize", {".tex", ".bib", ".md", ".pdf"}),
+                               ("papers/paper3", {".tex", ".bib", ".md", ".pdf"}),
                                ("papers/paper2", {".tex", ".bib", ".md", ".pdf"})):
         scanned_roots.append(ROOT / folder)
         for path in scanned_roots[-1].rglob("*"):

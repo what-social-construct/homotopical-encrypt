@@ -19,7 +19,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace ProximityPrize.ReedSolomon.Parameters
+namespace ProximityCoding.ReedSolomon.Parameters
 
 open BlockCode CapacityList
 
@@ -230,4 +230,4 @@ theorem diagonalPowerPair_fold_distance_eq_capacity
   rw [hw]
   exact P.scaledPowerWord_relativeDistanceToCode_eq_capacity hDegree hk _ hcoef
 
-end ProximityPrize.ReedSolomon.Parameters
+end ProximityCoding.ReedSolomon.Parameters

@@ -34,15 +34,16 @@ placeholders and a Mathlib-only import surface. Solution supplies canonical
 proof adapters without importing Challenge. Its local import closure is
 21 modules, plus the independent one-module Challenge closure.
 
-The full-residual source obstruction, full Plücker coordinates,
-subspace/projector reconstruction and the
-projective-to-cochain/plane/RS chain are introduced in
-[Paper 3 §7](../proximity-prize/sections/07-application-interface.tex).
-Their canonical Lean proofs remain in place, outside this paper's selected
-entry. [Paper 2](../paper2/DRAFT.md) owns cochain construction, codec,
-visibility, security contracts and protocol evidence, using those geometric
-results when specifying released views. Paper 3 owns the coding and native
-metric/radius comparisons. The shared ownership table records this split.
+[Paper 2](../paper2/DRAFT.md) owns cochain construction, codec, visibility,
+security contracts and protocol evidence. It uses the geometric results
+developed in Paper 3 when specifying released views.
+
+[Paper 3 §7](../paper3/sections/07-application-interface.tex) introduces the
+full-residual source obstruction, full Plücker coordinates,
+subspace/projector reconstruction and the projective-to-cochain/plane/RS
+chain. Paper 3 also owns the coding and native metric/radius comparisons.
+The canonical Lean proofs of these geometric results remain in place,
+outside Paper 1's selected entry. The shared ownership table records this split.
 
 The [source ledger](../../docs/SOURCE_LEDGER.md#bibliography-correspondence)
 accounts for all 28 sources across the three bibliographies. The projective

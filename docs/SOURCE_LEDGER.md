@@ -5,8 +5,8 @@ the chain/network working review; that review retains architecture provenance.
 Use source IDs as stable lookup keys. Full citation metadata stays in the
 [Paper 1 bibliography](../papers/paper1/references.bib),
 [Paper 2 bibliography](../papers/paper2/references.bib) and
-[Paper 3 bibliography](../papers/proximity-prize/references.bib).
-Paper 3’s [manuscript](../papers/proximity-prize/main.tex) contains its
+[Paper 3 bibliography](../papers/paper3/references.bib).
+Paper 3’s [manuscript](../papers/paper3/main.tex) contains its
 source-to-claim comparison; the [live parity register](../SEMANTIC-PARITY.md)
 records the mathematical objects and remaining obligations.
 
@@ -31,7 +31,7 @@ below retain their review depth and applicability conditions.
 
 Here **P1** means [Paper 1 references.bib](../papers/paper1/references.bib),
 **P2** means [Paper 2 references.bib](../papers/paper2/references.bib), and
-**P3** means [Paper 3 references.bib](../papers/proximity-prize/references.bib).
+**P3** means [Paper 3 references.bib](../papers/paper3/references.bib).
 Metadata for the 19 newly added records was checked against the primary
 versioned arXiv pages on 2026-11-09. Reviewed versions are retained rather
 than silently upgraded: for example, `2611.05136v1` is the reviewed PRG

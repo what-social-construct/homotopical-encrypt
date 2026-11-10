@@ -17,7 +17,7 @@ the Reed--Solomon covering bound directly by interpolation. No concrete
 commitment, runtime object or cited-bound axiom is imported.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace BlockCode
 
 section Agreement
@@ -268,4 +268,4 @@ noncomputable def distanceCalibration
   noncollapse _ := le_rfl
 
 end BlockCode
-end ProximityPrize
+end ProximityCoding

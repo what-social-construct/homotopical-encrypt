@@ -41,7 +41,7 @@ def layout : (ι × Fin 2) ≃ TotalCoord Unit (fun _ => Fintype.card (ι × Fin
     simp
 
 /-- The original real encoder function in the fixed information and edge coordinates. -/
-def generatorFun (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+def generatorFun (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (data : Coord (Fintype.card ({a // a ∈ S} × Fin 2))) :
     Coord (Fintype.card (ι × Fin 2)) :=
   WithLp.toLp ((2 : ℕ) : ENNReal) fun idx =>
@@ -50,32 +50,32 @@ def generatorFun (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Fi
       (fun a => data ((Fintype.equivFin ({a // a ∈ S} × Fin 2)) (a, p.2))) p.1
 
 /-- The actual encoder preserves addition of the same input coordinate vectors. -/
-theorem generatorFun_add (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+theorem generatorFun_add (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (a b : Coord (Fintype.card ({a // a ∈ S} × Fin 2))) :
     generatorFun P S (a + b) = generatorFun P S a + generatorFun P S b := by
   apply PiLp.ext
   intro idx
-  simp [generatorFun, ProximityPrize.ReedSolomon.Parameters.realEncode,
+  simp [generatorFun, ProximityCoding.ReedSolomon.Parameters.realEncode,
     add_mul, Finset.sum_add_distrib]
 
 /-- The same encoder preserves real scalar multiplication. -/
-theorem generatorFun_smul (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+theorem generatorFun_smul (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (r : ℝ) (a : Coord (Fintype.card ({a // a ∈ S} × Fin 2))) :
     generatorFun P S (r • a) = r • generatorFun P S a := by
   apply PiLp.ext
   intro idx
-  simp [generatorFun, ProximityPrize.ReedSolomon.Parameters.realEncode,
+  simp [generatorFun, ProximityCoding.ReedSolomon.Parameters.realEncode,
     mul_assoc, Finset.mul_sum]
 
 /-- The original systematic cellular restriction map, with named linearity proofs. -/
-def generator (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
+def generator (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
     Coord (Fintype.card ({a // a ∈ S} × Fin 2)) →ₗ[ℝ]
       Coord (Fintype.card (ι × Fin 2)) where
   toFun := generatorFun P S
   map_add' := generatorFun_add P S
   map_smul' := generatorFun_smul P S
 
-def sheaf (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
+def sheaf (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
     CellularSheaf complex where
   vertexDim _ := Fintype.card ({a // a ∈ S} × Fin 2)
   edgeDim _ := Fintype.card (ι × Fin 2)
@@ -86,7 +86,7 @@ def sheaf (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι
   restrictionComp _ _ f := Empty.elim f
 
 theorem generator_apply
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (data : Coord (Fintype.card ({a // a ∈ S} × Fin 2))) (p : ι × Fin 2) :
     generator P S data ((Fintype.equivFin (ι × Fin 2)) p) =
       P.realEncode S
@@ -94,7 +94,7 @@ theorem generator_apply
   simp [generator, generatorFun]
 
 theorem delta0_apply
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (a : (sheaf P S).C0) (p : ι × Fin 2) :
     (sheaf P S).delta0 a (layout p) =
       P.realEncode S
@@ -117,21 +117,21 @@ theorem delta0_apply
   rfl
 
 /-- Source vectors are actual edge-stalk coordinates in the chosen layout. -/
-def ofWord (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+def ofWord (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (z : ι → Fin 2 → ℝ) : (sheaf P S).C1 :=
   WithLp.toLp 2 fun coordinate =>
     z (layout.symm coordinate).1 (layout.symm coordinate).2
 
 @[simp]
 theorem ofWord_apply
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (z : ι → Fin 2 → ℝ) (i : ι) (j : Fin 2) :
     ofWord P S z (layout (i, j)) = z i j := by
   simp [ofWord]
 
 /-- Exactness is derived from the actual cellular coboundary, not postulated. -/
 theorem isExact_iff_realCheck_eq_zero
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (b : (sheaf P S).C1) :
     (sheaf P S).IsExactOneCochain b ↔
       ∀ j, P.realCheck S (fun i => b (layout (i, j))) = 0 := by
@@ -162,7 +162,7 @@ theorem isExact_iff_realCheck_eq_zero
     exact (sub_eq_zero.mp hi).symm
 
 theorem ofWord_isExact_iff
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (z : ι → Fin 2 → ℝ) :
     (sheaf P S).IsExactOneCochain (ofWord P S z) ↔
       ∀ j, P.realCheck S (fun i => z i j) = 0 := by
@@ -172,7 +172,7 @@ theorem ofWord_isExact_iff
 /-- No-wrap received pairs that are genuine RS codewords decode to exact
 cochains in this constructed cellular sheaf. -/
 theorem ofWord_isExact_of_vectorCodeword_of_noWrap
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (hDegree : 0 < P.degreeBound) (hS : S.card = P.degreeBound)
     (z : ι → Fin 2 → ℤ)
     (hw : P.VectorCodeword (Fin 2) (fun i j => (z i j : ZMod q)))

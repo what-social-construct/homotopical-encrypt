@@ -9,21 +9,21 @@ verification entries for one manuscript.
 [Comparator configuration](comparator.json) selects **52 declarations**:
 **36 manuscript-facing and 16 supporting**. [Challenge](Challenge.lean)
 independently defines the objects using Mathlib only, retaining canonical
-`ProximityPrize` names and ordinary definition bodies. [Solution](Solution.lean)
+`ProximityCoding` names and ordinary definition bodies. [Solution](Solution.lean)
 imports canonical proofs and supplies the two equivalence-inverse wrappers
 under `HomotopicalEncryption.Palomar.PaperThree`. Definitions are transparent;
 `definition_names` is empty. Challenge's **51 intentional theorem placeholders**
 are comparison targets; Solution has no proof or definition holes.
 
-In the crosswalk, `RS` is `ProximityPrize.ReedSolomon.Parameters`, `BC` is
-`ProximityPrize.BlockCode`, `GF` is `ProximityPrize.Capacity.SmoothQuarterFamily`,
-`BF` is `ProximityPrize.MCA.BoundaryField`, and `E` is
+In the crosswalk, `RS` is `ProximityCoding.ReedSolomon.Parameters`, `BC` is
+`ProximityCoding.BlockCode`, `GF` is `ProximityCoding.Capacity.SmoothQuarterFamily`,
+`BF` is `ProximityCoding.MCA.BoundaryField`, and `E` is
 `HomotopicalEncryption.Palomar.PaperThree`. Canonical proofs are collected by
-[ProximityPrize](../../ProximityPrize.lean).
+[ProximityCoding](../../ProximityCoding.lean).
 
 | Group / source | Selected content and declaration anchors |
 | --- | --- |
-| P3-S01 · §3 | `E.planePairEquiv_inverse_laws` and `ProximityPrize.planePairEquiv_hammingDistance` / `planePairEquiv_relativeHammingDistance`: equivalence of full plane and pair carriers, preserving whole-symbol distance. |
+| P3-S01 · §3 | `E.planePairEquiv_inverse_laws` and `ProximityCoding.planePairEquiv_hammingDistance` / `planePairEquiv_relativeHammingDistance`: equivalence of full plane and pair carriers, preserving whole-symbol distance. |
 | P3-S02 · §3 | `E.planeLineEquiv_inverse_laws`: the full plane carrier corresponds to arbitrary affine-line base and direction. |
 | P3-S03 · §5 | `RS.vectorListSizeBoundAt_capacityGrid`, `capacityReceived_ballCardAt_eq_choose`, `vectorFractionalListSizeBoundAt_capacityGrid_iff`: exact capacity-grid list size `choose(n,k)` and attaining word for every positive width. |
 | P3-S04 · §5 | `RS.fieldCard_pow_le_nextShell_ballCardAt`: the next-shell list has at least the field cardinality to the interleaving width. |

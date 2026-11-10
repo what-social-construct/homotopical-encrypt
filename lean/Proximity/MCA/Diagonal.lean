@@ -23,7 +23,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace ProximityPrize
+namespace ProximityCoding
 
 namespace AffineLine
 
@@ -198,4 +198,4 @@ theorem challengeFraction_badChallengeSetAt_eq_of_diagonal
 end FiniteChallenges
 
 end FAdditiveCode
-end ProximityPrize
+end ProximityCoding

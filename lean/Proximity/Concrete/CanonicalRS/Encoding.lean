@@ -183,7 +183,7 @@ theorem canonicalPlaneWordEquiv_hammingDistance
         (canonicalPlaneWordEquiv iota q) =
       BlockCode.hammingDistance p q := by
   unfold BlockCode.hammingDistance
-  unfold ProximityPrize.BlockCode.hammingDistance
+  unfold ProximityCoding.BlockCode.hammingDistance
   congr 1
   ext i
   simp [canonicalPlaneWordEquiv]
@@ -198,12 +198,12 @@ theorem canonicalPlaneWordEquiv_relativeHammingDistance
       BlockCode.relativeHammingDistance p q := by
   have hdist := canonicalPlaneWordEquiv_hammingDistance p q
   change
-    ProximityPrize.BlockCode.hammingDistance
+    ProximityCoding.BlockCode.hammingDistance
         (canonicalPlaneWordEquiv iota p)
         (canonicalPlaneWordEquiv iota q) =
-      ProximityPrize.BlockCode.hammingDistance p q at hdist
+      ProximityCoding.BlockCode.hammingDistance p q at hdist
   unfold BlockCode.relativeHammingDistance
-  unfold ProximityPrize.BlockCode.relativeHammingDistance
+  unfold ProximityCoding.BlockCode.relativeHammingDistance
   rw [hdist]
 
 /--

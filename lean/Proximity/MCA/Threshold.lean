@@ -22,7 +22,7 @@ The finite-threshold wrappers expose the safe radii, greatest safe radius, and
 first unsafe radius on the count grid `0, ..., n`.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace BlockCode
 
 section WorstBadCount
@@ -378,4 +378,4 @@ theorem pairMCAThreshold_eq_of_safe_next_unsafe
 end ThresholdGrid
 
 end BlockCode
-end ProximityPrize
+end ProximityCoding

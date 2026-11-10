@@ -15,7 +15,7 @@ public import Proximity.Concrete.RS.ReedSolomon
   - The shared parity register distinguishes standalone proofs from
     conditional application adapters and literature-bound inputs.
 
-  This aggregate keeps the prize-side list-decoding, correlated-agreement, and
+  This aggregate keeps the list-decoding, correlated-agreement, and
   RS code-family interfaces together. `Proximity.RS.Target` adds the final
   problem-facing target interface, and `Proximity.CanonicalRS` remains the
   concrete calibrated parameter regime used by the application bridge.

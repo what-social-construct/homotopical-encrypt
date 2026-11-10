@@ -6,9 +6,11 @@ canonical identifiers:
 | Surface | Identifier |
 |---|---|
 | Lean namespace | `HomotopicalEncryption` |
+| Standalone coding namespace and aggregate | `ProximityCoding` |
 | Lean package | `homotopical-encrypt-proofs` |
 | Repository/review name | `homotopical-encrypt` |
 | Lean protocol domain prefix | `HOMOTOPICAL_ENCRYPT` |
+| Paper 3 manuscript directory | `papers/paper3/` |
 
 The active repository scope is Lean and the corresponding manuscripts.
 The historical Rust/Python workspace, prompts, examples, tests and build

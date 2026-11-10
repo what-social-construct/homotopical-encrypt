@@ -8,7 +8,7 @@ public import Proximity.Core.ReedSolomon
 /-!
 # Compatibility and application predicates for Reed--Solomon codes
 
-`ProximityPrize.ReedSolomon` owns evaluation domains, scalar/vector codewords,
+`ProximityCoding.ReedSolomon` owns evaluation domains, scalar/vector codewords,
 and F-additivity. This module preserves their historical `HomotopicalEncryption.Proximity`
 names and retains the conditional list/CA/MCA application adapters used by
 Paper 3. The protocol profile that consumes them belongs to Paper 2.
@@ -20,53 +20,53 @@ namespace ReedSolomon
 
 /-- Compatibility alias for paper-style vector symbols. -/
 abbrev VectorSymbol (F σ : Type*) :=
-  ProximityPrize.ReedSolomon.VectorSymbol F σ
+  ProximityCoding.ReedSolomon.VectorSymbol F σ
 
 /-- Compatibility alias for vector received words. -/
 abbrev VectorWord (ι F σ : Type*) :=
-  ProximityPrize.ReedSolomon.VectorWord ι F σ
+  ProximityCoding.ReedSolomon.VectorWord ι F σ
 
 /-- Compatibility alias for injectively indexed evaluation domains. -/
 abbrev EvaluationDomain (F ι : Type*) :=
-  ProximityPrize.ReedSolomon.EvaluationDomain F ι
+  ProximityCoding.ReedSolomon.EvaluationDomain F ι
 
 /-- Compatibility alias for smooth evaluation domains. -/
 abbrev SmoothEvaluationDomain (F ι : Type*) :=
-  ProximityPrize.ReedSolomon.SmoothEvaluationDomain F ι
+  ProximityCoding.ReedSolomon.SmoothEvaluationDomain F ι
 
 /-- Compatibility alias for standalone RS parameters. -/
 abbrev Parameters (F ι : Type*) [Field F] [Fintype ι] :=
-  ProximityPrize.ReedSolomon.Parameters F ι
+  ProximityCoding.ReedSolomon.Parameters F ι
 
 namespace Parameters
 
 variable {F ι : Type*} [Field F] [Fintype ι]
 
 abbrev length (P : Parameters F ι) : ℕ :=
-  ProximityPrize.ReedSolomon.Parameters.length P
+  ProximityCoding.ReedSolomon.Parameters.length P
 
 abbrev dimensionBound (P : Parameters F ι) : ℕ :=
-  ProximityPrize.ReedSolomon.Parameters.dimensionBound P
+  ProximityCoding.ReedSolomon.Parameters.dimensionBound P
 
 abbrev Codeword (P : Parameters F ι) (w : Word ι F) : Prop :=
-  ProximityPrize.ReedSolomon.Parameters.Codeword P w
+  ProximityCoding.ReedSolomon.Parameters.Codeword P w
 
 abbrev toBlockCode (P : Parameters F ι) : BlockCode ι F :=
-  ProximityPrize.ReedSolomon.Parameters.toBlockCode P
+  ProximityCoding.ReedSolomon.Parameters.toBlockCode P
 
 abbrev vectorBlockCode (P : Parameters F ι) (σ : Type*) :
     BlockCode ι (VectorSymbol F σ) :=
-  ProximityPrize.ReedSolomon.Parameters.vectorBlockCode P σ
+  ProximityCoding.ReedSolomon.Parameters.vectorBlockCode P σ
 
 abbrev VectorCodeword
     (P : Parameters F ι)
     (σ : Type*)
     (w : VectorWord ι F σ) : Prop :=
-  ProximityPrize.ReedSolomon.Parameters.VectorCodeword P σ w
+  ProximityCoding.ReedSolomon.Parameters.VectorCodeword P σ w
 
 /-- Compatibility alias for RS F-additivity certificates. -/
 abbrev FAdditive (P : Parameters F ι) :=
-  ProximityPrize.ReedSolomon.Parameters.FAdditive P
+  ProximityCoding.ReedSolomon.Parameters.FAdditive P
 
 namespace FAdditive
 
@@ -74,14 +74,14 @@ abbrev toFAdditiveCode
     {P : Parameters F ι}
     (hP : P.FAdditive) :
     FAdditiveCode F ι F :=
-  ProximityPrize.ReedSolomon.Parameters.FAdditive.toFAdditiveCode hP
+  ProximityCoding.ReedSolomon.Parameters.FAdditive.toFAdditiveCode hP
 
 abbrev toVectorFAdditiveCode
     {P : Parameters F ι}
     (hP : P.FAdditive)
     (σ : Type*) :
     FAdditiveCode F ι (VectorSymbol F σ) :=
-  ProximityPrize.ReedSolomon.Parameters.FAdditive.toVectorFAdditiveCode hP σ
+  ProximityCoding.ReedSolomon.Parameters.FAdditive.toVectorFAdditiveCode hP σ
 
 end FAdditive
 
@@ -89,7 +89,7 @@ abbrev fAdditive_of_degreeBound_pos
     (P : Parameters F ι)
     (hDegree : 0 < P.degreeBound) :
     P.FAdditive :=
-  ProximityPrize.ReedSolomon.Parameters.fAdditive_of_degreeBound_pos P hDegree
+  ProximityCoding.ReedSolomon.Parameters.fAdditive_of_degreeBound_pos P hDegree
 
 section ListDecoding
 

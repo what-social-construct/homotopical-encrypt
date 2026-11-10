@@ -13,7 +13,7 @@ words and to arbitrary affine-line presentations. The pair equivalence is an
 isometry for whole-symbol Hamming distance.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 
 /-- A two-coordinate field-valued plane. -/
 abbrev PlaneWord (ι F : Type*) := Word ι (Fin 2 → F)
@@ -145,4 +145,4 @@ theorem evaluatePlane_apply
     evaluatePlane p γ i = p i 0 + γ * p i 1 :=
   rfl
 
-end ProximityPrize
+end ProximityCoding

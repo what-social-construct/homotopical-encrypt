@@ -32,26 +32,26 @@ variable {Vertex Edge Face : Type*}
 
 /-- Read and reduce both coordinates of the original stored cochain. -/
 def extractedPair (E : CochainPlane.PlaneExtractionContext ℤ ι)
-    (C : Context Fsheaf) : ProximityPrize.Word ι (Fin 2 → K) :=
+    (C : Context Fsheaf) : ProximityCoding.Word ι (Fin 2 → K) :=
   fun i j => ((E.projectedPlane C.cochain i j : ℤ) : K)
 
 /-- A concrete local lifting criterion, not an assumed source-to-pair inequality. -/
 structure LiftControl
     (C : Context Fsheaf)
     (E : CochainPlane.PlaneExtractionContext ℤ ι)
-    (code : ProximityPrize.BlockCode ι (Fin 2 → K)) (scale : ℝ) where
+    (code : ProximityCoding.BlockCode ι (Fin 2 → K)) (scale : ℝ) where
   lift : {word // code.Codeword word} → Fsheaf.C1
   exact_lift : ∀ word, Fsheaf.IsExactOneCochain (lift word)
   decoder_bound : ∀ word,
     ‖C.interpretation.decode C.cochain - lift word‖ ≤
-      scale * ProximityPrize.BlockCode.relativeHammingDistance
+      scale * ProximityCoding.BlockCode.relativeHammingDistance
         word.val (extractedPair E C)
 
 namespace LiftControl
 
 variable {C : Context Fsheaf}
   {E : CochainPlane.PlaneExtractionContext ℤ ι}
-  {code : ProximityPrize.BlockCode ι (Fin 2 → K)} {scale : ℝ}
+  {code : ProximityCoding.BlockCode ι (Fin 2 → K)} {scale : ℝ}
 
 /-- The nearest target codeword and its exact lift prove the geometric comparison. -/
 theorem decodedDistance_le_scaled_pairDistance
@@ -64,7 +64,7 @@ theorem decodedDistance_le_scaled_pairDistance
     C.decodedDistance ≤
         ‖C.interpretation.decode C.cochain - control.lift ⟨word, hword⟩‖ :=
       Fsheaf.exactDistance_le_norm_sub _ (control.exact_lift ⟨word, hword⟩)
-    _ ≤ scale * ProximityPrize.BlockCode.relativeHammingDistance
+    _ ≤ scale * ProximityCoding.BlockCode.relativeHammingDistance
           word (extractedPair E C) := control.decoder_bound ⟨word, hword⟩
     _ = scale * code.relativeDistanceToCode (extractedPair E C) := by
       rw [hnearest]
@@ -96,7 +96,7 @@ end LiftControl
 theorem no_liftControl_of_nonexact_codeword
     (C : Context Fsheaf)
     (E : CochainPlane.PlaneExtractionContext ℤ ι)
-    (code : ProximityPrize.BlockCode ι (Fin 2 → K))
+    (code : ProximityCoding.BlockCode ι (Fin 2 → K))
     (hsource : ¬ C.Accepted)
     (htarget : code.Codeword (extractedPair E C)) :
     ¬ ∃ scale : ℝ, Nonempty (LiftControl C E code scale) := by

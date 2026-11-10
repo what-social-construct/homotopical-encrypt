@@ -1,10 +1,10 @@
 # Output locations
 
 The canonical manuscript sources and compiled PDFs live together under
-`papers/paper1/` and `papers/proximity-prize/`. Paper 2 is a working text draft.
+`papers/paper1/` and `papers/paper3/`. Paper 2 is a working text draft.
 
 Read the canonical PDFs directly: [Paper 1](../papers/paper1/main.pdf) and
-[Paper 3](../papers/proximity-prize/main.pdf). There is no separate reading-copy
+[Paper 3](../papers/paper3/main.pdf). There is no separate reading-copy
 directory under `output/`.
 
 | Location | Purpose |

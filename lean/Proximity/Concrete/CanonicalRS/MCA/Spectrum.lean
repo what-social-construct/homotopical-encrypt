@@ -24,9 +24,9 @@ namespace Spectrum
 
 noncomputable section
 
-open ProximityPrize
-open ProximityPrize.BlockCode
-open ProximityPrize.ReedSolomon.Parameters
+open ProximityCoding
+open ProximityCoding.BlockCode
+open ProximityCoding.ReedSolomon.Parameters
 
 /-- The canonical RS dimension is positive. -/
 theorem canonical_degreeBound_pos :
@@ -71,7 +71,7 @@ At count radius zero, a concrete unit-spike line already exceeds the canonical
 `128`-bit challenge budget.
 -/
 theorem exists_radius_zero_line_exceeding_128_bit_budget :
-    ∃ L : ProximityPrize.AffineLine (Fin length) RSField,
+    ∃ L : ProximityCoding.AffineLine (Fin length) RSField,
       Fintype.card RSField <
         2 ^ (128 : ℕ) *
           ((canonicalSmoothDomain.parameters).toBlockCode.badChallengeSet 0 L).card := by

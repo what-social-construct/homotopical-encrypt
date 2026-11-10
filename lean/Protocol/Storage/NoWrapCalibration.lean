@@ -42,7 +42,7 @@ variable {Vertex Edge Face : Type*}
 
 /-- Identification of the actual real exact subspace with the systematic check kernel. -/
 structure SystematicModel (L : CoordinateLayout F ι)
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) : Prop where
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) : Prop where
   exact_iff : ∀ b : F.C1,
     F.IsExactOneCochain b ↔ ∀ j : Fin 2,
       P.realCheck S (fun i => b (L.coordinate (i, j))) = 0
@@ -50,7 +50,7 @@ structure SystematicModel (L : CoordinateLayout F ι)
 namespace SystematicModel
 
 variable {L : CoordinateLayout F ι}
-  {P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι} {S : Finset ι}
+  {P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι} {S : Finset ι}
 
 /-- The check is on the actual integer plane extracted from the original payload. -/
 def NoWrap (_M : SystematicModel L P S) (C : Context F) : Prop :=

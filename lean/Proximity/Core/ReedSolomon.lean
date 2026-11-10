@@ -13,7 +13,7 @@ This module defines evaluation domains, scalar RS codewords, and interleaved
 RS codewords. It contains no list-decoding-capacity or MCA theorem assumption.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace ReedSolomon
 
 /-- Paper-style vector symbols `F^s`. -/
@@ -181,4 +181,4 @@ theorem fAdditive_of_degreeBound_pos
 
 end Parameters
 end ReedSolomon
-end ProximityPrize
+end ProximityCoding

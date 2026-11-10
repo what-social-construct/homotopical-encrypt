@@ -21,7 +21,7 @@ interleaving width.  The module also constructs `|F| ^ m` distinct codewords
 in the next Hamming shell around zero.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace CapacityList
 
 open BlockCode
@@ -734,4 +734,4 @@ theorem vectorFractionalListSizeBoundAt_capacityGrid_iff
       _ ≤ ε * Fintype.card F := hfield
 
 end ReedSolomon.Parameters
-end ProximityPrize
+end ProximityCoding

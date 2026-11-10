@@ -26,7 +26,7 @@ Independent statements retain the original Context, decoder, layout and payload.
 Calibration statements unfold the existing interfaces without changing their maps.
 -/
 /- Minimal canonical generic parents for the separate modular application entry. -/
-namespace ProximityPrize
+namespace ProximityCoding
 
 /-- A word indexed by `ι` with symbols in `α`. -/
 abbrev Word (ι α : Type*) := ι → α
@@ -192,7 +192,7 @@ def powerReceivedWord (P : Parameters F ι) : Word ι F := fun i => P.domain.poi
 def diagonalPowerPair (P : Parameters F ι) : Word ι (Fin 2 → F) := fun i _ => P.powerReceivedWord i
 
 end ReedSolomon.Parameters
-end ProximityPrize
+end ProximityCoding
 namespace HomotopicalEncryption.Axioms
 
 /-- The original wire commitment modulus is 12289. -/
@@ -204,11 +204,11 @@ namespace HomotopicalEncryption.Proximity.ReedSolomon
 
 /-- The historical application name for the standalone injective evaluation domain. -/
 abbrev EvaluationDomain (F ι : Type*) :=
-  ProximityPrize.ReedSolomon.EvaluationDomain F ι
+  ProximityCoding.ReedSolomon.EvaluationDomain F ι
 
 /-- The historical application name for the standalone Reed--Solomon parameters. -/
 abbrev Parameters (F ι : Type*) [Field F] [Fintype ι] :=
-  ProximityPrize.ReedSolomon.Parameters F ι
+  ProximityCoding.ReedSolomon.Parameters F ι
 
 end HomotopicalEncryption.Proximity.ReedSolomon
 
@@ -339,7 +339,7 @@ end HomotopicalEncryption.Proximity.CanonicalRS
 noncomputable section
 open scoped BigOperators RealInnerProductSpace
 
-namespace ProximityPrize
+namespace ProximityCoding
 /-- A block code closed under zero, addition and field scalar multiplication. -/
 structure FAdditiveCode
     (F ι α : Type*) [Zero α] [Add α] [SMul F α]
@@ -351,14 +351,14 @@ structure FAdditiveCode
   smul_mem :
     ∀ (a : F) {u : Word ι α},
       Codeword u → Codeword fun i => a • u i
-end ProximityPrize
-namespace ProximityPrize.FAdditiveCode
+end ProximityCoding
+namespace ProximityCoding.FAdditiveCode
 variable {F ι α : Type*} [Zero α] [Add α] [SMul F α]
 /-- The underlying block-code predicate of an additive code. -/
 abbrev asBlockCode (C : FAdditiveCode F ι α) : BlockCode ι α :=
   C.toBlockCode
-end ProximityPrize.FAdditiveCode
-namespace ProximityPrize.ReedSolomon.Parameters
+end ProximityCoding.FAdditiveCode
+namespace ProximityCoding.ReedSolomon.Parameters
 variable {F ι : Type*} [Field F] [Fintype ι]
 /-- Field-linear closure of the scalar Reed–Solomon code. -/
 structure FAdditive (P : Parameters F ι) : Prop where
@@ -375,8 +375,8 @@ theorem fAdditive_of_degreeBound_pos
     (P : Parameters F ι)
     (hDegree : 0 < P.degreeBound) :
     P.FAdditive := by sorry
-end ProximityPrize.ReedSolomon.Parameters
-namespace ProximityPrize.ReedSolomon.Parameters.FAdditive
+end ProximityCoding.ReedSolomon.Parameters
+namespace ProximityCoding.ReedSolomon.Parameters.FAdditive
 variable {F ι : Type*} [Field F] [Fintype ι]
 /-- The additive-code interface for these same scalar RS codewords. -/
 def toFAdditiveCode
@@ -387,8 +387,8 @@ def toFAdditiveCode
   zero_mem := hP.zero_mem
   add_mem := hP.add_mem
   smul_mem := hP.smul_mem
-end ProximityPrize.ReedSolomon.Parameters.FAdditive
-namespace ProximityPrize.ReedSolomon.Parameters
+end ProximityCoding.ReedSolomon.Parameters.FAdditive
+namespace ProximityCoding.ReedSolomon.Parameters
 open BlockCode
 variable {F ι : Type*} [Field F] [Fintype F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
 /-- The actual Lagrange interpolant on the specified information positions. -/
@@ -408,8 +408,8 @@ noncomputable def interpolateWord
 def informationCoefficient (P : Parameters F ι) (S : Finset ι)
     (i : ι) (a : {a // a ∈ S}) : F :=
   P.interpolateWord S (fun j => if j = a.val then 1 else 0) i
-end ProximityPrize.ReedSolomon.Parameters
-namespace ProximityPrize.ReedSolomon.Parameters
+end ProximityCoding.ReedSolomon.Parameters
+namespace ProximityCoding.ReedSolomon.Parameters
 variable {q : ℕ} [Fact q.Prime] {ι : Type*} [Fintype ι] [DecidableEq ι]
 /-- Canonical integer lifts of the finite-field interpolation coefficients. -/
 def integerCoefficient (P : Parameters (ZMod q) ι) (S : Finset ι)
@@ -419,7 +419,7 @@ def integerCoefficient (P : Parameters (ZMod q) ι) (S : Finset ι)
 def realEncode (P : Parameters (ZMod q) ι) (S : Finset ι)
     (data : {a // a ∈ S} → ℝ) : ι → ℝ :=
   fun i => ∑ a, data a * (P.integerCoefficient S i a : ℝ)
-end ProximityPrize.ReedSolomon.Parameters
+end ProximityCoding.ReedSolomon.Parameters
 namespace HomotopicalEncryption.Axioms
 /-- Original cochain payload: modulus, declared count, full integer list and topology tag. -/
 structure CochainCommitmentData where
@@ -617,35 +617,35 @@ end HomotopicalEncryption.Protocol.Storage.Context
 namespace HomotopicalEncryption.Proximity
 /-- The original application name for the same block-code predicate. -/
 abbrev BlockCode (ι : Type u_1) (α : Type u_2) :=
-  ProximityPrize.BlockCode ι α
+  ProximityCoding.BlockCode ι α
 /-- The original application name for the same additive-code structure. -/
 abbrev FAdditiveCode
     (F : Type u_1) (ι : Type u_2) (α : Type u_3) [Zero α] [Add α] [SMul F α] :=
-  ProximityPrize.FAdditiveCode F ι α
+  ProximityCoding.FAdditiveCode F ι α
 end HomotopicalEncryption.Proximity
 namespace HomotopicalEncryption.Proximity.ReedSolomon
 /-- The historical vector-symbol name used by the original application. -/
 abbrev VectorSymbol (F : Type u_1) (σ : Type u_2) :=
-  ProximityPrize.ReedSolomon.VectorSymbol F σ
+  ProximityCoding.ReedSolomon.VectorSymbol F σ
 end HomotopicalEncryption.Proximity.ReedSolomon
 namespace HomotopicalEncryption.Proximity.ReedSolomon.Parameters
 variable {F : Type u_1} {ι : Type u_2} [Field F] [Fintype ι]
 /-- The historical scalar-code projection used by the original canonical payload metrics. -/
 abbrev toBlockCode (P : Parameters F ι) : BlockCode ι F :=
-  ProximityPrize.ReedSolomon.Parameters.toBlockCode P
+  ProximityCoding.ReedSolomon.Parameters.toBlockCode P
 /-- The historical vector-code projection of those same RS parameters. -/
 abbrev vectorBlockCode (P : Parameters F ι) (σ : Type u_3) :
     BlockCode ι (VectorSymbol F σ) :=
-  ProximityPrize.ReedSolomon.Parameters.vectorBlockCode P σ
+  ProximityCoding.ReedSolomon.Parameters.vectorBlockCode P σ
 /-- The historical name for the same scalar RS linear-closure certificate. -/
 abbrev FAdditive (P : Parameters F ι) :=
-  ProximityPrize.ReedSolomon.Parameters.FAdditive P
+  ProximityCoding.ReedSolomon.Parameters.FAdditive P
 /-- The historical positive-degree closure proof used by the original additive-code object. -/
 abbrev fAdditive_of_degreeBound_pos
     (P : Parameters F ι)
     (hDegree : 0 < P.degreeBound) :
     P.FAdditive :=
-  ProximityPrize.ReedSolomon.Parameters.fAdditive_of_degreeBound_pos P hDegree
+  ProximityCoding.ReedSolomon.Parameters.fAdditive_of_degreeBound_pos P hDegree
 end HomotopicalEncryption.Proximity.ReedSolomon.Parameters
 namespace HomotopicalEncryption.Proximity.ReedSolomon.Parameters.FAdditive
 variable {F : Type u_1} {ι : Type u_2} [Field F] [Fintype ι]
@@ -654,7 +654,7 @@ abbrev toFAdditiveCode
     {P : Parameters F ι}
     (hP : P.FAdditive) :
     FAdditiveCode F ι F :=
-  ProximityPrize.ReedSolomon.Parameters.FAdditive.toFAdditiveCode hP
+  ProximityCoding.ReedSolomon.Parameters.FAdditive.toFAdditiveCode hP
 end HomotopicalEncryption.Proximity.ReedSolomon.Parameters.FAdditive
 run_cmd Lean.modifyEnv fun env => Lean.Meta.auxLemmasExt.setState env {}
 namespace HomotopicalEncryption.Sheaf.SystematicCode
@@ -673,7 +673,7 @@ def layout : (ι × Fin 2) ≃ TotalCoord Unit (fun _ => Fintype.card (ι × Fin
     rcases p with ⟨⟨⟩, i⟩
     simp
 /-- The original real encoder function in the fixed information and edge coordinates. -/
-def generatorFun (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+def generatorFun (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (data : Coord (Fintype.card ({a // a ∈ S} × Fin 2))) :
     Coord (Fintype.card (ι × Fin 2)) :=
   WithLp.toLp ((2 : ℕ) : ENNReal) fun idx =>
@@ -681,22 +681,22 @@ def generatorFun (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Fi
     P.realEncode S
       (fun a => data ((Fintype.equivFin ({a // a ∈ S} × Fin 2)) (a, p.2))) p.1
 /-- The actual encoder preserves addition of the same input coordinate vectors. -/
-theorem generatorFun_add (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+theorem generatorFun_add (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (a b : Coord (Fintype.card ({a // a ∈ S} × Fin 2))) :
     generatorFun P S (a + b) = generatorFun P S a + generatorFun P S b := by sorry
 /-- The same encoder preserves real scalar multiplication. -/
-theorem generatorFun_smul (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+theorem generatorFun_smul (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (r : ℝ) (a : Coord (Fintype.card ({a // a ∈ S} × Fin 2))) :
     generatorFun P S (r • a) = r • generatorFun P S a := by sorry
 /-- The original systematic cellular restriction map, with named linearity proofs. -/
-def generator (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
+def generator (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
     Coord (Fintype.card ({a // a ∈ S} × Fin 2)) →ₗ[ℝ]
       Coord (Fintype.card (ι × Fin 2)) where
   toFun := generatorFun P S
   map_add' := generatorFun_add P S
   map_smul' := generatorFun_smul P S
 /-- The original cellular sheaf whose head restriction is that real encoder. -/
-def sheaf (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
+def sheaf (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
     CellularSheaf complex where
   vertexDim _ := Fintype.card ({a // a ∈ S} × Fin 2)
   edgeDim _ := Fintype.card (ι × Fin 2)
@@ -709,21 +709,21 @@ def sheaf (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι
 abbrev IntegerOpening (S : Finset ι) := {s // s ∈ S} → Fin 2 → ℤ
 /-- Embedding of that integer opening into the actual cellular head stalk with zero tail. -/
 def integralOpening
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (a : IntegerOpening S) : (sheaf P S).C0 :=
   WithLp.toLp ((2 : ℕ) : ENNReal) fun coordinate =>
     let p := (Fintype.equivFin ({s // s ∈ S} × Fin 2)).symm coordinate.2
     if coordinate.1 then (a p.1 p.2 : ℝ) else 0
 /-- Actual cellular coboundary equals the raw integer pair plus coordinatewise q-multiples. -/
 def ModularExact
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (z : ι → Fin 2 → ℤ) : Prop :=
   ∃ a : IntegerOpening S, ∃ carry : ι → Fin 2 → ℤ, ∀ i j,
     (sheaf P S).delta0 (integralOpening P S a) (layout (i, j)) =
       ((z i j + (q : ℤ) * carry i j : ℤ) : ℝ)
 /-- Actual modular cellular validity is equivalent to validity of the reduced RS pair. -/
 theorem modularExact_iff_vectorCodeword
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (hDegree : 0 < P.degreeBound) (hS : S.card = P.degreeBound)
     (z : ι → Fin 2 → ℤ) :
     ModularExact P S z ↔
@@ -732,7 +732,7 @@ end HomotopicalEncryption.Sheaf.SystematicCode
 namespace HomotopicalEncryption.Proximity
 /-- Compatibility name for the same indexed coding word. -/
 abbrev Word (ι : Type u_1) (α : Type u_2) :=
-  ProximityPrize.Word ι α
+  ProximityCoding.Word ι α
 end HomotopicalEncryption.Proximity
 open HomotopicalEncryption.Proximity
 namespace HomotopicalEncryption.Proximity.CochainBridge
@@ -784,36 +784,36 @@ def decode (L : CoordinateLayout F ι) (c : Axioms.CochainCommitmentData) : F.C1
 end HomotopicalEncryption.Protocol.Storage.CoordinateLayout
 run_cmd Lean.modifyEnv fun env => Lean.Meta.auxLemmasExt.setState env {}
 namespace HomotopicalEncryption.Protocol.Storage.ThreeLevel
-open ProximityPrize
+open ProximityCoding
 open HomotopicalEncryption.Sheaf.SystematicCode
 variable {q : ℕ} [Fact q.Prime] {ι : Type} [Fintype ι] [DecidableEq ι]
 /-- One integer column is valid precisely when its actual cellular lift is modularly exact. -/
-def integerScalarCode (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
-    ProximityPrize.BlockCode ι ℤ where
+def integerScalarCode (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
+    ProximityCoding.BlockCode ι ℤ where
   Codeword z := ModularExact P S (fun i j => if j = 0 then z i else 0)
 /-- Reduction of both original integer coordinates modulo the same prime. -/
-def reducePair (z : ProximityPrize.Word ι (Fin 2 → ℤ)) : ProximityPrize.Word ι (Fin 2 → ZMod q) :=
+def reducePair (z : ProximityCoding.Word ι (Fin 2 → ℤ)) : ProximityCoding.Word ι (Fin 2 → ZMod q) :=
   fun i j => (z i j : ZMod q)
 /-- The independently defined native metrics satisfy d_C ≤ d_P = D_RS ≤ 2d_C. -/
 theorem three_native_distance_comparison
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (hDegree : 0 < P.degreeBound) (hS : S.card = P.degreeBound)
-    (hn : 0 < Fintype.card ι) (z : ProximityPrize.Word ι (Fin 2 → ℤ)) :
-    (integerScalarCode P S).flattenedPairCode.relativeDistanceToCode (ProximityPrize.BlockCode.flattenPair z) ≤
+    (hn : 0 < Fintype.card ι) (z : ProximityCoding.Word ι (Fin 2 → ℤ)) :
+    (integerScalarCode P S).flattenedPairCode.relativeDistanceToCode (ProximityCoding.BlockCode.flattenPair z) ≤
         ((integerScalarCode P S).interleaved (Fin 2)).relativeDistanceToCode z ∧
     ((integerScalarCode P S).interleaved (Fin 2)).relativeDistanceToCode z =
         (P.vectorBlockCode (Fin 2)).relativeDistanceToCode (reducePair z) ∧
     (P.vectorBlockCode (Fin 2)).relativeDistanceToCode (reducePair z) ≤
         2 * (integerScalarCode P S).flattenedPairCode.relativeDistanceToCode
-          (ProximityPrize.BlockCode.flattenPair z) := by sorry
+          (ProximityCoding.BlockCode.flattenPair z) := by sorry
 /-- The scalar-coordinate native metric transports by matching representative lifts. -/
 theorem flatDistance_eq_rsFlatDistance
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι)
     (hDegree : 0 < P.degreeBound) (hS : S.card = P.degreeBound)
-    (z : ProximityPrize.Word ι (Fin 2 → ℤ)) :
-    (integerScalarCode P S).flattenedPairCode.relativeDistanceToCode (ProximityPrize.BlockCode.flattenPair z) =
+    (z : ProximityCoding.Word ι (Fin 2 → ℤ)) :
+    (integerScalarCode P S).flattenedPairCode.relativeDistanceToCode (ProximityCoding.BlockCode.flattenPair z) =
       P.toBlockCode.flattenedPairCode.relativeDistanceToCode
-        (ProximityPrize.BlockCode.flattenPair (reducePair z)) := by sorry
+        (ProximityCoding.BlockCode.flattenPair (reducePair z)) := by sorry
 end HomotopicalEncryption.Protocol.Storage.ThreeLevel
 namespace HomotopicalEncryption.Protocol.Storage.CanonicalSystematic
 /-- The original 4096 evaluation positions. -/
@@ -835,7 +835,7 @@ def sheaf := Sheaf.SystematicCode.sheaf parameters informationSet
 /-- The complete original geometric and serialized layout, before specialization. -/
 def systematicLayout {q : ℕ} [Fact q.Prime] {ι : Type}
     [Fintype ι] [DecidableEq ι]
-    (P : ProximityPrize.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
+    (P : ProximityCoding.ReedSolomon.Parameters (ZMod q) ι) (S : Finset ι) :
     CoordinateLayout (Sheaf.SystematicCode.sheaf P S) ι where
   coordinate := Sheaf.SystematicCode.layout
   serialized := Fintype.equivFin _
@@ -863,7 +863,7 @@ namespace HomotopicalEncryption.Protocol.Storage.Calibration
 variable {Fsheaf : CellularSheaf X} {K ι : Type} [Field K] [Fintype ι] [DecidableEq K]
 /-- The original extraction API reads and reduces both coordinates of this same context payload. -/
 def extractedPair (E : CochainPlane.PlaneExtractionContext ℤ ι)
-    (C : Context Fsheaf) : ProximityPrize.Word ι (Fin 2 → K) :=
+    (C : Context Fsheaf) : ProximityCoding.Word ι (Fin 2 → K) :=
   fun i j => ((E.projectedPlane C.cochain i j : ℤ) : K)
 end HomotopicalEncryption.Protocol.Storage.Calibration
 namespace HomotopicalEncryption.Proximity.CochainReedSolomon
@@ -909,11 +909,11 @@ def integerPlaneEncodingAt
 end HomotopicalEncryption.Proximity.CanonicalRS
 namespace HomotopicalEncryption.Protocol.Storage.CanonicalThreeLevel
 open CanonicalSystematic
-open ProximityPrize
+open ProximityCoding
 /-- Native distance on all original 2n scalar payload coordinates. -/
 def cochainDistance (c : Axioms.CochainCommitmentData) : ℝ :=
   (ThreeLevel.integerScalarCode parameters informationSet).flattenedPairCode.relativeDistanceToCode
-    (ProximityPrize.BlockCode.flattenPair (layout.raw c))
+    (ProximityCoding.BlockCode.flattenPair (layout.raw c))
 /-- Native distance on the original n integer pairs. -/
 def planeDistance (c : Axioms.CochainCommitmentData) : ℝ :=
   ((ThreeLevel.integerScalarCode parameters informationSet).interleaved (Fin 2)).relativeDistanceToCode
@@ -936,10 +936,10 @@ def extractedLine (c : Axioms.CochainCommitmentData) :
 /-- The original scalar challenge encoding of this same integer payload. -/
 def receivedWord (c : Axioms.CochainCommitmentData)
     (γ : HomotopicalEncryption.Proximity.CanonicalRS.RSField) :
-    ProximityPrize.Word Index HomotopicalEncryption.Proximity.CanonicalRS.RSField :=
+    ProximityCoding.Word Index HomotopicalEncryption.Proximity.CanonicalRS.RSField :=
   (HomotopicalEncryption.Proximity.CanonicalRS.integerPlaneEncodingAt γ).receivedWord (layout.raw c)
 /-- The same positive-degree scalar RS code through its additive interface. -/
-def additiveCode : ProximityPrize.FAdditiveCode HomotopicalEncryption.Proximity.CanonicalRS.RSField Index
+def additiveCode : ProximityCoding.FAdditiveCode HomotopicalEncryption.Proximity.CanonicalRS.RSField Index
     HomotopicalEncryption.Proximity.CanonicalRS.RSField :=
   (parameters.fAdditive_of_degreeBound_pos degreeBound_pos).toFAdditiveCode
 /-- The named diagonal capacity payload has the original wire shape. -/
@@ -957,7 +957,7 @@ theorem exists_payload_at_capacity :
       planeDistance c = (3 : ℝ) / 4 ∧ rsPairDistance c = (3 : ℝ) / 4 := by sorry
 /-- This actual diagonal payload has bad fraction exactly 1/12289 at every nonnegative radius. -/
 theorem capacityPayload_badChallengeFraction (δ : ℝ) (hδ : 0 ≤ δ) :
-    ProximityPrize.BlockCode.challengeFraction (additiveCode.asBlockCode.badChallengeSetAt δ
+    ProximityCoding.BlockCode.challengeFraction (additiveCode.asBlockCode.badChallengeSetAt δ
       (extractedLine capacityPayload)) = (1 : ℝ) / 12289 := by sorry
 /-- The original fixed challenge retains scalar distance 3/4 for this actual diagonal payload. -/
 theorem capacityPayload_canonicalMix_scalarDistance :

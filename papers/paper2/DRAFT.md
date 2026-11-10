@@ -176,7 +176,7 @@ It requires an actual integral opening and an integer carry such that
 \]
 
 The systematic cellular profile constructs this relation from the actual
-coboundary. [Paper 3](../proximity-prize/sections/07-application-interface.tex)
+coboundary. [Paper 3](../paper3/sections/07-application-interface.tex)
 proves its equivalence with the selected finite-field RS code. Its definition contains neither a coding-distance comparison nor a
 target-codeword assumption. Modular exactness and real decoded exactness
 remain different predicates. A proved no-wrap bound on the integer syndrome
@@ -374,7 +374,7 @@ retains the actual decoder equality and the geometric/serialized coordinate
 alignment from §3.3. A local-syndrome score `d_L` remains a separate profile
 field with its own adequacy and comparison contracts.
 
-[Paper 3's application](../proximity-prize/sections/07-application-interface.tex)
+[Paper 3's application](../paper3/sections/07-application-interface.tex)
 proves the modular metric comparisons, accepted-to-native-zero result and
 scaled near/far calibrations for these original objects. The protocol consumes
 those results through the existing
@@ -394,7 +394,7 @@ supply none of those missing inputs. Policy records whether it checks real
 
 ### 5. Geometric release and restricted source profiles
 
-[Paper 3](../proximity-prize/sections/07-application-interface.tex) owns full
+[Paper 3](../paper3/sections/07-application-interface.tex) owns full
 projective reconstruction and the geometric source-calibration obstructions.
 A protocol using its operative-target consequence must identify the released
 full shadow with the actual sample's harmonic kernel at the fixed metric.

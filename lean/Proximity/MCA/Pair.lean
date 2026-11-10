@@ -24,7 +24,7 @@ always admit a pair of degree-`<k` interpolants and hence cannot witness an MCA
 failure.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace ReedSolomon.Parameters
 
 open BlockCode
@@ -906,4 +906,4 @@ theorem pairMCAGreatestSafe_eq_length
   exact compressed_pair_mca_certificate_target u
 
 end Capacity.SmoothQuarterFamily
-end ProximityPrize
+end ProximityCoding

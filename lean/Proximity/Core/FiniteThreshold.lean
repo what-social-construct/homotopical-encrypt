@@ -13,7 +13,7 @@ statements.  A predicate `Good r` is inspected on the count grid
 `0, ..., n`; no coding-theoretic definitions occur here.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace FiniteThreshold
 
 /-- The natural-number radius grid `0, ..., n`. -/
@@ -218,4 +218,4 @@ theorem firstUnsafe_eq
 end ExactGridCertificate
 
 end FiniteThreshold
-end ProximityPrize
+end ProximityCoding

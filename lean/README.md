@@ -15,8 +15,8 @@ records the literature.
 | Cellular and semantic foundations | [Sheaf.lean](Sheaf.lean), [Laplacian.lean](Laplacian.lean), [Helfer.lean](Helfer.lean) | Finite cellular cochains, Hodge operators, typed semantic interpretations and homotopy-invariance interfaces. |
 | Paper 2: cochains and protocol | [Axioms/CochainCommitment.lean](Axioms/CochainCommitment.lean), [Protocol/Core.lean](Protocol/Core.lean), [Protocol/Storage/Core.lean](Protocol/Storage/Core.lean) | Commitment carriers, conservative resource transitions, projection gates and snapshot-bound evidence under explicit profiles. |
 | Paper 2: recovery and primitives | [Protocol/Ephemeral.lean](Protocol/Ephemeral.lean), [Protocol/Storage/Retrieval.lean](Protocol/Storage/Retrieval.lean), [Protocol/Transfer.lean](Protocol/Transfer.lean), [TCB.lean](TCB.lean) | Rotation, recovery, retrieval and verification contracts on the original objects. |
-| Paper 3: coding | [ProximityPrize.lean](ProximityPrize.lean), [Proximity hierarchy](Proximity/README.md) | Smooth-domain Reed–Solomon families, list/MCA statements, radii and attained distances. |
-| Paper 3: projective chain and application | [Proximity.lean](Proximity.lean), [Paper 3 manuscript](../papers/proximity-prize/README.md) | Projective reconstruction, actual cochain/pair extraction and the native comparison `d_C ≤ d_P = D_RS ≤ 2d_C`. |
+| Paper 3: coding | [ProximityCoding.lean](ProximityCoding.lean), [Proximity hierarchy](Proximity/README.md) | Smooth-domain Reed–Solomon families, list/MCA statements, radii and attained distances. |
+| Paper 3: projective chain and application | [Proximity.lean](Proximity.lean), [Paper 3 manuscript](../papers/paper3/README.md) | Projective reconstruction, actual cochain/pair extraction and the native comparison `d_C ≤ d_P = D_RS ≤ 2d_C`. |
 
 Paper 1's optional classifier-reflection profile identifies public fibers
 with the declared semantic homotopy classes when combined with closed-test
@@ -53,7 +53,7 @@ lake build Palomar.PaperOne.Solution Palomar.PaperThree.Solution Palomar.PaperTh
 ~~~
 
 The three Solutions are explicit, nondefault targets. Focused builds include
-`lake build HCP.AxisFamily`, `lake build ProximityPrize`,
+`lake build HCP.AxisFamily`, `lake build ProximityCoding`,
 `lake build Protocol.Core` and `lake build Protocol.Storage.Retrieval`.
 Rust/Python prototypes under `archive/runtime/` are not Lean build
 dependencies. Manuscript build commands are in the [root guide](../README.md#build-and-read).
@@ -66,7 +66,7 @@ the resulting theorems.
 
 [CanonicalRS/CitedBounds.lean](Proximity/Concrete/CanonicalRS/CitedBounds.lean)
 contains seven explicit literature-bound axioms, including two numerical
-witness constants. They are separate from the standalone `ProximityPrize`
+witness constants. They are separate from the standalone `ProximityCoding`
 proofs. Inspect an endpoint's dependencies with `#print axioms`; standard
 logical dependencies include `propext`, `Classical.choice` and `Quot.sound`.
 

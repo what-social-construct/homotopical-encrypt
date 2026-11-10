@@ -30,7 +30,7 @@ noncomputable section
 
 namespace HomotopicalEncryption.Protocol.Storage.CanonicalCalibration
 
-open ProximityPrize
+open ProximityCoding
 open HomotopicalEncryption.Sheaf.SystematicCode
 
 section Generic

@@ -18,7 +18,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace ProximityPrize
+namespace ProximityCoding
 
 open BlockCode
 
@@ -132,4 +132,4 @@ theorem no_unit_pair_distance_bound_by_flat_distance
     (h (pairWord P.zeroDirectionPowerLine))
 
 end ReedSolomon.Parameters
-end ProximityPrize
+end ProximityCoding

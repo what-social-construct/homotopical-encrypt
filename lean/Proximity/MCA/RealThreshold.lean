@@ -14,7 +14,7 @@ count-zero radius followed by an insecure count-one radius therefore gives
 the exact real interval `[0,1/n)`, including its nonattained supremum.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace BlockCode
 
 variable {ι F : Type*} [Fintype ι] [Fintype F] [Add F] [Mul F]
@@ -155,4 +155,4 @@ theorem pairMCA_real_128_threshold :
   exact RadiusShell.halfOpen_interval_summary (by norm_num)
 
 end MCA.BoundaryField
-end ProximityPrize
+end ProximityCoding

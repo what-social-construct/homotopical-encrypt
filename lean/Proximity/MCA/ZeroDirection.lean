@@ -19,7 +19,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace ProximityPrize
+namespace ProximityCoding
 
 namespace AffineLine
 
@@ -197,4 +197,4 @@ theorem pairDistance_eq_scalarDistance_at_every_challenge_of_direction_eq_zero
 end Distance
 
 end BlockCode
-end ProximityPrize
+end ProximityCoding

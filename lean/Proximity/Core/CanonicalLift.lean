@@ -21,7 +21,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace CanonicalLift
 
 open scoped BigOperators
@@ -171,4 +171,4 @@ theorem eq_top_of_contains_interleaved_rs_lifts
   exact W.sum_mem (fun j _ => hcolumn j _)
 
 end CanonicalLift
-end ProximityPrize
+end ProximityCoding

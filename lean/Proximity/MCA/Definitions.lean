@@ -18,7 +18,7 @@ count radius the two presentations agree exactly when the block length is
 positive.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace BlockCode
 
 section AgreementSets
@@ -288,4 +288,4 @@ theorem pairMCAErrorBoundAt_relativeRadius_iff
 end ErrorBounds
 
 end BlockCode
-end ProximityPrize
+end ProximityCoding

@@ -13,7 +13,7 @@ Galois fields and power domains. No field/domain realization or numerical
 budget is left as a supplied hypothesis.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace Capacity.SmoothQuarterFamily
 
 open BlockCode CapacityList
@@ -109,4 +109,4 @@ theorem realized_listRealThreshold
 
 end
 end Capacity.SmoothQuarterFamily
-end ProximityPrize
+end ProximityCoding

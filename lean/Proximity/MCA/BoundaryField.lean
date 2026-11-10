@@ -14,7 +14,7 @@ public meta import Mathlib.Tactic.ReduceModChar
 # A smooth boundary-field Reed--Solomon instance at 128-bit security
 
 This file certifies the arithmetic and evaluation-domain layer for the
-prize-facing boundary-field example
+boundary-field example
 
 * `q = 2^128 + 192513`,
 * block length `n = 4096`, and
@@ -27,7 +27,7 @@ indexed Reed--Solomon evaluation domain. The arithmetic certificates use
 kernel-checked numeral normalization and binary modular exponentiation.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace MCA
 namespace BoundaryField
 
@@ -414,7 +414,7 @@ theorem smoothEvaluationDomain_smooth :
     smoothEvaluationDomain.smooth :=
   length_dvd_modulus_sub_one
 
-/-- Prize-facing quarter-rate Reed--Solomon parameters over the boundary field. -/
+/-- Quarter-rate Reed--Solomon parameters over the boundary field. -/
 def parameters :
     ReedSolomon.Parameters RSField (Fin length) where
   domain := evaluationDomain
@@ -497,4 +497,4 @@ end
 
 end BoundaryField
 end MCA
-end ProximityPrize
+end ProximityCoding

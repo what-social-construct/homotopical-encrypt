@@ -222,7 +222,7 @@ theorem relativeDistanceSet_bddBelow
   intro d hd
   rcases hd with ⟨c, _hc, rfl⟩
   unfold BlockCode.relativeHammingDistance
-  unfold ProximityPrize.BlockCode.relativeHammingDistance
+  unfold ProximityCoding.BlockCode.relativeHammingDistance
   positivity
 
 /-- Distance to a code is bounded by distance to any concrete codeword. -/
@@ -251,7 +251,7 @@ theorem relativeDistanceToCode_nonneg
     intro d hd
     rcases hd with ⟨c, _hc, rfl⟩
     unfold BlockCode.relativeHammingDistance
-    unfold ProximityPrize.BlockCode.relativeHammingDistance
+    unfold ProximityCoding.BlockCode.relativeHammingDistance
     positivity)
 
 /-- A selected codeword has zero relative distance to its code. -/
@@ -269,8 +269,8 @@ theorem relativeDistanceToCode_eq_zero_of_codeword
         relativeDistanceToCode_le_of_codeword C hw
       _ = 0 := by
         unfold BlockCode.relativeHammingDistance
-        unfold ProximityPrize.BlockCode.relativeHammingDistance
-        unfold ProximityPrize.BlockCode.hammingDistance
+        unfold ProximityCoding.BlockCode.relativeHammingDistance
+        unfold ProximityCoding.BlockCode.hammingDistance
         simp
   · exact relativeDistanceToCode_nonneg C w
 
@@ -354,7 +354,7 @@ Thus arbitrary invalid/noisy observations remain in scope.
 
 /-- Canonical-region plane observations with their pulled-back valid locus. -/
 def sourceValidityModel (β : BridgeData) :
-    ProximityPrize.Application.SourceValidityModel where
+    ProximityCoding.Application.SourceValidityModel where
   Observation := AdmissibleWord
   Valid := (admissibleCode β).Codeword
   distanceToValid := admissibleDistance β
@@ -365,7 +365,7 @@ def sourceValidityModel (β : BridgeData) :
 
 /-- The paper pair code equipped with its relative-Hamming distance. -/
 def pairCodeShadow (β : BridgeData) :
-    ProximityPrize.Application.CodeDistanceModel where
+    ProximityCoding.Application.CodeDistanceModel where
   Word := PairWord
   Codeword := (pairCode β).Codeword
   distanceToCode := pairDistance β
@@ -377,7 +377,7 @@ The quantitative field is the proved direction
 `d_source ≤ D_pair`; in fact the preceding theorem proves equality.
 -/
 def sourceToPairCalibration (β : BridgeData) :
-    ProximityPrize.Application.SourceToCodeCalibration
+    ProximityCoding.Application.SourceToCodeCalibration
       (sourceValidityModel β)
       (pairCodeShadow β) where
   extract := encode
@@ -396,7 +396,7 @@ theorem admissibleSourceFar_implies_pairFar
     (δ : ℝ)
     (hSourceFar : δ ≤ admissibleDistance β p) :
     δ ≤ pairDistance β (encode p) :=
-  ProximityPrize.Application.SourceToCodeCalibration.sourceFar_implies_targetFar
+  ProximityCoding.Application.SourceToCodeCalibration.sourceFar_implies_targetFar
     (sourceToPairCalibration β) p δ hSourceFar
 
 end PlanePair

@@ -110,7 +110,7 @@ theorem norm_decode_le (L : CoordinateLayout F ι)
 theorem decodedFar_implies_pairFar
     (L : CoordinateLayout F ι) (C : Context F)
     {K : Type} [Field K] [DecidableEq K]
-    (code : ProximityPrize.BlockCode ι (Fin 2 → K))
+    (code : ProximityCoding.BlockCode ι (Fin 2 → K))
     (hcode : ∃ w, code.Codeword w) (hn : 0 < Fintype.card ι)
     (hdecode : C.interpretation.decode C.cochain = L.decode C.cochain)
     {bound : ℝ} (hbound : 0 < bound)

@@ -19,7 +19,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace ProximityPrize.ReedSolomon.Parameters
+namespace ProximityCoding.ReedSolomon.Parameters
 
 open scoped BigOperators
 
@@ -272,4 +272,4 @@ theorem single_outside_noWrap_nonzero (P : Parameters (ZMod q) Î¹) (S : Finset Î
 
 end Integer
 
-end ProximityPrize.ReedSolomon.Parameters
+end ProximityCoding.ReedSolomon.Parameters

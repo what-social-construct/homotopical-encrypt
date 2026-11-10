@@ -21,7 +21,7 @@ witness type, whose elements are valid by construction, from being mistaken
 for the carrier of noisy source observations.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace Application
 
 universe u v
@@ -29,7 +29,7 @@ universe u v
 /--
 An abstract code locus equipped with its declared distance-to-code function.
 
-The prize-facing calibration theorem needs no concrete encoding, commitment,
+The calibration theorem needs no concrete encoding, commitment,
 or runtime structure beyond this interface.
 -/
 structure CodeDistanceModel where
@@ -186,4 +186,4 @@ def ofPullback
 end SourceToSourceCalibration
 
 end Application
-end ProximityPrize
+end ProximityCoding

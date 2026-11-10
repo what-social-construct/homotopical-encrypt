@@ -19,7 +19,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace ProximityPrize.BlockCode
+namespace ProximityCoding.BlockCode
 
 variable {ι α : Type*} [Fintype ι] [DecidableEq α]
 
@@ -38,7 +38,7 @@ theorem one_le_length_mul_relativeDistanceToCode_of_not_codeword
   rw [mul_div_cancel₀ _ hn']
   exact hcount'
 
-end ProximityPrize.BlockCode
+end ProximityCoding.BlockCode
 
 namespace HomotopicalEncryption.Protocol.Storage.Calibration
 
@@ -61,7 +61,7 @@ theorem decodedDistance_le_norm (C : Context Fsheaf) :
 The reflection premise must come from the actual codec and its source profile. -/
 theorem decodedDistance_le_scaled_pairDistance_of_reflection
     (C : Context Fsheaf) (E : CochainPlane.PlaneExtractionContext ℤ ι)
-    (code : ProximityPrize.BlockCode ι (Fin 2 → K))
+    (code : ProximityCoding.BlockCode ι (Fin 2 → K))
     (hcode : ∃ w, code.Codeword w) (hn : 0 < Fintype.card ι)
     {bound : ℝ} (hbound : 0 ≤ bound)
     (hnorm : ‖C.interpretation.decode C.cochain‖ ≤ bound)
@@ -86,7 +86,7 @@ theorem decodedDistance_le_scaled_pairDistance_of_reflection
 /-- Source farness transfers with the explicit finite-shell scale loss. -/
 theorem decodedFar_implies_pairFar_of_reflection
     (C : Context Fsheaf) (E : CochainPlane.PlaneExtractionContext ℤ ι)
-    (code : ProximityPrize.BlockCode ι (Fin 2 → K))
+    (code : ProximityCoding.BlockCode ι (Fin 2 → K))
     (hcode : ∃ w, code.Codeword w) (hn : 0 < Fintype.card ι)
     {bound : ℝ} (hbound : 0 < bound)
     (hnorm : ‖C.interpretation.decode C.cochain‖ ≤ bound)

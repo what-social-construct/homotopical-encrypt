@@ -18,7 +18,7 @@ subgroup domain. The list and pair-MCA corollaries no longer require a
 field/domain realization as an input.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace Capacity.SmoothQuarterFamily
 
 noncomputable section
@@ -203,4 +203,4 @@ theorem realized_pairMCAGreatestSafe_eq_length (u : ℕ) :
 
 end
 end Capacity.SmoothQuarterFamily
-end ProximityPrize
+end ProximityCoding

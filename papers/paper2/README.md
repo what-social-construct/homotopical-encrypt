@@ -63,7 +63,7 @@ and composes supplied failure budgets under one shared probability law.
 | Integrity and primitive contracts | [Transfer.Security](../../lean/Protocol/Transfer/Security.lean), [Transfer.Primitives](../../lean/Protocol/Transfer/Primitives.lean) |
 
 [Paper 1](../paper1/README.md) supplies HCP, harmonic lattices, semantic classes
-and known-lattice CVP comparisons. [Paper 3](../proximity-prize/README.md)
+and known-lattice CVP comparisons. [Paper 3](../paper3/README.md)
 introduces full projective reconstruction and proves the quantitative
 projection, metric and radius comparisons. Paper 2 owns the construction,
 visibility and codec profiles consumed by those comparisons. The

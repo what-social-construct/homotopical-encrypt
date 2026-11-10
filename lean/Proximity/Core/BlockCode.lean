@@ -18,7 +18,7 @@ The natural-number Hamming count is finite proof plumbing. Paper-facing
 statements use `relativeHammingDistance`, `BallAt`, and `ListSizeBoundAt`.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 
 /-- A received word over coordinates `ι` and alphabet `α`. -/
 abbrev Word (ι α : Type*) := ι → α
@@ -233,4 +233,4 @@ def DeterminedBy
 
 end CapacityList
 
-end ProximityPrize
+end ProximityCoding

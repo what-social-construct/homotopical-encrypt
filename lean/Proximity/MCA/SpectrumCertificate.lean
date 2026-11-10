@@ -19,7 +19,7 @@ No Reed--Solomon structure is required.  Code families can import this adapter
 after proving their own upper bound and explicit bad-line witness.
 -/
 
-namespace ProximityPrize
+namespace ProximityCoding
 namespace BlockCode
 
 variable {ι F : Type*}
@@ -110,4 +110,4 @@ theorem pairMCABottomThreshold_of_badLine
     FiniteThreshold.firstUnsafe_eq_zero_of_not_good hzero⟩
 
 end BlockCode
-end ProximityPrize
+end ProximityCoding
