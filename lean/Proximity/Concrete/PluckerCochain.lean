@@ -13,7 +13,7 @@ public import Proximity.Application.Problem
   - Paper 3: the mathematical projective-shadow to cochain/local-test stage
     under explicit realization hypotheses.
   - Paper 2 owns the original payload and encoder/observation contracts. Paper
-    1 retains the geometric full-point recovery result.
+    3 owns the geometric full-point recovery result.
 
   This is the next projection stage after `GrassmannianPlucker`: a valid
   Plucker/exterior shadow is encoded as the committed cochain object already

@@ -821,6 +821,27 @@ external authentication contract.
 
 #### 6.3.1. Confidentiality and the intended hardness claim
 
+At fixed rank, the operative harmonic space is a point of the Grassmannian,
+whose Plücker image is a projective variety of decomposable exterior points.
+The full real projective point determines the harmonic projector, so
+releasing that point together with the observed cochain \(b\) determines
+\(h=P_Wb\). For the keyed coordinate family below, the full point even
+determines the key. A hidden-operator profile must specify the released handle
+and its hiding contract separately from the full frame used by a proof witness.
+The existing `HashedPluckerShadow` still carries its selected shadow internally;
+its digest-binding field alone supplies no hiding theorem.
+
+The [projection chain](../../lean/Proximity/Concrete/ProjectionChain/Core.lean)
+maps a frame through a cochain payload, plane shadow and RS word. Its
+Plücker-to-cochain encoder and stage comparisons are supplied data;
+[ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean) separately
+joins the state to the original artifact. The composed theorem preserves
+validity and proves that RS distance is at most the declared source
+disagreement. The canonical
+pair reduction
+has a separate Hamming-distance comparison; a single challenge fold can
+collapse a pair. These maps do not supply a Euclidean CVP solution map.
+
 The [checked-release challenge](../../lean/Protocol/Transfer/Confidentiality.lean)
 proves that the released input ID is an immediate branch distinguisher whenever
 two checked transfers use different inputs. A confidentiality challenge must
@@ -838,11 +859,39 @@ view by deterministic postprocessing. Such a triple bound must come from
 independent algorithms and security arguments; the reconstruction alone
 asserts no hiding.
 
-A native HCP hardness theorem would require a growing, finitely encoded
-cellular-sheaf family, independent key generation, a structured-noise sampler,
-an efficient private decoder, and a game releasing the actual selected storage
-and transfer fields. Its reduction must start from an independently stated
-hard problem and preserve the challenge distribution. The present CVP theorem
+The [finite keyed cellular family](../../lean/Sheaf/HCPFiniteKeyFamily.lean)
+provides one structural starting point. At parameter \(n\), its key is a
+binary choice in each block, with \(2^n\) keys and one common
+\(4n\)-coordinate degree-one carrier. Separate exact and coexact edges give
+both nonzero differentials when \(n>0\). Standard integral stalks support an
+integral harmonic unit message and an actual Hodge-encrypted sample with
+exact and coexact openings whose coordinates lie in \(\{0,1\}\); harmonic
+projection recovers that message.
+The [shared harmonic geometry](../../lean/Sheaf/HCPFiniteKeyGeometry.lean)
+proves that different keys select different embedded harmonic subspaces in
+this carrier and that the complementary units span each one. The
+[projective adapter](../../lean/Proximity/Concrete/HCPKeyedGrassmannian.lean)
+packages them as rank-\(n\) Grassmannian points and frame witnesses.
+This is a family of typed mathematical samples, prior to key/ciphertext bytes,
+randomized key/noise generation or a complete released-view experiment.
+The [explicit lattice presentation](../../lean/HCP/FiniteKeyCVP.lean) takes
+those harmonic units as its basis and spans the actual keyed harmonic space.
+Its unit-coefficient encryption is the original family sample, and a correct
+CVP oracle given that keyed lattice returns the sample's harmonic message.
+
+A native HCP computational hardness theorem still requires finite encoding,
+independent key generation, a structured-noise distribution, an efficient
+private decoder, and a game releasing the actual selected storage and transfer
+fields. Its reduction must start from an independently stated hard problem
+and preserve the challenge distribution. The existing Hodge
+sampler has an [exact geometric promise](../../lean/Sheaf/HarmonicCVPPromise.lean):
+for a presented lattice
+\(\Lambda\subseteq W\), observations of the form \(b=h+e\) with
+\(h\in\Lambda\) and \(e\perp W\) have \(P_Wb\in\Lambda\); conversely that
+projection condition gives such an orthogonal decomposition. An arbitrary
+CVP target need not satisfy it. Mapping a lattice to its real span and
+projecting the target therefore leaves the discrete nearest-vector step
+unsolved. The present CVP theorem
 proves a strict separation in the information supplied to a solver: the
 operative lattice lets a correct CVP oracle recover each axis sample, while
 the same oracle cannot choose two different targets at their shared

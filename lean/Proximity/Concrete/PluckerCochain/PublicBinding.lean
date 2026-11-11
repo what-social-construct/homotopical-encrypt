@@ -40,11 +40,12 @@ noncomputable section
 variable {n : Type} [Fintype n] [DecidableEq n] {r : ℕ}
 
 /--
-Public hash handle for a Plucker shadow.
+Hash-bound handle for a Plucker shadow.
 
-The digest is a storage/proof-transcript handle. It does not replace the
-mathematical shadow; it binds canonical public bytes for the shadow at the TCB
-boundary.
+This semantic record retains both the shadow and its digest. A release profile
+must state which of them is public. The digest is a storage/proof-transcript
+handle; its binding predicate does not establish hiding of a full projective
+point.
 -/
 structure HashedPluckerShadow (P : FramedSystem n r) where
   shadow : P.Shadow

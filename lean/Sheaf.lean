@@ -6,6 +6,7 @@ public import Sheaf.Morphism
 public import Sheaf.Hodge
 public import Sheaf.Integral
 public import Sheaf.HarmonicLattice
+public import Sheaf.HarmonicCVPPromise
 public import Sheaf.CoefficientRecovery
 public import Sheaf.Equivalence
 public import Sheaf.Rotation
