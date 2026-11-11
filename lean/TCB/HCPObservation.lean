@@ -131,6 +131,16 @@ theorem harmonicProjection_cochainObject
     F.harmonicOneProjection O.cochainObject = O.latticeObject.1 :=
   O.encrypted.harmonicOneProjection_observed
 
+/-- If the degree-two coboundary vanishes, the released full cochain together
+with the decoded exact payload determines the harmonic message directly. -/
+theorem message_eq_cochainObject_sub_decoded_of_delta1_zero
+    (O : BoundHCPObservation integral payload PublicClass Context classify Binds)
+    (hdelta : F.delta1 = 0) :
+    O.latticeObject.1 = O.cochainObject - payload.decode O.artifact.cochain := by
+  rw [O.decodedExactComponent]
+  simp [latticeObject, cochainObject, HodgeEncryptedCochain.observed,
+    HodgeNoise.value, HodgeNoise.exactComponent, hdelta]
+
 end BoundHCPObservation
 
 end TCB

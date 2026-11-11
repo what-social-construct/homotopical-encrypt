@@ -3,6 +3,8 @@ module
 public import Protocol.Transfer.Owned
 public import Protocol.Transfer.Anchored
 public import Protocol.Transfer.PublicView
+public import Protocol.Transfer.PublicAssembly
+public import Protocol.Transfer.Confidentiality
 public import Protocol.Transfer.Security
 public import Protocol.Transfer.Primitives
 public import Protocol.Transfer.Authorization
@@ -18,6 +20,9 @@ fixed-snapshot resource transition, represented in the original evidence and
 manifest interfaces. The same checks without assumed primitive soundness give
 a one-shot accepted-invalid reduction and sampled error-composition theorem.
 The exact released record retains its public identifiers and original objects.
+For fixed supplied setup and transfer, the same record is assembled from its
+base payload and the signature/proof bytes. A checked-release challenge shows
+that changed public input IDs give perfect branch distinction.
 Primitive error bounds, cryptographic implementations, ledger geometry migration
 and finality remain separate obligations.
 

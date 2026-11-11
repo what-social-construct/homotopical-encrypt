@@ -5,6 +5,7 @@ public import TCB.CompressionBoundary
 public import Protocol.Storage.Core
 public import Protocol.Storage.CanonicalRS
 public import Protocol.Storage.CanonicalSystematic
+public import Protocol.Storage.DisclosureLeak
 public import Protocol.Storage.ThreeLevelMetrics
 public import Protocol.Storage.CanonicalThreeLevel
 public import Protocol.Storage.CanonicalCalibration

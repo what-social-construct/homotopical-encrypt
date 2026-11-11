@@ -28,6 +28,10 @@ not disclose it automatically. Full operative-kernel Plücker coordinates are
 outside the base profile. Any released roots, tags, proofs and selective
 openings must appear in the chosen adversary view.
 
+For the canonical systematic sheaf, releasing both the full cochain and exact
+payload recovers the harmonic message when the decoder agrees with the
+selected public layout. The draft states this disclosure boundary explicitly.
+
 Actual integral rotation transports harmonic messages and structured noise.
 Recipient recovery retains the same integer coefficients through target-key
 decoding or inverse transport with the retained base key, under the supplied
@@ -56,11 +60,11 @@ and composes supplied failure budgets under one shared probability law.
 |---|---|
 | Commitment and coordinate profile | [CochainCommitment](../../lean/Axioms/CochainCommitment.lean), [CoordinateCodec](../../lean/Protocol/Storage/CoordinateCodec.lean) |
 | Generic ledger and computed transition | [Ledger.Transition](../../lean/Protocol/Ledger/Transition.lean), [Ledger.ValueFlow](../../lean/Protocol/Ledger/ValueFlow.lean) |
-| Bounded transition and checked transfer | [Protocol.Core](../../lean/Protocol/Core.lean), [Transfer](../../lean/Protocol/Transfer.lean), [protocol guide](../../lean/Protocol/README.md) |
+| Bounded transition and checked transfer | [Protocol.Core](../../lean/Protocol/Core.lean), [Transfer](../../lean/Protocol/Transfer.lean), [PublicAssembly](../../lean/Protocol/Transfer/PublicAssembly.lean), [protocol guide](../../lean/Protocol/README.md) |
 | Storage, public views and gates | [Storage.Core](../../lean/Protocol/Storage/Core.lean), [PublicView](../../lean/Protocol/Storage/PublicView.lean), [storage guide](../../lean/Protocol/Storage/README.md) |
 | Rotation, recovery and retrieval | [Ephemeral](../../lean/Protocol/Ephemeral.lean), [Retrieval](../../lean/Protocol/Storage/Retrieval.lean) |
 | Committee and proof/TCB envelopes | [Consensus.Quorum](../../lean/Protocol/Consensus/Quorum.lean), [TCB](../../lean/TCB.lean) |
-| Integrity and primitive contracts | [Transfer.Security](../../lean/Protocol/Transfer/Security.lean), [Transfer.Primitives](../../lean/Protocol/Transfer/Primitives.lean) |
+| Integrity, leakage and primitive contracts | [Transfer.Security](../../lean/Protocol/Transfer/Security.lean), [Transfer.Confidentiality](../../lean/Protocol/Transfer/Confidentiality.lean), [Transfer.Primitives](../../lean/Protocol/Transfer/Primitives.lean) |
 
 [Paper 1](../paper1/README.md) supplies HCP, harmonic lattices, semantic classes
 and known-lattice CVP comparisons. [Paper 3](../paper3/README.md)

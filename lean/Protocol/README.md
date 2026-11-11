@@ -20,7 +20,7 @@ existing authenticated proposal and quorum types.
 | `Ephemeral/Rotation`, `Ephemeral/Delivery`, `Ephemeral/HCP` | Separately imported actual integral/presented rotation, coefficient-preserving recipient recovery, original bound-sample/payload migration and scoped delivery receipts. Channel/authentication, generation and lifecycle enforcement remain explicit. |
 | `Transfer` | Focused conditional owned-resource profile: actual catalog and public input-ID nullifier, typed canonical packet checks, trusted-decoder proof result, derived candidate/update, staged hash inputs and original input-manifest/evidence/history joins. Secure primitives and runtime/state-origin/finality contracts remain explicit. |
 | `Evidence/TransferCheck`, `Transfer/Operational` | The same canonical packet and resource checks without assumed primitive soundness; local semantic good facts derive validity and actual accepted-invalid outcomes reduce to authorization or exact-payload false acceptance. |
-| `Transfer/PublicView`, `Transfer/Security` | Original checked release projection and direct public-ID distinction; explicit observation/auxiliary/PMF adversary experiment and conditional one-shot error bound. No primitive estimate, oracle security or privacy theorem. |
+| `Transfer/PublicView`, `Transfer/PublicAssembly`, `Transfer/Confidentiality`, `Transfer/Security` | Original checked release; exact reconstruction from fixed supplied setup, base payload and signature/proof bytes; perfect branch distinction for changed public input IDs; conditional one-shot integrity error bound. The assembly event bound requires an independently justified input-triple bound. No primitive estimate or HCP privacy theorem follows. |
 | `Transfer/Primitives` | Actual owner/key/message/history and byte-proof backend agreement, with five-event same-PMF error composition. Query coverage, backend-to-original-context refinement and concrete primitive budgets remain explicit. Current spectral runtime paths do not instantiate these joins. |
 | `Transfer/Signing`, `Transfer/Issuance`, `Transfer/Authorization` | Reuse the complete subject, packet codec, existing key map/history and release carrier. Construct owner-domain byte checks and exact authorized query projection; the bounded fixed-policy theorem excludes queried-unauthorized targets and leaves four same-PMF errors. Concrete wire/key/oracle refinement remains separate. |
 | `Transfer/PathSignature` | Partial finite-byte decoding and a supplied path realization retain the original credential opening, admissible path and rotation. The existing proof backend executes on credential/full-signing inputs and actual `ownerSignature` bytes. Statement reflection and witness encoding remain supplied; existence establishes no knowledge or unforgeability. |
@@ -31,6 +31,11 @@ existing authenticated proposal and quorum types.
 broader compatibility aggregate. Its legacy `Chain` import remains for
 compatibility; the new leaf modules do not use spectral validator identities,
 cumulative-gap fork choice or raw edge sums as ledger semantics.
+
+The broad `Protocol` facade also checks the finite
+[signed-axis sampler](../HCP/AxisSignedSampler.lean) and conditional
+[fixed-key span attack](../HCP/NoiseSpanAttack.lean). Both analyze the native
+HCP sample; neither proves confidentiality of a full storage or transfer view.
 
 `Protocol.Ephemeral` is the separate recovery/rotation facade. The actual
 message is a declared integer lattice coefficient vector; both target-key

@@ -1,5 +1,7 @@
 module
 
+public import HCP.AxisSignedSampler
+public import HCP.NoiseSpanAttack
 public import Protocol.Evidence
 public import Protocol.Ephemeral
 public import Protocol.Oracle
@@ -26,4 +28,7 @@ public import Protocol.Transfer
   receipts under explicit channel contracts. Oracle/coregulator surfaces remain
   attachment points. Concrete codec/lift instantiation,
   round/lock/finality and Rust refinement remain separate completion tasks.
+  The optional HCP sampling and fixed-key span modules provide finite
+  semantic checks and conditional leakage boundaries, not an asymptotic
+  confidentiality theorem.
 -/

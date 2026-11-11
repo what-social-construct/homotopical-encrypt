@@ -145,6 +145,14 @@ information. Neither identical class labels nor equal exact components imply
 equal headers, payloads or proof transcripts. In particular, the finite HCP
 axis example does not construct two equal complete public storage records.
 
+The canonical systematic RS sheaf has \(\delta_1=0\). For a bound sample whose
+interpretation decoder agrees with the canonical layout on its artifact, an
+explicit full-cochain disclosure and its public exact payload give
+\(h=b-\mathrm{decode}_{\mathrm{layout}}(c)\). This direct recovery is proved
+in [DisclosureLeak](../../lean/Protocol/Storage/DisclosureLeak.lean). That
+canonical profile therefore cannot serve as a confidentiality example when
+both values are released. The base storage view alone does not release \(b\).
+
 This fixes the first profile's data and access boundaries. Canonical bytes,
 hash domain separation, concrete proof/verifier formats, authenticated opening
 requests and the binding of released history extensions remain implementation
@@ -790,6 +798,41 @@ hash binding of an external encoded history, runtime agreement, durable
 application and finality are outside these events. The bad event is invalidity
 of the typed candidate under the configured policy, not failure of every
 external authentication contract.
+
+#### 6.3.1. Confidentiality and the intended hardness claim
+
+The [checked-release challenge](../../lean/Protocol/Transfer/Confidentiality.lean)
+proves that the released input ID is an immediate branch distinguisher whenever
+two checked transfers use different inputs. A confidentiality challenge must
+therefore hold such deterministic public fields fixed, or declare their
+leakage. A challenge over two transfers in one fixed configuration checks this
+view condition; it does not sample two HCP plaintexts or prove encryption
+privacy. The optional full-cochain disclosure is a separate, larger view.
+
+For a fixed supplied setup and transfer,
+[PublicAssembly](../../lean/Protocol/Transfer/PublicAssembly.lean) reconstructs
+every checked release from its public base payload, owner-signature bytes and
+proof bytes using the original manifest, hash and packet functions. An event
+bound for distributions of that actual triple carries to the full assembled
+view by deterministic postprocessing. Such a triple bound must come from
+independent algorithms and security arguments; the reconstruction alone
+asserts no hiding.
+
+A native HCP hardness theorem would require a growing, finitely encoded
+cellular-sheaf family, independent key generation, a structured-noise sampler,
+an efficient private decoder, and a game releasing the actual selected storage
+and transfer fields. Its reduction must start from an independently stated
+hard problem and preserve the challenge distribution. The present exact
+recovery obstruction and generated known-lattice CVP instances do not supply
+that reduction. With the canonical systematic source, the full-cochain
+disclosure fails already by the direct recovery in §2.1.
+
+For a fixed key, [NoiseSpanAttack](../../lean/HCP/NoiseSpanAttack.lean)
+proves a second conditional boundary: if observed zero encryptions span the
+harmonic orthogonal noise space, span membership separates every fresh zero
+sample from every sample with a nonzero presented harmonic message. The
+present rotation laws transport samples; they do not establish fresh-key
+generation or defeat this test.
 
 #### 6.4. Actual primitives and the trusted-computing boundary
 
