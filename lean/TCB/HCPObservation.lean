@@ -131,15 +131,26 @@ theorem harmonicProjection_cochainObject
     F.harmonicOneProjection O.cochainObject = O.latticeObject.1 :=
   O.encrypted.harmonicOneProjection_observed
 
-/-- If the degree-two coboundary vanishes, the released full cochain together
-with the decoded exact payload determines the harmonic message directly. -/
+/-- Removing the interpreted exact component leaves the harmonic message
+plus the coexact opening. This is an identity in the selected interpretation;
+the raw public payload has no decoder-independent real-cochain value. -/
+theorem cochainObject_sub_decoded_eq_message_add_coexact
+    (O : BoundHCPObservation integral payload PublicClass Context classify Binds) :
+    O.cochainObject - payload.decode O.artifact.cochain =
+      O.latticeObject.1 + O.encrypted.opening.coexactComponent := by
+  rw [O.decodedExactComponent]
+  simp [cochainObject, latticeObject, HodgeEncryptedCochain.observed,
+    HodgeNoise.value, HodgeNoise.exactComponent, HodgeNoise.coexactComponent]
+  abel
+
+/-- If the degree-two coboundary vanishes, a disclosed full cochain together
+with the interpreted exact component determines the harmonic message. -/
 theorem message_eq_cochainObject_sub_decoded_of_delta1_zero
     (O : BoundHCPObservation integral payload PublicClass Context classify Binds)
     (hdelta : F.delta1 = 0) :
     O.latticeObject.1 = O.cochainObject - payload.decode O.artifact.cochain := by
-  rw [O.decodedExactComponent]
-  simp [latticeObject, cochainObject, HodgeEncryptedCochain.observed,
-    HodgeNoise.value, HodgeNoise.exactComponent, hdelta]
+  rw [O.cochainObject_sub_decoded_eq_message_add_coexact]
+  simp [HodgeNoise.coexactComponent, hdelta]
 
 end BoundHCPObservation
 

@@ -12,9 +12,9 @@ definition/boundary rows. Full Plücker reconstruction and the transferred
 exact-component obstruction belong to Paper 3.
 Runtime prototypes are historical references under `archive/runtime/`.
 
-## Manuscript ownership and dependency table
+## Source ownership and dependency table
 
-The manuscript split is:
+The current source artifacts are:
 
 | Paper | Manuscript / current artifact | Owns | Dependency |
 |---|---|---|---|
@@ -22,11 +22,11 @@ The manuscript split is:
 | **2** | [Proof-Carrying Homotopical Encryption](papers/paper2/README.md); [working manuscript](papers/paper2/DRAFT.md) and bibliography; no TeX/PDF bundle | Payload/opening/commitment construction, actual source/codec, released-view binding, storage/evidence, rotation/retrieval, checked transitions and explicit security/runtime contracts | Uses Paper 1's actual primitives and HCP model; supplies the construction data consumed by Paper 3. |
 | **3** | [Capacity-Radius Proximity](papers/paper3/README.md); LaTeX, PDF and independent coding/application entries | RS/list/MCA results, radii, full projective reconstruction/chain, source-calibration obstructions and quantitative native-metric comparisons | Generic coding is independent of protocol completion; application theorems retain Paper 2's actual source, codec and binding/profile data. |
 
-The intended research submission combines the HCP mathematics and the
-proof-carrying transaction construction once a substantive security theorem
-for a finite keyed family and its actual release is proved. The current Paper 1
-and Paper 2 artifacts remain separate working sources until then. Paper 3
-remains an independent proximity paper.
+The combined HCP and proof-carrying transaction manuscript is the working
+research direction now. Paper 1 and Paper 2 remain source artifacts while
+their construction and proof narrative are merged. A finite keyed security
+theorem is required for a computational hardness claim; it is not a condition
+for drafting the combined paper. Paper 3 remains an independent proximity paper.
 
 | ID | Material / canonical owner | Paper 1: HCP | Paper 2: protocol/cochains | Paper 3: proximity | Dependency / disposition |
 |---|---|---|---|---|---|
@@ -150,7 +150,7 @@ no mathematical objects.
 | H68 | Whole-bucket private-read reference | [UniformRead](lean/Protocol/Storage/Retrieval/UniformRead.lean), `transcript_eq`, `distribution_eq`, `event_probability_eq` | **Exact target privacy in fixed scope.** Same entire manifest/request and arbitrary server response with target-independent tape yield identical full transcripts and event masses. Reply downloads the whole bucket; selection/recovery stay local. Public bucket, identity, timing and later access-dependent actions are outside this theorem. | Paper 2 §6.7 |
 | H69 | Conditional full-query disclosure | [LinearQueryObstruction](lean/Protocol/Storage/Retrieval/LinearQueryObstruction.lean), `essential_iff_selected`, `AxisExample.selected_is_publicly_identified` | **Joint-view limitation.** Under explicit redundancy of other noise columns, public span exclusion identifies the selected column. The concrete Fin3 fixture uses actual varying coexact HodgeNoise and the original axis sample. This is not a universal impossibility or an efficient sampler/security theorem. | Paper 2 §6.7 |
 | H70 | Hash-checked original HCP recovery | [Retrieval.Recovery](lean/Protocol/Storage/Retrieval/Recovery.lean), `recoverByDigest_bound_observation_or_collision` | **Original-source join.** Full-ciphertext parsing plus the same BoundHCPObservation/BoundSampleRotation endpoints feeds existing recipient/context/epoch recovery. Correct coefficients or actual accepted colliding bytes follow under original availability/decoding and delivered-material contracts. | Paper 2 §6.7 |
-| H71 | Full-cochain disclosure in the canonical systematic source | [DisclosureLeak](lean/Protocol/Storage/DisclosureLeak.lean), `canonical_hcpDisclosure_recovers_message_of_layout`; `TCB.BoundHCPObservation.message_eq_cochainObject_sub_decoded_of_delta1_zero` | **Direct recovery under explicit hypotheses.** The canonical sheaf has `delta1 = 0`; if its interpretation decoder agrees with the selected public layout on the artifact, the disclosed full cochain minus the same public exact payload's decoded value is the harmonic message. This rules out that release as a Hodge-confidentiality instance; the base view does not release the full cochain. | Paper 2 §2.1; Paper 3's systematic source is not a native HCP-hard sampler |
+| H71 | Exact payload versus full Hodge cochain | `TCB.BoundHCPObservation.cochainObject_sub_decoded_eq_message_add_coexact`; [DisclosureLeak](lean/Protocol/Storage/DisclosureLeak.lean), `canonical_hcpDisclosure_recovers_message_of_layout` | **Identity and direct-recovery boundary.** In the selected interpretation, `b - decode(c) = h + delta1* u`; the raw payload does not itself expose a real decoder. The canonical sheaf has `delta1 = 0`, so public layout-decoder agreement makes the disclosed full cochain and exact payload reveal the message. The base view alone omits the full cochain. | Paper 2 §2.1; Paper 3's systematic source is not a native HCP-hard sampler |
 | H72 | Checked-transfer public-ID challenge | [Confidentiality](lean/Protocol/Transfer/Confidentiality.lean), `inputIdAdversary_successProbability_eq_one`, `input_eq_of_all_advantage_lt_one` | **Exact leakage audit.** Two actually checked transfers under one fixed configuration have a perfect public-view branch test if their input IDs differ. This does not sample different HCP messages, keys or contexts. | Paper 2 §6.3.1 |
 | H73 | Field-wise assembly of the checked release | [PublicAssembly](lean/Protocol/Transfer/PublicAssembly.lean), `CheckedTransfer.publicView_eq_assembled`, `assembled_view_eventBound` | **Exact factorization and conditional data processing.** With one shared supplied setup and transfer, the original full release is reconstructed from the public base payload, owner-signature bytes and proof bytes. Any distributional event bound must first be proved for that variable triple under actual algorithms; no hiding premise is manufactured by assembly. | Paper 2 §6.3.1 |
 | H74 | Fresh signed-axis semantic sampler | [AxisSignedSampler](lean/HCP/AxisSignedSampler.lean), `observationDistribution_eq` | **Finite one-sample equality.** Actual harmonic-lattice encryptions of signed coefficients under a fresh uniform two-axis key induce equal laws on the selected homological class and raw cochain. Storage payloads, roots, transfer views, key reuse and asymptotic hardness are outside this result. | Paper 2 confidentiality design check; outside Paper 1 selection |
@@ -203,7 +203,7 @@ review history. They do not alter the universal coding theorem hypotheses.
 | D05 | Correct Euclidean likelihood and local identities | Define a recovery experiment and its success event, or retain only likelihood-score claims. | Supporting likelihood layer outside current Paper 1; Paper 2 security model |
 | D06 | Integral stalk lattices and coboundary preservation | The systematic modular profile and original codec are constructed; the finite axis family now has actual standard integral stalks and a harmonic lattice presentation. General serializers and production byte/binding laws remain profile contracts. | Paper 1 integral Hodge algebra; Paper 2 source/wire construction; Paper 3 quantitative comparison |
 | D07 | Blinding geometry and a proposition-only MAC interface | Construct key/tag/verify and a security game if the MAC is a central claim; otherwise defer it explicitly. | Paper 2 |
-| D08 | Algebraic ambiguity/oracle obstruction | Finite semantic equality and explicit disclosure/span attacks now test candidate claims. A computational-hardness theorem still needs a growing finite keyed family, full-view distribution, efficient algorithms, adversary model and reduction to an independently stated hard problem. | Paper 1 refinement; Paper 2 concrete scheme |
+| D08 | Algebraic ambiguity/oracle obstruction | The proved fixed-oracle separation is strict about input information, not computational complexity. Finite semantic equality and disclosure/span attacks test candidate claims. Computational hardness still needs a growing finite keyed family, full-view distribution, efficient algorithms, adversary model and reduction to an independently stated hard problem. | Paper 1 refinement; Paper 2 concrete scheme |
 | D25 | Actual cochain model, invariant homological tests and finite theory classifier | Full Helfer fibrational/first-order semantics and a general admissible quotient remain separate from the proved fragment. | Paper 1 |
 | D26 | Actual cellular/HCP realization and generic/concrete original-observation adapters | Apply the explicit artifact/classifier contracts; specify richer released-view equality/factorization and runtime bytes. | Paper 2 original-artifact binding; Paper 1 mathematical realization |
 | D27 | Actual integral/encoded rotation, both recipient recovery routes, finite axis instance and original bound-sample/payload joins | Instantiate fresh generation, authenticated delivery/epoch policy and atomic lifecycle/migration; prove any further coordinate/metric or topology-change laws claimed. Deterministic transport is distinct from a resampled-noise security profile. | Paper 2 |

@@ -1,11 +1,11 @@
-# Paper 2: Proof-Carrying Homotopical Encryption
+# Paper 2 source: Proof-Carrying Homotopical Encryption
 
-Working title: *Proof-Carrying Homotopical Encryption: Gate Certificates and
-Vertra Chain Architecture*.
+Working combined title: *Homotopical Encryption and Proof-Carrying Transactions*.
 
-The [working manuscript](DRAFT.md) specifies cochain commitments, visibility,
-codecs, storage and proof-carrying transitions. It is a Markdown draft with
-no TeX/PDF bundle or completed cryptographic security argument. The
+The [working manuscript](DRAFT.md) develops Hodge-structured cochain encryption
+with commitments, visibility, codecs, storage and proof-carrying transitions.
+It supplies the construction part of the combined HCP and transaction paper.
+The Markdown draft has no TeX/PDF bundle yet. The
 [bibliography](references.bib) records relevant sources; the
 [shared parity register](../../SEMANTIC-PARITY.md) maps objects and statements
 to their canonical Lean declarations.

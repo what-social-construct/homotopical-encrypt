@@ -1,25 +1,40 @@
-# Proof-Carrying Homotopical Encryption
+# Homotopical Encryption and Proof-Carrying Transactions
 
 ## Working manuscript: objects, observations and metric contracts
 
-This working draft develops one snapshot-bound proof-carrying transition and
-its construction and security contracts. It is not yet a full protocol paper
-or a TeX/PDF manuscript. The [shared parity table](../../SEMANTIC-PARITY.md)
+This working draft develops Hodge-structured cochain encryption, binds its
+exact component to a public commitment, and uses the resulting artifact in a
+snapshot-bound proof-carrying transaction. It is a Markdown source for the
+combined manuscript and does not yet have a TeX/PDF bundle. The
+[shared parity table](../../SEMANTIC-PARITY.md)
 records current statement ownership and proof status.
+
+### Candidate abstract for the combined manuscript
+
+We develop Hodge-structured cochain encryption over finite cellular sheaves.
+A private presentation determines the harmonic message space and exact and
+coexact noise; private decryption recovers the message by harmonic projection.
+An accepted cochain commitment records the exact component under a selected
+decoder, and the same artifact enters a snapshot-bound proof-carrying transfer.
+We prove algebraic recovery, exact joins between the committed artifact and
+the checked transfer, and a one-shot integrity bound under explicit primitive
+failure estimates. The HCP comparison gives a strict separation in information
+available to a solver: a correct CVP oracle recovers either constructed sample
+when given its lattice, but cannot choose both hidden targets from their common
+public HCP observation. The relation between the exact commitment and the
+full cochain also identifies disclosures that reveal the message. A
+finite keyed computational confidentiality theorem remains to be established.
 
 ### 1. Scope and paper ownership
 
-Paper 1 supplies the cellular Hodge primitives, the explicitly named
-homological Helfer fragment, concrete HCP families, harmonic recovery and CVP
-comparisons. Paper 2 owns the cochain commitment
-construction and its visibility, encoding and security contracts, the relation
-between those objects and public observations, verification evidence, retained
-artifacts and one accepted state transition.
-Authorized recipient recovery material, representative/key rotation and
-storage migration also belong to Paper 2's protocol profile. Paper 3 owns the
-independent coding theorems and the quantitative analysis of a declared application
-profile. Definitions are shared across the papers; a citation does not create
-a second commitment or discharge its compatibility conditions.
+The combined manuscript draws on the cellular Hodge primitives, homological
+Helfer fragment, HCP families and CVP comparisons of the first manuscript,
+together with the commitment, observation, storage and transaction construction
+developed here. These are stages of one encryption and verification mechanism.
+Authorized recipient recovery, representative/key rotation and storage migration
+belong to that same construction. Paper 3 owns the independent coding theorems
+and quantitative analysis of a declared application profile. Its application
+uses the same committed source without repeating the protocol contribution.
 
 The first protocol endpoint is the conservative, snapshot-bound owned-resource
 transition of §6.2, with candidate-indexed evidence and an optional matching
@@ -27,10 +42,9 @@ acceptance quorum. Section 6.3 gives a fixed-setup one-shot integrity experiment
 and conditional error-composition theorem for that checker. Primitive security
 estimates, adaptive cryptographic games, consensus finality and backend
 durability remain additional obligations. Section 6.1 specifies mathematical
-recipient recovery
-and rotation; authenticated delivery, lifecycle enforcement and bytes remain
-explicit contracts. The existing proofs state their authentication and
-implementation contracts explicitly.
+recipient recovery and rotation; authenticated delivery, lifecycle
+enforcement and bytes remain explicit contracts. The existing proofs state
+their authentication and implementation contracts explicitly.
 
 ### 2. Maintained geometry, temporary processing and retained artifacts
 
@@ -144,6 +158,12 @@ different cellular presentation, and a public lookup may reveal further
 information. Neither identical class labels nor equal exact components imply
 equal headers, payloads or proof transcripts. In particular, the finite HCP
 axis example does not construct two equal complete public storage records.
+
+For a bound sample, the decoded exact payload equals \(\delta_0a\), whereas
+the full Hodge cochain is \(b=h+\delta_0a+\delta_1^*u\). Thus
+\(b-\mathrm{decode}(c)=h+\delta_1^*u\) in the selected interpretation, as
+proved in [HCPObservation](../../lean/TCB/HCPObservation.lean). The raw
+public payload alone does not specify a real decoder.
 
 The canonical systematic RS sheaf has \(\delta_1=0\). For a bound sample whose
 interpretation decoder agrees with the canonical layout on its artifact, an
@@ -822,9 +842,13 @@ A native HCP hardness theorem would require a growing, finitely encoded
 cellular-sheaf family, independent key generation, a structured-noise sampler,
 an efficient private decoder, and a game releasing the actual selected storage
 and transfer fields. Its reduction must start from an independently stated
-hard problem and preserve the challenge distribution. The present exact
-recovery obstruction and generated known-lattice CVP instances do not supply
-that reduction. With the canonical systematic source, the full-cochain
+hard problem and preserve the challenge distribution. The present CVP theorem
+proves a strict separation in the information supplied to a solver: the
+operative lattice lets a correct CVP oracle recover each axis sample, while
+the same oracle cannot choose two different targets at their shared
+\((\alpha,b)\). Both axis samples also have exact component zero. This
+establishes no computational hardness reduction or equality of their complete
+storage records. With the canonical systematic source, the full-cochain
 disclosure fails already by the direct recovery in §2.1.
 
 For a fixed key, [NoiseSpanAttack](../../lean/HCP/NoiseSpanAttack.lean)
