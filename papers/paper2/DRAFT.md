@@ -14,6 +14,11 @@ records current statement ownership and proof status.
 We develop Hodge-structured cochain encryption over finite cellular sheaves.
 A private presentation determines the harmonic message space and exact and
 coexact noise; private decryption recovers the message by harmonic projection.
+An integer-matrix cellular family has an explicitly presented intrinsic
+harmonic lattice. Constructed cochain isomorphisms prove preservation of its
+declared semantic class and integer message coefficients, and concrete codecs
+reconstruct the original integral Hodge observations. Admissible isometric
+transport satisfies the encryption and recovery naturality square.
 An accepted cochain commitment records the exact component under a selected
 decoder, and the same artifact enters a snapshot-bound proof-carrying transfer.
 We prove algebraic recovery, exact joins between the committed artifact and
@@ -26,6 +31,34 @@ full cochain also identifies disclosures that reveal the message. A
 finite keyed computational confidentiality theorem remains to be established.
 
 ### 1. Scope and paper ownership
+
+Homotopical encryption is motivated by a structural analogue of homomorphic
+correctness. Homomorphic correctness relates an operation on messages to an
+operation on their ciphertexts; see
+[Gentry's definitions](https://crypto.stanford.edu/craig/craig-thesis.pdf).
+Here the central operation is an admissible change of presentation within
+the same declared semantic homotopy class. For an integral chain isometry
+compatible with the harmonic-lattice encodings, the original samples satisfy
+\[
+T_1\operatorname{Enc}_F(z,e)=\operatorname{Enc}_G(z,T_{\mathrm{noise}}e),
+\qquad
+\operatorname{Dec}_G(T_1b)=z=\operatorname{Dec}_F(b)
+\]
+on encryptions of \(z\). These are the existing
+`PresentedRotation.transport_encrypt` and recovery theorems. The underlying
+cochain equivalence also preserves the declared public class. This is the
+proved naturality square behind the analogy; a general category/functor
+package and arbitrary circuit evaluation are separate constructions. The
+larger coupled family below has actual semantic and lattice equivalences
+without supplying an isometry for every pair of presentations.
+Transport material may be private; this correctness square alone supplies no
+public translation algorithm.
+
+[Fully key-homomorphic encryption](https://crypto.stanford.edu/~dabo/pubs/abstracts/lattice-abe.html)
+also studies ciphertext transformations that retain a plaintext under changed
+public keys. A novelty comparison must therefore identify our concrete
+presentation data, permitted transports, visibility and security guarantees.
+The functorial language alone supplies no novelty or security claim.
 
 The combined manuscript draws on the cellular Hodge primitives, homological
 Helfer fragment, HCP families and CVP comparisons of the first manuscript,
@@ -158,6 +191,20 @@ different cellular presentation, and a public lookup may reveal further
 information. Neither identical class labels nor equal exact components imply
 equal headers, payloads or proof transcripts. In particular, the finite HCP
 axis example does not construct two equal complete public storage records.
+
+For the integral coupled family below, the matrix, scalar stalks, standard
+stalk lattices, graph basis and Euclidean metric form one fixed profile.
+Its [canonical presentation codec](../../lean/Protocol/Storage/CoupledCodec.lean)
+records the row and column counts followed by the integer matrix entries in
+row-major order. The versioned domain fixes that interpretation. Signed
+magnitudes use tagged base-256 digits; the decoder rejects noncanonical bytes,
+wrong domains, trailing data and proper truncations. The
+[snapshot adapter](../../lean/Protocol/Storage/CoupledBinding.lean) checks the
+canonical byte hash against the original snapshot root and proves exact
+presentation recovery or a concrete byte collision. Snapshot authentication
+and the observation/classifier join remain explicit contracts. Presentation
+bytes are private witness material in the hidden-operator profile; a public
+digest still requires its own confidentiality analysis.
 
 For a bound sample, the decoded exact payload equals \(\delta_0a\), whereas
 the full Hodge cochain is \(b=h+\delta_0a+\delta_1^*u\). Thus
@@ -879,6 +926,57 @@ those harmonic units as its basis and spans the actual keyed harmonic space.
 Its unit-coefficient encryption is the original family sample, and a correct
 CVP oracle given that keyed lattice returns the sample's harmonic message.
 
+The [coupled cellular family](../../lean/Sheaf/HCPCoupledFamily.lean) replaces
+independent coordinate choices with shared integral face equations. For an
+integer matrix \(B\in\mathbb Z^{m\times n}\), scalar information and parity
+edge stalks satisfy \(y=Bx\); a separate exact edge gives a nonzero
+\(\delta_0\). Its harmonic space and intrinsic integral harmonic lattice are
+exactly
+\[
+W_B=\{(0,x,Bx):x\in\mathbb R^n\},\qquad
+\Lambda_B=\{(0,z,Bz):z\in\mathbb Z^n\}.
+\]
+The [explicit presentation](../../lean/HCP/CoupledCVP.lean) contains the whole
+intrinsic lattice, with Gram matrix \(I+B^{\mathsf T}B\). Its closest-vector
+objective at target \((a,u,v)\) is
+\[
+a^2+\|u-z\|^2+\|v-Bz\|^2,\qquad z\in\mathbb Z^n.
+\]
+Shared rows can introduce off-diagonal coefficient interactions. The graph
+description lies in a fixed information-coordinate chart of a Grassmannian;
+the current Lean construction proves the embedded-space and lattice facts,
+without constructing an algebraic variety.
+
+The [semantic connection](../../lean/HCP/CoupledSemantics.lean) is constructed
+from the actual cochain complexes. For any two matrices of the same dimensions,
+the integral shear
+\((a,x,y)\mapsto(a,x,y+(C-B)x)\) intertwines both coboundaries and has the reverse
+shear as inverse. This gives a strict cochain isomorphism, a typed Helfer
+equivalence and equality of the declared homological closed theories. It also
+carries \((0,z,Bz)\) to \((0,z,Cz)\). The shear generally changes the Euclidean
+metric, so it supplies no Hodge-adjoint or full-ciphertext transport law.
+An actual `PresentedRotation` still requires the existing isometric and
+same-coefficient conditions. Equal public classes also leave snapshot/header
+equality as a separate released-view obligation.
+
+The [integral opening profile](../../lean/Sheaf/HCPCoupledEncoding.lean)
+instantiates the original Hodge sample with integer \(z,a,u\), and proves its
+entire observation is
+\[
+b=(a,\ z-B^{\mathsf T}u,\ Bz+u).
+\]
+Its executable integer coordinates cast to that same sample's real observed
+cochain. The [full ciphertext codec](../../lean/Protocol/Storage/CoupledCiphertext.lean)
+uses a separate versioned domain, explicit matrix dimensions and the ordered
+exact, information and parity coordinates. Its actual decoder reconstructs
+the original full observation, and the original harmonic recovery theorem
+then returns the same message. A byte-hash check and binding indexed by the
+existing `BoundHCPObservation` retain the original exact artifact, snapshot
+and lifecycle; the full-ciphertext digest has its own name. This closes the
+finite representation of this integral native profile. It leaves the
+transaction/proximity theorem's selected full-observation relation and
+cryptographic proof construction to be supplied explicitly.
+
 A native HCP computational hardness theorem still requires finite encoding,
 independent key generation, a structured-noise distribution, an efficient
 private decoder, and a game releasing the actual selected storage and transfer
@@ -1115,11 +1213,17 @@ proving/transcript algorithms, knowledge extraction, unforgeability and their
 setup/error games remain obligations. The generic `Signing`, `Issuance` and
 `Authorization` modules retain their geometry-independent roles.
 
-#### 6.7. Hash indexing, private retrieval and native Hodge queries
+#### 6.7. Harmonic-lattice recovery and optional encrypted evaluation
 
 The [retrieval layer](../../lean/Protocol/Storage/Retrieval.lean) recovers the
 encrypted-database/private-read intention using the existing manifest, actual
-HCP samples and private recovery material. Its native query construction is
+HCP samples and private recovery material. The primary object is the original
+Hodge-encrypted harmonic-lattice cochain; hash-indexed lookup and recipient
+recovery retain that same object. Encrypted linear-query evaluation is an
+optional application of its aggregation laws. It supplies neither the
+definition of the harmonic lattice nor the storage commitment.
+
+The optional query construction is
 in [HodgeQuery](../../lean/Protocol/Storage/Retrieval/HodgeQuery.lean). For a
 selected position \(i\), integer database values \(d_j\), coefficients \(z\)
 and existing exact/coexact openings \(e_j\), the columns are
@@ -1183,6 +1287,12 @@ this is distinct from public sender encryption to an arbitrary recipient.
 That public-key interface remains open.
 No auxiliary CRS encryption or conventional/native signature combiner is
 selected by this retrieval construction.
+
+A later comparison with fully homomorphic encryption should specify the
+supported operations on these actual ciphertexts, their output/recovery
+semantics and the corresponding security experiments. The present linear
+aggregation theorem supplies one entry in that inventory; no arbitrary
+encrypted-computation interface is constructed here.
 
 ### 7. Construction ownership and remaining protocol work
 

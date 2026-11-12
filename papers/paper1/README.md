@@ -1,8 +1,11 @@
 # Paper 1: The Harmonic Cochain Problem
 
 This folder contains *Homotopical Encryption: Hidden Hodge Operators and the
-Harmonic Cochain Problem*, the first manuscript in the recorded
-[three-paper program](../../SEMANTIC-PARITY.md#manuscript-ownership-and-dependency-table).
+Harmonic Cochain Problem*, the foundations source retained from the earlier
+three-part split. The [working combined manuscript](../paper2/DRAFT.md) now
+joins these foundations to the native construction and protocol; the
+proximity paper remains separate. The [parity register](../../SEMANTIC-PARITY.md)
+retains the source-directory and previous verification-entry correspondence.
 
 The paper introduces the HCP/Hodge recovery model, its homological semantic
 fragment, explicit harmonic lattices, known-lattice CVP comparisons and the
@@ -46,7 +49,7 @@ The canonical Lean proofs of these geometric results remain in place,
 outside Paper 1's selected entry. The shared ownership table records this split.
 
 The [source ledger](../../docs/SOURCE_LEDGER.md#bibliography-correspondence)
-accounts for all 28 sources across the three bibliographies. The projective
+accounts for all 30 ledger sources across the source bibliographies. The projective
 comparison source belongs to Paper 3; Paper 1 prints four external sources
 and retains two uncited companion records.
 

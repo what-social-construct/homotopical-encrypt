@@ -1,31 +1,41 @@
 # Homotopical Encryption
 
-This repository contains Lean formalizations and three research manuscripts
-on hidden Hodge operators, cellular-sheaf cochains, protocol specifications
-and Reed–Solomon proximity.
+This repository formalizes hidden Hodge operators, cellular-sheaf cochains,
+proof-carrying transactions and Reed–Solomon proximity in Lean.
 
-The plan is **three papers and three Palomar submissions, one per paper**.
-**Paper 1 is being prepared first.**
+The working manuscript combines the HCP foundations and protocol construction
+currently stored under `paper1` and `paper2`. The capacity-radius proximity
+paper remains separate under `paper3`. The directory labels and earlier
+focused verification entries are retained for source correspondence; a revised
+combined submission is still being developed.
 
 ## Manuscripts
 
 | Paper | Scope | Current preparation |
 |---|---|---|
-| [Paper 1: Hidden Hodge Operators and the Harmonic Cochain Problem](papers/paper1/README.md) | Cellular/Hodge primitives, HCP, semantic classes, harmonic lattices, known-lattice CVP comparisons and exact-recovery ambiguity. | [PDF](papers/paper1/main.pdf), [TeX](papers/paper1/main.tex) and [formalization entry](lean/Palomar/PaperOne/README.md); first planned submission. |
-| [Paper 2: Proof-Carrying Homotopical Encryption](papers/paper2/README.md) | Cochain commitments, visibility and codec contracts, storage, proof-carrying transitions and security-game obligations. | [Working Markdown draft](papers/paper2/DRAFT.md); TeX/PDF and a dedicated submission entry remain to be prepared. |
+| [HCP foundations source (`paper1`)](papers/paper1/README.md) | Cellular/Hodge primitives, HCP, semantic classes, harmonic lattices, known-lattice CVP comparisons and exact-recovery ambiguity. | Existing [PDF](papers/paper1/main.pdf), [TeX](papers/paper1/main.tex) and [focused formalization entry](lean/Palomar/PaperOne/README.md), preceding the combined revision. |
+| [Combined construction draft (`paper2`)](papers/paper2/README.md) | Hodge encryption, cochain commitments, concrete presentation bytes, visibility, storage and proof-carrying transitions. | [Working manuscript](papers/paper2/DRAFT.md) and [coupled-construction TeX section](papers/paper2/sections/coupled-construction.tex); full TeX/PDF and revised submission entry remain to be prepared. |
 | [Paper 3: Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes](papers/paper3/README.md) | Projective reconstruction in the projection chain, coding/list/MCA results, radii and native modular metric comparisons. | [PDF](papers/paper3/main.pdf), [TeX](papers/paper3/main.tex); internal verification configurations: [coding](lean/Palomar/PaperThree/README.md) and [application](lean/Palomar/PaperThree/Application/README.md). |
 
 The [shared parity register](SEMANTIC-PARITY.md) assigns canonical objects and
 statements to these papers. The [source ledger](docs/SOURCE_LEDGER.md)
 indexes their literature. Paper 2 supplies the cochain construction and
-protocol contracts consumed by Paper 3's application results. Paper 1's
-HCP/CVP contribution is independent of that protocol and coding development.
+protocol contracts consumed by Paper 3's application results. The HCP
+foundations remain independent of the protocol and coding import closures.
 
 Paper 3's coding and application configurations check different parts of
 the same manuscript. The linked verification guides record their current
 status. Paper 2's dedicated configuration remains to be prepared.
 
 ## Mathematical focus
+
+The expository anchor is a homotopical analogue of encryption correctness:
+admissible presentation transport commutes with encryption and recovery while
+preserving the declared semantic class. The existing
+[`transport_encrypt`](lean/Protocol/Ephemeral/Rotation.lean) theorem proves
+this square for compatible integral chain isometries. The coupled semantic
+family below is larger than that proved rotation orbit. Supported encrypted
+computations and a comparison with FHE remain explicit follow-up work.
 
 A hidden presentation selects a degree-one Hodge operator
 
@@ -50,6 +60,24 @@ closest vectors. A constructed family has one public observation and
 different operative targets: a correct CVP oracle recovers the target when
 given the private lattice, while the shared public input cannot select the
 hidden member's answer uniformly.
+
+The [coupled cellular family](lean/Sheaf/HCPCoupledFamily.lean) has shared
+integer face equations `y=B x`. Its intrinsic harmonic lattice is exactly
+`Λ_B={(0,z,Bz): z∈ℤⁿ} ⊂ C¹`: the message is already a cochain, and encryption
+adds exact/coexact Hodge noise to it. A constructed
+[cochain isomorphism and typed Helfer equivalence](lean/HCP/CoupledSemantics.lean)
+preserve the declared public homotopy class and integer message coefficients
+across same-size matrices. This generally nonisometric shear does not supply
+the stronger Hodge rotation laws. The
+[lattice presentation](lean/HCP/CoupledCVP.lean) has Gram matrix `I+BᵀB`;
+[canonical matrix bytes](lean/Protocol/Storage/CoupledCodec.lean) and
+[snapshot checks](lean/Protocol/Storage/CoupledBinding.lean) bind that same
+profile to existing storage contexts.
+The [integral native sample](lean/Sheaf/HCPCoupledEncoding.lean) has full
+observation `(a,z−Bᵀu,Bz+u)`. Its
+[ciphertext codec](lean/Protocol/Storage/CoupledCiphertext.lean) decodes to the
+same original Hodge cochain, with a ciphertext digest distinct from the
+exact-component artifact digest.
 
 These are exact mathematical comparisons. Computational hardness and
 encryption security require their stated additional assumptions.

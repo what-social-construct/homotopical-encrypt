@@ -13,6 +13,14 @@ public import Protocol.Storage.Context
 The semantic plaintext is an integer coefficient vector in a declared
 harmonic-lattice presentation. An actual integral chain isometry, together
 with compatibility of the two encodings, transports that same plaintext.
+`PresentedRotation.transport_encrypt` is the encryption-naturality square:
+transporting an encryption equals encrypting the same coefficients with the
+transported exact/coexact opening. Identity, inverse and composition operations
+retain the original objects. This is the proved transport analogue motivating
+homotopical encryption; no general circuit-evaluation or fully homomorphic
+encryption claim is made. Typed class invariance follows separately from the
+actual cochain equivalence (as in `Helfer.CochainModel`); a nonisometric
+homotopy equivalence alone need not transport Hodge noise.
 Both direct target-key recovery and inverse-transport/base-key recovery are
 derived from the observed cochain. The decoder is classical, not an efficient
 cryptographic algorithm.
@@ -67,7 +75,9 @@ theorem pullback_rotateObserved (R : PresentedRotation H K) (b : F.C1) :
     R.integral.degreeOne.symm (R.rotateObserved b) = b :=
   R.integral.degreeOne.symm_apply_apply b
 
-/-- Rotated encryption is actual target encryption of the same coefficient vector. -/
+/-- Encryption naturality under this admissible presentation transport:
+`T₁(Enc_H(z,e)) = Enc_K(z,T_noise(e))` at the original sample-object level.
+The semantic message is the same integer coefficient vector. -/
 theorem transport_encrypt (R : PresentedRotation H K)
     (z : Rank → ℤ) (opening : HodgeNoise F) :
     R.integral.transportSample (H.encrypt z opening) =

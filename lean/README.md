@@ -1,7 +1,9 @@
 # Lean formalization
 
 This workspace formalizes the mathematics and protocol specifications in
-the project's [three manuscripts](../README.md#manuscripts). The namespace is
+the project's [manuscript sources](../README.md#manuscripts). HCP foundations
+and protocol construction are being combined; the proximity paper remains
+separate. The namespace is
 `HomotopicalEncryption`. The [shared parity register](../SEMANTIC-PARITY.md)
 records statement ownership; each manuscript and independent entry provides
 its own declaration crosswalk. The [source ledger](../docs/SOURCE_LEDGER.md)
@@ -13,6 +15,8 @@ records the literature.
 |---|---|---|
 | Paper 1: HCP and CVP | [HCP.lean](HCP.lean), [Hardness.lean](Hardness.lean), [CVP.lean](CVP.lean), [HCP/AxisFamily.lean](HCP/AxisFamily.lean) | Public semantic classes, hidden harmonic targets, explicit harmonic lattices, projection-preserving closest vectors and a supplied-member/hidden-member exact-recovery separation. |
 | Cellular and semantic foundations | [Sheaf.lean](Sheaf.lean), [Laplacian.lean](Laplacian.lean), [Helfer.lean](Helfer.lean) | Finite cellular cochains, Hodge operators, typed semantic interpretations and homotopy-invariance interfaces. |
+| Coupled native construction | [HCPCoupledFamily](Sheaf/HCPCoupledFamily.lean), [CoupledCVP](HCP/CoupledCVP.lean), [CoupledSemantics](HCP/CoupledSemantics.lean) | Actual shared stalk constraints, entire intrinsic graph lattice, constructed semantic-class/coefficient preservation and the original HCP projector. |
+| Concrete native encoding | [HCPCoupledEncoding](Sheaf/HCPCoupledEncoding.lean), [CoupledCodec](Protocol/Storage/CoupledCodec.lean), [CoupledBinding](Protocol/Storage/CoupledBinding.lean), [CoupledCiphertext](Protocol/Storage/CoupledCiphertext.lean) | Original integral Hodge observations, canonical matrix/full-cochain bytes and original snapshot/observation bindings. |
 | Paper 2: cochains and protocol | [Axioms/CochainCommitment.lean](Axioms/CochainCommitment.lean), [Protocol/Core.lean](Protocol/Core.lean), [Protocol/Storage/Core.lean](Protocol/Storage/Core.lean) | Commitment carriers, conservative resource transitions, projection gates and snapshot-bound evidence under explicit profiles. |
 | Paper 2: recovery and primitives | [Protocol/Ephemeral.lean](Protocol/Ephemeral.lean), [Protocol/Storage/Retrieval.lean](Protocol/Storage/Retrieval.lean), [Protocol/Transfer.lean](Protocol/Transfer.lean), [TCB.lean](TCB.lean) | Rotation, recovery, retrieval and verification contracts on the original objects. |
 | Paper 3: coding | [ProximityCoding.lean](ProximityCoding.lean), [Proximity hierarchy](Proximity/README.md) | Smooth-domain Reed–Solomon families, list/MCA statements, radii and attained distances. |
@@ -22,6 +26,13 @@ Paper 1's optional classifier-reflection profile identifies public fibers
 with the declared semantic homotopy classes when combined with closed-test
 invariance. The admitted two-member family proves reflection; the operative
 embedded Hodge kernel still depends on the hidden presentation.
+
+The coupled family also proves reflection on its same-size admitted matrices
+by constructed strict cochain isomorphisms. Its harmonic lattice consists of
+the actual cochains `(0,z,Bz)`; encryption adds the original exact/coexact
+noise. `PresentedRotation.transport_encrypt` is the proved encryption
+naturality square for admissible integral chain isometries. General coupled
+semantic shears are not isometries and do not supply that noise transport.
 
 Paper 2 specifies commitment construction, visibility, codecs and protocol
 evidence. Paper 3 owns the full projective reconstruction and quantitative

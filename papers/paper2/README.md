@@ -5,12 +5,40 @@ Working combined title: *Homotopical Encryption and Proof-Carrying Transactions*
 The [working manuscript](DRAFT.md) develops Hodge-structured cochain encryption
 with commitments, visibility, codecs, storage and proof-carrying transitions.
 It supplies the construction part of the combined HCP and transaction paper.
-The Markdown draft has no TeX/PDF bundle yet. The
+The [matching coupled-construction TeX section](sections/coupled-construction.tex)
+states the proved class/lattice/cochain connection; the full Markdown draft
+has no TeX/PDF bundle yet. The
 [bibliography](references.bib) records relevant sources; the
 [shared parity register](../../SEMANTIC-PARITY.md) maps objects and statements
 to their canonical Lean declarations.
 
 ## Current construction
+
+The [coupled family](../../lean/Sheaf/HCPCoupledFamily.lean) uses shared integer
+face equations `y=B x`. Its intrinsic harmonic lattice consists exactly of
+`(0,z,Bz)`: these messages are already cochains. Exact/coexact Hodge noise
+produces the original encrypted cochain. A constructed
+[strict cochain isomorphism](../../lean/HCP/CoupledSemantics.lean) proves typed
+Helfer equivalence and public homological-class preservation across same-size
+matrices, and an explicit harmonic-lattice equivalence preserves their integer
+message coefficients. The generally nonisometric shear does not transport
+Hodge noise; protocol rotations retain their actual isometry requirement.
+The same file joins the actual Hodge matrix to the HCP operative projector.
+
+The [canonical integer-matrix codec](../../lean/Protocol/Storage/CoupledCodec.lean)
+and [snapshot profile](../../lean/Protocol/Storage/CoupledBinding.lean) name
+that same sheaf, standard integral structure and metric. Matrix bytes remain
+private in the hidden-operator profile. Hash-indexed recovery of native
+harmonic-lattice ciphertexts is the storage path; encrypted linear-query
+evaluation is an optional application. A later FHE comparison will specify
+the actual supported computations and their security assumptions.
+
+The [integral sample profile](../../lean/Sheaf/HCPCoupledEncoding.lean) and
+[full-cochain codec](../../lean/Protocol/Storage/CoupledCiphertext.lean) close
+the original-object encoding join: the decoded bytes are exactly the same
+Hodge sample's full observation `(a,z-Bᵀu,Bz+u)`. This ciphertext digest is
+separate from the exact-component artifact digest. Key/noise sampling,
+concrete authentication/proof algorithms and full-view security remain work.
 
 The commitment profile retains the original cochain payload, its declared
 modulus/count/topology tag, the private cellular/Hodge interpretation and
@@ -32,7 +60,7 @@ For the canonical systematic sheaf, releasing both the full cochain and exact
 payload recovers the harmonic message when the decoder agrees with the
 selected public layout. The draft states this disclosure boundary explicitly.
 
-Actual integral rotation transports harmonic messages and structured noise.
+Actual integral isometric rotation transports harmonic messages and structured noise.
 Recipient recovery retains the same integer coefficients through target-key
 decoding or inverse transport with the retained base key, under the supplied
 encoding and delivery contracts. Hash-indexed lookup and full-bucket retrieval
@@ -58,6 +86,9 @@ and composes supplied failure budgets under one shared probability law.
 
 | Construction | Canonical entry |
 |---|---|
+| Coupled harmonic lattice and proved semantic class | [HCPCoupledFamily](../../lean/Sheaf/HCPCoupledFamily.lean), [CoupledCVP](../../lean/HCP/CoupledCVP.lean), [CoupledSemantics](../../lean/HCP/CoupledSemantics.lean) |
+| Concrete presentation bytes and original snapshot | [CoupledCodec](../../lean/Protocol/Storage/CoupledCodec.lean), [CoupledBinding](../../lean/Protocol/Storage/CoupledBinding.lean) |
+| Original full Hodge ciphertext bytes | [HCPCoupledEncoding](../../lean/Sheaf/HCPCoupledEncoding.lean), [CoupledCiphertext](../../lean/Protocol/Storage/CoupledCiphertext.lean) |
 | Commitment and coordinate profile | [CochainCommitment](../../lean/Axioms/CochainCommitment.lean), [CoordinateCodec](../../lean/Protocol/Storage/CoordinateCodec.lean) |
 | Generic ledger and computed transition | [Ledger.Transition](../../lean/Protocol/Ledger/Transition.lean), [Ledger.ValueFlow](../../lean/Protocol/Ledger/ValueFlow.lean) |
 | Bounded transition and checked transfer | [Protocol.Core](../../lean/Protocol/Core.lean), [Transfer](../../lean/Protocol/Transfer.lean), [PublicAssembly](../../lean/Protocol/Transfer/PublicAssembly.lean), [protocol guide](../../lean/Protocol/README.md) |

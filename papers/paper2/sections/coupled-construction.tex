@@ -1,0 +1,184 @@
+% Working section of the combined HCP and proof-carrying transaction manuscript.
+% Canonical prose counterpart: ../DRAFT.md, Sections 2.1 and 6.3.1.
+% Requires amsmath, amssymb, amsthm and proposition/theorem environments.
+\section{Coupled harmonic lattices and their public class}
+\label{sec:coupled-harmonic-construction}
+
+Homomorphic correctness requires evaluation on ciphertexts to agree with
+evaluation on messages \cite{gentry2009fullyHomomorphic}. The homotopical
+analogue developed here concerns admissible presentation transport.
+For an integral chain isometry compatible with the harmonic-lattice encodings,
+the existing sample-level transport and recovery theorems give
+\[
+ T_1\operatorname{Enc}_F(z,e)
+   =\operatorname{Enc}_G(z,T_{\mathrm{noise}}e),\qquad
+ \operatorname{Dec}_G(T_1b)=z=\operatorname{Dec}_F(b)
+\]
+on encryptions of \(z\). The underlying cochain equivalence preserves the
+declared semantic homotopy class. This naturality square states the proved
+analogy. Transport material may be private; the equation alone supplies no
+public translation algorithm. Ciphertext transformation under changed
+public keys also appears in fully key-homomorphic encryption
+\cite{bonehEtAl2014keyHomomorphic}. Our comparison concerns the concrete
+presentation data, permitted transports and their semantic class.
+
+The cellular sheaf determines the cochain complex before a message is chosen.
+For an integral presentation, the admissible messages form the subgroup
+\[
+  \Lambda_F=C^1_{\mathbb Z}(F)\cap\ker\Delta_{1,F}\ \subseteq\ C^1(F).
+\]
+A message in this lattice is already a degree-one cochain. An exact/coexact
+opening produces the observed cochain
+\begin{equation}
+  b=h+\delta_0a+\delta_1^*u,\qquad h\in\Lambda_F,
+  \label{eq:coupled-hodge-encryption}
+\end{equation}
+and the original harmonic projector recovers \(h\). The lattice specifies the
+integral message space; preservation of the public homotopy class comes from
+an equivalence of the underlying cochain interpretations.
+
+\subsection{Shared integral stalk constraints}
+
+Fix \(B\in\mathbb Z^{m\times n}\). The coupled cellular family has one scalar
+exact edge, \(n\) scalar information edges, \(m\) scalar parity edges, and
+one scalar face stalk per row of \(B\). Its actual restriction maps give
+\[
+ C^1(F_B)=\mathbb R\oplus\mathbb R^n\oplus\mathbb R^m,
+ \qquad
+ \delta_{0,B}(a)=(a,0,0),\qquad
+ \delta_{1,B}(a,x,y)=y-Bx.
+\]
+The information edges contribute to shared face equations, so the stalk maps
+couple different edge cells. Standard integer stalk lattices are preserved by
+these maps. All cochain spaces use their fixed Euclidean metrics.
+
+\begin{proposition}[Intrinsic harmonic graph lattice]
+\label{prop:coupled-harmonic-graph}
+The harmonic subspace and its intrinsic integral lattice are exactly
+\[
+ W_B=\{(0,x,Bx):x\in\mathbb R^n\},\qquad
+ \Lambda_B=\{(0,z,Bz):z\in\mathbb Z^n\}.
+\]
+The columns of \(G_B=[0;I;B]\) present the entire lattice \(\Lambda_B\), with
+Gram matrix \(G_B^{\mathsf T}G_B=I+B^{\mathsf T}B\). For target \((a,v,w)\),
+the squared distance to the point with coefficient vector \(z\) is
+\[
+ a^2+\|v-z\|^2+\|w-Bz\|^2.
+\]
+The embedded harmonic subspace determines \(B\).
+\end{proposition}
+
+\begin{proof}
+The harmonic equations are \(\delta_{0,B}^*(a,x,y)=0\) and
+\(\delta_{1,B}(a,x,y)=0\), which give \(a=0\) and \(y=Bx\).
+Integrality of the information coordinates forces \(x\in\mathbb Z^n\);
+integer \(B\) then makes every parity coordinate integral. The information
+coordinates also prove independence of the graph generators. Their inner
+products and distances give the displayed formulas. Applying the graph
+description to the information-coordinate unit vectors recovers each column
+of \(B\).
+\end{proof}
+
+Real graph matrices describe a standard information-coordinate chart of a
+Grassmannian; integer matrices select arithmetic points in that chart. The
+formalization constructs the sheaves, harmonic subspaces and lattices, without
+an algebraic-variety or scheme construction. Shared rows give explicit
+off-diagonal Gram entries, while computational hardness requires an
+independent reduction and a specified experiment.
+
+\subsection{Constructed homotopy-class and lattice preservation}
+
+\begin{theorem}[Same public class and message coefficients]
+\label{thm:coupled-public-class}
+For integer matrices \(B,C\) of the same dimensions, define
+\[
+ T_{B,C}(a,x,y)=(a,x,y+(C-B)x).
+\]
+Together with identity maps in degrees zero and two, this is a strict
+isomorphism between the actual cellular cochain complexes. It induces a
+typed Helfer equivalence and equality of their closed theories in the declared
+homological test fragment. Its restriction gives an additive equivalence
+\(\Lambda_B\simeq\Lambda_C\) preserving the integer coefficient vector:
+\[
+ T_{B,C}(0,z,Bz)=(0,z,Cz).
+\]
+\end{theorem}
+
+\begin{proof}
+The inverse is \(T_{C,B}\), and direct substitution gives
+\[
+ T_{B,C}\delta_{0,B}=\delta_{0,C},\qquad
+ \delta_{1,C}T_{B,C}=\delta_{1,B}.
+\]
+The resulting strict complex isomorphism supplies the typed semantic
+equivalence. Proved invariance of the declared closed tests gives theory
+equality. The integral graph description in
+Proposition~\ref{prop:coupled-harmonic-graph} gives the lattice equivalence
+and its coefficient formula.
+\end{proof}
+
+This is an isomorphism of the full cochain interpretations. The shear mixes
+edge cells and need not define a stalkwise cellular morphism on the fixed
+scalar-cell decomposition. It generally changes lengths. Consequently it
+does not supply naturality of adjoints or orthogonal projections, or transport
+the noise in~\eqref{eq:coupled-hodge-encryption}. The protocol's
+\texttt{PresentedRotation} retains its stronger integral-isometry and
+same-coefficient conditions. The admitted semantic family can therefore be
+larger than a proved protocol rotation orbit.
+
+The realized HCP matrix acts by the actual cellular Hodge Laplacian. Its
+matrix kernel equals \(W_B\), and its operative recovery map equals the
+original cellular harmonic projector. Thus semantic interpretation, harmonic
+lattice, message and observed cochain refer to the same construction. Equal
+public classes leave equality of released roots, headers and proof transcripts
+as a separate application obligation.
+
+\subsection{Canonical presentation bytes and storage}
+
+The versioned presentation domain \texttt{HODGE\_COUPLING\_V1} fixes this
+family's scalar stalks, standard integral structures and Euclidean metric.
+The bytes record both dimensions followed by the signed integer entries in
+row-major order. Natural magnitudes use little-endian base-256 digits, each
+tagged to distinguish it from the terminating byte. An integer adds a sign
+byte. Canonical re-encoding rejects redundant digits and negative zero.
+The executable decoder roundtrips the actual matrix; injectivity, rejection
+of wrong dimensions or domain, trailing data and every proper truncation are
+proved. Encoded magnitude length is logarithmic in its value.
+
+An optional storage profile equates the canonical presentation hash with the
+original sheaf-indexed snapshot root. A successful parser and root check
+recovers the named matrix packet or exhibits distinct byte strings with equal
+hashes. Snapshot authentication, payload-envelope binding and agreement with
+the semantic classifier retain their original explicit contracts. The
+presentation bytes are private witness material in the hidden-operator
+profile. Releasing those bytes reveals \(B\); a digest alone establishes no
+hiding property.
+
+The exact payload encodes \(\delta_0a\), whereas the full native HCP ciphertext
+is \(b\) in~\eqref{eq:coupled-hodge-encryption}. The two objects retain distinct
+bindings. A proximity theorem about the exact payload does not automatically
+observe the harmonic graph.
+
+For the constructed integral opening profile, \(z,a,u\) are integer-valued and
+the original Hodge ciphertext has coordinates
+\[
+ b=(a,\ z-B^{\mathsf T}u,\ Bz+u).
+\]
+An executable integer vector casts to exactly this original observation. The
+full-ciphertext codec uses the distinct domain
+\texttt{HODGE\_CIPHERTEXT\_V1}, explicit matrix dimensions, and exact,
+information and parity coordinates in that order. Its decoder reconstructs
+the same native sample's full observed cochain; the existing harmonic
+projector recovers its original message. Canonical roundtrip, injectivity and
+rejection of malformed or mismatched byte streams are proved. A separate
+ciphertext hash check binds these bytes to the existing bound observation,
+retaining its exact artifact, snapshot and lifecycle. A concrete proof of the
+selected transaction/proximity relation remains an application obligation.
+
+The constructed operations concern harmonic-lattice messages, their Hodge
+openings and recovery. Encrypted linear query evaluation is an optional
+application. A later comparison with fully homomorphic encryption should
+inventory the actual supported operations and their security statements.
+
+The shared parity register records the construction, encodings, transport
+square and their formal boundaries as H81--H88.

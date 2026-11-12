@@ -1,5 +1,22 @@
 # Concrete cellular HCP comparison
 
+[CoupledCVP](CoupledCVP.lean) and [CoupledSemantics](CoupledSemantics.lean)
+extend the construction to shared integral face equations `y=B x`. The actual
+cellular family lives in [Sheaf.HCPCoupledFamily](../Sheaf/HCPCoupledFamily.lean).
+Its entire intrinsic harmonic lattice is the integer graph `(0,z,Bz)`; its
+explicit basis has Gram `I+BᵀB`. A constructed strict cochain shear proves
+typed Helfer equivalence and public homological-theory equality for all
+same-size matrices. That shear generally changes the metric, so it does not
+instantiate the isometric `PresentedRotation` interface. The existing Hodge
+sampler and known-lattice CVP recovery apply, with the generated-target promise
+retained. Canonical presentation bytes and original-snapshot checks live in
+[Storage.CoupledCodec](../Protocol/Storage/CoupledCodec.lean) and
+[CoupledBinding](../Protocol/Storage/CoupledBinding.lean).
+The [native integer profile](../Sheaf/HCPCoupledEncoding.lean) is the same
+original Hodge encryption; the [full ciphertext codec](../Protocol/Storage/CoupledCiphertext.lean)
+reconstructs its complete observation. These are harmonic-lattice messages
+and cochains; encrypted query evaluation remains an optional application.
+
 [AxisFamily.lean](AxisFamily.lean) instantiates the existing HCP recovery and
 CVP-oracle comparison with two actual integral cellular sheaves. Import
 `HCP.AxisFamily` for the mathematical example or

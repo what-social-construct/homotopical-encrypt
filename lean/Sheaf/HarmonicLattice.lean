@@ -17,6 +17,15 @@ provides exact and coexact noise coordinates, and the observed cochain is
 
 Harmonic projection recovers `h` exactly.  An optional explicit full-rank
 harmonic sublattice presentation selects a concrete lattice for a CVP instance.
+
+The lattice is a subgroup of the existing degree-one cochain space: a harmonic
+message is already a cochain, and adding the opening constructs its observed
+cochain. Homotopy-class preservation belongs to an equivalence of the
+underlying cochain interpretations. For the coupled integral family,
+`HCP.CoupledSemantics` constructs that equivalence and a same-coefficient
+harmonic-lattice equivalence. Neither the lattice definition nor a general
+cochain equivalence supplies metric or Hodge-adjoint covariance. The separate
+isometric integral transport in `Sheaf.Rotation` supplies those stronger laws.
 -/
 
 set_option autoImplicit false
@@ -78,6 +87,8 @@ end HodgeNoise
 /--
 A harmonic integral message together with exact/coexact Hodge noise.
 
+The message is included in the original `F.C1` through its subgroup carrier;
+there is no independently chosen message-to-cochain conversion.
 The observed cochain is defined below as `message + noise`; it is not asserted
 to be integral or exact.
 -/

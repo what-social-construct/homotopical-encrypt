@@ -20,7 +20,7 @@ before their assumptions or guarantees enter a selected protocol.
 
 ### Bibliography correspondence
 
-All **28 ledger sources** now have a BibTeX record in the relevant paper's
+All **30 ledger sources** now have a BibTeX record in the relevant paper's
 bibliography. File membership is a retrieval aid, not adoption, proof review,
 or a claim that a source's theorem is formalized. The PDFs print sources
 actually cited in their text; candidate records are retained for later work
@@ -39,6 +39,8 @@ source even though version 2 was posted on November 5.
 
 | Source ID | BibTeX key | File | Current role |
 |---|---|---|---|
+| Gentry 2009 thesis | `gentry2009fullyHomomorphic` | P2 | Primary correctness/computation comparison for the homotopical analogy; no FHE construction adopted. |
+| EUROCRYPT 2014 key-homomorphic encryption | `bonehEtAl2014keyHomomorphic` | P2 | Ciphertext/key-transport novelty comparator; no security reduction or public translation algorithm transferred. |
 | 1312.6454 | `curryGhristNanda2015morse` | P1 | Computational comparison; retained maps/metric need justification. |
 | 1808.01513 | `hansenGhrist2018sheaves` | P1 | Cited foundation; finite cellular/Hodge part only. |
 | 1908.08944 | `helfer2019fol` | P1 | Cited semantic background; declared homological fragment only. |
@@ -80,6 +82,7 @@ Search this file for an arXiv ID or `ePrint 2026/910` when working from a URL.
 | Network dynamics, metrics and learning | [2608.15397](#source-2608-15397), [2608.14556](#source-2608-14556), [2605.06395](#source-2605-06395), [2610.28455](#source-2610-28455), [2512.00242](#source-2512-00242), [2611.04670](#source-2611-04670), [2110.03789](#source-2110-03789) |
 | Ordered constraints and transitions | [2007.04099](#source-2007-04099), [2605.15778](#source-2605-15778), [2605.26883](#source-2605-26883) |
 | Cryptographic games and private retrieval | [2611.05136](#source-2611-05136), [2610.37061](#source-2610-37061), [ePrint 2026/910](#source-eprint-2026-910) |
+| Encryption correctness and presentation/key transport | [Gentry 2009](#source-gentry-2009), [Boneh et al. 2014](#source-key-homomorphic-2014) |
 
 ### Foundations and categorical organization
 
@@ -122,6 +125,8 @@ Search this file for an arXiv ID or `ePrint 2026/910` when working from a URL.
 
 | Source | Result/definition examined | Possible role and boundary |
 |---|---|---|
+| <a id="source-gentry-2009"></a>[Gentry, *A Fully Homomorphic Encryption Scheme*, Stanford thesis, 2009](https://crypto.stanford.edu/craig/craig-thesis.pdf) | **Primary abstract and Definitions 2.1.1--2.1.6 reviewed on 2026-11-12.** Correctness of encrypted evaluation, compactness, fully/leveled homomorphic evaluation and separate circuit privacy. Full construction/reduction audit not undertaken here. | Expository anchor for comparing commuting encryption/recovery squares and, later, supported operations. Our proved integral-isometric presentation transport does not establish general FHE evaluation or adopt this scheme's security. |
+| <a id="source-key-homomorphic-2014"></a>[Boneh et al., *Fully Key-Homomorphic Encryption, Arithmetic Circuit ABE and Compact Garbled Circuits*, EUROCRYPT 2014](https://crypto.stanford.edu/~dabo/pubs/abstracts/lattice-abe.html) | **Primary author abstract and bibliographic metadata reviewed on 2026-11-12.** Describes public ciphertext translation from key `x` to `(f(x),f)` retaining the plaintext, under its stated LWE assumptions. Detailed construction/proof audit remains open. | Required novelty comparator for presentation/key transport. Match actual key visibility, permitted maps, algorithms and security experiments; a commuting diagram or homotopical name alone does not establish novelty. No HCP reduction is supplied. |
 | <a id="source-2007-04099"></a>[Ghrist–Riess, *Cellular Sheaves of Lattices and the Tarski Laplacian*, 2007.04099v2](https://arxiv.org/html/2007.04099v2) | Lattice stalks with Galois adjunctions; fixed points of `id meet L` are global sections of the lower-map sheaf. Completeness and termination require the stated order hypotheses. | Promising `TaskSheaf` constraint-propagation model, after constructing its actual stalks/adjunctions. The current truth order `Invalid < Undetermined < Valid` makes the meet flow descending; evidence growth requires a deliberate order/semantics choice. DCC gives per-orbit termination, not a uniform round bound. |
 | <a id="source-2605-15778"></a>[Ghrist, *Clearing in Liability Networks via Sheaves on Directed Hypergraphs*, 2605.15778v1](https://arxiv.org/html/2605.15778v1) | Local payment constraints, distribution/aggregation maps and global clearing as an equalizer/fixed-point problem; existence and uniqueness depend on additional hypotheses. | Useful local-constraint-to-global-transition pattern. Any economic interpretation remains unselected. Compiling a proposed clearing into the conservative kernel needs authorization, availability, freshness and conservation proofs for the same action. |
 | <a id="source-2605-26883"></a>[Cignarale–Rincon Galeana, *A Dynamic Deontic Simplicial Logic for Joint Commitments*, 2605.26883v2](https://arxiv.org/html/2605.26883v2) | **Primary §§2,5–6 definitions and theorem statements reviewed; proof audit incomplete.** Version 2 is dated July 9, 2026. Agent-coloured simplices model social group commitments; dynamic modalities use precondition-filtered product updates. The paper presents static/dynamic soundness and completeness. | **Paper 2 candidate; no adoption or Lean formalization here, and no prerequisite for Paper 1 submission.** Could organize `Policy.authorized` and joint evidence, after constructing agent/state valuations and a correspondence theorem. A box action may hold vacuously when disabled; actual acceptance needs execution evidence. Product updates retain local valuations, whereas `Candidate.after` changes resources/nullifiers: a simulation law is needed. These normative commitments are distinct from cryptographic cochain payloads and their authentication/security contracts. |
