@@ -126,6 +126,41 @@ the noise in~\eqref{eq:coupled-hodge-encryption}. The protocol's
 same-coefficient conditions. The admitted semantic family can therefore be
 larger than a proved protocol rotation orbit.
 
+\begin{proposition}[Native ciphertext transport]
+\label{prop:coupled-native-transport}
+The real coordinate map
+\[
+ M_B(a,z,u)=(a,z-B^{\mathsf T}u,Bz+u)
+\]
+is a linear equivalence. Let \(L_{B\to C}=M_CM_B^{-1}\). For every original
+integral Hodge sample,
+\[
+ L_{B\to C}\operatorname{Enc}_B(z,a,u)
+   =\operatorname{Enc}_C(z,a,u).
+\]
+The transports have identity, inverse and composition laws, and generated
+integral samples remain generated integral samples with unchanged
+\(z,a,u\).
+\end{proposition}
+
+\begin{proof}
+For every real coordinate vector \(q\), the two coupling terms cancel in
+\(\langle q,M_Bq\rangle=\langle q,q\rangle\). Thus \(M_B\) is injective,
+hence bijective in the common finite-dimensional carrier. The original
+sample's coordinate formula identifies its observed cochain with
+\(M_B(a,z,u)\). The transport and composition formulas follow by cancellation
+of the coordinate equivalences.
+\end{proof}
+
+This map is distinct from the cochain shear and need not preserve norms.
+Its inverse is currently classical; a finite rational implementation,
+transport-token codec and delivery adapter remain additional work. In
+particular, the existing scoped receipt is indexed by the isometric
+\texttt{PresentedRotation} interface. Public release requires a further
+security argument: transport to the known zero presentation has information
+coordinates \(z\), so that usable transport reveals the original message
+coefficients.
+
 The realized HCP matrix acts by the actual cellular Hodge Laplacian. Its
 matrix kernel equals \(W_B\), and its operative recovery map equals the
 original cellular harmonic projector. Thus semantic interpretation, harmonic
@@ -175,10 +210,23 @@ ciphertext hash check binds these bytes to the existing bound observation,
 retaining its exact artifact, snapshot and lifecycle. A concrete proof of the
 selected transaction/proximity relation remains an application obligation.
 
+The concrete hash-addressed recovery specialization now uses this decoder
+and the original target sample bytes. The actual source and target bound
+observations determine their storage contexts. Under the original isometric
+rotation, recipient/epoch/context-scoped private delivery, manifest naming
+and availability hypotheses, lookup recovers the original coefficients or
+exhibits an accepted byte-hash collision. Hashing supplies object naming and
+binding; the private delivered material supplies recovery.
+
+Hashing an agreed secret to select an ephemeral representative is a separate
+generation plan. The shared-secret agreement, finite representative generator
+and protected delivery envelope are not constructed. A public content address
+does not supply that private seed.
+
 The constructed operations concern harmonic-lattice messages, their Hodge
 openings and recovery. Encrypted linear query evaluation is an optional
 application. A later comparison with fully homomorphic encryption should
 inventory the actual supported operations and their security statements.
 
 The shared parity register records the construction, encodings, transport
-square and their formal boundaries as H81--H88.
+square and their formal boundaries as H81--H91.

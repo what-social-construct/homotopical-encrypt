@@ -25,6 +25,14 @@ message coefficients. The generally nonisometric shear does not transport
 Hodge noise; protocol rotations retain their actual isometry requirement.
 The same file joins the actual Hodge matrix to the HCP operative projector.
 
+The separate [native coordinate transport](../../lean/HCP/CoupledTransport.lean)
+is `M_C M_B⁻¹` for the original full observation map `M_B`. It transports
+ciphertexts with the same message and opening coordinates for all same-size
+matrix pairs, including nonisometric ones. Identity, inverse, composition and
+generated-sample integrality are proved. A finite rational algorithm and
+transport-material delivery adapter remain open. The proved zero-target
+disclosure prevents treating arbitrary public transport as a secrecy claim.
+
 The [canonical integer-matrix codec](../../lean/Protocol/Storage/CoupledCodec.lean)
 and [snapshot profile](../../lean/Protocol/Storage/CoupledBinding.lean) name
 that same sheaf, standard integral structure and metric. Matrix bytes remain
@@ -39,6 +47,10 @@ the original-object encoding join: the decoded bytes are exactly the same
 Hodge sample's full observation `(a,z-Bᵀu,Bz+u)`. This ciphertext digest is
 separate from the exact-component artifact digest. Key/noise sampling,
 concrete authentication/proof algorithms and full-view security remain work.
+The [hash-recovery specialization](../../lean/Protocol/Storage/Retrieval/Coupled.lean)
+now supplies the actual full-cochain decoder to the existing recipient-scoped
+recovery theorem, retaining its original observations, isometric rotation,
+private delivery receipt and directory/availability hypotheses.
 
 The commitment profile retains the original cochain payload, its declared
 modulus/count/topology tag, the private cellular/Hodge interpretation and

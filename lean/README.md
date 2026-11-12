@@ -33,6 +33,11 @@ the actual cochains `(0,z,Bz)`; encryption adds the original exact/coexact
 noise. `PresentedRotation.transport_encrypt` is the proved encryption
 naturality square for admissible integral chain isometries. General coupled
 semantic shears are not isometries and do not supply that noise transport.
+The separate [CoupledTransport](HCP/CoupledTransport.lean) map uses the native
+encryption-coordinate equivalences to transport full samples for every
+same-size matrix pair. Its inverse is classical. The
+[concrete hash-recovery leaf](Protocol/Storage/Retrieval/Coupled.lean) separately
+instantiates the existing scoped isometric-delivery path with the new codec.
 
 Paper 2 specifies commitment construction, visibility, codecs and protocol
 evidence. Paper 3 owns the full projective reconstruction and quantitative
@@ -66,6 +71,8 @@ lake build Palomar.PaperOne.Solution Palomar.PaperThree.Solution Palomar.PaperTh
 The three Solutions are explicit, nondefault targets. Focused builds include
 `lake build HCP.AxisFamily`, `lake build ProximityCoding`,
 `lake build Protocol.Core` and `lake build Protocol.Storage.Retrieval`.
+The optional coupled construction is checked with
+`lake build HCP.CoupledCVP HCP.CoupledSemantics HCP.CoupledTransport Protocol.Storage.CoupledBinding Protocol.Storage.Retrieval.Coupled`.
 Rust/Python prototypes under `archive/runtime/` are not Lean build
 dependencies. Manuscript build commands are in the [root guide](../README.md#build-and-read).
 

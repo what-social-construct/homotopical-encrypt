@@ -77,6 +77,7 @@ the full-observation relation when they need the harmonic graph.
 | [Retrieval/HodgeQuery](Retrieval/HodgeQuery.lean) | Actual harmonic-lattice query samples and exact/coexact `HodgeNoise` aggregation. The public integer-weighted answer is the same full observation as an original encrypted answer; the existing coefficient decoder and CVP comparison apply to it. |
 | [Retrieval/ContentAddress](Retrieval/ContentAddress.lean) | Executable client-local slot/digest lookup and hash checks against the existing fixed manifest directory, followed by parsing. Substitution for original content gives equality or an actual hash collision, without global injectivity. |
 | [Retrieval/Recovery](Retrieval/Recovery.lean) | Connects accepted byte lookup and full-target decoding to the existing `RecoveryDelivery`; the native theorem retains original `BoundHCPObservation` endpoints through `BoundSampleRotation` and gives source coefficients or collision. |
+| [Retrieval/Coupled](Retrieval/Coupled.lean) | Optional concrete coupled specialization. Original-observation-derived contexts, actual isometric rotation and scoped delivery combine with the canonical full-ciphertext codec; the decoding premise is proved, giving original coefficients or an accepted byte collision. |
 | [Retrieval/UniformRead](Retrieval/UniformRead.lean) | Downloads the whole fixed public bucket before local selection/checking/recovery. The complete declared server view and its distribution are target-independent under one shared PMF, at linear download cost. |
 | [Retrieval/LinearQueryObstruction](Retrieval/LinearQueryObstruction.lean) | Conditional public essential-column test for a joint one-hot query, with an example using varying coexact openings in the original cellular family and the existing CVP comparison. It does not decide every native query profile's privacy. |
 | [Examples](Examples.lean) | A concrete two-coordinate sheaf with zero `delta0`, a nonexact raw `[1,0]` input, accepted zero, two actual payload/plane slots, and positive/negative lifecycle fixtures. Authentication and backend receipt relations are explicitly toy equality models. |
@@ -90,6 +91,16 @@ same original bound sample. `HodgeQuery` is an optional encrypted linear
 evaluation application; it does not define that lattice or the storage
 commitment. A later FHE comparison should inventory the operations actually
 proved for these ciphertexts and their separate security conditions.
+
+The hash-addressed native path is
+`canonical full ciphertext → digest/directory → checked local lookup → full-cochain decoder → scoped private recovery`.
+[Retrieval.Coupled](Retrieval/Coupled.lean) now supplies the concrete decoder
+join for the original integral Hodge samples. The hash names and binds the
+ciphertext; recipient/epoch/context-scoped private material supplies recovery.
+A transport-envelope codec and delivery algorithm remain separate work.
+The older hash-of-shared-secret fiber-selection plan also needs actual
+shared-secret agreement and a finite representative generator. Public context
+identifiers and ciphertext hashes are not those private seeds.
 
 `HodgeQuery` is the native evaluation construction: the client supplies the
 existing harmonic presentation and structured openings, while the server sums
@@ -114,7 +125,7 @@ not a replacement database or fibration. Trust in the directory/root,
 availability, the hash implementation, finite full-ciphertext decoding and
 private delivery remain profile/runtime contracts. This layer establishes no
 efficient PIR/OMR protocol or public-key HCP encryption interface. The
-[Paper 2 account](../../../papers/paper2/DRAFT.md#67-hash-indexing-private-retrieval-and-native-hodge-queries)
+[Paper 2 account](../../../papers/paper2/DRAFT.md#67-harmonic-lattice-recovery-and-optional-encrypted-evaluation)
 and implementation map (archived reference: `archive/documentation/docs/PROTOCOL_PARITY_QUEUE.md`)
 record those boundaries.
 

@@ -641,6 +641,45 @@ is needed to preserve any cochain/plane/RS Hamming profile under a chosen
 migration. The base complex is fixed; topology-changing migration is outside
 this construction.
 
+##### 6.1.1. Native coordinate transport for the coupled family
+
+The coupled family admits a separate
+[full-ciphertext transport](../../lean/HCP/CoupledTransport.lean) without
+requiring an isometry. Its original sample has the coordinate map
+\[
+M_B(a,z,u)=(a,z-B^{\mathsf T}u,Bz+u).
+\]
+This is a real linear equivalence. In the fixed Euclidean coordinate carrier,
+the coupling terms cancel in
+\(\langle q,M_Bq\rangle=\langle q,q\rangle\), proving injectivity; finite
+dimensionality gives invertibility. Define
+\[
+L_{B\to C}=M_CM_B^{-1}.
+\]
+The proved law is
+\[
+L_{B\to C}\operatorname{Enc}_B(z,a,u)
+ =\operatorname{Enc}_C(z,a,u).
+\]
+Identity, inverse and composition follow from these same coordinate
+equivalences. Generated integral observations remain generated integral
+observations, with the same message and exact/coexact opening coordinates.
+This is the native ciphertext correctness map; it is different from the
+strict cochain shear used to prove semantic equivalence. It need not preserve
+norms or a subsequent proximity metric.
+
+The inverse is currently classical. A finite rational implementation and
+encoded transport material remain to be constructed. The existing scoped
+delivery receipt is still indexed by `PresentedRotation`, so applying that
+interface to this general map needs an explicit adapter. Public release of
+transport material is also a security question: the proved specialization
+\[
+\operatorname{information}\bigl(L_{B\to0}\operatorname{Enc}_B(z,a,u)\bigr)=z
+\]
+shows that publicly usable transport to the known zero presentation exposes
+the message coefficients. A public evaluation-key protocol must specify its
+admitted endpoints, auxiliary information and security experiment.
+
 #### 6.2. One checked owned-resource transition
 
 The [owned-resource profile](../../lean/Protocol/Ledger/OwnedResource.lean)
@@ -958,6 +997,8 @@ metric, so it supplies no Hodge-adjoint or full-ciphertext transport law.
 An actual `PresentedRotation` still requires the existing isometric and
 same-coefficient conditions. Equal public classes also leave snapshot/header
 equality as a separate released-view obligation.
+Section 6.1.1 constructs the different native coordinate transport that does
+carry full ciphertexts between arbitrary same-size matrix presentations.
 
 The [integral opening profile](../../lean/Sheaf/HCPCoupledEncoding.lean)
 instantiates the original Hodge sample with integer \(z,a,u\), and proves its
@@ -1267,6 +1308,24 @@ under the named-byte availability and full-target decoding contracts.
 The full ciphertext's digest has a separate role from the existing
 exact-component leaf `cochainDigest`; the latter alone supplies no full
 ciphertext binding.
+
+The [concrete coupled recovery theorem](../../lean/Protocol/Storage/Retrieval/Coupled.lean)
+now instantiates this existing path with `CoupledCiphertext.decodeReal` and
+the original target sample bytes. Source and target contexts are derived from
+the actual bound observations. Canonical decoding discharges the former
+independent decoder premise; the actual isometric rotation, scoped private
+delivery receipt, manifest naming and byte availability remain explicit.
+The result is original source-coefficient recovery or an actual accepted hash
+collision. It introduces no new encryption or query carrier.
+
+Hashing has a second, prospective role in ephemeral generation: derive an
+index or seed from an agreed secret and the authenticated epoch/context, then
+generate the private representative and transport material reproducibly.
+Shared-secret agreement, the finite generator and their security are not
+constructed. This proposed derivation is distinct from the current public
+ciphertext content address; hashing a public identifier does not produce
+private recovery material. The delivery envelope also needs its concrete
+codec and protection scheme.
 
 [UniformRead](../../lean/Protocol/Storage/Retrieval/UniformRead.lean) is the
 complete selector-privacy reference profile: request the same whole public

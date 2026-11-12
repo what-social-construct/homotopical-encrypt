@@ -17,6 +17,16 @@ original Hodge encryption; the [full ciphertext codec](../Protocol/Storage/Coupl
 reconstructs its complete observation. These are harmonic-lattice messages
 and cochains; encrypted query evaluation remains an optional application.
 
+[CoupledTransport](CoupledTransport.lean) separately constructs the native
+coordinate map `M_B(a,z,u)=(a,z-Bᵀu,Bz+u)` as a real linear equivalence.
+The ciphertext map `M_C M_B⁻¹` preserves the original message and both opening
+coordinate vectors for every same-size pair, with identity/inverse/composition.
+It is distinct from the cochain shear and does not require an isometry.
+Generated integral samples remain integral. The current inverse is classical;
+finite transport-token algorithms and secure delivery/public release remain
+separate. Transport to the known zero presentation exposes the message
+coefficients, so universal public transport is not a confidentiality contract.
+
 [AxisFamily.lean](AxisFamily.lean) instantiates the existing HCP recovery and
 CVP-oracle comparison with two actual integral cellular sheaves. Import
 `HCP.AxisFamily` for the mathematical example or

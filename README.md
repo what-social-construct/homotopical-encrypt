@@ -33,8 +33,11 @@ The expository anchor is a homotopical analogue of encryption correctness:
 admissible presentation transport commutes with encryption and recovery while
 preserving the declared semantic class. The existing
 [`transport_encrypt`](lean/Protocol/Ephemeral/Rotation.lean) theorem proves
-this square for compatible integral chain isometries. The coupled semantic
-family below is larger than that proved rotation orbit. Supported encrypted
+this square for compatible integral chain isometries. The
+[native coupled coordinate transport](lean/HCP/CoupledTransport.lean)
+separately proves `M_C M_B⁻¹ Enc_B(z,a,u)=Enc_C(z,a,u)` for all same-size
+coupled matrices, with identity/inverse/composition. It is not the cochain
+shear, and its inverse is currently classical. Supported encrypted
 computations and a comparison with FHE remain explicit follow-up work.
 
 A hidden presentation selects a degree-one Hodge operator
@@ -78,6 +81,10 @@ observation `(a,z−Bᵀu,Bz+u)`. Its
 [ciphertext codec](lean/Protocol/Storage/CoupledCiphertext.lean) decodes to the
 same original Hodge cochain, with a ciphertext digest distinct from the
 exact-component artifact digest.
+The [concrete hash-recovery specialization](lean/Protocol/Storage/Retrieval/Coupled.lean)
+uses those same bytes and the original scoped private recovery. Hashes name
+and bind ciphertexts; generating or securely delivering private transport
+material remains separate work.
 
 These are exact mathematical comparisons. Computational hardness and
 encryption security require their stated additional assumptions.
