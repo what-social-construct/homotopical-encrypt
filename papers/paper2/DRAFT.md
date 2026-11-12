@@ -723,6 +723,13 @@ it supplies neither single-use authorization nor confinement of copied
 matrix data. Authentication and confidential envelope delivery remain
 explicit application contracts.
 
+The native retrieval theorem takes a manifest view and ciphertext naming
+premise; it does not yet derive them from an authenticated sealed manifest of
+the target context or an accepted owned transfer. The current owned-transfer
+manifest names only the original exact artifact. Joining the full-ciphertext
+entry to that action/history profile, and aligning its storage classifier with
+the coupled semantic realization, remain explicit integration work.
+
 Omitting \(B,C\) as token fields supplies no key-hiding theorem. Public release
 of transport material remains a security question: the proved specialization
 \[

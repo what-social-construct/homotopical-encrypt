@@ -93,6 +93,10 @@ original recipient handle, epochs and context keys to the derived map.
 [NativeDelivery](lean/Protocol/Ephemeral/NativeDelivery.lean) reuses the existing
 scoped receipt, and [native hash recovery](lean/Protocol/Storage/Retrieval/Native.lean)
 joins it to the original bound samples and directory lookup.
+Directory naming/availability remain explicit premises; storage classifiers
+still need alignment with the coupled semantic realization. Accepted owned
+transfers do not yet derive the full-ciphertext entry in their authenticated
+manifest/history.
 
 The intended public history uses ciphertext content IDs and selected action
 links for auditing, while credential/policy proofs keep identity witnesses

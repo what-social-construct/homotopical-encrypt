@@ -4,6 +4,7 @@ public import Axioms.Fibration
 public import Protocol.Ephemeral.Rotation
 public import Protocol.Ephemeral.Delivery
 public import Protocol.Ephemeral.HCP
+public import Protocol.Ephemeral.NativeDelivery
 
 @[expose] public section
 
@@ -14,8 +15,10 @@ public import Protocol.Ephemeral.HCP
   Actual integral Hodge transport and coefficient recovery live in `Sheaf`;
   this facade exports compatible presented rotations, original-payload
   migration under explicit decoder laws, and recipient/epoch/context-bound
-  delivery receipts under explicit channel contracts. Concrete axis-family
-  examples are in `Protocol.Ephemeral.Examples`.
+  delivery receipts under explicit channel contracts. The native path also
+  exports exact rational transport, canonical scoped-token bytes and held-token
+  migration/recovery on the original contexts. Concrete axis-family examples
+  are in `Protocol.Ephemeral.Examples`.
 
   Generation, secure delivery implementations, freshness, single-use
   consumption, replay exclusion, retirement and runtime refinement remain

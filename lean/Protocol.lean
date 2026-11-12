@@ -25,8 +25,11 @@ public import Protocol.Transfer
   Sheaf storage additionally has snapshot/payload contexts, typed stage prefixes,
   exact manifests and a receipt-indexed local consumption lifecycle. Ephemeral
   recovery has integral/encoded rotation laws and recipient-bound delivery
-  receipts under explicit channel contracts. Oracle/coregulator surfaces remain
-  attachment points. Concrete codec/lift instantiation,
+  receipts under explicit channel contracts. The selected native profile also
+  exports canonical ciphertext/scoped-token codecs and exact rational
+  transport/recovery through hash lookup. Its full-ciphertext manifest entry
+  is not yet joined to accepted owned transfers. Oracle/coregulator surfaces
+  remain attachment points. Generic codec/lift instantiation,
   round/lock/finality and Rust refinement remain separate completion tasks.
   The optional HCP sampling and fixed-key span modules provide finite
   semantic checks and conditional leakage boundaries, not an asymptotic
