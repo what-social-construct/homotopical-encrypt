@@ -29,8 +29,11 @@ The separate [native coordinate transport](../../lean/HCP/CoupledTransport.lean)
 is `M_C M_B⁻¹` for the original full observation map `M_B`. It transports
 ciphertexts with the same message and opening coordinates for all same-size
 matrix pairs, including nonisometric ones. Identity, inverse, composition and
-generated-sample integrality are proved. A finite rational algorithm and
-transport-material delivery adapter remain open. The proved zero-target
+generated-sample integrality are proved. The
+[rational reference implementation](../../lean/HCP/CoupledRational.lean)
+executes that map and private coefficient recovery by exact arithmetic, with
+proved agreement with the original real operators. Its determinant/adjugate
+implementation carries no polynomial complexity bound. The proved zero-target
 disclosure prevents treating arbitrary public transport as a secrecy claim.
 
 The [canonical integer-matrix codec](../../lean/Protocol/Storage/CoupledCodec.lean)
@@ -51,6 +54,22 @@ The [hash-recovery specialization](../../lean/Protocol/Storage/Retrieval/Coupled
 now supplies the actual full-cochain decoder to the existing recipient-scoped
 recovery theorem, retaining its original observations, isometric rotation,
 private delivery receipt and directory/availability hypotheses.
+
+The selected native path uses the
+[held-token byte executor](../../lean/Protocol/Ephemeral/NativeTransport.lean),
+[scope/token codecs](../../lean/Protocol/Ephemeral/TransportToken.lean),
+[existing scoped-delivery adapter](../../lean/Protocol/Ephemeral/NativeDelivery.lean)
+and [native hash retrieval](../../lean/Protocol/Storage/Retrieval/Native.lean).
+The receiver uses the held derived map directly; retained-base recovery takes
+the private source presentation explicitly. The recipient, epochs and original
+contexts determine the scope, and the selected full-ciphertext digest remains
+separate from the exact-artifact digest.
+
+This is a reusable context/profile capability. Scope checks do not authenticate
+the caller, prevent replay or cryptographically confine copied map data.
+Omitting the source/target matrices as serialized fields gives no key-hiding
+guarantee for the derived map. Protected delivery, shared-secret agreement,
+key/noise sampling and security for the complete released view remain open.
 
 The commitment profile retains the original cochain payload, its declared
 modulus/count/topology tag, the private cellular/Hodge interpretation and
@@ -101,6 +120,8 @@ and composes supplied failure budgets under one shared probability law.
 | Coupled harmonic lattice and proved semantic class | [HCPCoupledFamily](../../lean/Sheaf/HCPCoupledFamily.lean), [CoupledCVP](../../lean/HCP/CoupledCVP.lean), [CoupledSemantics](../../lean/HCP/CoupledSemantics.lean) |
 | Concrete presentation bytes and original snapshot | [CoupledCodec](../../lean/Protocol/Storage/CoupledCodec.lean), [CoupledBinding](../../lean/Protocol/Storage/CoupledBinding.lean) |
 | Original full Hodge ciphertext bytes | [HCPCoupledEncoding](../../lean/Sheaf/HCPCoupledEncoding.lean), [CoupledCiphertext](../../lean/Protocol/Storage/CoupledCiphertext.lean) |
+| Exact native execution and scoped token | [CoupledRational](../../lean/HCP/CoupledRational.lean), [TransportCodec](../../lean/Protocol/Storage/TransportCodec.lean), [ScopeCodec](../../lean/Protocol/Ephemeral/ScopeCodec.lean), [TransportToken](../../lean/Protocol/Ephemeral/TransportToken.lean), [NativeTransport](../../lean/Protocol/Ephemeral/NativeTransport.lean) |
+| Original-context native delivery and retrieval | [NativeDelivery](../../lean/Protocol/Ephemeral/NativeDelivery.lean), [Retrieval.Native](../../lean/Protocol/Storage/Retrieval/Native.lean) |
 | Commitment and coordinate profile | [CochainCommitment](../../lean/Axioms/CochainCommitment.lean), [CoordinateCodec](../../lean/Protocol/Storage/CoordinateCodec.lean) |
 | Generic ledger and computed transition | [Ledger.Transition](../../lean/Protocol/Ledger/Transition.lean), [Ledger.ValueFlow](../../lean/Protocol/Ledger/ValueFlow.lean) |
 | Bounded transition and checked transfer | [Protocol.Core](../../lean/Protocol/Core.lean), [Transfer](../../lean/Protocol/Transfer.lean), [PublicAssembly](../../lean/Protocol/Transfer/PublicAssembly.lean), [protocol guide](../../lean/Protocol/README.md) |
@@ -125,9 +146,11 @@ chain model are deferred or supporting families outside the bounded
 transition claim. Authenticated quorums do not supply rounds, locking or finality.
 
 Concrete credential/proof algorithms, message-bound knowledge and
-unforgeability, finite packet/ciphertext/witness codecs, authenticated
-roots/directories and secure recipient delivery require construction and
-verification. The supplied primitive budgets do not establish adaptive
+unforgeability, packet/witness codecs beyond the selected native profile,
+authenticated roots/directories and protected recipient delivery require
+construction and verification. The native codecs do not encode unrestricted
+real openings. Key/noise sampling and shared-secret agreement remain open.
+The supplied primitive budgets do not establish adaptive
 signing/corruption security, encryption privacy or anonymity. State origin,
 executable refinement, global lifecycle enforcement and consensus finality
 also require separate results. The archived prototype is not an implementation

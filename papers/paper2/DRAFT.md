@@ -160,6 +160,30 @@ manifest items, omitting their semantic checkpoint payloads. The manifest
 root does not replace the proposal, state, evidence or block roots; those
 remain separately named public extensions wherever the history releases them.
 
+For fetching and tracing encrypted material, the content ID is the hash of
+its selected canonical ciphertext bytes. Public records can link that ID to
+context, evidence and permitted successor events. This is the intended
+hash-linking role across the stack. The public encoding is chosen explicitly;
+it does not serialize the private sheaf, identity witness, opening or
+transport token merely because a semantic record retains them. Repeated
+content IDs and published successor links are observable. The ciphertext ID,
+exact artifact digest and enclosing roots retain their distinct preimages.
+
+The intended privacy profile allows actions and policy evidence to be
+audited while the actor's identity remains private. An authorization proof
+must bind the action and its context to the required credential/policy
+predicate without disclosing that identity. This target does not require
+identity decryption for action tracing. It still requires a concrete
+credential/proof construction and an explicit metadata threat model. The
+bounded owned-transfer example below publishes owner and signer IDs and
+does not instantiate this privacy profile. Private information retrieval
+addresses which object a reader fetches; oblivious message retrieval can
+also hide the message-to-recipient mapping
+([UnifOMR](https://eprint.iacr.org/2026/910)). These retrieval guarantees are
+separate from anonymous action authorization. The existing uniform-read
+profile keeps selection local after a whole-bucket download; an efficient
+PIR/OMR construction remains open.
+
 | Object or path | Reader and released data | Binding and limit |
 |---|---|---|
 | Base public input | Every public reader receives \(V_{\mathrm{base}}\), including the residue vector and all six header coordinates. | Reuses the original artifact and context. Public identifiers are observable and may distinguish presentations. |
@@ -668,11 +692,39 @@ This is the native ciphertext correctness map; it is different from the
 strict cochain shear used to prove semantic equivalence. It need not preserve
 norms or a subsequent proximity metric.
 
-The inverse is currently classical. A finite rational implementation and
-encoded transport material remain to be constructed. The existing scoped
-delivery receipt is still indexed by `PresentedRotation`, so applying that
-interface to this general map needs an explicit adapter. Public release of
-transport material is also a security question: the proved specialization
+The [exact rational refinement](../../lean/HCP/CoupledRational.lean) computes
+this map by determinant/adjugate inversion. Its realization equals the real
+transport, and its denominator-checked private decoder recovers the original
+integer coefficients. This is an executable reference algorithm; no
+polynomial running-time bound is asserted.
+
+The [scoped transport token](../../lean/Protocol/Ephemeral/TransportToken.lean)
+encodes the derived rational matrix with its physical dimensions, recipient
+handle, both epochs and every field of the original source/target context
+keys. It uses the existing ciphertext coordinate order and canonical
+normalized fractions. The same material-indexed delivery receipt supports
+both the earlier isometric rotation and this native token. Its native
+adapter derives scope from the actual contexts and binds the envelope
+relation to the exact canonical token bytes. Migration consumes the held
+token; retained-base recovery also uses the private source presentation
+\(B\). Neither operation regenerates \(B,C\) from context labels.
+
+Canonical token/scope/hash and full-ciphertext checks precede exact rational
+execution. Original generated samples migrate to the target's original
+ciphertext bytes and recover the same \(z\). The
+[hash-addressed adapter](../../lean/Protocol/Storage/Retrieval/Native.lean)
+retains the original bound HCP observations: with the canonical issued token,
+named, available target bytes give the original coefficients or an accepted
+ciphertext byte-hash collision. Accepted substitution of the issued token is
+covered separately by the token's original-operator-or-collision theorem. The
+full-ciphertext digest remains separate from the exact artifact digest in
+the context key. The scope is reusable for the selected contexts/profile;
+it supplies neither single-use authorization nor confinement of copied
+matrix data. Authentication and confidential envelope delivery remain
+explicit application contracts.
+
+Omitting \(B,C\) as token fields supplies no key-hiding theorem. Public release
+of transport material remains a security question: the proved specialization
 \[
 \operatorname{information}\bigl(L_{B\to0}\operatorname{Enc}_B(z,a,u)\bigr)=z
 \]
@@ -1408,3 +1460,15 @@ obstructions, coding and metric/radius theorems. Their imported conclusions
 retain the actual source, layout, observation and comparison hypotheses;
 Paper 2 owns the construction, authentication and protocol consumption of
 those objects. Shared definitions do not create a second contribution.
+
+A richer logical profile may use graded products in cohomology. Kryazhev's
+[multiplicative Serre spectral sequence in HoTT](https://arxiv.org/html/2611.11828v1)
+is a prospective source for that direction. The present cellular core already
+has addition, scalar actions, differentials, adjoints, the Laplacian and
+harmonic projection. It has no chosen graded cup product. Such an enrichment
+needs explicit multiplicative data, product-compatible transport and a
+comparison with the source's type-family model. The public semantic signature
+and the private Hodge operators must remain explicit: the coupled cochain
+shear preserves the differential but generally does not intertwine adjoints
+or Laplacians. This is future logical structure, not a prerequisite for the
+native transport/codec construction.

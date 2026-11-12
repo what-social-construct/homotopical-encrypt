@@ -17,6 +17,8 @@ records the literature.
 | Cellular and semantic foundations | [Sheaf.lean](Sheaf.lean), [Laplacian.lean](Laplacian.lean), [Helfer.lean](Helfer.lean) | Finite cellular cochains, Hodge operators, typed semantic interpretations and homotopy-invariance interfaces. |
 | Coupled native construction | [HCPCoupledFamily](Sheaf/HCPCoupledFamily.lean), [CoupledCVP](HCP/CoupledCVP.lean), [CoupledSemantics](HCP/CoupledSemantics.lean) | Actual shared stalk constraints, entire intrinsic graph lattice, constructed semantic-class/coefficient preservation and the original HCP projector. |
 | Concrete native encoding | [HCPCoupledEncoding](Sheaf/HCPCoupledEncoding.lean), [CoupledCodec](Protocol/Storage/CoupledCodec.lean), [CoupledBinding](Protocol/Storage/CoupledBinding.lean), [CoupledCiphertext](Protocol/Storage/CoupledCiphertext.lean) | Original integral Hodge observations, canonical matrix/full-cochain bytes and original snapshot/observation bindings. |
+| Exact native execution | [CoupledRational](HCP/CoupledRational.lean), [NativeTransport](Protocol/Ephemeral/NativeTransport.lean) | Executable rational inverse/transport and private coefficient recovery, refinement to the original real map, and canonical byte migration using a held derived token. No polynomial runtime bound is claimed. |
+| Native token and scoped recovery | [TransportCodec](Protocol/Storage/TransportCodec.lean), [ScopeCodec](Protocol/Ephemeral/ScopeCodec.lean), [TransportToken](Protocol/Ephemeral/TransportToken.lean), [NativeDelivery](Protocol/Ephemeral/NativeDelivery.lean), [Retrieval/Native](Protocol/Storage/Retrieval/Native.lean) | Canonical scope/map bytes, complete scope and separate token/ciphertext hash checks, the existing scoped receipt, and original-object hash-addressed coefficient recovery under explicit authorization, delivery and availability contracts. |
 | Paper 2: cochains and protocol | [Axioms/CochainCommitment.lean](Axioms/CochainCommitment.lean), [Protocol/Core.lean](Protocol/Core.lean), [Protocol/Storage/Core.lean](Protocol/Storage/Core.lean) | Commitment carriers, conservative resource transitions, projection gates and snapshot-bound evidence under explicit profiles. |
 | Paper 2: recovery and primitives | [Protocol/Ephemeral.lean](Protocol/Ephemeral.lean), [Protocol/Storage/Retrieval.lean](Protocol/Storage/Retrieval.lean), [Protocol/Transfer.lean](Protocol/Transfer.lean), [TCB.lean](TCB.lean) | Rotation, recovery, retrieval and verification contracts on the original objects. |
 | Paper 3: coding | [ProximityCoding.lean](ProximityCoding.lean), [Proximity hierarchy](Proximity/README.md) | Smooth-domain Reed–Solomon families, list/MCA statements, radii and attained distances. |
@@ -35,9 +37,23 @@ naturality square for admissible integral chain isometries. General coupled
 semantic shears are not isometries and do not supply that noise transport.
 The separate [CoupledTransport](HCP/CoupledTransport.lean) map uses the native
 encryption-coordinate equivalences to transport full samples for every
-same-size matrix pair. Its inverse is classical. The
-[concrete hash-recovery leaf](Protocol/Storage/Retrieval/Coupled.lean) separately
-instantiates the existing scoped isometric-delivery path with the new codec.
+same-size matrix pair. [CoupledRational](HCP/CoupledRational.lean) gives a
+proved exact rational execution/refinement and finite private coefficient
+decoder for the native profile. The
+[native byte execution](Protocol/Ephemeral/NativeTransport.lean) uses the held
+token directly and checks rational output for integrality before encoding an
+integer target ciphertext. The [native delivery adapter](Protocol/Ephemeral/NativeDelivery.lean)
+and [hash-recovery leaf](Protocol/Storage/Retrieval/Native.lean) retain the
+existing scope, original contexts and sample bindings. The older
+[coupled specialization](Protocol/Storage/Retrieval/Coupled.lean) remains a
+separate instance of the isometric-delivery route.
+
+The native token is reusable within its context/profile scope; a separate
+full-ciphertext digest identifies the selected record. Scope equality is not
+caller authentication or replay prevention. The matrix may reveal private
+presentation information despite omitting the presentation matrices as fields.
+No protected channel, key agreement, key/noise sampler or full-view security
+theorem follows from the codecs or execution laws.
 
 Paper 2 specifies commitment construction, visibility, codecs and protocol
 evidence. Paper 3 owns the full projective reconstruction and quantitative
@@ -73,6 +89,8 @@ The three Solutions are explicit, nondefault targets. Focused builds include
 `lake build Protocol.Core` and `lake build Protocol.Storage.Retrieval`.
 The optional coupled construction is checked with
 `lake build HCP.CoupledCVP HCP.CoupledSemantics HCP.CoupledTransport Protocol.Storage.CoupledBinding Protocol.Storage.Retrieval.Coupled`.
+The exact native execution and delivery/retrieval profile is checked with
+`lake build HCP.CoupledRational Protocol.Ephemeral.NativeDelivery Protocol.Storage.Retrieval.Native`.
 Rust/Python prototypes under `archive/runtime/` are not Lean build
 dependencies. Manuscript build commands are in the [root guide](../README.md#build-and-read).
 

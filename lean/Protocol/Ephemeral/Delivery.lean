@@ -8,10 +8,11 @@ public import Protocol.Ephemeral.Rotation
 # Recipient- and epoch-bound recovery material
 
 A delivery scope names the recipient, both epochs and the keys derived from
-the actual source and target storage contexts. A receipt retains the actual
-private presented rotation and an envelope through explicitly supplied
-authorization and delivery relations. It does not construct a cryptographic
-channel or serialize that private material.
+the actual source and target storage contexts. One material-indexed receipt
+retains the actual private material and envelope through explicitly supplied
+authorization and delivery relations. The existing presented-rotation API is
+a specialization of this same structure. No cryptographic channel or private
+material serialization is constructed by the receipt.
 
 The context keys are public identifiers, not secret recovery keys. Epoch
 labels are supplied by the profile; its authorization and delivery contracts
@@ -28,8 +29,6 @@ remain the explicit channel contracts retained by the receipt.
 
 set_option autoImplicit false
 
-noncomputable section
-
 namespace HomotopicalEncryption.Protocol.Ephemeral
 
 open Sheaf CellularSheaf
@@ -41,6 +40,7 @@ structure DeliveryScope (Recipient : Type*) where
   targetEpoch : ℕ
   source : Storage.ContextKey
   target : Storage.ContextKey
+  deriving DecidableEq
 
 variable
   {Vertex Edge Face : Type*}
@@ -63,25 +63,18 @@ def forContexts {Recipient : Type*}
 
 end DeliveryScope
 
-variable
-  {I : IntegralStructure F} {J : IntegralStructure G}
-  {Rank : Type*} [Fintype Rank]
-
 /-- Application-owned authorization and delivery of this actual private material. -/
-structure DeliveryContract
-    (H : HarmonicLatticePresentation I Rank)
-    (K : HarmonicLatticePresentation J Rank)
-    (Recipient Envelope : Type*) where
+structure ScopedDeliveryContract (Material Recipient Envelope : Type*) where
   Authorized : DeliveryScope Recipient → Prop
-  Delivers : DeliveryScope Recipient → PresentedRotation H K → Envelope → Prop
+  Delivers : DeliveryScope Recipient → Material → Envelope → Prop
 
-/-- A receipt for the specified recipient, epochs, original contexts and rotation. -/
-structure RecoveryDelivery
-    {H : HarmonicLatticePresentation I Rank}
-    {K : HarmonicLatticePresentation J Rank}
-    {Recipient Envelope : Type*}
-    (contract : DeliveryContract H K Recipient Envelope)
-    (rotation : PresentedRotation H K)
+/-- One material-indexed delivery receipt for the actual recipient, epochs and
+original contexts. Material may be an isometric rotation or a native transport
+token; authorization and delivery retain the same exact object indices. -/
+structure ScopedDelivery
+    {Material Recipient Envelope : Type*}
+    (contract : ScopedDeliveryContract Material Recipient Envelope)
+    (material : Material)
     (recipient : Recipient) (sourceEpoch targetEpoch : ℕ)
     (source : Storage.Context F) (target : Storage.Context G) where
   envelope : Envelope
@@ -89,7 +82,64 @@ structure RecoveryDelivery
     (DeliveryScope.forContexts recipient sourceEpoch targetEpoch source target)
   delivered : contract.Delivers
     (DeliveryScope.forContexts recipient sourceEpoch targetEpoch source target)
-    rotation envelope
+    material envelope
+
+namespace ScopedDelivery
+
+variable {Material Recipient Envelope : Type*}
+  {contract : ScopedDeliveryContract Material Recipient Envelope}
+  {material : Material} {recipient : Recipient} {sourceEpoch targetEpoch : ℕ}
+  {source : Storage.Context F} {target : Storage.Context G}
+
+/-- Derive the complete scope from the original contexts and receipt indices. -/
+def scope (_delivery : ScopedDelivery contract material recipient sourceEpoch targetEpoch
+    source target) : DeliveryScope Recipient :=
+  DeliveryScope.forContexts recipient sourceEpoch targetEpoch source target
+
+/-- Scope-check the supplied material operation locally. The receipt's
+authorization and delivery facts remain separate from this executable check. -/
+def useFor [DecidableEq Recipient] {Input Output : Type*}
+    (delivery : ScopedDelivery contract material recipient sourceEpoch targetEpoch source target)
+    (use : Material → Input → Option Output)
+    (request : DeliveryScope Recipient) (input : Input) : Option Output :=
+  if request = delivery.scope then use material input else none
+
+@[simp] theorem useFor_scope [DecidableEq Recipient] {Input Output : Type*}
+    (delivery : ScopedDelivery contract material recipient sourceEpoch targetEpoch source target)
+    (use : Material → Input → Option Output) (input : Input) :
+    delivery.useFor use delivery.scope input = use material input := by
+  simp [useFor]
+
+theorem useFor_eq_none_of_scope_ne [DecidableEq Recipient] {Input Output : Type*}
+    (delivery : ScopedDelivery contract material recipient sourceEpoch targetEpoch source target)
+    (use : Material → Input → Option Output)
+    (request : DeliveryScope Recipient) (wrong : request ≠ delivery.scope) (input : Input) :
+    delivery.useFor use request input = none := by
+  simp [useFor, wrong]
+
+end ScopedDelivery
+
+variable
+  {I : IntegralStructure F} {J : IntegralStructure G}
+  {Rank : Type*} [Fintype Rank]
+
+/-- Backwards-compatible specialization of the one material-delivery contract. -/
+abbrev DeliveryContract
+    (H : HarmonicLatticePresentation I Rank)
+    (K : HarmonicLatticePresentation J Rank)
+    (Recipient Envelope : Type*) :=
+  ScopedDeliveryContract (PresentedRotation H K) Recipient Envelope
+
+/-- Existing isometric recovery receipts specialize the same scoped structure. -/
+abbrev RecoveryDelivery
+    {H : HarmonicLatticePresentation I Rank}
+    {K : HarmonicLatticePresentation J Rank}
+    {Recipient Envelope : Type*}
+    (contract : DeliveryContract H K Recipient Envelope)
+    (rotation : PresentedRotation H K)
+    (recipient : Recipient) (sourceEpoch targetEpoch : ℕ)
+    (source : Storage.Context F) (target : Storage.Context G) :=
+  ScopedDelivery contract rotation recipient sourceEpoch targetEpoch source target
 
 namespace RecoveryDelivery
 
@@ -110,7 +160,7 @@ def scope
 
 /-- Use the delivered private transport only for the exact receipt scope.
 Matching labels do not authenticate a caller or prevent replay. -/
-def recoverFor
+noncomputable def recoverFor
     (delivery : RecoveryDelivery contract rotation recipient sourceEpoch targetEpoch
       source target)
     (request : DeliveryScope Recipient) (b : G.C1) : Option (Rank → ℤ) := by

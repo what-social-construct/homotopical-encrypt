@@ -153,13 +153,20 @@ of the coordinate equivalences.
 \end{proof}
 
 This map is distinct from the cochain shear and need not preserve norms.
-Its inverse is currently classical; a finite rational implementation,
-transport-token codec and delivery adapter remain additional work. In
-particular, the existing scoped receipt is indexed by the isometric
-\texttt{PresentedRotation} interface. Public release requires a further
-security argument: transport to the known zero presentation has information
-coordinates \(z\), so that usable transport reveals the original message
-coefficients.
+An executable rational refinement computes the inverse by the
+determinant/adjugate formula. Its real realization equals \(L_{B\to C}\),
+and a denominator-checked private decoder recovers the integer coefficients
+of the original generated samples. This reference algorithm has no proved
+polynomial running-time bound.
+
+A canonical token records the derived rational matrix, physical dimensions
+and the original recipient, epoch and context scope. Rational entries use
+normalized numerators and positive denominators. The matrix acts in the
+same exact, information and parity coordinate order as the original
+ciphertext codec. The token contains no separate \(B,C\) fields; this alone
+gives no key-hiding guarantee. In particular, usable transport to the known
+zero presentation reveals the message coordinates \(z\). A public
+evaluation-key construction requires its own security argument.
 
 The realized HCP matrix acts by the actual cellular Hodge Laplacian. Its
 matrix kernel equals \(W_B\), and its operative recovery map equals the
@@ -210,13 +217,35 @@ ciphertext hash check binds these bytes to the existing bound observation,
 retaining its exact artifact, snapshot and lifecycle. A concrete proof of the
 selected transaction/proximity relation remains an application obligation.
 
-The concrete hash-addressed recovery specialization now uses this decoder
-and the original target sample bytes. The actual source and target bound
-observations determine their storage contexts. Under the original isometric
-rotation, recipient/epoch/context-scoped private delivery, manifest naming
-and availability hypotheses, lookup recovers the original coefficients or
-exhibits an accepted byte-hash collision. Hashing supplies object naming and
-binding; the private delivered material supplies recovery.
+One material-indexed scoped-delivery receipt supports both the earlier
+isometric rotation and the native derived token. The native adapter derives
+its scope from the actual source and target storage contexts, including
+all six fields of each context key, and binds the envelope relation to the
+canonical token bytes. Migration consumes the held token. Retained-base
+recovery also uses the private source presentation \(B\); context labels do
+not regenerate private matrices.
+
+Canonical token, scope, hash and ciphertext checks precede rational
+execution. On original generated samples, migration produces the target's
+original bytes and retained-base recovery returns the same \(z\). The
+concrete hash-addressed adapter retains the original bound HCP observations.
+With the canonical issued token and manifest naming and availability
+hypotheses, target-byte lookup recovers the original coefficients or an
+accepted ciphertext substitution exhibits a byte-hash collision. Accepted
+token substitution has a separate original-operator-or-collision theorem.
+The full-ciphertext digest remains separate from the
+exact artifact digest in the context key.
+
+This scope is reusable for the selected contexts and profile. Label checks
+neither authenticate the caller nor confine copied matrix data. Authorization
+and confidential delivery remain explicit application relations. Hashing
+supplies object naming and binding; private material supplies recovery.
+
+Public records may link the ciphertext content ID to context, evidence and
+successor actions. The intended privacy profile permits auditing those
+actions without decrypting the identity witness. Its public encoding must
+select only the intended disclosures; anonymous authorization and private
+retrieval require separate credential/proof and PIR/OMR constructions.
 
 Hashing an agreed secret to select an ephemeral representative is a separate
 generation plan. The shared-secret agreement, finite representative generator
@@ -229,4 +258,4 @@ application. A later comparison with fully homomorphic encryption should
 inventory the actual supported operations and their security statements.
 
 The shared parity register records the construction, encodings, transport
-square and their formal boundaries as H81--H91.
+square and their formal boundaries as H81--H97.

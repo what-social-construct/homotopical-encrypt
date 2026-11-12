@@ -1,6 +1,6 @@
 # Source ledger
 
-Updated 2026-11-09. This is the single source-reading register extracted from
+Updated 2026-11-12. This is the single source-reading register extracted from
 the chain/network working review; that review retains architecture provenance.
 Use source IDs as stable lookup keys. Full citation metadata stays in the
 [Paper 1 bibliography](../papers/paper1/references.bib),
@@ -20,7 +20,7 @@ before their assumptions or guarantees enter a selected protocol.
 
 ### Bibliography correspondence
 
-All **30 ledger sources** now have a BibTeX record in the relevant paper's
+All **31 ledger sources** now have a BibTeX record in the relevant paper's
 bibliography. File membership is a retrieval aid, not adoption, proof review,
 or a claim that a source's theorem is formalized. The PDFs print sources
 actually cited in their text; candidate records are retained for later work
@@ -39,6 +39,7 @@ source even though version 2 was posted on November 5.
 
 | Source ID | BibTeX key | File | Current role |
 |---|---|---|---|
+| 2611.11828 | `kryazhev2026serreMultiplicativity` | P2 | Future richer graded/multiplicative invariants; no product/fibration adapter or Lean adoption. |
 | Gentry 2009 thesis | `gentry2009fullyHomomorphic` | P2 | Primary correctness/computation comparison for the homotopical analogy; no FHE construction adopted. |
 | EUROCRYPT 2014 key-homomorphic encryption | `bonehEtAl2014keyHomomorphic` | P2 | Ciphertext/key-transport novelty comparator; no security reduction or public translation algorithm transferred. |
 | 1312.6454 | `curryGhristNanda2015morse` | P1 | Computational comparison; retained maps/metric need justification. |
@@ -78,6 +79,7 @@ Search this file for an arXiv ID or `ePrint 2026/910` when working from a URL.
 | Topic | Source IDs |
 |---|---|
 | Cellular sheaves, Hodge and categorical/family semantics | [1808.01513](#source-1808-01513), [1908.08944](#source-1908-08944), [2606.03861](#source-2606-03861), [2610.12384](#source-2610-12384), [2611.05209](#source-2611-05209), [2610.40746](#source-2610-40746) |
+| Multiplicative cohomology and richer logical profiles | [2611.11828](#source-2611-11828) |
 | Geometry, codes and reductions | [2601.19830](#source-2601-19830), [0911.1298](#source-0911-1298), [2609.18098](#source-2609-18098), [2608.22663](#source-2608-22663), [1312.6454](#source-1312-6454), [2011.14057](#source-2011-14057), [1507.01653](#source-1507-01653), [ePrint 2025/2051](#source-eprint-2025-2051), [2611.07607](#source-2611-07607) |
 | Network dynamics, metrics and learning | [2608.15397](#source-2608-15397), [2608.14556](#source-2608-14556), [2605.06395](#source-2605-06395), [2610.28455](#source-2610-28455), [2512.00242](#source-2512-00242), [2611.04670](#source-2611-04670), [2110.03789](#source-2110-03789) |
 | Ordered constraints and transitions | [2007.04099](#source-2007-04099), [2605.15778](#source-2605-15778), [2605.26883](#source-2605-26883) |
@@ -90,6 +92,7 @@ Search this file for an arXiv ID or `ePrint 2026/910` when working from a URL.
 |---|---|---|
 | <a id="source-1808-01513"></a>[Hansen–Ghrist, *Toward a Spectral Theory of Cellular Sheaves*, 1808.01513v2](https://arxiv.org/html/1808.01513v2) | Face-poset vector-space sheaves, weighted cochains and Hodge theory (§§2–3). Already cited by Paper 1. | Primary mathematical foundation. Our finite coordinate truncation gives concrete maps/laws; it does not formalize the entire paper. |
 | <a id="source-1908-08944"></a>[Helfer, *First-order homotopical logic*, 1908.08944v2](https://arxiv.org/html/1908.08944v2) | Fibrational semantics and homotopy-invariant first-order interpretation, including Theorem 12.3. Already cited by Paper 1. | Interpretation/equivalence layer. The current `Helfer.CochainModel` constructs the nonzero-cohomology-test fragment in an actual Quillen cochain model; the full external first-order construction remains separate. |
+| <a id="source-2611-11828"></a>[Kryazhev, *Multiplicativity of the Serre Spectral Sequence in Homotopy Type Theory*, 2611.11828v1](https://arxiv.org/html/2611.11828v1) | **Primary introduction, §2, Theorems 3.26 and 4.7, and §5.1 reviewed on 2026-11-12; full proof/convention audit incomplete.** Coherent tower pairings induce spectral-sequence pairings. The type-family theorem uses fiberwise cohomology coefficients and the paper's `E₁` convention, with multiplicative convergence, Leibniz and graded-commutativity laws. It uses univalence/HITs and Eilenberg–Mac Lane mapping types; the author reports Coq HoTT formalization in progress. | Future richer graded/ring predicates, after constructing multiplicative cellular data and product-compatible transport plus an explicit comparison to its type-family model. Plain real linear stalks do not supply cup products. **Inference from our graph-family formulas:** injective `δ₀` and surjective `δ₁` give `H⁰=H²=0`, so its positive-degree products would be trivial; a useful multiplicative profile needs further structure/degrees. No metric, noise, transport-runtime or security theorem is transferred. |
 | <a id="source-2606-03861"></a>[*A topos for étale-finite Heyting algebras*, 2606.03861v2](https://arxiv.org/pdf/2606.03861v2) | The étale-finite construction realizes `H` as `Sub(1)` of a topos (Theorem 5.25). | Possible logical semantics. Global truth values `Sub(1)` and the internal classifier object are distinct. Our abstract residuation interface alone does not establish all required lattice laws or construct this topos. |
 | <a id="source-2610-12384"></a>[Færgeman–Kjærsgaard, *Local Constancy of the Betti Automorphic Category over the Moduli of Curves*, 2610.12384v2](https://arxiv.org/html/2610.12384v2) | Categories of derived sheaves with nilpotent singular support; fiber restriction is an equivalence over a contractible real analytic family (Theorem 10.1.0.1). Appendix B.1 organizes local constancy; global monodromy can remain. | Useful pattern: a parameter base, categories over it and coherent transport. No realization from our cellular sheaf or Helfer interfaces is supplied. Its categorical spectral projector is distinct from an orthogonal Hodge projector. Local equivalence alone does not establish metric preservation, key rotation or byte recovery. |
 | <a id="source-2611-05209"></a>[Fernandez Herrero–Inchiostro, *Relative cohomology and base-change*, 2611.05209v1](https://arxiv.org/html/2611.05209v1) | **Primary §2 / Theorem 1 reviewed.** For a finite-type separated morphism between schemes locally of finite type over a locally Noetherian base, and a bounded termwise base-flat quasicoherent complex, derived pushforward has a local bounded base-flat model and the stated derived base-change comparison. Part (c) also requires the target to be base-flat and the cohomology to be coherent with proper support over that target. | Candidate for coherent constructions over parameter families. An actual scheme/relative-sheaf realization and comparison with the finite cellular model are required. It supplies no metric preservation, noise sampler or cryptographic security theorem. |

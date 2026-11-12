@@ -35,6 +35,7 @@ structure ContextKey where
   cochainDigest : TCB.Hash32
   topologyTag : Fin 16 → UInt8
   parameterSet : TCB.Hash32
+  deriving DecidableEq
 
 /-- Fixed interpretation and original payload; exactness is deliberately separate. -/
 structure Context (F : CellularSheaf X) where

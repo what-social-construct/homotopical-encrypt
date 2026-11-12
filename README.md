@@ -37,7 +37,10 @@ this square for compatible integral chain isometries. The
 [native coupled coordinate transport](lean/HCP/CoupledTransport.lean)
 separately proves `M_C M_B⁻¹ Enc_B(z,a,u)=Enc_C(z,a,u)` for all same-size
 coupled matrices, with identity/inverse/composition. It is not the cochain
-shear, and its inverse is currently classical. Supported encrypted
+shear. The [exact rational reference algorithm](lean/HCP/CoupledRational.lean)
+now executes that map and private coefficient recovery with a proved
+refinement to the original real operators. It carries no polynomial
+execution-time claim. Supported encrypted
 computations and a comparison with FHE remain explicit follow-up work.
 
 A hidden presentation selects a degree-one Hodge operator
@@ -81,10 +84,28 @@ observation `(a,z−Bᵀu,Bz+u)`. Its
 [ciphertext codec](lean/Protocol/Storage/CoupledCiphertext.lean) decodes to the
 same original Hodge cochain, with a ciphertext digest distinct from the
 exact-component artifact digest.
-The [concrete hash-recovery specialization](lean/Protocol/Storage/Retrieval/Coupled.lean)
-uses those same bytes and the original scoped private recovery. Hashes name
-and bind ciphertexts; generating or securely delivering private transport
-material remains separate work.
+The [native execution path](lean/Protocol/Ephemeral/NativeTransport.lean)
+uses a held rational token and the canonical full-ciphertext bytes for exact
+migration or retained-base recovery. The receiver uses that token directly;
+issuer generation derives it from the private presentations. The
+[scope/token codecs](lean/Protocol/Ephemeral/TransportToken.lean) bind the
+original recipient handle, epochs and context keys to the derived map.
+[NativeDelivery](lean/Protocol/Ephemeral/NativeDelivery.lean) reuses the existing
+scoped receipt, and [native hash recovery](lean/Protocol/Storage/Retrieval/Native.lean)
+joins it to the original bound samples and directory lookup.
+
+The intended public history uses ciphertext content IDs and selected action
+links for auditing, while credential/policy proofs keep identity witnesses
+private. Private retrieval addresses access metadata separately. This target
+is recorded in the [parity register](SEMANTIC-PARITY.md); the bounded transfer
+example still publishes owner/signer IDs and does not yet realize it.
+
+This is a reusable context/profile-scoped capability, with the full-ciphertext
+digest checked separately. Scope checks do not authenticate a caller, prevent
+replay or confine copied matrix data. Omitting the private matrices as token
+fields supplies no key-hiding guarantee for the derived map. Protected
+delivery, shared-secret agreement, key/noise sampling and full-view security
+remain explicit construction and proof obligations.
 
 These are exact mathematical comparisons. Computational hardness and
 encryption security require their stated additional assumptions.

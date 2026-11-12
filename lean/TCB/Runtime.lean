@@ -18,13 +18,15 @@ public import TCB.ProofCarrying
   - These proposition-shaped interfaces are outside Paper 1's selected proof
     statements and do not verify a backend by themselves.
 
-  This file is a naming scaffold for the Lean/Rust split. Lean owns the
-  mathematical/specification side; Rust owns adversarial runtime validation,
-  canonical bytes, proof verification, hash binding, and atomic state updates.
-
-  It intentionally does not claim that Rust is verified by Lean. It records the
-  obligations that a production Rust implementation must satisfy before a
-  public artifact is treated as consensus-facing evidence.
+  This file is a naming scaffold for the specification/backend boundary.
+  Selected coupled-presentation, ciphertext and scoped-token profiles now
+  have executable Lean codecs, canonical/scope/digest checks and exact rational
+  transport/recovery, with proofs about those actual functions. These results
+  do not instantiate this entire runtime contract or verify the archived Rust
+  backend. A production implementation must agree with the selected reference
+  functions and supply resource bounds, authentication, primitive security,
+  proof verification and atomic state updates before its artifacts are treated
+  as consensus-facing evidence.
 
   The named `Prop` fields are contract assumptions, not data-indexed results
   from actual parsers, keys, messages or proof bytes. The acceptance predicates
@@ -50,10 +52,11 @@ def LeanSpecBoundary.WellFormed (S : LeanSpecBoundary) : Prop :=
     ∧ Axioms.SheafCoherenceWellFormed S.sheaf
 
 /--
-Rust-owned runtime obligations.
+Production backend obligations.
 
-These are production validation facts: byte parsing, hash/proof verification,
-oracle attestation checks, and atomic state transition behavior.
+Selected Lean codecs/checks discharge properties of their own functions.
+Backend refinement, resource limits, cryptographic hash/proof security,
+oracle attestation checks and atomic state transitions remain separate facts.
 -/
 structure RuntimeBoundary where
   CanonicalEncoding : Prop
@@ -65,7 +68,7 @@ structure RuntimeBoundary where
   AtomicStateTransition : Prop
   NoPythonConsensusAuthority : Prop
 
-/-- Runtime boundary well-formedness is the conjunction of Rust-owned obligations. -/
+/-- Runtime boundary well-formedness is the conjunction of backend obligations. -/
 def RuntimeBoundary.WellFormed (R : RuntimeBoundary) : Prop :=
   R.CanonicalEncoding
     ∧ R.BoundedAllocation

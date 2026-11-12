@@ -52,6 +52,16 @@ exact-component artifact digest. This does not serialize the unrestricted
 real carrier. Concrete transaction/proximity proofs must explicitly consume
 the full-observation relation when they need the harmonic graph.
 
+The exact native path now uses a held derived rational map through
+[NativeTransport](../Ephemeral/NativeTransport.lean). It checks canonical
+token/ciphertext bytes, the complete original scope and their separate hashes,
+then performs rational migration or retained-base coefficient recovery.
+Generated integer samples give the target's original canonical bytes.
+[NativeDelivery](../Ephemeral/NativeDelivery.lean) specializes the existing
+`ScopedDelivery` receipt to that material and derives its context names from
+the original source and target contexts. [Retrieval.Native](Retrieval/Native.lean)
+joins this execution to hash-indexed lookup and the original bound samples.
+
 ## Module map
 
 | Module | Content and boundary |
@@ -63,6 +73,9 @@ the full-observation relation when they need the harmonic graph.
 | [HCP](HCP.lean) | Builds a context from the original `BoundHCPObservation`, retaining its exact artifact and snapshot. The run name is derived from the actual lifecycle context through the supplied identification function. |
 | [CoupledCodec](CoupledCodec.lean), [CoupledBinding](CoupledBinding.lean) | Optional integral graph-family profile. Canonical dimensioned matrix bytes, executable parsing, roundtrip/injectivity and malformed-input rejection; a root check identifies the original matrix packet or an actual byte collision. The existing context and exact-payload/full-cochain distinction are retained. |
 | [CoupledCiphertext](CoupledCiphertext.lean) | Concrete integral full-cochain codec, exact original-sample reconstruction and hash checks. Its bound-observation relation retains the same exact artifact, snapshot and lifecycle with a separately named ciphertext digest. |
+| [CoupledCiphertext/Layout](CoupledCiphertext/Layout.lean) | Executable exact/information/parity reindexing shared by integer ciphertexts and rational transport matrices; matrix action commutes with the coordinate conversion. |
+| [TransportCodec](TransportCodec.lean), [ScopeCodec](../Ephemeral/ScopeCodec.lean), [TransportToken](../Ephemeral/TransportToken.lean) | Canonical reduced rational matrix and original scope bytes, physical dimensions, executable parsers and injectivity/rejection theorems. Token checking requires the actual complete scope and token-byte hash. Omitting source/target matrices as fields gives no key-hiding guarantee for the derived map. |
+| [NativeTransport](../Ephemeral/NativeTransport.lean), [NativeDelivery](../Ephemeral/NativeDelivery.lean) | Held-token exact byte migration and retained-base recovery; the existing material-indexed receipt retains actual contexts, recipient, epochs, authorization and exact-token delivery relations. Protected envelope algorithms remain open. |
 | [PublicView](PublicView.lean) | Original-payload/header release, actual sealed-root/slot-digest directory, and separately named same-sample HCP disclosure. Proves equal-view criteria, directory order/uniqueness and sensitivity to changed snapshot/run/parameter names. It is a semantic value projection; bytes, access control and hiding require separate contracts. |
 | [DisclosureLeak](DisclosureLeak.lean) | For the canonical face-free systematic sheaf, an explicit full HCP cochain together with the same exact payload recovers the harmonic message. A public-layout expression requires decoder agreement on that artifact; the base view omits the full cochain. |
 | [Anchor](Anchor.lean) | Joins existing candidate evidence to the same interpretation, original artifact and exact sealed manifest. Derives context acceptance, snapshot/root and payload inclusion facts. A supplied object-indexed history relation authenticates that manifest through the candidate's block digest; quorum and exact persistence-receipt adapters retain the same objects. |
@@ -78,6 +91,7 @@ the full-observation relation when they need the harmonic graph.
 | [Retrieval/ContentAddress](Retrieval/ContentAddress.lean) | Executable client-local slot/digest lookup and hash checks against the existing fixed manifest directory, followed by parsing. Substitution for original content gives equality or an actual hash collision, without global injectivity. |
 | [Retrieval/Recovery](Retrieval/Recovery.lean) | Connects accepted byte lookup and full-target decoding to the existing `RecoveryDelivery`; the native theorem retains original `BoundHCPObservation` endpoints through `BoundSampleRotation` and gives source coefficients or collision. |
 | [Retrieval/Coupled](Retrieval/Coupled.lean) | Optional concrete coupled specialization. Original-observation-derived contexts, actual isometric rotation and scoped delivery combine with the canonical full-ciphertext codec; the decoding premise is proved, giving original coefficients or an accepted byte collision. |
+| [Retrieval/Native](Retrieval/Native.lean) | Optional exact native path using the held token and explicit private source decoder. Original observations derive the contexts and retain the selected source message and target byte binding; canonical original token bytes and named available ciphertexts yield original coefficients or a byte collision. |
 | [Retrieval/UniformRead](Retrieval/UniformRead.lean) | Downloads the whole fixed public bucket before local selection/checking/recovery. The complete declared server view and its distribution are target-independent under one shared PMF, at linear download cost. |
 | [Retrieval/LinearQueryObstruction](Retrieval/LinearQueryObstruction.lean) | Conditional public essential-column test for a joint one-hot query, with an example using varying coexact openings in the original cellular family and the existing CVP comparison. It does not decide every native query profile's privacy. |
 | [Examples](Examples.lean) | A concrete two-coordinate sheaf with zero `delta0`, a nonexact raw `[1,0]` input, accepted zero, two actual payload/plane slots, and positive/negative lifecycle fixtures. Authentication and backend receipt relations are explicitly toy equality models. |
@@ -94,13 +108,25 @@ proved for these ciphertexts and their separate security conditions.
 
 The hash-addressed native path is
 `canonical full ciphertext → digest/directory → checked local lookup → full-cochain decoder → scoped private recovery`.
-[Retrieval.Coupled](Retrieval/Coupled.lean) now supplies the concrete decoder
-join for the original integral Hodge samples. The hash names and binds the
-ciphertext; recipient/epoch/context-scoped private material supplies recovery.
-A transport-envelope codec and delivery algorithm remain separate work.
+[Retrieval.Native](Retrieval/Native.lean) supplies that path with executable
+rational recovery and a held token. [Retrieval.Coupled](Retrieval/Coupled.lean)
+retains the earlier isometric-receipt specialization. The hash names and binds
+the ciphertext; the material-indexed receipt supplies the original scope and
+delivery contracts. A concrete protected envelope and delivery algorithm
+remain open.
 The older hash-of-shared-secret fiber-selection plan also needs actual
 shared-secret agreement and a finite representative generator. Public context
 identifiers and ciphertext hashes are not those private seeds.
+
+The native token is reusable for its context/profile rather than inherently
+single-use or restricted to one ciphertext. The selected full-ciphertext
+digest is checked separately from `ContextKey.cochainDigest`, which still
+names the exact artifact. Scope equality does not authenticate a caller or
+prevent replay; possession of copied matrix data permits off-API use. The
+derived matrix may reveal private presentation information. Token checks
+therefore establish neither hiding nor a safely public evaluation capability.
+The rational determinant/adjugate code is a finite reference implementation
+without a polynomial runtime bound.
 
 `HodgeQuery` is the native evaluation construction: the client supplies the
 existing harmonic presentation and structured openings, while the server sums

@@ -22,10 +22,32 @@ coordinate map `M_B(a,z,u)=(a,z-Bᵀu,Bz+u)` as a real linear equivalence.
 The ciphertext map `M_C M_B⁻¹` preserves the original message and both opening
 coordinate vectors for every same-size pair, with identity/inverse/composition.
 It is distinct from the cochain shear and does not require an isometry.
-Generated integral samples remain integral. The current inverse is classical;
-finite transport-token algorithms and secure delivery/public release remain
-separate. Transport to the known zero presentation exposes the message
-coefficients, so universal public transport is not a confidentiality contract.
+Generated integral samples remain integral.
+[CoupledRational](CoupledRational.lean) now executes the inverse and transport
+by exact rational adjugate/determinant arithmetic and proves refinement to
+the original real map. Its private decoder checks integral message
+coordinates and recovers the same original coefficients. This is a finite
+reference implementation without a polynomial complexity bound. Secure
+delivery/public release remains separate. Transport to the known zero
+presentation exposes the message coefficients, so universal public transport
+is not a confidentiality contract.
+
+The [protocol execution adapter](../Protocol/Ephemeral/NativeTransport.lean)
+serializes the derived rational map in the canonical ciphertext coordinate
+ordering and executes with the held token. Retained-base recovery takes the
+private source presentation explicitly. The [scope codec](../Protocol/Ephemeral/ScopeCodec.lean)
+and [token codec](../Protocol/Ephemeral/TransportToken.lean)
+retain the actual recipient/epoch/context scope; [native delivery](../Protocol/Ephemeral/NativeDelivery.lean)
+and [retrieval](../Protocol/Storage/Retrieval/Native.lean) reuse the existing
+receipt, original storage contexts and full-ciphertext digest. The exact
+artifact carrier is unchanged.
+
+The token is a reusable context/profile map capability. Expected-scope checks
+do not cryptographically restrict copied matrix data. Its fields omit the
+source and target matrices, but the derived operator may reveal them; no
+key-hiding guarantee or secure public-token release is proved. Authentication,
+protected envelope delivery, shared-secret agreement, key/noise generation and
+the complete released-view security experiment remain separate work.
 
 [AxisFamily.lean](AxisFamily.lean) instantiates the existing HCP recovery and
 CVP-oracle comparison with two actual integral cellular sheaves. Import
