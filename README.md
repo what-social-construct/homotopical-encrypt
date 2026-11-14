@@ -93,10 +93,21 @@ original recipient handle, epochs and context keys to the derived map.
 [NativeDelivery](lean/Protocol/Ephemeral/NativeDelivery.lean) reuses the existing
 scoped receipt, and [native hash recovery](lean/Protocol/Storage/Retrieval/Native.lean)
 joins it to the original bound samples and directory lookup.
-Directory naming/availability remain explicit premises; storage classifiers
-still need alignment with the coupled semantic realization. Accepted owned
-transfers do not yet derive the full-ciphertext entry in their authenticated
-manifest/history.
+The [native manifest profile](lean/Protocol/Storage/NativeManifest.lean) now
+seals the original exact artifact and separately named full ciphertext in two
+slots. [Anchored native recovery](lean/Protocol/Storage/Retrieval/NativeAnchored.lean)
+derives the public view and ciphertext membership from that actual target
+seal, then associates recovery with the same context, manifest and accepted
+history entry through the existing transition anchor. Harmonic projection
+identifies the original target message without equating private openings.
+
+The manifest root uses a supplied function of the public base and ordered
+slot/digest directory; its byte codec, hash security and history authentication
+remain profile obligations. Availability and canonical issued token bytes
+remain explicit. The earlier owned-transfer one-slot manifest and signed
+packet are unchanged; no relation identifies harmonic coefficients with
+catalogue amounts or action semantics. Storage classifier alignment with the
+coupled semantic realization remains open.
 
 The intended public history uses ciphertext content IDs and selected action
 links for auditing, while credential/policy proofs keep identity witnesses

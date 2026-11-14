@@ -723,12 +723,45 @@ it supplies neither single-use authorization nor confinement of copied
 matrix data. Authentication and confidential envelope delivery remain
 explicit application contracts.
 
-The native retrieval theorem takes a manifest view and ciphertext naming
-premise; it does not yet derive them from an authenticated sealed manifest of
-the target context or an accepted owned transfer. The current owned-transfer
-manifest names only the original exact artifact. Joining the full-ciphertext
-entry to that action/history profile, and aligning its storage classifier with
-the coupled semantic realization, remain explicit integration work.
+The [native manifest profile](../../lean/Protocol/Storage/NativeManifest.lean)
+places the original exact artifact and the separately named full ciphertext
+in two distinct slots of the existing checkpoint engine. For the original
+target context \(\mathcal C_T\), its public directory is
+\[
+\mathcal D_M=[(\mathrm{exact},d_{\mathrm{ex}}),
+ (\mathrm{cipher},H(\operatorname{encode}(b_T)))].
+\]
+The supplied manifest-root function takes only
+\((V_{\mathrm{base}}(\mathcal C_T),\mathcal D_M)\). The enclosing root and
+private observation fields are outside that preimage. The slot roles are
+distinct even when their digest values coincide.
+
+**Proposition (Native ciphertext/history association).** Let \(M\) be an
+actual seal in this profile for the original target observation, with
+\(b_T=\operatorname{Enc}_C(z,a,u)\). An existing transition anchor for this
+same context and seal associates its exact artifact and full-ciphertext
+directory with the candidate's authenticated history entry. The original
+target harmonic message is \((0,z,Cz)\). Given the canonical issued transport
+token and available target bytes, lookup in \(M\)'s derived public view
+recovers \(z\), or accepted ciphertext substitution gives a byte-hash
+collision. Directory membership is a consequence of the seal, not an
+independent naming premise.
+
+The [proof](../../lean/Protocol/Storage/Retrieval/NativeAnchored.lean) first
+uses canonical decoding and the full-ciphertext leaf binding to identify the
+original observed cochain. Applying its harmonic projector identifies the
+message without assuming equality of private opening representatives. The
+seal determines the directory; the existing transition anchor and native
+recovery theorem then give the history association and collision alternative.
+History authentication, byte availability and protected delivery keep their
+original contracts. The typed manifest-root function has no new concrete
+byte-codec or hash-security instantiation.
+
+The earlier owned-transfer packet still commits its one-slot exact-artifact
+manifest. Extending that packet/profile and aligning storage classifiers with
+the coupled semantic realization remain integration work. The association
+above does not identify \(z\) with a catalogue amount, identity or authorized
+action; those application meanings need their own proof predicate.
 
 Omitting \(B,C\) as token fields supplies no key-hiding theorem. Public release
 of transport material remains a security question: the proved specialization

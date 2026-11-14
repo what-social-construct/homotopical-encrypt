@@ -6,6 +6,7 @@ public import Protocol.Storage.Retrieval.HodgeQuery
 public import Protocol.Storage.Retrieval.Recovery
 public import Protocol.Storage.Retrieval.Coupled
 public import Protocol.Storage.Retrieval.Native
+public import Protocol.Storage.Retrieval.NativeAnchored
 public import Protocol.Storage.Retrieval.LinearQueryObstruction
 
 @[expose] public section
@@ -22,7 +23,9 @@ introduced. The source of each security claim remains visible: transcript
 independence for uniform reads, actual collision alternatives for hashing,
 and original Hodge/CVP laws for native correctness. The concrete coupled
 decoder and exact rational held-token path retain original bound observations.
-Their naming/availability premises are explicit: the owned-transfer manifest
-does not yet include the full-ciphertext entry. Efficient private-query
+The native two-slot seal derives the target view and ciphertext naming, with
+same-context recovery/history association through the existing transition
+anchor. Availability/authentication remain explicit; the old owned-transfer
+packet still uses its one-slot exact-artifact manifest. Efficient private-query
 sampling and recipient discovery are separate protocol work.
 -/

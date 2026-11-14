@@ -241,6 +241,50 @@ neither authenticate the caller nor confine copied matrix data. Authorization
 and confidential delivery remain explicit application relations. Hashing
 supplies object naming and binding; private material supplies recovery.
 
+\subsection{Native ciphertext manifests and history}
+
+The selected native manifest retains the original exact artifact and the
+full ciphertext in two distinct slots. For the original target context
+\(\mathcal C_T\), let \(d_{\mathrm{ex}}\) be its exact-artifact digest and
+\(d_b=H(\operatorname{encode}(b_T))\) its separate ciphertext content ID.
+The public directory and root input are
+\[
+ \mathcal D_M=[(\mathrm{exact},d_{\mathrm{ex}}),(\mathrm{cipher},d_b)],
+ \qquad
+ r_M=H_{\mathrm{man}}(V_{\mathrm{base}}(\mathcal C_T),\mathcal D_M).
+\]
+The enclosing root and private observation fields are outside this preimage.
+Distinct slot roles do not require unequal digest values.
+
+\begin{proposition}[Native ciphertext/history association]
+\label{prop:coupled-native-manifest}
+Let \(M\) be an actual seal in this profile for the original target
+observation, binding the canonical bytes of
+\(b_T=\operatorname{Enc}_C(z,a,u)\). An existing transition anchor for this
+same context and seal associates its original exact artifact and ciphertext
+directory with the candidate's history entry. The target's original harmonic
+message is \((0,z,Cz)\). Given the canonical issued native transport token
+and available target bytes, lookup in \(M\)'s derived public view recovers
+\(z\), or accepted ciphertext substitution exhibits a byte-hash collision.
+\end{proposition}
+
+\begin{proof}
+Canonical decoding and the full-ciphertext leaf binding identify the native
+sample's observation with the original target observation. Applying the
+fixed target harmonic projector identifies its message without requiring
+equality of private opening representatives. The seal fixes the directory
+and derives ciphertext membership. The existing transition anchor carries
+that same context, ordered manifest and root into history; the native
+recovery law gives the stated collision alternative under availability.
+\end{proof}
+
+History authentication and the typed manifest-root function retain their
+explicit contracts; no new root byte codec or hash-security instance is
+constructed. The earlier owned-transfer signed packet still uses its
+one-slot manifest. Neither that packet extension nor a relation from harmonic
+coefficients to catalogue amounts, identities or action semantics is supplied
+by this same-context association. Storage-classifier alignment remains open.
+
 Public records may link the ciphertext content ID to context, evidence and
 successor actions. The intended privacy profile permits auditing those
 actions without decrypting the identity witness. Its public encoding must
@@ -258,4 +302,4 @@ application. A later comparison with fully homomorphic encryption should
 inventory the actual supported operations and their security statements.
 
 The shared parity register records the construction, encodings, transport
-square and their formal boundaries as H81--H97.
+square and their formal boundaries as H81--H98.
