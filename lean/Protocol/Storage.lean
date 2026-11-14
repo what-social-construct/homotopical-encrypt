@@ -6,6 +6,7 @@ public import Protocol.Storage.Core
 public import Protocol.Storage.CanonicalRS
 public import Protocol.Storage.CanonicalSystematic
 public import Protocol.Storage.DisclosureLeak
+public import Protocol.Storage.CoupledCiphertext.Disclosure
 public import Protocol.Storage.ThreeLevelMetrics
 public import Protocol.Storage.CanonicalThreeLevel
 public import Protocol.Storage.CanonicalCalibration
@@ -26,6 +27,11 @@ public import Protocol.Storage.Retrieval
   instantiation, database atomicity and crash consistency remain profile/runtime
   obligations. `Protocol.Storage.Core` is the focused import without the legacy
   broad evidence facade or optional canonical-field application.
+
+  The canonical raw manifest has separate exact-artifact and full-ciphertext
+  slots. Original-observation certificates add native decoding/message meaning
+  to that same seal. The disclosure lemmas explain why an exact component alone
+  cannot name distinct full ciphertexts; they imply no computational secrecy.
 
 `Protocol.Storage.Retrieval` separately analyzes hash-indexed encrypted-object
 reads: uniform whole-bucket transcript privacy, local content verification,

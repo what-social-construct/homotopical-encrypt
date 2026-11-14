@@ -82,8 +82,8 @@ profile to existing storage contexts.
 The [integral native sample](lean/Sheaf/HCPCoupledEncoding.lean) has full
 observation `(a,z−Bᵀu,Bz+u)`. Its
 [ciphertext codec](lean/Protocol/Storage/CoupledCiphertext.lean) decodes to the
-same original Hodge cochain, with a ciphertext digest distinct from the
-exact-component artifact digest.
+same original Hodge cochain, with independently computed names for the full
+ciphertext and exact-component artifact.
 The [native execution path](lean/Protocol/Ephemeral/NativeTransport.lean)
 uses a held rational token and the canonical full-ciphertext bytes for exact
 migration or retained-base recovery. The receiver uses that token directly;
@@ -93,21 +93,33 @@ original recipient handle, epochs and context keys to the derived map.
 [NativeDelivery](lean/Protocol/Ephemeral/NativeDelivery.lean) reuses the existing
 scoped receipt, and [native hash recovery](lean/Protocol/Storage/Retrieval/Native.lean)
 joins it to the original bound samples and directory lookup.
-The [native manifest profile](lean/Protocol/Storage/NativeManifest.lean) now
-seals the original exact artifact and separately named full ciphertext in two
-slots. [Anchored native recovery](lean/Protocol/Storage/Retrieval/NativeAnchored.lean)
+The canonical [ciphertext manifest](lean/Protocol/Storage/CiphertextManifest.lean)
+seals the original exact artifact and selected full ciphertext in two slots.
+Its root is part of the signed intent and actual transfer checks. The separate
+[native certificate](lean/Protocol/Storage/NativeManifest.lean) validates those
+same bytes against the original HCP observation.
+[Anchored native recovery](lean/Protocol/Storage/Retrieval/NativeAnchored.lean)
 derives the public view and ciphertext membership from that actual target
 seal, then associates recovery with the same context, manifest and accepted
 history entry through the existing transition anchor. Harmonic projection
 identifies the original target message without equating private openings.
+The [checked native transfer](lean/Protocol/Transfer/Native.lean) joins these
+facts to the actual owned packet, computed history entry and recovery, with
+an accepted ciphertext-hash collision as the substitution alternative.
 
 The manifest root uses a supplied function of the public base and ordered
 slot/digest directory; its byte codec, hash security and history authentication
 remain profile obligations. Availability and canonical issued token bytes
-remain explicit. The earlier owned-transfer one-slot manifest and signed
-packet are unchanged; no relation identifies harmonic coefficients with
-catalogue amounts or action semantics. Storage classifier alignment with the
-coupled semantic realization remains open.
+remain explicit. Raw sealing permits malformed ciphertext bytes; exact-payload
+acceptance alone does not establish native validity. No relation identifies
+harmonic coefficients with catalogue amounts or action semantics. Storage
+classifier alignment with the coupled semantic realization remains open.
+
+The [certificate reflection rule](lean/Protocol/Transfer/Certificates.lean)
+requires a selected proof statement to entail a typed certificate bound to the
+exact checked intent. The [ownership table](docs/SEMANTIC_OWNERSHIP.md) records
+the stage/hard-gate chain and remaining certificate-to-statement-to-bytes
+binding work; evidence slot labels alone do not supply it.
 
 The intended public history uses ciphertext content IDs and selected action
 links for auditing, while credential/policy proofs keep identity witnesses

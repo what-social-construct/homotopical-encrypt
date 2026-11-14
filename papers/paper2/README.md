@@ -2,9 +2,16 @@
 
 Working combined title: *Homotopical Encryption and Proof-Carrying Transactions*.
 
-The [working manuscript](DRAFT.md) develops Hodge-structured cochain encryption
-with commitments, visibility, codecs, storage and proof-carrying transitions.
-It supplies the construction part of the combined HCP and transaction paper.
+The [working manuscript](DRAFT.md) develops cochain encryption and verification
+with changes of cellular presentation that preserve messages. Its coupled
+family has an explicit intrinsic harmonic lattice; separate cochain and ciphertext maps
+preserve the declared semantic class and original message coefficients.
+The exact-component artifact can remain fixed while the full encrypted
+cochain changes, so the canonical manifest names both objects. Its root enters
+owner authorization, packet verification and accepted history. A separate
+native observation-binding refinement connects the ciphertext bytes to the
+original harmonic message used in recovery. Exact-payload proof checking and
+full-observation binding remain distinct obligations.
 The [matching coupled-construction TeX section](sections/coupled-construction.tex)
 states the proved class/lattice/cochain connection; the full Markdown draft
 has no TeX/PDF bundle yet. The
@@ -65,6 +72,23 @@ the private source presentation explicitly. The recipient, epochs and original
 contexts determine the scope, and the selected full-ciphertext digest remains
 separate from the exact-artifact digest.
 
+One [canonical two-slot manifest](../../lean/Protocol/Storage/CiphertextManifest.lean)
+names that exact artifact and the selected full-ciphertext bytes. The raw seal
+permits malformed inputs; it records the bytes without assuming their native
+meaning. A separate
+[original-observation certificate](../../lean/Protocol/Storage/NativeManifest.lean)
+relates the same raw seal's context and decoded bytes to the original bound
+HCP observation. Canonical sample bytes, the original sample equation and
+context equality construct this refinement.
+
+The [actual checked owned-transfer bridge](../../lean/Protocol/Transfer/Native.lean)
+retains the same manifest root through its signed intent, packet and computed
+history anchor. With the native certificate, canonical held transport token
+and available bytes, it identifies the original harmonic message and recovers
+its coefficients or exhibits an accepted byte-hash collision. This is the
+existing transfer configuration, not an alternate native packet profile.
+Exact-payload acceptance alone does not establish the native certificate.
+
 This is a reusable context/profile capability. Scope checks do not authenticate
 the caller, prevent replay or cryptographically confine copied map data.
 Omitting the source/target matrices as serialized fields gives no key-hiding
@@ -87,6 +111,14 @@ not disclose it automatically. Full operative-kernel Plücker coordinates are
 outside the base profile. Any released roots, tags, proofs and selective
 openings must appear in the chosen adversary view.
 
+For fixed setup, the
+[public assembly](../../lean/Protocol/Transfer/PublicAssembly.lean)
+reconstructs the released transfer view from four varying inputs: the base
+storage view, full-ciphertext digest, owner-signature bytes and proof bytes.
+The digest is released in the directory; the view does not automatically
+release the corresponding bytes. This factorization is not a confidentiality
+claim for those joint inputs.
+
 For the canonical systematic sheaf, releasing both the full cochain and exact
 payload recovers the harmonic message when the decoder agrees with the
 selected public layout. The draft states this disclosure boundary explicitly.
@@ -108,10 +140,18 @@ proof soundness for the original trusted payload interpretation derive
 candidate validity and the computed state update. Operational acceptance does
 not assume that validity in advance.
 
-The evidence/history join retains the same artifact, original input manifest,
-intent and complete proposal. The one-shot integrity experiment reduces
+The evidence/history join retains the same artifact, canonical two-slot input
+manifest, intent and complete proposal. Its root names the full ciphertext
+alongside the exact artifact. The one-shot integrity experiment reduces
 accepted-invalid outcomes to authorization or exact-payload check failures
 and composes supplied failure budgets under one shared probability law.
+
+The [certificate-reflection boundary](../../lean/Protocol/Transfer/Certificates.lean)
+states the additional obligation that the verifier's declared predicate on the
+exact expected intent implies existence of an actually bound certificate.
+With this reflection, successful checking gives such a certificate or an
+actual backend false acceptance. Slot-only evidence assertions do not prove
+the relation, and logical existence does not supply knowledge extraction.
 
 ## Lean sources and paper ownership
 
@@ -122,13 +162,15 @@ and composes supplied failure budgets under one shared probability law.
 | Original full Hodge ciphertext bytes | [HCPCoupledEncoding](../../lean/Sheaf/HCPCoupledEncoding.lean), [CoupledCiphertext](../../lean/Protocol/Storage/CoupledCiphertext.lean) |
 | Exact native execution and scoped token | [CoupledRational](../../lean/HCP/CoupledRational.lean), [TransportCodec](../../lean/Protocol/Storage/TransportCodec.lean), [ScopeCodec](../../lean/Protocol/Ephemeral/ScopeCodec.lean), [TransportToken](../../lean/Protocol/Ephemeral/TransportToken.lean), [NativeTransport](../../lean/Protocol/Ephemeral/NativeTransport.lean) |
 | Original-context native delivery and retrieval | [NativeDelivery](../../lean/Protocol/Ephemeral/NativeDelivery.lean), [Retrieval.Native](../../lean/Protocol/Storage/Retrieval/Native.lean) |
+| Canonical two-slot naming and native semantic certificate | [CiphertextManifest](../../lean/Protocol/Storage/CiphertextManifest.lean), [NativeManifest](../../lean/Protocol/Storage/NativeManifest.lean) |
+| Actual checked native history and recovery | [Transfer.Native](../../lean/Protocol/Transfer/Native.lean), [Retrieval.NativeAnchored](../../lean/Protocol/Storage/Retrieval/NativeAnchored.lean) |
 | Commitment and coordinate profile | [CochainCommitment](../../lean/Axioms/CochainCommitment.lean), [CoordinateCodec](../../lean/Protocol/Storage/CoordinateCodec.lean) |
 | Generic ledger and computed transition | [Ledger.Transition](../../lean/Protocol/Ledger/Transition.lean), [Ledger.ValueFlow](../../lean/Protocol/Ledger/ValueFlow.lean) |
 | Bounded transition and checked transfer | [Protocol.Core](../../lean/Protocol/Core.lean), [Transfer](../../lean/Protocol/Transfer.lean), [PublicAssembly](../../lean/Protocol/Transfer/PublicAssembly.lean), [protocol guide](../../lean/Protocol/README.md) |
 | Storage, public views and gates | [Storage.Core](../../lean/Protocol/Storage/Core.lean), [PublicView](../../lean/Protocol/Storage/PublicView.lean), [storage guide](../../lean/Protocol/Storage/README.md) |
 | Rotation, recovery and retrieval | [Ephemeral](../../lean/Protocol/Ephemeral.lean), [Retrieval](../../lean/Protocol/Storage/Retrieval.lean) |
 | Committee and proof/TCB envelopes | [Consensus.Quorum](../../lean/Protocol/Consensus/Quorum.lean), [TCB](../../lean/TCB.lean) |
-| Integrity, leakage and primitive contracts | [Transfer.Security](../../lean/Protocol/Transfer/Security.lean), [Transfer.Confidentiality](../../lean/Protocol/Transfer/Confidentiality.lean), [Transfer.Primitives](../../lean/Protocol/Transfer/Primitives.lean) |
+| Integrity, leakage and primitive contracts | [Transfer.Security](../../lean/Protocol/Transfer/Security.lean), [Transfer.Confidentiality](../../lean/Protocol/Transfer/Confidentiality.lean), [Transfer.Primitives](../../lean/Protocol/Transfer/Primitives.lean), [Transfer.Certificates](../../lean/Protocol/Transfer/Certificates.lean) |
 
 [Paper 1](../paper1/README.md) supplies HCP, harmonic lattices, semantic classes
 and known-lattice CVP comparisons. [Paper 3](../paper3/README.md)
@@ -148,7 +190,11 @@ transition claim. Authenticated quorums do not supply rounds, locking or finalit
 Concrete credential/proof algorithms, message-bound knowledge and
 unforgeability, packet/witness codecs beyond the selected native profile,
 authenticated roots/directories and protected recipient delivery require
-construction and verification. The native codecs do not encode unrestricted
+construction and verification. Certificate codecs and digest binding must
+connect actual subjects, bytes and proof metadata to the exact expected intent
+and instantiate verifier-statement reflection. A separate application
+relation must connect harmonic coefficients to amounts and action semantics.
+The native codecs do not encode unrestricted
 real openings. Key/noise sampling and shared-secret agreement remain open.
 The supplied primitive budgets do not establish adaptive
 signing/corruption security, encryption privacy or anonymity. State origin,

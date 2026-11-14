@@ -1,7 +1,7 @@
 module
 
 public import Protocol.Evidence.TransferCheck
-public import Protocol.Storage.TransferManifest
+public import Protocol.Storage.CiphertextManifest
 public import Protocol.Ledger.Sheaf
 
 @[expose] public section
@@ -47,6 +47,8 @@ checking algorithms carry no universal semantic soundness law. -/
 structure Config (F : CellularSheaf X) (Owner Asset Receipt : Type) where
   catalog : Ledger.OwnedResource.Catalog Owner Asset
   context : Storage.Context F
+  /-- Full ciphertext bytes named independently of the exact-component artifact. -/
+  ciphertext : List UInt8
   before : Ledger.State ℕ ℕ
   hashes : HashSuite Owner
   metadata : ProofMetadata
@@ -56,7 +58,7 @@ structure Config (F : CellularSheaf X) (Owner Asset Receipt : Type) where
   topologyBinds : SheafStateSnapshot F → TCB.Hash32 → Prop
   topologyBound : topologyBinds context.interpretation.snapshot before.topologyRoot
   persisted : Storage.Context F →
-    List (Storage.ManifestItem Unit (fun _ => Axioms.CochainCommitmentData)) →
+    List (Storage.ManifestItem Storage.CiphertextManifest.Slot Storage.CiphertextManifest.Payload) →
     TCB.Hash32 → Receipt → Prop
   committeeDigest : TCB.Hash32
   round : ℕ
@@ -68,8 +70,12 @@ namespace Config
 
 variable (config : Config F Owner Asset Receipt)
 
-/-- The exact original input leaf is sealed before proof or proposal completion. -/
-def manifest := Storage.TransferManifest.sealed config.hashes config.persisted config.context
+/-- Both original exact artifact and selected full ciphertext are named before signing. -/
+def manifest := Storage.CiphertextManifest.sealed config.hashes.ciphertext config.hashes.manifest
+  config.persisted config.context config.ciphertext
+
+/-- The separately released content ID of the selected full ciphertext bytes. -/
+def ciphertextDigest : TCB.Hash32 := config.hashes.ciphertext config.ciphertext
 
 /-- The enclosing cochain root remains distinct from its original payload leaf. -/
 def cochainRoot : TCB.Hash32 := config.hashes.cochainRoot [config.context.artifact.digest]
@@ -260,6 +266,24 @@ theorem accepted_update [DecidableEq Asset]
   ⟨rfl, checked.valid authorized payloadAccepted, rfl⟩
 
 end CheckedTransfer
+
+/-- A parsed packet naming a different manifest root is rejected independently
+of signature/proof soundness or native ciphertext validity. Changes of bytes
+are not assumed to change their digest or manifest root. -/
+theorem reject_manifest_root_mismatch (config : Config F Owner Asset Receipt)
+    (transfer : ResourceTransfer Owner) (bytes : List UInt8) (packet : ProofPacket Owner)
+    (decoded : config.codec.decode bytes = some packet)
+    (wrongRoot : packet.intent.manifestRoot ≠ config.manifest.root) :
+    check config transfer bytes = false := by
+  cases outcome : check config transfer bytes with
+  | false => rfl
+  | true =>
+    have checked := CheckedTransfer.ofCheck outcome
+    have packetEq : checked.proof.packet = packet :=
+      Option.some.inj (checked.proof.decoded.symm.trans decoded)
+    have rootEq : checked.proof.packet.intent.manifestRoot = config.manifest.root :=
+      congrArg Intent.manifestRoot checked.proof.intent_eq
+    exact False.elim (wrongRoot (packetEq ▸ rootEq))
 
 /-- One adversarial proposal, retaining the actual bytes to be parsed. -/
 structure Attempt (Owner : Type) where

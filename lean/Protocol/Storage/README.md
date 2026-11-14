@@ -62,23 +62,27 @@ Generated integer samples give the target's original canonical bytes.
 the original source and target contexts. [Retrieval.Native](Retrieval/Native.lean)
 joins this execution to hash-indexed lookup and the original bound samples.
 
-[NativeManifest](NativeManifest.lean) constructs a two-slot seal containing the
-original exact artifact and separately hashed full-ciphertext bytes. Every seal
-in this profile retains the original observation-derived context, ordered
-items and ciphertext binding. [NativeAnchored](Retrieval/NativeAnchored.lean)
-derives its public view and lookup membership from that actual target seal,
-and reuses the existing `TransitionAnchor` over the exact same manifest.
-The bound canonical bytes determine the original target harmonic message by
-projection; equality of private opening representatives is unnecessary.
+[CiphertextManifest](CiphertextManifest.lean) constructs the canonical raw
+two-slot seal containing the original exact artifact and separately hashed
+full-ciphertext bytes. Every seal fixes its ordered items, public view and
+ciphertext naming; malformed bytes remain representable. The separate
+`BindsOriginal` certificate in [NativeManifest](NativeManifest.lean) binds
+that same seal to the original observation and context.
+[NativeAnchored](Retrieval/NativeAnchored.lean) combines that certificate with
+the existing `TransitionAnchor`. The bound canonical bytes determine the
+original target harmonic message by projection without equating private
+opening representatives.
 
 The root function consumes only the public base and ordered slot/digest
 directory. A root byte codec, cryptographic binding and history authentication
 remain profile work. Availability and canonical issuer-derived token bytes
-are explicit recovery premises. This is a same-context association: the old
-owned-transfer one-slot profile and signed packet remain unchanged, and no
-relation identifies recovered coefficients with catalogue amounts or action
-semantics. Storage-classifier alignment, private authorization and efficient
-PIR remain open.
+are explicit recovery premises. The owned signing/checking path uses this
+same two-slot root. [Checked native transfer recovery](../Transfer/Native.lean)
+then joins the actual packet, candidate and computed history anchor to native
+message recovery under its separate certificate and sample-byte premises.
+No relation identifies recovered coefficients with catalogue amounts or
+action semantics. Storage-classifier alignment, private authorization and
+efficient PIR remain open.
 
 ## Module map
 
@@ -91,7 +95,9 @@ PIR remain open.
 | [HCP](HCP.lean) | Builds a context from the original `BoundHCPObservation`, retaining its exact artifact and snapshot. The run name is derived from the actual lifecycle context through the supplied identification function. |
 | [CoupledCodec](CoupledCodec.lean), [CoupledBinding](CoupledBinding.lean) | Optional integral graph-family profile. Canonical dimensioned matrix bytes, executable parsing, roundtrip/injectivity and malformed-input rejection; a root check identifies the original matrix packet or an actual byte collision. The existing context and exact-payload/full-cochain distinction are retained. |
 | [CoupledCiphertext](CoupledCiphertext.lean) | Concrete integral full-cochain codec, exact original-sample reconstruction and hash checks. Its bound-observation relation retains the same exact artifact, snapshot and lifecycle with a separately named ciphertext digest. |
-| [NativeManifest](NativeManifest.lean) | Existing checkpoint engine specialized to exact-artifact and full-ciphertext slots. Constructs the seal from an original-observation byte binding; any seal derives its actual context, exact ordered leaves, public view, ciphertext naming and original-observation binding. The public root preimage excludes its own root and private witnesses. |
+| [CiphertextManifest](CiphertextManifest.lean) | The canonical raw exact-artifact/full-ciphertext profile over the existing checkpoint engine. Every seal derives its exact ordered leaves, public view and ciphertext naming. Its public root preimage excludes its own root and private witnesses; raw sealing does not establish decoding or native validity. |
+| [NativeManifest](NativeManifest.lean) | Reuses the same raw scheme/seal and adds `BindsOriginal`, certifying the original observation/context and full-ciphertext decoder equation. Canonical sample bytes discharge this certificate under the actual sample equation. No second manifest profile is introduced. |
+| [CoupledCiphertext/Disclosure](CoupledCiphertext/Disclosure.lean) | At a fixed coupled presentation, full canonical sample bytes determine the message even while openings vary, whereas the exact component alone cannot determine distinct messages or full ciphertexts. This explains the separate ciphertext commitment; unequal byte hashes or computational secrecy are not inferred. |
 | [CoupledCiphertext/Layout](CoupledCiphertext/Layout.lean) | Executable exact/information/parity reindexing shared by integer ciphertexts and rational transport matrices; matrix action commutes with the coordinate conversion. |
 | [TransportCodec](TransportCodec.lean), [ScopeCodec](../Ephemeral/ScopeCodec.lean), [TransportToken](../Ephemeral/TransportToken.lean) | Canonical reduced rational matrix and original scope bytes, physical dimensions, executable parsers and injectivity/rejection theorems. Token checking requires the actual complete scope and token-byte hash. Omitting source/target matrices as fields gives no key-hiding guarantee for the derived map. |
 | [NativeTransport](../Ephemeral/NativeTransport.lean), [NativeDelivery](../Ephemeral/NativeDelivery.lean) | Held-token exact byte migration and retained-base recovery; the existing material-indexed receipt retains actual contexts, recipient, epochs, authorization and exact-token delivery relations. Protected envelope algorithms remain open. |
@@ -104,14 +110,15 @@ PIR remain open.
 | [NoWrapCalibration](NoWrapCalibration.lean), [CanonicalSystematic](CanonicalSystematic.lean) | Constructed systematic cellular sheaf, original canonical payload codec and integer-syndrome no-wrap comparison. Its positive Euclidean family is checked, but the coarse bound does not reach the capacity radius. |
 | [ThreeLevelMetrics](ThreeLevelMetrics.lean), [CanonicalThreeLevel](CanonicalThreeLevel.lean) | Intrinsic modular validity via an integral cellular coboundary and carry; global native metric comparison and original canonical payload attaining `3/4` at all three levels. Canonical-mix goodness is for the declared diagonal family. |
 | [CanonicalCalibration](CanonicalCalibration.lean) | Composes the existing source/plane/RS calibration contracts on original storage contexts. Far transfer has unit scale; the near contract uses `2*d_C`, and the factor two is sharp. |
-| [Core](Core.lean) | Aggregates `Context`, `Checkpoint`, `Projection`, `Calibration`, `HCP`, `PublicView`, `Anchor`, `ProjectionAnchor` and `CoordinateCodec`. Import `CanonicalRS` for the fixed canonical application or `Retrieval` for the optional query/read profiles. The separate transition kernel is [Protocol.Core](../Core.lean). |
+| [Core](Core.lean) | Aggregates `Context`, `Checkpoint`, `Projection`, `Calibration`, `HCP`, `PublicView`, the raw `CiphertextManifest`, `Anchor`, `ProjectionAnchor` and `CoordinateCodec`. Import `CanonicalRS` for the fixed canonical application or `Retrieval` for the optional query/read profiles. The separate transition kernel is [Protocol.Core](../Core.lean). |
 | [Retrieval](Retrieval.lean) | Optional facade over the native query, authenticated lookup, private recovery and privacy-reference leaves below. It is outside `Storage.Core` and also exported by the broader `Protocol.Storage` facade. |
 | [Retrieval/HodgeQuery](Retrieval/HodgeQuery.lean) | Actual harmonic-lattice query samples and exact/coexact `HodgeNoise` aggregation. The public integer-weighted answer is the same full observation as an original encrypted answer; the existing coefficient decoder and CVP comparison apply to it. |
 | [Retrieval/ContentAddress](Retrieval/ContentAddress.lean) | Executable client-local slot/digest lookup and hash checks against the existing fixed manifest directory, followed by parsing. Substitution for original content gives equality or an actual hash collision, without global injectivity. |
 | [Retrieval/Recovery](Retrieval/Recovery.lean) | Connects accepted byte lookup and full-target decoding to the existing `RecoveryDelivery`; the native theorem retains original `BoundHCPObservation` endpoints through `BoundSampleRotation` and gives source coefficients or collision. |
 | [Retrieval/Coupled](Retrieval/Coupled.lean) | Optional concrete coupled specialization. Original-observation-derived contexts, actual isometric rotation and scoped delivery combine with the canonical full-ciphertext codec; the decoding premise is proved, giving original coefficients or an accepted byte collision. |
 | [Retrieval/Native](Retrieval/Native.lean) | Optional exact native path using the held token and explicit private source decoder. Original observations derive the contexts and retain the selected source message and target byte binding; canonical original token bytes and named available ciphertexts yield original coefficients or a byte collision. |
-| [Retrieval/NativeAnchored](Retrieval/NativeAnchored.lean) | Derives the view and ciphertext membership from the actual target-bound native seal, identifies the original target message by harmonic projection, and combines recovery/collision with the existing `TransitionAnchor` over the same context and manifest. It associates the ciphertext with an accepted history entry without interpreting coefficients as ledger amounts/actions. |
+| [Retrieval/NativeAnchored](Retrieval/NativeAnchored.lean) | Derives naming from the actual raw seal, uses its separate native certificate to identify the target message by harmonic projection, and combines recovery/collision with the existing `TransitionAnchor` over the same context and manifest. It associates the ciphertext with an accepted history entry without interpreting coefficients as ledger amounts/actions. |
+| [Transfer/Native](../Transfer/Native.lean) | The actual checked owned packet names this same manifest root. Its computed history anchor and native certificate give original-message recovery or an accepted ciphertext-hash collision, retaining the actual context and artifact. |
 | [Retrieval/UniformRead](Retrieval/UniformRead.lean) | Downloads the whole fixed public bucket before local selection/checking/recovery. The complete declared server view and its distribution are target-independent under one shared PMF, at linear download cost. |
 | [Retrieval/LinearQueryObstruction](Retrieval/LinearQueryObstruction.lean) | Conditional public essential-column test for a joint one-hot query, with an example using varying coexact openings in the original cellular family and the existing CVP comparison. It does not decide every native query profile's privacy. |
 | [Examples](Examples.lean) | A concrete two-coordinate sheaf with zero `delta0`, a nonexact raw `[1,0]` input, accepted zero, two actual payload/plane slots, and positive/negative lifecycle fixtures. Authentication and backend receipt relations are explicitly toy equality models. |
@@ -130,8 +137,10 @@ The hash-addressed native path is
 `canonical full ciphertext → digest/directory → checked local lookup → full-cochain decoder → scoped private recovery`.
 [Retrieval.Native](Retrieval/Native.lean) supplies executable rational recovery
 with a held token. [NativeAnchored](Retrieval/NativeAnchored.lean) derives the
-directory from an actual native seal and composes the same-context history
-anchor; the older generic function still accepts a supplied view.
+directory from the canonical raw seal and composes its separate native
+certificate with the same-context history anchor; the older generic function
+still accepts a supplied view. [Transfer.Native](../Transfer/Native.lean)
+connects that result to the actual checked owned packet and signed root.
 [Retrieval.Coupled](Retrieval/Coupled.lean) retains the earlier isometric-receipt
 specialization. The hash names and binds
 the ciphertext; the material-indexed receipt supplies the original scope and
@@ -230,7 +239,7 @@ All 32-byte values reuse `TCB.Hash32`, but their roles remain different.
 | `Context.key.runId` | The projection lifecycle name. Its global freshness and the injectivity/security of a lifecycle identification function are separate obligations. |
 | `Context.key.snapshotRoot` | The original immutable cellular-sheaf snapshot root. |
 | `Context.key.cochainDigest` | The original public cochain artifact's leaf digest. |
-| Retrieval ciphertext digest | A directory-listed hash of named encrypted bytes. `NativeManifest` retains the decoder binding to the original full target observation and derives directory membership from its actual seal; `NativeAnchored` uses that same target context. The exact-component `cochainDigest` alone does not supply this binding. |
+| Retrieval ciphertext digest | A directory-listed hash of named encrypted bytes. `CiphertextManifest` derives naming from its raw seal; `NativeManifest.BindsOriginal` separately supplies the decoder/original-observation binding consumed by `NativeAnchored` and `Transfer.Native`. The exact-component `cochainDigest` alone does not supply this binding. |
 | `Context.key.topologyTag` | The existing **16-byte** declared topology tag; it is not a 32-byte root. |
 | `Context.key.parameterSet` | The selected parameter-profile identifier. |
 | `Context.key.schemaVersion` | The schema version inherited from the original snapshot. |

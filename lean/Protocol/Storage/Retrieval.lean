@@ -23,9 +23,10 @@ introduced. The source of each security claim remains visible: transcript
 independence for uniform reads, actual collision alternatives for hashing,
 and original Hodge/CVP laws for native correctness. The concrete coupled
 decoder and exact rational held-token path retain original bound observations.
-The native two-slot seal derives the target view and ciphertext naming, with
-same-context recovery/history association through the existing transition
-anchor. Availability/authentication remain explicit; the old owned-transfer
-packet still uses its one-slot exact-artifact manifest. Efficient private-query
+The canonical raw two-slot seal derives its public view and ciphertext naming.
+A separate original-observation certificate supplies native decoding/message
+meaning, and the existing transition anchor retains the same context and seal
+in history. Owned signing uses that same canonical manifest root. Availability
+and authentication remain explicit. Efficient private-query
 sampling and recipient discovery are separate protocol work.
 -/

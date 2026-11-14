@@ -10,11 +10,11 @@ public import Protocol.Storage.Anchor
 # Native ciphertext recovery from the same sealed and anchored manifest
 
 The public view and ciphertext directory membership below are derived from
-an actual two-slot seal of the original target context. They are not supplied
+an actual raw two-slot seal of the original target context. They are not supplied
 as independent names. The existing transition anchor authenticates that exact
 context, ordered manifest and root under its candidate/history contract.
 
-Canonical ciphertext binding also identifies the target's original harmonic
+The separate original-observation certificate identifies the target's original harmonic
 message by projection; equality of private opening representatives is not
 required. Recovery uses the existing held native token and private base key.
 Downloaded-byte availability and canonical issuer-derived token bytes remain
@@ -23,7 +23,8 @@ not inferred from root computation or sealing.
 
 This is a same-context ciphertext/history association. It does not identify
 the harmonic coefficients with ledger amounts, credentials or action semantics,
-change the earlier owned-transfer packet, or establish identity privacy or PIR.
+establish identity privacy or PIR. Owned transfers use this same two-slot
+profile; native semantic binding remains a separate validated certificate.
 -/
 
 set_option autoImplicit false
@@ -44,6 +45,8 @@ variable {rows cols : ℕ} {B C : Matrix (Fin rows) (Fin cols) ℤ}
   {classifyT : SheafStateSnapshot (sheaf C) → PublicClassT}
   {BindsT : TCB.HCPStackBinding LifecycleT PublicClassT (C1 (Fin rows) (Fin cols))}
 
+variable {target : Context (sheaf C)}
+
 variable (hash : Bytes → TCB.Hash32)
   (manifestHash : NativeManifest.PublicPreimage → TCB.Hash32)
   (persisted : Context (sheaf C) →
@@ -56,15 +59,17 @@ variable (hash : Bytes → TCB.Hash32)
 
 /-- Binding canonical sample bytes to the actual observation determines its
 harmonic message. No equality of private opening representatives is assumed. -/
-theorem message_eq_of_sealed_sample
-    (M : SealedManifest (NativeManifest.scheme hash manifestHash persisted
-      targetObservation identifyT parametersT (CoupledCiphertext.sampleBytes C z a u))
-      (ofHCPObservation targetObservation identifyT parametersT)) :
+theorem message_eq_of_bound_sample
+    {bytes : Bytes}
+    (M : SealedManifest (NativeManifest.scheme hash manifestHash persisted bytes) target)
+    (sampleEq : bytes = CoupledCiphertext.sampleBytes C z a u)
+    (bound : NativeManifest.BindsOriginal M targetObservation identifyT parametersT) :
     targetObservation.encrypted.message = HCPCoupledEncoding.message C z := by
+  subst bytes
   apply Subtype.ext
   have observed := Option.some.inj
     ((CoupledCiphertext.decodeReal_sampleBytes C z a u).symm.trans
-      (NativeManifest.ciphertext_bound M).1)
+      (NativeManifest.ciphertext_bound bound).1)
   have projected := congrArg (sheaf C).harmonicOneProjection observed
   change (sheaf C).harmonicOneProjection (HCPCoupledEncoding.sample C z a u).observed =
     (sheaf C).harmonicOneProjection targetObservation.encrypted.observed at projected
@@ -78,22 +83,21 @@ variable {source : Context (sheaf B)} {recipient : TCB.Hash32}
 /-- Lookup naming is derived from this actual target-bound seal. The caller
 still supplies downloaded-byte availability and the canonical issued token. -/
 theorem recoverByDigest_sealed_or_collision
-    (M : SealedManifest (NativeManifest.scheme hash manifestHash persisted
-      targetObservation identifyT parametersT (CoupledCiphertext.sampleBytes C z a u))
-      (ofHCPObservation targetObservation identifyT parametersT))
+    (M : SealedManifest (NativeManifest.scheme hash manifestHash persisted (CoupledCiphertext.sampleBytes C z a u))
+      target)
     (downloaded : List (NativeManifest.Slot × Bytes))
     (delivery : NativeDelivery.Receipt (Authorized := Authorized) (DeliversBytes := DeliversBytes)
-      (source := source) (target := ofHCPObservation targetObservation identifyT parametersT)
+      (source := source) (target := target)
       (recipient := recipient)
       (sourceEpoch := sourceEpoch) (targetEpoch := targetEpoch)
       (material := NativeDelivery.tokenFor (B := B) (C := C)
-        recipient sourceEpoch targetEpoch source (ofHCPObservation targetObservation identifyT parametersT)))
+        recipient sourceEpoch targetEpoch source target))
     (present : (CoupledCiphertext.sampleBytes C z a u) ∈ downloaded.map Prod.snd) :
     Native.recoverByDigest hash M.publicView (hash (CoupledCiphertext.sampleBytes C z a u))
         downloaded delivery
         delivery.scope
         (TransportToken.encode (NativeDelivery.tokenFor (B := B) (C := C)
-          recipient sourceEpoch targetEpoch source (ofHCPObservation targetObservation identifyT parametersT))) = some z ∨
+          recipient sourceEpoch targetEpoch source target)) = some z ∨
       ∃ candidate, candidate ≠ CoupledCiphertext.sampleBytes C z a u ∧
         hash candidate = hash (CoupledCiphertext.sampleBytes C z a u) ∧
         ContentAddress.readByDigest hash M.publicView (hash (CoupledCiphertext.sampleBytes C z a u)) downloaded =
@@ -117,24 +121,25 @@ variable {Resource Nullifier Asset : Type} [DecidableEq Nullifier]
 with one evidence-bearing history entry through the existing anchor. This
 does not interpret the recovered coefficient vector as the ledger action. -/
 theorem recoverByDigest_anchored_or_collision
-    (M : SealedManifest (NativeManifest.scheme hash manifestHash persisted
-      targetObservation identifyT parametersT (CoupledCiphertext.sampleBytes C z a u))
-      (ofHCPObservation targetObservation identifyT parametersT))
+    (M : SealedManifest (NativeManifest.scheme hash manifestHash persisted (CoupledCiphertext.sampleBytes C z a u))
+      target)
+    (bound : NativeManifest.BindsOriginal M targetObservation identifyT parametersT)
     (anchor : TransitionAnchor topologyBinds history evidence
-      (ofHCPObservation targetObservation identifyT parametersT) M)
+      target M)
     (downloaded : List (NativeManifest.Slot × Bytes))
     (delivery : NativeDelivery.Receipt (Authorized := Authorized) (DeliversBytes := DeliversBytes)
-      (source := source) (target := ofHCPObservation targetObservation identifyT parametersT)
+      (source := source) (target := target)
       (recipient := recipient)
       (sourceEpoch := sourceEpoch) (targetEpoch := targetEpoch)
       (material := NativeDelivery.tokenFor (B := B) (C := C)
-        recipient sourceEpoch targetEpoch source (ofHCPObservation targetObservation identifyT parametersT)))
+        recipient sourceEpoch targetEpoch source target))
     (present : (CoupledCiphertext.sampleBytes C z a u) ∈ downloaded.map Prod.snd) :
-    M.publicView.base = (ofHCPObservation targetObservation identifyT parametersT).publicView ∧
+    target = ofHCPObservation targetObservation identifyT parametersT ∧
+      M.publicView.base = target.publicView ∧
       candidate.action.cochain = targetObservation.artifact.cochain ∧
       candidate.proposal.snapshotRoot =
-        (ofHCPObservation targetObservation identifyT parametersT).key.snapshotRoot ∧
-      history.manifestIncluded candidate (ofHCPObservation targetObservation identifyT parametersT)
+        target.key.snapshotRoot ∧
+      history.manifestIncluded candidate target
         M.manifest.items M.root candidate.proposal.blockDigest ∧
       hash (CoupledCiphertext.sampleBytes C z a u) ∈ M.publicView.directory.map Prod.snd ∧
       targetObservation.encrypted.message = HCPCoupledEncoding.message C z ∧
@@ -143,18 +148,22 @@ theorem recoverByDigest_anchored_or_collision
           downloaded delivery
           delivery.scope
           (TransportToken.encode (NativeDelivery.tokenFor (B := B) (C := C)
-            recipient sourceEpoch targetEpoch source (ofHCPObservation targetObservation identifyT parametersT))) = some z ∨
+            recipient sourceEpoch targetEpoch source target)) = some z ∨
         ∃ substituted, substituted ≠ CoupledCiphertext.sampleBytes C z a u ∧
           hash substituted = hash (CoupledCiphertext.sampleBytes C z a u) ∧
           ContentAddress.readByDigest hash M.publicView (hash (CoupledCiphertext.sampleBytes C z a u)) downloaded =
-            some substituted) :=
-  ⟨SealedManifest.publicView_base M, anchor.cochain_matches, anchor.snapshot_root_matches,
+            some substituted) := by
+  have exactMatch : target.cochain = targetObservation.artifact.cochain := by
+    rw [bound.context_eq]
+    rfl
+  exact ⟨bound.context_eq, SealedManifest.publicView_base M,
+    anchor.cochain_matches.trans exactMatch, anchor.snapshot_root_matches,
     anchor.manifestIncluded, NativeManifest.ciphertext_named M,
-    message_eq_of_sealed_sample hash manifestHash persisted
-      targetObservation identifyT parametersT z a u M,
+    message_eq_of_bound_sample hash manifestHash persisted
+      targetObservation identifyT parametersT z a u M rfl bound,
     anchor.toAcceptedUpdate,
     recoverByDigest_sealed_or_collision hash manifestHash persisted
-      targetObservation identifyT parametersT z a u M downloaded delivery present⟩
+      z a u M downloaded delivery present⟩
 
 end History
 end HomotopicalEncryption.Protocol.Storage.Retrieval.NativeAnchored

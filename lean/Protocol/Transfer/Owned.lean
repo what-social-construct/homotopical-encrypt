@@ -2,7 +2,7 @@ module
 
 public import Protocol.Evidence.TransferVerifier
 public import Protocol.Transfer.Operational
-public import Protocol.Storage.TransferManifest
+public import Protocol.Storage.CiphertextManifest
 public import Protocol.Ledger.Sheaf
 
 @[expose] public section
@@ -47,6 +47,8 @@ their catalog, topology, arithmetization or cryptographic correctness. -/
 structure Config (F : CellularSheaf X) (Owner Asset Receipt : Type) where
   catalog : Ledger.OwnedResource.Catalog Owner Asset
   context : Storage.Context F
+  /-- Full ciphertext bytes named independently of the exact-component artifact. -/
+  ciphertext : List UInt8
   before : Ledger.State ℕ ℕ
   hashes : HashSuite Owner
   metadata : ProofMetadata
@@ -56,7 +58,7 @@ structure Config (F : CellularSheaf X) (Owner Asset Receipt : Type) where
   topologyBinds : SheafStateSnapshot F → TCB.Hash32 → Prop
   topologyBound : topologyBinds context.interpretation.snapshot before.topologyRoot
   persisted : Storage.Context F →
-    List (Storage.ManifestItem Unit (fun _ => Axioms.CochainCommitmentData)) →
+    List (Storage.ManifestItem Storage.CiphertextManifest.Slot Storage.CiphertextManifest.Payload) →
     TCB.Hash32 → Receipt → Prop
   committeeDigest : TCB.Hash32
   round : ℕ
@@ -72,6 +74,7 @@ variable (config : Config F Owner Asset Receipt)
 def operational : Operational.Config F Owner Asset Receipt where
   catalog := config.catalog
   context := config.context
+  ciphertext := config.ciphertext
   before := config.before
   hashes := config.hashes
   metadata := config.metadata
@@ -85,8 +88,11 @@ def operational : Operational.Config F Owner Asset Receipt where
   round := config.round
   phase := config.phase
 
-/-- The exact original input leaf is sealed before proof or proposal completion. -/
+/-- The same two-slot manifest is sealed before proof or proposal completion. -/
 def manifest := config.operational.manifest
+
+/-- The full ciphertext content ID retained by the signed manifest. -/
+def ciphertextDigest : TCB.Hash32 := config.operational.ciphertextDigest
 
 /-- The enclosing cochain root remains distinct from its original payload leaf. -/
 def cochainRoot : TCB.Hash32 := config.operational.cochainRoot

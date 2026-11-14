@@ -8,11 +8,11 @@ public import Mathlib.Probability.ProbabilityMassFunction.Constructions
 /-!
 # Assembly of the checked transfer release from its variable public fields
 
-For a fixed supplied transfer setup, the base storage payload and the two
-evidence byte strings determine the complete checked release. In particular,
-the manifest, cochain root, proposal hashes, and canonical packet bytes are
+For a fixed supplied transfer setup, the base storage payload, selected
+ciphertext digest and two evidence byte strings determine the complete checked
+release. In particular, the manifest, cochain root, proposal hashes, and canonical packet bytes are
 computed from these fields by the original protocol functions. This is a
-structural factorization, not a hiding claim for any of its three inputs.
+structural factorization, not a hiding claim for any of its four inputs.
 The supplied before-state and functions must be shared and independent of a
 challenge before the factorization can be used as a privacy reduction.
 -/
@@ -41,13 +41,15 @@ namespace PublicAssemblySetup
 
 variable {Owner : Type}
 
-/-- The original one-slot manifest, computed from the released payload and digest. -/
+/-- The canonical two-slot manifest, computed from its released exact-artifact
+and ciphertext names. The ciphertext digest remains a variable input. -/
 def manifest (setup : PublicAssemblySetup Owner)
-    (base : Storage.PublicPayloadView) : Storage.PublicManifestView Unit :=
+    (base : Storage.PublicPayloadView) (ciphertextDigest : TCB.Hash32) :
+    Storage.PublicManifestView Storage.CiphertextManifest.Slot :=
   { base := base
     root := setup.hashes.manifest
-      { base := base, directory := [((), base.key.cochainDigest)] }
-    directory := [((), base.key.cochainDigest)] }
+      (base, [(.exactArtifact, base.key.cochainDigest), (.fullCiphertext, ciphertextDigest)])
+    directory := [(.exactArtifact, base.key.cochainDigest), (.fullCiphertext, ciphertextDigest)] }
 
 def cochainRoot (setup : PublicAssemblySetup Owner)
     (base : Storage.PublicPayloadView) : TCB.Hash32 :=
@@ -73,7 +75,8 @@ def draft (setup : PublicAssemblySetup Owner)
 
 /-- The signed intent, including the exact original storage input. -/
 def intent (setup : PublicAssemblySetup Owner)
-    (transfer : ResourceTransfer Owner) (base : Storage.PublicPayloadView) :
+    (transfer : ResourceTransfer Owner) (base : Storage.PublicPayloadView)
+    (ciphertextDigest : TCB.Hash32) :
     Intent Owner where
   schemaVersion := setup.metadata.schemaVersion
   statementId := setup.metadata.statementId
@@ -82,26 +85,28 @@ def intent (setup : PublicAssemblySetup Owner)
   base := base
   beforeEvidenceRoot := setup.before.evidenceRoot
   draft := setup.draft transfer base
-  manifestRoot := (setup.manifest base).root
+  manifestRoot := (setup.manifest base ciphertextDigest).root
 
 /-- The packet retains both evidence byte strings without altering them. -/
 def packet (setup : PublicAssemblySetup Owner)
     (transfer : ResourceTransfer Owner) (base : Storage.PublicPayloadView)
+    (ciphertextDigest : TCB.Hash32)
     (ownerSignature proofBytes : List UInt8) : ProofPacket Owner where
   metadata := setup.metadata
-  intent := setup.intent transfer base
+  intent := setup.intent transfer base ciphertextDigest
   ownerSignature := ownerSignature
   proofBytes := proofBytes
 
 /-- Exact public release assembled using the original canonical codec and hash suite. -/
 def view (setup : PublicAssemblySetup Owner)
     (transfer : ResourceTransfer Owner) (base : Storage.PublicPayloadView)
+    (ciphertextDigest : TCB.Hash32)
     (ownerSignature proofBytes : List UInt8) : PublicTransferView Owner :=
-  let packet := setup.packet transfer base ownerSignature proofBytes
+  let packet := setup.packet transfer base ciphertextDigest ownerSignature proofBytes
   { packetBytes := setup.codec.encode packet
     packet := packet
     proposal := setup.hashes.proposal packet
-    manifest := setup.manifest base }
+    manifest := setup.manifest base ciphertextDigest }
 
 variable {Vertex Edge Face Asset Receipt : Type}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
@@ -120,13 +125,13 @@ def ofOperational (config : Operational.Config F Owner Asset Receipt) :
 
 @[simp]
 theorem ofOperational_manifest (config : Operational.Config F Owner Asset Receipt) :
-    (ofOperational config).manifest config.context.publicView =
+    (ofOperational config).manifest config.context.publicView config.ciphertextDigest =
       config.manifest.publicView := rfl
 
 @[simp]
 theorem ofOperational_intent (config : Operational.Config F Owner Asset Receipt)
     (transfer : ResourceTransfer Owner) :
-    (ofOperational config).intent transfer config.context.publicView =
+    (ofOperational config).intent transfer config.context.publicView config.ciphertextDigest =
       config.intentFor transfer := rfl
 
 end PublicAssemblySetup
@@ -135,14 +140,15 @@ variable {Vertex Edge Face Owner Asset Receipt : Type}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
   {X : OrientedTwoComplex Vertex Edge Face} {F : CellularSheaf X}
 
-/-- Every actually checked release is assembled from its base and evidence bytes. -/
+/-- Every actually checked release is assembled from its base, released
+ciphertext digest and evidence bytes under the same supplied setup. -/
 theorem CheckedTransfer.publicView_eq_assembled
     {config : Config F Owner Asset Receipt}
     {transfer : ResourceTransfer Owner} {bytes : List UInt8}
     (checked : CheckedTransfer config transfer bytes) :
     checked.publicView =
       (PublicAssemblySetup.ofOperational config.operational).view transfer
-        checked.publicView.base checked.publicView.packet.ownerSignature
+        checked.publicView.base config.ciphertextDigest checked.publicView.packet.ownerSignature
         checked.publicView.packet.proofBytes := by
   let setup := PublicAssemblySetup.ofOperational config.operational
   have hbase := checked.publicView_base
@@ -150,9 +156,10 @@ theorem CheckedTransfer.publicView_eq_assembled
   have hmetadata := checked.publicView_metadata
   have hpacket : checked.publicView.packet =
       setup.packet transfer checked.publicView.base
+        config.ciphertextDigest
         checked.publicView.packet.ownerSignature
         checked.publicView.packet.proofBytes := by
-    have hsintent : setup.intent transfer checked.publicView.base =
+    have hsintent : setup.intent transfer checked.publicView.base config.ciphertextDigest =
         config.intentFor transfer := by
       rw [hbase]
       rfl
@@ -167,6 +174,7 @@ theorem CheckedTransfer.publicView_eq_assembled
   · rw [PublicAssemblySetup.view]
     change checked.publicView.packetBytes = setup.codec.encode
       (setup.packet transfer checked.publicView.base
+        config.ciphertextDigest
         checked.publicView.packet.ownerSignature
         checked.publicView.packet.proofBytes)
     rw [← hpacket]
@@ -175,6 +183,7 @@ theorem CheckedTransfer.publicView_eq_assembled
   · rw [PublicAssemblySetup.view]
     change checked.publicView.proposal = setup.hashes.proposal
       (setup.packet transfer checked.publicView.base
+        config.ciphertextDigest
         checked.publicView.packet.ownerSignature
         checked.publicView.packet.proofBytes)
     rw [← hpacket]
@@ -200,12 +209,12 @@ theorem EventBound.map {α β : Type} (p q : PMF α) (ε : ℝ≥0∞)
 fields, provided the supplied setup and transfer are shared. -/
 theorem assembled_view_eventBound
     (setup : PublicAssemblySetup Owner) (transfer : ResourceTransfer Owner)
-    (p q : PMF (Storage.PublicPayloadView × List UInt8 × List UInt8))
+    (p q : PMF (Storage.PublicPayloadView × TCB.Hash32 × List UInt8 × List UInt8))
     (ε : ℝ≥0∞) (h : EventBound p q ε) :
     EventBound
-      (p.map fun x => setup.view transfer x.1 x.2.1 x.2.2)
-      (q.map fun x => setup.view transfer x.1 x.2.1 x.2.2) ε :=
+      (p.map fun x => setup.view transfer x.1 x.2.1 x.2.2.1 x.2.2.2)
+      (q.map fun x => setup.view transfer x.1 x.2.1 x.2.2.1 x.2.2.2) ε :=
   EventBound.map p q ε h
-    (fun x => setup.view transfer x.1 x.2.1 x.2.2)
+    (fun x => setup.view transfer x.1 x.2.1 x.2.2.1 x.2.2.2)
 
 end HomotopicalEncryption.Protocol.Transfer.Owned

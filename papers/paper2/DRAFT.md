@@ -1,83 +1,123 @@
 # Homotopical Encryption and Proof-Carrying Transactions
 
-## Working manuscript: objects, observations and metric contracts
+## Working manuscript
 
-This working draft develops Hodge-structured cochain encryption, binds its
-exact component to a public commitment, and uses the resulting artifact in a
-snapshot-bound proof-carrying transaction. It is a Markdown source for the
-combined manuscript and does not yet have a TeX/PDF bundle. The
-[shared parity table](../../SEMANTIC-PARITY.md)
-records current statement ownership and proof status.
+This manuscript develops Hodge-structured cochain encryption together with
+the commitments, finite representations and proof-carrying actions that name
+its encrypted objects. The full Markdown draft has no TeX/PDF bundle yet. The
+[shared parity table](../../SEMANTIC-PARITY.md) records statement correspondence
+and proof status.
 
-### Candidate abstract for the combined manuscript
+### Abstract
 
-We develop Hodge-structured cochain encryption over finite cellular sheaves.
-A private presentation determines the harmonic message space and exact and
-coexact noise; private decryption recovers the message by harmonic projection.
-An integer-matrix cellular family has an explicitly presented intrinsic
-harmonic lattice. Constructed cochain isomorphisms prove preservation of its
-declared semantic class and integer message coefficients, and concrete codecs
-reconstruct the original integral Hodge observations. Admissible isometric
-transport satisfies the encryption and recovery naturality square.
-An accepted cochain commitment records the exact component under a selected
-decoder, and the same artifact enters a snapshot-bound proof-carrying transfer.
-We prove algebraic recovery, exact joins between the committed artifact and
-the checked transfer, and a one-shot integrity bound under explicit primitive
-failure estimates. The HCP comparison gives a strict separation in information
-available to a solver: a correct CVP oracle recovers either constructed sample
-when given its lattice, but cannot choose both hidden targets from their common
-public HCP observation. The relation between the exact commitment and the
-full cochain also identifies disclosures that reveal the message. A
-finite keyed computational confidentiality theorem remains to be established.
+We construct a framework for cochain encryption and verification over finite
+cellular sheaves, with changes of presentation that preserve integral harmonic
+messages. Exact and coexact openings form a full Hodge ciphertext. An
+integer-matrix family supplies the entire intrinsic harmonic lattice, its
+metric and an explicit discrete CVP objective. Same-size presentations have
+equivalent cochain interpretations and lattice maps that preserve coefficients.
+A separate transport moves full ciphertexts between these presentations while
+retaining message and opening coordinates; exact rational algorithms and
+canonical codecs refine the construction to finite data. We distinguish the
+exact-component commitment from the full ciphertext and record both in one
+context-bound manifest used by owner authorization, packet verification and
+accepted history. A separate native observation-binding refinement identifies
+the original target message by harmonic projection, and scoped recipient
+recovery returns its coefficients or exhibits an accepted byte-hash collision.
+We derive conditional integrity from the stated primitive checks and prove
+disclosure results that constrain transport and public release. The resulting
+formalization connects the hidden geometric construction to the finite object
+named by a public action. Computational confidentiality, authorization with
+private identity and efficient private retrieval remain open.
 
-### 1. Scope and paper ownership
+### 1. Problem and contributions
 
-Homotopical encryption is motivated by a structural analogue of homomorphic
-correctness. Homomorphic correctness relates an operation on messages to an
-operation on their ciphertexts; see
-[Gentry's definitions](https://crypto.stanford.edu/craig/craig-thesis.pdf).
-Here the central operation is an admissible change of presentation within
-the same declared semantic homotopy class. For an integral chain isometry
-compatible with the harmonic-lattice encodings, the original samples satisfy
+Public verification should identify the encrypted object to which an action
+refers, even when its private cellular presentation changes. A cochain
+commitment can retain only part of that object. In the coupled family studied
+here, an integer matrix \(B\in\mathbb Z^{m\times n}\) determines the
+harmonic message \((0,z,Bz)\) and the ciphertext
 \[
-T_1\operatorname{Enc}_F(z,e)=\operatorname{Enc}_G(z,T_{\mathrm{noise}}e),
-\qquad
-\operatorname{Dec}_G(T_1b)=z=\operatorname{Dec}_F(b)
+\operatorname{Enc}_B(z,a,u)=(a,z-B^{\mathsf T}u,Bz+u),
+\qquad z\in\mathbb Z^n,\quad a\in\mathbb Z,\quad u\in\mathbb Z^m.
 \]
-on encryptions of \(z\). These are the existing
-`PresentedRotation.transport_encrypt` and recovery theorems. The underlying
-cochain equivalence also preserves the declared public class. This is the
-proved naturality square behind the analogy; a general category/functor
-package and arbitrary circuit evaluation are separate constructions. The
-larger coupled family below has actual semantic and lattice equivalences
-without supplying an isometry for every pair of presentations.
-Transport material may be private; this correctness square alone supplies no
-public translation algorithm.
+Fixing \(a\) fixes the exact component \(\delta_0a\), while changing
+\(z\) or \(u\) changes the full ciphertext. Thus a public reference to the
+exact artifact alone does not specify which encrypted cochain accompanies an
+action. The construction must preserve the message through presentation
+changes and bind both the exact artifact and full ciphertext to the same
+public context.
 
-[Fully key-homomorphic encryption](https://crypto.stanford.edu/~dabo/pubs/abstracts/lattice-abe.html)
-also studies ciphertext transformations that retain a plaintext under changed
-public keys. A novelty comparison must therefore identify our concrete
-presentation data, permitted transports, visibility and security guarantees.
-The functorial language alone supplies no novelty or security claim.
+We address these requirements through four contributions.
 
-The combined manuscript draws on the cellular Hodge primitives, homological
-Helfer fragment, HCP families and CVP comparisons of the first manuscript,
-together with the commitment, observation, storage and transaction construction
-developed here. These are stages of one encryption and verification mechanism.
-Authorized recipient recovery, representative/key rotation and storage migration
-belong to that same construction. Paper 3 owns the independent coding theorems
-and quantitative analysis of a declared application profile. Its application
-uses the same committed source without repeating the protocol contribution.
+1. **A coupled intrinsic harmonic-lattice family.** We construct the cellular
+   sheaves, prove that their entire intrinsic harmonic lattice is
+   \(\Lambda_B=\{(0,z,Bz):z\in\mathbb Z^n\}\), and identify its Gram
+   matrix \(I+B^{\mathsf T}B\) and discrete CVP objective. All integer
+   matrices of fixed dimensions give equivalent typed cochain interpretations
+   in the declared homological semantics, while the embedded harmonic space
+   determines \(B\). This supplies a family with shared face constraints in
+   which invariant semantics and embedded recovery geometry have distinct
+   roles.
 
-The first protocol endpoint is the conservative, snapshot-bound owned-resource
-transition of §6.2, with candidate-indexed evidence and an optional matching
-acceptance quorum. Section 6.3 gives a fixed-setup one-shot integrity experiment
-and conditional error-composition theorem for that checker. Primitive security
-estimates, adaptive cryptographic games, consensus finality and backend
-durability remain additional obligations. Section 6.1 specifies mathematical
-recipient recovery and rotation; authenticated delivery, lifecycle
-enforcement and bytes remain explicit contracts. The existing proofs state
-their authentication and implementation contracts explicitly.
+2. **Transport of the full ciphertext with the same message.** A cochain shear
+   preserves the declared semantic class and integer lattice coefficients.
+   We separately construct \(L_{B\to C}=M_CM_B^{-1}\) for the full
+   observation map \(M_B(a,z,u)=\operatorname{Enc}_B(z,a,u)\), proving
+   \(L_{B\to C}\operatorname{Enc}_B(z,a,u)=\operatorname{Enc}_C(z,a,u)\).
+   This transports the noisy ciphertext with the same \(z,a,u\), including
+   changes that are not isometries. Exact rational execution, canonical
+   codecs for ciphertexts and transport tokens, together with scoped recovery,
+   realize this selected integral profile as finite data. The separate maps
+   make explicit what is required
+   for valid presentation migration beyond cochain equivalence.
+
+3. **Precise commitments and disclosure consequences.** The exact-component
+   commitment, full Hodge observation and private geometry retain distinct
+   definitions and bindings. Raw coboundary openings are identified modulo
+   \(\ker\delta_0\), with modular carry recorded separately. We prove
+   recovery and disclosure results for the original observations, including
+   the fact that usable transport to a known zero presentation exposes the
+   message coefficients. These results specify which information a released
+   view and its confidentiality experiment must account for.
+
+4. **A signed reference to the same encrypted object.** One canonical
+   two-slot manifest names the original exact artifact and full ciphertext.
+   Its root enters the owner's authorization subject and checked packet, and
+   the accepted history retains that context and manifest. A separate native
+   binding certificate relates the ciphertext bytes to the original bound
+   HCP observation; harmonic projection then identifies its target message.
+   This certificate supplies the full-observation refinement beyond the
+   exact-payload verifier's declared predicate. Under fixed supplied setup,
+   the released view is reconstructed from the base view, ciphertext digest,
+   owner-signature bytes and proof bytes. This keeps the integrity experiment's
+   public inputs explicit and connects public audit references with the
+   objects used in verification and recipient recovery.
+
+Homomorphic correctness provides a useful comparison: decryption of an
+evaluated ciphertext agrees with the corresponding computation on messages
+([Gentry, Definition 2.1.1](https://crypto.stanford.edu/craig/craig-thesis.pdf)).
+Here the central commuting relation concerns admissible changes of cellular
+presentation. [Fully key-homomorphic encryption](https://crypto.stanford.edu/~dabo/pubs/abstracts/lattice-abe.html)
+also translates ciphertexts across public keys while retaining their plaintext.
+Our comparison concerns the explicit cellular presentations, intrinsic
+harmonic lattices, permitted transports and verification contracts above.
+
+Primitive security, authenticated setup and delivery, byte availability and
+backend behavior remain explicit contracts. The transfer theorem is a
+fixed-setup one-shot integrity result; rational transport is an exact reference
+algorithm without a proved polynomial running-time bound. Computational
+confidentiality, identity privacy, efficient private information retrieval,
+arbitrary circuit evaluation
+and consensus finality remain separate objectives. The known-lattice CVP
+comparison and public-data ambiguity theorem specify an information boundary;
+they supply no asymptotic hardness reduction.
+
+Sections 2–3 define the original geometry, public observations and commitment
+construction. Sections 4–5 retain the metric and disclosure hypotheses of the
+selected application. Section 6 gives transport, recipient recovery, signed
+transaction verification and the conditional integrity experiment. The parity
+table records the correspondence with the formal statements.
 
 ### 2. Maintained geometry, temporary processing and retained artifacts
 
@@ -524,13 +564,21 @@ mix requires an authenticated restricted-line profile and the corresponding
 goodness result from Paper 3. Its challenge computations and fixed-mix
 counterexamples are not repeated here.
 
-The final evidence object records the source score, each metric handoff,
-radius normalization, challenge experiment and root bindings. The existing
-candidate-indexed evidence and anchor joins preserve those statements and
-objects under their explicit contracts. They do not construct an omitted
-source comparison or turn an admissibility predicate into finality.
+A completed certificate statement must identify its source, metric handoffs,
+radii, selected challenge experiment and root bindings. Current typed
+certificates retain the supplied projection chain and calibrated far witness;
+candidate-indexed evidence and anchors retain their actual objects under
+explicit contracts. The concrete byte-level statement joining these data
+remains a protocol obligation.
 
 #### Projection certificates and retained evidence
+
+Typed mathematical certificates retain the projection chain and its supplied
+laws. Internal hard gates describe an intended local abort policy during
+generation, encryption or decryption when an invariant fails; executable guards
+and their refinement remain open. External verification parses and checks
+received bytes. The legacy proposition-level `StageAdmissibility` interface
+implements neither runtime guards nor those external checks.
 
 The protocol consumes the existing projection objects rather than replacing
 them with hash-named surrogates:
@@ -540,9 +588,34 @@ them with hash-named surrogates:
 | [ProjectionChain.Chain](../../lean/Proximity/Concrete/ProjectionChain/Core.lean) | Identify the same original cochain, declared plane extraction and finite-field encoding with the authenticated context. The quantitative source-to-code comparisons are the Paper 3 results consumed under their stated hypotheses. |
 | [Stage certificates and StateBus](../../lean/Proximity/Concrete/Gates/Stage.lean) | Retain each exact predecessor and its map/output identity. The selected projections supply both restriction and syndrome naturality squares at the cochain-to-plane and plane-to-RS boundaries, local layout nondegeneracy, codeword alignment, payload well-formedness/list shape, the expected coordinate count, selected-index bounds, codeword preservation and the near-distance handoffs. The accumulated certificate records these supplied conditions; it does not establish them for arbitrary extraction/encoding maps or create a far-preservation theorem. |
 | [Hard and final gates](../../lean/Proximity/Concrete/Gates.lean) | Keep the source score, projective chart, full-shadow respect, semantic alignment, structural naturality and calibrated far witness explicit. Their concrete validation is distinct from a supplied certificate record. |
-| [EvidenceDatabase and evidence records](../../lean/Proximity/Concrete/GateEvidence.lean) | Bind actual certificates to authenticated slot digests and the evidence root. The seven slots are the accumulated stage certificate, source metric, Plücker metric, public-shadow respect, semantic alignment, structural naturality and final far witness. Binding/inclusion/root facts remain indexed runtime contracts. |
+| [EvidenceDatabase and evidence records](../../lean/Proximity/Concrete/GateEvidence.lean) | Retain the actual certificate alongside seven named slots: accumulated stages, source metric, Plücker metric, public-shadow respect, semantic alignment, structural naturality and final far witness. `SlotBinds : EvidenceSlot → Prop` does not take the certificate, its public statement or encoded bytes. Slot completeness therefore does not establish that those bytes certify that statement. |
 | [Storage.Projection](../../lean/Protocol/Storage/Projection.lean) | Maintain the six ordered storage stages `cochain`, `plane`, `rs`, `hard`, `naturality`, `final`, preserving the exact preceding prefix and original `Context`. These six manifest stages are distinct from the seven evidence slots. |
 | [Checkpoint](../../lean/Protocol/Storage/Checkpoint.lean) and [ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean) | Seal the exact completed manifest, require its matching persistence receipt before local consumption, and join that same prefix and evidence database to the candidate's authenticated references. Backend atomicity, global freshness, erasure and finality are not consequences of this local lifecycle. |
+
+The [checked-transfer certificate contract](../../lean/Protocol/Transfer/Certificates.lean)
+uses the existing payload backend and exact expected intent \(I\). For a
+relation \(\operatorname{Binds}(I,\chi)\), its reflection rule is
+\[
+\operatorname{Holds}(\operatorname{inputFor}(I))
+\;\Longrightarrow\;\exists\chi\;\operatorname{Binds}(I,\chi).
+\]
+Actual checking and backend agreement then give a bound certificate or false
+acceptance of that actual packet proof. Without reflection, a missing
+certificate gives either false acceptance or a true backend statement that
+does not supply the required certificate. The latter alternative remains
+possible for a ledger-valid candidate. Excluding false acceptance and supplying
+reflection proves logical existence, not extraction or knowledge.
+
+A concrete `Binds` relation must identify the original context, roots and
+ciphertext digest, projection profile and calibration, and selected full proof
+metadata. Its encoding must connect that same subject and certificate to the
+slot digests, evidence root and verifier's circuit statement. Those concrete
+codec/circuit comparisons and the proof architecture remain open; neither the
+slot-only propositions nor a matching verifier identifier supplies them. The
+wire format must distinguish the public subject and proof from private witness
+fields; the Lean certificate is not itself a public byte encoding.
+The selected profile determines which certificates are required: an accepted
+exact native context need not carry a calibrated far-region certificate.
 
 The source/pair metric and radius laws are supplied by the declared Paper 3
 profile, while this paper owns their authentication and consumption. A
@@ -723,9 +796,12 @@ it supplies neither single-use authorization nor confinement of copied
 matrix data. Authentication and confidential envelope delivery remain
 explicit application contracts.
 
-The [native manifest profile](../../lean/Protocol/Storage/NativeManifest.lean)
-places the original exact artifact and the separately named full ciphertext
-in two distinct slots of the existing checkpoint engine. For the original
+The canonical [ciphertext manifest](../../lean/Protocol/Storage/CiphertextManifest.lean)
+places the original exact artifact and separately named full-ciphertext bytes
+in two distinct slots of the existing checkpoint engine. Raw sealing permits
+arbitrary bytes. The separate [native certificate](../../lean/Protocol/Storage/NativeManifest.lean)
+`BindsOriginal` relates the same seal to the original context and decoded Hodge
+observation. For the original
 target context \(\mathcal C_T\), its public directory is
 \[
 \mathcal D_M=[(\mathrm{exact},d_{\mathrm{ex}}),
@@ -737,8 +813,8 @@ private observation fields are outside that preimage. The slot roles are
 distinct even when their digest values coincide.
 
 **Proposition (Native ciphertext/history association).** Let \(M\) be an
-actual seal in this profile for the original target observation, with
-\(b_T=\operatorname{Enc}_C(z,a,u)\). An existing transition anchor for this
+actual raw seal with that native certificate and canonical sample-byte
+equality for \(b_T=\operatorname{Enc}_C(z,a,u)\). An existing transition anchor for this
 same context and seal associates its exact artifact and full-ciphertext
 directory with the candidate's authenticated history entry. The original
 target harmonic message is \((0,z,Cz)\). Given the canonical issued transport
@@ -748,8 +824,8 @@ collision. Directory membership is a consequence of the seal, not an
 independent naming premise.
 
 The [proof](../../lean/Protocol/Storage/Retrieval/NativeAnchored.lean) first
-uses canonical decoding and the full-ciphertext leaf binding to identify the
-original observed cochain. Applying its harmonic projector identifies the
+uses the native certificate's decoding equation and canonical sample bytes to
+identify the original observed cochain. Applying its harmonic projector identifies the
 message without assuming equality of private opening representatives. The
 seal determines the directory; the existing transition anchor and native
 recovery theorem then give the history association and collision alternative.
@@ -757,11 +833,16 @@ History authentication, byte availability and protected delivery keep their
 original contracts. The typed manifest-root function has no new concrete
 byte-codec or hash-security instantiation.
 
-The earlier owned-transfer packet still commits its one-slot exact-artifact
-manifest. Extending that packet/profile and aligning storage classifiers with
-the coupled semantic realization remain integration work. The association
-above does not identify \(z\) with a catalogue amount, identity or authorized
-action; those application meanings need their own proof predicate.
+The [native transfer adapter](../../lean/Protocol/Transfer/Native.lean) uses
+the actual checked owned-transfer configuration and that same raw seal.
+`Config.nativeBinding` constructs its native certificate from the original
+context/sample equations. `CheckedTransfer.native_history_recovery` retains
+the checked packet's manifest root, original artifact, computed history
+inclusion and accepted update while recovering the original coefficients or
+exhibiting accepted ciphertext substitution with the same hash. Native
+certification and canonical sample-byte equality remain explicit; exact-payload
+verification alone supplies neither. Storage-classifier alignment and the
+meaning of \(z\) as an amount, identity or authorized action remain separate.
 
 Omitting \(B,C\) as token fields supplies no key-hiding theorem. Public release
 of transport material remains a security question: the proved specialization
@@ -811,12 +892,14 @@ epoch migration.
 The [typed transcript](../../lean/Protocol/Evidence/TransferTranscript.lean)
 uses the following acyclic preparation order:
 
-1. Seal the original input payload and artifact digest in the
-   [input manifest](../../lean/Protocol/Storage/TransferManifest.lean). Its
-   root preimage is the existing base public view and one-entry slot/digest
-   directory. The leaf contains no current candidate, proof packet or enclosing
-   manifest root. This is an input-only manifest, not the six-stage projection
-   manifest or a certificate that all projection gates have been completed.
+1. Seal the original exact payload/artifact and selected full-ciphertext
+   bytes/digest in the canonical
+   [ciphertext manifest](../../lean/Protocol/Storage/CiphertextManifest.lean).
+   Its root preimage is the existing base public view and ordered two-entry
+   slot/digest directory. Neither leaf contains the current candidate, proof
+   packet or enclosing manifest root. Raw sealing does not validate the
+   ciphertext; the native certificate is separate. This input manifest is
+   distinct from the six-stage projection manifest and its gate certificates.
 2. Compute source and successor **content** roots and the pre-proof proposal
    draft. `StateContent` retains the marking, spent IDs, height, epoch, snapshot,
    topology and cochain root. It omits the current tip and evidence root.
@@ -849,7 +932,9 @@ The [packet checker](../../lean/Protocol/Evidence/TransferVerifier.lean)
 parses actual bytes, requires their canonical re-encoding, and checks equality
 with the full expected metadata and intent before the selected primitive
 Boolean verifiers. Equality of two Lean validity propositions does not bind
-these data. The signature soundness contract authorizes the exact intent.
+these data. The operational checker rejects an actual parsed packet with a
+different manifest root, without assuming digest injectivity. The signature
+soundness contract authorizes the exact intent.
 The payload verifier is indexed by the **actual trusted payload
 interpretation**; its soundness law requires the original context's
 interpretation equality and public-input equality before deriving exact
@@ -890,8 +975,8 @@ This closes the bounded mathematical transition under its stated setup,
 authorization, proof, topology and runtime contracts. It does not instantiate
 secure channels, hashing/codecs, signatures, payload proofs, authenticated
 before-state origin, atomic application/persistence, reorganization handling
-or consensus. The one-entry seal supplies no further proximity radius or
-projection-gate theorem.
+or consensus. The raw two-slot seal supplies neither native decoding validity
+nor a proximity radius or projection-gate theorem.
 
 The correctness statement in this section uses exact primitive soundness
 contracts. It supplies no computational or statistical failure bound for a
@@ -932,7 +1017,8 @@ V_{\mathrm{transfer}}=
 `CheckedTransfer.publicView` derives every coordinate from the same checked
 release. The packet contains public input/output and signer IDs, full
 metadata, original base payload/context, signature bytes and proof bytes;
-the proposal and manifest retain their existing roots and directory.
+the proposal and manifest retain their existing roots and two-slot directory,
+including the selected full-ciphertext digest.
 The private interpretation and harmonic witness are not record fields, which
 alone proves no hiding. A deterministic equality test on the released input
 ID separates any two records with different input IDs. Output or signer
@@ -1030,12 +1116,13 @@ privacy. The optional full-cochain disclosure is a separate, larger view.
 
 For a fixed supplied setup and transfer,
 [PublicAssembly](../../lean/Protocol/Transfer/PublicAssembly.lean) reconstructs
-every checked release from its public base payload, owner-signature bytes and
-proof bytes using the original manifest, hash and packet functions. An event
-bound for distributions of that actual triple carries to the full assembled
-view by deterministic postprocessing. Such a triple bound must come from
-independent algorithms and security arguments; the reconstruction alone
-asserts no hiding.
+every checked release from its public base payload, selected ciphertext digest,
+owner-signature bytes and proof bytes using the original manifest, hash and
+packet functions. An event bound for distributions of those four actual
+inputs carries to the assembled view by deterministic postprocessing. Such a
+bound must come from independent algorithms and security arguments; the
+reconstruction alone asserts no hiding. Downloaded ciphertext bytes and access
+metadata extend the experiment when available to the observer.
 
 The [finite keyed cellular family](../../lean/Sheaf/HCPFiniteKeyFamily.lean)
 provides one structural starting point. At parameter \(n\), its key is a
@@ -1467,14 +1554,15 @@ scoped one-shot integrity comparison in §6.3.
 | Cellular source and codec | [SystematicCode](../../lean/Sheaf/SystematicCode.lean), [CoordinateCodec](../../lean/Protocol/Storage/CoordinateCodec.lean), [CanonicalSystematic](../../lean/Protocol/Storage/CanonicalSystematic.lean) | Actual source and complete original-payload layout from §3.3; Paper 3 owns the validity/code and quantitative metric comparisons. |
 | Projective/payload realization | [PublicBinding](../../lean/Proximity/Concrete/PluckerCochain/PublicBinding.lean) | Hashed handles and conditional payload/frame/observation bindings; Paper 3 owns full-point reconstruction. |
 | Storage context and checkpoint lifecycle | [Context](../../lean/Protocol/Storage/Context.lean), [Checkpoint](../../lean/Protocol/Storage/Checkpoint.lean), [Projection](../../lean/Protocol/Storage/Projection.lean) | Original context, six ordered stages, exact manifests, matching receipt and terminal consumption; no backend durability, erasure or global freshness. |
-| Projection gates and evidence | [Gates](../../lean/Gates.lean), [stage certificates](../../lean/Proximity/Concrete/Gates/Stage.lean), [GateEvidence](../../lean/Proximity/Concrete/GateEvidence.lean) | Conditional certificates and seven evidence slots retain Paper 3's mathematical laws; supplied gate facts are not validation algorithms. |
-| History and proposal anchoring | [Anchor](../../lean/Protocol/Storage/Anchor.lean), [ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean), [TransferManifest](../../lean/Protocol/Storage/TransferManifest.lean) | Same artifact, exact manifest/prefix, gate database and proposal joined under indexed binding/inclusion contracts. |
+| Projection gates and evidence | [Gates](../../lean/Gates.lean), [stage certificates](../../lean/Proximity/Concrete/Gates/Stage.lean), [GateEvidence](../../lean/Proximity/Concrete/GateEvidence.lean) | Conditional certificates retain Paper 3's laws; seven slot-only propositions do not bind the actual certificate statement/bytes. Internal aborts and external verification require their own implementation/refinement. |
+| History and proposal anchoring | [Anchor](../../lean/Protocol/Storage/Anchor.lean), [ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean), [CiphertextManifest](../../lean/Protocol/Storage/CiphertextManifest.lean), [Native](../../lean/Protocol/Transfer/Native.lean) | Same artifact, canonical raw seal, checked intent and computed history join. Native recovery separately requires the original-observation certificate and sample-byte equality on that seal. |
 | Generic ledger | [ValueFlow](../../lean/Protocol/Ledger/ValueFlow.lean), [State](../../lean/Protocol/Ledger/State.lean), [Transition](../../lean/Protocol/Ledger/Transition.lean) | Constructed valuation, resource flow, nullifier state, action, candidate, policy, computed successor and conditional execution/conservation/replay laws. |
 | Checked owned transfer | [OwnedResource](../../lean/Protocol/Ledger/OwnedResource.lean), [Operational](../../lean/Protocol/Transfer/Operational.lean), [Owned](../../lean/Protocol/Transfer/Owned.lean), [Anchored](../../lean/Protocol/Transfer/Anchored.lean) | The fixed-catalogue/snapshot/epoch central transition of §6.2; derived validity/update under the stated check and primitive contracts. |
 | Transcript and checked evidence | [TransferTranscript](../../lean/Protocol/Evidence/TransferTranscript.lean), [TransferCheck](../../lean/Protocol/Evidence/TransferCheck.lean), [TransferEnvelope](../../lean/Protocol/Evidence/TransferEnvelope.lean) | Acyclic intent/metadata/packet/root construction and exact checker/evidence joins; raw checks remain distinct from exact soundness interfaces. |
 | Signing and authorized issuance | [Signing](../../lean/Protocol/Transfer/Signing.lean), [Issuance](../../lean/Protocol/Transfer/Issuance.lean), [Authorization](../../lean/Protocol/Transfer/Authorization.lean) | Full-intent/domain binding, actual authorized history and fixed-policy consequences; no adaptive signing security is inferred. |
 | Native path proof and outer codec | [PathSignature](../../lean/Protocol/Transfer/PathSignature.lean), [Codec](../../lean/Protocol/Transfer/PathSignature/Codec.lean) | Conditional original credential/path witness and proof execution; concrete outer framing, with finite inner encodings, knowledge and unforgeability still required. |
 | Primitive failures and one-shot integrity | [PrimitiveChecks](../../lean/TCB/PrimitiveChecks.lean), [Primitives](../../lean/Protocol/Transfer/Primitives.lean), [Security](../../lean/Protocol/Transfer/Security.lean) | Actual verifier/history interfaces and conditional shared-PMF failure composition; primitive error estimates and adaptive games remain supplied. |
+| Certificate reflection | [Certificates](../../lean/Protocol/Transfer/Certificates.lean) | Exact-intent logical existence or actual backend false acceptance; without reflection, missing certificates expose false acceptance or a statement mismatch even when ledger-valid. Concrete subject/codec/circuit binding, proof architecture and extraction remain open. |
 | Proof/TCB envelopes | [ProofCarrying](../../lean/TCB/ProofCarrying.lean), [SNARK](../../lean/TCB/SNARK.lean), [CompressionBoundary](../../lean/TCB/CompressionBoundary.lean), [WitnessVerifier](../../lean/TCB/WitnessVerifier.lean), [Runtime](../../lean/TCB/Runtime.lean) | Named proof/compression/runtime contracts. Legacy well-formedness includes statement truth and cannot establish independent concrete verifier soundness. |
 | Retrieval | [Retrieval](../../lean/Protocol/Storage/Retrieval.lean) | Original Hodge query/answer correctness, digest-check/collision recovery and whole-bucket selector privacy; efficient PIR and general native-query privacy remain open. |
 | Committee and quorum kernel | [Committee](../../lean/Protocol/Consensus/Committee.lean), [Vote](../../lean/Protocol/Consensus/Vote.lean), [Quorum](../../lean/Protocol/Consensus/Quorum.lean), [Certified](../../lean/Protocol/Ledger/Certified.lean) | Registered weights, authenticated proposal-bound votes, strict quorums and conditional intersection/safety; rounds, locks and finality are not supplied. |
@@ -1486,7 +1574,7 @@ completed bounded transition claim.
 
 | Family | Canonical modules | Status and boundary |
 |---|---|---|
-| Compatibility axiom/gate bundles | [Foundation](../../lean/Axioms/Foundation.lean), [Ledger](../../lean/Axioms/Ledger.lean), [Consensus](../../lean/Axioms/Consensus.lean), [StageAdmissibility](../../lean/Axioms/StageAdmissibility.lean) | Named proposition-level obligations and stage interfaces; they do not replace the proved cellular primitives, concrete ledger invariants or actual verifier agreement. |
+| Compatibility axiom/gate bundles | [Foundation](../../lean/Axioms/Foundation.lean), [Ledger](../../lean/Axioms/Ledger.lean), [Consensus](../../lean/Axioms/Consensus.lean), [StageAdmissibility](../../lean/Axioms/StageAdmissibility.lean) | Proposition-level critical-pass/admissibility obligations; they do not implement local aborts, construct typed projection certificates or establish external verifier reflection. |
 | Oracle and Heyting policy | [OracleModality](../../lean/Axioms/OracleModality.lean), [Heyting](../../lean/Axioms/Heyting.lean), [Protocol.Oracle](../../lean/Protocol/Oracle.lean) | Finite algebra/quotient laws and interfaces exist; authenticated operational oracle/retry behavior is outside the bounded transition. |
 | PoV, spectral geometry and reliability | [Consensus](../../lean/Consensus.lean), [SpectralBounds](../../lean/Axioms/SpectralBounds.lean), [Grassmannian](../../lean/Axioms/Grassmannian.lean) | Supporting interfaces and conditional score bounds, not secure validator selection, economic Sybil resistance or finality. |
 | Coregulator | [Coregulator interface](../../lean/Axioms/Coregulator.lean), [protocol attachment](../../lean/Protocol/Coregulator.lean) | Named predict/observe/update obligations; no constructed settling controller. |

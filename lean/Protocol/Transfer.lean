@@ -2,11 +2,13 @@ module
 
 public import Protocol.Transfer.Owned
 public import Protocol.Transfer.Anchored
+public import Protocol.Transfer.Native
 public import Protocol.Transfer.PublicView
 public import Protocol.Transfer.PublicAssembly
 public import Protocol.Transfer.Confidentiality
 public import Protocol.Transfer.Security
 public import Protocol.Transfer.Primitives
+public import Protocol.Transfer.Certificates
 public import Protocol.Transfer.Authorization
 public import Protocol.Transfer.PathSignature
 
@@ -21,7 +23,7 @@ manifest interfaces. The same checks without assumed primitive soundness give
 a one-shot accepted-invalid reduction and sampled error-composition theorem.
 The exact released record retains its public identifiers and original objects.
 For fixed supplied setup and transfer, the same record is assembled from its
-base payload and the signature/proof bytes. A checked-release challenge shows
+base payload, selected ciphertext digest and signature/proof bytes. A checked-release challenge shows
 that changed public input IDs give perfect branch distinction.
 Primitive error bounds, cryptographic implementations, ledger geometry migration
 and finality remain separate obligations.
@@ -44,4 +46,11 @@ with supplied credential-opening, partial finite decoding and path-realization
 contracts. It feeds owner-signature bytes through the existing proof backend;
 encoding/statement reflection, authenticated setup and knowledge security remain
 explicit obligations rather than consequences of existential witness validity.
+
+The native adapter uses this same two-slot manifest and the actual checked
+history anchor. Its separate original-observation certificate and canonical
+sample bytes connect retained-base recovery to the original harmonic message,
+with an accepted byte-hash collision as the substitution alternative. The
+certificate reflection rule records the additional exact-intent obligation
+needed for a selected proof backend to entail a bound typed certificate.
 -/

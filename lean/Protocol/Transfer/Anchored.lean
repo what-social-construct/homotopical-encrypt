@@ -11,7 +11,7 @@ public import Protocol.Storage.Anchor
 
 All roots below are computed from explicit typed preimages. The entire packet,
 including its metadata, signature and proof bytes, determines the evidence
-root. The original input manifest is included in the block preimage. These
+root. The exact-artifact/full-ciphertext manifest is included in the block preimage. These
 equations assert neither collision resistance nor digest inversion.
 
 The operational checker has already derived candidate validity. The semantic
@@ -57,12 +57,13 @@ def bindings (packet : ProofPacket Owner) :
     packet.intent = config.subject candidate packet.intent.transfer ∧
     root = config.hashes.evidence packet
 
-/-- This exact input manifest is included through the acyclic block preimage. -/
-def history (packet : ProofPacket Owner) : Storage.HistoryBindings F ℕ ℕ Unit
-    (fun _ => Axioms.CochainCommitmentData) where
+/-- This exact two-slot input manifest is included through the acyclic block preimage. -/
+def history (packet : ProofPacket Owner) : Storage.HistoryBindings F ℕ ℕ Storage.CiphertextManifest.Slot
+    Storage.CiphertextManifest.Payload where
   manifestIncluded candidate context items root block :=
     context = config.context ∧
-    items = [Storage.TransferManifest.inputItem config.context] ∧
+    items = [Storage.CiphertextManifest.exactItem config.context,
+      Storage.CiphertextManifest.ciphertextItem config.hashes.ciphertext config.ciphertext] ∧
     root = config.manifest.root ∧
     packet.intent = config.subject candidate packet.intent.transfer ∧
     block = config.hashes.block

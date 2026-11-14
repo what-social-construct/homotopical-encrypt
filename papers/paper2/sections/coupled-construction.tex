@@ -1,26 +1,106 @@
 % Working section of the combined HCP and proof-carrying transaction manuscript.
-% Canonical prose counterpart: ../DRAFT.md, Sections 2.1 and 6.3.1.
+% Canonical prose counterpart: ../DRAFT.md, opening and coupled/native sections.
 % Requires amsmath, amssymb, amsthm and proposition/theorem environments.
-\section{Coupled harmonic lattices and their public class}
-\label{sec:coupled-harmonic-construction}
+\begin{abstract}
+We construct a framework for cochain encryption and verification over finite
+cellular sheaves, with changes of presentation that preserve integral harmonic
+messages. Exact and coexact openings form a full Hodge ciphertext. An
+integer-matrix family supplies the entire intrinsic harmonic lattice, its
+metric and an explicit discrete CVP objective. Same-size presentations have
+equivalent cochain interpretations and lattice maps that preserve coefficients.
+A separate transport moves full ciphertexts between these presentations while
+retaining message and opening coordinates; exact rational algorithms and
+canonical codecs refine the construction to finite data. We distinguish the
+exact-component commitment from the full ciphertext and record both in one
+context-bound manifest used by owner authorization, packet verification and
+accepted history. A separate native observation-binding refinement identifies
+the original target message by harmonic projection, and scoped recipient
+recovery returns its coefficients or exhibits an accepted byte-hash collision.
+We derive conditional integrity from the stated primitive checks and prove
+disclosure results that constrain transport and public release. The resulting
+formalization connects the hidden geometric construction to the finite object
+named by a public action. Computational confidentiality, authorization with
+private identity and efficient private retrieval remain open.
+\end{abstract}
+
+\section{Problem and contributions}
+
+Public verification should identify the encrypted object to which an action
+refers, even when its private cellular presentation changes. A cochain
+commitment can retain only part of that object. In the coupled family studied
+here, an integer matrix \(B\in\mathbb Z^{m\times n}\) determines the harmonic
+message \((0,z,Bz)\) and ciphertext
+\[
+ \operatorname{Enc}_B(z,a,u)=(a,z-B^{\mathsf T}u,Bz+u),
+ \qquad z\in\mathbb Z^n,\quad a\in\mathbb Z,\quad u\in\mathbb Z^m.
+\]
+Fixing \(a\) fixes the exact component \(\delta_0a\), while changing \(z\) or
+\(u\) changes the full ciphertext. Thus a public reference to the exact
+artifact alone does not specify which encrypted cochain accompanies an
+action. The construction must preserve the message through presentation
+changes and bind both the exact artifact and the full ciphertext to the same
+public context.
+
+We establish four connected results.
+\begin{enumerate}
+\item \textbf{A coupled intrinsic harmonic-lattice family.}
+The actual cellular sheaves have intrinsic lattice
+\(\{(0,z,Bz):z\in\mathbb Z^n\}\), Gram matrix \(I+B^{\mathsf T}B\), and
+an explicit discrete CVP objective. All integer matrices of fixed dimensions
+give equivalent typed cochain interpretations in the declared homological
+semantics, while the embedded harmonic space determines \(B\). The shared
+face constraints separate invariant semantics from the embedded geometry
+used for recovery.
+
+\item \textbf{Transport of the full ciphertext with the same message.}
+A cochain shear preserves the declared class and integer message
+coefficients. A separate map \(L_{B\to C}=M_CM_B^{-1}\), where
+\(M_B(a,z,u)=\operatorname{Enc}_B(z,a,u)\), transports the actual noisy
+sample with unchanged \(z,a,u\), including between nonisometric
+presentations. Exact rational execution, canonical ciphertext and token
+codecs, and scoped recovery refine this map to finite data. The distinction
+explains why cochain equivalence alone does not supply ciphertext migration.
+
+\item \textbf{Precise commitments and disclosure consequences.}
+The exact artifact, full observation and private geometry have distinct
+roles. Raw openings are identified modulo \(\ker\delta_0\), with modular
+carry treated separately. Recovery and disclosure theorems concern the
+original observation; in particular, usable transport to a known zero
+presentation reveals the message coordinates. These results specify
+information that a security experiment must account for.
+
+\item \textbf{A signed reference to the same encrypted object.}
+One canonical two-slot manifest names the exact artifact and full ciphertext,
+and its root enters owner authorization, the checked packet and accepted
+history. A separate native binding certificate relates its bytes to the
+original bound HCP observation, whose harmonic projection identifies the
+target message. This supplies the full-observation refinement beyond the
+exact-payload verifier's declared predicate. For fixed setup, the released
+view is reconstructed from the base storage view, ciphertext digest,
+owner-signature bytes and proof bytes. These explicit inputs join public
+audit, verification and recipient recovery.
+\end{enumerate}
 
 Homomorphic correctness requires evaluation on ciphertexts to agree with
-evaluation on messages \cite{gentry2009fullyHomomorphic}. The homotopical
-analogue developed here concerns admissible presentation transport.
-For an integral chain isometry compatible with the harmonic-lattice encodings,
-the existing sample-level transport and recovery theorems give
-\[
- T_1\operatorname{Enc}_F(z,e)
-   =\operatorname{Enc}_G(z,T_{\mathrm{noise}}e),\qquad
- \operatorname{Dec}_G(T_1b)=z=\operatorname{Dec}_F(b)
-\]
-on encryptions of \(z\). The underlying cochain equivalence preserves the
-declared semantic homotopy class. This naturality square states the proved
-analogy. Transport material may be private; the equation alone supplies no
-public translation algorithm. Ciphertext transformation under changed
-public keys also appears in fully key-homomorphic encryption
-\cite{bonehEtAl2014keyHomomorphic}. Our comparison concerns the concrete
-presentation data, permitted transports and their semantic class.
+evaluation on messages \cite[Definition 2.1.1]{gentry2009fullyHomomorphic}.
+Here the central commuting relation concerns an admissible change of
+cellular presentation. Fully key-homomorphic encryption also translates
+ciphertexts across public keys while retaining their plaintext
+\cite{bonehEtAl2014keyHomomorphic}. The comparison concerns the explicit
+cellular presentations, intrinsic lattices, permitted transports and
+verification contracts developed here.
+
+Primitive security, authenticated setup and delivery, byte availability and
+backend behavior remain explicit contracts. The transfer theorem gives
+fixed-setup one-shot integrity; rational transport is an exact reference
+algorithm without a proved polynomial running-time bound. Computational
+confidentiality, identity privacy, efficient private retrieval, arbitrary
+circuit evaluation and finality require separate constructions. The
+known-lattice CVP comparison and public-data ambiguity specify an information
+boundary rather than an asymptotic hardness reduction.
+
+\section{Coupled harmonic lattices and their public class}
+\label{sec:coupled-harmonic-construction}
 
 The cellular sheaf determines the cochain complex before a message is chosen.
 For an integral presentation, the admissible messages form the subgroup
@@ -125,6 +205,17 @@ the noise in~\eqref{eq:coupled-hodge-encryption}. The protocol's
 \texttt{PresentedRotation} retains its stronger integral-isometry and
 same-coefficient conditions. The admitted semantic family can therefore be
 larger than a proved protocol rotation orbit.
+
+For an integral chain isometry compatible with the harmonic-lattice encodings,
+sample-level transport and recovery give
+\[
+ T_1\operatorname{Enc}_F(z,e)
+   =\operatorname{Enc}_G(z,T_{\mathrm{noise}}e),\qquad
+ \operatorname{Dec}_G(T_1b)=z=\operatorname{Dec}_F(b)
+\]
+on encryptions of \(z\). The underlying cochain equivalence preserves the
+declared semantic homotopy class. Transport material may be private; this
+correctness equation alone supplies no public translation algorithm.
 
 \begin{proposition}[Native ciphertext transport]
 \label{prop:coupled-native-transport}
@@ -243,8 +334,10 @@ supplies object naming and binding; private material supplies recovery.
 
 \subsection{Native ciphertext manifests and history}
 
-The selected native manifest retains the original exact artifact and the
-full ciphertext in two distinct slots. For the original target context
+The canonical raw manifest retains the original exact artifact and full
+ciphertext bytes in two distinct slots. It accepts arbitrary bytes, including
+malformed inputs; sealing records their names rather than assuming their
+semantic validity. For a context
 \(\mathcal C_T\), let \(d_{\mathrm{ex}}\) be its exact-artifact digest and
 \(d_b=H(\operatorname{encode}(b_T))\) its separate ciphertext content ID.
 The public directory and root input are
@@ -258,32 +351,68 @@ Distinct slot roles do not require unequal digest values.
 
 \begin{proposition}[Native ciphertext/history association]
 \label{prop:coupled-native-manifest}
-Let \(M\) be an actual seal in this profile for the original target
-observation, binding the canonical bytes of
-\(b_T=\operatorname{Enc}_C(z,a,u)\). An existing transition anchor for this
-same context and seal associates its original exact artifact and ciphertext
-directory with the candidate's history entry. The target's original harmonic
-message is \((0,z,Cz)\). Given the canonical issued native transport token
-and available target bytes, lookup in \(M\)'s derived public view recovers
-\(z\), or accepted ciphertext substitution exhibits a byte-hash collision.
+Let \(M\) be the actual raw seal of a checked owned transfer whose selected
+bytes are the canonical encoding of
+\(b_T=\operatorname{Enc}_C(z,a,u)\). Suppose a separate native binding
+certificate identifies its context and decoded ciphertext with an original
+bound HCP observation \(O\). The checked intent names \(M\)'s root, and its
+computed transition anchor records the same exact artifact and ciphertext
+directory in accepted history. The original harmonic message of \(O\) is
+\((0,z,Cz)\). Given the canonical issued native transport token, the stated
+runtime conditions and available target bytes, lookup in \(M\)'s derived
+public view recovers \(z\), or accepted ciphertext substitution exhibits a
+byte-hash collision.
 \end{proposition}
 
 \begin{proof}
-Canonical decoding and the full-ciphertext leaf binding identify the native
-sample's observation with the original target observation. Applying the
-fixed target harmonic projector identifies its message without requiring
-equality of private opening representatives. The seal fixes the directory
-and derives ciphertext membership. The existing transition anchor carries
-that same context, ordered manifest and root into history; the native
-recovery law gives the stated collision alternative under availability.
+The native certificate gives the original context equality and the
+full-ciphertext decoder equation. Applying the target's original harmonic
+projector identifies its message without requiring equality of private
+opening representatives. The raw seal fixes the directory and derives
+ciphertext membership. The checked intent names that seal's root; the
+computed transition anchor carries the same context, ordered manifest and
+root into accepted history. The native recovery law gives the stated
+collision alternative under availability and scoped delivery.
 \end{proof}
 
-History authentication and the typed manifest-root function retain their
-explicit contracts; no new root byte codec or hash-security instance is
-constructed. The earlier owned-transfer signed packet still uses its
-one-slot manifest. Neither that packet extension nor a relation from harmonic
-coefficients to catalogue amounts, identities or action semantics is supplied
-by this same-context association. Storage-classifier alignment remains open.
+The certificate refines the existing raw owned-transfer configuration; it
+introduces no alternate packet or manifest profile. Canonical sample bytes,
+the original sample equation and context equality construct it. The generic
+exact-payload verifier establishes only its declared payload predicate and
+does not supply this full-observation certificate. History authentication and
+the typed manifest-root function retain their explicit contracts. A relation
+from harmonic coefficients to catalogue amounts, identities or action
+semantics, and storage-classifier alignment, remain application obligations.
+
+For fixed setup, assembly of the released view factors through four varying
+inputs:
+\[
+ (V_{\mathrm{base}},\,d_b,\,\text{owner-signature bytes},\,\text{proof bytes}).
+\]
+In particular \(d_b\) appears in the released directory and cannot be absorbed
+into fixed setup. The directory exposes a content identifier; the selected
+view does not thereby release the ciphertext bytes or private presentation.
+This factorization accounts for the released inputs without proving their
+joint confidentiality.
+
+\subsection{Certificate reflection at the proof boundary}
+
+An evidence slot alone does not bind an actual certificate to the expected
+intent, subject or bytes. The certificate-reflection interface records the
+needed implication for the exact expected public intent \(I\):
+\[
+ \operatorname{Holds}(\operatorname{inputFor}(I))
+   \ \Longrightarrow\ \exists Q.\ \operatorname{Binds}(I,Q).
+\]
+The application relation must bind the relevant context, roots, ciphertext
+digest, projection profile, calibration and proof metadata. The existing
+slot-indexed evidence assertions do not instantiate that relation. With
+reflection, a successful check yields an exactly bound certificate or an
+actual backend false acceptance. Without reflection, a true declared
+predicate may still lack the intended certificate, even for a valid
+candidate. This is logical existence, not witness extraction or a
+message-bound proof-of-knowledge construction. Concrete certificate codecs,
+digest binding and verifier-statement reflection remain to be supplied.
 
 Public records may link the ciphertext content ID to context, evidence and
 successor actions. The intended privacy profile permits auditing those
@@ -301,5 +430,5 @@ openings and recovery. Encrypted linear query evaluation is an optional
 application. A later comparison with fully homomorphic encryption should
 inventory the actual supported operations and their security statements.
 
-The shared parity register records the construction, encodings, transport
-square and their formal boundaries as H81--H98.
+The shared parity register maps these constructions, encodings, transport and
+verification statements to their formal declarations.

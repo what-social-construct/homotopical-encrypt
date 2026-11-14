@@ -1,7 +1,7 @@
 module
 
 public import Protocol.Ledger.OwnedResource
-public import Protocol.Storage.PublicView
+public import Protocol.Storage.CiphertextManifest
 public import Protocol.Consensus.Vote
 
 @[expose] public section
@@ -11,7 +11,7 @@ public import Protocol.Consensus.Vote
 
 The public intent contains its schema/statement/policy signing domain, the
 transfer, original public cochain/context view, an unsigned proposal draft and
-an independently prepared manifest root. The
+an independently prepared canonical exact-artifact/full-ciphertext manifest root. The
 proof packet retains exact metadata, owner-signature bytes and proof bytes.
 The evidence hash is computed from that packet before the block hash; neither
 preimage contains its own enclosing digest.
@@ -216,20 +216,19 @@ structure ProofPacket (Owner : Type) where
   ownerSignature : List UInt8
   proofBytes : List UInt8
 
-/-- Public manifest input excludes its enclosing root and semantic leaf payloads. -/
-structure ManifestPreimage where
-  base : Storage.PublicPayloadView
-  directory : List (Unit × TCB.Hash32)
+/-- The same canonical two-slot public preimage used by storage. -/
+abbrev ManifestPreimage := Storage.CiphertextManifest.PublicPreimage
 
 namespace ManifestPreimage
 
-def ofView (view : Storage.PublicManifestView Unit) : ManifestPreimage :=
-  ⟨view.base, view.directory⟩
+def ofView (view : Storage.PublicManifestView Storage.CiphertextManifest.Slot) : ManifestPreimage :=
+  (view.base, view.directory)
 
 def toView (preimage : ManifestPreimage) (root : TCB.Hash32) :
-    Storage.PublicManifestView Unit := ⟨preimage.base, root, preimage.directory⟩
+    Storage.PublicManifestView Storage.CiphertextManifest.Slot :=
+  ⟨preimage.1, root, preimage.2⟩
 
-theorem reconstruct (view : Storage.PublicManifestView Unit) :
+theorem reconstruct (view : Storage.PublicManifestView Storage.CiphertextManifest.Slot) :
     (ofView view).toView view.root = view := by
   cases view
   rfl
@@ -248,6 +247,8 @@ structure HashSuite (Owner : Type) where
   state : StateContent → TCB.Hash32
   /-- Original payload leaf digest. -/
   cochain : Axioms.CochainCommitmentData → TCB.Hash32
+  /-- Separately named full-ciphertext bytes. -/
+  ciphertext : List UInt8 → TCB.Hash32
   /-- Enclosing ordered cochain leaves, distinct from the payload-leaf role. -/
   cochainRoot : List TCB.Hash32 → TCB.Hash32
   manifest : ManifestPreimage → TCB.Hash32

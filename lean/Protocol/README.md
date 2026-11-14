@@ -21,15 +21,17 @@ existing authenticated proposal and quorum types.
 | [Ephemeral/NativeDelivery](Ephemeral/NativeDelivery.lean) | Exported by `Protocol.Ephemeral`: exact rational native transport, canonical scoped tokens and held-token byte migration/recovery on the original contexts. Uses the same delivery receipt; concrete protected delivery remains an application obligation. |
 | `Transfer` | Focused conditional owned-resource profile: actual catalog and public input-ID nullifier, typed canonical packet checks, trusted-decoder proof result, derived candidate/update, staged hash inputs and original input-manifest/evidence/history joins. Secure primitives and runtime/state-origin/finality contracts remain explicit. |
 | `Evidence/TransferCheck`, `Transfer/Operational` | The same canonical packet and resource checks without assumed primitive soundness; local semantic good facts derive validity and actual accepted-invalid outcomes reduce to authorization or exact-payload false acceptance. |
-| `Transfer/PublicView`, `Transfer/PublicAssembly`, `Transfer/Confidentiality`, `Transfer/Security` | Original checked release; exact reconstruction from fixed supplied setup, base payload and signature/proof bytes; perfect branch distinction for changed public input IDs; conditional one-shot integrity error bound. The assembly event bound requires an independently justified input-triple bound. No primitive estimate or HCP privacy theorem follows. |
+| `Transfer/PublicView`, `Transfer/PublicAssembly`, `Transfer/Confidentiality`, `Transfer/Security` | Original checked release; exact reconstruction from fixed supplied setup, base payload, ciphertext digest and signature/proof bytes; perfect branch distinction for changed public input IDs; conditional one-shot integrity error bound. The assembly event bound requires an independently justified bound on those four variable fields. No primitive estimate or HCP privacy theorem follows. |
 | `Transfer/Primitives` | Actual owner/key/message/history and byte-proof backend agreement, with five-event same-PMF error composition. Query coverage, backend-to-original-context refinement and concrete primitive budgets remain explicit. Current spectral runtime paths do not instantiate these joins. |
+| [Transfer/Certificates](Transfer/Certificates.lean) | Checks the selected backend on the exact expected intent and actual proof bytes. A supplied statement-to-certificate reflection law gives an intent-bound certificate or concrete backend false acceptance. Without reflection, missing certification may instead expose a backend/certificate statement mismatch, even when the ledger candidate is valid. Logical existence is not witness extraction or knowledge security. |
 | `Transfer/Signing`, `Transfer/Issuance`, `Transfer/Authorization` | Reuse the complete subject, packet codec, existing key map/history and release carrier. Construct owner-domain byte checks and exact authorized query projection; the bounded fixed-policy theorem excludes queried-unauthorized targets and leaves four same-PMF errors. Concrete wire/key/oracle refinement remains separate. |
 | `Transfer/PathSignature` | Partial finite-byte decoding and a supplied path realization retain the original credential opening, admissible path and rotation. The existing proof backend executes on credential/full-signing inputs and actual `ownerSignature` bytes. Statement reflection and witness encoding remain supplied; existence establishes no knowledge or unforgeability. |
 | [Transfer/PathSignature/Codec](Transfer/PathSignature/Codec.lean) | Concrete byte-key/full-message framing, canonical parser, roundtrip and injectivity. `canonical_input_subject_eq` discharges the outer encoding premise; typed owner-packet, HCP ciphertext and private-witness codecs remain separate. |
 | [Storage/Retrieval](Storage/Retrieval.lean) | Optional native Hodge query/answer and same-answer CVP laws, local content-address verification and original HCP recovery, fixed-bucket uniform-read privacy, and a conditional joint-query obstruction. See the [storage leaf map](Storage/README.md#harmonic-lattice-recovery-and-optional-query-evaluation) for separate hypotheses. |
 | [Storage/Retrieval/Coupled](Storage/Retrieval/Coupled.lean) | Optional concrete codec join for original bound coupled samples, actual isometric rotation and scoped private delivery. Hash-checked recovery gives original coefficients or a byte collision under the existing directory and availability hypotheses. |
 | [Storage/Retrieval/Native](Storage/Retrieval/Native.lean) | Exact rational held-token recovery from canonical native ciphertext bytes and hash lookup, retaining original observations. Its generic directory naming/availability premises are separate; `NativeAnchored` derives the view and naming from an actual target seal. |
-| [Storage/NativeManifest](Storage/NativeManifest.lean), [Storage/Retrieval/NativeAnchored](Storage/Retrieval/NativeAnchored.lean) | Two-slot original exact-artifact/full-ciphertext seal and same-context recovery/history association through the existing `TransitionAnchor` over that exact manifest. Projection identifies the target's original harmonic message without equality of private opening representatives. Availability, canonical issued token and history authentication remain explicit. The old owned one-slot manifest/signed packet and catalogue/action semantics are unchanged. |
+| [Storage/CiphertextManifest](Storage/CiphertextManifest.lean), [Storage/NativeManifest](Storage/NativeManifest.lean), [Storage/Retrieval/NativeAnchored](Storage/Retrieval/NativeAnchored.lean) | One canonical raw two-slot seal for the original exact artifact and selected full-ciphertext bytes. Raw naming does not establish ciphertext validity. The separate `BindsOriginal` certificate supplies the original observation/context binding; projection and the same `TransitionAnchor` give native message/history association. Availability, canonical issued token and authentication remain explicit. |
+| [Transfer/Native](Transfer/Native.lean) | Connects the actual checked owned packet and its computed two-slot history anchor to native recovery on that same manifest. The native certificate and canonical sample-byte equation remain explicit; no relation identifies harmonic coefficients with catalogue amounts or action semantics. |
 
 `Protocol.Core` is the focused review entry point. `Protocol.Ledger` is the
 broader compatibility aggregate. Its legacy `Chain` import remains for
@@ -75,9 +77,12 @@ inventory a value independent of cochain coordinates. It derives validity
 from local resource checks and actual packet verification under signature and
 trusted-interpretation proof contracts. Owner authorization covers a typed
 pre-proof intent; the full packet determines evidence before the complete
-block proposal is constructed. Its retained manifest has the original input
-payload in one slot, separate from the six-stage projection manifest. The
-raw Boolean specification is noncomputable; it verifies no Rust implementation.
+block proposal is constructed. Its signed manifest root covers the original
+exact artifact and separately named full-ciphertext bytes in two distinct
+slots, separate from the six-stage projection manifest. Raw sealing admits
+invalid inputs; the native certificate and any required gate-certificate
+reflection remain separate from exact-payload acceptance. The raw Boolean
+specification is noncomputable; it verifies no Rust implementation.
 
 ## Exact endpoint and assumptions
 
@@ -111,7 +116,9 @@ explicit runtime/security obligations. No global hash injectivity is asserted.
 `HashedCommittedCochain` public artifact, and its evidence root. It does not
 take the full `ProofCarryingCommittedCochain` or bind serialized proof bytes,
 proof-system identifiers, statements or verifier metadata into that root.
-Full proof-evidence inclusion and its encoding remain concrete-profile work.
+The selected owned profile separately computes its evidence root from the
+actual full packet, including metadata, signature and proof bytes. Canonical
+root encodings and cryptographic binding remain concrete-profile work.
 
 `Storage.TransitionAnchor` additionally joins that candidate evidence to the
 same full public artifact, sheaf interpretation and exact sealed manifest.

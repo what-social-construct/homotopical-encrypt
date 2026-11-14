@@ -27,9 +27,10 @@ public import Protocol.Transfer
   recovery has integral/encoded rotation laws and recipient-bound delivery
   receipts under explicit channel contracts. The selected native profile also
   exports canonical ciphertext/scoped-token codecs and exact rational
-  transport/recovery through hash lookup. Native two-slot seals associate the
-  original ciphertext with same-context history under explicit bindings; the
-  old one-slot owned-transfer packet remains separate. Oracle/coregulator surfaces
+  transport/recovery through hash lookup. Owned-resource subjects sign the
+  canonical two-slot exact-artifact/ciphertext root. Raw seals admit arbitrary
+  bytes; separate original-observation certificates associate native meaning
+  with that same context and history under explicit bindings. Oracle/coregulator surfaces
   remain attachment points. Generic codec/lift instantiation,
   round/lock/finality and Rust refinement remain separate completion tasks.
   The optional HCP sampling and fixed-key span modules provide finite

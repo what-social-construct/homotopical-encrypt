@@ -8,10 +8,14 @@ public import Protocol.Transfer.Owned
 # The released record of one checked owned-resource transfer
 
 This projection retains the actual canonical packet bytes, parsed packet,
-complete proposal and original one-input manifest view. The packet includes
+complete proposal and original two-slot manifest view. The packet includes
 the public resource/signer identifiers, verifier metadata, original public
 cochain/context input, signature bytes and proof bytes. Its carrier contains
 no private interpretation, harmonic message, opening or semantic proposition.
+The manifest names both the original exact artifact and selected ciphertext
+bytes by their separate digests. This view releases the names; fetching or
+disclosing the ciphertext bytes and establishing their native meaning are
+separate operations.
 
 The record is a specified transfer release, not a complete network transcript.
 Public setup, available prior-state data, catalog access, auxiliary information
@@ -39,7 +43,7 @@ structure PublicTransferView (Owner : Type) where
   packetBytes : List UInt8
   packet : ProofPacket Owner
   proposal : Consensus.ProposalRef
-  manifest : Storage.PublicManifestView Unit
+  manifest : Storage.PublicManifestView Storage.CiphertextManifest.Slot
 
 namespace PublicTransferView
 
@@ -78,6 +82,11 @@ def base (view : PublicTransferView Owner) : Storage.PublicPayloadView :=
 
 def metadata (view : PublicTransferView Owner) : ProofMetadata :=
   view.packet.metadata
+
+/-- Read the selected ciphertext name from the released directory. An arbitrary
+view may omit it; the checked-release lemma below proves its actual value. -/
+def ciphertextDigest (view : PublicTransferView Owner) : Option TCB.Hash32 :=
+  (view.manifest.directory.find? fun item => decide (item.1 = .fullCiphertext)).map Prod.snd
 
 /-- The public-ID profile determines its singleton nullifier from the input. -/
 def nullifiers (view : PublicTransferView Owner) : List ℕ := [view.transfer.input]
@@ -127,6 +136,13 @@ theorem ne_of_manifest_ne {left right : PublicTransferView Owner}
   intro same
   exact different (congrArg PublicTransferView.manifest same)
 
+/-- Different released ciphertext names distinguish the complete records,
+without assuming that the named bytes decode or that hashing is injective. -/
+theorem ne_of_ciphertextDigest_ne {left right : PublicTransferView Owner}
+    (different : left.ciphertextDigest ≠ right.ciphertextDigest) : left ≠ right := by
+  intro same
+  exact different (congrArg ciphertextDigest same)
+
 /-- An exact equality test on the released public resource identifier. -/
 def inputTest (expected : ℕ) (view : PublicTransferView Owner) : Bool :=
   decide (view.transfer.input = expected)
@@ -155,6 +171,15 @@ def PublicTransferView.ofOperational
   packet := checked.proof.packet
   proposal := checked.candidate.proposal
   manifest := config.manifest.publicView
+
+/-- The raw checked release names the selected bytes, without asserting that
+the exact-payload verifier also validates a full HCP observation. -/
+theorem PublicTransferView.ofOperational_ciphertextDigest
+    {config : Operational.Config F Owner Asset Receipt}
+    {transfer : ResourceTransfer Owner} {bytes : List UInt8}
+    (checked : Operational.CheckedTransfer config transfer bytes) :
+    (PublicTransferView.ofOperational checked).ciphertextDigest =
+      some config.ciphertextDigest := rfl
 
 namespace CheckedTransfer
 
@@ -204,7 +229,19 @@ theorem publicView_manifest_root (checked : CheckedTransfer config transfer byte
   rfl
 
 theorem publicView_manifest_directory (checked : CheckedTransfer config transfer bytes) :
-    checked.publicView.manifest.directory = [((), config.context.artifact.digest)] := rfl
+    checked.publicView.manifest.directory =
+      [(.exactArtifact, config.context.artifact.digest),
+        (.fullCiphertext, config.ciphertextDigest)] := rfl
+
+/-- The selected ciphertext digest is an actual coordinate of the released view. -/
+theorem publicView_ciphertextDigest (checked : CheckedTransfer config transfer bytes) :
+    checked.publicView.ciphertextDigest = some config.ciphertextDigest := rfl
+
+/-- Content-addressed ciphertext naming is derived from the same checked seal. -/
+theorem publicView_ciphertext_named (checked : CheckedTransfer config transfer bytes) :
+    config.ciphertextDigest ∈ checked.publicView.manifest.directory.map Prod.snd := by
+  rw [checked.publicView_manifest_directory]
+  simp
 
 theorem publicView_proposal (checked : CheckedTransfer config transfer bytes) :
     checked.publicView.proposal = checked.candidate.proposal := rfl

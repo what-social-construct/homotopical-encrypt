@@ -15,8 +15,9 @@ bit sampler for the success event. The distinguishing advantage below is the
 absolute gap between the two deterministic output bits.
 
 The fixed configuration also fixes the sheaf, original storage context and
-payload. This is a transaction-release leakage audit, not an HCP message or
-encryption challenge with two independently chosen hidden geometries.
+payload, selected ciphertext bytes and their released digest. This is a
+transaction-release leakage audit, not an HCP message or encryption challenge
+with two independently chosen hidden geometries.
 
 The public input resource ID already gives a perfect distinguisher when the
 branches use different IDs. Thus equality of that released ID is necessary for
@@ -70,6 +71,20 @@ theorem rightView_transfer : challenge.rightView.transfer = challenge.rightTrans
   change challenge.rightChecked.proof.packet.intent.transfer = challenge.rightTransfer
   rw [challenge.rightChecked.proof.intent_eq]
   rfl
+
+/-- Both branches name the ciphertext fixed by this operational configuration. -/
+theorem leftView_ciphertextDigest :
+    challenge.leftView.ciphertextDigest = some config.ciphertextDigest :=
+  Owned.PublicTransferView.ofOperational_ciphertextDigest challenge.leftChecked
+
+theorem rightView_ciphertextDigest :
+    challenge.rightView.ciphertextDigest = some config.ciphertextDigest :=
+  Owned.PublicTransferView.ofOperational_ciphertextDigest challenge.rightChecked
+
+/-- This fixed-configuration game does not vary its encrypted-object name. -/
+theorem ciphertextDigest_eq :
+    challenge.leftView.ciphertextDigest = challenge.rightView.ciphertextDigest :=
+  challenge.leftView_ciphertextDigest.trans challenge.rightView_ciphertextDigest.symm
 
 /-- The challenger's actual public observation for the selected bit. -/
 def observe (bit : Bool) : Owned.PublicTransferView Owner :=
