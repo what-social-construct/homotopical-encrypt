@@ -146,12 +146,27 @@ alongside the exact artifact. The one-shot integrity experiment reduces
 accepted-invalid outcomes to authorization or exact-payload check failures
 and composes supplied failure budgets under one shared probability law.
 
-The [certificate-reflection boundary](../../lean/Protocol/Transfer/Certificates.lean)
-states the additional obligation that the verifier's declared predicate on the
-exact expected intent implies existence of an actually bound certificate.
-With this reflection, successful checking gives such a certificate or an
-actual backend false acceptance. Slot-only evidence assertions do not prove
-the relation, and logical existence does not supply knowledge extraction.
+The [public certificate codec](../../lean/Protocol/Transfer/Certificates/Codec.lean)
+retains full metadata and the original intent with the ciphertext digest,
+public profile, optional rational calibration and claim. Canonical evidence
+entries bind these subjects and actual proof bytes under one immutable
+seven-slot root. [Bundle checking](../../lean/Protocol/Transfer/Certificates/Bundle.lean)
+requires all five hard, six naturality or seven final slots on the same
+submitted bundle; a failed earlier prefix rejects the actual later transfer.
+[Exact calibration realization](../../lean/Protocol/Transfer/Certificates/Calibration.lean)
+identifies all four selected real radii with their rational descriptor.
+
+The [constructed statement](../../lean/Protocol/Transfer/Certificates/Statement.lean)
+discharges encoding reflection for actual native/projection certificate
+relations. Successful checking therefore yields certification or false
+acceptance on the actual submitted proof, traced to its terminal leaf in the
+projection bundle. The native relation is the existing original-observation
+binding; the projection adapter retains the actual chain, cochain input and
+certificate record, including its metric choices. The guarded transfer
+profile compares its actual database with all seven canonical leaf digests
+and the computed root, deriving `DatabaseBound` from acceptance of that same
+packet. Legacy slot labels and public profile names do not supply this
+refinement.
 
 ## Lean sources and paper ownership
 
@@ -170,7 +185,9 @@ the relation, and logical existence does not supply knowledge extraction.
 | Storage, public views and gates | [Storage.Core](../../lean/Protocol/Storage/Core.lean), [PublicView](../../lean/Protocol/Storage/PublicView.lean), [storage guide](../../lean/Protocol/Storage/README.md) |
 | Rotation, recovery and retrieval | [Ephemeral](../../lean/Protocol/Ephemeral.lean), [Retrieval](../../lean/Protocol/Storage/Retrieval.lean) |
 | Committee and proof/TCB envelopes | [Consensus.Quorum](../../lean/Protocol/Consensus/Quorum.lean), [TCB](../../lean/TCB.lean) |
-| Integrity, leakage and primitive contracts | [Transfer.Security](../../lean/Protocol/Transfer/Security.lean), [Transfer.Confidentiality](../../lean/Protocol/Transfer/Confidentiality.lean), [Transfer.Primitives](../../lean/Protocol/Transfer/Primitives.lean), [Transfer.Certificates](../../lean/Protocol/Transfer/Certificates.lean) |
+| Public certificate bytes and calibration | [Codec](../../lean/Protocol/Transfer/Certificates/Codec.lean), [Calibration](../../lean/Protocol/Transfer/Certificates/Calibration.lean), [Evidence](../../lean/Protocol/Transfer/Certificates/Evidence.lean), [Bundle](../../lean/Protocol/Transfer/Certificates/Bundle.lean) |
+| Certificate statements and actual consumption | [Statement](../../lean/Protocol/Transfer/Certificates/Statement.lean), [Native](../../lean/Protocol/Transfer/Certificates/Native.lean), [Projection](../../lean/Protocol/Transfer/Certificates/Projection.lean) |
+| Integrity, leakage and primitive contracts | [Transfer.Security](../../lean/Protocol/Transfer/Security.lean), [Transfer.Confidentiality](../../lean/Protocol/Transfer/Confidentiality.lean), [Transfer.Primitives](../../lean/Protocol/Transfer/Primitives.lean), [generic certificate contract](../../lean/Protocol/Transfer/Certificates.lean) |
 
 [Paper 1](../paper1/README.md) supplies HCP, harmonic lattices, semantic classes
 and known-lattice CVP comparisons. [Paper 3](../paper3/README.md)
@@ -190,9 +207,11 @@ transition claim. Authenticated quorums do not supply rounds, locking or finalit
 Concrete credential/proof algorithms, message-bound knowledge and
 unforgeability, packet/witness codecs beyond the selected native profile,
 authenticated roots/directories and protected recipient delivery require
-construction and verification. Certificate codecs and digest binding must
-connect actual subjects, bytes and proof metadata to the exact expected intent
-and instantiate verifier-statement reflection. A separate application
+construction and verification. The public certificate codec, digest preimages
+and intended-statement reflection are constructed; the selected CRS/proof
+algorithm still needs circuit refinement, setup authentication and a
+computational soundness/knowledge argument. Its packet serializer remains a
+supplied codec. A separate application
 relation must connect harmonic coefficients to amounts and action semantics.
 The native codecs do not encode unrestricted
 real openings. Key/noise sampling and shared-secret agreement remain open.

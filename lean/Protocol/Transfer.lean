@@ -9,6 +9,8 @@ public import Protocol.Transfer.Confidentiality
 public import Protocol.Transfer.Security
 public import Protocol.Transfer.Primitives
 public import Protocol.Transfer.Certificates
+public import Protocol.Transfer.Certificates.Native
+public import Protocol.Transfer.Certificates.Projection
 public import Protocol.Transfer.Authorization
 public import Protocol.Transfer.PathSignature
 
@@ -53,4 +55,10 @@ sample bytes connect retained-base recovery to the original harmonic message,
 with an accepted byte-hash collision as the substitution alternative. The
 certificate reflection rule records the additional exact-intent obligation
 needed for a selected proof backend to entail a bound typed certificate.
+The selected construction now supplies canonical public subjects, rational
+calibration realization, complete subject/proof byte leaves and one immutable
+seven-slot bundle. Its database-bound checker derives the actual slot/root
+equations and enforces every required predecessor. Native and projection
+intended statements reuse the original observations and accumulated certificates;
+concrete circuit/CRS soundness and knowledge remain explicit obligations.
 -/

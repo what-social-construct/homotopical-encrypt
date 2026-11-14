@@ -80,6 +80,11 @@ are explicit recovery premises. The owned signing/checking path uses this
 same two-slot root. [Checked native transfer recovery](../Transfer/Native.lean)
 then joins the actual packet, candidate and computed history anchor to native
 message recovery under its separate certificate and sample-byte premises.
+The selected [native proof statement](../Transfer/Certificates/Native.lean)
+now instantiates the certificate relation with that existing `BindsOriginal`.
+Canonical subject decoding proves its statement reflection; actual acceptance
+without the required native binding is a backend false acceptance. Concrete
+circuit/CRS refinement and cryptographic soundness remain open.
 No relation identifies recovered coefficients with catalogue amounts or
 action semantics. Storage-classifier alignment, private authorization and
 efficient PIR remain open.
@@ -119,6 +124,8 @@ efficient PIR remain open.
 | [Retrieval/Native](Retrieval/Native.lean) | Optional exact native path using the held token and explicit private source decoder. Original observations derive the contexts and retain the selected source message and target byte binding; canonical original token bytes and named available ciphertexts yield original coefficients or a byte collision. |
 | [Retrieval/NativeAnchored](Retrieval/NativeAnchored.lean) | Derives naming from the actual raw seal, uses its separate native certificate to identify the target message by harmonic projection, and combines recovery/collision with the existing `TransitionAnchor` over the same context and manifest. It associates the ciphertext with an accepted history entry without interpreting coefficients as ledger amounts/actions. |
 | [Transfer/Native](../Transfer/Native.lean) | The actual checked owned packet names this same manifest root. Its computed history anchor and native certificate give original-message recovery or an accepted ciphertext-hash collision, retaining the actual context and artifact. |
+| [Transfer/Certificates/Native](../Transfer/Certificates/Native.lean) | Constructs the intended native byte statement from the same raw configuration and existing `BindsOriginal`. Public family bytes contain only version/dimensions. Missing native binding, including malformed ciphertext, after actual checking yields backend false acceptance; no Boolean verifier soundness is assumed. |
+| [Transfer/Certificates/Projection](../Transfer/Certificates/Projection.lean) | Retains the actual mathematical record/certificate and chosen metric data. The preferred `boundConfig` checks all seven leaf digests/root against its actual database; acceptance derives `DatabaseBound` for that parsed bundle and record. Hard/naturality/final checks require the immutable bundle's first five/six/seven entries, and failed prior checks reject later acceptance. Actual chain/cochain input and final rational calibration realization remain in the intended meaning. |
 | [Retrieval/UniformRead](Retrieval/UniformRead.lean) | Downloads the whole fixed public bucket before local selection/checking/recovery. The complete declared server view and its distribution are target-independent under one shared PMF, at linear download cost. |
 | [Retrieval/LinearQueryObstruction](Retrieval/LinearQueryObstruction.lean) | Conditional public essential-column test for a joint one-hot query, with an example using varying coexact openings in the original cellular family and the existing CVP comparison. It does not decide every native query profile's privacy. |
 | [Examples](Examples.lean) | A concrete two-coordinate sheaf with zero `delta0`, a nonexact raw `[1,0]` input, accepted zero, two actual payload/plane slots, and positive/negative lifecycle fixtures. Authentication and backend receipt relations are explicitly toy equality models. |
@@ -244,7 +251,7 @@ All 32-byte values reuse `TCB.Hash32`, but their roles remain different.
 | `Context.key.parameterSet` | The selected parameter-profile identifier. |
 | `Context.key.schemaVersion` | The schema version inherited from the original snapshot. |
 | `PlaneView.storageRoot` | The enclosing public compressed-stack anchor. The canonical adapter separately joins the observation's original cochain leaf to the context. |
-| `GateEvidence.EvidenceDatabase.rootDigest` | The legacy gate-evidence root over **seven slots**: five hard-gate slots, naturality, and the final far-region witness. |
+| `GateEvidence.EvidenceDatabase.rootDigest` | The existing gate-evidence root over **seven slots**: five hard-gate slots, naturality and the final far-region witness. The selected `Certificates.Projection.boundConfig` checks it against the computed canonical directory of all seven subject/proof leaf hashes; successful verification levels still require only their five/six/seven-entry prefixes. |
 | `SealedManifest.root` | The surrounding manifest root. The projection profile has **six stage leaves** retaining accumulated gates; the native ciphertext profile has **two leaves**, exact artifact and full ciphertext. Each root belongs to its actual ordered list and context; it is not automatically the seven-slot evidence root, stack root, snapshot root or cochain leaf. |
 
 The checkpoint scheme's binding relations receive the actual context,
@@ -355,9 +362,11 @@ evidence root. Generic sealing alone does not establish those projection
 joins. A matching `CertifiedTransition` signs the same block digest and
 snapshot coordinate. Persistence still requires the exact manifest receipt.
 
-Concrete canonical preimages, hash/inclusion verification, public/private
-serialization, availability and global freshness remain profile/runtime
-obligations. A concrete preimage must exclude its own digest fields. This
+The certificate profile supplies canonical subject/proof/directory preimages
+and compares their computed digests with the actual retained database. Hash
+security, authenticated history inclusion, other public/private serializations,
+availability and global freshness remain profile/runtime obligations. Each
+preimage excludes its own digest fields. This
 fixed-`F` adapter does not implement geometry changes or key rotation.
 
 ## Local lifecycle and runtime boundary

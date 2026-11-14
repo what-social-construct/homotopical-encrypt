@@ -397,22 +397,87 @@ joint confidentiality.
 
 \subsection{Certificate reflection at the proof boundary}
 
-An evidence slot alone does not bind an actual certificate to the expected
-intent, subject or bytes. The certificate-reflection interface records the
-needed implication for the exact expected public intent \(I\):
+The public certificate subject retains the full proof metadata, original
+pre-proof intent, computed ciphertext digest, selected public profile bytes,
+optional rational calibration and a claim tag. Its concrete outer parser
+accepts exactly the canonical encoding; the existing packet codec serializes
+the empty-signature/empty-proof intent skeleton. No private certificate or
+opening is serialized. The enclosing gate/evidence/block root is excluded,
+so committing these bytes introduces no self-reference.
+
+A finite calibration descriptor \(c=(s_n,s_f,t_n,t_f)\in\mathbb Q^4\) passes
+its validity check exactly when
 \[
- \operatorname{Holds}(\operatorname{inputFor}(I))
-   \ \Longrightarrow\ \exists Q.\ \operatorname{Binds}(I,Q).
+ s_n\le s_f,\qquad t_n\le t_f,\qquad s_n\le t_n.
 \]
-The application relation must bind the relevant context, roots, ciphertext
-digest, projection profile, calibration and proof metadata. The existing
-slot-indexed evidence assertions do not instantiate that relation. With
-reflection, a successful check yields an exactly bound certificate or an
-actual backend false acceptance. Without reflection, a true declared
-predicate may still lack the intended certificate, even for a valid
-candidate. This is logical existence, not witness extraction or a
-message-bound proof-of-knowledge construction. Concrete certificate codecs,
-digest binding and verifier-statement reflection remain to be supplied.
+Realization identifies these four exact rational casts with the actual real
+calibration \(\kappa\), thereby identifying the whole calibration. Invalid
+raw descriptors remain parsable but fail the validity check; they cannot
+establish a final statement requiring realization of its actual
+\(\kappa\). This covers rational calibration data without asserting a finite
+encoding of arbitrary real radii or a far-preservation theorem.
+
+Each evidence leaf canonically encodes its actual public subject and submitted
+proof bytes. A fixed ordered directory names all seven leaves under one
+computed root. Accepted substitution for a named leaf returns the entire
+original entry or exhibits unequal bytes with equal hashes. The root preimage
+omits its own root, the verification level and private witnesses. The same
+submitted bundle and root are retained as verification advances.
+
+Hard verification checks the first five slots; naturality checks the first
+six; final verification checks all seven. Each check compares the exact
+expected subject and claim and executes the selected backend on the actual
+leaf proof. For fixed subjects, later verification requires every earlier
+check on the same submitted bundle. The operational transfer adapter rejects
+a later check when an earlier prefix fails. Committing a slot alone does not
+certify its contents.
+
+The intended byte statement is defined by actual canonical decoding and its
+certificate relation:
+\[
+ \operatorname{Holds}(x)\quad\Longleftrightarrow\quad
+ \exists S,Q.\ \bigl(\operatorname{decode}(x)=\operatorname{some}(S)
+     \ \land\ \operatorname{Meaning}(S,Q)\bigr).
+\]
+Roundtrip decoding proves exact-intent reflection for this constructed
+statement. The native relation is the existing original-observation binding
+on the same raw seal. The projection relation retains the actual hard,
+naturality or calibrated-final record, its chosen chart and metric, and the
+original cochain/chain input equality. A profile label alone does not provide
+those semantics.
+
+\begin{proposition}[Certificate consumption and predecessor checks]
+For the selected profile, successful packet checking supplies a certificate
+for its exact expected public subject or an actual backend false acceptance.
+For a projection bundle, the false acceptance is traced to its actual
+terminal leaf proof while all preceding required Boolean checks execute.
+The final check cannot waive a failed hard or naturality prefix. Its
+mathematical and database predecessors are the retained original objects.
+\end{proposition}
+
+\begin{proof}
+Canonical subject decoding identifies the exact expected intent, metadata
+and selected public coordinates. The declared statement therefore reflects
+the actual certificate relation. A successful selected verifier either has
+that statement or is a false acceptance on the actual proof bytes. Bundle
+parsing fixes all seven entries, and a later prefix contains each preceding
+check on those same entries. The wrapper's terminal verification identifies
+the actual leaf false-acceptance alternative.
+\end{proof}
+
+The guarded transfer profile also compares the retained record's actual
+database with all seven canonical leaf digests and the computed root on that
+same decoded bundle. Successful acceptance derives the database-binding
+relation and required subject/verification checks from the actual packet.
+Its predecessor laws preserve the same database and bundle. Legacy slot-only
+evidence propositions do not substitute for these executable comparisons.
+
+The construction supplies public framing, digest preimages,
+encoding/statement reflection and verifier consumption. Concrete CRS/proof
+algorithms, circuit refinement, setup authentication, computational soundness,
+knowledge and extraction remain open. The selected profile determines its
+required certificate; an accepted native context need not carry a far-region
+certificate.
 
 Public records may link the ciphertext content ID to context, evidence and
 successor actions. The intended privacy profile permits auditing those

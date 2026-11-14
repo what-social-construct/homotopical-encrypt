@@ -568,8 +568,8 @@ A completed certificate statement must identify its source, metric handoffs,
 radii, selected challenge experiment and root bindings. Current typed
 certificates retain the supplied projection chain and calibrated far witness;
 candidate-indexed evidence and anchors retain their actual objects under
-explicit contracts. The concrete byte-level statement joining these data
-remains a protocol obligation.
+explicit contracts. The selected finite certificate join is constructed below;
+authenticated history and circuit refinement remain protocol obligations.
 
 #### Projection certificates and retained evidence
 
@@ -588,34 +588,94 @@ them with hash-named surrogates:
 | [ProjectionChain.Chain](../../lean/Proximity/Concrete/ProjectionChain/Core.lean) | Identify the same original cochain, declared plane extraction and finite-field encoding with the authenticated context. The quantitative source-to-code comparisons are the Paper 3 results consumed under their stated hypotheses. |
 | [Stage certificates and StateBus](../../lean/Proximity/Concrete/Gates/Stage.lean) | Retain each exact predecessor and its map/output identity. The selected projections supply both restriction and syndrome naturality squares at the cochain-to-plane and plane-to-RS boundaries, local layout nondegeneracy, codeword alignment, payload well-formedness/list shape, the expected coordinate count, selected-index bounds, codeword preservation and the near-distance handoffs. The accumulated certificate records these supplied conditions; it does not establish them for arbitrary extraction/encoding maps or create a far-preservation theorem. |
 | [Hard and final gates](../../lean/Proximity/Concrete/Gates.lean) | Keep the source score, projective chart, full-shadow respect, semantic alignment, structural naturality and calibrated far witness explicit. Their concrete validation is distinct from a supplied certificate record. |
-| [EvidenceDatabase and evidence records](../../lean/Proximity/Concrete/GateEvidence.lean) | Retain the actual certificate alongside seven named slots: accumulated stages, source metric, Plücker metric, public-shadow respect, semantic alignment, structural naturality and final far witness. `SlotBinds : EvidenceSlot → Prop` does not take the certificate, its public statement or encoded bytes. Slot completeness therefore does not establish that those bytes certify that statement. |
+| [EvidenceDatabase and evidence records](../../lean/Proximity/Concrete/GateEvidence.lean) | Retain the actual certificate alongside seven named slots. The guarded transfer adapter compares the actual database with canonical subject/proof leaves and a computed root, deriving `DatabaseBound` on acceptance; legacy slot-only completeness does not supply that refinement. |
 | [Storage.Projection](../../lean/Protocol/Storage/Projection.lean) | Maintain the six ordered storage stages `cochain`, `plane`, `rs`, `hard`, `naturality`, `final`, preserving the exact preceding prefix and original `Context`. These six manifest stages are distinct from the seven evidence slots. |
 | [Checkpoint](../../lean/Protocol/Storage/Checkpoint.lean) and [ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean) | Seal the exact completed manifest, require its matching persistence receipt before local consumption, and join that same prefix and evidence database to the candidate's authenticated references. Backend atomicity, global freshness, erasure and finality are not consequences of this local lifecycle. |
 
-The [checked-transfer certificate contract](../../lean/Protocol/Transfer/Certificates.lean)
-uses the existing payload backend and exact expected intent \(I\). For a
-relation \(\operatorname{Binds}(I,\chi)\), its reflection rule is
-\[
-\operatorname{Holds}(\operatorname{inputFor}(I))
-\;\Longrightarrow\;\exists\chi\;\operatorname{Binds}(I,\chi).
-\]
-Actual checking and backend agreement then give a bound certificate or false
-acceptance of that actual packet proof. Without reflection, a missing
-certificate gives either false acceptance or a true backend statement that
-does not supply the required certificate. The latter alternative remains
-possible for a ledger-valid candidate. Excluding false acceptance and supplying
-reflection proves logical existence, not extraction or knowledge.
+The [public certificate subject codec](../../lean/Protocol/Transfer/Certificates/Codec.lean)
+retains the full proof metadata, original pre-proof intent, computed ciphertext
+digest, selected public profile bytes, optional rational calibration and one
+of eight claim tags. Its executable parser accepts exactly the canonical
+encoding. The original intent and metadata use the existing packet codec's
+empty-signature/empty-proof skeleton. No private certificate, opening or
+presentation is serialized, and the enclosing gate/evidence/block root is
+excluded from this preimage.
 
-A concrete `Binds` relation must identify the original context, roots and
-ciphertext digest, projection profile and calibration, and selected full proof
-metadata. Its encoding must connect that same subject and certificate to the
-slot digests, evidence root and verifier's circuit statement. Those concrete
-codec/circuit comparisons and the proof architecture remain open; neither the
-slot-only propositions nor a matching verifier identifier supplies them. The
-wire format must distinguish the public subject and proof from private witness
-fields; the Lean certificate is not itself a public byte encoding.
-The selected profile determines which certificates are required: an accepted
-exact native context need not carry a calibrated far-region certificate.
+For a rational descriptor \(c=(s_n,s_f,t_n,t_f)\), the
+[calibration check](../../lean/Protocol/Transfer/Certificates/Calibration.lean)
+tests exactly
+\[
+ s_n\le s_f,\qquad t_n\le t_f,\qquad s_n\le t_n.
+\]
+Realization identifies all four exact rational casts with the selected real
+calibration \(\kappa\); it determines that whole calibration rather than a
+name. Raw invalid descriptors remain parsable and fail the validity check.
+Final certification requires realization of its actual \(\kappa\), so an
+invalid descriptor cannot establish that intended statement. This finite
+profile does not encode arbitrary real radii or prove a far-preservation law.
+
+Each [evidence entry](../../lean/Protocol/Transfer/Certificates/Evidence.lean)
+contains the actual public subject and submitted proof bytes. Their canonical
+encoding determines the leaf digest; a versioned ordered directory names all
+seven leaves under one computed root. Accepted replacement of a named entry
+returns that complete entry or exhibits unequal bytes with equal hashes.
+The root preimage excludes its own root, the verification level and private
+witnesses. Advancing verification therefore retains the same committed
+bundle and root.
+
+The [submitted bundle checker](../../lean/Protocol/Transfer/Certificates/Bundle.lean)
+parses exactly seven entries, checks their canonical encoding and compares
+each required subject with the exact expected subject. Hard verification
+checks the first five slots, naturality the first six, and final verification
+all seven. For fixed subjects, a later level executes every preceding check
+on the *same submitted bundle*. The
+[projection adapter](../../lean/Protocol/Transfer/Certificates/Projection.lean)
+connects this execution to the actual transfer checker: failure of an earlier
+prefix rejects the later transfer. Merely committing later slots does not
+certify them.
+
+The selected [intended statement](../../lean/Protocol/Transfer/Certificates/Statement.lean)
+is defined on decoded subjects and an actual certificate relation:
+\[
+ \operatorname{Holds}(x)
+ \;\Longleftrightarrow\;
+ \exists S,\chi\;\bigl(\operatorname{decode}(x)=\operatorname{some}(S)
+   \ \land\ \operatorname{Meaning}(S,\chi)\bigr).
+\]
+Canonical decoding proves the generic exact-intent reflection rule for this
+statement, and the operational adapter executes the selected byte verifier
+on that exact encoded subject and the packet's actual proof bytes. The
+[native relation](../../lean/Protocol/Transfer/Certificates/Native.lean) is the
+existing `NativeManifest.BindsOriginal` on the same raw seal. The projection
+relation retains the actual hard, naturality or calibrated-final record and
+its certificate, including the chosen chart and metric, together with the
+original cochain/chain input equality. A public profile label alone supplies
+none of these meanings.
+
+**Proposition (Certificate consumption and predecessor checks).** In the
+selected profile, successful packet checking gives an actual certificate for
+the exact expected subject or false acceptance by the selected proof backend.
+For a projection bundle, false acceptance is traced to the actual terminal
+leaf proof, while all required earlier Boolean checks have also executed.
+The final check cannot waive a failed hard or naturality prefix. The existing
+mathematical and database predecessors are retained without rebuilding them.
+
+`Projection.boundConfig` adds an executable database guard to the actual
+transfer payload check. On that same decoded bundle it compares all seven
+leaf digests and the computed root with the retained record's actual database.
+Successful guarded acceptance derives `DatabaseBound` and the required
+subject/verification checks from the same packet bytes. Its predecessor laws
+keep that same database and bundle. Legacy slot-only `SlotBinds` propositions
+do not substitute for these comparisons.
+
+The construction supplies the public wire format, digest preimages,
+encoding/statement reflection and actual verifier consumption. Cryptographic
+CRS/proof algorithms, circuit refinement, setup authentication, computational
+soundness, knowledge and extraction remain separate obligations. The generic
+reflection interface still permits arbitrary profiles; its supplied
+reflection premise is discharged for the constructed statements above.
+Profile choice determines the required certificate: an accepted exact native
+context need not carry a calibrated far-region certificate.
 
 The source/pair metric and radius laws are supplied by the declared Paper 3
 profile, while this paper owns their authentication and consumption. A
@@ -1554,7 +1614,7 @@ scoped one-shot integrity comparison in §6.3.
 | Cellular source and codec | [SystematicCode](../../lean/Sheaf/SystematicCode.lean), [CoordinateCodec](../../lean/Protocol/Storage/CoordinateCodec.lean), [CanonicalSystematic](../../lean/Protocol/Storage/CanonicalSystematic.lean) | Actual source and complete original-payload layout from §3.3; Paper 3 owns the validity/code and quantitative metric comparisons. |
 | Projective/payload realization | [PublicBinding](../../lean/Proximity/Concrete/PluckerCochain/PublicBinding.lean) | Hashed handles and conditional payload/frame/observation bindings; Paper 3 owns full-point reconstruction. |
 | Storage context and checkpoint lifecycle | [Context](../../lean/Protocol/Storage/Context.lean), [Checkpoint](../../lean/Protocol/Storage/Checkpoint.lean), [Projection](../../lean/Protocol/Storage/Projection.lean) | Original context, six ordered stages, exact manifests, matching receipt and terminal consumption; no backend durability, erasure or global freshness. |
-| Projection gates and evidence | [Gates](../../lean/Gates.lean), [stage certificates](../../lean/Proximity/Concrete/Gates/Stage.lean), [GateEvidence](../../lean/Proximity/Concrete/GateEvidence.lean) | Conditional certificates retain Paper 3's laws; seven slot-only propositions do not bind the actual certificate statement/bytes. Internal aborts and external verification require their own implementation/refinement. |
+| Projection gates and evidence | [Gates](../../lean/Gates.lean), [stage certificates](../../lean/Proximity/Concrete/Gates/Stage.lean), [GateEvidence](../../lean/Proximity/Concrete/GateEvidence.lean), [certificate adapter](../../lean/Protocol/Transfer/Certificates/Projection.lean) | Actual records, chosen chart/metric and original chain input are retained. Five/six/seven-slot checks require the same earlier bundle; the actual guarded transfer check derives `DatabaseBound` from all seven leaf/root equations. Cryptographic verification and runtime guard refinement remain open. |
 | History and proposal anchoring | [Anchor](../../lean/Protocol/Storage/Anchor.lean), [ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean), [CiphertextManifest](../../lean/Protocol/Storage/CiphertextManifest.lean), [Native](../../lean/Protocol/Transfer/Native.lean) | Same artifact, canonical raw seal, checked intent and computed history join. Native recovery separately requires the original-observation certificate and sample-byte equality on that seal. |
 | Generic ledger | [ValueFlow](../../lean/Protocol/Ledger/ValueFlow.lean), [State](../../lean/Protocol/Ledger/State.lean), [Transition](../../lean/Protocol/Ledger/Transition.lean) | Constructed valuation, resource flow, nullifier state, action, candidate, policy, computed successor and conditional execution/conservation/replay laws. |
 | Checked owned transfer | [OwnedResource](../../lean/Protocol/Ledger/OwnedResource.lean), [Operational](../../lean/Protocol/Transfer/Operational.lean), [Owned](../../lean/Protocol/Transfer/Owned.lean), [Anchored](../../lean/Protocol/Transfer/Anchored.lean) | The fixed-catalogue/snapshot/epoch central transition of §6.2; derived validity/update under the stated check and primitive contracts. |
@@ -1562,7 +1622,8 @@ scoped one-shot integrity comparison in §6.3.
 | Signing and authorized issuance | [Signing](../../lean/Protocol/Transfer/Signing.lean), [Issuance](../../lean/Protocol/Transfer/Issuance.lean), [Authorization](../../lean/Protocol/Transfer/Authorization.lean) | Full-intent/domain binding, actual authorized history and fixed-policy consequences; no adaptive signing security is inferred. |
 | Native path proof and outer codec | [PathSignature](../../lean/Protocol/Transfer/PathSignature.lean), [Codec](../../lean/Protocol/Transfer/PathSignature/Codec.lean) | Conditional original credential/path witness and proof execution; concrete outer framing, with finite inner encodings, knowledge and unforgeability still required. |
 | Primitive failures and one-shot integrity | [PrimitiveChecks](../../lean/TCB/PrimitiveChecks.lean), [Primitives](../../lean/Protocol/Transfer/Primitives.lean), [Security](../../lean/Protocol/Transfer/Security.lean) | Actual verifier/history interfaces and conditional shared-PMF failure composition; primitive error estimates and adaptive games remain supplied. |
-| Certificate reflection | [Certificates](../../lean/Protocol/Transfer/Certificates.lean) | Exact-intent logical existence or actual backend false acceptance; without reflection, missing certificates expose false acceptance or a statement mismatch even when ledger-valid. Concrete subject/codec/circuit binding, proof architecture and extraction remain open. |
+| Public certificate bytes and calibration | [Codec](../../lean/Protocol/Transfer/Certificates/Codec.lean), [Calibration](../../lean/Protocol/Transfer/Certificates/Calibration.lean), [Evidence](../../lean/Protocol/Transfer/Certificates/Evidence.lean), [Bundle](../../lean/Protocol/Transfer/Certificates/Bundle.lean) | Canonical public subjects, actual proof-byte leaves, immutable seven-slot root and predecessor checks; exact rational realization identifies the selected real calibration. Packet serialization remains supplied. |
+| Certificate reflection and consumption | [generic contract](../../lean/Protocol/Transfer/Certificates.lean), [Statement](../../lean/Protocol/Transfer/Certificates/Statement.lean), [Native](../../lean/Protocol/Transfer/Certificates/Native.lean), [Projection](../../lean/Protocol/Transfer/Certificates/Projection.lean) | Encoding reflection and operational algorithm agreement are constructed for the actual native/projection relations. Checking yields certification or actual backend/terminal-leaf false acceptance; circuit refinement, cryptographic soundness and knowledge remain open. |
 | Proof/TCB envelopes | [ProofCarrying](../../lean/TCB/ProofCarrying.lean), [SNARK](../../lean/TCB/SNARK.lean), [CompressionBoundary](../../lean/TCB/CompressionBoundary.lean), [WitnessVerifier](../../lean/TCB/WitnessVerifier.lean), [Runtime](../../lean/TCB/Runtime.lean) | Named proof/compression/runtime contracts. Legacy well-formedness includes statement truth and cannot establish independent concrete verifier soundness. |
 | Retrieval | [Retrieval](../../lean/Protocol/Storage/Retrieval.lean) | Original Hodge query/answer correctness, digest-check/collision recovery and whole-bucket selector privacy; efficient PIR and general native-query privacy remain open. |
 | Committee and quorum kernel | [Committee](../../lean/Protocol/Consensus/Committee.lean), [Vote](../../lean/Protocol/Consensus/Vote.lean), [Quorum](../../lean/Protocol/Consensus/Quorum.lean), [Certified](../../lean/Protocol/Ledger/Certified.lean) | Registered weights, authenticated proposal-bound votes, strict quorums and conditional intersection/safety; rounds, locks and finality are not supplied. |

@@ -13,8 +13,10 @@ concrete relation must bind the actual context, roots, ciphertext digest,
 projection profile, calibration and proof metadata as appropriate to its claim;
 equality of a statement name or an evidence slot alone is insufficient. The
 slot-only propositions in `Proximity.GateEvidence.Projection.EvidenceDatabase`
-do not instantiate this relation. Concrete certificate encoders, their digest
-binding and the selected verifier's statement reflection remain obligations.
+do not instantiate this relation. The selected construction in this module's
+`Codec`, `Statement`, `Native` and `Projection` leaves supplies finite public
+subjects, actual subject/proof digest binding and encoding/statement reflection.
+Concrete circuit/CRS refinement and cryptographic soundness remain obligations.
 
 Successful checking is retained at the actual packet proof bytes and original
 expected intent. Without a reflection contract, a missing required certificate

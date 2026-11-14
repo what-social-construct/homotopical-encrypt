@@ -23,7 +23,9 @@ existing authenticated proposal and quorum types.
 | `Evidence/TransferCheck`, `Transfer/Operational` | The same canonical packet and resource checks without assumed primitive soundness; local semantic good facts derive validity and actual accepted-invalid outcomes reduce to authorization or exact-payload false acceptance. |
 | `Transfer/PublicView`, `Transfer/PublicAssembly`, `Transfer/Confidentiality`, `Transfer/Security` | Original checked release; exact reconstruction from fixed supplied setup, base payload, ciphertext digest and signature/proof bytes; perfect branch distinction for changed public input IDs; conditional one-shot integrity error bound. The assembly event bound requires an independently justified bound on those four variable fields. No primitive estimate or HCP privacy theorem follows. |
 | `Transfer/Primitives` | Actual owner/key/message/history and byte-proof backend agreement, with five-event same-PMF error composition. Query coverage, backend-to-original-context refinement and concrete primitive budgets remain explicit. Current spectral runtime paths do not instantiate these joins. |
-| [Transfer/Certificates](Transfer/Certificates.lean) | Checks the selected backend on the exact expected intent and actual proof bytes. A supplied statement-to-certificate reflection law gives an intent-bound certificate or concrete backend false acceptance. Without reflection, missing certification may instead expose a backend/certificate statement mismatch, even when the ledger candidate is valid. Logical existence is not witness extraction or knowledge security. |
+| [Transfer/Certificates](Transfer/Certificates.lean), [Certificates/Statement](Transfer/Certificates/Statement.lean) | The generic reflection contract remains available. The constructed adapter executes the selected byte verifier on the original full subject, with reflexive algorithm agreement and canonical-decoding reflection for its declared meaning. Actual checking yields certification or backend false acceptance; this supplies no arbitrary-verifier soundness or knowledge theorem. |
+| [Certificates/Codec](Transfer/Certificates/Codec.lean), [Calibration](Transfer/Certificates/Calibration.lean), [Evidence](Transfer/Certificates/Evidence.lean), [Bundle](Transfer/Certificates/Bundle.lean) | Canonical full intent/metadata subjects, optional exact rational calibration, actual subject-and-proof entry hashes and one immutable seven-entry bundle/root. Hard/naturality/final verification requires the same five/six/seven-entry prefix. A failed earlier prefix rejects later checking; raw root commitment alone certifies no gate. |
+| [Certificates/Native](Transfer/Certificates/Native.lean), [Projection](Transfer/Certificates/Projection.lean) | Instantiate the declared statement with the existing original-observation binding or exact retained projection record/certificate, including its chosen metric functions and original cochain input. Final projection meaning requires rational realization of the actual calibration. The preferred `boundConfig` checks the actual record's database root and all seven leaf digests, deriving `DatabaseBound` from acceptance. Circuit/CRS refinement, semantic profile registration and cryptographic soundness remain explicit. |
 | `Transfer/Signing`, `Transfer/Issuance`, `Transfer/Authorization` | Reuse the complete subject, packet codec, existing key map/history and release carrier. Construct owner-domain byte checks and exact authorized query projection; the bounded fixed-policy theorem excludes queried-unauthorized targets and leaves four same-PMF errors. Concrete wire/key/oracle refinement remains separate. |
 | `Transfer/PathSignature` | Partial finite-byte decoding and a supplied path realization retain the original credential opening, admissible path and rotation. The existing proof backend executes on credential/full-signing inputs and actual `ownerSignature` bytes. Statement reflection and witness encoding remain supplied; existence establishes no knowledge or unforgeability. |
 | [Transfer/PathSignature/Codec](Transfer/PathSignature/Codec.lean) | Concrete byte-key/full-message framing, canonical parser, roundtrip and injectivity. `canonical_input_subject_eq` discharges the outer encoding premise; typed owner-packet, HCP ciphertext and private-witness codecs remain separate. |
@@ -80,9 +82,13 @@ pre-proof intent; the full packet determines evidence before the complete
 block proposal is constructed. Its signed manifest root covers the original
 exact artifact and separately named full-ciphertext bytes in two distinct
 slots, separate from the six-stage projection manifest. Raw sealing admits
-invalid inputs; the native certificate and any required gate-certificate
-reflection remain separate from exact-payload acceptance. The raw Boolean
-specification is noncomputable; it verifies no Rust implementation.
+invalid inputs. The selected native and projection certificate profiles now
+construct their intended byte predicates separately from exact-payload
+acceptance. The projection profile parses the actual packet proof bytes as
+one seven-entry bundle and requires every earlier check before its selected
+level can pass. The raw transfer specification is noncomputable; the new finite
+codecs and prefix checks do not establish a Rust refinement or proof-system
+soundness.
 
 ## Exact endpoint and assumptions
 

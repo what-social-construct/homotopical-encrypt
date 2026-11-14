@@ -115,11 +115,25 @@ acceptance alone does not establish native validity. No relation identifies
 harmonic coefficients with catalogue amounts or action semantics. Storage
 classifier alignment with the coupled semantic realization remains open.
 
-The [certificate reflection rule](lean/Protocol/Transfer/Certificates.lean)
-requires a selected proof statement to entail a typed certificate bound to the
-exact checked intent. The [ownership table](docs/SEMANTIC_OWNERSHIP.md) records
-the stage/hard-gate chain and remaining certificate-to-statement-to-bytes
-binding work; evidence slot labels alone do not supply it.
+The [certificate subjects](lean/Protocol/Transfer/Certificates/Codec.lean)
+encode the original intent and metadata, ciphertext digest, public profile,
+claim and optional exact rational calibration. The actual submitted proof is
+one immutable seven-entry [bundle](lean/Protocol/Transfer/Certificates/Bundle.lean).
+Hard, naturality and final checks require its first five, six and seven entries;
+a failed predecessor rejects every later level on those same proof bytes.
+The root commits all seven raw entries, including their subjects and proof
+bytes, independently of which verification level has passed. The selected
+record-bound checker compares that root and all seven leaf digests with the
+actual retained evidence database.
+
+The [native](lean/Protocol/Transfer/Certificates/Native.lean) and
+[projection](lean/Protocol/Transfer/Certificates/Projection.lean) statements
+retain the original observation or exact mathematical certificate, including
+its chosen metric data. Canonical decoding proves statement reflection;
+certificate truth after Boolean checking still depends on excluding actual
+backend false acceptance. The [ownership table](docs/SEMANTIC_OWNERSHIP.md)
+records the remaining circuit/CRS refinement, semantic profile registration
+and cryptographic security work.
 
 The intended public history uses ciphertext content IDs and selected action
 links for auditing, while credential/policy proofs keep identity witnesses

@@ -131,8 +131,11 @@ end HardGateSlot
 /--
 Authenticated database/root view for proximity evidence.
 
-The concrete database, Merkle/Verkle root, serialization, inclusion proof, and
-hash function are Rust/TCB-owned. Lean records the shape of the public evidence.
+This generic database records the shape of the public evidence. The selected
+`Protocol.Transfer.Certificates` construction adds canonical subject/proof bytes
+and checks its computed directory/root against this exact database. Hash
+security, authenticated inclusion and persistent storage remain implementation
+contracts; the slot-only propositions below do not establish that refinement.
 -/
 structure EvidenceDatabase (runtime : TCB.RuntimeBoundary) where
   slotDigest : EvidenceSlot → TCB.Hash32
