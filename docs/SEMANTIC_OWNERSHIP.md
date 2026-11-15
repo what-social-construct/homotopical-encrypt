@@ -52,6 +52,11 @@ mathematical object.
 | Typed projection certificates | Current `HardGateCertificate`, `NaturalityGateCertificate` and `CalibratedFinalCertificate` in [Gates](../lean/Proximity/Concrete/Gates.lean). | Retain the exact projection chain and preceding certificate; final separation needs its explicit calibration witness. | Internal invariant-abort behavior, validation of arbitrary received bytes, or the proposition-only legacy `StageAdmissibility` interface. |
 | Exact-intent certificate reflection | Generic [Transfer.Certificates](../lean/Protocol/Transfer/Certificates.lean) and constructed [Statement](../lean/Protocol/Transfer/Certificates/Statement.lean), [Native](../lean/Protocol/Transfer/Certificates/Native.lean) and [Projection](../lean/Protocol/Transfer/Certificates/Projection.lean) adapters. | `Statement.withVerifier` executes the selected byte algorithm on the actual encoded intent/metadata/ciphertext subject, with reflexive algorithm agreement. Canonical decoding proves reflection for its declared actual-object meaning. Native certification uses the existing `BindsOriginal`; projection meaning retains the exact record certificate and original input relation. Missing certification after checking is traced to actual backend false acceptance. | A Boolean verifier's soundness, circuit/CRS implementation, extraction/knowledge, or authenticated semantic profile registration. |
 | Finite evidence and ordered gate checks | Current [Codec](../lean/Protocol/Transfer/Certificates/Codec.lean), [Calibration](../lean/Protocol/Transfer/Certificates/Calibration.lean), [Evidence](../lean/Protocol/Transfer/Certificates/Evidence.lean) and [Bundle](../lean/Protocol/Transfer/Certificates/Bundle.lean). | Canonical public subjects, rational calibration realization, subject-and-proof leaf hashes, and one immutable seven-entry bundle/root. Hard/naturality/final checks require the same first five/six/seven entries; failed earlier checks reject later operational acceptance. The preferred `Projection.boundConfig` checks all seven computed leaf names/root against the actual existing database; `checked_bound_record` derives `DatabaseBinds` from acceptance. | Certificate truth from hashing, private witness serialization, hash security, or evidence-root/history authentication without their selected binding contracts. |
+| Approved finite profile and execution | [Certificates/Profile](../lean/Protocol/Transfer/Certificates/Profile.lean), [Registered](../lean/Protocol/Transfer/PathSignature/Registered.lean) and [NativeRegistered](../lean/Protocol/Transfer/PathSignature/NativeRegistered.lean). | A complete acceptance quorum approves exact descriptor/program/key/CRS bytes. Applicability checks original metadata, parameters, scope/calibration and epoch. The preferred native adapter checks the exact expected program and derives the public key from the existing owner credential, actual context snapshot root and ciphertext digest; the original full message and signature bytes reach the selected parsed verifier. | Automatic application of the sampled bound without matching actual primitive/setup, context/challenge key and hash/codec; conversion of legacy authentication; owned ledger finality, credential ownership or secure setup generation. |
+| Bounded native credential relation | [NativeRelation](../lean/Protocol/Transfer/PathSignature/NativeRelation.lean) and [NativeProgram](../lean/Protocol/Transfer/PathSignature/NativeProgram.lean). | Concrete private matrix/message/opening/salt bytes with bounded validation; salted source credential, target-presentation and ciphertext names; the same original Hodge sample, typed Helfer equivalence and native full-ciphertext transport. | Instantiation of the generic fingerprint/path-to-isometric-rotation interface, automatic original artifact/lifecycle binding, hiding or individual-owner identity. |
+| Adaptive CRS reference and native security reduction | [CRS](../lean/Protocol/Transfer/PathSignature/CRS.lean), [NativeSecurity](../lean/Protocol/Transfer/PathSignature/NativeSecurity.lean). | Response-dependent bounded signing generates its actual query log. `WinningHybrid` uses the actual Boolean fresh-forgery test; it needs no statistical all-events premise. The preferred full-view experiment supplies canonical full target-ciphertext bytes while preserving remaining auxiliary data and execution. Its five terms retain hybrid, extraction failure, original coefficient recovery and two byte-hash collision probabilities. | A concrete CRS/SE primitive, numerical/negligible or PPT theorem, statistical zero knowledge, UC security, or a hardness estimate imported from the older HCP/CVP view. |
+| Finite native sampling | [NativeSampler](../lean/Protocol/Transfer/PathSignature/NativeSampler.lean). | Uniform seed law with cardinality `(2K+1)^(2mn+n+m+1) * 256^ell`, injective private-witness decoding, bounded support and an independent fixed cryptographic-tape law with the original marginals. | Uniform/distinct hash-derived public keys, efficient sampling/runtime refinement, or hardness/confidentiality for a family containing zero messages and degenerate matrices. |
+| Native arithmetic circuit core | [NativeCircuit](../lean/Protocol/Transfer/PathSignature/NativeCircuit.lean). | Generated `2mn+n+m+1` constraints admit the canonical assignment for every integer native sample, also modulo the selected modulus. Integer satisfaction recovers the actual observation; the converse modular lift requires residual `NoWrap`. | Hash/range/salt/canonical-byte gates, a complete compiler to the selected proof engine, or finite arithmetization of arbitrary real projection certificates. |
 | `SheafBlock` | Planned Paper 2 protocol term; `Protocol.Storage` supplies manifest/checkpoint and conditional anchor endpoints without defining this named type. | Persistent checkpoint record for a fixed context. The proposed public form authenticates artifact and evidence subtrees under one canonical SHA-256 manifest address. The semantic candidate/context/seal join now has source definitions; canonical bytes, backend guarantees and concrete chain inclusion remain open. | `Chain.Block`, a cellular global section, the evidence subtree root alone, or the volatile `SheafState`. |
 | `CellularSheaf.IsGlobalSection` | Current Lean identifier; overloaded `Proximity.GlobalSection` names remain a migration item. | A degree-zero stalk assignment in `ker delta0`. Ordinary endpoint-by-endpoint compatibility additionally uses the intended graph/incidence profile. | An arbitrary vertex assignment, account table, block, or accepted degree-one cochain. |
 | `AcceptedCommittedOneCochain` | Current Lean identifier. | Paper 2's payload `c` bound to one `SheafStateSnapshot`, with opening `a` and decoded exactness `I.decode c = F.delta0 a`. Raw openings are identified modulo `ker delta0`; modular carries are a separate relation. | The decoded geometric cochain itself, a degree-zero global section, or a uniquely determined opening `a`. |
@@ -164,13 +169,44 @@ including its chosen chart and metric functions. The original `Storage.Projectio
 chain to the same cochain/context. The final statement additionally requires
 the rational descriptor to realize all four actual real calibration values.
 
-Concrete circuit/CRS implementation and security, authenticated interpretation
-of the public profile descriptor, and authenticated inclusion of the computed
-database root remain obligations. A successful arbitrary Boolean algorithm
-can still be a false acceptance; declared intended semantics does not prove
-its soundness or knowledge security. The selected profile determines which
-certificates are required. An accepted exact native context need not carry a
-calibrated far-region certificate.
+The selected profile approval now authenticates exact public descriptor,
+program, verifier-key and CRS bytes through the existing complete-proposal
+quorum. The registered owner checker rejects inapplicable epochs/metadata/scopes
+or failed parsing, and then executes those actual parsed objects. Approval is
+not a state update, finality or evidence of honest setup generation. The
+program's refinement to the intended semantics remains explicit.
+
+The bounded native witness uses integer source/target matrices, message,
+openings and salt. Its existing typed Helfer equivalence and full native
+transport are separate from the generic `HasPathSpace`/isometric realization
+interface. It does not automatically construct an original bound observation
+with accepted artifact and lifecycle data.
+
+The CRS construction composes supplied setup/prover/verifier/simulator/extractor
+algorithms. Its bounded adaptive interpreter generates actual query histories;
+the conditional native forgery bound has five terms: transcript hybrid,
+extraction failure, original coefficient recovery, snapshot collision and
+ciphertext collision. The preferred `fullViewExperiment` concretely supplies
+the canonical full target ciphertext to the adversary alongside its public
+credential and commitments. It preserves the remaining auxiliary input, PMF,
+adversary, setup and random tapes, and has the same five-term bound. The
+earlier `(class,b)` ambiguity or explicit-lattice CVP comparison supplies no
+small recovery bound for this richer view.
+
+The native snapshot join uses the existing
+[CoupledBinding](../lean/Protocol/Storage/CoupledBinding.lean)
+`BindsSnapshot` profile and `context_root_eq`: the canonical target-matrix
+hash is the original context snapshot root under that profile. The canonical
+sample-byte equation similarly identifies the ciphertext digest. These are
+actual context conditions when applying the sampled theorem, alongside the
+selected setup/reference and owner-credential equality.
+
+A secure primitive implementation, its quantitative security estimates,
+complete hash/range/byte circuit refinement, semantic setup verification and
+authenticated inclusion of the computed database root remain obligations.
+A declared intended predicate alone does not prove Boolean soundness or
+knowledge. Profile-selected requirements still allow an exact native context
+without a calibrated far-region certificate.
 
 ## Boundary Is Not Implication
 

@@ -13,6 +13,12 @@ public import Protocol.Transfer.Certificates.Native
 public import Protocol.Transfer.Certificates.Projection
 public import Protocol.Transfer.Authorization
 public import Protocol.Transfer.PathSignature
+public import Protocol.Evidence.TransferCodec
+public import Protocol.Transfer.Certificates.ProfileAuthentication
+public import Protocol.Transfer.PathSignature.NativeRegistered
+public import Protocol.Transfer.PathSignature.NativeSecurity
+public import Protocol.Transfer.PathSignature.NativeSampler
+public import Protocol.Transfer.PathSignature.NativeCircuit
 
 @[expose] public section
 
@@ -40,8 +46,9 @@ Full-intent owner signing reuses the existing packet codec, subject and
 owner-key map. An authorized issuance batch projects to the existing query
 history; full message reflection excludes queried unauthorized intents under
 the same fixed policy and an explicit foreign-domain condition. Its PMF bound
-retains four primitive/context failure terms. Concrete serialization, key
-setup, arbitrary-history coverage and numerical security remain obligations.
+retains four primitive/context failure terms. A canonical byte-owner packet
+codec now serializes the original packet and complete quorum vote target;
+general owner codecs and numerical security remain separate obligations.
 
 The optional native path adapter reuses the original representative and rotation
 with supplied credential-opening, partial finite decoding and path-realization
@@ -60,5 +67,21 @@ calibration realization, complete subject/proof byte leaves and one immutable
 seven-slot bundle. Its database-bound checker derives the actual slot/root
 equations and enforces every required predecessor. Native and projection
 intended statements reuse the original observations and accumulated certificates;
-concrete circuit/CRS soundness and knowledge remain explicit obligations.
+circuit/CRS soundness and knowledge retain explicit security premises.
+
+The finite native reference construction supplies canonical bounded witnesses,
+program and public-key codecs, uniform finite seeds, the original coupled
+transport and typed homotopy equivalence, and a checked arithmetic core. Its
+adaptive CRS signing experiment executes actual queries and trapdoor extraction;
+the full-ciphertext forgery bound separates winning-event hybrid transfer,
+extraction failure, original coefficient recovery and two byte-hash collisions.
+No security estimate follows from the finite sampler alone.
+
+Authenticated profile descriptors select actual parsed program, verifier key
+and CRS bytes. The native checker also requires the exact expected program and
+derives its key from the original owner credential, context snapshot root and
+ciphertext digest. Existing quorum votes authenticate the complete descriptor
+proposal. Hash/signature security, secure setup and a concrete tagged
+simulation-extractable proof engine remain assumptions to instantiate; the
+arithmetic core does not compile canonical bytes, hashes or range checks.
 -/

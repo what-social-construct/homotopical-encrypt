@@ -23,7 +23,15 @@ reflection is separately required to infer existence of a valid finite witness.
 That existence does not depend on the message and is not knowledge security:
 a backend may ignore its public input. Actual transcript binding, extraction,
 unforgeability, setup, decoding algorithms and authenticated credential setup
-remain separate obligations. The original cochain payload proof is unchanged.
+remain separate obligations for this generic interface. The original cochain
+payload proof is unchanged.
+
+The child native modules provide a separate finite reference construction with
+canonical witnesses, the actual coupled transport and typed Helfer equivalence,
+uniform bounded seeds, adaptive CRS extraction games and authenticated program
+selection. General coupled transport is not assumed isometric, and those modules
+do not instantiate the generic isometric path decoder below. A supplied tagged
+simulation-extractable proof primitive is still required.
 -/
 
 set_option autoImplicit false

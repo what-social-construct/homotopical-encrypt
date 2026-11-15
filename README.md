@@ -131,9 +131,45 @@ The [native](lean/Protocol/Transfer/Certificates/Native.lean) and
 retain the original observation or exact mathematical certificate, including
 its chosen metric data. Canonical decoding proves statement reflection;
 certificate truth after Boolean checking still depends on excluding actual
-backend false acceptance. The [ownership table](docs/SEMANTIC_OWNERSHIP.md)
-records the remaining circuit/CRS refinement, semantic profile registration
-and cryptographic security work.
+backend false acceptance.
+
+The [bounded native relation](lean/Protocol/Transfer/PathSignature/NativeRelation.lean)
+now has canonical private matrix/message/opening/salt bytes and public salted
+credential, target-presentation and ciphertext names. Its actual samples use
+the existing typed Helfer equivalence and native full-ciphertext transport.
+The [finite native sampler](lean/Protocol/Transfer/PathSignature/NativeSampler.lean)
+assigns uniform mass to an explicitly counted seed space, decodes only bounded
+witnesses and combines them with an independent fixed cryptographic-tape law.
+Private seed uniformity gives no uniformity or hardness claim for public hashes.
+The [CRS reference construction](lean/Protocol/Transfer/PathSignature/CRS.lean)
+composes supplied primitive algorithms through bounded adaptive signing for
+a sampled credential, with generated query logs. Its
+[native security reduction](lean/Protocol/Transfer/PathSignature/NativeSecurity.lean)
+bounds forgery by the actual Boolean forgery-test hybrid, extraction failure,
+original coefficient recovery and two byte-hash collision probabilities.
+The hybrid is specific to that winning event; statistical closeness of all
+transcript sets is not required. Its preferred full-view
+experiment actually gives the adversary the canonical full target ciphertext,
+preserving the remaining auxiliary data and execution. No numerical or
+asymptotic bound is supplied; the older HCP/CVP observation theorem does not
+establish hardness for this richer public view.
+
+[Profile approval](lean/Protocol/Transfer/Certificates/Profile.lean) and the
+[registered checker](lean/Protocol/Transfer/PathSignature/Registered.lean)
+authenticate exact program/key/public-CRS bytes through the existing quorum
+and execute the actual parsed objects at the original owner checker. The
+[preferred native adapter](lean/Protocol/Transfer/PathSignature/NativeRegistered.lean)
+additionally checks the exact expected program bytes and derives the public
+key from the existing owner credential, original snapshot root and actual
+ciphertext digest. A different program rejects independently of its label. The
+sampled bound still needs the actual primitive/setup, context/challenge key
+and hash/codec interpretations to agree with the checked call. The
+[native arithmetic core](lean/Protocol/Transfer/PathSignature/NativeCircuit.lean)
+generates `2mn+n+m+1` constraints, with a satisfying assignment for every
+integer native sample and its modular reduction. The converse modular lift
+requires explicit no-wrap premises. A secure CRS primitive and complete hash/range/byte circuit compiler
+remain to be instantiated; the [ownership table](docs/SEMANTIC_OWNERSHIP.md)
+records the precise scope.
 
 The intended public history uses ciphertext content IDs and selected action
 links for auditing, while credential/policy proofs keep identity witnesses
@@ -145,8 +181,8 @@ This is a reusable context/profile-scoped capability, with the full-ciphertext
 digest checked separately. Scope checks do not authenticate a caller, prevent
 replay or confine copied matrix data. Omitting the private matrices as token
 fields supplies no key-hiding guarantee for the derived map. Protected
-delivery, shared-secret agreement, key/noise sampling and full-view security
-remain explicit construction and proof obligations.
+delivery, shared-secret agreement, justified parameter/distribution choices
+and full-view security remain explicit construction and proof obligations.
 
 These are exact mathematical comparisons. Computational hardness and
 encryption security require their stated additional assumptions.

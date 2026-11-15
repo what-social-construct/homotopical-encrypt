@@ -31,7 +31,12 @@ public import Protocol.Transfer
   canonical two-slot exact-artifact/ciphertext root. Raw seals admit arbitrary
   bytes; separate original-observation certificates associate native meaning
   with that same context and history under explicit bindings. Oracle/coregulator surfaces
-  remain attachment points. Generic codec/lift instantiation,
+  remain attachment points. The finite native CRS reference construction uses
+  canonical witness/program/byte-owner packet codecs, a bounded uniform seed
+  law and authenticated exact-program selection on the original context. Its
+  adaptive full-ciphertext forgery bound retains explicit hybrid, extraction,
+  recovery and hash-collision terms. The tagged proof primitive and its security
+  estimates remain to be instantiated. Generic codec/lift instantiation,
   round/lock/finality and Rust refinement remain separate completion tasks.
   The optional HCP sampling and fixed-key span modules provide finite
   semantic checks and conditional leakage boundaries, not an asymptotic

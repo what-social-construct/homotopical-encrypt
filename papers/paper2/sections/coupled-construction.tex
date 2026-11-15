@@ -16,11 +16,15 @@ context-bound manifest used by owner authorization, packet verification and
 accepted history. A separate native observation-binding refinement identifies
 the original target message by harmonic projection, and scoped recipient
 recovery returns its coefficients or exhibits an accepted byte-hash collision.
-We derive conditional integrity from the stated primitive checks and prove
-disclosure results that constrain transport and public release. The resulting
-formalization connects the hidden geometric construction to the finite object
-named by a public action. Computational confidentiality, authorization with
-private identity and efficient private retrieval remain open.
+For a bounded native witness, a CRS reference construction reduces adaptive
+fresh-message forgery to transcript simulation error, extraction failure,
+recovery of the original harmonic coefficients and two byte-hash collision
+events. The reduction includes the full ciphertext in the adversary's view
+and uses supplied proof-system algorithms. We also derive conditional
+transfer integrity and disclosure results. These constructions connect the
+hidden geometry to the finite object named by a public action.
+Computational confidentiality, identity privacy and efficient private
+retrieval remain open.
 \end{abstract}
 
 \section{Problem and contributions}
@@ -78,7 +82,10 @@ target message. This supplies the full-observation refinement beyond the
 exact-payload verifier's declared predicate. For fixed setup, the released
 view is reconstructed from the base storage view, ciphertext digest,
 owner-signature bytes and proof bytes. These explicit inputs join public
-audit, verification and recipient recovery.
+audit, verification and recipient recovery. A bounded native credential
+relation supplies the witness for a separate adaptive CRS reference
+construction. Its five-term forgery bound retains the original coefficient
+recovery event and the actual full-ciphertext public view.
 \end{enumerate}
 
 Homomorphic correctness requires evaluation on ciphertexts to agree with
@@ -92,8 +99,9 @@ verification contracts developed here.
 
 Primitive security, authenticated setup and delivery, byte availability and
 backend behavior remain explicit contracts. The transfer theorem gives
-fixed-setup one-shot integrity; rational transport is an exact reference
-algorithm without a proved polynomial running-time bound. Computational
+fixed-setup one-shot integrity, while the CRS construction gives a separate
+bounded adaptive reduction over supplied algorithms. Rational transport is an
+exact reference algorithm without a proved polynomial running-time bound. Computational
 confidentiality, identity privacy, efficient private retrieval, arbitrary
 circuit evaluation and finality require separate constructions. The
 known-lattice CVP comparison and public-data ambiguity specify an information
@@ -473,11 +481,212 @@ Its predecessor laws preserve the same database and bundle. Legacy slot-only
 evidence propositions do not substitute for these executable comparisons.
 
 The construction supplies public framing, digest preimages,
-encoding/statement reflection and verifier consumption. Concrete CRS/proof
-algorithms, circuit refinement, setup authentication, computational soundness,
-knowledge and extraction remain open. The selected profile determines its
-required certificate; an accepted native context need not carry a far-region
-certificate.
+encoding/statement reflection and verifier consumption. The selected profile
+determines its required certificate; an accepted native context need not
+carry a far-region certificate. The following finite relation and CRS
+composition address owner authorization separately from the payload proof.
+
+\subsection{A bounded native credential and its geometric meaning}
+
+Fix dimensions \(m,n\), an integer-coordinate bound \(K\), a salt length
+\(\ell\), and a byte hash \(H\). A private witness is
+\[
+ w=(B,C,z,a,u,s),\qquad
+ B,C\in\mathbb Z^{m\times n},\quad
+ z\in\mathbb Z^n,\quad a\in\mathbb Z,\quad u\in\mathbb Z^m.
+\]
+Every matrix entry and integer coordinate has absolute value at most \(K\),
+and \(s\) has exactly \(\ell\) bytes. Its private codec rejects noncanonical
+encodings; the relation separately checks the bounds. The public instance has
+three hashes:
+\[
+ x_w=\bigl(H(\operatorname{credbytes}(s,B)),\,
+           H(\operatorname{enc}(C)),\,
+           H(\operatorname{samplebytes}(C,z,a,u))\bigr).
+\]
+Here \(\operatorname{credbytes}\) uses a dedicated domain and canonical
+salt/matrix framing. The other two preimages are the actual target matrix
+bytes and full target ciphertext bytes. The salt is a private witness field;
+its presence alone establishes no hiding theorem.
+
+The finite program \(p=(m,n,K,\ell)\) has its own canonical codec. Its Boolean
+relation \(R_{p,H}(x,\eta)\) accepts exactly when \(\eta\) canonically decodes
+to a bounded witness \(w\) with \(x_w=x\). Canonical decoding fixes the
+original matrices and coordinates rather than selecting a geometry by a
+profile name. The sample bytes decode to the actual observation
+\(\operatorname{Enc}_C(z,a,u)\); its original harmonic projector returns
+\((0,z,Cz)\), which is also the operative HCP target.
+
+An explicit finite sampler chooses all matrix and integer coordinates from
+\(\{-K,\ldots,K\}\) and an \(\ell\)-byte salt. Its seed space has cardinality
+\[
+ N=(2K+1)^{2mn+n+m+1}\,256^\ell.
+\]
+Each seed has mass \(N^{-1}\); injective seed decoding gives the same mass
+to its private witness, and every supported witness satisfies the selected
+bounds. A fixed cryptographic-tape law is sampled independently of the
+native seed, with both marginals retained. This does not make the hash-derived
+public keys uniform or distinct. The family includes zero messages and
+degenerate matrices, so cardinality and bounded support alone give no
+hardness or confidentiality estimate.
+
+The witness carries two related constructions. The strict cochain
+isomorphism gives typed Helfer equivalence of the source and target
+interpretations. Independently, \(M_CM_B^{-1}\) transports their full native
+samples with the same \(z,a,u\). This transport can be nonisometric. It does
+not instantiate the separate generic path-witness relation or its
+isometric \texttt{PresentedRotation} adapter. Nor does the finite relation
+alone construct an artifact-bound HCP observation or establish storage
+lifecycle acceptance; those require the original binding certificates above.
+
+\subsection{A bounded adaptive CRS reference construction}
+
+The proof primitive supplies actual functions for setup, proving,
+verification, simulated setup, simulation and extraction. We compose these
+functions as a signature-of-knowledge reference construction, following the
+game organization of Chase--Lysyanskaya
+\cite[Section 2.2]{chaseLysyanskaya2006signaturesKnowledge}. The selected proof
+input is the injectively framed pair
+\[
+ \operatorname{input}(x,\mu)=\operatorname{frame}(\operatorname{enc}(x),\mu).
+\]
+The message \(\mu\) is the existing domain-separated encoding of the complete
+metadata and original intent. The native geometric relation ignores \(\mu\):
+the same private witness is valid for every message under its credential.
+Message binding must therefore be a property of the selected proof primitive
+on this complete input. Tagged signatures of knowledge provide a relevant
+comparison \cite[Section 5.2]{bagheryEtAl2022signaturesKnowledge}; passing an
+input to an arbitrary verifier does not establish that property.
+
+An adaptive interpreter permits at most \(q\) signing queries. Each next
+query or final output depends on the actual prior query/answer list. The real
+oracle proves with the sampled private witness and real setup; the simulated
+oracle uses the simulated setup's trapdoor. Both executions use the same
+adversary and sampled maps for the credential, auxiliary input, setup seed,
+proof randomness and adversary randomness. One shared PMF supplies these
+values; the finite sampler above is one permitted choice. The reduction
+does not require independence. Freshness is tested against the
+generated signing log on the complete credential/message input.
+
+The preferred full-view experiment explicitly supplies the canonical full
+target ciphertext bytes as the first component of the adversary's auxiliary
+input. It preserves the remaining auxiliary data and all sampled execution
+maps. Thus its view contains the salted credential, target snapshot hash,
+ciphertext digest and actual full cochain, together with the selected setup
+and declared auxiliary information.
+
+\begin{samepage}
+The extractor's output must pass the same relation and private decoder.
+Recovery returns its coefficients; the original \(z\) defines success.
+The target hashes yield original coefficients or unequal snapshot or
+ciphertext bytes with equal hashes.\par
+\end{samepage}
+
+\begin{samepage}
+\begin{theorem}[Conditional native forgery reduction]
+For the bounded adaptive experiment above, let \(D\) be its Boolean test for
+a verified fresh forgery. Assume the event-specific hybrid inequality
+\[
+ \Pr[D(T_{\mathrm{real}})=1]
+ \le \Pr[D(T_{\mathrm{sim}})=1]+\delta_{\mathrm{hyb}}.
+\]
+With all events evaluated on the stated sampled execution,
+\begin{align*}
+ \Pr[\mathrm{Forge}_{\mathrm{real}}]
+ &\le \delta_{\mathrm{hyb}}+\Pr[\mathrm{ExtractFail}]
+       +\Pr[\mathrm{RecoverOriginal}]\\
+ &\qquad+\Pr[\mathrm{SnapshotCollision}]
+       +\Pr[\mathrm{CiphertextCollision}].
+\end{align*}
+The same bound holds for the constructed full-ciphertext view.
+\end{theorem}
+\end{samepage}
+
+\begin{proof}
+The hybrid premise bounds the real win probability by the simulated win
+probability plus \(\delta_{\mathrm{hyb}}\). A simulated fresh win either
+fails validated extraction or yields a witness accepted by the same native
+relation. Canonical decoding and the two hash equations give the original
+target coefficients or one of the two byte-collision events. Applying the
+union bound proves the statement without independence assumptions.
+\end{proof}
+
+The hybrid premise concerns this actual Boolean forgery test. It requires no
+statistical bound for every set of transcripts; such a stronger all-events
+bound is only a sufficient corollary. A computational instantiation must
+still justify the test's efficiency and the selected primitive's hybrid bound.
+
+This is an exact conditional reduction, with no numerical or asymptotic
+bound supplied for its five terms. It proves neither polynomial-time
+security nor negligibility. The public view extends the original HCP
+observation by commitments and auxiliary data, so the earlier public-data
+obstruction and known-lattice CVP comparison do not supply a computational
+bound for \(\mathrm{RecoverOriginal}\). The CRS primitive, its security
+rates and secure setup generation remain external. No Groth16 or pairing
+engine, zero-knowledge theorem or UC theorem is constructed here. Direct
+trapdoor extraction avoids requiring an unsupported HCP public-key
+encryption slot while retaining the native Hodge witness as the relation.
+
+\subsection{Approved execution and the finite arithmetic core}
+
+A canonical registration descriptor retains the complete proof metadata,
+public profile bytes, a hash identifying the parameters, optional gate scope and rational
+calibration, native program bytes, verifier-key bytes and public CRS bytes.
+Its dedicated registration hash is the evidence root of the exact proposal
+approved by an existing authenticated acceptance quorum. The complete vote
+target has a canonical codec, and the authentication adapter invokes the
+selected signature verifier on those actual bytes. Approval therefore binds
+the exact descriptor and committee epoch; it is not a mutable name-to-function
+registry or a consensus finality theorem.
+
+Applicability compares the original metadata, profile, parameters, scope,
+calibration and current epoch. The approved program, verifier key and CRS
+must parse to the actual selected objects. The resulting owner checker uses
+the existing key map and full-intent signing bytes. Inapplicable or unparsed
+configurations reject. Honest signatures verify when the primitive's
+completeness contract holds and its real setup output is the approved
+reference. Approval authenticates the chosen bytes; it does not prove their
+semantic refinement or secure CRS generation.
+
+The preferred native adapter additionally compares the approved program
+bytes with the exact canonical expected program. Its public key is the
+canonical triple of the existing owner's credential, the original context's
+snapshot root and its actual full-ciphertext digest. Neither target name can
+be supplied independently. Accepted checking therefore executes that expected
+program on the original context and full signing message; a different
+approved program rejects even when its profile label matches. This binds
+code and public names without proving credential ownership or proof soundness.
+
+Applying the sampled bound to this checked call requires matching the actual
+parsed primitive and reference to the sampled setup, the context-derived key
+to the challenge's public instance, and the selected hash/codec interpretation.
+Neither importing the modules nor accepting a transfer establishes these
+equalities. The byte-signature quorum authentication adapter is also an
+explicit selection; it does not convert arbitrary legacy authentication.
+
+The byte-owner transfer packet also has a canonical reference codec for the
+existing packet, full intent and metadata. It preserves declared payload
+counts separately from actual list lengths, so malformed semantic data can
+parse and remain subject to the actual checks. This versioned Lean wire
+profile makes no compatibility claim for the archived Rust serializer.
+
+\begin{samepage}
+For \(C\in\mathbb Z^{m\times n}\), the generated rank-one arithmetic core
+enforces the integer sample equations with
+\[
+ 2mn+n+m+1
+\]
+constraints: \(2mn\) matrix-coordinate products, \(n+m\) coordinate
+equations and one exact-coordinate equation. Every integer matrix, message
+and opening gives an explicit satisfying native assignment, both over the
+integers and modulo any chosen modulus. Conversely, modular satisfaction
+lifts to the integer equations only under the explicit no-wrap premise that
+every integer constraint residual has absolute value below the modulus.
+This constructs the sample arithmetic, not a compiler for the complete
+hashed relation. Salt and coordinate ranges, byte parsing, canonical
+encodings and hash circuits still require refinement. General real
+projection certificates do not automatically yield this finite circuit.\par
+\end{samepage}
 
 Public records may link the ciphertext content ID to context, evidence and
 successor actions. The intended privacy profile permits auditing those

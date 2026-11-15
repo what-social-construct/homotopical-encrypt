@@ -11,7 +11,12 @@ cochain changes, so the canonical manifest names both objects. Its root enters
 owner authorization, packet verification and accepted history. A separate
 native observation-binding refinement connects the ciphertext bytes to the
 original harmonic message used in recovery. Exact-payload proof checking and
-full-observation binding remain distinct obligations.
+full-observation binding remain distinct obligations. For a bounded native
+credential, the manuscript also gives an adaptive CRS reference reduction
+with the full ciphertext actually released to the adversary. It bounds fresh
+forgery by transcript simulation error, extraction failure, recovery of the
+original coefficients and two byte-hash collision events; all primitive
+algorithms and quantitative security estimates remain explicit inputs.
 The [matching coupled-construction TeX section](sections/coupled-construction.tex)
 states the proved class/lattice/cochain connection; the full Markdown draft
 has no TeX/PDF bundle yet. The
@@ -55,8 +60,9 @@ The [integral sample profile](../../lean/Sheaf/HCPCoupledEncoding.lean) and
 [full-cochain codec](../../lean/Protocol/Storage/CoupledCiphertext.lean) close
 the original-object encoding join: the decoded bytes are exactly the same
 Hodge sample's full observation `(a,z-Bᵀu,Bz+u)`. This ciphertext digest is
-separate from the exact-component artifact digest. Key/noise sampling,
-concrete authentication/proof algorithms and full-view security remain work.
+separate from the exact-component artifact digest. Justified sampler profiles,
+secure authentication/proof implementations and quantitative full-view
+security remain work.
 The [hash-recovery specialization](../../lean/Protocol/Storage/Retrieval/Coupled.lean)
 now supplies the actual full-cochain decoder to the existing recipient-scoped
 recovery theorem, retaining its original observations, isometric rotation,
@@ -93,7 +99,71 @@ This is a reusable context/profile capability. Scope checks do not authenticate
 the caller, prevent replay or cryptographically confine copied map data.
 Omitting the source/target matrices as serialized fields gives no key-hiding
 guarantee for the derived map. Protected delivery, shared-secret agreement,
-key/noise sampling and security for the complete released view remain open.
+justified sampler profiles and security for the complete released view remain open.
+
+The [finite native relation](../../lean/Protocol/Transfer/PathSignature/NativeRelation.lean)
+uses the actual bounded private witness `(B,C,z,a,u,salt)`. Canonical witness
+and [program/instance codecs](../../lean/Protocol/Transfer/PathSignature/NativeProgram.lean)
+retain a salted source credential, target matrix commitment and full-ciphertext
+digest. Accepted witnesses have the actual target sample, harmonic projection
+and typed Helfer equivalence; the native `M_C M_B⁻¹` transport preserves their
+message and openings. It may be nonisometric and does not instantiate the
+separate generic isometric path adapter. Artifact/lifecycle binding still
+requires the original native certificates.
+
+The [finite native sampler](../../lean/Protocol/Transfer/PathSignature/NativeSampler.lean)
+uses exactly `(2K+1)^(2mn+n+m+1) * 256^ell` seeds with equal mass. Injective
+decoding gives bounded private witnesses, and a fixed cryptographic-tape law
+is independent of the native seed with both marginals retained. This does
+not make public hash keys uniform or distinct and gives no hardness estimate
+for a family that includes zero messages and degenerate matrices.
+
+The [CRS reference composition](../../lean/Protocol/Transfer/PathSignature/CRS.lean)
+uses supplied actual setup/prove/verify/simulation/extraction functions. A
+bounded response-dependent signing interpreter generates its query/answer
+log on the complete credential/message bytes. Its
+[native security specialization](../../lean/Protocol/Transfer/PathSignature/NativeSecurity.lean)
+constructs a full-view experiment that places canonical full ciphertext bytes
+in adversary auxiliary input while preserving the remaining auxiliary data,
+PMF and execution maps. The five-term conditional bound reduces validated
+extraction to original-coefficient recovery or snapshot/ciphertext byte-hash
+collisions. Its `WinningHybrid` premise is specific to the actual Boolean
+fresh-forgery test; statistical closeness for all transcript sets is only a
+stronger sufficient corollary. It supplies no numerical, negligible or polynomial-time bound;
+the earlier `(class,b)` HCP obstruction and CVP comparison do not estimate
+recovery for this richer view.
+
+An [approved descriptor](../../lean/Protocol/Transfer/Certificates/Profile.lean)
+authenticates exact program, verifier-key and public CRS bytes using the
+existing full-proposal acceptance quorum. The
+[vote authentication adapter](../../lean/Protocol/Transfer/Certificates/ProfileAuthentication.lean)
+calls the selected signature verifier on canonical full vote-target bytes.
+The [registered owner checker](../../lean/Protocol/Transfer/PathSignature/Registered.lean)
+parses those actual objects and checks the original metadata, profile,
+parameters, scope, calibration and epoch. Honest completeness requires the
+primitive's completeness contract and a matching actual setup output.
+Approval authenticates selected bytes rather than establishing their semantic
+refinement or secure setup generation.
+
+The [preferred native adapter](../../lean/Protocol/Transfer/PathSignature/NativeRegistered.lean)
+also checks the exact expected program bytes and derives the public key from
+the existing owner credential, original context snapshot root and actual
+full-ciphertext digest. Different approved code rejects independently of its
+profile label. Original packet parsing and payload-proof checks are retained;
+the concrete byte-owner signing join requires the selected codec explicitly.
+The sampled bound applies to that call only after matching its actual
+primitive/reference/setup, context key to the challenge instance, and
+hash/codec interpretation. Importing the adapters does not establish those
+equalities or convert legacy quorum authentication automatically.
+
+The [byte-owner packet codec](../../lean/Protocol/Evidence/TransferCodec.lean)
+canonically serializes the existing full packet and intent, retaining raw
+malformed semantic values for the checker. It defines a versioned Lean
+reference wire profile, without archived Rust compatibility. The
+[generated R1CS sample core](../../lean/Protocol/Transfer/PathSignature/NativeCircuit.lean)
+has `2mn+n+m+1` constraints and an honest assignment for every integer sample.
+Modular satisfaction lifts only with the explicit no-wrap residual bound;
+range, salt, byte and hash compilation for the complete relation remains open.
 
 The commitment profile retains the original cochain payload, its declared
 modulus/count/topology tag, the private cellular/Hodge interpretation and
@@ -187,6 +257,10 @@ refinement.
 | Committee and proof/TCB envelopes | [Consensus.Quorum](../../lean/Protocol/Consensus/Quorum.lean), [TCB](../../lean/TCB.lean) |
 | Public certificate bytes and calibration | [Codec](../../lean/Protocol/Transfer/Certificates/Codec.lean), [Calibration](../../lean/Protocol/Transfer/Certificates/Calibration.lean), [Evidence](../../lean/Protocol/Transfer/Certificates/Evidence.lean), [Bundle](../../lean/Protocol/Transfer/Certificates/Bundle.lean) |
 | Certificate statements and actual consumption | [Statement](../../lean/Protocol/Transfer/Certificates/Statement.lean), [Native](../../lean/Protocol/Transfer/Certificates/Native.lean), [Projection](../../lean/Protocol/Transfer/Certificates/Projection.lean) |
+| Bounded native credential and adaptive CRS reduction | [NativeRelation](../../lean/Protocol/Transfer/PathSignature/NativeRelation.lean), [NativeProgram](../../lean/Protocol/Transfer/PathSignature/NativeProgram.lean), [CRS](../../lean/Protocol/Transfer/PathSignature/CRS.lean), [NativeSecurity](../../lean/Protocol/Transfer/PathSignature/NativeSecurity.lean) |
+| Finite native witness sampling | [NativeSampler](../../lean/Protocol/Transfer/PathSignature/NativeSampler.lean) |
+| Authenticated profile selection and owner execution | [Profile](../../lean/Protocol/Transfer/Certificates/Profile.lean), [ProfileAuthentication](../../lean/Protocol/Transfer/Certificates/ProfileAuthentication.lean), [Registered](../../lean/Protocol/Transfer/PathSignature/Registered.lean), [NativeRegistered](../../lean/Protocol/Transfer/PathSignature/NativeRegistered.lean) |
+| Canonical byte-owner packets and sample arithmetic | [TransferCodec](../../lean/Protocol/Evidence/TransferCodec.lean), [NativeCircuit](../../lean/Protocol/Transfer/PathSignature/NativeCircuit.lean) |
 | Integrity, leakage and primitive contracts | [Transfer.Security](../../lean/Protocol/Transfer/Security.lean), [Transfer.Confidentiality](../../lean/Protocol/Transfer/Confidentiality.lean), [Transfer.Primitives](../../lean/Protocol/Transfer/Primitives.lean), [generic certificate contract](../../lean/Protocol/Transfer/Certificates.lean) |
 
 [Paper 1](../paper1/README.md) supplies HCP, harmonic lattices, semantic classes
@@ -204,19 +278,20 @@ PoV/reliability policy, oracle/coregulator attachment points and the legacy
 chain model are deferred or supporting families outside the bounded
 transition claim. Authenticated quorums do not supply rounds, locking or finality.
 
-Concrete credential/proof algorithms, message-bound knowledge and
-unforgeability, packet/witness codecs beyond the selected native profile,
-authenticated roots/directories and protected recipient delivery require
-construction and verification. The public certificate codec, digest preimages
-and intended-statement reflection are constructed; the selected CRS/proof
-algorithm still needs circuit refinement, setup authentication and a
-computational soundness/knowledge argument. Its packet serializer remains a
-supplied codec. A separate application
+The CRS reference reduction composes supplied algorithms; a secure proof
+primitive implementation, its message-bound extraction/simulation estimates,
+full range/byte/hash circuit refinement and secure setup generation remain
+obligations. Quorum approval binds selected bytes rather than establishing
+those properties. Authenticated roots/directories and protected recipient
+delivery also require construction and verification. The canonical byte-owner
+packet/witness profile does not encode unrestricted real data or establish a
+runtime implementation. A separate application
 relation must connect harmonic coefficients to amounts and action semantics.
 The native codecs do not encode unrestricted
-real openings. Key/noise sampling and shared-secret agreement remain open.
-The supplied primitive budgets do not establish adaptive
-signing/corruption security, encryption privacy or anonymity. State origin,
+real openings. Secure parameter/distribution selection and shared-secret
+agreement remain open.
+No quantitative adaptive signing/corruption security, encryption privacy or
+anonymity follows from the supplied primitive names or budgets. State origin,
 executable refinement, global lifecycle enforcement and consensus finality
 also require separate results. The archived prototype is not an implementation
 proof of this protocol.
