@@ -1615,13 +1615,53 @@ program on the original context and full signing message. Different approved
 program bytes reject even if their profile label matches. This binds code
 and public names without proving credential ownership or proof soundness.
 
-Applying the sampled bound to this checked call requires matching the actual
-parsed primitive/reference to the sampled setup, the context-derived key to
-the challenge's `instanceFor`, and the selected hash/codec interpretation.
-`checked_native_selection` fixes the actual verifier call; it does not
-discharge those application equalities. The byte-signature quorum
-authentication factory is an explicit selection, with no automatic conversion
-of an arbitrary legacy authentication relation.
+The [original-context adapter](../../lean/Protocol/Transfer/PathSignature/NativeContext.lean)
+derives equality with the challenge's `instanceFor` from four actual-object
+conditions: the selected owner's credential is the salted source credential, the target
+matrix binds the original snapshot, the selected ciphertext is the canonical
+target sample, and its selected hash agrees with the native hash. The sample
+equality also identifies the actual full ciphertext supplied to the adversary.
+Parsed approved verifier-key and CRS components must equal the actual setup
+output at the sampled seed; checked verification then uses that same reference.
+
+The [application completion adapter](../../lean/Protocol/Transfer/PathSignature/NativeApplication.lean)
+reads the experiment's actual returned target. It parses its canonical full
+signing message through the selected packet codec, checks that the decoded
+signer's context key equals the challenged key, and reconstructs the original
+packet with exactly the target proof as its owner signature. The separate
+payload proof is supplied explicitly. Every original resource, metadata,
+intent, signature and payload check still executes. Malformed messages or a
+different signer key yield no attempt; owner-to-key injectivity is not assumed.
+
+The application experiment selects the actual program's primitive by
+construction while retaining the original PMF, adaptive adversary, random
+tapes and full-ciphertext view. `FreshChecked` requires successful checking of
+this completion of the actual returned target and freshness against its
+generated query log. Per-sample equality of the approved parsed key/CRS with
+actual setup gives the same-PMF event inclusion
+\[
+ \Pr[\mathrm{FreshChecked}]\le\Pr[\mathrm{Forge}_{\rm real}].
+\]
+Canonical parsing and the original checks fix the actual target message and
+signature; the completion guard fixes the challenged key. The existing
+five-term native bound therefore also bounds this application event.
+
+The preferred `nativeSource_application_bound` consumes these source and
+setup equations for configurations of the challenge's actual target sheaf.
+It jointly derives, at every sampled outcome, the selected owner's context
+key equality, equality of the released full ciphertext with the original
+configuration's ciphertext, and the same application's five-term bound.
+The completion guard still handles the adversary's actual chosen signer.
+`errorBudget` names the existing five-event sum; it supplies no small
+numerical estimate.
+
+This result covers the single-credential completion adapter, without
+translating arbitrary packet-producing adversaries or classifying all accepted
+transfers as forgeries. General accepted-invalid integrity retains its policy,
+compromise and payload-failure branches. Additional public application data
+belongs in the declared auxiliary remainder; no complete storage-view privacy
+claim follows. The byte-signature quorum authentication factory remains an
+explicit selection, with no conversion of arbitrary legacy authentication.
 
 A [canonical byte-owner packet codec](../../lean/Protocol/Evidence/TransferCodec.lean)
 serializes the existing packet, full intent and metadata. It retains declared
@@ -1773,6 +1813,7 @@ scoped one-shot integrity comparison in §6.3.
 | Finite native sampling | [NativeSampler](../../lean/Protocol/Transfer/PathSignature/NativeSampler.lean) | Uniform finite seeds, exact cardinality, injective bounded witness decoding and a fixed independent crypto tape. Public-hash uniformity and hardness do not follow. |
 | Adaptive CRS reference reduction | [CRS](../../lean/Protocol/Transfer/PathSignature/CRS.lean), [NativeSecurity](../../lean/Protocol/Transfer/PathSignature/NativeSecurity.lean) | Supplied actual algorithms; response-dependent bounded oracle and generated logs; five-term reduction for the actual full-ciphertext view under the event-specific Boolean forgery-test hybrid. Primitive estimates and a secure implementation remain external. |
 | Approved parsed execution | [Profile](../../lean/Protocol/Transfer/Certificates/Profile.lean), [ProfileAuthentication](../../lean/Protocol/Transfer/Certificates/ProfileAuthentication.lean), [Registered](../../lean/Protocol/Transfer/PathSignature/Registered.lean), [NativeRegistered](../../lean/Protocol/Transfer/PathSignature/NativeRegistered.lean) | Exact quorum-approved program/key/CRS bytes; original metadata/scope/epoch and exact expected-code checks. The native key uses the owner's credential and actual context snapshot/ciphertext names. Honest completeness is conditional; no finality or secure setup generation. |
+| Original context and sampled application | [NativeContext](../../lean/Protocol/Transfer/PathSignature/NativeContext.lean), [NativeApplication](../../lean/Protocol/Transfer/PathSignature/NativeApplication.lean) | Actual credential/snapshot/sample/hash and parsed-setup joins; canonical completion of the generated fresh target into the original checked packet. The same-PMF application event inherits the native five-term bound. Arbitrary packet adversaries and general accepted-invalid integrity remain separate. |
 | Finite sample arithmetic | [NativeCircuit](../../lean/Protocol/Transfer/PathSignature/NativeCircuit.lean) | Generated R1CS core of size `2mn+n+m+1`, honest native assignments and explicit no-wrap lifting. Range/byte/hash compilation remains open. |
 | Canonical byte-owner packets | [TransferCodec](../../lean/Protocol/Evidence/TransferCodec.lean) | Exact existing metadata/intent/packet bytes and full vote targets; malformed semantic fields remain representable. This is a versioned Lean reference profile. |
 | Primitive failures and one-shot integrity | [PrimitiveChecks](../../lean/TCB/PrimitiveChecks.lean), [Primitives](../../lean/Protocol/Transfer/Primitives.lean), [Security](../../lean/Protocol/Transfer/Security.lean) | Actual verifier/history interfaces and conditional shared-PMF failure composition; this fixed-history theorem is separate from the bounded adaptive CRS reduction above. Primitive error estimates remain supplied. |

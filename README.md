@@ -161,9 +161,16 @@ and execute the actual parsed objects at the original owner checker. The
 [preferred native adapter](lean/Protocol/Transfer/PathSignature/NativeRegistered.lean)
 additionally checks the exact expected program bytes and derives the public
 key from the existing owner credential, original snapshot root and actual
-ciphertext digest. A different program rejects independently of its label. The
-sampled bound still needs the actual primitive/setup, context/challenge key
-and hash/codec interpretations to agree with the checked call. The
+ciphertext digest. A different program rejects independently of its label.
+The [context joins](lean/Protocol/Transfer/PathSignature/NativeContext.lean)
+derive the native key from actual credential/snapshot/sample/hash conditions.
+The [application adapter](lean/Protocol/Transfer/PathSignature/NativeApplication.lean)
+completes the generated fresh CRS target into the original checked packet;
+the preferred native-source theorem consumes actual credential, snapshot,
+sample, hash and setup equations and jointly derives the context/challenge
+key, actual released ciphertext and same-PMF five-term bound. This covers that completion experiment;
+general integrity and arbitrary packet adversaries retain separate analysis.
+Other public application data belongs in the declared auxiliary remainder. The
 [native arithmetic core](lean/Protocol/Transfer/PathSignature/NativeCircuit.lean)
 generates `2mn+n+m+1` constraints, with a satisfying assignment for every
 integer native sample and its modular reduction. The converse modular lift

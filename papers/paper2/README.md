@@ -151,10 +151,28 @@ the existing owner credential, original context snapshot root and actual
 full-ciphertext digest. Different approved code rejects independently of its
 profile label. Original packet parsing and payload-proof checks are retained;
 the concrete byte-owner signing join requires the selected codec explicitly.
-The sampled bound applies to that call only after matching its actual
-primitive/reference/setup, context key to the challenge instance, and
-hash/codec interpretation. Importing the adapters does not establish those
-equalities or convert legacy quorum authentication automatically.
+The [context adapter](../../lean/Protocol/Transfer/PathSignature/NativeContext.lean)
+derives the challenged key from the actual source credential, target snapshot
+binding, canonical target sample bytes and selected hash agreement. Parsed
+approved key/CRS components must match the actual sampled setup; the same
+sample-byte equation identifies the full ciphertext released to the adversary.
+
+The [application adapter](../../lean/Protocol/Transfer/PathSignature/NativeApplication.lean)
+selects the program's actual primitive and completes its generated final
+target into the original packet. It checks the canonical full signing message
+and challenged signer key, uses the target proof as owner signature, and keeps
+the separate supplied payload proof and all operational checks. A successful
+fresh completion implies a win in that same generated transcript, so its
+probability inherits the native five-term bound on the original PMF under
+the actual approved-setup parsing equations.
+The preferred native-source theorem consumes the actual credential,
+snapshot, sample, hash and setup equations together, deriving the selected
+owner's challenge-key and released-ciphertext equalities alongside that bound.
+Its error budget is the existing five-event sum. This is a single-credential
+completion experiment, not a translation of arbitrary packet adversaries or
+a bound on every accepted transfer. Policy, compromise and payload failures
+remain in general integrity analysis. Other released application data belongs
+in the auxiliary remainder; no complete storage-view privacy follows.
 
 The [byte-owner packet codec](../../lean/Protocol/Evidence/TransferCodec.lean)
 canonically serializes the existing full packet and intent, retaining raw
@@ -260,6 +278,7 @@ refinement.
 | Bounded native credential and adaptive CRS reduction | [NativeRelation](../../lean/Protocol/Transfer/PathSignature/NativeRelation.lean), [NativeProgram](../../lean/Protocol/Transfer/PathSignature/NativeProgram.lean), [CRS](../../lean/Protocol/Transfer/PathSignature/CRS.lean), [NativeSecurity](../../lean/Protocol/Transfer/PathSignature/NativeSecurity.lean) |
 | Finite native witness sampling | [NativeSampler](../../lean/Protocol/Transfer/PathSignature/NativeSampler.lean) |
 | Authenticated profile selection and owner execution | [Profile](../../lean/Protocol/Transfer/Certificates/Profile.lean), [ProfileAuthentication](../../lean/Protocol/Transfer/Certificates/ProfileAuthentication.lean), [Registered](../../lean/Protocol/Transfer/PathSignature/Registered.lean), [NativeRegistered](../../lean/Protocol/Transfer/PathSignature/NativeRegistered.lean) |
+| Original context and sampled application bound | [NativeContext](../../lean/Protocol/Transfer/PathSignature/NativeContext.lean), [NativeApplication](../../lean/Protocol/Transfer/PathSignature/NativeApplication.lean) |
 | Canonical byte-owner packets and sample arithmetic | [TransferCodec](../../lean/Protocol/Evidence/TransferCodec.lean), [NativeCircuit](../../lean/Protocol/Transfer/PathSignature/NativeCircuit.lean) |
 | Integrity, leakage and primitive contracts | [Transfer.Security](../../lean/Protocol/Transfer/Security.lean), [Transfer.Confidentiality](../../lean/Protocol/Transfer/Confidentiality.lean), [Transfer.Primitives](../../lean/Protocol/Transfer/Primitives.lean), [generic certificate contract](../../lean/Protocol/Transfer/Certificates.lean) |
 

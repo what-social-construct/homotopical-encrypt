@@ -36,7 +36,11 @@ public import Protocol.Transfer
   law and authenticated exact-program selection on the original context. Its
   adaptive full-ciphertext forgery bound retains explicit hybrid, extraction,
   recovery and hash-collision terms. The tagged proof primitive and its security
-  estimates remain to be instantiated. Generic codec/lift instantiation,
+  estimates remain to be instantiated. Original native source and actual
+  setup joins also connect fresh checked completions of the generated target
+  to that same experiment's five-term bound. Arbitrary packet-adversary
+  translation and general integrity retain their own obligations.
+  Generic codec/lift instantiation,
   round/lock/finality and Rust refinement remain separate completion tasks.
   The optional HCP sampling and fixed-key span modules provide finite
   semantic checks and conditional leakage boundaries, not an asymptotic

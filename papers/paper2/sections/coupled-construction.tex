@@ -657,12 +657,55 @@ program on the original context and full signing message; a different
 approved program rejects even when its profile label matches. This binds
 code and public names without proving credential ownership or proof soundness.
 
-Applying the sampled bound to this checked call requires matching the actual
-parsed primitive and reference to the sampled setup, the context-derived key
-to the challenge's public instance, and the selected hash/codec interpretation.
-Neither importing the modules nor accepting a transfer establishes these
-equalities. The byte-signature quorum authentication adapter is also an
-explicit selection; it does not convert arbitrary legacy authentication.
+The context adapter derives equality with the native challenge key from four
+original-object conditions: the selected owner's credential is the salted source
+credential, the target matrix binds the original snapshot, the selected
+ciphertext is the canonical target sample, and its selected hash agrees with
+the native hash. The last sample equality also identifies the full ciphertext
+actually supplied to the adversary. Parsed approved verifier-key and CRS
+components must equal the actual setup output at the sampled seed; the
+checked packet then verifies under that same reference.
+
+An application completion adapter reads the actual final target of the
+adaptive experiment. It parses the target's canonical full signing message
+with the selected packet codec and checks that its decoded signer's context
+key equals the challenged key. It rebuilds the original packet using exactly
+the target proof as the owner signature and a separately supplied payload
+proof. The original operational checker retains every resource, metadata,
+intent, signature and payload check. Malformed messages or a different
+signer key yield no completed attempt; owner-to-key injectivity is not assumed.
+
+The application experiment selects the actual program's primitive by
+construction and retains the existing PMF, adaptive adversary, random tapes
+and full-ciphertext view. Let \(\mathrm{FreshChecked}\) be successful checking
+of this completion of the experiment's actual returned target, with freshness
+against its generated query log. Under the per-sample approved-setup parsing
+equations,
+\[
+ \Pr[\mathrm{FreshChecked}]
+ \le \Pr[\mathrm{Forge}_{\mathrm{real}}].
+\]
+Indeed, canonical parsing and the original checks identify the exact target
+message and owner signature verified at that setup, while the completion
+guard identifies the challenged key. This proves the event inclusion on the
+same PMF; the preceding five-term native bound therefore applies.
+
+For configurations of the challenge's actual target sheaf, the preferred
+composed theorem consumes these source and setup equations together. For
+every sampled outcome it identifies the selected owner's context key with
+the challenge key and the released full ciphertext with the original
+configuration's ciphertext, while deriving the same application's five-term
+bound. The completion guard still checks the adversary's actual chosen signer.
+The named error budget is exactly the existing five-event sum, not a supplied
+small numerical estimate.
+
+The result concerns this single-credential completion adapter. It neither
+translates arbitrary packet-producing adversaries nor treats every accepted
+transfer as a forgery. General accepted-invalid integrity retains its policy,
+compromise and payload-failure branches. Additional public application data
+must enter the declared auxiliary remainder; no complete storage-view privacy
+claim follows. The byte-signature quorum authentication adapter remains an
+explicit selection, with no conversion of arbitrary legacy authentication.
 
 The byte-owner transfer packet also has a canonical reference codec for the
 existing packet, full intent and metadata. It preserves declared payload

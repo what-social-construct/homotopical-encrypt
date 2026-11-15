@@ -19,6 +19,7 @@ public import Protocol.Transfer.PathSignature.NativeRegistered
 public import Protocol.Transfer.PathSignature.NativeSecurity
 public import Protocol.Transfer.PathSignature.NativeSampler
 public import Protocol.Transfer.PathSignature.NativeCircuit
+public import Protocol.Transfer.PathSignature.NativeApplication
 
 @[expose] public section
 
@@ -84,4 +85,13 @@ ciphertext digest. Existing quorum votes authenticate the complete descriptor
 proposal. Hash/signature security, secure setup and a concrete tagged
 simulation-extractable proof engine remain assumptions to instantiate; the
 arithmetic core does not compile canonical bytes, hashes or range checks.
+
+The application adapter completes the actual generated target into the original
+packet, checks its canonical signing subject and challenged key, and retains
+all original operational checks. Accepted fresh completions imply a win in
+that same generated transcript under the actual approved setup. The native
+source theorem combines original credential/snapshot/ciphertext/hash joins
+with the same-PMF five-term application bound. It covers this explicit
+completion adapter; general packet adversaries and accepted-invalid integrity
+retain their separate translation and policy/compromise/payload obligations.
 -/
