@@ -20,6 +20,12 @@ public import Protocol.Transfer.PathSignature.NativeSecurity
 public import Protocol.Transfer.PathSignature.NativeSampler
 public import Protocol.Transfer.PathSignature.NativeCircuit
 public import Protocol.Transfer.PathSignature.NativeApplication
+public import Protocol.Transfer.PathSignature.NativeCircuitBounds
+public import Protocol.Transfer.PathSignature.NativeRecovery
+public import Protocol.Transfer.PathSignature.NativeSignSampler
+public import Protocol.Transfer.PathSignature.NativeSignPrivacy
+public import Protocol.Transfer.PathSignature.NativeOperatorGuessing
+public import Protocol.Transfer.PathSignature.NativeNoiseRefresh
 
 @[expose] public section
 
@@ -94,4 +100,15 @@ source theorem combines original credential/snapshot/ciphertext/hash joins
 with the same-PMF five-term application bound. It covers this explicit
 completion adapter; general packet adversaries and accepted-invalid integrity
 retain their separate translation and policy/compromise/payload obligations.
+
+The integer-core range checker supplies an explicit modulus criterion for the
+original NoWrap lift. This is not yet a field-circuit compilation of byte,
+range and hash checks. The bounded reference sampler now has an actual-byte
+scalar recovery counterexample. A separate fresh-sign candidate proves equal
+one-use ciphertext laws and a uniform-message guessing bound of 2^-n, with
+independent tapes and partial coefficient decoders covered. Its raw operator
+hash admits a plaintext-candidate test; no storage-view privacy follows.
+Ordinary native transport retains its coexact opening. A canonical-byte
+coexact correction produces the target candidate's desired opening, without
+supplying independent key generation or a public refresh capability.
 -/

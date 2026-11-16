@@ -141,6 +141,31 @@ The [finite native sampler](lean/Protocol/Transfer/PathSignature/NativeSampler.l
 assigns uniform mass to an explicitly counted seed space, decodes only bounded
 witnesses and combines them with an independent fixed cryptographic-tape law.
 Private seed uniformity gives no uniformity or hardness claim for public hashes.
+The [sampler audit](lean/Protocol/Transfer/PathSignature/NativeRecovery.lean)
+proves exact `7/9` public-byte coefficient recovery in the original scalar
+profile and known-zero recovery of a reused scalar operator. These are not
+automatic signature forgeries. A separate
+[fresh-sign candidate](lean/Protocol/Transfer/PathSignature/NativeSignSampler.lean)
+has equal one-use ciphertext-byte laws for every Boolean message, including
+a dense coupled example. With an independent uniform message, its
+[ciphertext-only recovery law](lean/Protocol/Transfer/PathSignature/NativeSignPrivacy.lean)
+gives every complete-message decoder success exactly `2^-n`, also with an
+independent random tape or a ciphertext digest. Partial integer-coefficient
+recovery has success at most `2^-n`. It is not the default storage
+privacy profile: an [actual-byte candidate test](lean/Protocol/Transfer/PathSignature/NativeOperatorGuessing.lean)
+uses a raw operator hash to check plaintext guesses.
+
+The selected design target combines exact harmonic recovery, fresh geometry
+for each public encrypted object and persistent private master-key management.
+Wallet-at-rest and reused-geometry roles remain separate profiles. The sign
+sampler remains a nondefault implementation candidate until actual hiding
+operator binding, private openings and versioned instance/witness/codec/context
+joins are built. Generic snapshot carriers can remain; a hiding flag cannot replace the construction. The
+[coexact refresh](lean/Protocol/Transfer/PathSignature/NativeNoiseRefresh.lean)
+produces the prescribed target sample after transport, which otherwise
+retains the old opening. It supplies no public refresh token or key-freshness
+policy. Joint public metadata and proof views still require analysis.
+
 The [CRS reference construction](lean/Protocol/Transfer/PathSignature/CRS.lean)
 composes supplied primitive algorithms through bounded adaptive signing for
 a sampled credential, with generated query logs. Its
@@ -173,9 +198,11 @@ general integrity and arbitrary packet adversaries retain separate analysis.
 Other public application data belongs in the declared auxiliary remainder. The
 [native arithmetic core](lean/Protocol/Transfer/PathSignature/NativeCircuit.lean)
 generates `2mn+n+m+1` constraints, with a satisfying assignment for every
-integer native sample and its modular reduction. The converse modular lift
-requires explicit no-wrap premises. A secure CRS primitive and complete hash/range/byte circuit compiler
-remain to be instantiated; the [ownership table](docs/SEMANTIC_OWNERSHIP.md)
+integer native sample and its modular reduction. The
+[range checker](lean/Protocol/Transfer/PathSignature/NativeCircuitBounds.lean)
+and an explicit residual/modulus bound now discharge the integer-lift no-wrap
+premise. Field constraints for ranges, bytes and hashes and a secure tagged
+CRS backend remain to be instantiated; the [ownership table](docs/SEMANTIC_OWNERSHIP.md)
 records the precise scope.
 
 The intended public history uses ciphertext content IDs and selected action

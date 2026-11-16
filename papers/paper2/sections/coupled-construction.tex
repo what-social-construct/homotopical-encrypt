@@ -16,6 +16,8 @@ context-bound manifest used by owner authorization, packet verification and
 accepted history. A separate native observation-binding refinement identifies
 the original target message by harmonic projection, and scoped recipient
 recovery returns its coefficients or exhibits an accepted byte-hash collision.
+A correlated noise candidate has message-independent one-use ciphertext-byte
+laws; operator metadata and key reuse require separate disclosure analysis.
 For a bounded native witness, a CRS reference construction reduces adaptive
 fresh-message forgery to transcript simulation error, extraction failure,
 recovery of the original harmonic coefficients and two byte-hash collision
@@ -71,7 +73,11 @@ roles. Raw openings are identified modulo \(\ker\delta_0\), with modular
 carry treated separately. Recovery and disclosure theorems concern the
 original observation; in particular, usable transport to a known zero
 presentation reveals the message coordinates. These results specify
-information that a security experiment must account for.
+information that a security experiment must account for. An explicit public
+byte predictor recovers the coefficient with probability \(7/9\) in the
+original bound-one scalar sampler. A separate correlated noise family has
+equal one-use ciphertext laws for all Boolean messages, while its raw operator
+hash enables a two-candidate plaintext test.
 
 \item \textbf{A signed reference to the same encrypted object.}
 One canonical two-slot manifest names the exact artifact and full ciphertext,
@@ -488,6 +494,10 @@ composition address owner authorization separately from the payload proof.
 
 \subsection{A bounded native credential and its geometric meaning}
 
+The following raw operator-hash profile fixes the finite binding and checking
+objects. The privacy candidate below requires a different operator commitment
+profile; it is not substituted into this relation implicitly.
+
 Fix dimensions \(m,n\), an integer-coordinate bound \(K\), a salt length
 \(\ell\), and a byte hash \(H\). A private witness is
 \[
@@ -539,6 +549,95 @@ isometric \texttt{PresentedRotation} adapter. Nor does the finite relation
 alone construct an artifact-bound HCP observation or establish storage
 lifecycle acceptance; those require the original binding certificates above.
 
+\subsection{Sampling, disclosure and fresh operators}
+
+Uniform finite coordinates alone do not give a small recovery probability.
+In the original scalar sampler with bound one, a public predictor parses the
+canonical ciphertext and recovers \(z\) with probability exactly \(7/9\).
+The calculation uses the full original seed law and holds for every credential
+salt length, with an independent cryptographic tape appended. It ignores
+hashes, the private source presentation and the exact opening. A known zero
+message with \(u\ne0\) also exposes a reused scalar operator through
+\(x=-Cu\), \(y=u\), hence \(C=-x/y\). These are coefficient/key recovery
+results, not automatic signature-of-knowledge forgeries.
+
+A different candidate correlates the coexact opening with the chosen message.
+Fix a public integer matrix \(A\in\mathbb Z^{m\times n}\) with
+\(A^{\mathsf T}A=dI\), \(d>0\). For independent fresh uniform key signs
+\(k\in\{-1,1\}^n\) and chosen message signs \(s\in\{-1,1\}^n\), set
+\[
+ C_k=A\operatorname{diag}(k),\qquad z=ds,\qquad u=C_ks.
+\]
+The original Hodge sample then has the exact normal form
+\[
+ \operatorname{Enc}_{C_k}(ds,a,C_ks)
+   =\bigl(a,0,(d+1)A(k\mathbin\odot s)\bigr),
+\]
+where \(\odot\) is coordinatewise multiplication and \(a\) is fixed
+independently of the message and key. Multiplication by a fixed \(s\) permutes
+the finite uniform key space. Consequently the actual canonical full
+ciphertext-byte laws are equal for every pair of messages. Any deterministic
+digest of those ciphertext bytes preserves this equality. The private
+harmonic projection still recovers \((0,ds,C_kds)\), and \(d>0\) makes the
+Boolean message encoding injective. Both \(A=I\), \(d=1\), and the dense
+matrix \(\left(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\right)\),
+\(d=2\), instantiate the construction.
+
+For an independent uniform Boolean message and fresh uniform key, the actual
+joint law factors into a uniform message independent of ciphertext bytes.
+Every total complete-message decoder succeeds with probability exactly
+\(2^{-n}\), including a decoder using a separately sampled fixed random tape
+or a deterministic ciphertext digest. Positive \(d\) identifies correct
+encoded coefficient recovery with bit-vector recovery. An arbitrary partial
+integer-coefficient extractor, allowing invalid outputs or failure, succeeds
+with probability at most \(2^{-n}\), also with the independent tape. The uniform-target
+hypothesis belongs to this guessing statement; equality of ciphertext laws
+for each pair of fixed messages does not need it.
+
+This is a one-use ciphertext law. The same normal form exposes the masked
+vector
+\[
+ t=\frac{A^{\mathsf T}y}{d(d+1)}=k\mathbin\odot s.
+\]
+For two chosen candidate messages \(s_0,s_1\), compute
+\(k_i=t\mathbin\odot s_i\) and \(C_i=A\operatorname{diag}(k_i)\).
+A published raw snapshot \(H(\operatorname{enc}(C_k))\) permits testing both
+candidates with two forward hashes. The actual byte parser and public
+transpose/parity arithmetic recover the masked signs and construct each
+candidate's canonical operator bytes. The true plaintext passes; a wrong
+candidate that passes yields a collision between distinct canonical matrix bytes. Thus key entropy does not
+repair this public snapshot view. Reusing the sign key also retains the usual
+one-time-mask limitation; the ciphertext-only law supplies no encryption-oracle
+or repeated-key security theorem.
+
+The selected design target is exact harmonic recovery with fresh geometry per
+public encrypted object and persistent private master-key management.
+Wallet-at-rest encryption and reused geometry require separate analysis.
+The sign sampler remains a nondefault implementation candidate until actual
+hiding operator binding and its versioned native wire are built. Generic
+snapshot and context carriers can remain; the private opening, public
+instance, witness codec and original-context joins must be versioned and
+checked. A named hiding proposition does not construct that binding.
+Content hashes identify the encrypted material. The selected private-view
+design excludes operator nullifiers, full projectors or kernel/Pl\"ucker data,
+and usable transport to a known presentation. The exact opening
+and artifact must be message-independent in this candidate, and other public
+records, auxiliary data and proof transcripts remain outside its proved view.
+
+Fresh encryption is also distinct from deterministic migration. Existing
+transport preserves \(z,a,u\); the new target law prescribes
+\(u'=C_{k'}s\). After transport to \(C_{k'}\), the concrete correction is
+\[
+ \operatorname{Enc}_{C_{k'}}(z,a,u)
+ +\operatorname{Enc}_{C_{k'}}(0,0,u'-u)
+ =\operatorname{Enc}_{C_{k'}}(z,a,u').
+\]
+Canonical byte parsing and addition implement this coexact correction and
+return exactly the desired target sample. At fixed target and message,
+ordinary migrated bytes already equal the fresh target bytes precisely when
+the retained and desired openings agree. This correction neither samples a
+fresh key nor constructs a safe public refresh token or a one-use lifecycle.
+
 \subsection{A bounded adaptive CRS reference construction}
 
 The proof primitive supplies actual functions for setup, proving,
@@ -564,8 +663,8 @@ oracle proves with the sampled private witness and real setup; the simulated
 oracle uses the simulated setup's trapdoor. Both executions use the same
 adversary and sampled maps for the credential, auxiliary input, setup seed,
 proof randomness and adversary randomness. One shared PMF supplies these
-values; the finite sampler above is one permitted choice. The reduction
-does not require independence. Freshness is tested against the
+values; the original box sampler is one permitted choice for this reference
+relation. The reduction does not require independence. Freshness is tested against the
 generated signing log on the complete credential/message input.
 
 The preferred full-view experiment explicitly supplies the canonical full
@@ -626,6 +725,12 @@ rates and secure setup generation remain external. No Groth16 or pairing
 engine, zero-knowledge theorem or UC theorem is constructed here. Direct
 trapdoor extraction avoids requiring an unsupported HCP public-key
 encryption slot while retaining the native Hodge witness as the relation.
+The tagged Boolean construction in \cite[Sections 5--6]{bagheryEtAl2022signaturesKnowledge}
+is compatible with this straight-line extraction interface, but requires
+genuine encoded bilinear groups, the selected matrix/kernel Diffie--Hellman
+assumptions and collision analysis for the complete subject tag. A
+Fiat--Shamir extractor that forks an oracle adversary is a different interface.
+No such secure backend is instantiated here.
 
 \subsection{Approved execution and the finite arithmetic core}
 
@@ -722,12 +827,17 @@ enforces the integer sample equations with
 constraints: \(2mn\) matrix-coordinate products, \(n+m\) coordinate
 equations and one exact-coordinate equation. Every integer matrix, message
 and opening gives an explicit satisfying native assignment, both over the
-integers and modulo any chosen modulus. Conversely, modular satisfaction
-lifts to the integer equations only under the explicit no-wrap premise that
-every integer constraint residual has absolute value below the modulus.
-This constructs the sample arithmetic, not a compiler for the complete
-hashed relation. Salt and coordinate ranges, byte parsing, canonical
-encodings and hash circuits still require refinement. General real
+integers and modulo any chosen modulus. An executable range check bounds
+the integer input wires by \(K\), products by \(K^2\), and information/parity
+coordinates by \(K+mK^2\) and \(K+nK^2\). Every gate residual is at most
+\[
+ M=\max\{2K^2,\,2(K+mK^2),\,2(K+nK^2),\,2K\}.
+\]
+Thus a modulus \(q>M\), modular satisfaction and these checked integer
+ranges imply the original integer ciphertext equations. Honest bounded
+witnesses pass the range check. This checks integer lifts; compiling the
+range/salt checks, byte parsing, canonical encodings and hashes into field
+constraints remains separate. General real
 projection certificates do not automatically yield this finite circuit.\par
 \end{samepage}
 

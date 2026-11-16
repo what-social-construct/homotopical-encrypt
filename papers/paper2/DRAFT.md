@@ -24,6 +24,8 @@ context-bound manifest used by owner authorization, packet verification and
 accepted history. A separate native observation-binding refinement identifies
 the original target message by harmonic projection, and scoped recipient
 recovery returns its coefficients or exhibits an accepted byte-hash collision.
+A correlated noise candidate has message-independent one-use ciphertext-byte
+laws; operator metadata and key reuse require separate disclosure analysis.
 For a bounded native witness, a CRS reference construction reduces adaptive
 fresh-message forgery to transcript simulation error, extraction failure,
 recovery of the original harmonic coefficients and two byte-hash collision
@@ -83,7 +85,11 @@ We address these requirements through four contributions.
    recovery and disclosure results for the original observations, including
    the fact that usable transport to a known zero presentation exposes the
    message coefficients. These results specify which information a released
-   view and its confidentiality experiment must account for.
+   view and its confidentiality experiment must account for. An explicit
+   byte predictor recovers the coefficient with probability \(7/9\) in the
+   original bound-one scalar sampler. A separate correlated noise family has
+   equal one-use ciphertext laws for all Boolean messages, while its raw
+   operator hash enables a two-candidate plaintext test.
 
 4. **A signed reference to the same encrypted object.** One canonical
    two-slot manifest names the original exact artifact and full ciphertext.
@@ -1455,6 +1461,10 @@ nonisometric native transport does not instantiate this isometric adapter.
 
 ##### 6.6.1. Bounded native witness and actual geometric meaning
 
+The following raw operator-hash profile fixes the reference binding and
+checking objects. The privacy candidate below needs a different operator
+commitment profile; it is not substituted into this relation implicitly.
+
 Fix dimensions \(m,n\), a coordinate bound \(K\), a salt length \(\ell\)
 and a byte hash \(H\). The [native witness](../../lean/Protocol/Transfer/PathSignature/NativeRelation.lean)
 is
@@ -1505,7 +1515,97 @@ neither the generic path witness above nor an artifact-bound
 `BoundHCPObservation` and its storage/lifecycle acceptance; the latter still
 requires the original binding certificates.
 
-##### 6.6.2. Bounded adaptive CRS reference construction
+##### 6.6.2. Sampling, disclosure and fresh operators
+
+Uniform finite coordinates do not give a small recovery probability. In the
+original scalar sampler with bound one, a
+[public byte predictor](../../lean/Protocol/Transfer/PathSignature/NativeRecovery.lean)
+recovers \(z\) with probability exactly \(7/9\) under the full original seed
+law, for every credential-salt length and with an independent crypto tape
+appended. It ignores hashes, source presentation and exact opening. A known
+zero message with \(u\ne0\) also reveals a reused scalar operator through
+\(x=-Cu\), \(y=u\), hence \(C=-x/y\). These are coefficient/key recovery
+results, not automatic signature-of-knowledge forgeries.
+
+The [fresh-sign candidate](../../lean/Protocol/Transfer/PathSignature/NativeSignSampler.lean)
+instead correlates the coexact opening with the chosen message. Fix public
+\(A\in\mathbb Z^{m\times n}\) with \(A^{\mathsf T}A=dI\), \(d>0\).
+For a fresh uniform sign key \(k\in\{-1,1\}^n\), chosen message signs
+\(s\in\{-1,1\}^n\), and exact opening \(a\) independent of both, set
+\[
+ C_k=A\operatorname{diag}(k),\qquad z=ds,\qquad u=C_ks.
+\]
+The actual original sample is
+\[
+ \operatorname{Enc}_{C_k}(ds,a,C_ks)
+ =\bigl(a,0,(d+1)A(k\mathbin\odot s)\bigr).
+\]
+Here \(\odot\) is coordinatewise multiplication. For fixed \(s\), masking
+permutes the finite uniform key space. Thus the canonical full ciphertext-byte
+laws are equal for every pair of messages, and deterministic ciphertext
+digests preserve that equality. The original private harmonic projection
+still recovers \((0,ds,C_kds)\); positive \(d\) makes the message encoding
+injective. Both \(A=I,d=1\) in every dimension and the dense two-by-two
+Hadamard matrix with \(d=2\) instantiate the construction.
+
+For an independent uniform Boolean message and fresh uniform key, the
+[actual joint law](../../lean/Protocol/Transfer/PathSignature/NativeSignPrivacy.lean)
+factors into a uniform message independent of the ciphertext. Every total
+complete-message decoder therefore succeeds with probability exactly
+\(2^{-n}\). This remains true for a deterministic ciphertext digest and an
+independently sampled fixed random tape. For positive \(d\), correct encoded
+coefficient recovery is equivalent to correct bit-vector recovery. An
+arbitrary partial integer-coefficient extractor, allowing invalid outputs or
+failure, has success at most \(2^{-n}\), also with the independent tape. The
+uniform-target hypothesis belongs to this guessing statement; equality of
+ciphertext laws for each pair of fixed messages does not need it.
+
+This one-use ciphertext law excludes the key-dependent operator snapshot.
+From the parity coordinates \(y\), the public left inverse gives
+\[
+ t=\frac{A^{\mathsf T}y}{d(d+1)}=k\mathbin\odot s.
+\]
+For candidate messages \(s_0,s_1\), compute \(k_i=t\mathbin\odot s_i\)
+and \(C_i=A\operatorname{diag}(k_i)\). A public raw root
+\(H(\operatorname{enc}(C_k))\) permits testing both with two forward hashes.
+The [actual-byte candidate test](../../lean/Protocol/Transfer/PathSignature/NativeOperatorGuessing.lean)
+parses the ciphertext, recovers the masked signs by public transpose/parity
+arithmetic and constructs those canonical operator bytes. The true plaintext
+passes; a wrong candidate that passes yields a collision between distinct
+canonical matrix bytes. Key entropy therefore does not repair this snapshot view.
+Reusing the sign key also retains the usual one-time-mask limitation; the
+proved law is neither encryption-oracle nor repeated-key security.
+
+The selected design target is exact harmonic recovery with fresh geometry per
+public encrypted object and persistent private master-key management.
+Wallet-at-rest and reused-geometry encryption remain separate. The sign
+sampler remains a nondefault implementation candidate until actual hiding
+operator binding and its versioned native wire are built. Generic snapshot
+and context carriers can stay; the private opening, public instance, witness
+codec and context joins must be versioned and checked. A hiding flag is
+insufficient. Content
+hashes name encrypted material. The selected public-view design excludes
+operator nullifiers, full projectors/kernel Plücker data and usable transport
+to a known presentation. Its exact opening/artifact must be message-independent,
+and the joint view of public records, auxiliary data and proof transcripts
+still needs analysis.
+
+Fresh sampling also differs from ordinary transport, which preserves
+\(z,a,u\). The target sign law prescribes \(u'=C_{k'}s\). The actual
+[coexact refresh](../../lean/Protocol/Transfer/PathSignature/NativeNoiseRefresh.lean)
+satisfies
+\[
+ \operatorname{Enc}_{C_{k'}}(z,a,u)
+ +\operatorname{Enc}_{C_{k'}}(0,0,u'-u)
+ =\operatorname{Enc}_{C_{k'}}(z,a,u').
+\]
+Its canonical-byte parser and correction return the desired target sample.
+At fixed target and message, migrated bytes already equal the fresh target
+bytes exactly when the retained and desired openings agree. This operation
+does not generate fresh keys, enforce one use or provide a safe public refresh
+token.
+
+##### 6.6.3. Bounded adaptive CRS reference construction
 
 The [CRS primitive interface](../../lean/Protocol/Transfer/PathSignature/CRS.lean)
 supplies actual setup, prover, verifier, simulated-setup, simulator and
@@ -1525,7 +1625,8 @@ oracle proves with the sampled private witness and real setup; its simulated
 oracle uses simulated setup and its trapdoor. A shared PMF supplies the
 credential, witness, auxiliary input, setup seed, proof randomness and
 adversary randomness. Both executions retain the same adversary and sampled
-maps. The finite sampler above is one permitted PMF; the reduction requires
+maps. The original box sampler is one permitted PMF for this reference
+relation; the reduction requires
 no independence. Freshness uses the generated signing log
 on the complete credential/message input.
 
@@ -1582,8 +1683,14 @@ its security rates and secure setup generation remain external; no Groth16
 or pairing engine, zero-knowledge theorem or UC theorem is constructed here.
 The direct trapdoor-extraction route avoids an unsupported HCP public-key
 encryption slot while keeping the actual native Hodge witness central.
+The tagged Boolean construction in
+[BGPR2022, §§5–6](https://imec-publications.be/server/api/core/bitstreams/16add66f-1230-43ee-80f1-9c0e93c7f206/content)
+fits straight-line extraction, but still requires genuine encoded bilinear
+groups, the selected matrix/kernel Diffie–Hellman assumptions and collision
+analysis for the complete subject tag. A Fiat–Shamir extractor that forks an
+oracle adversary has a different interface. No secure backend is instantiated.
 
-##### 6.6.3. Approved execution and finite arithmetic core
+##### 6.6.4. Approved execution and finite arithmetic core
 
 The [registration descriptor](../../lean/Protocol/Transfer/Certificates/Profile.lean)
 retains full proof metadata, public profile bytes, parameter-set hash,
@@ -1673,12 +1780,18 @@ The [generated rank-one arithmetic core](../../lean/Protocol/Transfer/PathSignat
 has exactly \(2mn+n+m+1\) constraints: \(2mn\) matrix-coordinate products,
 \(n+m\) coordinate equations and one exact-coordinate equation. Every
 integer matrix, message and opening has an explicit satisfying assignment,
-both over the integers and modulo the chosen modulus. Modular satisfaction
-lifts to the integer sample equations only under the explicit `NoWrap`
-premise that every integer constraint residual has absolute value below the
-modulus. This is the sample arithmetic core. Range/salt checks, canonical
-byte parsing and hash circuits still require a compiler/refinement for the
-full native relation. General real projection certificates do not
+both over the integers and modulo the chosen modulus. The
+[integer range checker](../../lean/Protocol/Transfer/PathSignature/NativeCircuitBounds.lean)
+bounds inputs by \(K\), products by \(K^2\), and information/parity outputs
+by \(K+mK^2\) and \(K+nK^2\). Every gate residual is at most
+\[
+ M=\max\{2K^2,2(K+mK^2),2(K+nK^2),2K\}.
+\]
+A modulus \(q>M\), modular satisfaction and those checked ranges imply the
+original integer ciphertext equations. Honest bounded witnesses pass the
+range check. This checks integer lifts: compiling range/salt checks, canonical
+byte parsing and hashes into field constraints remains separate. General
+real projection certificates do not
 automatically become this finite circuit.
 
 #### 6.7. Harmonic-lattice recovery and optional encrypted evaluation
@@ -1811,10 +1924,14 @@ scoped one-shot integrity comparison in §6.3.
 | Generic path proof and outer codec | [PathSignature](../../lean/Protocol/Transfer/PathSignature.lean), [Codec](../../lean/Protocol/Transfer/PathSignature/Codec.lean) | Original supplied path witness and isometric realization remain separate from the coupled finite relation; outer key/message framing is canonical. |
 | Finite native witness and program | [NativeRelation](../../lean/Protocol/Transfer/PathSignature/NativeRelation.lean), [NativeProgram](../../lean/Protocol/Transfer/PathSignature/NativeProgram.lean) | Canonical bounded witness/instance/program codecs, actual sample/projector and typed Helfer equivalence, native nonisometric transport and original-target-or-byte-collision comparison. |
 | Finite native sampling | [NativeSampler](../../lean/Protocol/Transfer/PathSignature/NativeSampler.lean) | Uniform finite seeds, exact cardinality, injective bounded witness decoding and a fixed independent crypto tape. Public-hash uniformity and hardness do not follow. |
+| Original sampler recovery audit | [NativeRecovery](../../lean/Protocol/Transfer/PathSignature/NativeRecovery.lean) | Actual-byte scalar coefficient recovery has exact mass `7/9` under the original full seed law for any salt length and independent crypto tape. Known-zero reused-key recovery is separate from automatic forgery. |
+| Proposed sign sampling and ciphertext-only recovery | [NativeSignSampler](../../lean/Protocol/Transfer/PathSignature/NativeSignSampler.lean), [NativeSignPrivacy](../../lean/Protocol/Transfer/PathSignature/NativeSignPrivacy.lean) | Equal one-use canonical ciphertext laws, identity/dense examples and exact `2^-n` total message-guessing mass and at most `2^-n` partial coefficient recovery for independent uniform targets. This is not the default storage/full-view profile. |
+| Bare operator-hash disclosure | [NativeOperatorGuessing](../../lean/Protocol/Transfer/PathSignature/NativeOperatorGuessing.lean) | Actual ciphertext parsing recovers the mask; true candidate hashes match, while wrong accepted guesses give canonical matrix-byte collisions. No timed CPA theorem is asserted. |
+| Coexact noise refresh | [NativeNoiseRefresh](../../lean/Protocol/Transfer/PathSignature/NativeNoiseRefresh.lean) | Actual original transport plus the byte correction yields the prescribed target opening. Transport alone retains old noise; no public token, fresh key or lifecycle is supplied. |
 | Adaptive CRS reference reduction | [CRS](../../lean/Protocol/Transfer/PathSignature/CRS.lean), [NativeSecurity](../../lean/Protocol/Transfer/PathSignature/NativeSecurity.lean) | Supplied actual algorithms; response-dependent bounded oracle and generated logs; five-term reduction for the actual full-ciphertext view under the event-specific Boolean forgery-test hybrid. Primitive estimates and a secure implementation remain external. |
 | Approved parsed execution | [Profile](../../lean/Protocol/Transfer/Certificates/Profile.lean), [ProfileAuthentication](../../lean/Protocol/Transfer/Certificates/ProfileAuthentication.lean), [Registered](../../lean/Protocol/Transfer/PathSignature/Registered.lean), [NativeRegistered](../../lean/Protocol/Transfer/PathSignature/NativeRegistered.lean) | Exact quorum-approved program/key/CRS bytes; original metadata/scope/epoch and exact expected-code checks. The native key uses the owner's credential and actual context snapshot/ciphertext names. Honest completeness is conditional; no finality or secure setup generation. |
 | Original context and sampled application | [NativeContext](../../lean/Protocol/Transfer/PathSignature/NativeContext.lean), [NativeApplication](../../lean/Protocol/Transfer/PathSignature/NativeApplication.lean) | Actual credential/snapshot/sample/hash and parsed-setup joins; canonical completion of the generated fresh target into the original checked packet. The same-PMF application event inherits the native five-term bound. Arbitrary packet adversaries and general accepted-invalid integrity remain separate. |
-| Finite sample arithmetic | [NativeCircuit](../../lean/Protocol/Transfer/PathSignature/NativeCircuit.lean) | Generated R1CS core of size `2mn+n+m+1`, honest native assignments and explicit no-wrap lifting. Range/byte/hash compilation remains open. |
+| Finite sample arithmetic | [NativeCircuit](../../lean/Protocol/Transfer/PathSignature/NativeCircuit.lean), [NativeCircuitBounds](../../lean/Protocol/Transfer/PathSignature/NativeCircuitBounds.lean) | Generated `2mn+n+m+1` core, honest assignments and actual integer-lift range check. An explicit residual/modulus bound gives integer observations. Compiling range/byte/hash checks into field constraints remains open. |
 | Canonical byte-owner packets | [TransferCodec](../../lean/Protocol/Evidence/TransferCodec.lean) | Exact existing metadata/intent/packet bytes and full vote targets; malformed semantic fields remain representable. This is a versioned Lean reference profile. |
 | Primitive failures and one-shot integrity | [PrimitiveChecks](../../lean/TCB/PrimitiveChecks.lean), [Primitives](../../lean/Protocol/Transfer/Primitives.lean), [Security](../../lean/Protocol/Transfer/Security.lean) | Actual verifier/history interfaces and conditional shared-PMF failure composition; this fixed-history theorem is separate from the bounded adaptive CRS reduction above. Primitive error estimates remain supplied. |
 | Public certificate bytes and calibration | [Codec](../../lean/Protocol/Transfer/Certificates/Codec.lean), [Calibration](../../lean/Protocol/Transfer/Certificates/Calibration.lean), [Evidence](../../lean/Protocol/Transfer/Certificates/Evidence.lean), [Bundle](../../lean/Protocol/Transfer/Certificates/Bundle.lean) | Canonical public subjects, actual proof-byte leaves, immutable seven-slot root and predecessor checks; exact rational realization identifies the selected real calibration. The generic packet codec has a concrete byte-owner specialization. |

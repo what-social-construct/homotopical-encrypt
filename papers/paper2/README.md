@@ -104,8 +104,8 @@ justified sampler profiles and security for the complete released view remain op
 The [finite native relation](../../lean/Protocol/Transfer/PathSignature/NativeRelation.lean)
 uses the actual bounded private witness `(B,C,z,a,u,salt)`. Canonical witness
 and [program/instance codecs](../../lean/Protocol/Transfer/PathSignature/NativeProgram.lean)
-retain a salted source credential, target matrix commitment and full-ciphertext
-digest. Accepted witnesses have the actual target sample, harmonic projection
+retain a salted source credential, raw target-matrix hash and full-ciphertext
+digest in the existing reference profile. Accepted witnesses have the actual target sample, harmonic projection
 and typed Helfer equivalence; the native `M_C M_B⁻¹` transport preserves their
 message and openings. It may be nonisometric and does not instantiate the
 separate generic isometric path adapter. Artifact/lifecycle binding still
@@ -117,6 +117,41 @@ decoding gives bounded private witnesses, and a fixed cryptographic-tape law
 is independent of the native seed with both marginals retained. This does
 not make public hash keys uniform or distinct and gives no hardness estimate
 for a family that includes zero messages and degenerate matrices.
+
+The [original sampler audit](../../lean/Protocol/Transfer/PathSignature/NativeRecovery.lean)
+gives exact `7/9` public coefficient recovery in its bound-one scalar profile
+for every salt length, and actual-byte recovery of a reused scalar operator
+from a known zero message with nonzero noise. This does not itself forge the
+complete credential proof. The separate
+[fresh-sign candidate](../../lean/Protocol/Transfer/PathSignature/NativeSignSampler.lean)
+uses `C=A diag(k)`, `AᵀA=dI`, `z=d sign(message)` and correlated `u=C sign(message)`.
+Its canonical ciphertext laws agree for all messages under one fresh uniform
+sign key; identity and dense Hadamard examples inhabit the profile. Under an
+independent uniform message, [complete-message guessing](../../lean/Protocol/Transfer/PathSignature/NativeSignPrivacy.lean)
+has exact success `2^-n`, also with an independent fixed tape or a ciphertext
+digest; arbitrary partial integer-coefficient recovery is at most `2^-n`. This ciphertext-only law omits operator roots and signing/storage
+views. The [actual-byte candidate test](../../lean/Protocol/Transfer/PathSignature/NativeOperatorGuessing.lean)
+checks a plaintext guess against a raw operator hash; a wrong accepted guess
+supplies a collision between distinct canonical matrix bytes.
+
+The selected design target is exact harmonic recovery with fresh geometry per
+public encrypted object and persistent private master-key management.
+Wallet-at-rest and reused-geometry encryption remain separate. The sign
+sampler remains a nondefault implementation candidate until actual hiding
+operator binding, private openings and a versioned native instance, witness
+codec and context joins are built. Existing generic
+snapshot carriers remain useful; the cochain hiding flags are not an operator
+commitment algorithm. Public content hashes name encrypted material; operator
+fingerprints/nullifiers, full projectors/Plücker data and usable public
+transport are excluded from the intended private view. The exact artifact must
+be message-independent, and auxiliary/proof disclosures still need analysis.
+The candidate is not the default storage profile.
+
+The [coexact refresh](../../lean/Protocol/Transfer/PathSignature/NativeNoiseRefresh.lean)
+adds the desired-minus-retained target opening and returns the prescribed
+canonical target sample. Ordinary transport preserves the old opening and
+need not resample the new correlated law. This correction provides neither a
+safe public refresh token nor independent key generation or one-use enforcement.
 
 The [CRS reference composition](../../lean/Protocol/Transfer/PathSignature/CRS.lean)
 uses supplied actual setup/prove/verify/simulation/extraction functions. A
@@ -180,8 +215,10 @@ malformed semantic values for the checker. It defines a versioned Lean
 reference wire profile, without archived Rust compatibility. The
 [generated R1CS sample core](../../lean/Protocol/Transfer/PathSignature/NativeCircuit.lean)
 has `2mn+n+m+1` constraints and an honest assignment for every integer sample.
-Modular satisfaction lifts only with the explicit no-wrap residual bound;
-range, salt, byte and hash compilation for the complete relation remains open.
+The [actual integer range check](../../lean/Protocol/Transfer/PathSignature/NativeCircuitBounds.lean)
+and explicit maximum residual/modulus bound discharge no-wrap and recover
+the original integer observation. Compiling these integer range checks, salt,
+bytes and hashes into the complete field circuit remains open.
 
 The commitment profile retains the original cochain payload, its declared
 modulus/count/topology tag, the private cellular/Hodge interpretation and
@@ -276,6 +313,8 @@ refinement.
 | Public certificate bytes and calibration | [Codec](../../lean/Protocol/Transfer/Certificates/Codec.lean), [Calibration](../../lean/Protocol/Transfer/Certificates/Calibration.lean), [Evidence](../../lean/Protocol/Transfer/Certificates/Evidence.lean), [Bundle](../../lean/Protocol/Transfer/Certificates/Bundle.lean) |
 | Certificate statements and actual consumption | [Statement](../../lean/Protocol/Transfer/Certificates/Statement.lean), [Native](../../lean/Protocol/Transfer/Certificates/Native.lean), [Projection](../../lean/Protocol/Transfer/Certificates/Projection.lean) |
 | Bounded native credential and adaptive CRS reduction | [NativeRelation](../../lean/Protocol/Transfer/PathSignature/NativeRelation.lean), [NativeProgram](../../lean/Protocol/Transfer/PathSignature/NativeProgram.lean), [CRS](../../lean/Protocol/Transfer/PathSignature/CRS.lean), [NativeSecurity](../../lean/Protocol/Transfer/PathSignature/NativeSecurity.lean) |
+| Sampler audit and fresh-sign candidate | [NativeRecovery](../../lean/Protocol/Transfer/PathSignature/NativeRecovery.lean), [NativeSignSampler](../../lean/Protocol/Transfer/PathSignature/NativeSignSampler.lean), [NativeSignPrivacy](../../lean/Protocol/Transfer/PathSignature/NativeSignPrivacy.lean), [NativeOperatorGuessing](../../lean/Protocol/Transfer/PathSignature/NativeOperatorGuessing.lean) |
+| Coexact refresh and checked arithmetic ranges | [NativeNoiseRefresh](../../lean/Protocol/Transfer/PathSignature/NativeNoiseRefresh.lean), [NativeCircuitBounds](../../lean/Protocol/Transfer/PathSignature/NativeCircuitBounds.lean) |
 | Finite native witness sampling | [NativeSampler](../../lean/Protocol/Transfer/PathSignature/NativeSampler.lean) |
 | Authenticated profile selection and owner execution | [Profile](../../lean/Protocol/Transfer/Certificates/Profile.lean), [ProfileAuthentication](../../lean/Protocol/Transfer/Certificates/ProfileAuthentication.lean), [Registered](../../lean/Protocol/Transfer/PathSignature/Registered.lean), [NativeRegistered](../../lean/Protocol/Transfer/PathSignature/NativeRegistered.lean) |
 | Original context and sampled application bound | [NativeContext](../../lean/Protocol/Transfer/PathSignature/NativeContext.lean), [NativeApplication](../../lean/Protocol/Transfer/PathSignature/NativeApplication.lean) |
@@ -296,6 +335,12 @@ committee objects without promoting their supplied contracts to algorithms.
 PoV/reliability policy, oracle/coregulator attachment points and the legacy
 chain model are deferred or supporting families outside the bounded
 transition claim. Authenticated quorums do not supply rounds, locking or finality.
+
+The immediate privacy obligation is the new hiding operator-root profile and
+its actual opening/codec/context joins, followed by analysis of the complete
+public view and key-use policy. The ciphertext-only sign law does not close
+that obligation or justify a multi-use security theorem. The existing raw-root
+application remains a conditional integrity/recovery reference.
 
 The CRS reference reduction composes supplied algorithms; a secure proof
 primitive implementation, its message-bound extraction/simulation estimates,

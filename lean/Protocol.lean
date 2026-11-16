@@ -44,5 +44,11 @@ public import Protocol.Transfer
   round/lock/finality and Rust refinement remain separate completion tasks.
   The optional HCP sampling and fixed-key span modules provide finite
   semantic checks and conditional leakage boundaries, not an asymptotic
-  confidentiality theorem.
+  confidentiality theorem. The native reference sampler also has a concrete
+  scalar recovery counterexample. A separate fresh-sign candidate has exact
+  one-use ciphertext laws and ciphertext-only guessing bounds; its public
+  operator-hash disclosure and migration/noise-refresh boundaries are explicit.
+  The selected design target uses fresh geometry per public object and a
+  private master for key management. Hiding operator binding and a secure
+  proof primitive remain construction tasks, not properties of the old wire.
 -/
