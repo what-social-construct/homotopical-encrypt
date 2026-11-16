@@ -159,3 +159,43 @@ reused-geometry security remain separate. Current
 [scoped native delivery](../lean/Protocol/Ephemeral/NativeDelivery.lean) is
 reusable; freshness, protected delivery and retirement require their actual
 selected policy and implementation.
+
+### Operator-commitment provenance
+
+The earlier [native primitive plan](archive/PRIMITIVES.md) preferred cochain
+commitments over Pedersen for payload values. Its coboundary and Hodge-blinding
+objects concern `C¹` values inside a sheaf; they do not commit to a varying
+private operator.
+
+There is also a concrete, separate operator-commitment prototype in
+[`homotopical_zkp.py`](../archive/runtime/src/proofs/homotopical_zkp.py).
+`_commit_laplacian` hashes a domain separator, the Laplacian snapshot, its path
+parameter and a fresh 32-byte secret nonce. `GeodesicCommitment.to_public_bytes`
+returns only the digest before opening. This is historical precedent for a
+private-nonce operator hash, not evidence that a group-based operator
+commitment was selected. The nonce is a private opening, distinct from a
+public transaction counter or credential salt.
+
+The prototype uses floating-point array bytes and publishes selected operator,
+parameter and nonce openings in its proof. Its sampled indices include zero,
+whose snapshot is the initial secret operator; opening that index discloses
+it. Consequently the commitment idea must be separated from that archived
+cut-and-open proof when constructing a non-disclosing profile. Canonical
+encoding, the full released proof view and a quantitative hiding argument
+remain required; the old comments do not supply them or select a ROM theorem.
+
+The later [visibility audit](../archive/documentation/docs/SEMANTIC_PARITY_QUEUE.md)
+explicitly reopened the choice between a private frame/shadow with a hiding
+commitment and proof, a proved-safe public projection, or deliberate audit
+disclosure. Its warning that hash binding is not hiding still applies.
+The [architecture](archive/ARCHITECTURE.md) separately assigns outer hashes to
+encrypted content and public audit/indexing. Preserve these three roles:
+native cochain payload, private operator commitment, and outer content hash.
+
+For the selected fresh-geometry target, the nonce-hash prototype is the
+closest recovered implementation direction. It is not yet the active native
+wire or an established operator-hiding security model. In particular, the
+current native witness salt protects its source credential, while its target
+snapshot still hashes the bare matrix; a target-specific private opening and
+versioned context/codec joins must be constructed before using the new privacy
+profile. No archived runtime or proof system is reinstated by this review.
