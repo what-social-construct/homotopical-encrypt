@@ -1,8 +1,7 @@
 module
 
 public import Protocol.Storage.CoupledCiphertext.Disclosure
-public import HCP.CoupledSemantics
-public import HCP.CoupledTransport
+public import HCP.CoupledGeometry
 
 @[expose] public section
 

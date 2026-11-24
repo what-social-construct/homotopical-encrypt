@@ -79,6 +79,13 @@ the stronger Hodge rotation laws. The
 [canonical matrix bytes](lean/Protocol/Storage/CoupledCodec.lean) and
 [snapshot checks](lean/Protocol/Storage/CoupledBinding.lean) bind that same
 profile to existing storage contexts.
+The [core geometry and recovery diagram](lean/HCP/CoupledGeometry.lean)
+derives the true Hodge action from those same cellular maps and proves that
+its matrix determines `B` in this fixed profile. Harmonic projection commutes
+with native ciphertext transport and the shear restricted to harmonic
+messages, on every real cochain. The two transports agree on that message
+lattice but differ on general observations. Varying topology, metrics or
+integral/basis choices would require an enlarged reconstruction profile.
 The [integral native sample](lean/Sheaf/HCPCoupledEncoding.lean) has full
 observation `(a,z−Bᵀu,Bz+u)`. Its
 [ciphertext codec](lean/Protocol/Storage/CoupledCiphertext.lean) decodes to the

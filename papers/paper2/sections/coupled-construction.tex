@@ -1,6 +1,6 @@
 % Working section of the combined HCP and proof-carrying transaction manuscript.
 % Canonical prose counterpart: ../DRAFT.md, opening and coupled/native sections.
-% Requires amsmath, amssymb, amsthm and proposition/theorem environments.
+% Requires amsmath, amssymb, amsthm, tikz-cd and proposition/theorem environments.
 \begin{abstract}
 We construct a framework for cochain encryption and verification over finite
 cellular sheaves, with changes of presentation that preserve integral harmonic
@@ -116,7 +116,23 @@ boundary rather than an asymptotic hardness reduction.
 \section{Coupled harmonic lattices and their public class}
 \label{sec:coupled-harmonic-construction}
 
-The cellular sheaf determines the cochain complex before a message is chosen.
+\subsection{The source presentation and its derived operators}
+
+The source presentation fixes a finite oriented incidence complex, stalks,
+restriction maps, inner-product conventions and compatible integral stalk
+lattices. In the present cellular model, the coordinate stalks carry standard
+Euclidean metrics; an integral structure is additional data. The selected
+profile specifies which data are fixed, public or private. The sheaf
+determines the cochain complex before a message is chosen, and the inner
+products determine the adjoints and true Hodge operator
+\[
+ C^0(F)\xrightarrow{\delta_0}C^1(F)\xrightarrow{\delta_1}C^2(F),\qquad
+ \Delta_{1,F}=\delta_0\delta_0^*+\delta_1^*\delta_1.
+\]
+Thus the private operator is derived from a presentation, rather than supplied
+as an unrelated positive matrix. The incidence model does not by itself
+construct a geometric CW realization, a network topology or a moduli stack.
+
 For an integral presentation, the admissible messages form the subgroup
 \[
   \Lambda_F=C^1_{\mathbb Z}(F)\cap\ker\Delta_{1,F}\ \subseteq\ C^1(F).
@@ -145,6 +161,25 @@ one scalar face stalk per row of \(B\). Its actual restriction maps give
 The information edges contribute to shared face equations, so the stalk maps
 couple different edge cells. Standard integer stalk lattices are preserved by
 these maps. All cochain spaces use their fixed Euclidean metrics.
+
+These definitions reconstruct the full admitted geometry from the dimensions
+and \(B\): the cellular maps, standard metric and integral stalks, harmonic
+space and graph basis. Directly from the two differentials and their adjoints,
+\[
+ \Delta_B(a,x,y)=\bigl(a,-B^{\mathsf T}(y-Bx),y-Bx\bigr),
+\]
+\[
+ \Delta_B=
+ \begin{pmatrix}
+  1&0&0\\0&B^{\mathsf T}B&-B^{\mathsf T}\\0&-B&I
+ \end{pmatrix}.
+\]
+Each of \(\delta_{1,B}\) and \(\Delta_B\), in these fixed coordinates,
+determines every entry of \(B\). Canonical \(B\) bytes can therefore bind this
+entire profile without an independently chosen operator. A general Hodge
+matrix does not determine arbitrary integral lattices, coefficient bases or
+the separate differentials. Varying those data, the topology or the metric
+requires an explicit enlarged reconstruction profile.
 
 \begin{proposition}[Intrinsic harmonic graph lattice]
 \label{prop:coupled-harmonic-graph}
@@ -182,11 +217,17 @@ independent reduction and a specified experiment.
 
 \subsection{Constructed homotopy-class and lattice preservation}
 
+Helfer's homotopy equivalences compare interpretations of a declared
+signature \cite[Definition~7.1]{helfer2019fol}. Here the sort is the actual
+cochain complex and the closed tests concern nonzero homology. The metric and
+Hodge adjoints are additional data, rather than operations whose covariance
+is asserted by the semantic signature.
+
 \begin{theorem}[Same public class and message coefficients]
 \label{thm:coupled-public-class}
 For integer matrices \(B,C\) of the same dimensions, define
 \[
- T_{B,C}(a,x,y)=(a,x,y+(C-B)x).
+ S_{B,C}(a,x,y)=(a,x,y+(C-B)x).
 \]
 Together with identity maps in degrees zero and two, this is a strict
 isomorphism between the actual cellular cochain complexes. It induces a
@@ -194,15 +235,15 @@ typed Helfer equivalence and equality of their closed theories in the declared
 homological test fragment. Its restriction gives an additive equivalence
 \(\Lambda_B\simeq\Lambda_C\) preserving the integer coefficient vector:
 \[
- T_{B,C}(0,z,Bz)=(0,z,Cz).
+ S_{B,C}(0,z,Bz)=(0,z,Cz).
 \]
 \end{theorem}
 
 \begin{proof}
-The inverse is \(T_{C,B}\), and direct substitution gives
+The inverse is \(S_{C,B}\), and direct substitution gives
 \[
- T_{B,C}\delta_{0,B}=\delta_{0,C},\qquad
- \delta_{1,C}T_{B,C}=\delta_{1,B}.
+ S_{B,C}\delta_{0,B}=\delta_{0,C},\qquad
+ \delta_{1,C}S_{B,C}=\delta_{1,B}.
 \]
 The resulting strict complex isomorphism supplies the typed semantic
 equivalence. Proved invariance of the declared closed tests gives theory
@@ -256,6 +297,42 @@ sample's coordinate formula identifies its observed cochain with
 \(M_B(a,z,u)\). The transport and composition formulas follow by cancellation
 of the coordinate equivalences.
 \end{proof}
+
+\begin{proposition}[Harmonic recovery square]
+\label{prop:coupled-recovery-square}
+Let \(P_B\) denote harmonic projection and
+\(g_B(z)=(0,z,Bz)\). For every real coordinate triple \(\xi=(a,z,u)\) and
+every real cochain \(b\),
+\begin{align*}
+ P_B M_B\xi&=g_B(z),&
+ P_C L_{B\to C}b&=S_{B,C}P_Bb,\\
+ \operatorname{info}_C P_C L_{B\to C}b&=\operatorname{info}_B P_Bb.
+\end{align*}
+On harmonic vectors \(L_{B\to C}\) agrees with \(S_{B,C}\), including
+their restrictions to the intrinsic integral lattices.
+\end{proposition}
+
+\begin{proof}
+The actual assembly is
+\(M_B(a,z,u)=g_B(z)+\delta_{0,B}a+\delta_{1,B}^*u\).
+Harmonic projection fixes the first summand and kills the other two.
+Every real \(b\) has the unique form \(M_B\xi\). Substitution of
+\(L_{B\to C}M_B=M_C\) and \(S_{B,C}g_B=g_C\) gives the square.
+Information coordinates of \(g_B(z)\) are \(z\), which proves the final
+identity. Taking zero noise proves agreement on harmonic vectors; restricting
+to integer \(z\) gives the lattice statement.
+\end{proof}
+
+\input{sections/geometry-diagrams.tex}
+
+This square holds without an isometry because the tailored native map
+preserves the harmonic and noise summands separately. The semantic shear
+cannot replace its ciphertext arrow. For \(B=0,C=1,b=(0,0,1)\),
+\[
+ S_{B,C}P_Bb=0,\qquad P_CS_{B,C}b=(0,1/2,1/2).
+\]
+The diagrams concern the mathematical core. Account recovery policy and
+key-rotation lifecycle are separate protocol constructions.
 
 This map is distinct from the cochain shear and need not preserve norms.
 An executable rational refinement computes the inverse by the

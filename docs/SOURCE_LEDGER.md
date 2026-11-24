@@ -192,6 +192,19 @@ The [architecture](archive/ARCHITECTURE.md) separately assigns outer hashes to
 encrypted content and public audit/indexing. Preserve these three roles:
 native cochain payload, private operator commitment, and outer content hash.
 
+The core geometry must be fixed before selecting that commitment's preimage.
+The active [coupled geometry](../lean/HCP/CoupledGeometry.lean) reconstructs
+its cellular maps, standard Euclidean metrics, integral stalks and graph
+encoding from the dimensions and integer coupling matrix. The actual
+differential and true Hodge operator each determine that matrix in this fixed
+profile. Its assembly, projection and coefficient diagrams are proved on the
+same objects. This recovers the geometry-first direction of the earlier
+plans without adopting their spectral-classification, anonymity or
+adjoint-inverse claims. A larger profile must encode any additional varying
+topology, metric, lattice or basis data; a derived Laplacian alone does not
+generically bind those choices. The current snapshot is indexed by the sheaf,
+with additional integral/decoder/profile bindings still explicit.
+
 For the selected fresh-geometry target, the nonce-hash prototype is the
 closest recovered implementation direction. It is not yet the active native
 wire or an established operator-hiding security model. In particular, the

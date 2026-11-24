@@ -23,6 +23,16 @@ The ciphertext map `M_C M_B⁻¹` preserves the original message and both openin
 coordinate vectors for every same-size pair, with identity/inverse/composition.
 It is distinct from the cochain shear and does not require an isometry.
 Generated integral samples remain integral.
+[CoupledGeometry](CoupledGeometry.lean) connects these maps through the same
+source presentation. It derives the actual block Hodge operator and proves
+that either the degree-one differential or true Hodge matrix determines `B`
+in the fixed coordinate/metric profile. Its two assembly/recovery triangles
+and central square hold on all real cochains:
+`P_C L_(B→C) = S_(B,C) P_B`. The tailored native map carries the harmonic and
+noise summands separately, so this square needs no isometry. Native transport
+and the semantic shear agree on harmonic vectors and the intrinsic lattice;
+an explicit scalar counterexample shows why the shear cannot replace the
+ciphertext arrow. This adds no independent geometry record or lifecycle policy.
 [CoupledRational](CoupledRational.lean) now executes the inverse and transport
 by exact rational adjugate/determinant arithmetic and proves refinement to
 the original real map. Its private decoder checks integral message

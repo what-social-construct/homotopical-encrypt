@@ -1,0 +1,34 @@
+% Canonical core-geometry figure. Requires tikz-cd.
+% Lean correspondence: HCP.CoupledGeometry; HCP.CoupledSemantics.
+\begin{figure}[htbp]
+\centering
+\begin{tikzcd}[row sep=2.8em, column sep=3.2em]
+ & \mathcal D_{\mathbb R}
+     \arrow[dl, "M_B"'] \arrow[dr, "M_C"] & \\
+ C^1(F_B) \arrow[rr, "L_{B\to C}"] \arrow[d, "P_B"']
+   && C^1(F_C) \arrow[d, "P_C"] \\
+ W_B \arrow[rr, "S_{B,C}|_{W_B}"]
+     \arrow[dr, "\operatorname{info}_B"']
+   && W_C \arrow[dl, "\operatorname{info}_C"] \\
+ & \mathbb R^n &
+\end{tikzcd}
+
+\medskip
+\begin{tikzcd}[row sep=2.2em, column sep=3.2em]
+ \mathcal I(K_B) \arrow[rr, "\simeq_{\mathrm H}"]
+       \arrow[dr, "\operatorname{Th}"']
+   && \mathcal I(K_C) \arrow[dl, "\operatorname{Th}"] \\
+ & \alpha &
+\end{tikzcd}
+\caption{The core recovery diagram and its semantic class.
+Here \(\mathcal D_{\mathbb R}=\mathbb R\oplus\mathbb R^n\oplus\mathbb R^m\),
+\(W_B=\ker\Delta_B\), and \(\operatorname{info}_B(0,z,Bz)=z\).
+The upper triangle assembles the same coordinates, the square projects to
+harmonic messages, and the lower triangle reads their coefficients.
+The separate semantic triangle uses the actual cochain complexes
+\(K_B=C^\bullet(F_B)\), their typed interpretations, and the common declared
+homological theory \(\alpha\). The semantic equivalence is induced by
+\((1,S_{B,C},1)\). Its shear acts on harmonic messages in the
+large diagram; native transport acts on ciphertexts.}
+\label{fig:coupled-core-diagrams}
+\end{figure}

@@ -136,14 +136,115 @@ table records the correspondence with the formal statements.
 
 ### 2. Maintained geometry, temporary processing and retained artifacts
 
-Fix a finite cellular sheaf \(F\) on an oriented two-complex \(X\). Its stalks,
-restriction maps, inner products and integral-coordinate conventions determine
-the cochain complex and true degree-one Hodge operator
+The source presentation consists of a finite oriented incidence complex, its
+stalks and restriction maps, inner-product conventions and compatible integral
+stalk lattices. The current cellular model uses coordinate stalks with their
+standard Euclidean metrics; its integral structure is separate supplied data.
+The secret and public parts of this presentation are selected by the profile.
+These objects determine the cochain spaces before a message or noise opening
+is chosen. The restriction maps assemble into the differentials, and the
+inner products determine their adjoints and the true degree-one Hodge operator
 
 \[
 C^0(F)\xrightarrow{\delta_0}C^1(F)\xrightarrow{\delta_1}C^2(F),
 \qquad \Delta_1=\delta_0\delta_0^*+\delta_1^*\delta_1.
 \]
+
+#### 2.1. Private geometry, harmonic messages and the recovery diagrams
+
+The phrase *private operator* refers to this presentation and its derived
+Hodge data, rather than an independently supplied positive matrix. The
+dependency is
+
+\[
+\mathcal G\longmapsto
+(C^\bullet(F),\delta_0,\delta_1,\langle\ ,\ \rangle,I)
+\longmapsto (\Delta_1,P_H,\Lambda_F),
+\qquad
+\Lambda_F=C^1_{\mathbb Z}(F)\cap\ker\Delta_1.
+\]
+
+A coefficient encoding, when used, selects points in this same lattice.
+The harmonic message \(h\in\Lambda_F\) is already a cochain. An opening
+\((a,u)\in C^0(F)\times C^2(F)\) constructs its full observation
+
+\[
+b=h+\delta_0a+\delta_1^*u\in C^1(F),\qquad P_Hb=h.
+\]
+
+An integral wire profile can encode residues of the same differential value
+\(\delta_0a\). The original observation additionally binds its selected real
+decoder to that exact summand of \(b\); modular equality alone does not give
+the real decoder equation. The encoded artifact is not itself a real cochain
+summand and does not determine the full ciphertext or its harmonic message.
+The Laplacian alone does not specify arbitrary integral lattices, coefficient
+bases or an exact/coexact decomposition in a general presentation.
+
+In the coupled profile, all data except the integer matrix
+\(B\in\mathbb Z^{m\times n}\) and its dimensions are fixed: the incidence
+complex, scalar stalks, standard Euclidean metrics, standard integer stalk
+lattices, coordinate ordering and graph basis. The existing constructors
+therefore reconstruct one geometry \(\mathcal G_B\) without choosing another
+operator or message space. In its coordinates,
+
+\[
+\delta_{0,B}a=(a,0,0),\quad
+\delta_{1,B}(a,x,y)=y-Bx,\quad
+\Delta_B(a,x,y)=\bigl(a,-B^{\mathsf T}(y-Bx),y-Bx\bigr).
+\]
+
+Both the actual differential \(\delta_{1,B}\) and the actual Hodge operator
+\(\Delta_B\), in these fixed coordinates, determine \(B\) uniquely. Thus
+committing to a canonical \(B\) can bind the complete geometry of this
+profile. Allowing varying metrics, topology, integral lattices or bases would
+require a new reconstruction profile and its data; it is not encoded by an
+unqualified matrix hash. A snapshot's indexing by \(F\) does not supply such
+a reconstruction or authenticate additional choices.
+
+For two same-size presentations, put
+\(K_B=C^\bullet(F_B)\), \(W_B=\ker\Delta_B\),
+\(g_B(z)=(0,z,Bz)\), and
+
+\[
+S_{B,C}(a,x,y)=(a,x,y+(C-B)x),\quad
+M_B(a,z,u)=(a,z-B^{\mathsf T}u,Bz+u),\quad
+L_{B\to C}=M_CM_B^{-1}.
+\]
+
+The strict cochain map \((1,S_{B,C},1):K_B\cong K_C\) supplies the typed
+Helfer equivalence of their actual interpretations and equality of the
+declared public homological theories. Helfer's semantic invariance concerns
+interpretations of the declared signature. The Hodge adjoints and metric are
+additional geometric data; the current cochain model uses homological closed
+tests, not a logical signature asserting covariance of every Hodge operator.
+
+The [commutative diagrams](sections/geometry-diagrams.tex) have two triangles
+and a central square. The upper triangle assembles a real coordinate triple
+by \(M_B\) or \(M_C\); the lower triangle reads the coefficients of a
+harmonic graph vector. The square is
+
+\[
+P_C L_{B\to C}=\left.S_{B,C}\right|_{W_B}P_B,\qquad
+\operatorname{info}_C P_C L_{B\to C}=\operatorname{info}_B P_B.
+\]
+
+These equations hold on every real cochain. The tailored map \(L_{B\to C}\)
+carries the harmonic and noise summands separately, so this projection square
+does not require an isometry. On harmonic vectors, \(L_{B\to C}\) and
+\(S_{B,C}\) agree. On general ciphertexts they differ: the scalar
+\(B=0,C=1,b=(0,0,1)\) gives \(S_{B,C}P_Bb=0\), while
+\(P_CS_{B,C}b=(0,1/2,1/2)\). One cannot replace the upper arrow of the
+square by the cochain shear. Identity, inverse and composition of \(L\) are
+already proved. This is a coherent family of selected linear transports;
+no general stack, descent construction or realization of arbitrary paths is
+inferred from the diagram.
+
+Restricting the upper triangle to integer message and opening coordinates
+recovers the original native samples and intrinsic integral harmonic messages.
+It makes no claim that projection or transport preserves every arbitrary
+integer cochain. These mathematical comparison maps establish the core
+geometry and recovery identities; account recovery policy, key generation,
+rotation and lifecycle enforcement are separate protocol concerns.
 
 The base complex is not identified with a block-history graph or a physical
 peer network. Those identifications require explicit maps and application
@@ -176,7 +277,7 @@ disclosure and access contracts belong to this paper:
 | Public payload | The serialized residue edge vector \(\bar c=\delta_0a\bmod q\), modulus, declared edge count and topology tag; public artifact handles and root bindings refer to the selected objects. This payload is not the full Hodge sample or a presentation of its operator. |
 | Selective opening/proof | Only the declared local values, conditions or verified statements are exposed. An opening or proof does not make every field of its semantic witness record public. |
 
-#### 2.1. Base public input and declared disclosures
+#### 2.2. Base public input and declared disclosures
 
 The first storage-facing profile publishes the original payload together with
 the header already derived by `Storage.Context.key`. For a context \(C\), set
@@ -361,7 +462,7 @@ criterion. The existing global factorization theorem is another sufficient
 criterion, not a property automatically enjoyed by public roots or proofs.
 
 Projective extensions retain the disclosure and binding conditions in
-§§2.1 and 5.
+§§2.2 and 5.
 
 #### 3.1. Payload operations and commitment interfaces
 
@@ -554,7 +655,7 @@ A protocol using its operative-target consequence must identify the released
 full shadow with the actual sample's harmonic kernel at the fixed metric.
 The existing
 [operative-target adapter](../../lean/TCB/PluckerObservation.lean) records that
-conditional use. The base visibility profile in §2.1 instead omits full
+conditional use. The base visibility profile in §2.2 instead omits full
 coordinates; a digest-only extension retains its own observable fields,
 binding contract and security analysis.
 
@@ -714,7 +815,7 @@ implicitly from a large classifier fiber or the name of a gate.
 The recipient profile below keeps the base lattice/Hodge key and uses an
 actual private transport for recovery. Its delivery receipt names the same
 semantic plaintext convention and original source/target contexts. Any
-released delivery hints or envelope bytes extend the §2.1 observation view.
+released delivery hints or envelope bytes extend the §2.2 observation view.
 A noise opening or class-membership path alone supplies neither that recovery
 material nor a key-exchange or encapsulation algorithm.
 
@@ -1295,7 +1396,7 @@ the same oracle cannot choose two different targets at their shared
 \((\alpha,b)\). Both axis samples also have exact component zero. This
 establishes no computational hardness reduction or equality of their complete
 storage records. With the canonical systematic source, the full-cochain
-disclosure fails already by the direct recovery in §2.1.
+disclosure fails already by the direct recovery in §2.2.
 
 For a fixed key, [NoiseSpanAttack](../../lean/HCP/NoiseSpanAttack.lean)
 proves a second conditional boundary: if observed zero encryptions span the
@@ -1903,6 +2004,7 @@ scoped one-shot integrity comparison in §6.3.
 
 | Family | Canonical modules | Status and boundary |
 |---|---|---|
+| Source presentation and derived operators | [Cellular](../../lean/Sheaf/Cellular.lean), [Hodge](../../lean/Sheaf/Hodge.lean), [Integral](../../lean/Sheaf/Integral.lean), [CoupledGeometry](../../lean/HCP/CoupledGeometry.lean) | Existing source objects determine the fixed-profile operators, lattice and cochain space. The true Hodge operator reconstructs the coupling matrix; the all-real assembly/recovery triangles and projection square are proved on those same objects. Generic independently varying geometry and its finite codec remain separate. |
 | Payload and operations | [Payload](../../lean/Axioms/CochainCommitment/Payload.lean) | Constructed shape, modulus/count/tag, compatible addition and zero; finite serialization remains separate. |
 | Snapshot, interpretation and openings | [Commitment](../../lean/Sheaf/Commitment.lean) | Constructed snapshot/payload interpretation, exact acceptance and opening equivalence modulo `ker delta0`; this is Paper 2 construction. |
 | Concrete/legacy semantics | [CochainSemantics](../../lean/Sheaf/CochainSemantics.lean), [SheafCoherence](../../lean/Axioms/SheafCoherence.lean) | Conditional carrier/decoder/coboundary alignment and acceptance equivalence; ambient coherence contracts remain supplied. |

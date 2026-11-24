@@ -37,6 +37,17 @@ message coefficients. The generally nonisometric shear does not transport
 Hodge noise; protocol rotations retain their actual isometry requirement.
 The same file joins the actual Hodge matrix to the HCP operative projector.
 
+The [core geometry diagram](../../lean/HCP/CoupledGeometry.lean) now derives
+the full Hodge action and proves that the actual differential or Laplacian
+determines the coupling matrix in this fixed profile. It joins coordinate
+assembly, harmonic projection and coefficient recovery on all real cochains.
+The [manuscript figure](sections/geometry-diagrams.tex) uses two triangles and
+a central square, keeping the semantic shear and native ciphertext map
+distinct. Private geometry is the source of the cochain space and operators;
+the message and its opening then construct a particular observed cochain.
+Independent metric, topology, lattice or basis choices require their own
+reconstruction data. Account recovery and key-rotation policy are deferred.
+
 The separate [native coordinate transport](../../lean/HCP/CoupledTransport.lean)
 is `M_C M_B⁻¹` for the original full observation map `M_B`. It transports
 ciphertexts with the same message and opening coordinates for all same-size
