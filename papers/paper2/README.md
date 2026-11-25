@@ -1,12 +1,9 @@
 # Proof-Carrying Transactions for Homotopical Encryption
 
-Paper 2 constructs transaction, storage and verification interfaces that
-consume the mathematical encryption mechanism established in
-[Paper 1](../paper1/README.md). The readable manuscript is
-[construction.pdf](construction.pdf), built from
-[construction.tex](construction.tex) and the
-[protocol section](sections/coupled-construction.tex). These filenames remain
-stable. The [working inventory](DRAFT.md) records the broader protocol work.
+Paper 2 specifies how transactions store, verify and act on the same encrypted
+cochain. It uses the encryption, recovery and transport interface established
+in [Paper 1](../paper1/README.md). Read the [protocol PDF](construction.pdf),
+its [TeX source](construction.tex), or the [working inventory](DRAFT.md).
 
 An exact-component commitment can remain fixed while the full encrypted
 cochain changes. The protocol therefore names both objects in one manifest,
@@ -26,21 +23,11 @@ held transport token and available ciphertext bytes.
 | Raw-root CRS reference | Fresh completion inherits the conditional five-term adaptive forgery bound on the original sampled execution. |
 | Nonce-bearing version | Its separate native relation and approved owner checker retain the original snapshot/context and actual private operator opening. |
 
-The coupled cellular operators, intrinsic harmonic lattice, semantic and
-ciphertext transports, finite encryption/recovery algorithms, and one-use
-random-oracle theorem belong to Paper 1. Their canonical Lean modules remain
-where they are; source-directory names do not determine paper ownership.
-Paper 2 cites these results and retains the protocol joins, rather than
-repeating their mathematical proofs. [Paper 3](../paper3/README.md) owns the
-coding, projection-distance and proximity analysis.
-
-The two native profiles have distinct verification and security scopes. The
-original bounded relation retains a raw target-matrix hash and is the relation
-used by the existing adaptive CRS reduction. The nonce-bearing version uses
-the private operator commitment and its own versioned witness, program and
-instance. Its original-context checker is constructed. Paper 1's one-use
-instance/ciphertext recovery theorem does not automatically bound recovery
-from signing answers, evidence proofs or the complete public storage record.
+The adaptive CRS reduction uses the raw-root relation. The nonce-bearing
+version uses the private operator commitment and its own witness, program,
+instance and original-context checker. A privacy experiment for that checker
+must account for the signing answers, evidence proofs and released storage
+records together.
 
 The remaining protocol work is secure proof/signature primitive
 instantiation, semantic setup refinement, complete field-circuit byte/hash

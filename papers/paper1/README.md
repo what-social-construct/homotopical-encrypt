@@ -15,7 +15,11 @@ The main body has four parts:
 
 The coupled family uses one canonical private matrix throughout. Its integer
 harmonic chart covers the full intrinsic lattice; exact byte recovery returns
-the original coefficients. The finite fresh-key instance has the proved
+the original coefficients. The manuscript walks through both runnable byte
+round trips, including recovery of the original Boolean message in the
+fresh-sign profile. [Lean demo](../../lean/Protocol/Storage/CoupledRecovery/Demo.lean)
+
+The finite fresh-key instance has the proved
 classical query bound `2^-n+(Q+2)/256^32`, including partial coefficient
 recovery for positive scaling. The theorem specifies a fresh empty shared
 oracle cache and `Q` postrelease decoder queries.

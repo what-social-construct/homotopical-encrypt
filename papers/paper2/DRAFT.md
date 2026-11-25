@@ -45,47 +45,23 @@ The construction has four parts:
    exact program and parsed key/CRS. The conditional signature-of-knowledge
    reference and nonce-bearing version retain distinct security experiments.
 
-The coupled sheaf, intrinsic lattice, semantic and ciphertext transports,
-finite encryption/recovery algorithms and one-use random-oracle recovery
-bound are established in the HCP paper. We consume those results here. The
-protocol's signing, proof and storage transcripts require their own analysis.
-
 ### 2. Maintained geometry, temporary processing and retained artifacts
 
-The source presentation consists of a finite oriented incidence complex, its
-stalks and restriction maps, inner-product conventions and compatible integral
-stalk lattices. The current cellular model uses coordinate stalks with their
-standard Euclidean metrics; its integral structure is separate supplied data.
-The secret and public parts of this presentation are selected by the profile.
-These objects determine the cochain spaces before a message or noise opening
-is chosen. The restriction maps assemble into the differentials, and the
-inner products determine their adjoints and the true degree-one Hodge operator
+#### 2.1. Encryption interface and artifact binding
 
-\[
-C^0(F)\xrightarrow{\delta_0}C^1(F)\xrightarrow{\delta_1}C^2(F),
-\qquad \Delta_1=\delta_0\delta_0^*+\delta_1^*\delta_1.
-\]
+Use the [HCP paper's coupled encryption](../paper1/main.pdf) with private
+presentation \(B\), coefficients \(z\), and exact and coexact openings
+\(a,u\). The observed cochain is \(b=\operatorname{Enc}_B(z,a,u)\). Its
+canonical bytes are \(E_B(z,a,u)\). The recipient reads those bytes with
+the original private presentation to recover \(z\). The protocol retains
+the actual snapshot and observation in its artifact binding and uses the
+same recovery interface for delivery and lookup.
 
-#### 2.1. Source encryption and consumed recovery laws
-
-Use the scalar Euclidean coupled profile of the HCP construction. Its private
-matrix \(B\) determines the same cellular maps, genuine Hodge operator and
-intrinsic lattice \(\Lambda_B=\{(0,z,Bz):z\in\mathbb Z^n\}\). Write
-\[
-\operatorname{Enc}_B(z,a,u)=(a,z-B^{\mathsf T}u,Bz+u),
-\qquad \beta=E_B(z,a,u).
-\]
-The source paper's exact byte-recovery theorem returns \(z\) on those
-canonical bytes and identifies the complete integer ciphertext language. Its
-native transport \(M_CM_B^{-1}\) preserves the message and opening coordinates;
-the semantic cochain shear is a separate map.
-
-The exact payload encodes \(\delta_0a\); the full ciphertext is the entire
-observed cochain. The original observation binds its real decoder to that
-exact summand. Modular payload equality alone does not give the real decoder
-equation or identify the full ciphertext. We retain separate digest and
-binding relations for these two objects. Native storage and protocol checks
-consume the source results through the same original samples and contexts.
+The exact payload encodes \(\delta_0a\). The original observation binds the
+payload's real decoder to that exact summand. The manifest assigns separate
+digests to the exact artifact and the full ciphertext. The native
+certificate identifies the retained ciphertext with the original
+observation in that context.
 
 #### 2.2. Base public input and declared disclosures
 
@@ -1047,147 +1023,30 @@ application and finality are outside these events. The bad event is invalidity
 of the typed candidate under the configured policy, not failure of every
 external authentication contract.
 
-#### 6.3.1. Confidentiality and the intended hardness claim
-
-At fixed rank, the operative harmonic space is a point of the Grassmannian,
-whose Plücker image is a projective variety of decomposable exterior points.
-The full real projective point determines the harmonic projector, so
-releasing that point together with the observed cochain \(b\) determines
-\(h=P_Wb\). For the keyed coordinate family below, the full point even
-determines the key. A hidden-operator profile must specify the released handle
-and its hiding contract separately from the full frame used by a proof witness.
-The existing `HashedPluckerShadow` still carries its selected shadow internally;
-its digest-binding field alone supplies no hiding theorem.
-
-The [projection chain](../../lean/Proximity/Concrete/ProjectionChain/Core.lean)
-maps a frame through a cochain payload, plane shadow and RS word. Its
-Plücker-to-cochain encoder and stage comparisons are supplied data;
-[ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean) separately
-joins the state to the original artifact. The composed theorem preserves
-validity and proves that RS distance is at most the declared source
-disagreement. The canonical
-pair reduction
-has a separate Hamming-distance comparison; a single challenge fold can
-collapse a pair. These maps do not supply a Euclidean CVP solution map.
+#### 6.3.1. Confidentiality of the released transfer
 
 The [checked-release challenge](../../lean/Protocol/Transfer/Confidentiality.lean)
-proves that the released input ID is an immediate branch distinguisher whenever
-two checked transfers use different inputs. A confidentiality challenge must
-therefore hold such deterministic public fields fixed, or declare their
-leakage. A challenge over two transfers in one fixed configuration checks this
-view condition; it does not sample two HCP plaintexts or prove encryption
-privacy. The optional full-cochain disclosure is a separate, larger view.
+shows that different input IDs distinguish two checked transfers directly.
+A privacy experiment must hold such public fields fixed or account for
+their leakage. Downloaded ciphertext bytes, access metadata and optional
+cochain disclosures also belong in the view when available to the observer.
 
-For a fixed supplied setup and transfer,
+For fixed setup and transfer,
 [PublicAssembly](../../lean/Protocol/Transfer/PublicAssembly.lean) reconstructs
-every checked release from its public base payload, selected ciphertext digest,
-owner-signature bytes and proof bytes using the original manifest, hash and
-packet functions. An event bound for distributions of those four actual
-inputs carries to the assembled view by deterministic postprocessing. Such a
-bound must come from independent algorithms and security arguments; the
-reconstruction alone asserts no hiding. Downloaded ciphertext bytes and access
-metadata extend the experiment when available to the observer.
+the checked release from its public base payload, selected ciphertext
+digest, owner-signature bytes and proof bytes using the original manifest,
+hash and packet functions. Any event bound on the joint distribution of
+these inputs carries to the assembled view by deterministic postprocessing.
+The account must cover their joint law, including the correlation of proof
+and signature bytes with the same private observation.
 
-The [finite keyed cellular family](../../lean/Sheaf/HCPFiniteKeyFamily.lean)
-provides one structural starting point. At parameter \(n\), its key is a
-binary choice in each block, with \(2^n\) keys and one common
-\(4n\)-coordinate degree-one carrier. Separate exact and coexact edges give
-both nonzero differentials when \(n>0\). Standard integral stalks support an
-integral harmonic unit message and an actual Hodge-encrypted sample with
-exact and coexact openings whose coordinates lie in \(\{0,1\}\); harmonic
-projection recovers that message.
-The [shared harmonic geometry](../../lean/Sheaf/HCPFiniteKeyGeometry.lean)
-proves that different keys select different embedded harmonic subspaces in
-this carrier and that the complementary units span each one. The
-[projective adapter](../../lean/Proximity/Concrete/HCPKeyedGrassmannian.lean)
-packages them as rank-\(n\) Grassmannian points and frame witnesses.
-This is a family of typed mathematical samples, prior to key/ciphertext bytes,
-randomized key/noise generation or a complete released-view experiment.
-The [explicit lattice presentation](../../lean/HCP/FiniteKeyCVP.lean) takes
-those harmonic units as its basis and spans the actual keyed harmonic space.
-Its unit-coefficient encryption is the original family sample, and a correct
-CVP oracle given that keyed lattice returns the sample's harmonic message.
-
-The [coupled cellular family](../../lean/Sheaf/HCPCoupledFamily.lean) replaces
-independent coordinate choices with shared integral face equations. For an
-integer matrix \(B\in\mathbb Z^{m\times n}\), scalar information and parity
-edge stalks satisfy \(y=Bx\); a separate exact edge gives a nonzero
-\(\delta_0\). Its harmonic space and intrinsic integral harmonic lattice are
-exactly
-\[
-W_B=\{(0,x,Bx):x\in\mathbb R^n\},\qquad
-\Lambda_B=\{(0,z,Bz):z\in\mathbb Z^n\}.
-\]
-The [explicit presentation](../../lean/HCP/CoupledCVP.lean) contains the whole
-intrinsic lattice, with Gram matrix \(I+B^{\mathsf T}B\). Its closest-vector
-objective at target \((a,u,v)\) is
-\[
-a^2+\|u-z\|^2+\|v-Bz\|^2,\qquad z\in\mathbb Z^n.
-\]
-Shared rows can introduce off-diagonal coefficient interactions. The graph
-description lies in a fixed information-coordinate chart of a Grassmannian;
-the current Lean construction proves the embedded-space and lattice facts,
-without constructing an algebraic variety.
-
-The [semantic connection](../../lean/HCP/CoupledSemantics.lean) is constructed
-from the actual cochain complexes. For any two matrices of the same dimensions,
-the integral shear
-\((a,x,y)\mapsto(a,x,y+(C-B)x)\) intertwines both coboundaries and has the reverse
-shear as inverse. This gives a strict cochain isomorphism, a typed Helfer
-equivalence and equality of the declared homological closed theories. It also
-carries \((0,z,Bz)\) to \((0,z,Cz)\). The shear generally changes the Euclidean
-metric, so it supplies no Hodge-adjoint or full-ciphertext transport law.
-An actual `PresentedRotation` still requires the existing isometric and
-same-coefficient conditions. Equal public classes also leave snapshot/header
-equality as a separate released-view obligation.
-Section 6.1.1 constructs the different native coordinate transport that does
-carry full ciphertexts between arbitrary same-size matrix presentations.
-
-The [integral opening profile](../../lean/Sheaf/HCPCoupledEncoding.lean)
-instantiates the original Hodge sample with integer \(z,a,u\), and proves its
-entire observation is
-\[
-b=(a,\ z-B^{\mathsf T}u,\ Bz+u).
-\]
-Its executable integer coordinates cast to that same sample's real observed
-cochain. The [full ciphertext codec](../../lean/Protocol/Storage/CoupledCiphertext.lean)
-uses a separate versioned domain, explicit matrix dimensions and the ordered
-exact, information and parity coordinates. Its actual decoder reconstructs
-the original full observation, and the original harmonic recovery theorem
-then returns the same message. A byte-hash check and binding indexed by the
-existing `BoundHCPObservation` retain the original exact artifact, snapshot
-and lifecycle; the full-ciphertext digest has its own name. This closes the
-finite representation of this integral native profile. It leaves the
-transaction/proximity theorem's selected full-observation relation and
-cryptographic proof construction to be supplied explicitly.
-
-A finite native sampler is constructed in §6.6. A computational hardness
-theorem still requires justified parameter and distribution choices, efficient
-algorithms and a game releasing the actual selected storage and transfer
-fields. Its reduction must start from an independently stated hard problem
-and preserve the challenge distribution. The earlier axis
-sampler has an [exact geometric promise](../../lean/Sheaf/HarmonicCVPPromise.lean):
-for a presented lattice
-\(\Lambda\subseteq W\), observations of the form \(b=h+e\) with
-\(h\in\Lambda\) and \(e\perp W\) have \(P_Wb\in\Lambda\); conversely that
-projection condition gives such an orthogonal decomposition. An arbitrary
-CVP target need not satisfy it. Mapping a lattice to its real span and
-projecting the target therefore leaves the discrete nearest-vector step
-unsolved. The present CVP theorem
-proves a strict separation in the information supplied to a solver: the
-operative lattice lets a correct CVP oracle recover each axis sample, while
-the same oracle cannot choose two different targets at their shared
-\((\alpha,b)\). Both axis samples also have exact component zero. This
-establishes no computational hardness reduction or equality of their complete
-storage records. With the canonical systematic source, the full-cochain
-disclosure fails already by the direct recovery in §2.2.
-
-For a fixed key, [NoiseSpanAttack](../../lean/HCP/NoiseSpanAttack.lean)
-proves a second conditional boundary: if observed zero encryptions span the
-harmonic orthogonal noise space, span membership separates every fresh zero
-sample from every sample with a nonzero presented harmonic message. The
-present rotation laws transport samples; they do not establish fresh-key
-generation or defeat this test.
+The projection profile binds its proof to the original artifact through
+[ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean). Its
+public release keeps the handle separate from the full frame used by a
+witness. The full projective point and the observed cochain together
+determine the harmonic message by [Paper 3's reconstruction](../paper3/README.md).
+The storage experiment must explicitly enumerate which of these fields
+it releases.
 
 #### 6.4. Actual primitives and the trusted-computing boundary
 
@@ -1344,7 +1203,7 @@ and coefficient recovery for those realized paths. The arbitrary coupled
 family below uses a different concrete finite relation; its generally
 nonisometric native transport does not instantiate this isometric adapter.
 
-##### 6.6.1. Bounded native witness and actual geometric meaning
+##### 6.6.1. The bounded raw-root credential
 
 The following raw operator-hash profile fixes the reference binding and
 checking objects. The privacy candidate below needs a different operator
@@ -1383,22 +1242,15 @@ to a bounded witness \(w\) with \(x_w=x\). The decoded sample is the actual
 \((0,z,Cz)\). The existing operative-HCP comparison identifies this same
 message as the target.
 
-The strict cochain isomorphism proves typed Helfer equivalence of the actual
-source and target interpretations. Independently, \(M_CM_B^{-1}\) transports
-their full native samples with the same \(z,a,u\), including nonisometric
-changes. These are proved on the witness's original objects, rather than
-inferred from matching profile labels. The finite relation alone constructs
-neither the generic path witness above nor an artifact-bound
-`BoundHCPObservation` and its storage/lifecycle acceptance; the latter still
-requires the original binding certificates.
+The protocol checks this credential and relates its ciphertext name to the
+original artifact through the binding certificate.
 
 ##### 6.6.2. Operator visibility and the versioned protocol profile
 
-The HCP paper proves the sampler diagnostics, fresh-sign ciphertext law,
-private-nonce operator commitment and one-use native random-oracle recovery
-bound. These are source results for the protocol. The selected lifecycle
-uses fresh geometry per public encrypted object with private master-key
-management; wallet-at-rest and geometry reuse retain separate policies.
+The selected lifecycle uses fresh geometry per public encrypted object
+and retains persistent recovery material privately. The release profile
+permits ciphertext content IDs and keeps operator openings and usable
+transport material in protected delivery.
 
 The nonce-bearing V2 relation retains the source paper's canonical private
 witness and three public names. Its operator root is
@@ -1413,17 +1265,10 @@ agreement derives the actual V2 public key. Approved execution requires its
 exact V2 program bytes, parses the actual verifier key and CRS, and verifies
 the original full-intent signing bytes at the existing owner checker.
 
-The raw-root V1 relation below remains the relation of the existing adaptive
-CRS reduction. The V2 checker does not reinterpret those program bytes or
-silently instantiate that reduction. Extending the source one-use recovery
-experiment to signing answers, evidence proofs and storage records is a
-separate protocol security result. Public content hashes name encrypted
-material; private operator openings and usable transport are protected
-material under the selected release profile.
-
-The coexact correction law is also a source result. Applying it during
-migration still needs generation, delivery, freshness and retirement policy;
-the algebraic correction alone does not enforce one use.
+A protocol privacy experiment for V2 must include its signing answers,
+evidence proofs and retained storage records. Freshness and retirement
+remain lifecycle obligations, including when migration uses the companion
+paper's coexact correction to generate the prescribed target bytes.
 
 ##### 6.6.3. Bounded adaptive CRS reference construction
 
@@ -1614,45 +1459,17 @@ byte parsing and hashes into field constraints remains separate. General
 real projection certificates do not
 automatically become this finite circuit.
 
-#### 6.7. Harmonic-lattice recovery and optional encrypted evaluation
+#### 6.7. Retrieval and selector privacy
 
-The [retrieval layer](../../lean/Protocol/Storage/Retrieval.lean) recovers the
-encrypted-database/private-read intention using the existing manifest, actual
-HCP samples and private recovery material. The primary object is the original
-Hodge-encrypted harmonic-lattice cochain; hash-indexed lookup and recipient
-recovery retain that same object. Encrypted linear-query evaluation is an
-optional application of its aggregation laws. It supplies neither the
-definition of the harmonic lattice nor the storage commitment.
-
-The optional query construction is
-in [HodgeQuery](../../lean/Protocol/Storage/Retrieval/HodgeQuery.lean). For a
-selected position \(i\), integer database values \(d_j\), coefficients \(z\)
-and existing exact/coexact openings \(e_j\), the columns are
-\(q_j=(H.\mathrm{encrypt}(\mathbf{1}_{j=i}z,e_j)).\mathrm{observed}\).
-The server forms \(A=\sum_j d_j q_j\) using only the observed columns and
-public integer weights. `answer_eq_observed` identifies this entire answer
-with the original encryptor applied to \(d_i z\): its exact and coexact
-openings are the corresponding weighted sums. No replacement ambient-noise
-model is introduced. The existing coefficient decoder returns \(d_i z\),
-and `cvp_answer_iff` identifies the same answer's unique closest point in
-the selected explicit harmonic lattice.
-
-The earlier `HCPBridge.cvpOracle_insufficient_for_operativeTarget` in
-[Hardness](../../lean/Hardness.lean) remains the declared uniform comparison:
-under closed-formula invariance, kernel separation and existence of a correct
-explicit-lattice oracle, no single solver is exact on the operative target
-for every correct oracle at the specified public input. The full joint query
-can contain additional observations. Extending that theorem to this view
-requires its own factorization or sampled security argument.
-[LinearQueryObstruction](../../lean/Protocol/Storage/Retrieval/LinearQueryObstruction.lean)
-records a precise extra condition: when the selected column has nonzero
-harmonic projection, the other projections vanish and the nonselected columns
-are redundant, the selected column is the unique one outside the span of
-the others. This predicate uses only the public query. Its concrete example
-uses the original cellular axis sample and varying nonzero coexact openings,
-and retains the existing CVP comparison for those same samples. The result
-is a conditional joint-view obstruction, not a universal rejection of native
-HCP queries or a theorem about an unspecified random sampler.
+The [retrieval layer](../../lean/Protocol/Storage/Retrieval.lean) fetches
+the selected canonical ciphertext from the original manifest and passes it
+to recipient recovery. An optional
+[encrypted query](../../lean/Protocol/Storage/Retrieval/HodgeQuery.lean) uses
+the source encryption's linear aggregation law. Its request releases a
+joint list of encrypted columns, so selector privacy concerns that complete
+request. The [joint-view obstruction](../../lean/Protocol/Storage/Retrieval/LinearQueryObstruction.lean)
+identifies a profile in which the selected column is the unique one outside
+the span of the others.
 
 Hash lookup and recovery are separate implemented stages.
 [ContentAddress](../../lean/Protocol/Storage/Retrieval/ContentAddress.lean)
@@ -1706,12 +1523,6 @@ this is distinct from public sender encryption to an arbitrary recipient.
 That public-key interface remains open. The direct CRS extraction route in
 §6.6 does not require it. No conventional/native signature combiner is
 selected by this retrieval construction.
-
-A later comparison with fully homomorphic encryption should specify the
-supported operations on these actual ciphertexts, their output/recovery
-semantics and the corresponding security experiments. The present linear
-aggregation theorem supplies one entry in that inventory; no arbitrary
-encrypted-computation interface is constructed here.
 
 ### 7. Construction ownership and remaining protocol work
 
@@ -1777,25 +1588,8 @@ completed bounded transition claim.
 | Future geometry and lifecycle | No canonical `TaskSheaf`, block-history cellular model or presentation-stack/descent package is constructed | Explicit maps, transport, descent, generation, retirement and global lifecycle policies remain future work. |
 | Concrete cryptography and execution | [ZKP](../../lean/Axioms/ZKP.lean), [Runtime](../../lean/TCB/Runtime.lean) | Secure primitive implementation, full hash/range/byte circuit refinement, setup generation, authenticated directories/state origin, secure channels, primitive budgets, corruption/privacy games and production/runtime refinement remain obligations. |
 
-Paper 1 develops the cellular/Hodge, semantic HCP, harmonic-lattice and
-CVP foundations, including finite encryption, exact recovery and its native
-random-oracle theorem. This protocol manuscript consumes those results.
-Paper 3 supplies projective reconstruction, source-calibration obstructions,
-coding and metric/radius theorems. Imported conclusions retain their actual
-source, layout, observation and comparison hypotheses.
-
-A richer logical profile may use graded products in cohomology. Kryazhev's
-[multiplicative Serre spectral sequence in HoTT](https://arxiv.org/html/2611.11828v1)
-is a prospective source for that direction. The present cellular core already
-has addition, scalar actions, differentials, adjoints, the Laplacian and
-harmonic projection. It has no chosen graded cup product. Such an enrichment
-needs explicit multiplicative data, product-compatible transport and a
-comparison with the source's type-family model. The public semantic signature
-and the private Hodge operators must remain explicit: the coupled cochain
-shear preserves the differential but generally does not intertwine adjoints
-or Laplacians. This is future logical structure, not a prerequisite for the
-native transport/codec construction.
-
+The shared parity register links each interface to its source theorem and
+retains the required layout, observation and comparison hypotheses.
 
 ### 8. Conclusion
 

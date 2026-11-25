@@ -76,13 +76,15 @@ repository root, with elan installed:
 ~~~sh
 cd lean
 lake exe cache get
-lake build HCP.CoupledLattice Protocol.Storage.CoupledRecovery
+lake build HCP.CoupledLattice Protocol.Storage.CoupledRecovery.Demo
 lake env lean --run Protocol/Storage/CoupledRecovery/Demo.lean
 ~~~
 
-The fixed example encrypts message `(2,-1)` to cochain `(3,-2,-5,5)` and
-recovers `(2,-1)` through private-key and ciphertext bytes. It also checks
-rejection of nonintegral message coordinates and truncated encodings.
+The demo encrypts `(2,-1)` to cochain `(3,-2,-5,5)` and recovers the message
+through private-key and ciphertext bytes. It checks rejection of nonintegral
+message coordinates and truncated encodings. A second run uses the dense
+fresh-sign profile to encrypt `(true,false)` to `(3,0,0,-6,0)` and recover
+the original bits through the same byte path.
 
 For the full workspace and independent verification entries:
 

@@ -2,6 +2,8 @@ module
 
 public import Protocol.Storage.CoupledRecovery
 meta import Protocol.Storage.CoupledRecovery
+public import Protocol.Transfer.PathSignature.NativeSignSampler.Recovery
+meta import Protocol.Transfer.PathSignature.NativeSignSampler.Recovery
 
 @[expose] public section
 
@@ -11,15 +13,16 @@ meta import Protocol.Storage.CoupledRecovery
 Run from `lean/` with:
 `lake env lean --run Protocol/Storage/CoupledRecovery/Demo.lean`.
 
-This deterministic reference example runs the real byte encoder, canonical
-private-key parser and exact rational recovery algorithm. It is an execution
-check of the proved mechanism, not a secure key/noise sampler or performance
-benchmark. The public example key and openings are deliberately fixed.
+Two deterministic examples run the canonical byte encoder, private-key parser
+and exact rational recovery algorithm. The second uses the dense fresh-sign
+profile with fixed example signs and recovers the original Boolean message.
 -/
 
 set_option autoImplicit false
 
 namespace HomotopicalEncryption.Protocol.Storage.CoupledRecovery.Demo
+
+open Protocol.Transfer.PathSignature.NativeSignSampler
 
 def key : Matrix (Fin 1) (Fin 2) ℤ := fun _ _ => 1
 
@@ -34,6 +37,25 @@ def outsideIntegerLanguage : CoupledCiphertext.IntegerCochain 1 2 := fun p =>
   match p.1 with
   | some (.inl col) => if col.val = 0 then 1 else 0
   | _ => 0
+
+def runFreshSign : IO Unit := do
+  let signKey : Fin 2 → Bool := ![false, true]
+  let bits : Fin 2 → Bool := ![true, false]
+  let B := presentation hadamardTwo signKey
+  let keyBytes := CoupledCodec.encode (CoupledCodec.ofMatrix B)
+  let ciphertext := Protocol.Transfer.PathSignature.NativeSignSampler.ciphertextBytes
+    hadamardTwo 2 3 signKey bits
+  let coordinates := (CoupledCiphertext.decode 2 2 ciphertext).map CoupledCiphertext.entries
+  let recovered := (recoverWithKeyBytes 2 2 keyBytes ciphertext).map List.ofFn
+  let recoveredBits := (recoverBitsWithKeyBytes 2 2 keyBytes ciphertext).map List.ofFn
+  unless coordinates = some [3, 0, 0, -6, 0] do
+    throw (IO.userError "The fresh-sign ciphertext did not retain the original Hodge coordinates")
+  unless recovered = some [2, -2] && recoveredBits = some [true, false] do
+    throw (IO.userError "Fresh-sign byte recovery did not return the original message")
+  IO.println s!"Fresh-sign input bits: {List.ofFn bits}"
+  IO.println s!"Fresh-sign ciphertext coordinates: {coordinates}"
+  IO.println s!"Fresh-sign recovered coefficients: {recovered}"
+  IO.println s!"Fresh-sign recovered bits: {recoveredBits}"
 
 def run : IO Unit := do
   let recovered := (recoverWithKeyBytes 1 2 privateKeyBytes ciphertextBytes).map List.ofFn
@@ -55,6 +77,7 @@ def run : IO Unit := do
   IO.println s!"Outside integer encryption language rejected: {outsideRejected}"
   IO.println s!"Truncated ciphertext rejected: {truncatedRejected}"
   IO.println s!"Truncated private-key bytes rejected: {truncatedKeyRejected}"
+  runFreshSign
 
 end HomotopicalEncryption.Protocol.Storage.CoupledRecovery.Demo
 

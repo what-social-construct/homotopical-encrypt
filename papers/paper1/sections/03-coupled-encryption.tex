@@ -273,21 +273,29 @@ the same native sample's full observed cochain; the existing harmonic
 projector recovers its original message. Canonical roundtrip, injectivity and
 rejection of malformed or mismatched byte streams are proved.
 
-Let \(E_B(z,a,u)\) be those canonical full-ciphertext bytes. The direct
-recipient algorithm parses them, casts the same integer cochain to rational
-coordinates, applies the exact inverse of \(M_B\), and returns its information
-coordinates only if all have denominator one. Write this partial byte
-algorithm as \(D_B\). It uses the private presentation and ciphertext bytes
-directly, without a transport token or access to a sample's message field.
+Write \(\kappa(B)\) for the private matrix bytes and \(E_B(z,a,u)\) for
+the ciphertext bytes. The sender computes \eqref{eq:coupled-integer-encryption}
+and encodes the resulting cochain. The recipient parses \(\kappa(B)\) and
+the ciphertext in the same dimensions. For parsed coordinates \((a,x,y)\),
+the recipient applies the exact rational inverse of \(M_B\). Its message
+coordinate \(v\) is the unique solution of
+\[
+ (I+B^{\mathsf T}B)v=x+B^{\mathsf T}y.
+\]
+This equation follows by eliminating the coexact coordinate from the two
+blocks of the ciphertext. Its matrix is positive definite. The recipient
+returns \(v\) when all its coordinates are integers and rejects a parse
+failure or a nonintegral result. Write \(D_B\) for recovery with a parsed
+matrix and \(D_{m,n}^{\mathrm{bytes}}\) for recovery with private matrix bytes.
 
 \begin{proposition}[Finite encryption and exact byte recovery]
 \label{prop:coupled-byte-recovery}
 For every integer \(B,z,a,u\),
 \[
- D_B(E_B(z,a,u))=\operatorname{some}(z).
+ D_{m,n}^{\mathrm{bytes}}\bigl(\kappa(B),E_B(z,a,u)\bigr)
+ =D_B(E_B(z,a,u))=\operatorname{some}(z).
 \]
-The private presentation can itself be loaded from its canonical matrix
-bytes. For every byte string \(\beta\),
+For every byte string \(\beta\),
 \[
  D_B(\beta)=\operatorname{some}(z)
  \quad\Longleftrightarrow\quad
@@ -300,7 +308,8 @@ decoding operation.
 \end{proposition}
 
 \begin{proof}
-The rational inverse realizes the original real inverse, whose information
+The matrix codec returns \(B\) on \(\kappa(B)\). The rational inverse
+realizes the original real inverse, whose information
 coordinates are the coordinates of the projected harmonic graph. They are
 integral exactly when that projection belongs to \(\Lambda_B\). For an
 integer observation \((a,x,y)\) and an accepted integer message \(z\), its
@@ -310,13 +319,19 @@ the corresponding byte encoding. Conversely every such generated observation
 recovers \(z\) by the same inverse and integer check.
 \end{proof}
 
-The input-language statement imposes no opening magnitude or sampling bounds
-and supplies no authenticity condition. It establishes a functioning exact
-encryption/recovery mechanism. For example, \(B=(1\ 1)\), \(z=(2,-1)\),
-\(a=3\), \(u=4\) execute to ciphertext coordinates \((3,-2,-5,5)\), then
-recover \((2,-1)\) through canonical private-key and ciphertext bytes. The
-same reference execution rejects truncated byte inputs and an integer
-cochain whose projected coefficients are nonintegral.
+\Needspace{10\baselineskip}
+\paragraph{Executing the byte round trip.}
+Take \(B=(1\ 1)\), \(z=(2,-1)\), \(a=3\) and \(u=4\). The encoder produces
+the canonical bytes of \((3,-2,-5,5)\). After parsing those bytes and
+\(\kappa(B)\), the recipient computes the solution of
+\[
+ \begin{pmatrix}2&1\\1&2\end{pmatrix}v=\begin{pmatrix}3\\0\end{pmatrix},
+ \qquad v=\begin{pmatrix}2\\-1\end{pmatrix}.
+\]
+The Lean executable returns these original coefficients and checks rejection
+of a truncated private key, a truncated ciphertext and a canonically encoded
+cochain with nonintegral projected coefficients. The command in
+\cref{app:formal-boundaries} reproduces the execution.
 
 \subsection{A finite private carrier and canonical relation}
 \label{sec:coupled-finite-carrier}
@@ -398,6 +413,21 @@ harmonic projection still recovers \((0,ds,C_kds)\), and \(d>0\) makes the
 Boolean message encoding injective. Both \(A=I\), \(d=1\), and the dense
 matrix \(\left(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\right)\),
 \(d=2\), instantiate the construction.
+
+\paragraph{Executing the fresh-sign profile.}
+Use this dense matrix, Boolean message \((1,0)\) and key signs \((-1,1)\).
+With \(a=3\), the operative matrix and openings give
+\[
+ C_k=\begin{pmatrix}-1&1\\-1&-1\end{pmatrix},\qquad
+ z=(2,-2),\qquad u=(-2,0),\qquad b=(3,0,0,-6,0).
+\]
+The encoder emits the bytes of \(b\). The recipient reads the canonical
+private matrix and ciphertext bytes and recovers \((2,-2)\). Testing which
+coefficients are positive produces \((1,0)\). For every \(d>0\), the same
+decoder returns the original bits on generated ciphertext bytes by
+\cref{prop:coupled-byte-recovery} and the sign rule for \(ds\). The executable
+uses fixed inputs to reproduce this trace. The probability laws below use
+fresh keys.
 
 For an independent uniform Boolean message and fresh uniform key, the actual
 joint law factors into a uniform message independent of ciphertext bytes.

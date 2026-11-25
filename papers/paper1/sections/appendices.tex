@@ -30,6 +30,13 @@ The coupled construction and quantitative recovery results have the separate
 canonical correspondence below. Their Lean proofs and axiom audits are
 complete; they are not part of the earlier 36-declaration comparator selection.
 
+To reproduce both byte round trips, run the following from \lean{lean/}
+with the pinned toolchain and dependencies.
+\begin{verbatim}
+lake build Protocol.Storage.CoupledRecovery.Demo
+lake env lean --run Protocol/Storage/CoupledRecovery/Demo.lean
+\end{verbatim}
+
 \begingroup
 \small
 \setlength{\tabcolsep}{6pt}
@@ -74,11 +81,13 @@ rank, discreteness and full lattice span inside harmonic space.
 \\\midrule
 \textbf{P1-N04. Exact finite recovery.}\newline
 \Cref{prop:coupled-byte-recovery}; all-input decoder refinement and exact
-integer ciphertext language.
+integer ciphertext language. The fresh-sign byte decoder recovers the
+original bits for positive scaling.
 &
 \lean{HE.HCP.CoupledDecoding.decodeCoefficients_realize}\par
 \lean{HE.Protocol.Storage.CoupledRecovery.recoverWithKeyBytes_encode_sample}\par
-\lean{HE.Protocol.Storage.CoupledRecovery.recover_eq_some_iff_sampleBytes}
+\lean{HE.Protocol.Storage.CoupledRecovery.recover_eq_some_iff_sampleBytes}\par
+\lean{HE.Protocol.Transfer.PathSignature.NativeSignSampler.recoverBitsWithKeyBytes_ciphertextBytes}
 \\\midrule
 \textbf{P1-N05. Fresh one-use family.}\newline
 \Cref{sec:coupled-sampling}; actual canonical ciphertext law and the original
