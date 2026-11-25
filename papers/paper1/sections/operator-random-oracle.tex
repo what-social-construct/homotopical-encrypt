@@ -1,0 +1,87 @@
+\subsection{Bounded-query recovery in the shared byte random oracle}
+\label{sec:native-random-oracle}
+
+The public oracle accepts arbitrary byte strings and returns independent
+uniform 32-byte digests on previously unseen inputs, caching each answer.
+The experiment starts with an empty cache. Before releasing any view, the
+constructor samples independent uniform Boolean vectors
+\(\mu,k\in\{0,1\}^n\) and an independent uniform 32-byte nonce \(r\).
+Here \(\varepsilon(0)=-1\), \(\varepsilon(1)=1\) coordinatewise, and
+\[
+ B_k=A\operatorname{diag}(\varepsilon(k)),\qquad
+ z=d\varepsilon(\mu),\qquad u=B_k\varepsilon(\mu).
+\]
+The source opening \((\rho,S)\), exact opening \(a\), and public matrix \(A\)
+are fixed independently of these samples. Choose a common descriptor with
+\(\ell=|\rho|\) and a coordinate bound \(K\) satisfying
+\[
+\begin{gathered}
+ |S_{ij}|\leq K,\quad |A_{ij}|\leq K,\quad |d|\leq K,\quad |a|\leq K,\\
+ \sum_j |A_{ij}|\leq K\qquad\text{for every row }i.
+\end{gathered}
+\]
+Every generated private carrier then satisfies the same bounded relation:
+the target entries have magnitude \(|A_{ij}|\), the message entries have
+magnitude \(|d|\), and the coexact entries are bounded by the row sums.
+
+The constructor first obtains the operator root by querying this same byte
+oracle at the complete canonical preimage for
+\(\operatorname{Com}(B_k;r)\). It then queries the source-credential bytes
+and full ciphertext bytes, and releases
+\(\operatorname{encodeInstance}(x_w)\) together with that ciphertext.
+The decoder receives only this view, uniform random sampling and the public
+byte oracle. It has no private-derivation interface or earlier oracle
+transcript. Its query budget \(Q\) counts all of its postrelease byte-oracle
+queries, on every input view and every execution path.
+
+The proof uses the hidden-seed simulation theorem of the pinned VCVio
+library \cite{vcvio2026library}. The real handler shares one cache between
+public queries and the constructor's private operator derivation; the ideal
+handler uses an independent derivation table. Injectivity of the canonical
+packet/nonce encoding implies that any fixed byte address is an operator
+opening for at most one nonce seed. A uniform 32-byte seed therefore hits
+that address with probability at most \(256^{-32}\). The adaptive event
+comparison charges this term once per public byte-oracle query.
+
+\begin{theorem}[Native recovery in the random-oracle model]
+\label{thm:coupled-native-rom}
+Fix \(A\in\mathbb Z^{m\times n}\) with \(A^{\mathsf T}A=dI\), a fixed
+source credential opening and exact opening \(a\). In the fresh-cache
+experiment above, every decoder making at most \(Q\) public byte-oracle
+queries satisfies
+\[
+ \Pr_{\mathrm{RO}}[\text{recover the complete Boolean message}]
+ \leq 2^{-n}+\frac{Q+2}{256^{32}}.
+\]
+If \(d>0\), the same upper bound holds for a partial extractor of the
+original integer harmonic coefficients \(d\varepsilon(\mu)\). The two additional
+queries are the constructor's source-credential and full-ciphertext digest
+calls.
+\end{theorem}
+
+\begin{proof}
+The constructor makes exactly one private derivation, before any public
+calls, and then two public digest calls. Uniform draws are uncharged. The
+lifted decoder has no private-derivation access, so the complete program
+has public-query budget \(Q+2\). Hidden-seed event comparison bounds real
+recovery by ideal recovery plus \((Q+2)256^{-32}\).
+
+In the ideal game, the first derivation returns an independent uniform
+operator root. All later calls use only the public byte oracle. Projecting
+away the separate derivation table leaves that same public-oracle execution.
+Reindex the fresh key by the fixed-message mask
+\(\varepsilon(k)\mathbin\odot\varepsilon(\mu)\). This is a permutation of the uniform
+key space, and the native normal form makes the ciphertext depend only on
+this mask. The ideal operator root, ciphertext, two public digests and
+entire subsequent adaptive decoder execution are consequently independent
+of the uniform message. Complete-message guessing has mass exactly
+\(2^{-n}\). For a partial coefficient extractor, the same factorization and
+positive scaling give success probability at most \(2^{-n}\); failure and
+invalid integer outputs cannot increase that event.
+\end{proof}
+
+The probabilities sample one shared random oracle; the theorem does not
+bound an absolute advantage separately for each fixed hash. It concerns this
+one-use instance/ciphertext view, with no prechallenge query phase. Concrete
+hash instantiation, reused geometry and additional public proof or storage
+transcripts require corresponding security experiments.

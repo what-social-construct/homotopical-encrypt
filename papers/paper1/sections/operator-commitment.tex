@@ -1,0 +1,118 @@
+\subsection{Private operator commitments and the versioned instance}
+\label{sec:private-operator-instance}
+
+The private operator opening consists of the canonical coupling packet and
+the separate 32-byte nonce \(r\). In the fixed scalar Euclidean profile,
+this packet determines the cellular maps, Hodge operator, integral structure
+and intrinsic harmonic lattice. Define
+\[
+ \operatorname{Com}(B;r)=
+ H\bigl(\mathsf{dom}_{\mathrm{op}}\Vert
+   \operatorname{frame}(\operatorname{enc}(B))\Vert
+   \operatorname{frame}(r)\bigr).
+\]
+The nonce is distinct from the source credential salt. Canonical decoding
+enforces the operator domain, original matrix codec, fixed nonce width and
+full consumption. Distinct accepted matrices with equal commitments give
+an actual hash collision between these complete preimages, allowing their
+nonces to differ.
+
+For the private carrier \(w=(S,B,z,a,u,\rho,r)\) and fixed descriptor
+\(p=(m,n,K,\ell)\), define its public instance by the three names
+\begin{equation}
+ x_w=\bigl(H(\operatorname{credbytes}(\rho,S)),\,
+          \operatorname{Com}(B;r),\,H(\beta)\bigr),
+ \qquad \beta=E_B(z,a,u).
+ \label{eq:coupled-committed-instance}
+\end{equation}
+Only the instance and ciphertext bytes are released; neither matrix nor
+opening is serialized in the public instance. The common declared semantic
+class is fixed for these dimensions. The versioned private-witness,
+program and instance formats use the respective domains
+\texttt{HODGE\_NATIVE\_WITNESS\_V2},
+\texttt{HODGE\_NATIVE\_PROGRAM\_V2} and
+\texttt{HODGE\_NATIVE\_INSTANCE\_V2}. They retain the canonical matrix,
+integer and salt encodings and reject the earlier raw-operator-hash formats.
+The finite Boolean relation is
+\[
+\begin{aligned}
+ R_{p,H}(x,\eta)=\mathsf{true}
+ \quad\Longleftrightarrow\quad \exists w:\;&
+ \eta=\operatorname{encodeWitness}(w),\\
+ &w\text{ satisfies the bounds for }p,\quad x=x_w.
+\end{aligned}
+\]
+Canonical program decoding fixes \(m,n,K,\ell\), and the checker recomputes
+all three names from the decoded witness. This gives both honest-witness
+acceptance and reflection of acceptance into the stated relation.
+
+\begin{proposition}[Committed-instance recovery or a hash collision]
+\label{prop:coupled-committed-recovery}
+Suppose an accepted witness \(w\) names an original target \(B_0\), with
+operator nonce \(r_0\), and the original ciphertext
+\(E_{B_0}(z_0,a_0,u_0)\). Then its message is \(z_0\), or there are distinct
+canonical operator preimages with equal hashes, or distinct canonical
+ciphertext byte strings with equal hashes.
+\end{proposition}
+
+\begin{proof}
+The second name gives equality of the two target commitments. Unless their
+complete preimages exhibit a hash collision, canonical injectivity gives
+\(B=B_0\). The third name similarly gives equality of the ciphertext bytes
+unless they exhibit a byte-hash collision. In the remaining case,
+Proposition~\ref{prop:coupled-byte-recovery} applied with this same private
+matrix recovers both messages from the same bytes, so \(z=z_0\).
+\end{proof}
+
+For the signed family, let \(\varepsilon(0)=-1\) and \(\varepsilon(1)=1\), applied
+coordinatewise to Boolean vectors, and put
+\[
+ B_k=A\operatorname{diag}(\varepsilon(k)),\qquad
+ z=d\varepsilon(\mu),\qquad u=B_k\varepsilon(\mu).
+\]
+Sample the Boolean message \(\mu\in\{0,1\}^n\), key \(k\in\{0,1\}^n\)
+and nonce independently and uniformly. Fix the source opening \((\rho,S)\)
+and exact opening \(a\) independently of these samples. Its credential is
+therefore fixed in the following fixed-hash experiment. The released view
+is the pair
+\[
+ V=\bigl(\operatorname{encodeInstance}(x_w),E_{B_k}(z,a,u)\bigr).
+\]
+If the bounded checker is used, select \(K\) large enough for this finite
+family and the fixed source opening.
+
+Fix a reference matrix \(B_*\) of the same dimensions. For a deterministic
+complete-message decoder \(D\), the chosen-operator test \(T_D\) samples
+its own \(\mu,k\), receives either \(\operatorname{Com}(B_k;r)\) or
+\(\operatorname{Com}(B_*;r)\), constructs the same ciphertext and public
+view, runs \(D\), and tests whether the result is \(\mu\). Let \(p_1,p_0\)
+be its real and reference acceptance probabilities, respectively, and put
+\(\operatorname{Adv}_{\mathrm{op}}(T_D)=|p_1-p_0|\).
+
+\begin{theorem}[Public-instance recovery reduces to operator hiding]
+\label{thm:coupled-instance-recovery}
+For \(A^{\mathsf T}A=dI\) and every such decoder \(D\),
+\[
+ \Pr[D(V)=\mu]\leq 2^{-n}+\operatorname{Adv}_{\mathrm{op}}(T_D).
+\]
+For positive \(d\), a partial integer-coefficient extractor has the same
+bound using its threshold-totalized bit decoder in \(T_D\).
+\end{theorem}
+
+\begin{proof}
+In the reference world, the operator root depends only on the independent
+nonce and fixed matrix. The ciphertext law, with that nonce as an
+independent tape, gives complete-message recovery probability exactly
+\(2^{-n}\). The real world's public names and ciphertext are exactly those
+computed from the sampled private witness. The two recovery events are the
+acceptance events of \(T_D\), so their difference is bounded by its
+advantage. For a partial coefficient extractor, replace failure by a fixed
+bit vector and an integer output by its coordinatewise positive-sign bits.
+When \(d>0\), every correct coefficient output gives the correct Boolean
+message. Its success event is therefore contained in the totalized decoder's
+success event.
+\end{proof}
+
+This is an algebraic transfer for a fixed byte hash, with the advantage of
+an explicit chosen-operator test. The next experiment instead samples one
+shared random oracle and bounds the actual recovery event directly.

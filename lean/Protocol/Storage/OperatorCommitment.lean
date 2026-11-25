@@ -40,6 +40,21 @@ open Ephemeral.ScopeCodec (encodeFixed parseFixed parseFixed_encodeFixed encodeF
 /-- A fixed 32-byte private opening nonce, reusing the existing byte-vector shape. -/
 abbrev Nonce := TCB.Hash32
 
+/-- Finite canonical byte seeds for the private nonce. -/
+abbrev NonceSeed := Fin 32 → Fin 256
+
+def nonceOfSeed (seed : NonceSeed) : Nonce := fun index => UInt8.ofNat (seed index).val
+
+theorem nonceOfSeed_injective : Function.Injective nonceOfSeed := by
+  intro first second same
+  funext index
+  apply Fin.ext
+  have values := congrArg UInt8.toNat (congrFun same index)
+  simpa only [nonceOfSeed, UInt8.toNat_ofNat_of_lt' (first index).isLt,
+    UInt8.toNat_ofNat_of_lt' (second index).isLt] using values
+
+theorem card_nonceSeed : Fintype.card NonceSeed = 256 ^ 32 := by simp [NonceSeed]
+
 /-- The original coupling packet and its private nonce, with no duplicate geometry. -/
 abbrev Opening := Packet × Nonce
 

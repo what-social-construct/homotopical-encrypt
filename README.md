@@ -8,8 +8,8 @@ semantic class is known but the operative Hodge geometry is hidden. The
 research question is how that recovery task compares with CVP, where a
 lattice basis is supplied.
 
-Start with the [construction note](papers/paper2/construction.pdf) or
-[combined manuscript](papers/paper2/DRAFT.md), then follow the
+Start with [Paper 1](papers/paper1/main.pdf), which develops the HCP encryption
+mechanism and its recovery theorems, then follow the
 [core Lean construction](#reading-the-construction) below. The
 [shared parity register](SEMANTIC-PARITY.md) maps statements to their canonical
 proofs; the [source ledger](docs/SOURCE_LEDGER.md) indexes the literature.
@@ -46,8 +46,9 @@ lattice derived from $B$ in the fixed scalar Euclidean profile.
 | Encryption and private recovery | Exact rational execution refines the real operators on every rational input. Byte recovery succeeds exactly on the integer Hodge-encryption language. | [CoupledRational](lean/HCP/CoupledRational.lean), [CoupledDecoding](lean/HCP/CoupledDecoding.lean), [CoupledRecovery](lean/Protocol/Storage/CoupledRecovery.lean) |
 | Ciphertext transport | The native map $M_CM_B^{-1}$ preserves message/opening coordinates and commutes with harmonic projection, with identity, inverse and composition laws. | [CoupledTransport](lean/HCP/CoupledTransport.lean), [CoupledGeometry](lean/HCP/CoupledGeometry.lean) |
 | CVP and public recovery comparison | Projecting the target onto harmonic space preserves closest vectors in its harmonic lattice. Constructed public-equivalent presentations have different operative targets, giving an exact public-data recovery obstruction. | [Hardness](lean/Hardness.lean), [AxisFamily](lean/HCP/AxisFamily.lean) |
-| Protocol joins | Canonical manifests retain the exact artifact and full ciphertext through signed intents and checked history. Conditional integrity and adaptive CRS reduction theorems retain their stated primitive hypotheses. | [Protocol guide](lean/Protocol/README.md), [construction crosswalk](papers/paper2/README.md#lean-sources-and-paper-ownership) |
+| Protocol joins | Canonical manifests retain the exact artifact and full ciphertext through signed intents and checked history. Conditional integrity and adaptive CRS reduction theorems retain their stated primitive hypotheses. | [Protocol guide](lean/Protocol/README.md), [construction crosswalk](papers/paper2/DRAFT.md#7-construction-ownership-and-remaining-protocol-work) |
 | Private operator and public instance | Canonical nonce-bearing operator openings, V2 witness/program/instance checks and original-context verification. A finite public-instance recovery experiment reduces success above $2^{-n}$ to an explicit operator-commitment distinguishing test. | [OperatorCommitment](lean/Protocol/Storage/OperatorCommitment.lean), [NativeCommitted](lean/Protocol/Transfer/PathSignature/NativeCommitted.lean), [context](lean/Protocol/Transfer/PathSignature/NativeCommittedContext.lean), [reduction](lean/Protocol/Transfer/PathSignature/NativeCommittedPrivacy.lean) |
+| One-use random-oracle recovery | With an initially empty oracle cache, independent uniform messages, fresh sign keys and private 32-byte nonces, a decoder making at most `Q` public hash queries recovers with probability at most `2^-n + (Q+2)/256^32`. The bound covers partial integer-coefficient recovery for positive scaling. | [Exact-byte oracle adapter](lean/Protocol/Storage/OperatorCommitment/RandomOracle.lean), [native experiment and bound](lean/Protocol/Transfer/PathSignature/NativeCommittedRandomOracle.lean) |
 
 ## Reading the construction
 
@@ -94,13 +95,14 @@ The [Lean guide](lean/README.md) describes the wider module map and proof
 assumptions. The completed native core has passed its targeted builds,
 external declaration/axiom checks and byte-execution example; the full
 `Protocol` aggregate has also built successfully.
+The random-oracle proofs use the pinned VCVio hidden-seed simulation library.
 
 ## Next mathematical work
 
 | Workstream | Endpoint |
 |---|---|
-| Encryption privacy | Bound the new operator-commitment test advantage for a selected backend, then extend the experiment to the complete proof/storage view and key-use policy. |
-| Computational comparison | A finite sampled recovery problem with efficient adversaries and an explicit reduction or oracle-relative comparison with CVP. |
+| Encryption privacy | Extend the proved native random-oracle experiment to proof/storage transcripts and key-use policy, and specify the concrete implementation profile. |
+| Computational comparison | Prove the intended comparison with an explicit CVP oracle or reduction using the specified finite family and released view. |
 | Concrete proof construction | Complete field-circuit refinement for ranges, bytes and hashes, and a secure CRS primitive with quantitative estimates. |
 
 The [parity register](SEMANTIC-PARITY.md#what-remains-by-paper) and
@@ -109,16 +111,18 @@ endpoints and the remaining protocol work.
 
 ## Manuscripts and repository layout
 
-The current manuscript combines the HCP foundations and protocol construction
-stored under `paper1` and `paper2`. Capacity-radius proximity remains a
-separate paper. The source-directory labels preserve the existing proof and
-statement crosswalks.
+Paper 1 owns the encryption mechanism and its mathematical recovery results.
+Paper 2 consumes them in protocol, storage and verification constructions.
+Paper 3 develops the separate coding and proximity analysis.
 
-| Manuscript | Reading copy and sources |
+| Manuscript | Scope and sources |
 |---|---|
-| Combined HCP and proof-carrying transactions | [Construction-note PDF](papers/paper2/construction.pdf) and [TeX](papers/paper2/construction.tex), [full working manuscript](papers/paper2/DRAFT.md), [construction guide](papers/paper2/README.md). |
-| Earlier focused HCP foundations | [PDF](papers/paper1/main.pdf), [TeX](papers/paper1/main.tex), [36-target verification entry](lean/Palomar/PaperOne/README.md). |
-| Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes | [PDF](papers/paper3/main.pdf), [TeX](papers/paper3/main.tex), [coding](lean/Palomar/PaperThree/README.md) and [application](lean/Palomar/PaperThree/Application/README.md) verification entries. |
+| Paper 1: Homotopical Encryption | [PDF](papers/paper1/main.pdf), [TeX](papers/paper1/main.tex), [guide](papers/paper1/README.md). Primitives, HCP, coupled lattice encryption, exact byte recovery, one-use random-oracle recovery and CVP comparison. |
+| Paper 2: Proof-Carrying Transactions for Homotopical Encryption | [Protocol PDF](papers/paper2/construction.pdf), [TeX](papers/paper2/construction.tex), [working inventory](papers/paper2/DRAFT.md). Payload commitments, contexts, manifests, certificates, approved execution and conditional protocol security. |
+| Paper 3: Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes | [PDF](papers/paper3/main.pdf), [TeX](papers/paper3/main.tex), [coding](lean/Palomar/PaperThree/README.md) and [application](lean/Palomar/PaperThree/Application/README.md) verification entries. |
+
+Paper 1's appendix separates the current construction results from the
+[earlier focused 36-target Hodge/CVP selection](lean/Palomar/PaperOne/README.md).
 
 With a full TeX installation, rebuild the canonical PDFs
 from the repository root:

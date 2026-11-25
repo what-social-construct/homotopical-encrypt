@@ -1,62 +1,41 @@
-# Paper 1: The Harmonic Cochain Problem
+# Homotopical Encryption
 
-This folder contains *Homotopical Encryption: Hidden Hodge Operators and the
-Harmonic Cochain Problem*, the foundations source retained from the earlier
-three-part split. The [working combined manuscript](../paper2/DRAFT.md) now
-joins these foundations to the native construction and protocol; the
-proximity paper remains separate. The [parity register](../../SEMANTIC-PARITY.md)
-retains the source-directory and previous verification-entry correspondence.
+*Homotopical Encryption: Hidden Hodge Operators and the Harmonic Cochain
+Problem* develops the encryption mechanism and the mathematical problem it
+creates. Read the [PDF](main.pdf) or [TeX source](main.tex).
 
-The paper introduces the HCP/Hodge recovery model, its homological semantic
-fragment, explicit harmonic lattices, known-lattice CVP comparisons and the
-constructed hidden-target and integer-encoding ambiguity. The finite model
-uses signed incidence; it asserts neither a regular CW realization for every
-admitted base nor asymptotic hardness or sampled encryption security.
+The main body has four parts:
 
-The numbered body has three sections: [Primitives](sections/02-primitives.tex),
-[the HCP](sections/02-harmonic-cochain-problem.tex), and the CVP comparison.
-The semantic and Hodge data precede the public observation, hidden witness and
-recovery problem. The optional classifier-reflection profile, together with
-invariance, identifies public fibers with the declared typed homotopy classes.
-The actual admitted two-member family proves reflection. This completeness
-does not identify the operative embedded kernel.
+1. Cellular, semantic and Hodge primitives.
+2. The Harmonic Cochain Problem and its public homotopy classes.
+3. The coupled encryption construction: actual operators, entire intrinsic
+   lattice, finite encoding/recovery, transport diagrams, private operator
+   commitments and one-use random-oracle recovery.
+4. CVP comparison and hidden-target ambiguity.
 
-[CVP Comparison and Kernel Ambiguity](sections/03-cvp-comparison.tex) ends
-with Corollary 3.6: the same correct rank-one CVP oracle recovers the answer
-when given the operative private lattice, while the shared public observation
-cannot determine the answer uniformly across compatible separated members.
-The conclusion follows immediately. This is exact-recovery separation, not
-an asymptotic complexity reduction.
+The coupled family uses one canonical private matrix throughout. Its integer
+harmonic chart covers the full intrinsic lattice; exact byte recovery returns
+the original coefficients. The finite fresh-key instance has the proved
+classical query bound `2^-n+(Q+2)/256^32`, including partial coefficient
+recovery for positive scaling. The theorem specifies a fresh empty shared
+oracle cache and `Q` postrelease decoder queries.
 
-The parity appendix uses separate main-statement, supporting-statement and
-definition/boundary tables. It maps six selected groups to **16 main and
-20 supporting declarations**. Its root abbreviation is
-`HE = HomotopicalEncryption`; the independent entry uses
-`HomotopicalEncryption.Palomar.PaperOne`. Challenge has 18 intentional theorem
-placeholders and a Mathlib-only import surface. Solution supplies canonical
-proof adapters without importing Challenge. Its local import closure is
-21 modules, plus the independent one-module Challenge closure.
+The post-conclusion appendix maps these results to canonical Lean declarations.
+It also retains the earlier six-group Hodge/CVP table, whose
+[focused verification entry](../../lean/Palomar/PaperOne/README.md) selects
+16 main and 20 supporting declarations. That checked selection is separate
+from the new coupled and random-oracle results; its source metadata pins the
+earlier revision.
 
-[Paper 2](../paper2/DRAFT.md) owns cochain construction, codec, visibility,
-security contracts and protocol evidence. It uses the geometric results
-developed in Paper 3 when specifying released views.
+[Paper 2](../paper2/README.md) consumes this construction in payload, storage,
+certificate and transaction interfaces. [Paper 3](../paper3/README.md) owns
+coding and proximity results. Mathematical proofs have one canonical home
+here; protocol joins remain in their own manuscript. Lean module paths retain
+their historical locations without duplicating definitions.
 
-[Paper 3 §7](../paper3/sections/07-application-interface.tex) introduces the
-full-residual source obstruction, full Plücker coordinates,
-subspace/projector reconstruction and the projective-to-cochain/plane/RS
-chain. Paper 3 also owns the coding and native metric/radius comparisons.
-The canonical Lean proofs of these geometric results remain in place,
-outside Paper 1's selected entry. The shared ownership table records this split.
+The [shared parity register](../../SEMANTIC-PARITY.md) records precise
+ownership and remaining work. The [source ledger](../../docs/SOURCE_LEDGER.md)
+indexes the literature and its corresponding bibliographies.
 
-The [source ledger](../../docs/SOURCE_LEDGER.md#bibliography-correspondence)
-accounts for all 35 ledger sources across the source bibliographies. The projective
-comparison source belongs to Paper 3; Paper 1 prints four external sources
-and retains two uncited companion records.
-
-The [entry README](../../lean/Palomar/PaperOne/README.md) records the selected
-statements and reproducible checks; its metadata records the current local
-verification. The [naming guide](../../docs/PROJECT_NAMING.md) fixes the formal
-namespace. Current reading copies and package locations are described in
-[the output guide](../../docs/OUTPUTS.md).
-
-Build locally with `latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex`.
+Build from this directory with
+`latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex`.

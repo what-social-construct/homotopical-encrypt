@@ -29,6 +29,7 @@ public import Protocol.Transfer.PathSignature.NativeNoiseRefresh
 public import Protocol.Transfer.PathSignature.NativeCommitted
 public import Protocol.Transfer.PathSignature.NativeCommittedContext
 public import Protocol.Transfer.PathSignature.NativeCommittedPrivacy
+public import Protocol.Transfer.PathSignature.NativeCommittedRandomOracle
 
 @[expose] public section
 
@@ -122,4 +123,12 @@ verification are proved. Its finite public-instance/ciphertext experiment
 reduces recovery above the reference `2^-n` mass to an explicit chosen-operator
 commitment test. Bounding that test and joining proof/storage transcripts
 are separate from this reduction and the retained V1 forgery theorem.
+
+A separate classical byte-random-oracle experiment gives the explicit native
+recovery bound `2^-n + (q+2)/256^32`: its public-only decoder makes at most q
+queries, and the constructor adds two honest digest calls. The single private
+derivation uses the exact operator commitment encoding. The same game bounds
+partial integer-coefficient recovery for positive scaling. Probabilities are
+computed after shared-oracle sampling; the fixed-hash algebraic experiment
+and the V1 CRS theorem retain their own meanings.
 -/

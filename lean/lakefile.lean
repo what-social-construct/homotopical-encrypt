@@ -102,5 +102,9 @@ lean_lib Palomar where
     `Palomar.PaperThree.Challenge, `Palomar.PaperThree.Solution,
     `Palomar.PaperThree.Application.Challenge, `Palomar.PaperThree.Application.Solution]
 
+/- The byte-ROM adapter uses only VCVio's HiddenSeed/query-tracking closure. -/
+require VCVio from git
+  "https://github.com/Verified-zkEVM/VCVio" @ "a95ea922181968f96cbd2e668be6aef6892c67dc"
+
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4" @ "56a005855ea17e0b0958f73ec801ae140b0a1679"

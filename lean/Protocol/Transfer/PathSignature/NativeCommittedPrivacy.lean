@@ -36,23 +36,18 @@ open scoped ENNReal
 
 abbrev Bytes := List UInt8
 abbrev View := Bytes × Bytes
-abbrev NonceSeed := Fin 32 → Fin 256
+abbrev NonceSeed := Storage.OperatorCommitment.NonceSeed
 
 variable {rows cols : ℕ}
 
 /-- The finite seed retains every byte of the private operator nonce. -/
-def nonceOfSeed (seed : NonceSeed) : Storage.OperatorCommitment.Nonce :=
-  fun index => UInt8.ofNat (seed index).val
+abbrev nonceOfSeed := Storage.OperatorCommitment.nonceOfSeed
 
-theorem nonceOfSeed_injective : Function.Injective nonceOfSeed := by
-  intro first second same
-  funext index
-  apply Fin.ext
-  have values := congrArg UInt8.toNat (congrFun same index)
-  simpa only [nonceOfSeed, UInt8.toNat_ofNat_of_lt' (first index).isLt,
-    UInt8.toNat_ofNat_of_lt' (second index).isLt] using values
+theorem nonceOfSeed_injective : Function.Injective nonceOfSeed :=
+  Storage.OperatorCommitment.nonceOfSeed_injective
 
-theorem card_nonceSeed : Fintype.card NonceSeed = 256 ^ 32 := by simp [NonceSeed]
+theorem card_nonceSeed : Fintype.card NonceSeed = 256 ^ 32 :=
+  Storage.OperatorCommitment.card_nonceSeed
 
 /-- Reuse the original native witness: only its generated target and openings change. -/
 def sampleWitness (base : NativeRelation.Witness rows cols)

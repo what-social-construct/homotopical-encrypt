@@ -1,84 +1,85 @@
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
 
+A private Hodge presentation determines which component of an observed
+cochain carries its message. We construct an explicit encryption mechanism
+from this dependence and formulate the Harmonic Cochain Problem (HCP) for
+recovery when the operative geometry is hidden. The distinction from
+known-lattice CVP is the input: CVP supplies its lattice basis, while HCP
+supplies a public semantic class and an observation.
+
+The coupled construction begins with an integer matrix
+\(B\in\mathbb Z^{m\times n}\). Its cellular face constraints are \(y=Bx\),
+and its intrinsic harmonic lattice is
+\[
+ \Lambda_B=\{(0,z,Bz):z\in\mathbb Z^n\}.
+\]
+The message is already a cochain. Adding exact/coexact Hodge noise gives
+\[
+ \operatorname{Enc}_B(z,a,u)=(a,z-B^{\mathsf T}u,Bz+u).
+\]
+The private presentation recovers \(z\) exactly. Canonical private-key and
+ciphertext bytes implement this recovery by exact rational arithmetic.
+This construction supplies a concrete family in which to study the hidden
+recovery geometry rather than leaving HCP as an abstract operator problem.
 
 Helfer's first-order homotopical logic \cite{helfer2019fol} provides the
-original semantic motivation for this framework: equality is interpreted
-through path objects and, under the stated hypotheses, closed-formula truth
-is invariant under homotopy equivalence of interpretations. This motivates
-distinguishing a hidden presentation from the semantic information retained
-by a public classifier. HCP asks how that distinction interacts with the
-harmonic target determined by a hidden Hodge operator.
+original semantic motivation. Equality is interpreted through path objects
+and, under its hypotheses, closed-formula truth is preserved by homotopy
+equivalence. Our constructed cellular interpretations use a homological
+test fragment. They share a public homotopy class while their embedded
+harmonic spaces and Hodge operators can differ. In this fixed profile,
+the source restriction maps determine the actual differential and Hodge
+operator; either the degree-one differential or the Hodge operator determines
+\(B\). The cochain shear preserves the declared semantic class, and a separate
+native map transports the full noisy ciphertext with its message intact.
 
-\HE{} studies the recovery of an operative harmonic component when the
-Hodge operator is hidden. The public input specifies an observed cochain and
-a class of possible private presentations. In a known-lattice closest-vector
-problem, the lattice is presented before the search begins. In HCP, the
-recovery target is
-\[
-  h=P_H(b)\in\ker(\Delta_1),
-\]
-but the public class does not include the degree-one Hodge--Laplacian
-\(\Delta_1\), its kernel, or the restriction maps from which \(\Delta_1\) is
-built.
+Learning with errors is a useful noisy-algebraic comparator. Search LWE
+publishes \((A,As+e\bmod q)\), with a uniformly sampled matrix and independently
+sampled errors, and asks for the hidden vector \(s\) \cite[Section~1]{regev2009lwe}.
+Here the message lies in a harmonic lattice and the noise lies in its
+geometry-dependent orthogonal complement.
+\input{sections/recovery-comparison.tex}
 
-The operator dependence can be summarized as follows. A hidden representative
-determines the restriction data, which determine the adjacent
-coboundaries and hence the degree-one Hodge operator:
-\[
-  x
-  \longmapsto
-  \{R_{\sigma\to\tau}^{x}\}_{\sigma\prec\tau}
-  \longmapsto
-  (\delta_{0,x},\delta_{1,x})
-  \longmapsto
-  \Delta_{1,x}
-  \longmapsto
-  \bigl(\ker\Delta_{1,x},P_{H_x}\bigr).
-\]
-Homotopy-equivalent hidden representatives share a public label even when
-their Hodge operators differ in the fixed public coordinates.
-
-The CVP comparison makes this dependence on the input precise. A real linear
-span can be realized as the kernel of a suitable linear operator, but a discrete lattice cannot equal a
-nonzero real kernel. If an explicit lattice \(\Lambda\) is supplied inside a
-harmonic subspace \(W=\ker(\Delta_W)\), orthogonal projection of the target
-onto \(W\) preserves the closest vectors of \(\Lambda\).
-
-\begin{table}[ht]
-  \centering
-  \small
-  \begin{tabular}{@{}p{0.27\linewidth}p{0.65\linewidth}@{}}
-    \hline
-    Symbol & Meaning \\
-    \hline
-    \(\pi:A\to P\) & homotopy-invariant public classifier \\
-    \(\alpha=\pi(x)\in P\) & realized public classifier value \\
-    \(A_\alpha=[x]_\pi\) & fiber of hidden representatives with public label \(\alpha\) \\
-    \((\alpha,b)\) & public HCP observation \\
-    \(\delta_0,\delta_1,\Delta_1\) & adjacent coboundaries and degree-one Hodge--Laplacian \\
-    \(\ker(\Delta_1),\ P_H\) & harmonic subspace and harmonic projection \\
-    \(\Delta_W=I-P_W\) & kernel-normalized projection operator associated with \(W\) \\
-    \hline
-  \end{tabular}
-  \caption{Core notation for the semantic interpretation and HCP.}
-  \label{tab:core-notation}
-\end{table}
-
-\Needspace{18\baselineskip}
-This paper develops this boundary through the following statements.
+We establish four connected results.
 \begin{enumerate}[label=(\roman*)]
-  \item The Harmonic Cochain Problem (HCP) asks to recover the operative
-    component \(h=P_Hb\) for a hidden Hodge operator \(\Delta_1\).
-  \item A Hodge-structured noise model gives the cochain decomposition
-    \(b = h + e\), where \(h \in \ker(\Delta_1)\) and
-    \(e \in \image(\delta_0) \oplus \image(\delta_1^\ast)\).
-  \item Harmonic lattices in one public class can have
-    different unique closest vectors to the same cochain, so known-lattice
-    CVP access does not determine the operative answer.
+  \item \textbf{A derived cellular encryption construction.}
+  The private coupling matrix determines the sheaf, genuine Hodge operator
+  and entire intrinsic harmonic lattice. We construct its real and integer
+  coefficient charts and prove its basis, rank, discreteness and metric.
+  \item \textbf{Exact finite recovery and coherent transport.}
+  The canonical byte decoder refines the harmonic-lattice decoder on every
+  input. Its accepted integer ciphertexts are exactly the original
+  Hodge-encryption language. Constructed semantic equivalences, native
+  ciphertext transport and harmonic recovery form commuting diagrams.
+  \item \textbf{A quantitative one-use recovery bound.}
+  The fresh-sign family and canonical private-nonce operator commitment give
+  an explicit fresh-cache shared-byte-random-oracle experiment. For a uniform message,
+  a public decoder with at most \(Q\) hash queries has recovery probability
+  at most \(2^{-n}+(Q+2)256^{-32}\), including partial integer coefficients
+  for positive scaling. The constructor's two digest calls are counted.
+  \item \textbf{A precise comparison with supplied-lattice CVP.}
+  Orthogonal projection preserves the closest vectors of an explicitly
+  supplied harmonic lattice. Constructed publicly equivalent presentations
+  can require different operative targets at one observation, preventing
+  a known-lattice oracle from selecting the hidden member's answer uniformly.
 \end{enumerate}
 
+The comparison concerns the actual public input and operative target. A
+stronger computational comparison with CVP requires its own specified
+reduction or oracle-relative theorem. The random-oracle result gives a
+separate concrete query bound for the native instance/ciphertext view.
+
+Homomorphic correctness compares evaluation before and after encryption
+\cite[Definition~2.1.1]{gentry2009fullyHomomorphic}. Here the central commuting
+relation concerns a change of cellular presentation. Fully key-homomorphic
+encryption also translates ciphertexts across public keys while retaining
+plaintext \cite{bonehEtAl2014keyHomomorphic}; our construction specifies its
+own private geometry, admissible maps and recovery laws.
+
 Finite Hodge theory follows the cellular-cochain framework of
-Hansen--Ghrist \cite{hansenGhrist2018sheaves}; the algebraic model used here is
-specified in \cref{sec:primitives}. The constructed public theories use
-the nonzero-cohomology-test fragment.
+Hansen--Ghrist \cite{hansenGhrist2018sheaves}. Sections~\ref{sec:primitives}
+and~\ref{sec:hcp-definition} fix the primitives and recovery problem;
+\cref{sec:coupled-harmonic-construction} constructs the encryption family,
+followed by the CVP comparison. The correspondence tables after the
+conclusion identify the canonical Lean results.

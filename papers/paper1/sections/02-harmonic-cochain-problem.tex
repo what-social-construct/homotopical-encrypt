@@ -132,7 +132,7 @@
     \qquad
     \Delta_yb\ne0,
   \]
-  then \(\pi_\Delta\) has public-compatible Hodge ambiguity, and hence is
+  then \(\pi_\Delta\) has public-compatible Hodge ambiguity. It is therefore
   kernel-ambiguous and lossy.
 \end{proposition}
 
@@ -230,8 +230,9 @@ the private transport \(U_1\) neither revealed nor applied.
 
 \subsection{Computational Scope}\label{sec:computational-scope}
 
-These exact-recovery comparisons do not by themselves give an asymptotic
-CVP-hardness reduction. Such a comparison requires encoded instance families,
-an input-size measure, an algorithm class and a success criterion. A
-distributional security claim also requires a sampling model and a declared
-adversary view.
+The coupled construction below fixes an encoded family, finite sampling
+law and public instance/ciphertext view. Its fresh one-use profile has a
+proved recovery bound for classical decoders with bounded access to a shared
+byte random oracle. The generic exact-recovery comparison and this sampled
+query theorem have distinct hypotheses. A stronger computational comparison
+with CVP remains a separate reduction or oracle-relative statement.

@@ -16,21 +16,28 @@
 \maketitle
 
 \begin{abstract}
-We introduce the Harmonic Cochain Problem (HCP): recovering the operative
-harmonic component \(h=P_{\ker(\Delta_1)}b\) from public data
-\((\alpha,b)\). The degree-one Hodge--Laplacian \(\Delta_1\) is induced by
-an operative hidden representative \(x\in A_\alpha=\pi^{-1}(\alpha)\) of
-the public classifier value \(\alpha\). Its adjacent coboundaries
-\(\delta_0,\delta_1\) determine the Hodge decomposition \(b=h+e\), with
-\(e\in\image(\delta_0)\oplus\image(\delta_1^\ast)\).
-We compare HCP with the closest-vector problem (CVP), distinguishing the
-field-linear image \(\mathcal V_B(R)=\{Bx:x\in R^n\}\) from the discrete
-lattice \(\Lambda_B=B\mathbb Z^n\). The former can be realized as a linear
-kernel. For an explicitly supplied inclusion \(\Lambda_B\subseteq W\),
-orthogonal projection onto the harmonic subspace \(W\) preserves the closest
-lattice vectors. We then prove a hidden-operator separation: if publicly
-equivalent hidden operators disagree on harmonicity, a correct known-lattice
-CVP oracle cannot supply a uniformly exact public-data HCP solver.
+We construct homotopical encryption from intrinsic harmonic lattices of finite
+cellular sheaves. An integer coupling matrix determines the stalk maps,
+Hodge operator and lattice of harmonic cochains. Its coefficient chart covers
+the entire intrinsic lattice, with proved basis, rank, discreteness and metric.
+Encryption adds exact/coexact Hodge noise to an integer harmonic message;
+a canonical byte algorithm recovers its coefficients exactly and agrees with
+the original harmonic-lattice decoder on every input.
+The Harmonic Cochain Problem (HCP) asks for the operative harmonic message
+from a public homotopy class and observation while the private geometry is
+withheld. Constructed cochain equivalences preserve the declared semantic
+class, while a separate ciphertext transport gives commuting projection and
+recovery diagrams. For a uniform-message, fresh-sign-key family with private
+32-byte operator nonces and an initially empty oracle cache, a decoder
+making at most \(Q\) public random-oracle
+queries recovers with probability at most
+\(2^{-n}+(Q+2)256^{-32}\); positive scaling gives the same bound for partial
+integer-coefficient extraction. We compare the recovery problem with CVP
+supplied with a lattice basis. Harmonic projection preserves its closest
+vectors, whereas publicly equivalent hidden presentations can have different
+operative targets at the same observation. These results give an explicit
+encryption mechanism and precise geometric, information and bounded-query
+recovery comparisons.
 \end{abstract}
 
 \setcounter{tocdepth}{1}
@@ -40,6 +47,7 @@ CVP oracle cannot supply a uniformly exact public-data HCP solver.
 \input{sections/01-introduction}
 \input{sections/02-primitives}
 \input{sections/02-harmonic-cochain-problem}
+\input{sections/03-coupled-encryption}
 \input{sections/03-cvp-comparison}
 \input{sections/04-conclusion}
 \input{sections/appendices}

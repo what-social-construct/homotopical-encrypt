@@ -1,0 +1,448 @@
+% Canonical mathematical construction. Protocol applications cite these results.
+\section{Coupled Hodge Encryption}
+\label{sec:coupled-harmonic-construction}
+
+\subsection{The private presentation and its message space}
+
+The private presentation supplies the cellular differentials, inner products
+and compatible integral stalk lattices. These data determine the adjoints,
+Hodge operator and integral harmonic messages. We now fix a concrete family
+in which one integer matrix reconstructs all of these data. Its standard
+Euclidean metrics and integer stalks are part of the profile.
+
+For a harmonic message \(h\), an exact/coexact opening gives the cochain
+\begin{equation}
+ b=h+\delta_0a+\delta_1^*u,
+ \qquad h\in C^1_{\mathbb Z}(F)\cap\ker\Delta_{1,F}.
+ \label{eq:coupled-hodge-encryption}
+\end{equation}
+The harmonic projector recovers \(h\). Preservation of the public homotopy
+class will follow from an equivalence of the underlying cochain
+interpretations; the integral lattice supplies the message space.
+
+\subsection{Shared integral stalk constraints}
+
+Fix \(B\in\mathbb Z^{m\times n}\). The coupled cellular family has one scalar
+exact edge, \(n\) scalar information edges, \(m\) scalar parity edges, and
+one scalar face stalk per row of \(B\). Its actual restriction maps give
+\[
+ C^1(F_B)=\mathbb R\oplus\mathbb R^n\oplus\mathbb R^m,
+ \qquad
+ \delta_{0,B}(a)=(a,0,0),\qquad
+ \delta_{1,B}(a,x,y)=y-Bx.
+\]
+The information edges contribute to shared face equations, so the stalk maps
+couple different edge cells. Standard integer stalk lattices are preserved by
+these maps. All cochain spaces use their fixed Euclidean metrics.
+
+These definitions reconstruct the full admitted geometry from the dimensions
+and \(B\): the cellular maps, standard metric and integral stalks, harmonic
+space and graph basis. Directly from the two differentials and their adjoints,
+\[
+ \Delta_B(a,x,y)=\bigl(a,-B^{\mathsf T}(y-Bx),y-Bx\bigr),
+\]
+\[
+ \Delta_B=
+ \begin{pmatrix}
+  1&0&0\\0&B^{\mathsf T}B&-B^{\mathsf T}\\0&-B&I
+ \end{pmatrix}.
+\]
+Each of \(\delta_{1,B}\) and \(\Delta_B\), in these fixed coordinates,
+determines every entry of \(B\). Canonical \(B\) bytes can therefore bind this
+entire profile without an independently chosen operator. A general Hodge
+matrix does not determine arbitrary integral lattices, coefficient bases or
+the separate differentials. Varying those data, the topology or the metric
+requires an explicit enlarged reconstruction profile.
+
+\begin{proposition}[Intrinsic harmonic graph lattice]
+\label{prop:coupled-harmonic-graph}
+The harmonic subspace and its intrinsic integral lattice are exactly
+\[
+ W_B=\{(0,x,Bx):x\in\mathbb R^n\},\qquad
+ \Lambda_B=\{(0,z,Bz):z\in\mathbb Z^n\}.
+\]
+The columns of \(G_B=[0;I;B]\) present the entire lattice \(\Lambda_B\), with
+Gram matrix \(G_B^{\mathsf T}G_B=I+B^{\mathsf T}B\). For target \((a,v,w)\),
+the squared distance to the point with coefficient vector \(z\) is
+\[
+ a^2+\|v-z\|^2+\|w-Bz\|^2.
+\]
+The embedded harmonic subspace determines \(B\).
+\end{proposition}
+
+\begin{proof}
+The harmonic equations are \(\delta_{0,B}^*(a,x,y)=0\) and
+\(\delta_{1,B}(a,x,y)=0\), which give \(a=0\) and \(y=Bx\).
+Integrality of the information coordinates forces \(x\in\mathbb Z^n\);
+integer \(B\) then makes every parity coordinate integral. The information
+coordinates also prove independence of the graph generators. Their inner
+products and distances give the displayed formulas. Applying the graph
+description to the information-coordinate unit vectors recovers each column
+of \(B\).
+\end{proof}
+
+\begin{proposition}[The full intrinsic lattice and its coefficient charts]
+\label{prop:coupled-intrinsic-lattice}
+The graph map gives a real linear equivalence
+\(g_B:\mathbb R^n\simeq W_B\) and an integer linear equivalence
+\(e_B:\mathbb Z^n\simeq\Lambda_B\). The integer chart is the original
+harmonic-lattice point encoding. Restricting the original subgroup to its
+harmonic ambient space identifies it with the integer span of the real graph
+basis. It is discrete, spans \(W_B\) over \(\mathbb R\), and has integral
+rank \(n\).
+\end{proposition}
+
+\begin{proof}
+Information coordinates invert the real graph map. The complete integral
+graph characterization in Proposition~\ref{prop:coupled-harmonic-graph}
+gives the integer chart and its surjectivity. Transporting the standard
+coefficient bases gives the two graph bases. An element belongs to the
+integer span exactly when all its graph-basis coordinates are integers,
+which is the original intrinsic membership condition. The integer span of
+a real basis is discrete and spans its ambient space. Its integer basis has
+\(n\) elements.
+\end{proof}
+
+\input{sections/lattice-diagram.tex}
+
+Full real span and equality with the intrinsic integral subgroup are separate
+conditions in a general harmonic-lattice presentation. Both are proved here
+for the same coupled graph basis; no auxiliary message lattice is chosen.
+The integer native profile also derives coexact integrality from
+\(\delta_{1,B}^*u=(0,-B^{\mathsf T}u,u)\). General integral-structure laws
+preserve the differentials and do not assert adjoint preservation of arbitrary
+chosen lattices. The finite mechanism uses this actual standard metric and
+integral profile.
+
+Real graph matrices describe a standard information-coordinate chart of a
+Grassmannian; integer matrices select arithmetic points in that chart. The
+formalization constructs the sheaves, harmonic subspaces and lattices, without
+an algebraic-variety or scheme construction. Shared rows give explicit
+off-diagonal Gram entries, while computational hardness requires an
+independent reduction and a specified experiment.
+
+\subsection{Constructed homotopy-class and lattice preservation}
+
+Helfer's homotopy equivalences compare interpretations of a declared
+signature \cite[Definition~7.1]{helfer2019fol}. Here the sort is the actual
+cochain complex and the closed tests concern nonzero homology. The metric and
+Hodge adjoints are additional data, rather than operations whose covariance
+is asserted by the semantic signature.
+
+\begin{theorem}[Same public class and message coefficients]
+\label{thm:coupled-public-class}
+For integer matrices \(B,C\) of the same dimensions, define
+\[
+ S_{B,C}(a,x,y)=(a,x,y+(C-B)x).
+\]
+Together with identity maps in degrees zero and two, this is a strict
+isomorphism between the actual cellular cochain complexes. It induces a
+typed Helfer equivalence and equality of their closed theories in the declared
+homological test fragment. Its restriction gives an additive equivalence
+\(\Lambda_B\simeq\Lambda_C\) preserving the integer coefficient vector:
+\[
+ S_{B,C}(0,z,Bz)=(0,z,Cz).
+\]
+\end{theorem}
+
+\begin{proof}
+The inverse is \(S_{C,B}\), and direct substitution gives
+\[
+ S_{B,C}\delta_{0,B}=\delta_{0,C},\qquad
+ \delta_{1,C}S_{B,C}=\delta_{1,B}.
+\]
+The resulting strict complex isomorphism supplies the typed semantic
+equivalence. Proved invariance of the declared closed tests gives theory
+equality. The integral graph description in
+Proposition~\ref{prop:coupled-harmonic-graph} gives the lattice equivalence
+and its coefficient formula.
+\end{proof}
+
+The shear is an isomorphism of the full cochain interpretations. It mixes
+edge cells and need not define a stalkwise cellular morphism on the fixed
+scalar-cell decomposition. It generally changes lengths, so it does not
+transport adjoints, orthogonal projections or the noise
+in~\eqref{eq:coupled-hodge-encryption} merely by being a cochain isomorphism.
+
+For an integral chain isometry compatible with the harmonic-lattice encodings,
+sample-level transport and recovery give
+\[
+ T_1\operatorname{Enc}_F(z,e)
+   =\operatorname{Enc}_G(z,T_{\mathrm{noise}}e),\qquad
+ \operatorname{Dec}_G(T_1b)=z=\operatorname{Dec}_F(b)
+\]
+on encryptions of \(z\). The underlying cochain equivalence preserves the
+declared semantic homotopy class. Transport material may be private; this
+correctness equation alone supplies no public translation algorithm.
+
+\begin{proposition}[Native ciphertext transport]
+\label{prop:coupled-native-transport}
+The real coordinate map
+\[
+ M_B(a,z,u)=(a,z-B^{\mathsf T}u,Bz+u)
+\]
+is a linear equivalence. Let \(L_{B\to C}=M_CM_B^{-1}\). For every original
+integral Hodge sample,
+\[
+ L_{B\to C}\operatorname{Enc}_B(z,a,u)
+   =\operatorname{Enc}_C(z,a,u).
+\]
+The transports have identity, inverse and composition laws, and generated
+integral samples remain generated integral samples with unchanged
+\(z,a,u\).
+\end{proposition}
+
+\begin{proof}
+For every real coordinate vector \(q\), the two coupling terms cancel in
+\(\langle q,M_Bq\rangle=\langle q,q\rangle\). Thus \(M_B\) is injective,
+hence bijective in the common finite-dimensional carrier. The original
+sample's coordinate formula identifies its observed cochain with
+\(M_B(a,z,u)\). The transport and composition formulas follow by cancellation
+of the coordinate equivalences.
+\end{proof}
+
+\begin{proposition}[Harmonic recovery square]
+\label{prop:coupled-recovery-square}
+Let \(P_B\) denote harmonic projection and
+\(g_B(z)=(0,z,Bz)\). For every real coordinate triple \(\xi=(a,z,u)\) and
+every real cochain \(b\),
+\begin{align*}
+ P_B M_B\xi&=g_B(z),&
+ P_C L_{B\to C}b&=S_{B,C}P_Bb,\\
+ \operatorname{info}_C P_C L_{B\to C}b&=\operatorname{info}_B P_Bb.
+\end{align*}
+On harmonic vectors \(L_{B\to C}\) agrees with \(S_{B,C}\), including
+their restrictions to the intrinsic integral lattices.
+\end{proposition}
+
+\begin{proof}
+The actual assembly is
+\(M_B(a,z,u)=g_B(z)+\delta_{0,B}a+\delta_{1,B}^*u\).
+Harmonic projection fixes the first summand and kills the other two.
+Every real \(b\) has the unique form \(M_B\xi\). Substitution of
+\(L_{B\to C}M_B=M_C\) and \(S_{B,C}g_B=g_C\) gives the square.
+Information coordinates of \(g_B(z)\) are \(z\), which proves the final
+identity. Taking zero noise proves agreement on harmonic vectors; restricting
+to integer \(z\) gives the lattice statement.
+\end{proof}
+
+\input{sections/geometry-diagrams.tex}
+
+This square holds without an isometry because the tailored native map
+preserves the harmonic and noise summands separately. The semantic shear
+cannot replace its ciphertext arrow. For \(B=0,C=1,b=(0,0,1)\),
+\[
+ S_{B,C}P_Bb=0,\qquad P_CS_{B,C}b=(0,1/2,1/2).
+\]
+
+An exact rational refinement computes the inverse by the
+determinant/adjugate formula. Its real realization equals \(L_{B\to C}\).
+This reference algorithm has no proved polynomial running-time bound.
+Usable transport to the known zero presentation reveals the message
+coordinates: the information component of
+\(L_{B\to0}\operatorname{Enc}_B(z,a,u)=(a,z,u)\) is \(z\).
+
+The HCP matrix in this family is the actual cellular Hodge Laplacian. Its
+kernel is \(W_B\), and its operative recovery map is the original harmonic
+projector. Thus the semantic interpretation, harmonic lattice, message and
+observed cochain refer to the same presentation.
+
+\subsection{Canonical bytes and direct recovery}
+
+The versioned presentation domain \texttt{HODGE\_COUPLING\_V1} fixes this
+family's scalar stalks, standard integral structures and Euclidean metric.
+The bytes record both dimensions followed by the signed integer entries in
+row-major order. Natural magnitudes use little-endian base-256 digits, each
+tagged to distinguish it from the terminating byte. An integer adds a sign
+byte. Canonical re-encoding rejects redundant digits and negative zero.
+The executable decoder roundtrips the actual matrix; injectivity, rejection
+of wrong dimensions or domain, trailing data and every proper truncation are
+proved. Encoded magnitude length is logarithmic in its value.
+
+For the constructed integral opening profile, \(z,a,u\) are integer-valued and
+the original Hodge ciphertext has coordinates
+\begin{equation}
+ b=\operatorname{Enc}_B(z,a,u)=(a,\ z-B^{\mathsf T}u,\ Bz+u).
+ \label{eq:coupled-integer-encryption}
+\end{equation}
+An executable integer vector casts to exactly this original observation. The
+full-ciphertext codec uses the distinct domain
+\texttt{HODGE\_CIPHERTEXT\_V1}, explicit matrix dimensions, and exact,
+information and parity coordinates in that order. Its decoder reconstructs
+the same native sample's full observed cochain; the existing harmonic
+projector recovers its original message. Canonical roundtrip, injectivity and
+rejection of malformed or mismatched byte streams are proved.
+
+Let \(E_B(z,a,u)\) be those canonical full-ciphertext bytes. The direct
+recipient algorithm parses them, casts the same integer cochain to rational
+coordinates, applies the exact inverse of \(M_B\), and returns its information
+coordinates only if all have denominator one. Write this partial byte
+algorithm as \(D_B\). It uses the private presentation and ciphertext bytes
+directly, without a transport token or access to a sample's message field.
+
+\begin{proposition}[Finite encryption and exact byte recovery]
+\label{prop:coupled-byte-recovery}
+For every integer \(B,z,a,u\),
+\[
+ D_B(E_B(z,a,u))=\operatorname{some}(z).
+\]
+The private presentation can itself be loaded from its canonical matrix
+bytes. For every byte string \(\beta\),
+\[
+ D_B(\beta)=\operatorname{some}(z)
+ \quad\Longleftrightarrow\quad
+ \exists a\in\mathbb Z,\ u\in\mathbb Z^m:\ \beta=E_B(z,a,u).
+\]
+On every rational cochain, the rational coefficient algorithm equals the
+original harmonic-lattice partial decoder. Thus byte recovery, including
+rejection, refines canonical parsing followed by the same harmonic-lattice
+decoding operation.
+\end{proposition}
+
+\begin{proof}
+The rational inverse realizes the original real inverse, whose information
+coordinates are the coordinates of the projected harmonic graph. They are
+integral exactly when that projection belongs to \(\Lambda_B\). For an
+integer observation \((a,x,y)\) and an accepted integer message \(z\), its
+coexact opening is \(u=y-Bz\), which is also integral. The original inverse
+identities give \(M_B(a,z,u)=(a,x,y)\). Canonical parsing identifies exactly
+the corresponding byte encoding. Conversely every such generated observation
+recovers \(z\) by the same inverse and integer check.
+\end{proof}
+
+The input-language statement imposes no opening magnitude or sampling bounds
+and supplies no authenticity condition. It establishes a functioning exact
+encryption/recovery mechanism. For example, \(B=(1\ 1)\), \(z=(2,-1)\),
+\(a=3\), \(u=4\) execute to ciphertext coordinates \((3,-2,-5,5)\), then
+recover \((2,-1)\) through canonical private-key and ciphertext bytes. The
+same reference execution rejects truncated byte inputs and an integer
+cochain whose projected coefficients are nonintegral.
+
+\subsection{A finite private carrier and canonical relation}
+\label{sec:coupled-finite-carrier}
+
+Fix a program descriptor \(p=(m,n,K,\ell)\), with integer-coordinate bound
+\(K\in\mathbb N\) and credential-salt length \(\ell\). The private carrier is
+\[
+ w=(S,B,z,a,u,\rho,r),\qquad
+ S,B\in\mathbb Z^{m\times n},\quad z\in\mathbb Z^n,\quad
+ a\in\mathbb Z,\quad u\in\mathbb Z^m.
+\]
+Here \(S\) is a source presentation, \(B\) is the operative target
+presentation, \(\rho\) is an \(\ell\)-byte credential salt and \(r\) is a
+separate 32-byte operator nonce. A bounded witness has every entry of
+\(S,B,z,a,u\) of absolute value at most \(K\). Dimensions, lengths and these
+bounds make its carrier finite. Both presentations use the same fixed
+cellular, metric and integral profile.
+
+Write \(\operatorname{enc}(S)\) for its canonical matrix bytes and
+\[
+ \operatorname{credbytes}(\rho,S)
+   =\mathsf{dom}_{\mathrm{cred}}\Vert
+     \operatorname{frame}(\rho)\Vert\operatorname{enc}(S).
+\]
+The credential domain is distinct from the matrix and ciphertext domains.
+A fixed byte hash \(H\) maps byte strings to 32-byte names. The source
+credential is \(H(\operatorname{credbytes}(\rho,S))\); it names fixed source
+opening data rather than an identity. The private operator commitment and
+three-name public relation are defined below. Their codecs retain the
+original matrices and coordinates, not only a profile name.
+
+For a sampling diagnostic, the integer-box sampler chooses the first five
+integer components independently and uniformly from \(\{-K,\ldots,K\}\)
+and chooses a uniform \(\ell\)-byte salt. Its native seed space has size
+\[
+ N=(2K+1)^{2mn+n+m+1}\,256^\ell.
+\]
+Each seed has mass \(N^{-1}\), and injective seed decoding gives the same
+mass to its decoded native witness. Every supported witness satisfies the
+selected bounds. An additional 32-byte nonce or fixed cryptographic tape
+can be sampled independently. The box law includes degenerate matrices and
+zero messages; its cardinality alone gives no recovery bound.
+
+\subsection{Sampling, disclosure and fresh operators}
+\label{sec:coupled-sampling}
+
+Uniform finite coordinates alone do not give a small recovery probability.
+In the original scalar sampler with bound one, a public predictor parses the
+canonical ciphertext and recovers \(z\) with probability exactly \(7/9\).
+Writing the scalar observation as \((a,x,y)\), the predictor returns
+\(\operatorname{sign}(x)\) when \(x\ne0\), returns
+\(\operatorname{sign}(y)\) when \(x=0\) and \(|y|=2\), and returns zero
+otherwise. It is correct on 21 of the 27 equally likely triples
+\((B,z,u)\in\{-1,0,1\}^3\). The calculation uses the full original seed law
+and holds for every credential salt length, also with an independent nonce
+or fixed cryptographic tape appended. It ignores hashes, the private source
+presentation and the exact opening. A known zero message with \(u\ne0\)
+also exposes a reused scalar operator through \(x=-Bu\), \(y=u\), hence
+\(B=-x/y\). These computations concern coefficient and operator recovery.
+
+The sign family correlates the coexact opening with the chosen message.
+Fix a public integer matrix \(A\in\mathbb Z^{m\times n}\) with
+\(A^{\mathsf T}A=dI\), \(d>0\). For independent fresh uniform key signs
+\(k\in\{-1,1\}^n\) and chosen message signs \(s\in\{-1,1\}^n\), set
+\[
+ C_k=A\operatorname{diag}(k),\qquad z=ds,\qquad u=C_ks.
+\]
+The original Hodge sample then has the exact normal form
+\[
+ \operatorname{Enc}_{C_k}(ds,a,C_ks)
+   =\bigl(a,0,(d+1)A(k\mathbin\odot s)\bigr),
+\]
+where \(\odot\) is coordinatewise multiplication and \(a\) is fixed
+independently of the message and key. Multiplication by a fixed \(s\) permutes
+the finite uniform key space. Consequently the actual canonical full
+ciphertext-byte laws are equal for every pair of messages. Any deterministic
+digest of those ciphertext bytes preserves this equality. The private
+harmonic projection still recovers \((0,ds,C_kds)\), and \(d>0\) makes the
+Boolean message encoding injective. Both \(A=I\), \(d=1\), and the dense
+matrix \(\left(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\right)\),
+\(d=2\), instantiate the construction.
+
+For an independent uniform Boolean message and fresh uniform key, the actual
+joint law factors into a uniform message independent of ciphertext bytes.
+Every total complete-message decoder succeeds with probability exactly
+\(2^{-n}\), including a decoder using a separately sampled fixed random tape
+or a deterministic ciphertext digest. Positive \(d\) identifies correct
+encoded coefficient recovery with bit-vector recovery. An arbitrary partial
+integer-coefficient extractor, allowing invalid outputs or failure, succeeds
+with probability at most \(2^{-n}\), also with the independent tape. The uniform-target
+hypothesis belongs to this guessing statement; equality of ciphertext laws
+for each pair of fixed messages does not need it.
+
+This is a one-use ciphertext law. The same normal form exposes the masked
+vector
+\[
+ t=\frac{A^{\mathsf T}y}{d(d+1)}=k\mathbin\odot s.
+\]
+For two chosen candidate messages \(s_0,s_1\), compute
+\(k_i=t\mathbin\odot s_i\) and \(C_i=A\operatorname{diag}(k_i)\).
+A published raw operator digest \(H(\operatorname{enc}(C_k))\) permits testing both
+candidates with two forward hashes. The actual byte parser and public
+transpose/parity arithmetic recover the masked signs and construct each
+candidate's canonical operator bytes. The true plaintext passes; a wrong
+candidate that passes yields a collision between distinct canonical matrix bytes. Thus key entropy does not
+repair this public operator-digest view. Reusing the sign key also retains the usual
+one-time-mask limitation; the ciphertext-only law supplies no encryption-oracle
+or repeated-key security theorem.
+
+The released view studied below consists only of the versioned instance and
+its full ciphertext bytes. It excludes exposed projectors, kernel or
+Pl\"ucker coordinates, operator nullifiers and usable transport to a known
+presentation. The exact opening \(a\) is fixed independently of the message
+and fresh key. No proof or storage transcript is included in this view.
+
+Fresh sampling is distinct from deterministic migration. Transport retains
+\(z,a,u\), whereas a fresh target key prescribes \(u'=C_{k'}s\). At that
+target, linearity gives the exact correction
+\[
+ \operatorname{Enc}_{C_{k'}}(z,a,u)
+ +\operatorname{Enc}_{C_{k'}}(0,0,u'-u)
+ =\operatorname{Enc}_{C_{k'}}(z,a,u').
+\]
+Canonical byte parsing and addition implement this same coexact correction.
+The identity does not itself sample a fresh key or supply a public refresh
+key.
+
+\input{sections/operator-commitment.tex}
+\input{sections/operator-random-oracle.tex}

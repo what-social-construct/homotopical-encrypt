@@ -1,20 +1,20 @@
 # Semantic Ownership
 
 The [manuscript parity register](../SEMANTIC-PARITY.md) is the current
-three-paper object/result ownership index. Paper 1 contains exactly three
-numbered themes: **1 Primitives, 2 The Harmonic Cochain Problem, 3 CVP Comparison
-and Kernel Ambiguity**; Introduction and Conclusion are unnumbered. Its
-independent entry selects **six groups, 36 declarations (16 main/20 support)**,
-with **18 intentional Challenge placeholders** and a **21-module Solution
-closure**. [Entry metadata](../lean/Palomar/PaperOne/formalization.yaml)
-records verification for its exact input scope.
+three-paper object/result ownership index. Paper 1 owns the HCP encryption
+mechanism: primitives, the problem, coupled cellular geometry and intrinsic
+lattices, finite encoding/recovery, semantic/ciphertext transport, private
+operator commitments, one-use random-oracle recovery and CVP comparisons.
+Its appendix separates these canonical results from the earlier focused
+six-group, 36-declaration verification selection. The latter's metadata
+continues to describe its exact checked scope.
 
-Paper 2 owns payloads, the opening quotient, commitments, source/codec data,
-released-view binding, rotation, storage/evidence and the bounded conditional
-transition. Paper 3 owns coding, full-point reconstruction (§7.1), source
-metrics/calibration and the transferred exact-component residual obstruction
-(§7.3). Full-point and residual-obstruction results are auxiliary to Paper 3's
-52/22 coding/application selections; they are outside Paper 1's 36 targets.
+Paper 2 owns exact-payload commitments, opening quotients, modular source and
+layout data, released-view and snapshot binding, scoped delivery, storage,
+evidence, certificates, approved verification and conditional transaction
+security. It consumes the same mathematical objects and results from Paper 1.
+Paper 3 owns coding, projective reconstruction, metrics/calibration and
+proximity. Physical Lean module paths do not determine manuscript ownership.
 
 The [complete family index](../SEMANTIC-PARITY.md#complete-family-coverage)
 accounts for construction, conditional, supporting and deferred objects,
@@ -71,6 +71,7 @@ mathematical object.
 | Canonical private operator commitment | [OperatorCommitment](../lean/Protocol/Storage/OperatorCommitment.lean). | Complete private opening codec on the original matrix packet and separate 32-byte nonce; honest checking, complete-preimage collision alternatives and original snapshot/context-root equations. | A cryptographic hash implementation, collision-resistance or hiding estimate for arbitrary supplied hashes. |
 | V2 native witness and actual context | [NativeCommitted](../lean/Protocol/Transfer/PathSignature/NativeCommitted.lean), [NativeCommittedContext](../lean/Protocol/Transfer/PathSignature/NativeCommittedContext.lean). | Complete V2 witness/program/instance checking reuses the original bounded witness and three public names. Exact program approval and the actual V2 parser configure the existing owner checker. Original byte recovery and coefficient-or-complete-preimage/ciphertext-collision results remain on the same geometry. | Reinterpreting V1 raw-hash bytes or its security theorem, new owner/geometry carriers, secure CRS generation or primitive security inferred from approval. |
 | Finite public-instance recovery and hiding reduction | [NativeCommittedPrivacy](../lean/Protocol/Transfer/PathSignature/NativeCommittedPrivacy.lean). | Independent uniform message, sign key and 32-byte nonce seeds release the actual V2 instance/ciphertext bytes with fixed independent source credential. The fixed-reference operator-root world has exact `2^-n` recovery; real recovery is at most that plus the explicit chosen-operator test advantage. Positive scaling transfers the bound to partial coefficient extraction. | A small/negligible bound for that advantage, proof/storage transcript privacy, arbitrary auxiliary input, oracle/reuse security, or the unchanged V1 CRS forgery bound. |
+| Native recovery in the shared byte random oracle | [OperatorCommitment.RandomOracle](../lean/Protocol/Storage/OperatorCommitment/RandomOracle.lean), [NativeCommittedRandomOracle](../lean/Protocol/Transfer/PathSignature/NativeCommittedRandomOracle.lean). | Complete exact-byte hidden-seed adapter and actual public-only oracle decoder game. Uniform nonce address-hit mass is at most `256^-32`. Independent-table ideal recovery has mass `2^-n`; real native bit recovery and positive-scale partial coefficient recovery are at most `2^-n+(q+2)/256^32` for `q` decoder queries plus two honest digest calls. This uses the pinned VCVio HiddenSeed event theorem and one coherent public byte oracle. | Pointwise fixed-hash estimates, concrete hash instantiation, quantum-oracle queries, proof/storage transcripts, reuse/oracle-encryption security or the V1 CRS forgery bound. |
 | `SheafBlock` | Planned Paper 2 protocol term; `Protocol.Storage` supplies manifest/checkpoint and conditional anchor endpoints without defining this named type. | Persistent checkpoint record for a fixed context. The proposed public form authenticates artifact and evidence subtrees under one canonical SHA-256 manifest address. The semantic candidate/context/seal join now has source definitions; canonical bytes, backend guarantees and concrete chain inclusion remain open. | `Chain.Block`, a cellular global section, the evidence subtree root alone, or the volatile `SheafState`. |
 | `CellularSheaf.IsGlobalSection` | Current Lean identifier; overloaded `Proximity.GlobalSection` names remain a migration item. | A degree-zero stalk assignment in `ker delta0`. Ordinary endpoint-by-endpoint compatibility additionally uses the intended graph/incidence profile. | An arbitrary vertex assignment, account table, block, or accepted degree-one cochain. |
 | `AcceptedCommittedOneCochain` | Current Lean identifier. | Paper 2's payload `c` bound to one `SheafStateSnapshot`, with opening `a` and decoded exactness `I.decode c = F.delta0 a`. Raw openings are identified modulo `ker delta0`; modular carries are a separate relation. | The decoded geometric cochain itself, a degree-zero global section, or a uniquely determined opening `a`. |

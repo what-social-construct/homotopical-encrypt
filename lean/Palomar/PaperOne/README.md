@@ -2,10 +2,15 @@
 
 This entry formalizes six selected groups from *Homotopical Encryption:
 Hidden Hodge Operators and the Harmonic Cochain Problem*, organized in
-Sections 1–3: primitives, the HCP recovery problem, and comparison with the
+Sections 1–3 of the linked retained source revision: primitives, the HCP recovery problem, and comparison with the
 closest-vector problem. The constructed integral cellular families give
 concrete instances of the hidden-member recovery obstruction.
 [Manuscript source](https://github.com/what-social-construct/homotopical-encrypt-formalizations/blob/aabebed302d9e22da953983832346bde4648a922/papers/paper1/main.tex).
+
+The current Paper 1 manuscript additionally contains the coupled encryption,
+finite byte-recovery and bounded-query random-oracle results. Their canonical
+Lean proofs are mapped in its new construction table. This focused entry
+retains its checked six-group selection and does not select those additions.
 
 [Comparator configuration](comparator.json) selects **36 declarations**:
 **16 manuscript-facing and 20 supporting**. [Challenge](Challenge.lean)

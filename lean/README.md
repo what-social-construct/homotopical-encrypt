@@ -1,9 +1,8 @@
 # Lean formalization
 
 This workspace formalizes the mathematics and protocol specifications in
-the project's [manuscript sources](../README.md#manuscripts-and-repository-layout). HCP foundations
-and protocol construction are being combined; the proximity paper remains
-separate. The namespace is
+the project's [manuscript sources](../README.md#manuscripts-and-repository-layout). Paper 1 develops the HCP encryption mechanism and its recovery theorems;
+Paper 2 consumes those results in protocol constructions; Paper 3 owns proximity. The namespace is
 `HomotopicalEncryption`. The [shared parity register](../SEMANTIC-PARITY.md)
 records statement ownership; each manuscript and independent entry provides
 its own declaration crosswalk. The [source ledger](../docs/SOURCE_LEDGER.md)
@@ -13,14 +12,15 @@ records the literature.
 
 | Scope | Modules | Main content |
 |---|---|---|
-| Paper 1: HCP and CVP | [HCP.lean](HCP.lean), [Hardness.lean](Hardness.lean), [CVP.lean](CVP.lean), [HCP/AxisFamily.lean](HCP/AxisFamily.lean) | Public semantic classes, hidden harmonic targets, explicit harmonic lattices, projection-preserving closest vectors and a supplied-member/hidden-member exact-recovery separation. |
+| Paper 1: HCP foundations and CVP | [HCP.lean](HCP.lean), [Hardness.lean](Hardness.lean), [CVP.lean](CVP.lean), [HCP/AxisFamily.lean](HCP/AxisFamily.lean) | Public semantic classes, hidden harmonic targets, explicit harmonic lattices, projection-preserving closest vectors and a supplied-member/hidden-member exact-recovery separation. |
 | Cellular and semantic foundations | [Sheaf.lean](Sheaf.lean), [Laplacian.lean](Laplacian.lean), [Helfer.lean](Helfer.lean) | Finite cellular cochains, Hodge operators, typed semantic interpretations and homotopy-invariance interfaces. |
-| Coupled native construction | [HCPCoupledFamily](Sheaf/HCPCoupledFamily.lean), [CoupledCVP](HCP/CoupledCVP.lean), [CoupledSemantics](HCP/CoupledSemantics.lean) | Actual shared stalk constraints, entire intrinsic graph lattice, constructed semantic-class/coefficient preservation and the original HCP projector. |
-| Completed geometry and lattice | [CoupledGeometry](HCP/CoupledGeometry.lean), [CoupledLattice](HCP/CoupledLattice.lean) | Reconstruction from the genuine differential/Laplacian; all-real assembly, projection and recovery diagrams; coefficient charts, intrinsic basis, rank and discreteness. |
-| Concrete native encoding | [HCPCoupledEncoding](Sheaf/HCPCoupledEncoding.lean), [CoupledCodec](Protocol/Storage/CoupledCodec.lean), [CoupledBinding](Protocol/Storage/CoupledBinding.lean), [CoupledCiphertext](Protocol/Storage/CoupledCiphertext.lean) | Original integral Hodge observations, canonical matrix/full-cochain bytes and original snapshot/observation bindings. |
-| Completed exact native recovery | [CoupledRational](HCP/CoupledRational.lean), [CoupledDecoding](HCP/CoupledDecoding.lean), [CoupledRecovery](Protocol/Storage/CoupledRecovery.lean), [Demo](Protocol/Storage/CoupledRecovery/Demo.lean) | Executable exact inverse and direct private-key/ciphertext byte recovery; agreement with the original harmonic-lattice decoder on every rational input; exact integer-language characterization and an executed reference example. |
+| Paper 1: coupled native construction | [HCPCoupledFamily](Sheaf/HCPCoupledFamily.lean), [CoupledCVP](HCP/CoupledCVP.lean), [CoupledSemantics](HCP/CoupledSemantics.lean) | Actual shared stalk constraints, entire intrinsic graph lattice, constructed semantic-class/coefficient preservation and the original HCP projector. |
+| Paper 1: completed geometry and lattice | [CoupledGeometry](HCP/CoupledGeometry.lean), [CoupledLattice](HCP/CoupledLattice.lean) | Reconstruction from the genuine differential/Laplacian; all-real assembly, projection and recovery diagrams; coefficient charts, intrinsic basis, rank and discreteness. |
+| Paper 1 encoding / Paper 2 binding | [HCPCoupledEncoding](Sheaf/HCPCoupledEncoding.lean), [CoupledCodec](Protocol/Storage/CoupledCodec.lean), [CoupledBinding](Protocol/Storage/CoupledBinding.lean), [CoupledCiphertext](Protocol/Storage/CoupledCiphertext.lean) | Original integral Hodge observations, canonical matrix/full-cochain bytes and original snapshot/observation bindings. |
+| Paper 1: completed exact native recovery | [CoupledRational](HCP/CoupledRational.lean), [CoupledDecoding](HCP/CoupledDecoding.lean), [CoupledRecovery](Protocol/Storage/CoupledRecovery.lean), [Demo](Protocol/Storage/CoupledRecovery/Demo.lean) | Executable exact inverse and direct private-key/ciphertext byte recovery; agreement with the original harmonic-lattice decoder on every rational input; exact integer-language characterization and an executed reference example. |
 | Exact native transport | [NativeTransport](Protocol/Ephemeral/NativeTransport.lean) | Canonical byte migration using a held derived rational map, with refinement to the original real transport. |
 | Completed private operator / V2 instance wiring | [OperatorCommitment](Protocol/Storage/OperatorCommitment.lean), [NativeCommitted](Protocol/Transfer/PathSignature/NativeCommitted.lean), [NativeCommittedContext](Protocol/Transfer/PathSignature/NativeCommittedContext.lean), [NativeCommittedPrivacy](Protocol/Transfer/PathSignature/NativeCommittedPrivacy.lean) | Canonical private nonce openings, bounded versioned checks and original-context approved execution. The actual instance/ciphertext recovery event reduces to a specified chosen-operator commitment test, with reference probability exactly `2^-n`. |
+| Paper 1: completed one-use random-oracle recovery | [OperatorCommitment.RandomOracle](Protocol/Storage/OperatorCommitment/RandomOracle.lean), [NativeCommittedRandomOracle](Protocol/Transfer/PathSignature/NativeCommittedRandomOracle.lean) | Exact byte encoding, fresh empty-cache shared oracle, private challenge derivation and a public-only bounded decoder. Native bit/partial-coefficient recovery is at most `2^-n + (q+2)/256^32`. |
 | Native token and scoped recovery | [TransportCodec](Protocol/Storage/TransportCodec.lean), [ScopeCodec](Protocol/Ephemeral/ScopeCodec.lean), [TransportToken](Protocol/Ephemeral/TransportToken.lean), [NativeDelivery](Protocol/Ephemeral/NativeDelivery.lean), [Retrieval/Native](Protocol/Storage/Retrieval/Native.lean) | Canonical scope/map bytes, complete scope and separate token/ciphertext hash checks, the existing scoped receipt, and original-object hash-addressed coefficient recovery under explicit authorization, delivery and availability contracts. |
 | Paper 2: cochains and protocol | [Axioms/CochainCommitment.lean](Axioms/CochainCommitment.lean), [Protocol/Core.lean](Protocol/Core.lean), [Protocol/Storage/Core.lean](Protocol/Storage/Core.lean) | Commitment carriers, conservative resource transitions, projection gates and snapshot-bound evidence under explicit profiles. |
 | Paper 2: recovery and primitives | [Protocol/Ephemeral.lean](Protocol/Ephemeral.lean), [Protocol/Storage/Retrieval.lean](Protocol/Storage/Retrieval.lean), [Protocol/Transfer.lean](Protocol/Transfer.lean), [TCB.lean](TCB.lean) | Rotation, recovery, retrieval and verification contracts on the original objects. |
@@ -64,7 +64,8 @@ presentation information despite omitting the presentation matrices as fields.
 No protected channel, key agreement, key/noise sampler or full-view security
 theorem follows from the codecs or execution laws.
 
-Paper 2 specifies commitment construction, visibility, codecs and protocol
+Paper 1 owns the native matrix/ciphertext codecs and exact recovery.
+Paper 2 specifies exact-payload commitments, visibility, protocol codecs and
 evidence. Paper 3 owns the full projective reconstruction and quantitative
 projection comparisons that consume those construction profiles.
 
@@ -108,6 +109,10 @@ The exact native execution and delivery/retrieval profile is checked with
 The nonce-bearing operator, V2 context and finite recovery reduction are
 checked with
 `lake build Protocol.Storage.OperatorCommitment Protocol.Transfer.PathSignature.NativeCommittedContext Protocol.Transfer.PathSignature.NativeCommittedPrivacy`.
+The bounded classical random-oracle theorem is checked with
+`lake build Protocol.Transfer.PathSignature.NativeCommittedRandomOracle`.
+It imports only the pinned VCVio hidden-seed/query-tracking closure; the
+existing Lean and Mathlib pins are unchanged.
 Rust/Python prototypes under `archive/runtime/` are not Lean build
 dependencies. Manuscript build commands are in the [root guide](../README.md#build-and-run).
 

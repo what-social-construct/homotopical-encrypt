@@ -15,6 +15,18 @@
    "configFile": "lakefile.lean"
   },
   {
+   "url": "https://github.com/Verified-zkEVM/VCVio",
+   "type": "git",
+   "subDir": null,
+   "scope": "",
+   "rev": "a95ea922181968f96cbd2e668be6aef6892c67dc",
+   "name": "VCVio",
+   "manifestFile": "lake-manifest.json",
+   "inputRev": "a95ea922181968f96cbd2e668be6aef6892c67dc",
+   "inherited": false,
+   "configFile": "lakefile.lean"
+  },
+  {
    "url": "https://github.com/leanprover-community/plausible",
    "type": "git",
    "subDir": null,
@@ -99,12 +111,48 @@
    "configFile": "lakefile.toml"
   },
   {
+   "url": "https://github.com/lean-crypto-foundations/QuantumFoundations",
+   "type": "git",
+   "subDir": null,
+   "scope": "",
+   "rev": "9bc93ed50a76d62b509dc1926638118e7b5cf5fe",
+   "name": "QuantumFoundations",
+   "manifestFile": "lake-manifest.json",
+   "inputRev": "9bc93ed50a76d62b509dc1926638118e7b5cf5fe",
+   "inherited": true,
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "https://github.com/Verified-zkEVM/PolyFun",
+   "type": "git",
+   "subDir": null,
+   "scope": "",
+   "rev": "ea3b29785cba402588ea79a1b71bfedc2cfaff49",
+   "name": "PolyFun",
+   "manifestFile": "lake-manifest.json",
+   "inputRev": "ea3b29785cba402588ea79a1b71bfedc2cfaff49",
+   "inherited": true,
+   "configFile": "lakefile.toml"
+  },
+  {
    "url": "https://github.com/leanprover/lean4-cli",
    "type": "git",
    "subDir": null,
    "scope": "leanprover",
    "rev": "c24fe6078c630e89b489bffe59b3e20ac30d12c8",
    "name": "Cli",
+   "manifestFile": "lake-manifest.json",
+   "inputRev": "v4.35.0",
+   "inherited": true,
+   "configFile": "lakefile.toml"
+  },
+  {
+   "url": "https://github.com/leanprover/cslib",
+   "type": "git",
+   "subDir": null,
+   "scope": "leanprover",
+   "rev": "5b56df99362532c46e1175381fbbdd755bd56030",
+   "name": "cslib",
    "manifestFile": "lake-manifest.json",
    "inputRev": "v4.35.0",
    "inherited": true,

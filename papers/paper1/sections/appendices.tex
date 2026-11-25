@@ -2,8 +2,7 @@
 
 \section{Statement--Lean Parity Tables}\label{app:selected-crosswalk}\label{app:formal-boundaries}
 
-\Cref{tab:paper1-parity,tab:paper1-support,tab:paper1-definitions} record the correspondence for this paper's six
-Hodge/CVP groups. The independent entry's
+\Cref{tab:paper1-parity,tab:paper1-support,tab:paper1-definitions} record the retained focused selection of six Hodge/CVP groups. The independent entry's
 configuration, \lean{lean/Palomar/PaperOne/comparator.json}, selects 16
 manuscript-facing and 20 supporting theorem declarations. Every declaration
 appears once below. These are coverage counts, not a count of independent
@@ -27,18 +26,104 @@ Write \lean{HE} for \lean{HomotopicalEncryption} and
 and \lean{AF} for \lean{E.AxisFamily}. The abbreviated anchors expand to the
 exact configured declaration names.
 
+The coupled construction and quantitative recovery results have the separate
+canonical correspondence below. Their Lean proofs and axiom audits are
+complete; they are not part of the earlier 36-declaration comparator selection.
+
+\begingroup
+\small
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.39\linewidth}>{\raggedright\arraybackslash}p{0.57\linewidth}@{}}
+\caption{HCP encryption construction and quantitative recovery}\label{tab:paper1-native}\\
+\toprule
+\textbf{Statement} & \textbf{Canonical Lean declarations}\\
+\midrule
+\endfirsthead
+\caption[]{HCP encryption construction and quantitative recovery (continued).}\\
+\toprule
+\textbf{Statement} & \textbf{Canonical Lean declarations}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{P1-N01. Intrinsic lattice.}\newline
+\Cref{prop:coupled-harmonic-graph,prop:coupled-intrinsic-lattice}.
+The integer chart covers the entire original intrinsic lattice, with basis,
+rank, discreteness and full lattice span inside harmonic space.
+&
+\lean{HE.HCP.CoupledCVP.harmonicLatticePresentation}\par
+\lean{HE.HCP.CoupledLattice.integerGraphEquiv_eq_point}\par
+\lean{HE.HCP.CoupledLattice.intrinsic_finrank}\par
+\lean{HE.HCP.CoupledLattice.intrinsic_discrete}\par
+\lean{HE.HCP.CoupledLattice.intrinsicInHarmonicSpace_isZLattice}
+\\\midrule
+\textbf{P1-N02. Public class and operative geometry.}\newline
+\Cref{thm:coupled-public-class} and the derived Hodge operator.
+&
+\lean{HE.HCP.CoupledSemantics.semanticEquivalence}\par
+\lean{HE.HCP.CoupledGeometry.degreeOneLaplacian_coordinates}\par
+\lean{HE.HCP.CoupledGeometry.coupling_eq_of_laplacianMatrix_eq}
+\\\midrule
+\textbf{P1-N03. Ciphertext and recovery diagrams.}\newline
+\Cref{prop:coupled-native-transport,prop:coupled-recovery-square}.
+&
+\lean{HE.HCP.CoupledTransport.transport_observed}\par
+\lean{HE.HCP.CoupledGeometry.harmonicOneProjection_transport}\par
+\lean{HE.HCP.CoupledGeometry.information_projection_transport}
+\\\midrule
+\textbf{P1-N04. Exact finite recovery.}\newline
+\Cref{prop:coupled-byte-recovery}; all-input decoder refinement and exact
+integer ciphertext language.
+&
+\lean{HE.HCP.CoupledDecoding.decodeCoefficients_realize}\par
+\lean{HE.Protocol.Storage.CoupledRecovery.recoverWithKeyBytes_encode_sample}\par
+\lean{HE.Protocol.Storage.CoupledRecovery.recover_eq_some_iff_sampleBytes}
+\\\midrule
+\textbf{P1-N05. Fresh one-use family.}\newline
+\Cref{sec:coupled-sampling}; actual canonical ciphertext law and the original
+sampler's scalar recovery diagnostic.
+&
+\lean{HE.Protocol.Transfer.PathSignature.NativeSignSampler.ciphertextDistribution_eq}\par
+\lean{HE.Protocol.Transfer.PathSignature.NativeSignPrivacy.ciphertext_guess_probability}\par
+\lean{HE.Protocol.Transfer.PathSignature.NativeRecovery.uniformSeed_recovery}
+\\\midrule
+\textbf{P1-N06. Finite instance and private operator opening.}\newline
+\Cref{prop:coupled-committed-recovery,thm:coupled-instance-recovery}.
+Canonical checks retain the original coefficients or exhibit complete-preimage
+collisions; the fixed-hash transfer names its actual distinguishing test.
+&
+\lean{HE.Protocol.Storage.OperatorCommitment.matrix_eq_or_collision}\par
+\lean{HE.Protocol.Transfer.PathSignature.NativeCommittedPrivacy.sampleWitness_bounded}\par
+\lean{HE.Protocol.Transfer.PathSignature.NativeCommitted.extracted_target_or_collisions}\par
+\lean{HE.Protocol.Transfer.PathSignature.NativeCommittedPrivacy.recovery_le_guess_plus_operatorHiding}
+\\\midrule
+\textbf{P1-N07. Bounded-query recovery.}\newline
+\Cref{thm:coupled-native-rom}; fresh empty-cache shared-oracle experiment,
+public-only decoder and original partial integer coefficients.
+&
+\lean{HE.Protocol.Storage.OperatorCommitment.RandomOracle.hit_probability_le}\par
+\lean{HE.Protocol.Storage.OperatorCommitment.RandomOracle.event_probability_le}\par
+\lean{HE.Protocol.Transfer.PathSignature.NativeCommittedRandomOracle.game_query_bound}\par
+\lean{HE.Protocol.Transfer.PathSignature.NativeCommittedRandomOracle.ideal_recovery_probability}\par
+\lean{HE.Protocol.Transfer.PathSignature.NativeCommittedRandomOracle.recovery_probability_le}\par
+\lean{HE.Protocol.Transfer.PathSignature.NativeCommittedRandomOracle.partial_coeff_recovery_probability_le}
+\\
+\end{longtable}
+\endgroup
+
 \begingroup
 \small
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.12}
 \renewcommand{\lean}[1]{\begingroup\footnotesize\Urlmuskip=0mu plus 1mu\path{#1}\endgroup}
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.41\linewidth}>{\raggedright\arraybackslash}p{0.55\linewidth}@{}}
-\caption{Main statement groups}\label{tab:paper1-parity}\\
+\caption{Focused Hodge/CVP statement groups}\label{tab:paper1-parity}\\
 \toprule
 \textbf{Statement and scope} & \textbf{Formal declarations or boundary}\\
 \midrule
 \endfirsthead
-\caption[]{Main statement groups (continued).}\\
+\caption[]{Focused Hodge/CVP statement groups (continued).}\\
 \toprule
 \textbf{Statement and scope} & \textbf{Formal declarations or boundary}\\
 \midrule
@@ -50,7 +135,7 @@ exact configured declaration names.
 \endlastfoot
 
 \textbf{P1-S01.}\newline
-\Cref{prop:hodge-decomposition}; private recovery in Sections~1--3.
+\Cref{prop:hodge-decomposition}; private recovery in Sections~\ref{sec:primitives}--\ref{sec:cvp-comparison}.
 The complex equation and actual adjoint Hodge operator give componentwise
 unique harmonic, exact and coexact parts. Integer coefficient recovery
 is classical and noncomputable in the supplied integral harmonic lattice.
@@ -109,7 +194,7 @@ Canonical consequences:\par
 \\\midrule
 
 \textbf{P1-S06.}\newline
-Weighted example in Section~3.5.
+Weighted example in \cref{sec:axis-family}.
 The common observation is \(b=(1,2)\), with private integer coefficients
 two and one. Each privately presented lattice has its own unique CVP answer.
 &
@@ -135,7 +220,7 @@ two and one. Each privately presented lattice has its own unique CVP answer.
 \endlastfoot
 
 \textbf{Complexes and semantics.}\newline
-Sections~1--3.
+Sections~\ref{sec:primitives}--\ref{sec:cvp-comparison}.
 Actual coboundary composition, the constructed complex isomorphism and
 the corresponding three-term differential.
 &
@@ -146,7 +231,7 @@ the corresponding three-term differential.
 \\\midrule
 
 \textbf{Axis coordinates.}\newline
-Section~3.5.
+\cref{sec:axis-family}.
 Coordinate vectors and the distinct complementary-axis choices in the examples.
 &
 \lean{AF.unitCochain_apply}\par
@@ -156,7 +241,7 @@ Coordinate vectors and the distinct complementary-axis choices in the examples.
 \\\midrule
 
 \textbf{Axis Hodge operators.}\newline
-Section~3.5.
+\cref{sec:axis-family}.
 Both coboundaries, the adjoint, the degree-one Laplacian and its harmonicity criterion.
 &
 \lean{AF.delta0_eq_zero}\par
@@ -167,7 +252,7 @@ Both coboundaries, the adjoint, the degree-one Laplacian and its harmonicity cri
 \\\midrule
 
 \textbf{Integral lattice.}\newline
-Section~3.5.
+\cref{sec:axis-family}.
 Restriction-compatible stalk integrality, harmonic basis vectors,
 encoding injectivity and membership in the chosen lattice.
 &
@@ -211,7 +296,7 @@ Canonical definitions:\par
 \\\midrule
 
 \textbf{Explicit-lattice CVP.}\newline
-Section~3.1. An injective real basis presents the lattice through integer
+\cref{sec:known-lattice-cvp}. An injective real basis presents the lattice through integer
 coefficients. An instance adds a target; a solution is a closest discrete
 lattice point.
 &
@@ -239,7 +324,7 @@ Canonical definitions and classifier theorems:\par
 \\\midrule
 
 \textbf{Hodge sample and lattice.}\newline
-Sections~1--3. The sample combines an integral harmonic message with
+Sections~\ref{sec:primitives}--\ref{sec:cvp-comparison}. The sample combines an integral harmonic message with
 exact/coexact noise. A supplied harmonic-lattice presentation has full real
 span; it need not contain every intrinsic integral harmonic cochain.
 &
@@ -249,7 +334,7 @@ Canonical definitions:\par
 \\\midrule
 
 \textbf{External theorem and semantic premise.}\newline
-Sections~2.1 and~3.5; distinct from the proved homological fragment.
+Sections~\ref{sec:mathematical-framework} and~\ref{sec:axis-family}; distinct from the proved homological fragment.
 &
 Helfer's general fibrational/path-invariance theorem is cited background.
 The generic bridge uses the declared closed-test invariance; the concrete
@@ -258,12 +343,12 @@ not a theorem of this entry.
 \\\midrule
 
 \textbf{Assumption: computational hardness.}\newline
-Section~3.1; distinct from the proved exact comparisons.
+\cref{sec:known-lattice-cvp}; distinct from the proved exact comparisons.
 &
 Known-lattice CVP hardness is an external computational interface.
-The selected algebraic comparisons and non-identifiability examples do
-not establish an asymptotic encoded-instance hardness reduction or a
-sampled encryption-security theorem.
+The selected algebraic comparisons and non-identifiability examples retain
+their exact-recovery scope. The coupled native random-oracle theorem above
+is a separate sampled-query result.
 \\
 \end{longtable}
 

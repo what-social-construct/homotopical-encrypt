@@ -1,21 +1,25 @@
 \section*{Conclusion and Further Work}
 \addcontentsline{toc}{section}{Conclusion and Further Work}
 
-An explicitly presented harmonic lattice gives a precise discrete-CVP comparison, while
-the constructed common-input examples prevent uniform exact recovery from
-the specified public data.
+The coupled cellular family gives a functioning harmonic-lattice encryption
+mechanism. Its private presentation determines the actual Hodge operator,
+entire intrinsic harmonic lattice and coefficient encoding. Exact rational
+recovery from canonical private-key and ciphertext bytes returns the original
+message, and the transport/projection diagrams preserve that same message
+through changes of presentation.
 
+HCP isolates recovery when this operative geometry is hidden behind a public
+homotopy class. Supplying the harmonic lattice makes the native generated
+message its unique CVP answer. At a shared public observation, equivalent
+presentations can instead require different targets. The fresh one-use
+instance further has a concrete classical random-oracle recovery bound
+\(2^{-n}+(Q+2)256^{-32}\), with all decoder queries and the constructor's two
+digest calls accounted for.
 
-The comparison suggests studying encoded HCP families with explicit
-distributions on hidden presentations and Hodge-structured noise. Their
-computational difficulty must be assessed within that specified model.
-
-Discrete Morse reduction for cellular sheaf cohomology
-\cite{curryGhristNanda2015morse} suggests a computational refinement.
-A chain-homotopy equivalence alone does not identify the original harmonic
-representative or preserve its distance. An application to the original
-recovery target needs explicit retained lifts and a metric comparison.
-
-Further work includes extending the homological model to full first-order
-fibrational semantics, realizing richer families topologically, and studying
-transported observations.
+The next mathematical tasks are a stronger computational comparison with CVP,
+a larger released-view security experiment and richer admissible geometric
+families. Discrete Morse reduction for cellular sheaf cohomology
+\cite{curryGhristNanda2015morse} suggests an algorithmic refinement, provided
+the retained lifts and metric comparison identify the original harmonic
+representative. Extension from the constructed homological fragment to a
+richer logical semantics is a further direction.

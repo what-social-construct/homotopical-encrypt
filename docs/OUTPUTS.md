@@ -1,15 +1,12 @@
 # Output locations
 
 Canonical sources and compiled PDFs live together under `papers/`.
-Paper 2 has a working combined manuscript and a self-contained
-[construction note](../papers/paper2/construction.pdf), compiled from
-[construction.tex](../papers/paper2/construction.tex) and its canonical
-section sources.
-
-Read the canonical PDFs directly: [construction note](../papers/paper2/construction.pdf),
-[earlier HCP foundations](../papers/paper1/main.pdf) and
-[proximity paper](../papers/paper3/main.pdf). There is no separate reading-copy
-directory under `output/`.
+The main [HCP paper](../papers/paper1/main.pdf) contains the encryption
+construction and its mathematical recovery results. The
+[protocol paper](../papers/paper2/construction.pdf) consumes those results;
+its stable filename is compiled from [construction.tex](../papers/paper2/construction.tex).
+The separate [proximity paper](../papers/paper3/main.pdf) contains the coding
+and distance analysis. There is no separate reading-copy directory in `output/`.
 
 | Location | Purpose |
 |---|---|
