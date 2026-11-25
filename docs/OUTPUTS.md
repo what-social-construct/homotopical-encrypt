@@ -1,10 +1,14 @@
 # Output locations
 
-The canonical manuscript sources and compiled PDFs live together under
-`papers/paper1/` and `papers/paper3/`. Paper 2 is a working text draft.
+Canonical sources and compiled PDFs live together under `papers/`.
+Paper 2 has a working combined manuscript and a self-contained
+[construction note](../papers/paper2/construction.pdf), compiled from
+[construction.tex](../papers/paper2/construction.tex) and its canonical
+section sources.
 
-Read the canonical PDFs directly: [Paper 1](../papers/paper1/main.pdf) and
-[Paper 3](../papers/paper3/main.pdf). There is no separate reading-copy
+Read the canonical PDFs directly: [construction note](../papers/paper2/construction.pdf),
+[earlier HCP foundations](../papers/paper1/main.pdf) and
+[proximity paper](../papers/paper3/main.pdf). There is no separate reading-copy
 directory under `output/`.
 
 | Location | Purpose |

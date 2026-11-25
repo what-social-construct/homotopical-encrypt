@@ -5,11 +5,13 @@ correspondence and remaining mathematical obligations. Dated reviews,
 validation histories and process notes are preserved under
 `archive/documentation/` and excluded from review packages.
 
-The current Lean namespace is `HomotopicalEncryption`. Paper 1 has three
-numbered themes and six selected Hodge/CVP groups. Its
-appendix separates main statements, supporting statements and
-definition/boundary rows. Full Plücker reconstruction and the transferred
-exact-component obstruction belong to Paper 3.
+The current manuscript combines the HCP foundations and protocol construction
+stored under `paper1` and `paper2`; the proximity paper under `paper3` remains
+separate. The directory labels below retain source ownership and the earlier
+verification-entry correspondence. The Lean namespace is
+`HomotopicalEncryption`. The earlier focused HCP entry has six selected
+Hodge/CVP groups. Full Plücker reconstruction and the transferred
+exact-component obstruction belong to the proximity paper.
 Runtime prototypes are historical references under `archive/runtime/`.
 
 The central construction is
@@ -25,14 +27,19 @@ encryption-naturality square requires the stronger admissible Hodge transport.
 | Commitments and proofs | Actual payloads, signed ciphertext manifests, finite certificate/bundle checks, approved program/CRS selection, bounded native witness/program codecs, an adaptive CRS reference construction, conditional native-recovery/forgery bounds and their inheritance by the actual fresh-completion application event. | Instantiate the supplied CRS algorithms and their security bounds, finish hash/range/byte circuit compilation and semantic refinement, and establish full-view confidentiality and authenticated history. |
 | Blockchain | Resource transitions, conservation/replay results and authenticated quorum conditions. | Runtime refinement, lifecycle enforcement and consensus finality. |
 
-## Source ownership and dependency table
+**Completed native core:** H118–H121 identify the derived Hodge geometry,
+entire intrinsic lattice and its topology, all-rational decoder refinement,
+and exact private-key/ciphertext byte recovery. These use the same original
+coupled sheaf and integral structure throughout.
 
-The current source artifacts are:
+## Source-directory ownership and dependency table
+
+The source components and their retained verification scopes are:
 
 | Paper | Manuscript / current artifact | Owns | Dependency |
 |---|---|---|---|
 | **1** | [Homotopical Encryption](papers/paper1/README.md); LaTeX and PDF | Exactly three numbered themes: **1 Primitives, 2 The Harmonic Cochain Problem, 3 CVP Comparison and Kernel Ambiguity**; Introduction and Conclusion are unnumbered | Supplies cellular/Hodge/semantic HCP/lattice/CVP prerequisites; no commitment, storage, projective or source-calibration contribution. |
-| **2** | [Proof-Carrying Homotopical Encryption](papers/paper2/README.md); [working manuscript](papers/paper2/DRAFT.md), [coupled-construction TeX section](papers/paper2/sections/coupled-construction.tex) and bibliography; no full TeX/PDF bundle | Payload/opening/commitment construction, actual source/codec, released-view binding, storage/evidence, rotation/retrieval, checked transitions and explicit security/runtime contracts | Uses Paper 1's actual primitives and HCP model; supplies the construction data consumed by Paper 3. |
+| **2** | [Combined construction source](papers/paper2/README.md); [working manuscript](papers/paper2/DRAFT.md), [construction-note PDF](papers/paper2/construction.pdf), [TeX](papers/paper2/construction.tex) and bibliography | Native geometry/lattice encryption and recovery, payload/opening/commitment construction, released-view binding, storage/evidence, rotation/retrieval, checked transitions and explicit security/runtime contracts | Combines the foundational source with the actual native construction; supplies the construction data consumed by the proximity paper. |
 | **3** | [Capacity-Radius Proximity](papers/paper3/README.md); LaTeX, PDF and independent coding/application entries | RS/list/MCA results, radii, full projective reconstruction/chain, source-calibration obstructions and quantitative native-metric comparisons | Generic coding is independent of protocol completion; application theorems retain Paper 2's actual source, codec and binding/profile data. |
 
 The combined HCP and proof-carrying transaction manuscript is the working
@@ -55,11 +62,12 @@ bound needed for a computational hardness claim. Paper 3 remains an independent 
 | S10 | Canonical 12289/4096/1024 and conditional bridge slots; `Proximity/Concrete/CanonicalRS` | The former numerical endpoint chapter is removed. | **Owns** the concrete encoder/context and uninstantiated evidence/profile obligations. | **Owns** metric normalization, numeric constraints and relevant comparison/obstruction. | Legacy conditional Johnson/far slots remain supporting implementation, not a newly proved HCP/geometric radius claim. |
 | S11 | Gates, evidence, storage, transitions, consensus and runtime/security | Outside the three themes and selection. | **Owns** the bounded conditional protocol construction and supporting/deferred interfaces. | Supplies mathematical projection/challenge laws without constructing the protocol. | Primitive security, execution and finality are not inferred from interface coverage. |
 
-Paper 1 supplies only the three mathematical themes above. Paper 2 constructs
-the commitment/protocol profile; Paper 3 proves the quantitative coding,
-reconstruction and source-calibration claims for their declared objects. Shared definitions are intentional and
-attributed. The protocol, coding and gate developments are not repeated as
-Paper 1 contributions.
+Within the combined manuscript, the `paper1` source component supplies the
+three foundational themes and `paper2` supplies the native construction and
+commitment/protocol profile. The separate proximity paper proves the coding,
+reconstruction and source-calibration results. The earlier focused HCP
+verification entry retains its original selection. Shared definitions have
+one canonical owner in the crosswalk below.
 ## Construction data and theorem ownership
 
 | Notation/object | Defining data owner | Result or consumption owner |
@@ -263,7 +271,7 @@ review history. They do not alter the universal coding theorem hypotheses.
 
 | Issue | Existing progress | Completion decision / endpoint | Owner |
 |---|---|---|---|
-| D01 | Integral harmonic cipher, exact-component/full-sample record, harmonic recovery and the constructed finite semantic family | The mathematical `(class,b)` realization is constructed. Instantiate the larger released artifact's encoding, decoder and binding contracts if claiming a concrete public-storage HCP scheme. | Paper 2 artifact/released-view construction; Paper 1 prerequisites |
+| D01 | Integral harmonic cipher, exact-component/full-sample record, harmonic recovery and the constructed finite semantic family; H119–H121 complete coupled lattice/decoder/canonical-byte recovery | The coupled profile's encoding and exact decoder are constructed. Complete the hiding operator-root wire and larger released-view binding/security contracts; general profiles retain their own serializer and decoder obligations. | Combined HCP artifact/released-view construction |
 | D02 | Base payload/header, explicit HCP disclosure and retained root/directory are specified and projected from original objects | Implement the selected access/byte/proof contracts and include every released extension in its security experiment. Full operative-kernel coordinates are excluded from the base profile. | Paper 2 |
 | D03 | Selected canonical near/far convention, strict views and correct-solver pullback are now constructed and synchronized with Paper 3 §7. | **Resolved for this decision profile.** Instantiate the independent geometric far witness for a stronger application claim; other profiles must choose their own consistent promise radii. | Paper 3 calibration; Paper 2 application contract |
 | D05 | Correct Euclidean likelihood and local identities | Define a recovery experiment and its success event, or retain only likelihood-score claims. | Supporting likelihood layer outside current Paper 1; Paper 2 security model |
@@ -271,7 +279,7 @@ review history. They do not alter the universal coding theorem hypotheses.
 | D07 | Blinding geometry and a proposition-only MAC interface | Construct key/tag/verify and a security game if the MAC is a central claim; otherwise defer it explicitly. | Paper 2 |
 | D08 | Algebraic ambiguity/oracle obstruction | The proved fixed-oracle separation is strict about input information, not computational complexity. H77–H80 supply a growing keyed family and H76 gives the generated-target promise. H81–H98 add coupled native samples, concrete codecs, exact rational reference algorithms, scoped recovery and native manifest/history joins. H104–H105 specify the bounded adaptive full-view experiment and conditional forgery/recovery decomposition; H110–H111 add source/setup joins and inheritance by the generated fresh-completion application event. H113 gives exact `7/9` public recovery in the old scalar seed profile. H114–H117 give a separate nondefault one-use candidate, ciphertext-only guessing law and a raw-operator-hash obstruction; they do not replace the full-view reference experiment. Computational hardness still needs an efficiency/adversary model and an independently justified small recovery bound or hard-problem reduction for its actual view. Neither finite byte representations nor the reference inversion algorithm supply that reduction. H80 proves that a full Plücker point reveals the earlier family's key. | Combined HCP/protocol manuscript; outside the selected Paper 1 entry |
 | D25 | Actual cochain model, invariant homological tests and finite theory classifier | Full Helfer fibrational/first-order semantics and a general admissible quotient remain separate from the proved fragment. | Paper 1 |
-| D26 | Actual cellular/HCP realization and generic/concrete original-observation adapters | Apply the explicit artifact/classifier contracts; specify richer released-view equality/factorization and runtime bytes. | Paper 2 original-artifact binding; Paper 1 mathematical realization |
+| D26 | Actual cellular/HCP realization, generic/concrete original-observation adapters and canonical coupled key/ciphertext bytes with all-input decoder refinement | Complete storage-classifier alignment and richer released-view equality/factorization. General/production runtime profiles retain their own refinement contracts. | Combined HCP original-artifact binding |
 | D27 | Actual integral/encoded rotation, both recipient recovery routes, finite axis instance and original bound-sample/payload joins | Instantiate fresh generation, authenticated delivery/epoch policy and atomic lifecycle/migration; prove any further coordinate/metric or topology-change laws claimed. Deterministic transport is distinct from a resampled-noise security profile. | Paper 2 |
 | D28 | One supplied ephemeral endpoint/path and recovered family plan | Construct indexed generation/transport/lifecycle and the specified finite/asymptotic privacy experiment. | Paper 2 future generation/privacy profile; Paper 1 supplies finite HCP prerequisites |
 | D29 | Recovered operator-commitment precedent | The [provenance trace](docs/SOURCE_LEDGER.md#operator-commitment-provenance) separates native cochain commitments from the archived private-nonce Laplacian hash and outer content hashes. The nonce-hash operator prototype is the closest earlier implementation direction; no group-based operator backend or formal hiding model was settled. A canonical private target opening, versioned native wire and quantitative hiding proof remain necessary. The old floating-point cut-and-open proof is not reinstated; selected openings can disclose the secret operator. | Paper 2 operator-root construction and visibility |

@@ -21,6 +21,9 @@ jobs:
       - name: Build proofs and transition examples
         working-directory: lean
         run: lake build && lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer Protocol.Storage.Retrieval Palomar.PaperOne.Solution Palomar.PaperThree.Solution Palomar.PaperThree.Application.Solution
+      - name: Run native encryption and byte recovery
+        working-directory: lean
+        run: lake env lean --run Protocol/Storage/CoupledRecovery/Demo.lean
   manuscripts:
     runs-on: ubuntu-latest
     steps:
@@ -33,3 +36,6 @@ jobs:
       - name: Build Paper 3
         working-directory: papers/paper3
         run: latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+      - name: Build native construction note
+        working-directory: papers/paper2
+        run: latexmk -pdf -interaction=nonstopmode -halt-on-error construction.tex

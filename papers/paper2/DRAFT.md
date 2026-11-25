@@ -2084,16 +2084,17 @@ encrypted-computation interface is constructed here.
 
 ### 7. Construction ownership and remaining protocol work
 
-This inventory assigns each protocol family to Paper 2 without treating every
-interface as a completed cryptographic construction. A constructed record or
-conditional preservation theorem retains all of its supplied profiles.
-The bounded central claim is the checked transfer in §6.2 and its explicitly
-scoped one-shot integrity comparison in §6.3.
+The completed core construction comprises the derived Hodge geometry, full
+intrinsic harmonic lattice, exact encryption and private byte recovery in
+§2.1. The checked transfer in §6.2 and one-shot integrity comparison in §6.3
+are the bounded protocol results. This inventory records their canonical
+objects and assigns each supporting family to its source component; each
+conditional theorem retains its stated profiles.
 
 | Family | Canonical modules | Status and boundary |
 |---|---|---|
-| Source presentation and derived operators | [Cellular](../../lean/Sheaf/Cellular.lean), [Hodge](../../lean/Sheaf/Hodge.lean), [Integral](../../lean/Sheaf/Integral.lean), [CoupledGeometry](../../lean/HCP/CoupledGeometry.lean) | Existing source objects determine the fixed-profile operators, lattice and cochain space. The true Hodge operator reconstructs the coupling matrix; the all-real assembly/recovery triangles and projection square are proved on those same objects. Generic independently varying geometry and its finite codec remain separate. |
-| Intrinsic lattice, finite decoding and direct bytes | [CoupledLattice](../../lean/HCP/CoupledLattice.lean), [CoupledDecoding](../../lean/HCP/CoupledDecoding.lean), [CoupledRecovery](../../lean/Protocol/Storage/CoupledRecovery.lean) | The same original subgroup has real/integer charts, an integer basis, rank and discreteness; all-rational decoder refinement and exact integer ciphertext-language characterization feed direct key/ciphertext-byte recovery. No separate message lattice or rotation token is introduced. |
+| Source presentation and derived operators | [Cellular](../../lean/Sheaf/Cellular.lean), [Hodge](../../lean/Sheaf/Hodge.lean), [Integral](../../lean/Sheaf/Integral.lean), [CoupledGeometry](../../lean/HCP/CoupledGeometry.lean) | **Complete for the coupled profile.** Source objects determine the fixed-profile operators, lattice and cochain space. The true Hodge operator reconstructs the coupling matrix; the all-real assembly/recovery triangles and projection square are proved on those same objects. Generic independently varying geometry and its finite codec remain separate. |
+| Intrinsic lattice, finite decoding and direct bytes | [CoupledLattice](../../lean/HCP/CoupledLattice.lean), [CoupledDecoding](../../lean/HCP/CoupledDecoding.lean), [CoupledRecovery](../../lean/Protocol/Storage/CoupledRecovery.lean) | **Complete for the coupled profile.** The same original subgroup has real/integer charts, an integer basis, rank and discreteness; all-rational decoder refinement and exact integer ciphertext-language characterization feed direct key/ciphertext-byte recovery. |
 | Payload and operations | [Payload](../../lean/Axioms/CochainCommitment/Payload.lean) | Constructed shape, modulus/count/tag, compatible addition and zero; finite serialization remains separate. |
 | Snapshot, interpretation and openings | [Commitment](../../lean/Sheaf/Commitment.lean) | Constructed snapshot/payload interpretation, exact acceptance and opening equivalence modulo `ker delta0`; this is Paper 2 construction. |
 | Concrete/legacy semantics | [CochainSemantics](../../lean/Sheaf/CochainSemantics.lean), [SheafCoherence](../../lean/Axioms/SheafCoherence.lean) | Conditional carrier/decoder/coboundary alignment and acceptance equivalence; ambient coherence contracts remain supplied. |
@@ -2144,14 +2145,14 @@ completed bounded transition claim.
 | Coregulator | [Coregulator interface](../../lean/Axioms/Coregulator.lean), [protocol attachment](../../lean/Protocol/Coregulator.lean) | Named predict/observe/update obligations; no constructed settling controller. |
 | Legacy chain | [Chain](../../lean/Chain.lean) | Compatibility model with spectral identity, raw cochain-sum balance and cumulative-gap fork choice; not the bounded ledger's semantics or a complete consensus/security theorem. |
 | Future geometry and lifecycle | No canonical `TaskSheaf`, block-history cellular model or presentation-stack/descent package is constructed | Explicit maps, transport, descent, generation, retirement and global lifecycle policies remain future work. |
-| Concrete cryptography and execution | [ZKP](../../lean/Axioms/ZKP.lean), [Runtime](../../lean/TCB/Runtime.lean) | Secure primitive implementation, full hash/range/byte circuit refinement, setup generation, authenticated directories/state origin, secure channels, primitive budgets, corruption/privacy games and executable refinement remain obligations. |
+| Concrete cryptography and execution | [ZKP](../../lean/Axioms/ZKP.lean), [Runtime](../../lean/TCB/Runtime.lean) | Secure primitive implementation, full hash/range/byte circuit refinement, setup generation, authenticated directories/state origin, secure channels, primitive budgets, corruption/privacy games and production/runtime refinement remain obligations. |
 
-Paper 1 supplies the cellular/Hodge, semantic HCP, harmonic-lattice and CVP
-prerequisites. Paper 3 supplies projective reconstruction, source-calibration
-obstructions, coding and metric/radius theorems. Their imported conclusions
-retain the actual source, layout, observation and comparison hypotheses;
-Paper 2 owns the construction, authentication and protocol consumption of
-those objects. Shared definitions do not create a second contribution.
+The combined manuscript develops the cellular/Hodge, semantic HCP,
+harmonic-lattice and CVP foundations together with the native construction
+and its protocol use. The separate proximity paper supplies projective
+reconstruction, source-calibration obstructions, coding and metric/radius
+theorems. Imported conclusions retain their actual source, layout,
+observation and comparison hypotheses.
 
 A richer logical profile may use graded products in cohomology. Kryazhev's
 [multiplicative Serre spectral sequence in HoTT](https://arxiv.org/html/2611.11828v1)

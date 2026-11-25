@@ -14,44 +14,6 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 MARKER = "PUBLIC_REVIEW_MANIFEST.json"
 DOCS = ("SOURCE_LEDGER", "SEMANTIC_OWNERSHIP", "PROJECT_NAMING", "OUTPUTS")
-WORKFLOW = """name: Lean and manuscript review
-on: [push, pull_request, workflow_dispatch]
-jobs:
-  lean:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install elan
-        run: |
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-      - uses: actions/cache@v4
-        with:
-          path: |
-            lean/.lake
-            ~/.elan/toolchains
-          key: ${{ runner.os }}-lean-${{ hashFiles('lean/lean-toolchain', 'lean/lakefile.lean', 'lean/lake-manifest.json') }}
-      - name: Fetch pinned Mathlib cache
-        working-directory: lean
-        run: lake exe cache get
-      - name: Build proofs and transition examples
-        working-directory: lean
-        run: lake build && lake build Protocol.Core Protocol.Ledger.Examples Protocol.Ledger.EvidenceExamples Protocol.Storage.Core Protocol.Storage.Examples Protocol.Storage.AnchorExamples Protocol.Storage.CanonicalRS Protocol.Storage.CanonicalThreeLevel Protocol.Storage.CanonicalCalibration HCP.AxisFamily TCB.HCPAxisFamily Protocol.Ephemeral.Examples Protocol.Ephemeral.HCP Protocol.Transfer Protocol.Storage.Retrieval Palomar.PaperOne.Solution Palomar.PaperThree.Solution Palomar.PaperThree.Application.Solution
-  manuscripts:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install TeX
-        run: sudo apt-get update && sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended lmodern
-      - name: Build Paper 1
-        working-directory: papers/paper1
-        run: latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
-      - name: Build Paper 3
-        working-directory: papers/paper3
-        run: latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
-"""
-
-
 def source_files():
     paths = [ROOT / name for name in ("LICENSE", "README.md", "SEMANTIC-PARITY.md")]
     paths.append(ROOT / ".github/workflows/ci.yml")

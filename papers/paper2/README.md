@@ -1,6 +1,9 @@
-# Paper 2 source: Proof-Carrying Homotopical Encryption
+# Homotopical Encryption and Proof-Carrying Transactions
 
-Working combined title: *Homotopical Encryption and Proof-Carrying Transactions*.
+This directory holds the current combined manuscript and its native
+construction sources, retaining `paper2` as the source-directory label.
+Start with the [construction-note PDF](construction.pdf) or the
+[full working manuscript](DRAFT.md).
 
 The motivating question is recovery with hidden operative harmonic-lattice
 geometry, beyond CVP with a supplied basis. The manuscript's
@@ -25,14 +28,22 @@ with the full ciphertext actually released to the adversary. It bounds fresh
 forgery by transcript simulation error, extraction failure, recovery of the
 original coefficients and two byte-hash collision events; all primitive
 algorithms and quantitative security estimates remain explicit inputs.
-The [matching coupled-construction TeX section](sections/coupled-construction.tex)
-states the proved class/lattice/cochain connection; the full Markdown draft
-has no TeX/PDF bundle yet. The
+The [construction note](construction.tex) compiles the
+[canonical coupled-construction section](sections/coupled-construction.tex),
+including its geometry/lattice diagrams and exact recovery theorem.
+The full Markdown manuscript extends this note. The
 [bibliography](references.bib) records relevant sources; the
 [shared parity register](../../SEMANTIC-PARITY.md) maps objects and statements
 to their canonical Lean declarations.
 
-## Current construction
+## Completed native construction
+
+| Component | Status |
+|---|---|
+| Derived cellular maps and true Hodge operator | **Complete** in the coupled scalar Euclidean profile. |
+| Full intrinsic lattice, coefficient charts, basis, rank and discreteness | **Complete** for that same sheaf and integral structure. |
+| Semantic equivalence and native ciphertext transport | **Complete**, with the shear and ciphertext maps distinguished. |
+| Exact rational refinement and canonical private-byte recovery | **Complete** on all rational/byte inputs, with an executed reference example. |
 
 The [coupled family](../../lean/Sheaf/HCPCoupledFamily.lean) uses shared integer
 face equations `y=B x`. Its intrinsic harmonic lattice consists exactly of
@@ -330,6 +341,8 @@ refinement.
 | Construction | Canonical entry |
 |---|---|
 | Coupled harmonic lattice and proved semantic class | [HCPCoupledFamily](../../lean/Sheaf/HCPCoupledFamily.lean), [CoupledCVP](../../lean/HCP/CoupledCVP.lean), [CoupledSemantics](../../lean/HCP/CoupledSemantics.lean) |
+| Completed geometry and full intrinsic lattice | [CoupledGeometry](../../lean/HCP/CoupledGeometry.lean), [CoupledLattice](../../lean/HCP/CoupledLattice.lean) |
+| Completed all-input refinement and direct byte recovery | [CoupledDecoding](../../lean/HCP/CoupledDecoding.lean), [CoupledRecovery](../../lean/Protocol/Storage/CoupledRecovery.lean), [execution example](../../lean/Protocol/Storage/CoupledRecovery/Demo.lean) |
 | Concrete presentation bytes and original snapshot | [CoupledCodec](../../lean/Protocol/Storage/CoupledCodec.lean), [CoupledBinding](../../lean/Protocol/Storage/CoupledBinding.lean) |
 | Original full Hodge ciphertext bytes | [HCPCoupledEncoding](../../lean/Sheaf/HCPCoupledEncoding.lean), [CoupledCiphertext](../../lean/Protocol/Storage/CoupledCiphertext.lean) |
 | Exact native execution and scoped token | [CoupledRational](../../lean/HCP/CoupledRational.lean), [TransportCodec](../../lean/Protocol/Storage/TransportCodec.lean), [ScopeCodec](../../lean/Protocol/Ephemeral/ScopeCodec.lean), [TransportToken](../../lean/Protocol/Ephemeral/TransportToken.lean), [NativeTransport](../../lean/Protocol/Ephemeral/NativeTransport.lean) |

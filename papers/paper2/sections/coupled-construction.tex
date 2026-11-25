@@ -23,7 +23,7 @@ Sampling and disclosure audits distinguish the original scalar profile from
 a separate one-use ciphertext candidate and identify the effect of operator
 hashes. A bounded adaptive CRS reference reduces fresh-message forgery to
 simulation and extraction errors, recovery of the same original coefficients
-and explicit hash collisions. The exact public-data obstruction and
+and explicit hash collisions. The companion exact public-data obstruction and
 ciphertext-only laws retain their declared views; a computational comparison
 with CVP and security for the complete public view remain to be proved.
 \end{abstract}
@@ -405,8 +405,8 @@ key-rotation lifecycle are separate protocol constructions.
 This map is distinct from the cochain shear and need not preserve norms.
 An executable rational refinement computes the inverse by the
 determinant/adjugate formula. Its real realization equals \(L_{B\to C}\),
-and a denominator-checked private decoder recovers the integer coefficients
-of the original generated samples. This reference algorithm has no proved
+and its denominator-checked decoder implements the harmonic-lattice partial
+decoder on every rational observation. This reference algorithm has no proved
 polynomial running-time bound.
 
 A canonical token records the derived rational matrix, physical dimensions
@@ -1031,23 +1031,7 @@ constraints remains separate. General real
 projection certificates do not automatically yield this finite circuit.\par
 \end{samepage}
 
-Public records may link the ciphertext content ID to context, evidence and
-successor actions. The intended privacy profile permits auditing those
-actions without decrypting the identity witness. Its public encoding must
-select only the intended disclosures; anonymous authorization and private
-retrieval require separate credential/proof and PIR/OMR constructions.
-
-Hashing an agreed secret to select an ephemeral representative is a separate
-generation plan. The shared-secret agreement, finite representative generator
-and protected delivery envelope are not constructed. A public content address
-does not supply that private seed.
-
-The constructed operations concern harmonic-lattice messages, their Hodge
-openings and recovery. Encrypted linear query evaluation is an optional
-application. A later comparison with fully homomorphic encryption should
-inventory the actual supported operations and their security statements.
-
-\begin{samepage}
+\clearpage
 \section{Conclusion}
 
 The construction gives an explicit harmonic-lattice encryption mechanism,
@@ -1060,9 +1044,8 @@ exactly the integer Hodge-encryption language for the returned message.
 
 HCP isolates the associated recovery question when the operative geometry is
 hidden behind a public semantic class. Supplying that geometry makes the
-native generated message the unique known-lattice CVP answer; the proved
+native generated message the unique known-lattice CVP answer; the companion
 public-information obstruction identifies what a class label and observation
 can fail to determine. Establishing a stronger computational comparison,
 and security for a selected sampler and complete public view, is the central
 hardness task opened by this concrete mechanism.
-\end{samepage}

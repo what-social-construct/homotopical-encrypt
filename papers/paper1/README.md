@@ -49,7 +49,7 @@ The canonical Lean proofs of these geometric results remain in place,
 outside Paper 1's selected entry. The shared ownership table records this split.
 
 The [source ledger](../../docs/SOURCE_LEDGER.md#bibliography-correspondence)
-accounts for all 31 ledger sources across the source bibliographies. The projective
+accounts for all 35 ledger sources across the source bibliographies. The projective
 comparison source belongs to Paper 3; Paper 1 prints four external sources
 and retains two uncited companion records.
 
