@@ -11,6 +11,7 @@ public import Protocol.Transfer.Primitives
 public import Protocol.Transfer.Certificates
 public import Protocol.Transfer.Certificates.Native
 public import Protocol.Transfer.Certificates.Projection
+public import Protocol.Transfer.Certificates.SampledMCA
 public import Protocol.Transfer.Authorization
 public import Protocol.Transfer.PathSignature
 public import Protocol.Evidence.TransferCodec
@@ -79,6 +80,12 @@ seven-slot bundle. Its database-bound checker derives the actual slot/root
 equations and enforces every required predecessor. Native and projection
 intended statements reuse the original observations and accumulated certificates;
 circuit/CRS soundness and knowledge retain explicit security premises.
+
+The optional sampled scalar check retains the original canonical intent and
+count radius before a uniform field draw. Its response runs the existing
+packet checks and tests an RS polynomial against the issued fold of both
+actual cochain columns. For one draw from a modularly far source, acceptance
+is bounded by the retained line's MCA bad-set fraction.
 
 The finite native reference construction supplies canonical bounded witnesses,
 program and public-key codecs, uniform finite seeds, the original coupled

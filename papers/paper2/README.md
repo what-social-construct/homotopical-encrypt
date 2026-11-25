@@ -18,6 +18,7 @@ held transport token and available ciphertext bytes.
 | Native manifest and history | The signed intent, checked transfer and computed history anchor retain the same exact artifact, ciphertext directory and manifest root. |
 | Original-observation certificate | The actual raw seal and decoded bytes are related to the original bound HCP observation and harmonic message. |
 | Certificate subjects and gates | Canonical subjects retain the full intent and metadata; later verification consumes every predecessor check on the same seven-leaf bundle and database. |
+| Sampled scalar check | The retained intent fixes the pair before one uniform field challenge. Acceptance on a far modular cochain is bounded by the pair's MCA bad-challenge fraction. |
 | Scoped delivery and hash lookup | Canonical token/context checks join available bytes to original-coefficient recovery or an actual hash-collision alternative. |
 | Bounded native credentials | Canonical witness/program/instance codecs check the original matrix, message, opening and credential bounds. |
 | Approved execution | The owner checker uses the exact expected program, parsed verifier key, CRS, public names and full signing message. |
@@ -57,6 +58,8 @@ objects and proved statements to Lean. Useful protocol entry points include:
   and [native retrieval](../../lean/Protocol/Storage/Retrieval/Native.lean).
 - [Certificate profiles](../../lean/Protocol/Transfer/Certificates/Profile.lean)
   and [profile authentication](../../lean/Protocol/Transfer/Certificates/ProfileAuthentication.lean).
+- [Sampled scalar transfer check](../../lean/Protocol/Transfer/Certificates/SampledMCA.lean)
+  and its [canonical metric handoff](../../lean/Protocol/Storage/CanonicalCalibration.lean).
 - [Raw-root native security](../../lean/Protocol/Transfer/PathSignature/NativeSecurity.lean)
   and its [application adapter](../../lean/Protocol/Transfer/PathSignature/NativeApplication.lean).
 - [Nonce-bearing relation](../../lean/Protocol/Transfer/PathSignature/NativeCommitted.lean)

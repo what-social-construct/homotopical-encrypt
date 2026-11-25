@@ -42,6 +42,8 @@ the signed intent, checked transfer and computed history anchor.
 ciphertext digest and selected profile. Seven ordered evidence leaves form
 one submitted bundle. Later verification requires every preceding check on
 that same bundle, and the guarded transfer checks its actual database root.
+The canonical modular profile also supports a separate sampled scalar check
+on the pair fixed by the original intent.
 \item Successful checking gives a value-preserving owned-resource update
 and rejects replay. Scoped delivery and canonical token execution connect
 the same checked manifest to recovery of the original coefficients.
@@ -247,8 +249,61 @@ evidence propositions do not substitute for these executable comparisons.
 The construction supplies public framing, digest preimages,
 encoding/statement reflection and verifier consumption. The selected profile
 determines its required certificate; an accepted native context need not
-carry a far-region certificate. The following finite relation and CRS
-composition address owner authorization separately from the payload proof.
+carry a far-region certificate.
+
+\subsection{A sampled check on the retained pair}
+\label{sec:sampled-mca}
+
+For the canonical systematic layout, the pending verifier retains the
+original transfer configuration, intended action, structural prechecks and
+integer count radius \(r\). The intent includes the complete cochain payload
+\(c\). Its two reduced columns give an affine line \(L_c\) whose value at
+\(\gamma\) is the scalar fold. This fixes the line and the radius before a
+single uniform draw from \(\mathbb F_{12289}\). Here the code has length
+\(n=4096\) and degree bound \(k=1024\).
+
+A response echoes the issued challenge and supplies a packet and a polynomial
+of degree less than \(k\). The verifier evaluates that polynomial at the
+declared domain points and requires fewer than \(r\) disagreements with
+\(L_c(\gamma)\). It also runs the original packet checker. Exact intent
+matching identifies the cochain in the parsed packet with \(c\), so the
+checked scalar word comes from the retained pair. A configuration using the
+projection-bundle verifier retains all its predecessor checks. The sampled
+fold is a separate check from any fixed mix in that certificate.
+
+\begin{proposition}[Single-draw bound for a far cochain]
+\label{prop:sampled-mca}
+Let \(d_C(c)\) be the original modular cochain distance to validity for this
+layout and suppose \(d_C(c)\ge r/n\). The probability, under the uniform draw,
+that there exists an accepting response is at most
+\[
+  \frac{\bigl|\operatorname{Bad}_{\mathrm{MCA}}(r/n,L_c)\bigr|}{12289}.
+\]
+The bad set consists of challenges whose scalar fold agrees with a codeword
+on at least \(n-r\) positions on which no pair-codeword agrees with the
+pair. If the code has a pair-MCA error bound
+\(\varepsilon\) at radius \(r/n\), this probability is at most
+\(\varepsilon\).
+\end{proposition}
+
+\begin{proof}
+The modular metric handoff gives pair distance at least \(r/n\).
+An accepting polynomial witnesses scalar distance strictly below \(r/n\).
+On a good challenge the same-set agreement implication would force pair
+distance no greater than that scalar distance. Thus every accepting
+response witnesses a bad challenge for the fixed line. The uniform measure
+of this bad set gives the bound, even when the response depends on the draw.
+\end{proof}
+
+For the capacity payload with both columns equal to the evaluation of
+\(X^{1024}\), only \(\gamma=-1\) can pass at any positive count radius
+\(r\le 3n/4\). At that challenge the fold is zero, so if a packet passes
+the original checker, the zero polynomial attains the
+acceptance probability \(1/12289\).
+
+The verifier reads the entire scalar word. A deployment still needs randomness
+generation, authenticated challenge delivery, session persistence and a
+response codec to enforce one draw per retained attempt.
 
 \input{sections/owned-transfer.tex}
 
@@ -556,6 +611,15 @@ The executable checker is related to the same specification by
 \path{Owned.Executable.checkedPacket_isSome_eq_check} and
 \path{Owned.Executable.successor_eq}. The original native history and
 recovery proof is \path{Owned.CheckedTransfer.native_history_recovery}.
+
+The sampled check in Proposition~\ref{prop:sampled-mca} and the diagonal
+example use these declarations.
+\begin{verbatim}
+SampledMCA.Pending.far_acceptance_le
+SampledMCA.Pending.far_acceptance_le_of_mca
+SampledMCA.Pending.capacity_acceptance_eq
+\end{verbatim}
+
 Run the fixed byte-owner example from \path{lean/} with the pinned toolchain.
 \begin{verbatim}
 lake build Protocol.Transfer.Owned.Demo

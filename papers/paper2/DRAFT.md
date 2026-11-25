@@ -39,6 +39,8 @@ The construction has four parts:
 2. Canonical certificate subjects retain the full intent, metadata, selected
    profile and ciphertext digest. Every later gate consumes all required
    preceding checks on the same seven-leaf bundle and evidence database.
+   The canonical modular profile also checks a sampled scalar fold of the
+   pair fixed by the original transfer intent.
 3. Scoped delivery and token execution join hash-addressed lookup to recovery
    of the original coefficients using the actual contexts and available bytes.
 4. Bounded native relations and approved execution bind owner checking to the
@@ -460,11 +462,27 @@ proximity input remain distinct roles in the protocol.
 
 ### 6. Challenges and evidence consumption
 
-The protocol binds the original payload, extracted pair and code parameters
-before sampling an affine challenge under the declared distribution. A fixed
-mix requires an authenticated restricted-line profile and the corresponding
-goodness result from Paper 3. Its challenge computations and fixed-mix
-counterexamples are not repeated here.
+The [sampled transfer profile](../../lean/Protocol/Transfer/Certificates/SampledMCA.lean)
+fixes the original configuration, intended action and count radius \(r\)
+before one uniform challenge in \(\mathbb F_{12289}\). The complete cochain
+in the intent determines both columns under the canonical systematic
+layout. Exact intent matching fixes the same pair in any accepted packet.
+A response echoes the issued challenge, supplies the packet and exhibits
+a polynomial of degree below \(k\) with fewer than \(r\) disagreements
+with the challenged scalar fold. The original packet verifier still
+runs, including its bundle checks when the configuration selects them.
+
+If \(d_C(c)\ge r/n\), `Pending.far_acceptance_le` bounds the probability
+that any response accepts by the actual same-set MCA bad-challenge
+fraction for this fixed line. `Pending.far_acceptance_le_of_mca` gives
+the selected code's error bound when supplied at that radius. This
+experiment allows the response to depend on the draw. The scalar test
+uses the sampled challenge separately from any fixed mix in the
+projection certificate. A fixed mix used for a scalar soundness claim
+requires its own restricted-line profile and goodness result from
+Paper 3. The small-field bound here applies to one retained attempt.
+Randomness generation, challenge delivery, session persistence and
+response serialization remain implementation work.
 
 A completed certificate statement must identify its source, metric handoffs,
 radii, selected challenge experiment and root bindings. Current typed
@@ -1554,6 +1572,7 @@ their stated profiles.
 | Projective/payload realization | [PublicBinding](../../lean/Proximity/Concrete/PluckerCochain/PublicBinding.lean) | Hashed handles and conditional payload/frame/observation bindings; Paper 3 owns full-point reconstruction. |
 | Storage context and checkpoint lifecycle | [Context](../../lean/Protocol/Storage/Context.lean), [Checkpoint](../../lean/Protocol/Storage/Checkpoint.lean), [Projection](../../lean/Protocol/Storage/Projection.lean) | Original context, six ordered stages, exact manifests, matching receipt and terminal consumption; no backend durability, erasure or global freshness. |
 | Projection gates and evidence | [Gates](../../lean/Gates.lean), [stage certificates](../../lean/Proximity/Concrete/Gates/Stage.lean), [GateEvidence](../../lean/Proximity/Concrete/GateEvidence.lean), [certificate adapter](../../lean/Protocol/Transfer/Certificates/Projection.lean) | Actual records, chosen chart/metric and original chain input are retained. Five/six/seven-slot checks require the same earlier bundle; the actual guarded transfer check derives `DatabaseBound` from all seven leaf/root equations. Cryptographic verification and runtime guard refinement remain open. |
+| Sampled scalar transfer check | [SampledMCA](../../lean/Protocol/Transfer/Certificates/SampledMCA.lean), [canonical metric adapter](../../lean/Protocol/Storage/CanonicalCalibration.lean) | **Paper 2 composes the packet check and one-draw experiment.** Paper 3 supplies the metric handoff and same-set MCA error bound. The response check uses a strict scalar radius and retains the original pair and packet verifier. |
 | History and proposal anchoring | [Anchor](../../lean/Protocol/Storage/Anchor.lean), [ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean), [CiphertextManifest](../../lean/Protocol/Storage/CiphertextManifest.lean), [Native](../../lean/Protocol/Transfer/Native.lean) | Same artifact, canonical raw seal, checked intent and computed history join. Native recovery separately requires the original-observation certificate and sample-byte equality on that seal. |
 | Generic ledger | [ValueFlow](../../lean/Protocol/Ledger/ValueFlow.lean), [State](../../lean/Protocol/Ledger/State.lean), [Transition](../../lean/Protocol/Ledger/Transition.lean) | Constructed valuation, resource flow, nullifier state, action, candidate, policy, computed successor and conditional execution/conservation/replay laws. |
 | Checked owned transfer | [OwnedResource](../../lean/Protocol/Ledger/OwnedResource.lean), [Operational](../../lean/Protocol/Transfer/Operational.lean), [Owned](../../lean/Protocol/Transfer/Owned.lean), [Anchored](../../lean/Protocol/Transfer/Anchored.lean) | The fixed-catalogue/snapshot/epoch central transition of §6.2; derived validity/update under the stated check and primitive contracts. |
