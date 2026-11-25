@@ -8,17 +8,18 @@ and private decoder execute both the integer and fresh-sign round trips. The
 transport and projection laws preserve the same message through changes of
 presentation.
 
-HCP isolates recovery when the operative geometry is hidden behind a public
-homotopy class. For the fresh-sign family, one correct CVP query on the
-supplied lattice recovers every message. In the public experiment even a
+The compatible fresh-sign planes occupy one public homotopy class, with
+squared chordal distances proportional to their key Hamming distances.
+One correct CVP query on the supplied lattice recovers every message.
+In the public experiment even a
 decoder using that same fixed CVP oracle has recovery probability at most
 \(2^{-n}+(Q+2)256^{-32}\). The separation measures the cost of recovering
 the operative answer from the public view.
 
-For unrestricted rational targets, the coupled lift preserves a closest
-vector when the solver minimizes over the specified harmonic lattice.
-The generated-ciphertext promise is what makes the projection itself a
-closest lattice point. Richer geometric families and larger released views
+For arbitrary targets in a supplied coupled lattice, the exact distance
+decision problem is NP-complete. The generated-ciphertext promise makes
+the projection itself a closest lattice point. Richer geometric families
+and larger released views
 remain open. Discrete Morse reduction for cellular sheaf cohomology
 \cite{curryGhristNanda2015morse} suggests an algorithmic refinement, provided
 the retained lifts and metric comparison identify the original harmonic

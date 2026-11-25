@@ -20,7 +20,7 @@ before their assumptions or guarantees enter a selected protocol.
 
 ### Bibliography correspondence
 
-All **35 ledger sources** now have a BibTeX record in the relevant paper's
+All **36 ledger sources** now have a BibTeX record in the relevant paper's
 bibliography. File membership is a retrieval aid, not adoption, proof review,
 or a claim that a source's theorem is formalized. The PDFs print sources
 actually cited in their text; candidate records are retained for later work
@@ -42,6 +42,7 @@ source even though version 2 was posted on November 5.
 |---|---|---|---|
 | 2611.11828 | `kryazhev2026serreMultiplicativity` | P2 | Future richer graded/multiplicative invariants; no product/fibration adapter or Lean adoption. |
 | Gentry 2009 thesis | `gentry2009fullyHomomorphic` | P1, P2 | Primary correctness/computation comparison for the homotopical analogy; no FHE construction adopted. |
+| Micciancio 2001 exact CVP | `micciancio2001cvpp` | P1 | Section 3 gives NP-hardness with an integer basis, integer target and integral squared threshold. Paper 1 transfers the decision to the coupled harmonic lattice. |
 | Regev 2009 author version | `regev2009lwe` | P1, P2 | Primary search-LWE definition and noisy-linear recovery motivation; HCP uses a different Hodge-structured noise model and no LWE reduction is supplied. |
 | EUROCRYPT 2014 key-homomorphic encryption | `bonehEtAl2014keyHomomorphic` | P1, P2 | Ciphertext/key-transport novelty comparator; no security reduction or public translation algorithm transferred. |
 | CL06 | `chaseLysyanskaya2006signaturesKnowledge` | P2 | Primary SimExt game organization; bounded conditional CRS reference uses supplied primitives, not that paper's complete construction/security theorem. |
@@ -85,7 +86,7 @@ Search this file for an arXiv ID or `ePrint 2026/910` when working from a URL.
 |---|---|
 | Cellular sheaves, Hodge and categorical/family semantics | [1808.01513](#source-1808-01513), [1908.08944](#source-1908-08944), [2606.03861](#source-2606-03861), [2610.12384](#source-2610-12384), [2611.05209](#source-2611-05209), [2610.40746](#source-2610-40746) |
 | Multiplicative cohomology and richer logical profiles | [2611.11828](#source-2611-11828) |
-| Geometry, codes and reductions | [2601.19830](#source-2601-19830), [0911.1298](#source-0911-1298), [2609.18098](#source-2609-18098), [2608.22663](#source-2608-22663), [1312.6454](#source-1312-6454), [2011.14057](#source-2011-14057), [1507.01653](#source-1507-01653), [ePrint 2025/2051](#source-eprint-2025-2051), [2611.07607](#source-2611-07607) |
+| Geometry, codes and reductions | [Micciancio 2001](#source-micciancio-2001), [2601.19830](#source-2601-19830), [0911.1298](#source-0911-1298), [2609.18098](#source-2609-18098), [2608.22663](#source-2608-22663), [1312.6454](#source-1312-6454), [2011.14057](#source-2011-14057), [1507.01653](#source-1507-01653), [ePrint 2025/2051](#source-eprint-2025-2051), [2611.07607](#source-2611-07607) |
 | Network dynamics, metrics and learning | [2608.15397](#source-2608-15397), [2608.14556](#source-2608-14556), [2605.06395](#source-2605-06395), [2610.28455](#source-2610-28455), [2512.00242](#source-2512-00242), [2611.04670](#source-2611-04670), [2110.03789](#source-2110-03789) |
 | Ordered constraints and transitions | [2007.04099](#source-2007-04099), [2605.15778](#source-2605-15778), [2605.26883](#source-2605-26883) |
 | Cryptographic games and private retrieval | [CL06](#source-cl06), [BGPR2022](#source-bgpr2022), [VCVio](#source-vcvio), [2611.05136](#source-2611-05136), [2610.37061](#source-2610-37061), [ePrint 2026/910](#source-eprint-2026-910) |
@@ -105,8 +106,17 @@ Search this file for an arXiv ID or `ePrint 2026/910` when working from a URL.
 
 ### Geometry, code extraction and reduction
 
+The pinned Mathlib revision supplies [the graph criterion](https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/LinearAlgebra/Prod.lean)
+for subspaces with bijective first projection, [nonzero projective points](https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/LinearAlgebra/Projectivization/Basic.lean),
+and [Frobenius matrix norms](https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Analysis/Matrix/Normed.lean).
+Its [Grassmannian](https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/RingTheory/Grassmannian.lean)
+uses quotient rank. Our fixed Euclidean plane of dimension `r` in dimension
+`n` corresponds to quotient rank `n-r`. The pinned file leaves affine
+charts and representability as further work.
+
 | Source | Result/definition examined | Possible role and boundary |
 |---|---|---|
+| <a id="source-micciancio-2001"></a>[Micciancio, *The hardness of the closest vector problem with preprocessing*](https://cseweb.ucsd.edu/~daniele/papers/CVPP.pdf) | **Primary §3 checked 2026-11-25.** The reduction from subset sum has an integer basis with an identity block scaled by two, an integer target and an integral squared threshold. | Exact NP-hardness input to the coupled graph threshold reduction. The preprocessing results and approximation results are outside that use. |
 | <a id="source-2601-19830"></a>[*Grassmann–Plücker functions for orthogonal matroids*, 2601.19830v2](https://arxiv.org/html/2601.19830v2) | Restricted Plücker data for maximal isotropic subspaces of a split orthogonal space, with recovery of the subspace (Corollary 3.7). | A specialized algebraic comparison; our arbitrary real harmonic subspaces still have no selected orthogonal-matroid realization. **Status update, 2026-11-08:** [Reconstruction](../lean/Proximity/Concrete/GrassmannianPlucker/Reconstruction.lean) now recovers the subspace/projector and proves full-shadow equality exactly when genuine ranked points agree (`publicShadow_eq_iff_same_point`). This supersedes the initial review's soundness-only gap; digest inversion remains separate. |
 | <a id="source-0911-1298"></a>[Beelen–Ghorpade–Høholdt, *Affine Grassmann Codes*, 0911.1298v2](https://arxiv.org/abs/0911.1298v2) | Span of all minors of a finite-field matrix, evaluated on all matrices; exact length, dimension and minimum distance. Section 7 identifies the normalized big-cell connection to Grassmann/Plücker evaluation. | Direct coding reference to assess for the extraction layer. Applying its distance requires choosing that finite-field chart/evaluation code and proving the identification. The current real shadow and subsequent plane-to-RS encoding do not supply this automatically. Minimum codeword distance does not prove the missing geometric-source-to-pair far comparison. |
 | <a id="source-2609-18098"></a>[*Hyper-derivative Algebraic Geometry Codes via Local Expansions*, 2609.18098v1](https://arxiv.org/html/2609.18098v1) | Finite-field function evaluation through local derivative jets, with an ordered NRT metric. | Alternative codec research. Current paired RS words have independent coordinates and whole-pair Hamming distance. A derivative relation, new locus/codec and metric comparison would need construction before importing bounds. |

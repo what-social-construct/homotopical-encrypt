@@ -112,6 +112,34 @@ theorem coefficients_solve_source (G : Matrix Row Col ℤ) (t : Row → ℤ)
   rw [mul_add, mul_one] at hWeighted
   omega
 
+omit [DecidableEq Row] in
+/-- A single squared-distance threshold on the actual coupled instance
+decides the original integer threshold. The subtracted unit separates
+the original integer costs immediately above and below the cutoff. -/
+theorem source_threshold_iff_scaledDistance
+    (G : Matrix Row Col ℤ) (t : Row → ℤ) (scale : ℤ) (positive : 0 < scale)
+    (reference : Col → ℤ) (reference_min : ∀ z, sourceCost G t reference ≤ sourceCost G t z)
+    (reference_small : coefficientCost reference < scale ^ 2) (threshold : ℤ) :
+    (∃ z, sourceCost G t z ≤ threshold) ↔
+      ∃ z, CVP.squaredEuclideanDistance (scaledInstance G t scale).target
+          (CVP.latticeVector (scaledInstance G t scale).lattice z) ≤
+        ((scale ^ 2 * (threshold + 1) - 1 : ℤ) : ℝ) := by
+  simp only [squaredDistance_eq_scaledCost, Int.cast_le]
+  have weight_nonneg := le_of_lt (pow_pos positive 2)
+  constructor
+  · rintro ⟨z, within⟩
+    refine ⟨reference, ?_⟩
+    have scaled := mul_le_mul_of_nonneg_left ((reference_min z).trans within) weight_nonneg
+    rw [mul_add, mul_one]
+    omega
+  · rintro ⟨z, within⟩
+    refine ⟨z, ?_⟩
+    by_contra! above
+    have gap : threshold + 1 ≤ sourceCost G t z := by omega
+    have scaled := mul_le_mul_of_nonneg_left gap weight_nonneg
+    have coeff_nonneg : 0 ≤ coefficientCost z := Finset.sum_nonneg fun _ _ => sq_nonneg _
+    omega
+
 omit [DecidableEq Row] [DecidableEq Col] in
 /-- Clearing denominators produces a normal explicit CVP instance whose
 squared distance is the cast of the integer objective. -/

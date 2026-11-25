@@ -265,6 +265,31 @@ to be harmonic, \cref{prop:hodge-projection-is-cvp} gives exactly the same
 lifted minimizers after projection. On arbitrary targets, the oracle still
 performs discrete minimization over \(\Lambda_B\).
 
+\begin{corollary}[Exact decision hardness in the coupled family]
+\label{cor:coupled-cvp-np-complete}
+Given an integer coupling matrix \(B\), an integer parity target \(y\), and
+a nonnegative integer squared threshold \(S\), deciding whether
+\(\Lambda_B\) contains a point at squared distance at most \(S\) from
+\((0,0,y)\) is NP-complete.
+\end{corollary}
+
+\begin{proof}
+Exact Euclidean CVP with an integer basis, integer target and squared
+threshold is NP-hard \cite[\S3]{micciancio2001cvpp}. Let \(T\) be the original
+squared threshold and choose \(M\) as in
+\cref{prop:unrestricted-coupled-cvp-lift}. Use the same coupling \(B=MG\)
+and set \(y=Mt\) and \(S=M^2(T+1)-1\). If the original minimum is at most
+\(T\), its minimizer \(z_*\) has \(\|z_*\|^2<M^2\), so the lifted cost is at
+most \(S\). If the original minimum exceeds \(T\), every original integer
+cost is at least \(T+1\). Every lifted cost is then at least \(S+1\).
+
+For membership in NP, a certificate is the integer coefficient vector
+\(z\). The information block contributes \(\|z\|^2\) to the squared
+distance, so each \(|z_i|\leq\sqrt S\) on any yes instance. This bounds
+the certificate length polynomially, and the verifier computes the
+integer squared distance exactly.
+\end{proof}
+
 \subsection{Oracle Insufficiency}
 
 Fix a typed HCP semantic realization as in \cref{def:typed-hcp-realization}.

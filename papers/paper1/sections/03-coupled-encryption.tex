@@ -114,12 +114,13 @@ preserve the differentials and do not assert adjoint preservation of arbitrary
 chosen lattices. The finite mechanism uses this actual standard metric and
 integral profile.
 
-Real graph matrices describe a standard information-coordinate chart of a
-Grassmannian; integer matrices select arithmetic points in that chart. The
-formalization constructs the sheaves, harmonic subspaces and lattices, without
-an algebraic-variety or scheme construction. Shared rows give explicit
-off-diagonal Gram entries, while computational hardness requires an
-independent reduction and a specified experiment.
+The planes \(W_B\) lie in the Grassmannian of \(n\)-planes in the exact-zero
+space \(\mathbb R^n\oplus\mathbb R^m\). They occupy the open chart where
+projection onto the information coordinates is invertible. The columns of
+\([I;B]\) have information Pl\"ucker minor \(1\), and the minors obtained by
+replacing one information row recover the entries of \(B\) up to sign. Thus
+the full projective point determines the operative coupling in this chart.
+The integer matrices select the points carrying our intrinsic graph lattices.
 
 \subsection{Constructed homotopy-class and lattice preservation}
 
@@ -413,6 +414,33 @@ harmonic projection still recovers \((0,ds,C_kds)\), and \(d>0\) makes the
 Boolean message encoding injective. Both \(A=I\), \(d=1\), and the dense
 matrix \(\left(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\right)\),
 \(d=2\), instantiate the construction.
+
+\begin{proposition}[Chordal separation of the hidden planes]
+\label{prop:coupled-chordal-distance}
+In this fresh-sign family, let \(P_k\) be the harmonic projector onto
+\(W_{C_k}\). Use chordal distance \(d_{\mathrm{ch}}(W,W')=\|P_W-P_{W'}\|_F/\sqrt 2\)
+at the fixed ambient metric. For any two sign keys \(k,\ell\),
+\[
+ d_{\mathrm{ch}}(W_{C_k},W_{C_\ell})^2
+    =\frac{4d}{(1+d)^2}\,d_H(k,\ell),
+\]
+where \(d_H\) counts coordinates on which the two signs differ.
+\end{proposition}
+
+\begin{proof}
+With \(G_k=[0;I;C_k]\), the Gram identity gives
+\(P_k=(1+d)^{-1}G_kG_k^{\mathsf T}\). The exact block vanishes, and the
+information and parity diagonal blocks of \(G_kG_k^{\mathsf T}\) are
+\(I\) and \(AA^{\mathsf T}\). Hence only the off-diagonal blocks vary.
+Writing \(D_k=\operatorname{diag}(k)\), the squared Frobenius norm of
+\(C_k-C_\ell=A(D_k-D_\ell)\) is \(4d\,d_H(k,\ell)\). There are two
+transposed copies of this block in the projector difference. Dividing their
+squared norms by \(2(1+d)^2\) gives the identity.
+\end{proof}
+
+All of these planes share the public homotopy class. Their exact distances
+describe the geometry of the ambiguity, and in \cref{prop:coupled-cvp-candidate-count}
+the same planes give distinct closest-vector answers to one ciphertext.
 
 \paragraph{Executing the fresh-sign profile.}
 Use this dense matrix, Boolean message \((1,0)\) and key signs \((-1,1)\).

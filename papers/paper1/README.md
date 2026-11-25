@@ -33,7 +33,12 @@ For each fixed ciphertext mask there are exactly `2^n` compatible messages
 and operative lattices. Each lattice has its own unique closest point. The
 basis-span lift also preserves all closest vectors for arbitrary CVP targets.
 The coupled lift gives a one-query reduction to nearest-point search on
-the specified harmonic lattice for rational CVP inputs. [Basis-span lift](../../lean/HCP/UnrestrictedCVPLift.lean) · [Coupled lift](../../lean/HCP/CoupledCVPLift.lean)
+the specified harmonic lattice for rational CVP inputs. Its exact distance
+decision problem is NP-complete. [Basis-span lift](../../lean/HCP/UnrestrictedCVPLift.lean) · [Coupled lift](../../lean/HCP/CoupledCVPLift.lean)
+
+The different operative planes in that one public class form a graph chart
+family. Their squared chordal distances are an explicit multiple of key
+Hamming distance. [Projector geometry](../../lean/HCP/CoupledProjectorMetric.lean)
 
 The post-conclusion appendix maps these results to canonical Lean declarations.
 It also retains the earlier six-group Hodge/CVP table, whose
