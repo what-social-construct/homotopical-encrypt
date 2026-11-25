@@ -1,0 +1,89 @@
+\section{One checked owned-resource transfer}\label{sec:checked-owned-transfer}
+
+Fix a source state, epoch and snapshot. A resource catalogue assigns each
+identifier an owner, an asset and a positive integer amount. The state
+records a finite marking \(M\) of active identifiers and a set \(U\) of
+spent identifiers. A transfer signed by the catalogue owner of \(i\)
+consumes \(i\) and creates a distinct identifier \(j\) of the same asset
+and amount. The prechecks require \(M(i)=1\), \(M(j)=0\), and both
+identifiers outside \(U\). The spend list is derived as \([i]\).
+
+The verifier retains the original context and its cochain artifact. The
+configured snapshot root must match the source state, and the actual
+payload digest must match the artifact leaf. The supplied topology
+authentication ties that snapshot to the state. These checks connect the
+resource action to the configured cochain interpretation.
+
+\paragraph{From the packet to the computed state.}
+The two-slot manifest fixes the exact artifact and ciphertext before the
+owner authorizes the transfer. The pre-proof draft records the source
+parent and the roots of the source and computed successor state content.
+The signed intent names that draft, the source evidence root, the original
+public context, the transfer and the manifest root. Appending the signature
+and payload proof gives the canonical packet. Its evidence digest and the
+block digest complete the proposal. Both digest preimages exclude their own
+digest fields.
+
+The verifier parses the packet, confirms its canonical re-encoding, and
+checks the exact expected metadata and intent. A different manifest root
+therefore fails this check even on otherwise canonical bytes. The owner
+signature is checked against the full intent and the payload proof against
+the original interpretation. A profile requiring projection certificates
+also checks the actual submitted bundle against its database, with every
+required predecessor check on the same entries.
+
+\begin{proposition}[Accepted update and replay rejection]
+\label{prop:checked-owned-update}
+For this fixed-context profile, suppose the packet checker accepts under
+the configured authorization and exact-payload soundness contracts. The
+accepted update uses the computed successor of the candidate constructed
+from the parsed packet and original context. It preserves total value
+for each asset, with
+\[
+  M'(i)=0,\qquad M'(j)=1,\qquad U'=U\cup\{i\}.
+\]
+If the initial inventory contains at most one copy per identifier and no
+spent identifier is active, this invariant is preserved. The same action
+cannot be accepted from this successor, even with a new proposal.
+\end{proposition}
+
+\begin{proof}
+Acceptance supplies the resource and context prechecks and the exact parsed
+packet checks. The signature contract authorizes its intent. The payload
+contract gives exact acceptance under the original decoder using the checked
+public-view equality. Together these facts derive candidate validity and
+the accepted update. The single-copy flow removes \(i\) and inserts \(j\);
+their matching catalogue entries give value preservation. All other
+marking entries are retained, and the spend list adds \(i\). Freshness fails
+for this same action in the resulting state, independently of the new
+proposal.
+\end{proof}
+
+\paragraph{The recipient's view.}
+The checked intent and computed history anchor retain the same manifest.
+When its full ciphertext has the separate original-observation certificate,
+the recipient checks the content ID on downloaded bytes and uses the
+canonical issued token for its delivery scope. Under the hypotheses of
+Proposition~\ref{prop:coupled-native-manifest}, this returns the original
+coefficients or gives an accepted byte-hash collision. The catalogue value
+in the state theorem comes from the resource record. An application in
+which the encrypted coefficients determine the action supplies that
+relation separately.
+
+\paragraph{A finite reference execution.}
+The runnable byte-owner instance starts with one copy of resource \(0\) and
+no copy of resource \(1\). Both catalogue entries carry seven units of the
+same asset, with different owners. It uses the existing exact zero payload,
+canonical packet codec and fixture verifiers. The executable checker decides
+resource predicates, compares canonical encodings of the public fields and
+computes the finite successor. Lean proves that its acceptance and returned
+state agree with the specified checker and successor on this profile.
+
+The original canonical packet is \(3{,}524\) bytes. It moves the seven units
+to resource \(1\) and marks resource \(0\) spent. The verifier rejects a
+changed manifest root even with fixture authorization for the altered
+intent. Both the original
+packet and a freshly drafted attempt to spend \(0\) reject against the
+returned state. The fixture uses a raw ciphertext slot and fixed verifier
+data. Recipient recovery on genuine native bytes follows the separate
+binding and delivery conditions above.

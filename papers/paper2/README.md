@@ -14,6 +14,7 @@ held transport token and available ciphertext bytes.
 
 | Construction | Proved protocol behavior |
 |---|---|
+| Checked owned transfer | Acceptance derives the computed update, value preservation, input consumption, output creation and replay rejection. |
 | Native manifest and history | The signed intent, checked transfer and computed history anchor retain the same exact artifact, ciphertext directory and manifest root. |
 | Original-observation certificate | The actual raw seal and decoded bytes are related to the original bound HCP observation and harmonic message. |
 | Certificate subjects and gates | Canonical subjects retain the full intent and metadata; later verification consumes every predecessor check on the same seven-leaf bundle and database. |
@@ -34,6 +35,18 @@ instantiation, semantic setup refinement, complete field-circuit byte/hash
 compilation, authenticated delivery and lifecycle enforcement, and security
 for the full released view. Consensus finality and runtime refinement remain
 separate from the transaction interfaces here.
+
+The finite byte-owner example executes the canonical packet check and computes
+the same successor as the specification. It moves seven units from resource
+`0` to `1` and checks manifest substitution and both replay attempts. The
+example supplies fixture hashes and verifiers. [Executable checker](../../lean/Protocol/Transfer/Owned/Executable.lean) · [Demo](../../lean/Protocol/Transfer/Owned/Demo.lean)
+
+From `lean/` with the pinned dependencies:
+
+```sh
+lake build Protocol.Transfer.Owned.Demo
+lake env lean --run Protocol/Transfer/Owned/Demo.lean
+```
 
 The [shared parity register](../../SEMANTIC-PARITY.md) maps the original
 objects and proved statements to Lean. Useful protocol entry points include:

@@ -2,7 +2,9 @@
 % Requires amsmath, amssymb, amsthm,
 % and proposition/theorem environments.
 \begin{abstract}
-We construct proof-carrying transaction interfaces for homotopical encryption.
+We construct a bounded proof-carrying transfer for homotopical encryption.
+Successful checking under the configured verifier contracts yields an
+accepted state update that preserves asset value and rejects replay.
 An exact-component commitment can remain fixed while the full encrypted
 cochain changes. A canonical two-slot manifest therefore names both objects;
 its root is retained by owner authorization, checked packets and accepted
@@ -40,9 +42,9 @@ the signed intent, checked transfer and computed history anchor.
 ciphertext digest and selected profile. Seven ordered evidence leaves form
 one submitted bundle. Later verification requires every preceding check on
 that same bundle, and the guarded transfer checks its actual database root.
-\item Scoped delivery and canonical token execution join hash-addressed
-lookup to recovery of the original coefficients. The source and target
-contexts, held token and available bytes remain the actual inputs.
+\item Successful checking gives a value-preserving owned-resource update
+and rejects replay. Scoped delivery and canonical token execution connect
+the same checked manifest to recovery of the original coefficients.
 \item Bounded native relations and approved execution bind owner checking to
 the exact expected program, parsed verifier key, CRS and public names. A
 conditional adaptive signature-of-knowledge reduction applies to the
@@ -247,6 +249,8 @@ encoding/statement reflection and verifier consumption. The selected profile
 determines its required certificate; an accepted native context need not
 carry a far-region certificate. The following finite relation and CRS
 composition address owner authorization separately from the payload proof.
+
+\input{sections/owned-transfer.tex}
 
 \section{Native credentials and their public instances}
 
@@ -527,8 +531,9 @@ projection certificates do not automatically yield this finite circuit.\par
 
 \section{Conclusion}
 
-The protocol keeps an encrypted action tied to the same original cochain
-through storage, authorization, verification and recovery. Its two-slot
+The bounded transfer consumes its input, creates its output, preserves asset
+value and rejects replay. It keeps the action tied to the same original
+cochain through storage, authorization, verification and recovery. Its two-slot
 manifest distinguishes the exact artifact from the full ciphertext; the
 native certificate supplies their original-observation meaning. Canonical
 evidence subjects and predecessor checks retain the submitted bundle and
@@ -541,5 +546,18 @@ CRS used by the original owner checker. The raw-root native reference has a
 conditional five-term adaptive forgery reduction. The private-nonce version
 has its own original-context and approved-execution joins. Completing the
 selected cryptographic primitives, full released-view security and lifecycle
-execution will turn these proved interfaces into an end-to-end transaction
-construction.
+execution are the next steps for a secure protocol implementation.
+
+\appendix
+\section{Checked transfer in Lean}
+The accepted-update statement uses \path{Owned.check_implies_accepted_update}
+and the value, inventory and replay laws in \path{Owned.CheckedTransfer}.
+The executable checker is related to the same specification by
+\path{Owned.Executable.checkedPacket_isSome_eq_check} and
+\path{Owned.Executable.successor_eq}. The original native history and
+recovery proof is \path{Owned.CheckedTransfer.native_history_recovery}.
+Run the fixed byte-owner example from \path{lean/} with the pinned toolchain.
+\begin{verbatim}
+lake build Protocol.Transfer.Owned.Demo
+lake env lean --run Protocol/Transfer/Owned/Demo.lean
+\end{verbatim}

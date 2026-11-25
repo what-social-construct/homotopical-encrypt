@@ -811,10 +811,13 @@ it with the cochain's decoded coordinates. The actual configured catalogue is
 trusted profile data; matching a policy
 identifier alone does not authenticate its interpretation.
 
-The mechanical fixture transfers positive amount seven between distinct
-owners while retaining a supplied state header. It proves structural checks
-and inventory/value consequences without constructing a signature, payload
-proof, runtime or hash-security instance.
+The finite [executable fixture](../../lean/Protocol/Transfer/Owned/Demo.lean)
+transfers seven units between distinct byte owners. It reads a canonical
+packet on the existing exact zero payload and runs the reference verifier
+with fixture signatures, proof bytes and hashes. A changed manifest and
+replay against the computed successor both reject, including a replay with
+a fresh draft. The raw ciphertext slot tests object naming. Genuine native
+recovery uses the binding and delivery premises of §6.1.
 
 The [checked transfer](../../lean/Protocol/Transfer/Owned.lean) retains the
 original `Storage.Context`, payload interpretation, snapshot and artifact.
@@ -878,9 +881,11 @@ interpretation**; its soundness law requires the original context's
 interpretation equality and public-input equality before deriving exact
 payload acceptance. It does not quantify over arbitrary decoders sharing
 public labels. Codecs, primitive implementations and their indexed soundness
-remain supplied contracts; the checker is a classical Boolean specification,
-without a claimed efficient Rust implementation or new proof-system security
-theorem.
+remain supplied contracts. The classical Boolean specification has a proved
+[executable byte-owner refinement](../../lean/Protocol/Transfer/Owned/Executable.lean).
+Its decidable checks and finite-support update compute acceptance and the
+same successor for the canonical codec, given executable configured hashes
+and verifiers.
 
 `CheckedTransfer` stores the structural prechecks and actual checked packet.
 It does not assume candidate validity. Resource checks derive availability,
