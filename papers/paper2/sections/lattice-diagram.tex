@@ -1,0 +1,16 @@
+% Requires tikz-cd. All four maps use the original coupled geometry.
+\begin{figure}[htbp]
+\centering
+\begin{tikzcd}[row sep=2.8em, column sep=5.0em]
+ \mathbb Z^n \arrow[r, "e_B", "\simeq_{\mathbb Z}"']
+     \arrow[d, "\text{scalar inclusion}"']
+ & \Lambda_B \arrow[d, "\text{harmonic inclusion}"] \\
+ \mathbb R^n \arrow[r, "g_B", "\simeq_{\mathbb R}"'] & W_B
+\end{tikzcd}
+\caption{The integer and real coefficient charts describe the same graph
+\(g_B(z)=(0,z,Bz)\). The upper chart is onto the entire original intrinsic
+lattice, rather than a finite-index sublattice. Inside \(W_B\), its image is
+exactly the integer span of the real graph basis; its rank is \(n\) and its
+inherited topology is discrete.}
+\label{fig:coupled-lattice-chart}
+\end{figure}

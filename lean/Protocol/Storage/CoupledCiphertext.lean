@@ -30,6 +30,11 @@ open CoupledCodec
 abbrev IntegerCochain (rows cols : ℕ) :=
   HCPCoupledFamily.Index (Fin rows) (Fin cols) → ℤ
 
+/-- Exact rational coordinates of the same decoded integer cochain.
+This conversion is shared by direct recovery and held-token execution. -/
+def rationalize {rows cols : ℕ} (v : IntegerCochain rows cols) :
+    HCPCoupledFamily.Index (Fin rows) (Fin cols) → ℚ := fun p => (v p : ℚ)
+
 /-- Exact ASCII bytes of the versioned full-cochain ciphertext domain. -/
 def domain : Bytes :=
   [72, 79, 68, 71, 69, 95, 67, 73, 80, 72, 69, 82, 84, 69, 88, 84, 95, 86, 49]

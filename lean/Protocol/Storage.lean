@@ -7,6 +7,7 @@ public import Protocol.Storage.CanonicalRS
 public import Protocol.Storage.CanonicalSystematic
 public import Protocol.Storage.DisclosureLeak
 public import Protocol.Storage.CoupledCiphertext.Disclosure
+public import Protocol.Storage.CoupledRecovery
 public import Protocol.Storage.ThreeLevelMetrics
 public import Protocol.Storage.CanonicalThreeLevel
 public import Protocol.Storage.CanonicalCalibration

@@ -1,6 +1,7 @@
 # Homotopical Encryption
 
-This repository formalizes hidden Hodge operators, cellular-sheaf cochains,
+This repository constructs harmonic-lattice cochain encryption and exact
+private recovery, and formalizes the associated hidden-operator problem,
 proof-carrying transactions and Reed–Solomon proximity in Lean.
 
 The working manuscript combines the HCP foundations and protocol construction
@@ -28,6 +29,12 @@ the same manuscript. The linked verification guides record their current
 status. Paper 2's dedicated configuration remains to be prepared.
 
 ## Mathematical focus
+
+HCP is motivated by recovery with hidden operative lattice geometry, compared
+with CVP supplied with an explicit basis. The manuscript's
+[CVP/LWE/HCP task comparison](papers/paper2/sections/recovery-comparison.tex)
+states the different public inputs, noise models, proved comparisons and
+intended stronger computational question.
 
 The expository anchor is a homotopical analogue of encryption correctness:
 admissible presentation transport commutes with encryption and recovery while
@@ -91,6 +98,14 @@ observation `(a,z−Bᵀu,Bz+u)`. Its
 [ciphertext codec](lean/Protocol/Storage/CoupledCiphertext.lean) decodes to the
 same original Hodge cochain, with independently computed names for the full
 ciphertext and exact-component artifact.
+The [lattice charts](lean/HCP/CoupledLattice.lean) identify integer
+coefficients with the entire original intrinsic lattice and prove its rank
+and discreteness. The [all-rational decoder refinement](lean/HCP/CoupledDecoding.lean)
+and [direct byte recovery](lean/Protocol/Storage/CoupledRecovery.lean) connect
+that same lattice to the actual algorithms: canonical private-matrix and
+ciphertext bytes recover the original coefficients without a transport token.
+Successful recovery is exactly membership in the integer Hodge-encryption
+language for the returned message, without opening bounds or authenticity.
 The [native execution path](lean/Protocol/Ephemeral/NativeTransport.lean)
 uses a held rational token and the canonical full-ciphertext bytes for exact
 migration or retained-base recovery. The receiver uses that token directly;
@@ -238,6 +253,7 @@ cd lean
 lake exe cache get
 lake build
 lake build Palomar.PaperOne.Solution Palomar.PaperThree.Solution Palomar.PaperThree.Application.Solution
+lake env lean --run Protocol/Storage/CoupledRecovery/Demo.lean
 ~~~
 
 With a full TeX installation, run separately from the repository root:

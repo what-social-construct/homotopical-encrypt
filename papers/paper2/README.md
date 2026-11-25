@@ -2,6 +2,14 @@
 
 Working combined title: *Homotopical Encryption and Proof-Carrying Transactions*.
 
+The motivating question is recovery with hidden operative harmonic-lattice
+geometry, beyond CVP with a supplied basis. The manuscript's
+[CVP/LWE/HCP comparison](sections/recovery-comparison.tex) states the actual
+public inputs, recovery targets, noise models and proved/open comparisons.
+The construction gives an explicit encryption/recovery mechanism in which
+to study that question; computationally greater hardness remains a theorem
+to establish in a specified model.
+
 The [working manuscript](DRAFT.md) develops cochain encryption and verification
 with changes of cellular presentation that preserve messages. Its coupled
 family has an explicit intrinsic harmonic lattice; separate cochain and ciphertext maps
@@ -36,6 +44,19 @@ matrices, and an explicit harmonic-lattice equivalence preserves their integer
 message coefficients. The generally nonisometric shear does not transport
 Hodge noise; protocol rotations retain their actual isometry requirement.
 The same file joins the actual Hodge matrix to the HCP operative projector.
+
+The [lattice construction](../../lean/HCP/CoupledLattice.lean) identifies
+integer coefficients with the entire original intrinsic harmonic lattice,
+constructs its basis and proves rank and discreteness. Its full-lattice
+property is inside the harmonic space. The
+[decoder refinement](../../lean/HCP/CoupledDecoding.lean) holds on every
+rational observation; integer acceptance is exactly the original integer
+Hodge-encryption language. The [direct byte algorithm](../../lean/Protocol/Storage/CoupledRecovery.lean)
+parses private-key/ciphertext bytes and recovers without a transport token.
+The [Lean execution example](../../lean/Protocol/Storage/CoupledRecovery/Demo.lean)
+runs those actual algorithms on `(2,-1) → (3,-2,-5,5) → (2,-1)`, and checks
+integer-language and malformed-byte rejection. It is a fixed reference
+execution, with sampling and cryptographic security handled separately.
 
 The [core geometry diagram](../../lean/HCP/CoupledGeometry.lean) now derives
 the full Hodge action and proves that the actual differential or Laplacian

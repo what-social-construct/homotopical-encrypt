@@ -42,6 +42,24 @@ delivery/public release remains separate. Transport to the known zero
 presentation exposes the message coefficients, so universal public transport
 is not a confidentiality contract.
 
+[CoupledLattice](CoupledLattice.lean) constructs the real and integer graph
+coefficient equivalences, identifying the integer chart with the existing
+harmonic point encoding. The original intrinsic subgroup, restricted to its
+harmonic ambient space, equals the integer span of the real graph basis.
+It has integral rank equal to the information-coordinate count, a discrete
+inherited topology and Mathlib's full `IsZLattice` property inside harmonic
+space. Generic full real span does not assert complete intrinsic coverage.
+
+[CoupledDecoding](CoupledDecoding.lean) proves that the executable rational
+decoder equals the original harmonic-lattice partial decoder on every
+rational input. On integer observations, success is exactly the original
+integer Hodge-encryption language. The
+[direct byte consumer](../Protocol/Storage/CoupledRecovery.lean) applies that
+same algorithm after canonical private-key/ciphertext parsing; it requires no
+transport token. The [execution example](../Protocol/Storage/CoupledRecovery/Demo.lean)
+uses the actual finite codecs and inverse. These are correctness and input
+language statements; noise bounds, sampling and security are separate.
+
 The [protocol execution adapter](../Protocol/Ephemeral/NativeTransport.lean)
 serializes the derived rational map in the canonical ciphertext coordinate
 ordering and executes with the held token. Retained-base recovery takes the

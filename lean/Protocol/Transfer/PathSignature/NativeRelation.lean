@@ -1,7 +1,7 @@
 module
 
 public import Protocol.Storage.CoupledCiphertext.Disclosure
-public import HCP.CoupledGeometry
+public import Protocol.Storage.CoupledRecovery
 
 @[expose] public section
 
@@ -230,6 +230,14 @@ theorem target_harmonic_projection (witness : Witness rows cols) :
         (HCPCoupledEncoding.sample witness.target witness.z witness.a witness.u).observed =
       (HCPCoupledEncoding.message witness.target witness.z).1 :=
   HCPCoupledEncoding.sample_projection witness.target witness.z witness.a witness.u
+
+/-- The native witness's exact same target bytes recover its coefficients
+through the direct finite byte algorithm and derived intrinsic lattice. -/
+theorem target_byte_recovery (witness : Witness rows cols) :
+    Storage.CoupledRecovery.recover witness.target
+      (Storage.CoupledCiphertext.sampleBytes witness.target witness.z witness.a witness.u) =
+        some witness.z :=
+  Storage.CoupledRecovery.recover_sampleBytes witness.target witness.z witness.a witness.u
 
 /-- The actual full native transport preserves the message/opening coordinates. -/
 theorem transport_original_sample (witness : Witness rows cols) :

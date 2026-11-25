@@ -1,6 +1,6 @@
 # Source ledger
 
-Updated 2026-11-15. This is the single source-reading register extracted from
+Updated 2026-11-24. This is the single source-reading register extracted from
 the chain/network working review; that review retains architecture provenance.
 Use source IDs as stable lookup keys. Full citation metadata stays in the
 [Paper 1 bibliography](../papers/paper1/references.bib),
@@ -20,7 +20,7 @@ before their assumptions or guarantees enter a selected protocol.
 
 ### Bibliography correspondence
 
-All **34 ledger sources** now have a BibTeX record in the relevant paper's
+All **35 ledger sources** now have a BibTeX record in the relevant paper's
 bibliography. File membership is a retrieval aid, not adoption, proof review,
 or a claim that a source's theorem is formalized. The PDFs print sources
 actually cited in their text; candidate records are retained for later work
@@ -41,13 +41,14 @@ source even though version 2 was posted on November 5.
 |---|---|---|---|
 | 2611.11828 | `kryazhev2026serreMultiplicativity` | P2 | Future richer graded/multiplicative invariants; no product/fibration adapter or Lean adoption. |
 | Gentry 2009 thesis | `gentry2009fullyHomomorphic` | P2 | Primary correctness/computation comparison for the homotopical analogy; no FHE construction adopted. |
+| Regev 2009 author version | `regev2009lwe` | P2 | Primary search-LWE definition and noisy-linear recovery motivation; HCP uses a different Hodge-structured noise model and no LWE reduction is supplied. |
 | EUROCRYPT 2014 key-homomorphic encryption | `bonehEtAl2014keyHomomorphic` | P2 | Ciphertext/key-transport novelty comparator; no security reduction or public translation algorithm transferred. |
 | CL06 | `chaseLysyanskaya2006signaturesKnowledge` | P2 | Primary SimExt game organization; bounded conditional CRS reference uses supplied primitives, not that paper's complete construction/security theorem. |
 | BGPR2022 | `bagheryEtAl2022signaturesKnowledge` | P2 | Tagged SE/SoK and Boolean-circuit construction reviewed more closely; compatible reference route, with no implemented backend or adopted security assumption. |
 | VCVio | `vcvio2026library` | P2 | Pinned primary ElGamal/DDH, salted-ROM commitment and Σ/Fiat–Shamir source audit; reusable components, with no selected operator-binding model, native SE backend or new dependency. |
 | 1312.6454 | `curryGhristNanda2015morse` | P1 | Computational comparison; retained maps/metric need justification. |
 | 1808.01513 | `hansenGhrist2018sheaves` | P1 | Cited foundation; finite cellular/Hodge part only. |
-| 1908.08944 | `helfer2019fol` | P1 | Cited semantic background; declared homological fragment only. |
+| 1908.08944 | `helfer2019fol` | P1, P2 | Cited semantic background; declared homological fragment only. |
 | 2601.19830 | `dingKim2026plucker` | P3 | Projective-chain reconstruction comparison; specialized coordinates not adopted. |
 | 2007.04099 | `ghristRiess2022tarski` | P2 | Candidate ordered-constraint semantics; no stalk/adjunction realization. |
 | 2011.14057 | `riessHansenGhrist2020persistence` | P2 | Optional feature/learning comparison; no classifier adoption. |
@@ -87,7 +88,7 @@ Search this file for an arXiv ID or `ePrint 2026/910` when working from a URL.
 | Network dynamics, metrics and learning | [2608.15397](#source-2608-15397), [2608.14556](#source-2608-14556), [2605.06395](#source-2605-06395), [2610.28455](#source-2610-28455), [2512.00242](#source-2512-00242), [2611.04670](#source-2611-04670), [2110.03789](#source-2110-03789) |
 | Ordered constraints and transitions | [2007.04099](#source-2007-04099), [2605.15778](#source-2605-15778), [2605.26883](#source-2605-26883) |
 | Cryptographic games and private retrieval | [CL06](#source-cl06), [BGPR2022](#source-bgpr2022), [VCVio](#source-vcvio), [2611.05136](#source-2611-05136), [2610.37061](#source-2610-37061), [ePrint 2026/910](#source-eprint-2026-910) |
-| Encryption correctness and presentation/key transport | [Gentry 2009](#source-gentry-2009), [Boneh et al. 2014](#source-key-homomorphic-2014) |
+| Encryption correctness, noisy recovery and presentation/key transport | [Regev 2009](#source-regev-2009), [Gentry 2009](#source-gentry-2009), [Boneh et al. 2014](#source-key-homomorphic-2014) |
 
 ### Foundations and categorical organization
 
@@ -131,6 +132,7 @@ Search this file for an arXiv ID or `ePrint 2026/910` when working from a URL.
 
 | Source | Result/definition examined | Possible role and boundary |
 |---|---|---|
+| <a id="source-regev-2009"></a>[Regev, *On Lattices, Learning with Errors, Random Linear Codes, and Cryptography*, author version dated May 2, 2009](https://cims.nyu.edu/~regev/papers/qcrypto.pdf) | **Primary §1 definition reviewed on 2026-11-24.** Search LWE receives a public linear sample matrix and noisy modular products and recovers a hidden vector. The paper's lattice reductions and encryption construction have additional parameter and computational hypotheses. No full proof audit undertaken here. | Grounds the manuscript's CVP/LWE/HCP task comparison and noisy-algebraic motivation. HCP's exact/coexact noise is tied to private Hodge geometry. The comparison does not identify the problems, import LWE security, or prove that HCP is computationally harder than CVP. |
 | <a id="source-gentry-2009"></a>[Gentry, *A Fully Homomorphic Encryption Scheme*, Stanford thesis, 2009](https://crypto.stanford.edu/craig/craig-thesis.pdf) | **Primary abstract and Definitions 2.1.1--2.1.6 reviewed on 2026-11-12.** Correctness of encrypted evaluation, compactness, fully/leveled homomorphic evaluation and separate circuit privacy. Full construction/reduction audit not undertaken here. | Expository anchor for comparing commuting encryption/recovery squares and, later, supported operations. Our proved integral-isometric presentation transport does not establish general FHE evaluation or adopt this scheme's security. |
 | <a id="source-key-homomorphic-2014"></a>[Boneh et al., *Fully Key-Homomorphic Encryption, Arithmetic Circuit ABE and Compact Garbled Circuits*, EUROCRYPT 2014](https://crypto.stanford.edu/~dabo/pubs/abstracts/lattice-abe.html) | **Primary author abstract and bibliographic metadata reviewed on 2026-11-12.** Describes public ciphertext translation from key `x` to `(f(x),f)` retaining the plaintext, under its stated LWE assumptions. Detailed construction/proof audit remains open. | Required novelty comparator for presentation/key transport. Match actual key visibility, permitted maps, algorithms and security experiments; a commuting diagram or homotopical name alone does not establish novelty. No HCP reduction is supplied. |
 | <a id="source-cl06"></a>[Chase–Lysyanskaya, *On Signatures of Knowledge*, CRYPTO 2006](https://cs.brown.edu/people/alysyans/papers/cl06.pdf) | **Primary §§2.2–3 examined on 2026-11-15.** SimExt games and the encrypt-then-prove construction: auxiliary dense CPA encryption holds message/witness, a simulation-sound NIZK proves consistency, and extraction decrypts. | The current native CRS interface follows its game organization. Its actual construction would need those auxiliary algorithms and assumptions; current HCP encryption does not automatically fill the public-encryption slot. No UC or quantitative security theorem is imported. |

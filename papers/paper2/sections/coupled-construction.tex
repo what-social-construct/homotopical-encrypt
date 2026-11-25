@@ -1,45 +1,77 @@
 % Working section of the combined HCP and proof-carrying transaction manuscript.
 % Canonical prose counterpart: ../DRAFT.md, opening and coupled/native sections.
-% Requires amsmath, amssymb, amsthm, tikz-cd and proposition/theorem environments.
+% Requires amsmath, amssymb, amsthm, tikz-cd, booktabs, tabularx,
+% and proposition/theorem environments.
 \begin{abstract}
-We construct a framework for cochain encryption and verification over finite
-cellular sheaves, with changes of presentation that preserve integral harmonic
-messages. Exact and coexact openings form a full Hodge ciphertext. An
-integer-matrix family supplies the entire intrinsic harmonic lattice, its
-metric and an explicit discrete CVP objective. Same-size presentations have
-equivalent cochain interpretations and lattice maps that preserve coefficients.
-A separate transport moves full ciphertexts between these presentations while
-retaining message and opening coordinates; exact rational algorithms and
-canonical codecs refine the construction to finite data. We distinguish the
-exact-component commitment from the full ciphertext and record both in one
-context-bound manifest used by owner authorization, packet verification and
-accepted history. A separate native observation-binding refinement identifies
-the original target message by harmonic projection, and scoped recipient
-recovery returns its coefficients or exhibits an accepted byte-hash collision.
-A correlated noise candidate has message-independent one-use ciphertext-byte
-laws; operator metadata and key reuse require separate disclosure analysis.
-For a bounded native witness, a CRS reference construction reduces adaptive
-fresh-message forgery to transcript simulation error, extraction failure,
-recovery of the original harmonic coefficients and two byte-hash collision
-events. The reduction includes the full ciphertext in the adversary's view
-and uses supplied proof-system algorithms. We also derive conditional
-transfer integrity and disclosure results. These constructions connect the
-hidden geometry to the finite object named by a public action.
-Computational confidentiality, identity privacy and efficient private
-retrieval remain open.
+We construct an executable harmonic-lattice encryption and recovery mechanism
+over finite cellular sheaves. The associated Harmonic Cochain Problem asks for
+the operative message from a public semantic class and an observation while
+the private Hodge geometry is withheld. Its motivating comparison is recovery
+with a hidden lattice, beyond ordinary CVP with a supplied basis.
+An integer coupling matrix determines the actual stalk maps, Hodge operator
+and intrinsic integral harmonic lattice. Its integer coefficient chart covers
+the entire lattice; we prove discreteness, rank and the induced metric.
+Exact rational recovery from canonical private-presentation and ciphertext
+bytes equals canonical parsing followed by harmonic-lattice decoding on every
+byte input. Successful
+integer decoding characterizes the original Hodge-encryption language.
+Separate cochain and ciphertext transports preserve the declared semantic
+class and message coefficients, with commuting projection and recovery
+diagrams. A context-bound manifest names the exact artifact and full
+ciphertext, joining owner authorization, checked packets and accepted history.
+Sampling and disclosure audits distinguish the original scalar profile from
+a separate one-use ciphertext candidate and identify the effect of operator
+hashes. A bounded adaptive CRS reference reduces fresh-message forgery to
+simulation and extraction errors, recovery of the same original coefficients
+and explicit hash collisions. The exact public-data obstruction and
+ciphertext-only laws retain their declared views; a computational comparison
+with CVP and security for the complete public view remain to be proved.
 \end{abstract}
 
 \section{Problem and contributions}
 
-Public verification should identify the encrypted object to which an action
-refers, even when its private cellular presentation changes. A cochain
-commitment can retain only part of that object. In the coupled family studied
-here, an integer matrix \(B\in\mathbb Z^{m\times n}\) determines the harmonic
-message \((0,z,Bz)\) and ciphertext
+The motivating question is whether concealing the operative harmonic lattice
+can create a recovery barrier beyond explicit-lattice CVP. Ordinary CVP
+supplies a lattice basis and a target. HCP supplies a public semantic class
+and an observation while withholding the particular cellular presentation,
+Hodge operator and embedded harmonic lattice that determine the intended
+message. Equivalent cochain interpretations can retain the same public class
+while changing that recovery geometry.
+
+We construct an executable harmonic-lattice encryption and recovery mechanism
+to study this question. In the coupled family, an integer matrix
+\(B\in\mathbb Z^{m\times n}\) determines the entire intrinsic lattice,
+the harmonic message \((0,z,Bz)\), and the ciphertext
 \[
  \operatorname{Enc}_B(z,a,u)=(a,z-B^{\mathsf T}u,Bz+u),
  \qquad z\in\mathbb Z^n,\quad a\in\mathbb Z,\quad u\in\mathbb Z^m.
 \]
+Canonical private-presentation and ciphertext bytes feed an exact rational
+recovery algorithm. For every such \(B,z,a,u\), it returns the original
+integer vector \(z\). Its success on an arbitrary integer ciphertext is
+equivalent to that ciphertext being an original Hodge encryption of the
+returned message, with integer openings. These algorithms tie the recovery
+question to the same lattice, private presentation and observed cochain.
+
+Learning with errors supplies a useful noisy-algebraic recovery comparison.
+Search LWE publishes \((A,c=As+e\bmod q)\) and asks for the hidden vector
+\(s\), with a uniformly sampled matrix and independently sampled errors
+from the specified distribution
+\cite[Section~1]{regev2009lwe}. Here the message lies in a harmonic lattice
+and the exact/coexact noise lies in the orthogonal complement determined by
+the private Hodge geometry.
+
+\input{sections/recovery-comparison.tex}
+
+The intended stronger comparison must specify a finite family, sampling law,
+the complete released view, efficient adversaries and their CVP-oracle access
+or reduction. The proved fixed-observation obstruction is an information
+separation; it is not yet a statement that HCP is computationally strictly
+harder than CVP. This distinction fixes the research target without making it
+an assumption of the construction.
+
+Public verification should also identify the encrypted object to which an
+action refers. A cochain commitment can retain only part of that object.
 Fixing \(a\) fixes the exact component \(\delta_0a\), while changing \(z\) or
 \(u\) changes the full ciphertext. Thus a public reference to the exact
 artifact alone does not specify which encrypted cochain accompanies an
@@ -49,10 +81,13 @@ public context.
 
 We establish four connected results.
 \begin{enumerate}
-\item \textbf{A coupled intrinsic harmonic-lattice family.}
+\item \textbf{An explicit harmonic-lattice encryption and recovery mechanism.}
 The actual cellular sheaves have intrinsic lattice
 \(\{(0,z,Bz):z\in\mathbb Z^n\}\), Gram matrix \(I+B^{\mathsf T}B\), and
-an explicit discrete CVP objective. All integer matrices of fixed dimensions
+an explicit discrete CVP objective. Their integer coefficient chart exhausts
+the original lattice, with rank \(n\), discreteness and full lattice span
+inside the harmonic subspace. The canonical byte recovery algorithm equals
+canonical parsing followed by harmonic-lattice decoding on every byte input. All integer matrices of fixed dimensions
 give equivalent typed cochain interpretations in the declared homological
 semantics, while the embedded harmonic space determines \(B\). The shared
 face constraints separate invariant semantics from the embedded geometry
@@ -110,8 +145,8 @@ bounded adaptive reduction over supplied algorithms. Rational transport is an
 exact reference algorithm without a proved polynomial running-time bound. Computational
 confidentiality, identity privacy, efficient private retrieval, arbitrary
 circuit evaluation and finality require separate constructions. The
-known-lattice CVP comparison and public-data ambiguity specify an information
-boundary rather than an asymptotic hardness reduction.
+known-lattice CVP comparison and public-data ambiguity retain the scope
+specified above.
 
 \section{Coupled harmonic lattices and their public class}
 \label{sec:coupled-harmonic-construction}
@@ -207,6 +242,39 @@ products and distances give the displayed formulas. Applying the graph
 description to the information-coordinate unit vectors recovers each column
 of \(B\).
 \end{proof}
+
+\begin{proposition}[The full intrinsic lattice and its coefficient charts]
+\label{prop:coupled-intrinsic-lattice}
+The graph map gives a real linear equivalence
+\(g_B:\mathbb R^n\simeq W_B\) and an integer linear equivalence
+\(e_B:\mathbb Z^n\simeq\Lambda_B\). The integer chart is the original
+harmonic-lattice point encoding. Restricting the original subgroup to its
+harmonic ambient space identifies it with the integer span of the real graph
+basis. It is discrete, spans \(W_B\) over \(\mathbb R\), and has integral
+rank \(n\).
+\end{proposition}
+
+\begin{proof}
+Information coordinates invert the real graph map. The complete integral
+graph characterization in Proposition~\ref{prop:coupled-harmonic-graph}
+gives the integer chart and its surjectivity. Transporting the standard
+coefficient bases gives the two graph bases. An element belongs to the
+integer span exactly when all its graph-basis coordinates are integers,
+which is the original intrinsic membership condition. The integer span of
+a real basis is discrete and spans its ambient space. Its integer basis has
+\(n\) elements.
+\end{proof}
+
+\input{sections/lattice-diagram.tex}
+
+Full real span and equality with the intrinsic integral subgroup are separate
+conditions in a general harmonic-lattice presentation. Both are proved here
+for the same coupled graph basis; no auxiliary message lattice is chosen.
+The integer native profile also derives coexact integrality from
+\(\delta_{1,B}^*u=(0,-B^{\mathsf T}u,u)\). General integral-structure laws
+preserve the differentials and do not assert adjoint preservation of arbitrary
+chosen lattices. The finite mechanism uses this actual standard metric and
+integral profile.
 
 Real graph matrices describe a standard information-coordinate chart of a
 Grassmannian; integer matrices select arithmetic points in that chart. The
@@ -357,7 +425,7 @@ lattice, message and observed cochain refer to the same construction. Equal
 public classes leave equality of released roots, headers and proof transcripts
 as a separate application obligation.
 
-\subsection{Canonical presentation bytes and storage}
+\subsection{Canonical bytes and direct recovery}
 
 The versioned presentation domain \texttt{HODGE\_COUPLING\_V1} fixes this
 family's scalar stalks, standard integral structures and Euclidean metric.
@@ -398,6 +466,51 @@ rejection of malformed or mismatched byte streams are proved. A separate
 ciphertext hash check binds these bytes to the existing bound observation,
 retaining its exact artifact, snapshot and lifecycle. A concrete proof of the
 selected transaction/proximity relation remains an application obligation.
+
+Let \(E_B(z,a,u)\) be those canonical full-ciphertext bytes. The direct
+recipient algorithm parses them, casts the same integer cochain to rational
+coordinates, applies the exact inverse of \(M_B\), and returns its information
+coordinates only if all have denominator one. Write this partial byte
+algorithm as \(D_B\). It uses the private presentation and ciphertext bytes
+directly, without a transport token or access to a sample's message field.
+
+\begin{proposition}[Finite encryption and exact byte recovery]
+\label{prop:coupled-byte-recovery}
+For every integer \(B,z,a,u\),
+\[
+ D_B(E_B(z,a,u))=\operatorname{some}(z).
+\]
+The private presentation can itself be loaded from its canonical matrix
+bytes. For every byte string \(\beta\),
+\[
+ D_B(\beta)=\operatorname{some}(z)
+ \quad\Longleftrightarrow\quad
+ \exists a\in\mathbb Z,\ u\in\mathbb Z^m:\ \beta=E_B(z,a,u).
+\]
+On every rational cochain, the rational coefficient algorithm equals the
+original harmonic-lattice partial decoder. Thus byte recovery, including
+rejection, refines canonical parsing followed by the same harmonic-lattice
+decoding operation.
+\end{proposition}
+
+\begin{proof}
+The rational inverse realizes the original real inverse, whose information
+coordinates are the coordinates of the projected harmonic graph. They are
+integral exactly when that projection belongs to \(\Lambda_B\). For an
+integer observation \((a,x,y)\) and an accepted integer message \(z\), its
+coexact opening is \(u=y-Bz\), which is also integral. The original inverse
+identities give \(M_B(a,z,u)=(a,x,y)\). Canonical parsing identifies exactly
+the corresponding byte encoding. Conversely every such generated observation
+recovers \(z\) by the same inverse and integer check.
+\end{proof}
+
+The input-language statement imposes no opening magnitude or sampling bounds
+and supplies no authenticity condition. It establishes a functioning exact
+encryption/recovery mechanism. For example, \(B=(1\ 1)\), \(z=(2,-1)\),
+\(a=3\), \(u=4\) execute to ciphertext coordinates \((3,-2,-5,5)\), then
+recover \((2,-1)\) through canonical private-key and ciphertext bytes. The
+same reference execution rejects truncated byte inputs and an integer
+cochain whose projected coefficients are nonintegral.
 
 One material-indexed scoped-delivery receipt supports both the earlier
 isometric rotation and the native derived token. The native adapter derives
@@ -936,3 +1049,24 @@ inventory the actual supported operations and their security statements.
 
 The shared parity register maps these constructions, encodings, transport and
 verification statements to their formal declarations.
+
+
+\begin{samepage}
+\section{Conclusion}
+
+The construction gives an explicit harmonic-lattice encryption mechanism,
+from private cellular presentation and integer message through canonical
+ciphertext bytes to exact coefficient recovery. The graph lattice is the
+entire intrinsic integral harmonic lattice, with a proved coefficient basis,
+rank, discreteness and metric. The rational algorithm implements the original
+harmonic-lattice decoder on every rational input; its byte form accepts
+exactly the integer Hodge-encryption language for the returned message.
+
+HCP isolates the associated recovery question when the operative geometry is
+hidden behind a public semantic class. Supplying that geometry makes the
+native generated message the unique known-lattice CVP answer; the proved
+public-information obstruction identifies what a class label and observation
+can fail to determine. Establishing a stronger computational comparison,
+and security for a selected sampler and complete public view, is the central
+hardness task opened by this concrete mechanism.
+\end{samepage}

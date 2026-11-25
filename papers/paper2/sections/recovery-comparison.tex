@@ -1,0 +1,33 @@
+% Requires booktabs and tabularx. These are recovery tasks, not claimed reductions.
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.14\linewidth}
+  *{3}{>{\raggedright\arraybackslash}X}@{}}
+\toprule
+Feature & Explicit-lattice CVP & Search LWE & Native HCP profile \\
+\midrule
+Public input & Basis \(G\) and target \(t\)
+ & \((A,c)\), with \(c=As+e\bmod q\)
+ & Declared class \(\alpha_B\) and observation \(b\) \\
+Recovery target & A closest point \(Gz\)
+ & Hidden vector \(s\)
+ & The operative message \(h_B(z)\), or coefficients \(z\) \\
+Geometric data & The lattice basis is supplied
+ & A uniformly sampled matrix is supplied
+ & The operative presentation, Hodge operator and harmonic lattice are hidden \\
+Error or residual & \(t-Gz\), with no Hodge promise
+ & Independently sampled modular errors \(e\)
+ & Exact/coexact opening \(\delta_0a+\delta_1^*u\), orthogonal to the harmonic space \\
+Comparison here & The native generated message is the unique CVP answer when its lattice is supplied
+ & Motivating comparison with a different noise model
+ & Constructed encryption/recovery and an exact public-information obstruction;
+ a stronger computational comparison is a research target \\
+\bottomrule
+\end{tabularx}
+\caption{The recovery tasks and their different public inputs. The HCP column
+names the declared mathematical observation; a cryptographic experiment must
+also include every released root, credential and proof.}
+\label{tab:recovery-comparison}
+\end{table}

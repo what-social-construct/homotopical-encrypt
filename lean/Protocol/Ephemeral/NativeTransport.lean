@@ -94,9 +94,8 @@ theorem recoverWithBase_derive_sample (scope : TransportToken.Scope)
   rw [recoverWithBase, applyInverse_derive_sample, decodeCoefficients_sampleVector]
 
 /-- Exact integer embedding of the original finite ciphertext coordinates. -/
-def rationalize (v : CoupledCiphertext.IntegerCochain rows cols) :
-    Cochain (rows := rows) (cols := cols) :=
-  fun p => (v p : ℚ)
+abbrev rationalize (v : CoupledCiphertext.IntegerCochain rows cols) :
+    Cochain (rows := rows) (cols := cols) := CoupledCiphertext.rationalize v
 
 /-- An integer codec receives output only if every rational coordinate is integral. -/
 def integerCoordinates (v : Cochain (rows := rows) (cols := cols)) :
@@ -105,7 +104,7 @@ def integerCoordinates (v : Cochain (rows := rows) (cols := cols)) :
 
 @[simp] theorem integerCoordinates_rationalize (v : CoupledCiphertext.IntegerCochain rows cols) :
     integerCoordinates (rationalize v) = some v := by
-  simp [integerCoordinates, rationalize]
+  simp [integerCoordinates, rationalize, CoupledCiphertext.rationalize]
 
 /-- Migrate canonical full ciphertext bytes with a held token. -/
 def migrateBytes (token : Token (rows := rows) (cols := cols)) (bytes : Bytes) : Option Bytes := do
