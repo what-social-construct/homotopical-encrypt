@@ -108,6 +108,18 @@ def view (setup : PublicAssemblySetup Owner)
     proposal := setup.hashes.proposal packet
     manifest := setup.manifest base ciphertextDigest }
 
+/-- The artifact names are inputs to assembly. Replacing the two functions
+that originally computed those names leaves the assembled release unchanged. -/
+theorem view_withArtifactHashes (setup : PublicAssemblySetup Owner)
+    (ciphertextHash : List UInt8 → TCB.Hash32)
+    (cochainHash : Axioms.CochainCommitmentData → TCB.Hash32)
+    (transfer : ResourceTransfer Owner) (base : Storage.PublicPayloadView)
+    (ciphertextDigest : TCB.Hash32) (ownerSignature proofBytes : List UInt8) :
+    ({ setup with hashes := { setup.hashes with
+        ciphertext := ciphertextHash, cochain := cochainHash } } : PublicAssemblySetup Owner).view
+        transfer base ciphertextDigest ownerSignature proofBytes =
+      setup.view transfer base ciphertextDigest ownerSignature proofBytes := rfl
+
 variable {Vertex Edge Face Asset Receipt : Type}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
   {X : OrientedTwoComplex Vertex Edge Face} {F : CellularSheaf X}
@@ -140,8 +152,43 @@ variable {Vertex Edge Face Owner Asset Receipt : Type}
   [Fintype Vertex] [Fintype Edge] [Fintype Face]
   {X : OrientedTwoComplex Vertex Edge Face} {F : CellularSheaf X}
 
-/-- Every actually checked release is assembled from its base, released
-ciphertext digest and evidence bytes under the same supplied setup. -/
+/-- Every operationally checked release is assembled from its original base,
+released ciphertext digest and exact checked evidence bytes. -/
+theorem PublicTransferView.ofOperational_eq_assembled
+    {config : Operational.Config F Owner Asset Receipt}
+    {transfer : ResourceTransfer Owner} {bytes : List UInt8}
+    (checked : Operational.CheckedTransfer config transfer bytes) :
+    PublicTransferView.ofOperational checked =
+      (PublicAssemblySetup.ofOperational config).view transfer
+        config.context.publicView config.ciphertextDigest checked.proof.packet.ownerSignature
+        checked.proof.packet.proofBytes := by
+  let setup := PublicAssemblySetup.ofOperational config
+  have hpacket : checked.proof.packet =
+      setup.packet transfer config.context.publicView
+        config.ciphertextDigest
+        checked.proof.packet.ownerSignature checked.proof.packet.proofBytes := by
+    cases h : checked.proof.packet with
+    | mk metadata intent ownerSignature proofBytes =>
+      simp only [PublicAssemblySetup.packet]
+      congr 1
+      · simpa only [h, setup, PublicAssemblySetup.ofOperational] using checked.proof.metadata_eq
+      · simpa only [h, setup, PublicAssemblySetup.ofOperational_intent] using checked.proof.intent_eq
+  apply PublicTransferView.ext
+  · change bytes = setup.codec.encode
+      (setup.packet transfer config.context.publicView
+        config.ciphertextDigest
+        checked.proof.packet.ownerSignature checked.proof.packet.proofBytes)
+    rw [← hpacket]
+    exact checked.proof.canonical
+  · exact hpacket
+  · change setup.hashes.proposal checked.proof.packet = setup.hashes.proposal
+      (setup.packet transfer config.context.publicView
+        config.ciphertextDigest
+        checked.proof.packet.ownerSignature checked.proof.packet.proofBytes)
+    rw [← hpacket]
+  · exact (PublicAssemblySetup.ofOperational_manifest config).symm
+
+/-- Preserve the original owned-transfer assembly statement. -/
 theorem CheckedTransfer.publicView_eq_assembled
     {config : Config F Owner Asset Receipt}
     {transfer : ResourceTransfer Owner} {bytes : List UInt8}
@@ -150,47 +197,8 @@ theorem CheckedTransfer.publicView_eq_assembled
       (PublicAssemblySetup.ofOperational config.operational).view transfer
         checked.publicView.base config.ciphertextDigest checked.publicView.packet.ownerSignature
         checked.publicView.packet.proofBytes := by
-  let setup := PublicAssemblySetup.ofOperational config.operational
-  have hbase := checked.publicView_base
-  have hintent := checked.publicView_intent
-  have hmetadata := checked.publicView_metadata
-  have hpacket : checked.publicView.packet =
-      setup.packet transfer checked.publicView.base
-        config.ciphertextDigest
-        checked.publicView.packet.ownerSignature
-        checked.publicView.packet.proofBytes := by
-    have hsintent : setup.intent transfer checked.publicView.base config.ciphertextDigest =
-        config.intentFor transfer := by
-      rw [hbase]
-      rfl
-    cases h : checked.publicView.packet with
-    | mk metadata intent ownerSignature proofBytes =>
-      simp only [PublicAssemblySetup.packet]
-      congr 1
-      · simpa [PublicAssemblySetup.ofOperational, Config.operational, setup,
-          PublicTransferView.metadata, h] using hmetadata
-      · simpa [h] using hintent.trans hsintent.symm
-  apply PublicTransferView.ext
-  · rw [PublicAssemblySetup.view]
-    change checked.publicView.packetBytes = setup.codec.encode
-      (setup.packet transfer checked.publicView.base
-        config.ciphertextDigest
-        checked.publicView.packet.ownerSignature
-        checked.publicView.packet.proofBytes)
-    rw [← hpacket]
-    exact checked.publicView_canonical
-  · exact hpacket
-  · rw [PublicAssemblySetup.view]
-    change checked.publicView.proposal = setup.hashes.proposal
-      (setup.packet transfer checked.publicView.base
-        config.ciphertextDigest
-        checked.publicView.packet.ownerSignature
-        checked.publicView.packet.proofBytes)
-    rw [← hpacket]
-    exact checked.publicView_proposal_computed
-  · rw [PublicAssemblySetup.view, hbase]
-    exact checked.publicView_manifest.trans
-      (PublicAssemblySetup.ofOperational_manifest config.operational).symm
+  rw [checked.publicView_base]
+  exact PublicTransferView.ofOperational_eq_assembled checked.operational
 
 /-- Two-way event-mass closeness, with no efficiency or asymptotic interpretation. -/
 def EventBound {α : Type} (p q : PMF α) (ε : ℝ≥0∞) : Prop :=

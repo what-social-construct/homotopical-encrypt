@@ -31,6 +31,7 @@ public import Protocol.Transfer.PathSignature.NativeCommitted
 public import Protocol.Transfer.PathSignature.NativeCommittedContext
 public import Protocol.Transfer.PathSignature.NativeCommittedPrivacy
 public import Protocol.Transfer.PathSignature.NativeCommittedRandomOracle
+public import Protocol.Transfer.PathSignature.NativeCommittedRelease.Simulation
 
 @[expose] public section
 

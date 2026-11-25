@@ -1063,6 +1063,15 @@ these inputs carries to the assembled view by deterministic postprocessing.
 The account must cover their joint law, including the correlation of proof
 and signature bytes with the same private observation.
 
+The [nonce-bearing adapter](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease.lean)
+reconstructs the actual checked release and signing input from the parsed V2
+instance, aligned public fields and original evidence bytes. Its shared-cache
+[recovery theorem](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease/Simulation.lean)
+charges the simulator's `S` queries together with the decoder's `Q` queries
+and the two honest digests. A joint total-variation bound `ε` on the sampled
+message, release and live cache adds `ε` to the simulated recovery bound.
+The selected backend still needs to establish that joint simulation premise.
+
 The projection profile binds its proof to the original artifact through
 [ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean). Its
 public release keeps the handle separate from the full frame used by a

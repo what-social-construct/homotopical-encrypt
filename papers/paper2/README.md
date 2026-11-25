@@ -24,12 +24,17 @@ held transport token and available ciphertext bytes.
 | Approved execution | The owner checker uses the exact expected program, parsed verifier key, CRS, public names and full signing message. |
 | Raw-root CRS reference | Fresh completion inherits the conditional five-term adaptive forgery bound on the original sampled execution. |
 | Nonce-bearing version | Its separate native relation and approved owner checker retain the original snapshot/context and actual private operator opening. |
+| Nonce-bearing release recovery | The original checked release factors through the public instance, matched template and two evidence byte strings. The recovery bound transfers under a simulation premise on the joint prefix, including the sampled message and live byte-oracle cache. |
 
 The adaptive CRS reduction uses the raw-root relation. The nonce-bearing
 version uses the private operator commitment and its own witness, program,
-instance and original-context checker. A privacy experiment for that checker
-must account for the signing answers, evidence proofs and released storage
-records together.
+instance and original-context checker. In its release experiment, the
+simulator receives the exact intent, signing input and full ciphertext.
+With `m` disclosure values and query budgets `S` for the simulator and `Q`
+for the decoder, the recovery bound is `m/2^n + (S+Q+2)/256^32 + ε` under a joint
+prefix simulation error of at most `ε`. The one-use experiment retains
+failed releases in its probability space. The chosen backend still needs
+a proof of the joint simulation premise.
 
 The remaining protocol work is secure proof/signature primitive
 instantiation, semantic setup refinement, complete field-circuit byte/hash
@@ -64,6 +69,8 @@ objects and proved statements to Lean. Useful protocol entry points include:
   and its [application adapter](../../lean/Protocol/Transfer/PathSignature/NativeApplication.lean).
 - [Nonce-bearing relation](../../lean/Protocol/Transfer/PathSignature/NativeCommitted.lean)
   and [original-context owner checker](../../lean/Protocol/Transfer/PathSignature/NativeCommittedContext.lean).
+- [Nonce-bearing release assembly](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease.lean)
+  and [joint-prefix recovery bound](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease/Simulation.lean).
 
 Build the reading copy from this directory with
 `latexmk -pdf -interaction=nonstopmode -halt-on-error construction.tex`.

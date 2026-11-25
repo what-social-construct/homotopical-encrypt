@@ -376,6 +376,58 @@ verifier receives the existing full signing message and submitted signature.
 It configures the original authorization interface on the same context and
 packet carrier.
 
+\subsection{Recovery after the nonce-bearing transfer release}
+
+The canonical instance supplies the snapshot root for both the public
+context and the before-state, since the state hashes use that root. It also
+supplies the ciphertext digest for the original two-slot manifest. A public
+template, fixed for each value of a declared key disclosure \(L(k)\), supplies
+the exact artifact and the other public fields and setup. When these fields
+agree with the original checked transfer, the template and instance reproduce
+its canonical signing input. Assembly uses the original owner signature and
+payload-proof bytes to reproduce the packet, proposal and manifest.
+
+A public evidence simulator takes the reconstructed intent, exact signing
+input and full ciphertext. It can return the two evidence byte strings for
+assembly or fail. The simulator and the adaptive recovery decoder share the
+original byte-oracle cache. The assembly uses fixed public hash functions.
+Any assembly work that queries the sampled byte oracle belongs in the
+simulator's query budget.
+
+\begin{proposition}[Recovery under joint simulation of the release]
+\label{prop:joint-release-recovery}
+Fix the public templates and use the companion paper's fresh-sign experiment
+with a uniform \(n\)-bit message and a deterministic disclosure \(L(k)\) of
+the sign key. Suppose the public simulator makes at most \(S\) byte-oracle
+queries on every path and the recovery decoder at most \(Q\). At the point
+where the decoder begins, suppose the
+actual and simulated prefix laws have total variation distance at most
+\(\varepsilon\) on the joint record of the sampled message, the disclosure,
+the native instance and ciphertext, the optional transfer release and the
+live byte-oracle cache. Then recovery of the message, or of any injective
+encoding of it, in the actual experiment has probability at most
+\[
+  \frac{|\operatorname{im}L|}{2^n}+
+  \frac{S+Q+2}{256^{32}}+\varepsilon .
+\]
+\end{proposition}
+
+\begin{proof}
+In the simulated release experiment, compose the evidence simulator and
+decoder as one public continuation. Its budget is \(S+Q\), and the native
+constructor contributes two honest digest calls. The companion paper's
+key-disclosure bound then gives the first two terms. In both prefix laws,
+resume the same decoder from the supplied live cache. Total variation
+contracts under this common continuation and bounds the change in the
+recovery event by \(\varepsilon\).
+\end{proof}
+
+The joint premise retains the hidden target and oracle state that are
+omitted by a marginal transcript comparison. Establishing it for real
+signature and proof production requires a simulation argument for the
+selected backend beyond its forgery bound. The one-use experiment retains
+failed releases in its probability space.
+
 \subsection{Fresh geometry and lifecycle}
 
 The intended lifecycle issues fresh geometry per public encrypted object
@@ -599,9 +651,11 @@ construction.
 Approved execution fixes the actual program, public names, verifier key and
 CRS used by the original owner checker. The raw-root native reference has a
 conditional five-term adaptive forgery reduction. The private-nonce version
-has its own original-context and approved-execution joins. Completing the
-selected cryptographic primitives, full released-view security and lifecycle
-execution are the next steps for a secure protocol implementation.
+has its own original-context and approved-execution joins. Its release
+recovery bound reduces the remaining privacy argument to joint simulation
+of the chosen backend's release prefix. Completing that simulation,
+instantiating the cryptographic primitives and enforcing the lifecycle
+remain steps toward a secure protocol implementation.
 
 \appendix
 \section{Checked transfer in Lean}
@@ -618,6 +672,15 @@ example use these declarations.
 SampledMCA.Pending.far_acceptance_le
 SampledMCA.Pending.far_acceptance_le_of_mca
 SampledMCA.Pending.capacity_acceptance_eq
+\end{verbatim}
+
+The V2 release proofs use these Lean declarations.
+\begin{verbatim}
+NativeCommittedRelease
+Inputs.assemble_eq_checked
+Inputs.signingInputAt_eq_checked
+simulated_recovery_probability_le
+recovery_probability_le_of_joint_prefix
 \end{verbatim}
 
 Run the fixed byte-owner example from \path{lean/} with the pinned toolchain.
