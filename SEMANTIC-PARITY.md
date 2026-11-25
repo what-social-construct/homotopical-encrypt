@@ -243,6 +243,7 @@ no mathematical objects.
 | H136 | Coupled CVP residual and coefficient error | [CoupledCVPResidual](lean/HCP/CoupledCVPResidual.lean), `squaredDistance_eq_residual_add_gram`; [CoupledSignResidual](lean/HCP/CoupledSignResidual.lean), `squaredDistance_fixed_mask`, `cost_at_message`, `cost_gap`, `cost_gap_attained`, `recover_of_cost_lt` | **Exact squared costs.** For arbitrary coupled targets the nonharmonic residual is independent of the candidate. In the fresh-sign profile every compatible key has minimum `a²+d(d+1)n` for the same ciphertext. A unit coefficient step attains the `d+1` gap when `n>0`, so strict squared-cost slack below that gap preserves exact recovery with the lattice supplied. | Paper 1 CVP comparison |
 | H137 | Exact finite recovery from public disclosure | [FiniteRecovery](lean/HCP/FiniteRecovery.lean), `optimalProbability`, `successProbability_le_optimalProbability`, `exists_successProbability_eq_optimalProbability`; [typed observation](lean/HCP/FiniteRecovery/Typed.lean), `fixedObservation_optimal_probability` | **Sharp uniform-family bound.** Sum the largest target multiplicity in each realized view and divide by the family size. For an actual fixed HCP observation this is the largest multiplicity of its operative projection among the uniformly indexed witnesses. The auxiliary input is fixed across witnesses. | Paper 1 finite public recovery |
 | H138 | Deterministic disclosure on the actual fresh-sign ciphertext | [Native](lean/HCP/FiniteRecovery/Native.lean), `fixedMaskFiberEquiv`, `uniformKey_success_eq`, `optimalProbability_eq_view_count`, `optimalProbability_le_bit_budget`, `optimalProbability_eq_coordinate_disclosure`, `optimalProbability_add_minimum_cost` | **Exact coefficient recovery rate.** Conditioning on the emitted bytes leaves one compatible message per key. With injective coefficient targets, one of the `2^n` keys can be correctly decoded for each disclosed value. An `r`-bit view gives at most `2^r/2^n`, attained by releasing `r` distinct signs. The common minimum CVP cost leaves the bound unchanged. The nonce-bearing experiment uses H128. | Paper 1 fresh-sign disclosure |
+| H139 | Deterministic sign-key disclosure in the nonce-bearing view | [Disclosure](lean/Protocol/Transfer/PathSignature/NativeCommittedRandomOracle/Disclosure.lean), `ideal_game_masked`, `recovery_probability_le`, `bit_disclosure_recovery_probability_le`; [DisclosureGuessing](lean/Protocol/Transfer/PathSignature/NativeCommittedRandomOracle/DisclosureGuessing.lean), `uniform_guess_with_disclosure_range_le` | **Adaptive one-use bound.** Keep the actual V2 instance, full ciphertext and shared byte oracle. A fixed deterministic function of the sampled key with `m` realized values gives success at most `m/2^n+(Q+2)/256^32` for bits or an injective message encoding. The ideal view fixes the mask and bounds each randomized continuation by its finite disclosure range. The nonce, earlier queries and a general proof/storage transcript remain outside the disclosure function. | Paper 1 quantitative recovery |
 
 The coupled construction, semantic/lattice equivalences, original-sample
 recovery, codec injectivity and snapshot/ciphertext joins above have focused
@@ -327,9 +328,9 @@ retains that payload and the corresponding pair before a single modeled draw.
 The focused Hodge/CVP selection uses a two-member ambiguity example.
 H137 gives exact recovery probabilities on uniformly indexed compatible
 families, and H138 measures deterministic additional disclosure on the
-fresh-sign ciphertext. The native nonce-bearing experiment has its own
-sampled-oracle recovery theorem H128. A complexity reduction to a public HCP
-task needs a precise recoverable promise or distributional contract.
+fresh-sign ciphertext. H139 carries that disclosure model into the native
+nonce-bearing sampled-oracle experiment. A complexity reduction to a public
+HCP task needs a precise recoverable promise or distributional contract.
 
 Paper 3’s coding and native modular claims do not assert a capacity-scale
 Euclidean/full-HCP distance bridge. Broader source profiles and exact
@@ -359,6 +360,7 @@ provide the finer crosswalks.
 | P1-F07: chordal geometry of the fresh-sign family | H133 | `Laplacian/Grassmannian/Metric`, `HCP/CoupledProjectorMetric` |
 | P1-F08: residual, integer coefficient objective and sharp gap | H136 | `HCP/{CoupledCVPResidual,CoupledSignResidual}` |
 | P1-F09: finite recovery and deterministic disclosure | H137–H138 | `HCP/FiniteRecovery`, `HCP/FiniteRecovery/{Typed,Native}` |
+| P1-F10: deterministic disclosure in the native sampled oracle | H139 | `NativeCommittedRandomOracle/{Disclosure,DisclosureGuessing}` |
 
 ### Paper 2 construction and consumption families
 

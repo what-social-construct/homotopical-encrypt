@@ -80,8 +80,37 @@ positive scaling give success probability at most \(2^{-n}\); failure and
 invalid integer outputs cannot increase that event.
 \end{proof}
 
-The probabilities sample one shared random oracle; the theorem does not
-bound an absolute advantage separately for each fixed hash. It concerns this
-one-use instance/ciphertext view, with no prechallenge query phase. Concrete
-hash instantiation, reused geometry and additional public proof or storage
-transcripts require corresponding security experiments.
+\begin{corollary}[Native recovery with deterministic key disclosure]
+\label{cor:coupled-native-rom-disclosure}
+In the experiment of \cref{thm:coupled-native-rom}, also give the decoder
+\(L(k)\) for a fixed deterministic function \(L\) of the sampled sign key.
+The disclosure has no nonce input and makes no oracle queries. Let
+\(M=|\operatorname{im} L|\). A decoder making at most \(Q\) public byte-oracle
+queries on every execution path has
+\[
+ \Pr_{\mathrm{RO}}[\text{recover the target}]
+ \leq \frac{M}{2^n}+\frac{Q+2}{256^{32}}
+\]
+for any injective encoding of the complete message. This includes the
+Boolean message and, for \(d>0\), the original integer harmonic coefficients
+with a possible failure output. If \(L\) discloses \(s\) bits, the first term
+is at most \(2^{s-n}\).
+\end{corollary}
+
+\begin{proof}
+The query budget remains \(Q+2\), including the two honest digest calls.
+The same hidden-seed comparison adds \((Q+2)256^{-32}\) to the ideal
+recovery bound. In the ideal game the mask is uniform independently of the
+key, since it permutes the uniform message for each key. At a fixed mask
+and disclosed value, the decoder has one output distribution, including
+its adaptive public queries. The compatible keys in that disclosure fiber
+give distinct targets, so the probabilities assigned to those targets
+sum to at most one. Each key has weight \(2^{-n}\) at this mask, hence the
+fiber contributes at most \(2^{-n}\). Sum over the \(M\) disclosed values
+and average over the mask.
+\end{proof}
+
+Both bounds average over one shared random oracle in the one-use
+instance/ciphertext experiment with no prechallenge query phase.
+Concrete hash instantiation, reused geometry and additional public proof
+or storage transcripts require corresponding security experiments.

@@ -180,6 +180,20 @@ the bound to the fresh-sign family.
 \lean{optimalProbability_le_bit_budget},\par
 \lean{optimalProbability_eq_coordinate_disclosure},\par
 \lean{optimalProbability_add_minimum_cost}
+\\\midrule
+\textbf{P1-N14. Bounded-query recovery with key disclosure.}\newline
+\Cref{cor:coupled-native-rom-disclosure}; deterministic disclosure of the
+sign key in the same one-use byte-oracle experiment. The ideal guessing
+bound uses the number of disclosure values and retains the original nonce
+term.
+&
+\lean{HE.Protocol.Transfer.PathSignature.NativeCommittedRandomOracle}\par
+\lean{uniform_guess_with_disclosure_range_le}\par
+\lean{Disclosure.ideal_game_masked}\par
+\lean{Disclosure.ideal_recovery_probability_le}\par
+\lean{Disclosure.recovery_probability_le}\par
+\lean{Disclosure.partial_coeff_recovery_probability_le}\par
+\lean{Disclosure.bit_disclosure_recovery_probability_le}
 \\
 \end{longtable}
 \endgroup

@@ -48,6 +48,11 @@ fresh-sign ciphertext, disclosing `r` distinct sign bits raises it to
 `2^r/2^n`. Appending the common minimum CVP cost leaves it unchanged.
 [Typed bound](../../lean/HCP/FiniteRecovery/Typed.lean) · [Native disclosure](../../lean/HCP/FiniteRecovery/Native.lean)
 
+In the nonce-bearing random-oracle experiment, a deterministic sign-key
+disclosure with `m` possible values gives the upper bound
+`m/2^n + (Q+2)/256^32`, including adaptive decoder queries.
+[Oracle disclosure bound](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRandomOracle/Disclosure.lean)
+
 The different operative planes in that one public class form a graph chart
 family. Their squared chordal distances are an explicit multiple of key
 Hamming distance. [Projector geometry](../../lean/HCP/CoupledProjectorMetric.lean)
@@ -74,3 +79,5 @@ Build the manuscript from this directory with
 Check the closing theorem from `lean/` with `lake build HCP.CoupledRecoverySeparation`.
 Check the residual and gap with `lake build HCP.CoupledSignResidual`.
 Check the disclosure results with `lake build HCP.FiniteRecovery.Typed HCP.FiniteRecovery.Native`.
+Check the sampled-oracle extension with
+`lake build Protocol.Transfer.PathSignature.NativeCommittedRandomOracle.Disclosure`.

@@ -75,16 +75,24 @@ def afterRoot (decoder : Decoder cols Output) (credentialBytes ciphertext : Byte
   let ciphertextDigest ← PublicSpec.query (.inr ciphertext)
   decoder (namedView credential operatorRoot ciphertextDigest ciphertext)
 
-/-- The actual native experiment; all sampled target material stays internal. -/
-def game (decoder : Decoder cols Output) (base : NativeRelation.Witness rows cols)
+/-- The common native experiment, letting the honest wrapper choose a public
+decoder continuation based on the sampled sign key. -/
+def gameWithKey (decoderFor : Bits cols → Decoder cols Output)
+    (base : NativeRelation.Witness rows cols)
     (A : Matrix (Fin rows) (Fin cols) ℤ) (d a : ℤ) :
     OracleComp NativeSpec (Bits cols × Output) := do
   let message ← (liftM ($ᵗ (Bits cols)) : OracleComp NativeSpec _)
   let key ← (liftM ($ᵗ (Bits cols)) : OracleComp NativeSpec _)
   let operatorRoot ← NativeSpec.query (.inr (Storage.CoupledCodec.ofMatrix (presentation A key)))
-  let result ← liftPublic (afterRoot decoder (NativeRelation.credentialBytes base)
+  let result ← liftPublic (afterRoot (decoderFor key) (NativeRelation.credentialBytes base)
     (ciphertextBytes A d a key message) operatorRoot)
   pure (message, result)
+
+/-- The actual native experiment; all sampled target material stays internal. -/
+def game (decoder : Decoder cols Output) (base : NativeRelation.Witness rows cols)
+    (A : Matrix (Fin rows) (Fin cols) ℤ) (d a : ℤ) :
+    OracleComp NativeSpec (Bits cols × Output) :=
+  gameWithKey (fun _ => decoder) base A d a
 
 /-- Lifting a public decoder preserves its counted byte-hash queries. -/
 theorem liftPublic_query_bound (program : OracleComp PublicSpec Output) {q : ℕ}
@@ -116,15 +124,16 @@ theorem afterRoot_query_bound (decoder : Decoder cols Output) {q : ℕ}
     not_true_eq_false, false_or, ite_true, first, second]
   exact ⟨by omega, fun credential => ⟨by omega, fun ciphertextDigest => bounded _⟩⟩
 
-/-- Sampling and the single private derivation do not spend the public budget. -/
-theorem game_query_bound (decoder : Decoder cols Output) {q : ℕ}
-    (bounded : ∀ view, IsQueryBoundP (decoder view) publicOnly q)
+/-- Sampling and the single private derivation do not spend the public budget,
+even when the honest wrapper chooses a key-dependent public continuation. -/
+theorem gameWithKey_query_bound (decoderFor : Bits cols → Decoder cols Output) {q : ℕ}
+    (bounded : ∀ key view, IsQueryBoundP (decoderFor key view) publicOnly q)
     (base : NativeRelation.Witness rows cols) (A : Matrix (Fin rows) (Fin cols) ℤ) (d a : ℤ) :
-    IsQueryBoundP (game decoder base A d a) publicQuery (q + 2) := by
+    IsQueryBoundP (gameWithKey decoderFor base A d a) publicQuery (q + 2) := by
   have sampling : IsQueryBoundP
       (liftM ($ᵗ (Bits cols)) : OracleComp NativeSpec (Bits cols)) publicQuery 0 :=
     isQueryBoundP_liftM_withDerivations (fun _ => by simp [publicQuery]) _
-  unfold game
+  unfold gameWithKey
   rw [← Nat.zero_add (q + 2)]
   apply isQueryBoundP_bind (n := 0) (m := q + 2) sampling
   intro message _
@@ -135,12 +144,19 @@ theorem game_query_bound (decoder : Decoder cols Output) {q : ℕ}
   refine ⟨Or.inl (by simp [publicQuery]), ?_⟩
   intro operatorRoot
   change IsQueryBoundP
-    (do let result ← liftPublic (afterRoot decoder (NativeRelation.credentialBytes base)
+    (do let result ← liftPublic (afterRoot (decoderFor key) (NativeRelation.credentialBytes base)
           (ciphertextBytes A d a key message) operatorRoot)
         pure (message, result)) publicQuery (q + 2)
-  have lifted := liftPublic_query_bound _ (afterRoot_query_bound decoder bounded
+  have lifted := liftPublic_query_bound _ (afterRoot_query_bound (decoderFor key) (bounded key)
     (NativeRelation.credentialBytes base) (ciphertextBytes A d a key message) operatorRoot)
   simpa only [bind_pure_comp, isQueryBoundP_map_iff] using lifted
+
+/-- Sampling and the single private derivation do not spend the public budget. -/
+theorem game_query_bound (decoder : Decoder cols Output) {q : ℕ}
+    (bounded : ∀ view, IsQueryBoundP (decoder view) publicOnly q)
+    (base : NativeRelation.Witness rows cols) (A : Matrix (Fin rows) (Fin cols) ℤ) (d a : ℤ) :
+    IsQueryBoundP (game decoder base A d a) publicQuery (q + 2) :=
+  gameWithKey_query_bound (fun _ => decoder) (fun _ => bounded) base A d a
 
 /-- Public-only execution forgets the separate ideal derivation table exactly. -/
 theorem ideal_liftPublic_run' (program : OracleComp PublicSpec Output)
@@ -161,20 +177,21 @@ theorem ideal_liftPublic_run' (program : OracleComp PublicSpec Output)
       SecretEncoding.idealImpl, OracleSpec.romImpl, Functor.map_map, Prod.map]
 
 /-- A single first derivation in the ideal world is an independent uniform
-root; its private table is unavailable to every later operation. -/
-theorem ideal_game_run' (decoder : Decoder cols Output) (base : NativeRelation.Witness rows cols)
+root, including when the later public continuation is chosen using the key. -/
+theorem ideal_gameWithKey_run' (decoderFor : Bits cols → Decoder cols Output)
+    (base : NativeRelation.Witness rows cols)
     (A : Matrix (Fin rows) (Fin cols) ℤ) (d a : ℤ) :
     (simulateQ (SecretEncoding.idealImpl publicOracle Storage.CoupledCodec.Packet TCB.Hash32)
-        (game decoder base A d a)).run' (∅, ∅) =
+        (gameWithKey decoderFor base A d a)).run' (∅, ∅) =
       (do
         let message ← $ᵗ (Bits cols)
         let key ← $ᵗ (Bits cols)
         let operatorRoot ← $ᵗ TCB.Hash32
         let result ← (simulateQ publicOracle.romImpl
-          (afterRoot decoder (NativeRelation.credentialBytes base)
+          (afterRoot (decoderFor key) (NativeRelation.credentialBytes base)
             (ciphertextBytes A d a key message) operatorRoot)).run' ∅
         pure (message, result)) := by
-  simp only [game, simulateQ_bind, StateT.run'_eq, StateT.run_bind,
+  simp only [gameWithKey, simulateQ_bind, StateT.run'_eq, StateT.run_bind,
     map_bind, bind_pure_comp]
   rw [SecretEncoding.run_simulateQ_idealImpl_liftM]
   simp only [bind_map_left]
@@ -190,13 +207,28 @@ theorem ideal_game_run' (decoder : Decoder cols Output) (base : NativeRelation.W
   congr 1
   funext operatorRoot
   have projection := ideal_liftPublic_run'
-    (afterRoot decoder (NativeRelation.credentialBytes base)
+    (afterRoot (decoderFor key) (NativeRelation.credentialBytes base)
       (ciphertextBytes A d a key message) operatorRoot)
     (∅, (∅ : (Storage.CoupledCodec.Packet →ₒ TCB.Hash32).QueryCache).cacheQuery
       (Storage.CoupledCodec.ofMatrix (presentation A key)) operatorRoot)
   simpa only [StateT.run'_eq, simulateQ_map, StateT.run_map, Functor.map_map,
     Function.comp_def] using
     congrArg (fun program => (fun result => (message, result)) <$> program) projection
+
+/-- The independent ideal root law for the original native experiment. -/
+theorem ideal_game_run' (decoder : Decoder cols Output) (base : NativeRelation.Witness rows cols)
+    (A : Matrix (Fin rows) (Fin cols) ℤ) (d a : ℤ) :
+    (simulateQ (SecretEncoding.idealImpl publicOracle Storage.CoupledCodec.Packet TCB.Hash32)
+        (game decoder base A d a)).run' (∅, ∅) =
+      (do
+        let message ← $ᵗ (Bits cols)
+        let key ← $ᵗ (Bits cols)
+        let operatorRoot ← $ᵗ TCB.Hash32
+        let result ← (simulateQ publicOracle.romImpl
+          (afterRoot decoder (NativeRelation.credentialBytes base)
+            (ciphertextBytes A d a key message) operatorRoot)).run' ∅
+        pure (message, result)) :=
+  ideal_gameWithKey_run' (fun _ => decoder) base A d a
 
 /-- The ideal decoder's complete output, generated independently of the target
 message after reindexing the original sign key by its mask. -/
