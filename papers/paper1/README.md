@@ -11,7 +11,8 @@ The main body has four parts:
 3. The coupled encryption construction: actual operators, entire intrinsic
    lattice, finite encoding/recovery, transport diagrams, private operator
    commitments and one-use random-oracle recovery.
-4. CVP comparison and hidden-target ambiguity.
+4. CVP comparison, ending with a strict recovery separation on the
+   fresh-sign family.
 
 The coupled family uses one canonical private matrix throughout. Its integer
 harmonic chart covers the full intrinsic lattice; exact byte recovery returns
@@ -23,6 +24,10 @@ The finite fresh-key instance has the proved
 classical query bound `2^-n+(Q+2)/256^32`, including partial coefficient
 recovery for positive scaling. The theorem specifies a fresh empty shared
 oracle cache and `Q` postrelease decoder queries.
+
+On those same ciphertexts one CVP call with the supplied operative lattice
+recovers every message. The public bound remains in force for a decoder
+with the same fixed CVP oracle. [Lean comparison](../../lean/HCP/CoupledRecoverySeparation.lean)
 
 The post-conclusion appendix maps these results to canonical Lean declarations.
 It also retains the earlier six-group Hodge/CVP table, whose
@@ -41,5 +46,6 @@ The [shared parity register](../../SEMANTIC-PARITY.md) records precise
 ownership and remaining work. The [source ledger](../../docs/SOURCE_LEDGER.md)
 indexes the literature and its corresponding bibliographies.
 
-Build from this directory with
+Build the manuscript from this directory with
 `latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex`.
+Check the closing theorem from `lean/` with `lake build HCP.CoupledRecoverySeparation`.

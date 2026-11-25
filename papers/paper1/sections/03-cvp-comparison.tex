@@ -10,11 +10,10 @@ An explicit Euclidean CVP instance consists of a full-column-rank generator
 matrix \(G\in\mathbb R^{m\times n}\) and a target \(t\in\mathbb R^m\). Its
 discrete lattice is
 \[
-  \Lambda_G=G\mathbb Z^n=\{Bz:z\in\mathbb Z^n\}.
+  \Lambda_G=G\mathbb Z^n=\{Gz:z\in\mathbb Z^n\}.
 \]
-The injectivity of \(z\mapsto Bz\) records that the displayed columns are a
-lattice basis. A correct closest-vector answer is a vector
-\(v\in\Lambda_G\) such that
+Full column rank makes the coefficient map \(z\mapsto Gz\) injective.
+A correct closest-vector answer is a vector \(v\in\Lambda_G\) such that
 \[
   \|t-v\|^2\le \|t-w\|^2
   \qquad
@@ -52,7 +51,7 @@ is the schema
 
 Let \(R\) be a field. The field-linear image of \(G\) is a different object:
 \[
-  \mathcal V_G(R)=BR^n=\{Bx:x\in R^n\}.
+  \mathcal V_G(R)=GR^n=\{Gx:x\in R^n\}.
 \]
 Over a field this is a linear subspace, not the discrete lattice
 \(G\mathbb Z^n\).
@@ -67,7 +66,7 @@ returns \(S(\Delta,t)\in\mathcal V_G(R)\).
 \begin{proposition}[Kernel realization for explicit generated subspaces]\label{prop:hcp-to-cvp}
   Let \(G\in R^{n\times n}\) be an explicit square generator matrix over a
   field and set
-  \(\mathcal V_G(R)=\{Bx:x\in R^n\}\). There exists a matrix \(\Delta\) such that
+  \(\mathcal V_G(R)=\{Gx:x\in R^n\}\). There exists a matrix \(\Delta\) such that
   \[
     \ker(\Delta)=\mathcal V_G(R) .
   \]
@@ -81,7 +80,7 @@ returns \(S(\Delta,t)\in\mathcal V_G(R)\).
   Let \(G\in R^{n\times n}\) be an explicit generator matrix over a field
   \(R\), set
     \[
-      \mathcal V_G(R)=\{Bx:x\in R^n\}\subseteq R^n,
+      \mathcal V_G(R)=\{Gx:x\in R^n\}\subseteq R^n,
     \]
     and let \(t\in R^n\) be the solver input. We construct a matrix \(\Delta\)
     with
@@ -135,7 +134,7 @@ returns \(S(\Delta,t)\in\mathcal V_G(R)\).
     \quad\Longleftrightarrow\quad
     y\in\mathcal V_G(R)
     \quad\Longleftrightarrow\quad
-    \exists x,\ Bx=y .
+    \exists x,\ Gx=y .
   \]
 
     Let \(S:R^{n\times n}\times R^n\to R^n\) be a presented-operator Hodge
@@ -150,7 +149,7 @@ returns \(S(\Delta,t)\in\mathcal V_G(R)\).
   \]
   By the kernel calculation, there exists \(x\) with
   \[
-    Bx=S(\Delta,t).
+    Gx=S(\Delta,t).
   \]
     Hence \(S(\Delta,t)\in\mathcal V_G(R)\).
 \end{proof}
@@ -411,4 +410,51 @@ CVP answer in its actual lattice.
   Any compatible family containing the pair retains this contradiction.
 \end{proof}
 
-Solving the candidate CVP instances does not select the operative HCP answer.
+\subsection{Strict recovery separation on the native family}
+
+We can compare the two recovery tasks on the same encrypted samples from
+\cref{thm:coupled-native-rom}. On the supplied-lattice side, the solver
+receives the actual graph basis \(G_{B_k}=[0;I;B_k]\) and the canonical
+ciphertext. On the public HCP side, the solver receives the versioned
+instance and that same ciphertext. Fix a correct explicit-lattice CVP oracle
+\(O\) independently of the sampled byte oracle and the challenge coins.
+The public homotopy class is common to all these presentations by
+\cref{thm:coupled-public-class} and can be supplied as a fixed input.
+
+\begin{theorem}[Supplied-lattice CVP versus hidden-lattice HCP]
+\label{thm:strict-native-cvp-separation}
+In the fresh-sign experiment of \cref{thm:coupled-native-rom}, let \(d>0\).
+With the operative graph lattice supplied, one query to \(O\) recovers the
+message for every generated ciphertext. From the public HCP view, every
+decoder with access to the same fixed \(O\) and at most \(Q\) public byte-oracle
+queries has success probability at most
+\[
+  2^{-n}+\frac{Q+2}{256^{32}}.
+\]
+Thus public HCP recovery has strictly smaller success probability whenever
+this bound is below one, for example when \(n\geq 1\) and
+\(Q+2<2^{255}\).
+\end{theorem}
+
+\begin{proof}
+The canonical decoder returns the generated cochain \(b\). Its harmonic
+projection is \(g_{B_k}(d\varepsilon(\mu))\), a point of the supplied graph
+lattice. For every other lattice point, its squared distance to \(b\) is
+the squared noise norm plus a strictly positive squared distance to this
+projection by \cref{prop:hodge-projection-is-cvp}. Therefore \(O\) returns the
+harmonic message. Its information coordinates are \(d\varepsilon(\mu)\),
+whose signs recover \(\mu\).
+
+On the public side, fix \(O\) in the decoder's program. A call to this fixed
+function is a deterministic operation on the decoder's current inputs and
+uses no byte-oracle query. This includes adaptive CVP calls made after
+seeing byte-oracle replies. The resulting decoder is among those quantified
+over in \cref{thm:coupled-native-rom} with the original query budget \(Q\).
+The bound follows. For the stated regime, \(2^{-n}\leq 1/2\) and
+\((Q+2)/256^{32}<1/2\).
+\end{proof}
+
+In this classical query model, native HCP recovery is strictly harder than
+the corresponding supplied-lattice CVP task. The same oracle can solve
+candidate instances, while selecting the operative answer still requires
+information about the hidden presentation.

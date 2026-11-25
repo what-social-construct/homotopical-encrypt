@@ -33,12 +33,10 @@ recovery diagrams. For a uniform-message, fresh-sign-key family with private
 making at most \(Q\) public random-oracle
 queries recovers with probability at most
 \(2^{-n}+(Q+2)256^{-32}\); positive scaling gives the same bound for partial
-integer-coefficient extraction. We compare the recovery problem with CVP
-supplied with a lattice basis. Harmonic projection preserves its closest
-vectors, whereas publicly equivalent hidden presentations can have different
-operative targets at the same observation. These results give an explicit
-encryption mechanism and precise geometric, information and bounded-query
-recovery comparisons.
+integer-coefficient extraction. With the operative lattice supplied, one
+exact CVP query recovers the message on every sample of this family. With
+that lattice hidden, the bound still holds with access to the same fixed
+CVP oracle, giving a strict recovery separation in the bounded-query model.
 \end{abstract}
 
 \setcounter{tocdepth}{1}

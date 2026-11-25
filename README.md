@@ -49,6 +49,7 @@ lattice derived from $B$ in the fixed scalar Euclidean profile.
 | Protocol joins | Canonical manifests retain the exact artifact and full ciphertext through signed intents and checked history. Conditional integrity and adaptive CRS reduction theorems retain their stated primitive hypotheses. | [Protocol guide](lean/Protocol/README.md), [construction crosswalk](papers/paper2/DRAFT.md#7-construction-ownership-and-remaining-protocol-work) |
 | Private operator and public instance | Canonical nonce-bearing operator openings, V2 witness/program/instance checks and original-context verification. A finite public-instance recovery experiment reduces success above $2^{-n}$ to an explicit operator-commitment distinguishing test. | [OperatorCommitment](lean/Protocol/Storage/OperatorCommitment.lean), [NativeCommitted](lean/Protocol/Transfer/PathSignature/NativeCommitted.lean), [context](lean/Protocol/Transfer/PathSignature/NativeCommittedContext.lean), [reduction](lean/Protocol/Transfer/PathSignature/NativeCommittedPrivacy.lean) |
 | One-use random-oracle recovery | With an initially empty oracle cache, independent uniform messages, fresh sign keys and private 32-byte nonces, a decoder making at most `Q` public hash queries recovers with probability at most `2^-n + (Q+2)/256^32`. The bound covers partial integer-coefficient recovery for positive scaling. | [Exact-byte oracle adapter](lean/Protocol/Storage/OperatorCommitment/RandomOracle.lean), [native experiment and bound](lean/Protocol/Transfer/PathSignature/NativeCommittedRandomOracle.lean) |
+| Strict native recovery separation | One exact CVP call with the operative graph lattice recovers every generated message. The same fixed CVP oracle leaves the public HCP query bound unchanged, so success is strictly below one when `n ≥ 1` and `Q+2 < 2^255`. | [CoupledRecoverySeparation](lean/HCP/CoupledRecoverySeparation.lean) |
 
 ## Reading the construction
 
@@ -104,7 +105,7 @@ The random-oracle proofs use the pinned VCVio hidden-seed simulation library.
 | Workstream | Endpoint |
 |---|---|
 | Encryption privacy | Extend the proved native random-oracle experiment to proof/storage transcripts and key-use policy, and specify the concrete implementation profile. |
-| Computational comparison | Prove the intended comparison with an explicit CVP oracle or reduction using the specified finite family and released view. |
+| Computational comparison | The native family has a strict query separation. A reduction on unrestricted CVP targets remains a separate question. |
 | Concrete proof construction | Complete field-circuit refinement for ranges, bytes and hashes, and a secure CRS primitive with quantitative estimates. |
 
 The [parity register](SEMANTIC-PARITY.md#what-remains-by-paper) and
