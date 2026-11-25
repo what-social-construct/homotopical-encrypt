@@ -127,12 +127,14 @@ lattice and a strict public recovery gap with the same fixed oracle.
 \lean{HE.HCP.CoupledRecoverySeparation.strict_recovery_gap}
 \\\midrule
 \textbf{P1-N09. Harmonic lifts of arbitrary CVP targets.}\newline
-\Cref{prop:hodge-projection-is-cvp,prop:unrestricted-coupled-cvp-lift,cor:coupled-cvp-np-complete}.
-Lean checks the basis-span lift and the search and decision transfers under
-the scale inequality. The paper derives the scale and the complexity result.
+\Cref{prop:hodge-projection-is-cvp,prop:coupled-cvp-residual,prop:unrestricted-coupled-cvp-lift,cor:coupled-cvp-np-complete}.
+Lean checks the basis-span lift, the exact residual split and the search and
+decision transfers under the scale inequality. The paper derives the scale
+and the complexity result.
 &
 \lean{HarmonicCVPBridge.solution_iff_projectedInstance}\par
 \lean{HarmonicCVPBridge.oracleCorrect_of_harmonicTargets}\par
+\lean{HE.HCP.CoupledCVP.squaredDistance_eq_residual_add_gram}\par
 \lean{HE.HCP.CoupledCVPLift.source_solution_of_scaled_solution}\par
 \lean{HE.HCP.CoupledCVPLift.source_threshold_iff_scaledDistance}
 \\\midrule
@@ -151,6 +153,16 @@ the distances between compatible fresh-sign planes.
 \lean{HE.Laplacian.Grassmannian.chordalDistance_eq_zero_iff}\par
 \lean{HE.HCP.CoupledProjectorMetric.projectorMatrix_eq_graph}\par
 \lean{HE.HCP.CoupledProjectorMetric.chordalDistance_sq_eq_hamming}
+\\\midrule
+\textbf{P1-N12. Minimum residual and sharp recovery gap.}\newline
+\Cref{prop:fresh-sign-cvp-residual}; equal minimum squared residuals,
+the exact next cost and the strict additive tolerance on the supplied lattice.
+&
+\lean{HE.HCP.CoupledSignResidual}\par
+\lean{squaredDistance_fixed_mask}\par
+\lean{cost_at_message}\par
+\lean{cost_gap_attained}\par
+\lean{recover_of_cost_lt}
 \\
 \end{longtable}
 \endgroup

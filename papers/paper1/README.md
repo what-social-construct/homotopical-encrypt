@@ -36,6 +36,12 @@ The coupled lift gives a one-query reduction to nearest-point search on
 the specified harmonic lattice for rational CVP inputs. Its exact distance
 decision problem is NP-complete. [Basis-span lift](../../lean/HCP/UnrestrictedCVPLift.lean) · [Coupled lift](../../lean/HCP/CoupledCVPLift.lean)
 
+The coupled CVP objective splits into the squared Hodge residual and the
+graph Gram quadratic form in the coefficient error. For one fresh-sign
+ciphertext, every compatible key gives the same minimum squared cost, and
+the next larger cost is exactly `d+1` higher when `n>0`.
+[Residual split](../../lean/HCP/CoupledCVPResidual.lean) · [Fresh-sign gap](../../lean/HCP/CoupledSignResidual.lean)
+
 The different operative planes in that one public class form a graph chart
 family. Their squared chordal distances are an explicit multiple of key
 Hamming distance. [Projector geometry](../../lean/HCP/CoupledProjectorMetric.lean)
@@ -60,3 +66,4 @@ indexes the literature and its corresponding bibliographies.
 Build the manuscript from this directory with
 `latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex`.
 Check the closing theorem from `lean/` with `lake build HCP.CoupledRecoverySeparation`.
+Check the residual and gap with `lake build HCP.CoupledSignResidual`.

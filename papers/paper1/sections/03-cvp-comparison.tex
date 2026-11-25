@@ -217,9 +217,29 @@ unique closest point of the operative lattice.
 
 \subsection{Arbitrary CVP targets in the coupled family}
 
-The lift can also use the actual graph lattice of the coupled sheaf. The
-oracle in the following proposition solves closest-vector search in a
-specified coupled harmonic lattice for an arbitrary target.
+\begin{proposition}[Residual and coefficient error in the coupled lattice]
+\label{prop:coupled-cvp-residual}
+For an arbitrary cochain \(b\) and a specified coupling \(B\), write
+\(p=P_B b=g_B(z_B)\), where
+\(z_B=\operatorname{info}_B(p)\). For each integer coefficient vector
+\(w\), put \(e=z_B-w\). Then
+\[
+  \|b-g_B(w)\|^2
+  =\|(I-P_B)b\|^2 + e^{\mathsf T}(I+B^{\mathsf T}B)e.
+\]
+\end{proposition}
+
+\begin{proof}
+By \cref{prop:hodge-projection-is-cvp}, the squared distance is the
+squared kernel-normalized residual plus \(\|p-g_B(w)\|^2\). The latter is
+\(\|G_Be\|^2\), whose Gram form is given in
+\cref{prop:coupled-harmonic-graph}. Thus the discrete search minimizes
+only the second term over integer \(w\).
+\end{proof}
+
+A scaled graph lattice realizes arbitrary rational CVP instances. The
+oracle in the following proposition solves closest-vector search for any
+target in a specified coupled harmonic lattice.
 
 \begin{proposition}[Reduction to closest-vector search in a coupled harmonic lattice]
 \label{prop:unrestricted-coupled-cvp-lift}
@@ -508,9 +528,37 @@ distinct. Each column of \(A\) is nonzero since \(A^{\mathsf T}A=dI\), so a
 change of key changes the operative matrix. The lattice determines the
 matrix by its unique graph vector over each unit information coordinate.
 For each key, the generated cochain projects to the encoded harmonic point,
-which is the unique closest lattice point by
-\cref{prop:hodge-projection-is-cvp}.
+which is the unique closest lattice point by \cref{prop:coupled-cvp-residual}.
 \end{proof}
+
+\begin{proposition}[Equal residuals and the exact closest-vector gap]
+\label{prop:fresh-sign-cvp-residual}
+In the fresh-sign profile with \(A^{\mathsf T}A=dI\) and \(d>0\), fix
+a mask \(\tau\) and let \(b=(a,0,(d+1)A\tau)\) be its decoded ciphertext.
+For any sign key \(k\), write \(s=k\mathbin\odot\tau\).
+For every \(w\in\mathbb Z^n\),
+\[
+  \|b-g_{C_k}(w)\|^2
+  = a^2+d(d+1)n+(1+d)\sum_{i=1}^n(w_i-ds_i)^2.
+\]
+The minimum squared distance is \(a^2+d(d+1)n\) for every key.
+If \(n>0\), the next larger squared distance exceeds this minimum by
+exactly \(d+1\). Thus any point of the supplied lattice with squared cost
+strictly below the minimum plus \(d+1\) recovers the operative message.
+\end{proposition}
+
+\begin{proof}
+The Gram matrix is \((1+d)I\) and \(P_{C_k}b=g_{C_k}(ds)\).
+In the normal form, the residual is \((a,-ds,C_ks)\).
+Since \(C_k^{\mathsf T}C_k=dI\) and \(\|s\|^2=n\), its squared norm is
+\(a^2+d^2n+dn\). Substituting into \cref{prop:coupled-cvp-residual}
+gives the formula. A different integer coefficient vector gives at least
+one nonzero integer difference, and changing one coordinate by one attains
+the stated gap.
+\end{proof}
+
+The scalar minimum is constant across the compatible keys. Subtracting the
+full residual vector from \(b\) gives the projected message.
 
 The count concerns the ciphertext and its common public homotopy class.
 The experiment below also releases the nonce-bearing instance and measures
@@ -518,7 +566,7 @@ what that additional data can reveal.
 
 We can compare the two recovery tasks on the same encrypted samples from
 \cref{thm:coupled-native-rom}. On the supplied-lattice side, the solver
-receives the actual graph basis \(G_{B_k}=[0;I;B_k]\) and the canonical
+receives the actual graph basis \(G_{C_k}=[0;I;C_k]\) and the canonical
 ciphertext. On the public HCP side, the solver receives the versioned
 instance and that same ciphertext. Fix a correct explicit-lattice CVP oracle
 \(O\) independently of the sampled byte oracle and the challenge coins.
@@ -542,12 +590,10 @@ this bound is below one, for example when \(n\geq 1\) and
 
 \begin{proof}
 The canonical decoder returns the generated cochain \(b\). Its harmonic
-projection is \(g_{B_k}(d\varepsilon(\mu))\), a point of the supplied graph
-lattice. For every other lattice point, its squared distance to \(b\) is
-the squared noise norm plus a strictly positive squared distance to this
-projection by \cref{prop:hodge-projection-is-cvp}. Therefore \(O\) returns the
-harmonic message. Its information coordinates are \(d\varepsilon(\mu)\),
-whose signs recover \(\mu\).
+projection is \(g_{C_k}(d\varepsilon(\mu))\), the unique closest point of the
+supplied graph lattice by \cref{prop:fresh-sign-cvp-residual}. Thus \(O\)
+returns the harmonic message, whose information-coordinate signs recover
+\(\mu\).
 
 On the public side, fix \(O\) in the decoder's program. A call to this fixed
 function is a deterministic operation on the decoder's current inputs and
