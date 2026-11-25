@@ -17,7 +17,9 @@ Define \(\Bad_{\MCA}(\mathcal C,\delta,p)\) to be the set of
   \item the pair \(p\) does not agree on the same \(S\) with a codeword of
     \(\Cpair\).
 \end{enumerate}
-The MCA error is
+Fix \(p\) and draw \(\gamma\) uniformly from \(\F\). The failure probability is
+\(|\Bad_{\MCA}(\mathcal C,\delta,p)|/|\F|\). Maximizing over \(p\) gives
+the MCA error:
 \[
   \varepsilon_{\MCA}(\mathcal C,\delta)
   =
@@ -230,19 +232,14 @@ excluded challenges.
 
 \subsection{Commit-then-challenge order}
 
-The mathematical experiment fixes \(p\) before sampling
-\(\gamma\leftarrow\F\).  This ordering prevents the pair from being selected as
-a function of the challenge.  A full protocol implementation must bind \(p\)
-before deriving \(\gamma\), but the coding theorem needs only the resulting
-quantification and probability space; it does not depend on a complete
-blockchain or commitment protocol.
+The experiment fixes both components of \(p\) before sampling
+\(\gamma\) uniformly from \(\F\). The witnessing set \(S\) may depend on
+the draw. A protocol using this bound must bind the entire pair before
+deriving its challenge.
 
 \subsection{Scope}
 
-The theorem is universal over pair words and injective RS evaluation domains,
-but its \(2^{-128}\) corollary uses the explicit exponential-size field.
-For a different supplied field, the same certificate proof gives the
-sufficient comparison
+For a supplied field, the certificate proof gives the sufficient comparison
 \[
   \binom n{k+1}\le 2^{-128}|\F|.
 \]
@@ -272,10 +269,11 @@ The result is for the two-coordinate, same-set MCA experiment defined above.
 Broader notions or higher-dimensional challenge families require
 separate statements.
 
-As a separate concrete/application result, the repository also checks the
-canonical runtime field \(q=12289\) with \(n=4096\) and \(k=1024\).  Since
-\(q<2^{128}\) while its radius-zero unit-spike line has one bad challenge,
-that concrete code has no safe count radius for the \(2^{-128}\) MCA error
-target. This
-runtime-facing fact is not used by the standalone large-field or boundary-field
-theorems above.
+The three concrete fields give different conclusions at the \(2^{-128}\)
+target. The smooth extension-field family \(q_u=3^{n_u}\) meets the list
+budget at capacity and the MCA budget at every normalized radius. In the
+prime field of size \(2^{128}+192513\), the exact MCA transition is between
+count radii zero and one. In the canonical application field of size
+\(12289\), the radius-zero unit-spike line already has one bad challenge.
+Since \(12289<2^{128}\), this last code has no safe count radius on its
+full pair space.

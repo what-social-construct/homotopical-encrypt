@@ -48,12 +48,13 @@ and an extraction factoring through the exact component whose zero image
 has target distance zero. The canonical systematic sheaf has `δ₁=0`, so
 that nonzero-coexact premise is unavailable in this profile.
 
-That obstruction and the optional full-frame projective reconstruction
-remain auxiliary to the existing **52/22** selections. The latter uses
-exact-real data and explicit frame/kernel hypotheses to recover the
-subspace/projector; finite-byte recovery and digest inversion require
-separate constructions. The projection chain composes near-side maps;
-its source-far conclusions require the separately proved calibration.
+That obstruction and the optional full-frame projective results are auxiliary
+to the **52/22** selections. Genuine exact-real frames recover their subspaces
+and projectors. The shared chordal distance separates their full shadows, whose
+equality agrees with the corresponding Mathlib projective points. Finite-byte
+recovery and digest inversion require separate constructions. The projection
+chain composes near-side maps, and source-far transfer uses the separately
+proved calibration.
 
 The [semantic parity register](SEMANTIC_PARITY.md) gives the complete object
 dictionary, theorem correspondences and remaining mathematical extensions.

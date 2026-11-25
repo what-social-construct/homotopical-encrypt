@@ -85,9 +85,8 @@ The generic family corollaries retain their parameterized forms. The
 realization module additionally constructs \(\mathbb F_{3^{n_u}}\), an
 exact-order \(n_u\) root, and its injectively indexed subgroup for every
 \(u\), and instantiates those corollaries without a realization hypothesis.
-All source modules in this ledger live under \lean{lean/Proximity};
-\lean{lean/ProximityCoding.lean} is only the standalone aggregate import target,
-not a second source hierarchy.
+The standalone modules listed above live under \lean{lean/Proximity}.
+Their aggregate import target is \lean{lean/ProximityCoding.lean}.
 The detailed object dictionary, theorem correspondence, construction ownership
 and remaining mathematical extensions are recorded in
 \lean{papers/paper3/SEMANTIC_PARITY.md}.
@@ -101,6 +100,14 @@ Its \lean{recoverSubspace_frame} and \lean{recoverHarmonicProjector_frame}
 theorems recover the full subspace and its fixed-metric projector.
 \lean{TCB/PluckerObservation.recover_eq_operativeHarmonicComponent}
 adds the explicit operative-kernel identification.
+The shared metric in \lean{Laplacian/Grassmannian/Metric} uses the Frobenius
+distance of orthogonal projectors scaled by \(1/\sqrt{2}\).
+Under \lean{Proximity/Concrete/GrassmannianPlucker}, the
+\lean{ProjectorMetric} module proves that \lean{projectiveChordalDistance}
+agrees with the original chordal distance on genuine frames and vanishes
+exactly for equal shadows. The \lean{ProjectivePoint} module identifies
+equality of \lean{frameProjectivePoint} values in Mathlib's projectivization
+with equality of those shadows.
 \lean{Proximity/Concrete/ProjectionChain/Core} composes the supplied
 projective, cochain, plane and RS maps and their validity/near comparisons.
 The exact-component obstruction in
@@ -183,8 +190,9 @@ Arbitrary fixed-mix obstruction & Lean-proved &
 Exact-component residual obstruction & Lean-proved, auxiliary &
   Nonfactorization and no positive far transfer under the stated
   unrestricted/nonzero-coexact hypotheses\\
-Full projective reconstruction & Lean-proved, auxiliary &
-  Subspace/projector recovery from genuine full-frame data\\
+Full projective reconstruction and metric & Lean-proved, auxiliary &
+  Subspace/projector recovery, chordal separation and Mathlib projective-point
+  agreement on genuine frames\\
 \bottomrule
 \end{longtable}
 \endgroup
@@ -232,13 +240,12 @@ Separately, the intermediate list-decoding regime still requires new ideas if
 one wants an optimal sub-endpoint radius for a supplied field that fails the
 binomial target inequality.
 
-The existing commitment-to-plane extraction, canonical plane/pair Hamming
-isometry, exact transported-code distance equality, and public-observation
-pullback calibration live in the concrete application hierarchy. They are
-described in Section~7 and are outside the standalone
-\lean{ProximityCoding} import closure. Section~7 supplies an explicit modular
-instance of those interfaces. Comparison with an independently chosen HCP or
-frame score remains a separate mathematical question.
+The concrete application hierarchy contains the extraction, plane/pair
+Hamming isometry, distance equality and pullback calibration of Section~7.
+These constructions lie outside the standalone \lean{ProximityCoding}
+import closure. Section~7 instantiates them for the canonical modular
+profile. A separate comparison would be needed for an independent HCP or
+frame score.
 
 The explicit source realization lives in the \lean{Sheaf/SystematicCode}
 modules, including \lean{Modular}. Their actual integral cellular coboundary

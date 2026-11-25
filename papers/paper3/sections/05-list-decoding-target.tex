@@ -17,13 +17,13 @@ In particular, the worst-case endpoint list size is independent of \(m\).
 \begin{proof}
 We first prove the upper bound.  Fix \(w\in(\F^m)^n\).
 Every codeword in the ball agrees with \(w\) on at least \(k\) complete
-vector-symbol coordinates.  Assign to each such codeword one \(k\)-subset of
-its agreement coordinates.  This assignment is injective: if two interleaved
-codewords are assigned the same set \(S\), then they agree with one another on
-\(S\).  In each component, two degree-\(<k\) polynomials agree at the \(k\)
+vector-symbol coordinates.  Fix a total order on the \(k\)-subsets of \(I\)
+and assign to each codeword its first \(k\)-subset of agreement coordinates.
+Two interleaved codewords assigned the same set \(S\) agree with one another
+on \(S\).  In each component, two degree-\(<k\) polynomials agree at the \(k\)
 distinct evaluation points indexed by \(S\), and hence are equal.  The two
-interleaved codewords are therefore equal.  There are exactly \(\binom nk\)
-possible sets \(S\).
+interleaved codewords are therefore equal, so the assignment is injective
+into the \(\binom nk\) possible sets \(S\).
 
 For the reverse inequality, choose one of the \(m\) components and define the
 received word
@@ -53,9 +53,9 @@ At evaluation coordinate \(i\),
   i\in S,
 \]
 where the final equivalence uses injectivity of the evaluation points.
-Consequently \(c_S\) has distance exactly \(n-k\) from \(w^\star\), and its
-agreement set recovers \(S\).  The \(\binom nk\) choices of \(S\) therefore
-give distinct codewords in the endpoint ball.  This matches the upper bound.
+Consequently \(c_S\) has Hamming count distance exactly \(n-k\) from
+\(w^\star\), and its agreement set recovers \(S\).  The \(\binom nk\) choices
+of \(S\) give distinct codewords in the endpoint ball, matching the upper bound.
 \end{proof}
 
 \begin{theorem}[Failure on the next Hamming shell]
@@ -83,9 +83,9 @@ For every \(\lambda=(\lambda_1,\ldots,\lambda_m)\in\F^m\), the tuple
   (\lambda_1g_S,\ldots,\lambda_mg_S)
 \]
 defines an interleaved codeword.  These \(|\F|^m\) codewords are distinct.
-The zero tuple has distance zero from the received word \(0\); every nonzero
+The zero tuple has distance zero from the received word \(0\). Every nonzero
 tuple vanishes on \(S\) and is nonzero at every evaluation point outside
-\(S\), so its distance is exactly \(n-k+1\).
+\(S\), so its Hamming count distance is exactly \(n-k+1\).
 \end{proof}
 
 \begin{theorem}[Fractional-target phase split]

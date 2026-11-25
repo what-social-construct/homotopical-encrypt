@@ -121,6 +121,18 @@ The positive spectrum of \(\Delta_x\) remains additional operator data.
 Replacing the full real coordinates by encoded data or a digest requires a
 separate reconstruction procedure.
 
+Write \(W([c])\) for the reconstructed subspace. The shared Grassmannian
+chordal distance pulls back along this reconstruction as
+\[
+  d_{\mathrm{ch}}([c],[c'])
+  =\frac{\|P_{W([c])}-P_{W([c'])}\|_{\mathrm F}}{\sqrt{2}},
+\]
+where \(\|\cdot\|_{\mathrm F}\) is the Frobenius norm. For genuine frames
+this is the distance between their original subspaces and vanishes exactly
+when their full shadows agree. A genuine frame also yields a Mathlib
+projective point through its nonzero exterior product. Equality of these
+points is equivalent to equality of the full shadows on frames.
+
 The geometric source can enter the existing extraction chain through
 \[
   [w_1\wedge\cdots\wedge w_r]
@@ -368,8 +380,9 @@ needed for this modular statement.
 
 Let \(d_C(z)\) be scalar-coordinate edit distance to these modularly exact
 cochains, normalized by \(2n\). Let \(d_P(z)\) be whole-pair edit distance
-to modularly exact integer planes, normalized by \(n\). The RS distance is
-\(D_2(\bar z)\). For two words, their mismatch counts satisfy
+to modularly exact integer planes, normalized by \(n\). Denote the RS pair
+distance \(D_2(\bar z)\) by \(D_{\mathrm{RS}}(\bar z)\) in this comparison.
+For two words, their mismatch counts satisfy
 \(h_P\le h_C\le2h_P\). Taking attained nearest codewords gives
 \[
  d_C(z)\le d_P(z)\le2d_C(z).
@@ -380,13 +393,13 @@ matching received integer pair, and using canonical representatives at the
 remaining positions. The lifted word is modularly exact and has exactly the
 field word's mismatched positions. Thus
 \[
- \boxed{\ d_C(z)\le d_P(z)=D_2(\bar z)\le2d_C(z)\ }.
+ \boxed{\ d_C(z)\le d_P(z)=D_{\mathrm{RS}}(\bar z)\le2d_C(z)\ }.
 \]
 The scalar representative-lifting argument also identifies \(d_C\) with
 the corresponding flattened finite-field code distance. These independently
 defined native distances are compared through the actual maps. A unit-scale
 near contract must use the explicitly scaled local score \(2d_C\); the
-far implication uses \(d_C\le D_2\).
+far implication uses \(d_C\le D_{\mathrm{RS}}\).
 
 The factor two is sharp for proper RS codes. Put \(u_i=a_i^k\), and take
 the pair \((u,0)\). Its whole-pair distance is \((n-k)/n\), while its
@@ -404,12 +417,21 @@ common interpolation, proves
 \[
  d_C(z)=d_P(z)=D_2(\bar z)=\frac{n-k}{n}.
 \]
-For the canonical instance \((q,n,k)=(12289,4096,1024)\), representatives
-of these two columns serialize into the original commitment payload in the
-declared complete layout, and all three distances are \(3/4\).
-The payload is a well-formed raw proximity input. Under the matching decoder,
-accepted exact anchors have zero native distances. This is a native modular source
-statement, not a capacity-scale Euclidean Hodge-distance theorem.
+
+\paragraph{Trace of a canonical payload.}
+Use the length-4096 code over \(\mathbb F_{12289}\) with degree bound \(1024\).
+Let \(a_i=g^i\), where \(g=1331\) has order \(4096\). Serialize both columns
+as the canonical integer
+representatives of \(u_i=a_i^{1024}\) in the original payload \(c\). In the
+complete layout the entries at \(\iota(i,0)\) and \(\iota(i,1)\) both carry
+that representative. For a raw context holding \(c\), the calibration reads
+those same entries with the identity coefficient map. The resulting plane
+\(p_c\) reduces to \(\bar p_c=(u,u)\). The native cochain and plane distances
+on this payload and the RS pair distance on its reduction all equal \(3/4\).
+Thus the unit far comparison applies to the actual extracted pair of a
+well-formed raw payload. For an accepted real-exact anchor, agreement of the
+context's interpretation decoder with the layout decoder on its payload
+implies that all three native distances are zero.
 
 For this diagonal pair, the challenged word is \((1+\gamma)u\). Every
 \(\gamma\ne-1\) preserves the scalar capacity distance and is MCA-good;
@@ -432,11 +454,10 @@ justified quotient or restricted source profile before it can support a
 full-HCP far-region claim. Applying the proposition to a serializer also
 requires proving that its extraction factors through that decoded view.
 
-For scalar transfer, the pair must remain fixed before a random challenge is
-sampled, or a chosen fixed challenge must be proved MCA-good. The canonical
-fixed mix \(g=1331\) is a different assertion from a bound on the fraction
-of bad random challenges. Restricting integer representatives makes the
-pair faithful; it does not make one scalar evaluation injective.
+The canonical fixed mix tests the diagonal pair above. A random-challenge
+bound uses the pair fixed before the draw, as in Section~6. Restricting
+integer representatives makes the pair faithful, and scalar evaluation
+can still identify different pairs.
 
 The current canonical field is also distinct from the sufficiently large
 family of Section~4. For the full canonical pair space, the existing

@@ -2,8 +2,8 @@
 
 \subsection{The finite Hamming grid}
 
-Let \(1\le k\le n\).  The capacity endpoint is already an attainable
-normalized Hamming radius:
+Let \(1\le k\le n\).  The capacity endpoint lies on the normalized
+Hamming grid:
 \[
   r_{\mathrm{cap}}=n-k,
   \qquad
@@ -15,11 +15,7 @@ rate-\(1/4\), length-\(4096\) member has
   k=1024,\qquad r_{\mathrm{cap}}=3072,\qquad
   \deltacap=\frac34.
 \]
-The endpoint theorem below includes the strictly smaller radius
-\(3071/4096\).
-
-There is, however, a distinct granularity issue in the phrase ``largest
-relative radius.''  A closed Hamming ball changes only at
+A closed Hamming ball changes only at
 \[
   \mathcal H_n=\left\{0,\frac1n,\ldots,\frac nn\right\}.
 \]
@@ -85,17 +81,10 @@ It follows that
   =\epsstar|\F_u|.
 \]
 
-The pair-MCA theorem uses the comparison
+The same calculation gives the pair-MCA comparison
 \[
   2^{128}\binom{n_u}{k_u+1}\le q_u.
 \]
-It follows from the same calculation, because
-\(\binom{n_u}{k_u+1}\le2^{n_u}\).
-Compared with the ordered certificate count, this removes a factor \(k_u+1\):
-\[
-  \binom{n_u}{k_u}(n_u-k_u)
-  =(k_u+1)\binom{n_u}{k_u+1}.
-\]
-The field is exponential in the block length.  This is a valid explicit
-sufficiently-large-field regime, not a claim about practically sized fields
-or about every smooth code supplied to the Grand Challenge.
+since \(\binom{n_u}{k_u+1}\le2^{n_u}\). Both budgets here use an
+extension field of characteristic three whose cardinality grows
+exponentially with the block length.
