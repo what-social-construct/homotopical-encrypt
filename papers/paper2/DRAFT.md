@@ -4,7 +4,8 @@
 
 This manuscript develops Hodge-structured cochain encryption together with
 the commitments, finite representations and proof-carrying actions that name
-its encrypted objects. The full Markdown draft has no TeX/PDF bundle yet. The
+its encrypted objects. The [construction note](construction.pdf) presents the
+coupled family and its finite recovery results. The
 [shared parity table](../../SEMANTIC-PARITY.md) records statement correspondence
 and proof status.
 
@@ -28,7 +29,10 @@ diagrams. A context-bound manifest names the exact artifact and full
 ciphertext, joining owner authorization, checked packets and accepted history.
 Sampling and disclosure audits distinguish the original scalar profile from
 a separate one-use ciphertext candidate and identify the effect of operator
-hashes. A bounded adaptive CRS reference reduces fresh-message forgery to
+hashes. A versioned private-nonce operator commitment joins the original
+snapshot to the finite public instance. Recovery from that instance and the
+full ciphertext reduces to an explicit chosen-operator commitment test.
+A bounded adaptive CRS reference reduces fresh-message forgery to
 simulation and extraction errors, recovery of the same original coefficients
 and explicit hash collisions. The exact public-data obstruction and
 ciphertext-only laws retain their declared views; a computational comparison
@@ -1767,17 +1771,72 @@ proved law is neither encryption-oracle nor repeated-key security.
 
 The selected design target is exact harmonic recovery with fresh geometry per
 public encrypted object and persistent private master-key management.
-Wallet-at-rest and reused-geometry encryption remain separate. The sign
-sampler remains a nondefault implementation candidate until actual hiding
-operator binding and its versioned native wire are built. Generic snapshot
-and context carriers can stay; the private opening, public instance, witness
-codec and context joins must be versioned and checked. A hiding flag is
-insufficient. Content
-hashes name encrypted material. The selected public-view design excludes
+Wallet-at-rest and reused-geometry encryption remain separate. The private operator opening, versioned native instance/witness codecs and
+original-context joins are now constructed below. Content hashes name
+encrypted material. The selected public-view design excludes
 operator nullifiers, full projectors/kernel Plücker data and usable transport
 to a known presentation. Its exact opening/artifact must be message-independent,
 and the joint view of public records, auxiliary data and proof transcripts
 still needs analysis.
+
+#### Private operator commitments and the versioned instance
+
+The private operator opening pairs the existing canonical coupling packet
+with a separate 32-byte nonce \(r\). The packet determines the same cellular
+maps, true Hodge operator, integral structure and intrinsic harmonic lattice.
+Define
+\[
+\operatorname{Com}(B;r)=H(\mathsf{dom}_{\mathrm{op}}\Vert
+\operatorname{frame}(\operatorname{enc}(B))\Vert\operatorname{frame}(r)).
+\]
+Its canonical codec enforces the domain, original matrix encoding, nonce
+width and full consumption. Equal commitments for different operator packets
+yield an actual collision between their complete preimages, including their
+possibly different nonces.
+
+The public instance retains exactly three names,
+\[
+(\mathsf{credential},\operatorname{Com}(B;r),H(\beta)),
+\qquad \beta=\operatorname{EncBytes}_B(z,a,u).
+\]
+The private witness adds \(r\) to the original bounded witness, separately
+from its credential salt. V2 witness, program and instance domains select the
+new checker and reject the earlier raw-matrix-hash formats. Valid extraction
+recovers the original coefficients or gives an operator-preimage or
+ciphertext-byte hash collision. The original snapshot root, credential and
+ciphertext digest determine the same V2 owner key; approved execution checks
+its exact program and parses the actual key/CRS on the full signing message.
+The commitment preimage does not contain its own root.
+
+Write \(B_k=A\operatorname{diag}(\operatorname{sign}(k))\) and
+\(z=d\operatorname{sign}(m)\). Independently sample uniform Boolean
+message \(m\), key \(k\) and nonce, with the source credential fixed
+independently. Let \(V\) be the actual V2
+instance bytes and full ciphertext bytes. Fix a same-size reference matrix
+\(B_*\). The chosen-operator test \(T_D\) samples its own \(m,k\), receives
+a commitment to \(B_k\) or \(B_*\), builds the same ciphertext/public view,
+runs \(D\), and tests its own message. Let \(p_1,p_0\) be its acceptance
+probabilities and \(\operatorname{Adv}_{\mathrm{op}}(T_D)=|p_1-p_0|\).
+
+**Theorem (public-instance recovery reduces to operator hiding).** If
+\(A^{\mathsf T}A=dI\), every complete-message decoder satisfies
+\[
+\Pr[D(V)=m]\le 2^{-n}+\operatorname{Adv}_{\mathrm{op}}(T_D).
+\]
+For positive \(d\), partial integer-coefficient recovery has the same bound
+using its threshold-totalized bit decoder in \(T_D\).
+
+*Proof.* In the reference world the operator root is a function of an
+independent nonce and fixed matrix. The existing ciphertext law with that
+nonce as an independent tape gives recovery probability exactly \(2^{-n}\).
+The real world equals the original generated witness's instance/ciphertext
+view. The two recovery events equal the acceptance events of \(T_D\), so
+their difference is bounded by its advantage. Positive scaling turns every
+successful partial coefficient output into a correct bit output.
+
+The finite experiment and reduction are constructed. Its quantitative backend
+bound and the larger proof/storage transcript are the next privacy endpoints.
+The adaptive CRS reference below retains its original raw-root relation.
 
 Fresh sampling also differs from ordinary transport, which preserves
 \(z,a,u\). The target sign law prescribes \(u'=C_{k'}s\). The actual
@@ -2176,6 +2235,11 @@ entire intrinsic integral harmonic lattice, with a proved coefficient basis,
 rank, discreteness and metric. The rational algorithm implements the original
 harmonic-lattice decoder on every rational input; its byte form accepts
 exactly the integer Hodge-encryption language for the returned message.
+
+Canonical private-nonce operator openings and a versioned instance retain
+that same geometry at the original context and owner checker. In the finite
+signed family, recovery from the instance and full ciphertext is bounded by
+inverse message-space size plus an explicit operator-commitment test advantage.
 
 HCP isolates the associated recovery question when the operative geometry is
 hidden behind a public semantic class. Supplying that geometry makes the

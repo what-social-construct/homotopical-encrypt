@@ -52,12 +52,15 @@ cumulative-gap fork choice or raw edge sums as ledger semantics.
 
 The selected design target combines exact harmonic recovery, fresh geometry
 per public encrypted object and persistent private master-key management.
-Wallet-at-rest and reused-geometry roles remain separate. The sign sampler is
-a nondefault implementation candidate until actual hiding operator binding,
-private openings and versioned native instance/witness/codec/context joins are built.
-Generic snapshot carriers can remain. Existing cochain hiding flags and a raw
-matrix hash do not supply this construction. Other public/proof data must be
-accounted for before a storage privacy theorem.
+Wallet-at-rest and reused-geometry roles remain separate. The [nonce-bearing operator construction](Storage/OperatorCommitment.lean)
+and [V2 witness/program/instance](Transfer/PathSignature/NativeCommitted.lean)
+now reuse the original snapshot and bounded witness. The
+[context adapter](Transfer/PathSignature/NativeCommittedContext.lean) executes
+the approved V2 program at the original owner checker. The
+[finite public-instance experiment](Transfer/PathSignature/NativeCommittedPrivacy.lean)
+reduces recovery above `2^-n` to an explicit operator-commitment distinguishing
+test. Bounding that test and accounting for proof/storage transcripts are the
+next privacy endpoints.
 
 The broad `Protocol` facade also checks the finite
 [signed-axis sampler](../HCP/AxisSignedSampler.lean) and conditional

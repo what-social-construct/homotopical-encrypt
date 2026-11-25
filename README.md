@@ -47,6 +47,7 @@ lattice derived from $B$ in the fixed scalar Euclidean profile.
 | Ciphertext transport | The native map $M_CM_B^{-1}$ preserves message/opening coordinates and commutes with harmonic projection, with identity, inverse and composition laws. | [CoupledTransport](lean/HCP/CoupledTransport.lean), [CoupledGeometry](lean/HCP/CoupledGeometry.lean) |
 | CVP and public recovery comparison | Projecting the target onto harmonic space preserves closest vectors in its harmonic lattice. Constructed public-equivalent presentations have different operative targets, giving an exact public-data recovery obstruction. | [Hardness](lean/Hardness.lean), [AxisFamily](lean/HCP/AxisFamily.lean) |
 | Protocol joins | Canonical manifests retain the exact artifact and full ciphertext through signed intents and checked history. Conditional integrity and adaptive CRS reduction theorems retain their stated primitive hypotheses. | [Protocol guide](lean/Protocol/README.md), [construction crosswalk](papers/paper2/README.md#lean-sources-and-paper-ownership) |
+| Private operator and public instance | Canonical nonce-bearing operator openings, V2 witness/program/instance checks and original-context verification. A finite public-instance recovery experiment reduces success above $2^{-n}$ to an explicit operator-commitment distinguishing test. | [OperatorCommitment](lean/Protocol/Storage/OperatorCommitment.lean), [NativeCommitted](lean/Protocol/Transfer/PathSignature/NativeCommitted.lean), [context](lean/Protocol/Transfer/PathSignature/NativeCommittedContext.lean), [reduction](lean/Protocol/Transfer/PathSignature/NativeCommittedPrivacy.lean) |
 
 ## Reading the construction
 
@@ -98,7 +99,7 @@ external declaration/axiom checks and byte-execution example; the full
 
 | Workstream | Endpoint |
 |---|---|
-| Encryption privacy | Hiding operator binding and a security argument for the complete released view, using fresh geometry per public encrypted object. |
+| Encryption privacy | Bound the new operator-commitment test advantage for a selected backend, then extend the experiment to the complete proof/storage view and key-use policy. |
 | Computational comparison | A finite sampled recovery problem with efficient adversaries and an explicit reduction or oracle-relative comparison with CVP. |
 | Concrete proof construction | Complete field-circuit refinement for ranges, bytes and hashes, and a secure CRS primitive with quantitative estimates. |
 

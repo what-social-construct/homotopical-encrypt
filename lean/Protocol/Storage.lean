@@ -8,6 +8,7 @@ public import Protocol.Storage.CanonicalSystematic
 public import Protocol.Storage.DisclosureLeak
 public import Protocol.Storage.CoupledCiphertext.Disclosure
 public import Protocol.Storage.CoupledRecovery
+public import Protocol.Storage.OperatorCommitment
 public import Protocol.Storage.ThreeLevelMetrics
 public import Protocol.Storage.CanonicalThreeLevel
 public import Protocol.Storage.CanonicalCalibration
@@ -33,6 +34,10 @@ public import Protocol.Storage.Retrieval
   slots. Original-observation certificates add native decoding/message meaning
   to that same seal. The disclosure lemmas explain why an exact component alone
   cannot name distinct full ciphertexts; they imply no computational secrecy.
+
+  The private-nonce operator profile separately commits to canonical coupling
+  packet bytes and a private 32-byte opening. Its original snapshot/context
+  join and explicit preimage-collision alternatives retain the same geometry.
 
 `Protocol.Storage.Retrieval` separately analyzes hash-indexed encrypted-object
 reads: uniform whole-bucket transcript privacy, local content verification,

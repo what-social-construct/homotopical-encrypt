@@ -26,6 +26,9 @@ public import Protocol.Transfer.PathSignature.NativeSignSampler
 public import Protocol.Transfer.PathSignature.NativeSignPrivacy
 public import Protocol.Transfer.PathSignature.NativeOperatorGuessing
 public import Protocol.Transfer.PathSignature.NativeNoiseRefresh
+public import Protocol.Transfer.PathSignature.NativeCommitted
+public import Protocol.Transfer.PathSignature.NativeCommittedContext
+public import Protocol.Transfer.PathSignature.NativeCommittedPrivacy
 
 @[expose] public section
 
@@ -111,4 +114,12 @@ hash admits a plaintext-candidate test; no storage-view privacy follows.
 Ordinary native transport retains its coexact opening. A canonical-byte
 coexact correction produces the target candidate's desired opening, without
 supplying independent key generation or a public refresh capability.
+
+The V2 native path adds a separate private operator nonce to the original
+witness and retains the three public names. Canonical versioned decoding,
+operator-preimage collision alternatives and actual original-context approved
+verification are proved. Its finite public-instance/ciphertext experiment
+reduces recovery above the reference `2^-n` mass to an explicit chosen-operator
+commitment test. Bounding that test and joining proof/storage transcripts
+are separate from this reduction and the retained V1 forgery theorem.
 -/

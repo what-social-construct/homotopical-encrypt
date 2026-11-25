@@ -44,6 +44,8 @@ to their canonical Lean declarations.
 | Full intrinsic lattice, coefficient charts, basis, rank and discreteness | **Complete** for that same sheaf and integral structure. |
 | Semantic equivalence and native ciphertext transport | **Complete**, with the shear and ciphertext maps distinguished. |
 | Exact rational refinement and canonical private-byte recovery | **Complete** on all rational/byte inputs, with an executed reference example. |
+| Private operator opening and versioned native instance/context | **Complete**, with canonical bytes and explicit collision alternatives. |
+| Finite public-instance recovery reduction | **Complete**, with reference recovery `2^-n` and an explicit operator-commitment distinguishing term. |
 
 The [coupled family](../../lean/Sheaf/HCPCoupledFamily.lean) uses shared integer
 face equations `y=B x`. Its intrinsic harmonic lattice consists exactly of
@@ -179,12 +181,15 @@ supplies a collision between distinct canonical matrix bytes.
 
 The selected design target is exact harmonic recovery with fresh geometry per
 public encrypted object and persistent private master-key management.
-Wallet-at-rest and reused-geometry encryption remain separate. The sign
-sampler remains a nondefault implementation candidate until actual hiding
-operator binding, private openings and a versioned native instance, witness
-codec and context joins are built. Existing generic
-snapshot carriers remain useful; the cochain hiding flags are not an operator
-commitment algorithm. Public content hashes name encrypted material; operator
+Wallet-at-rest and reused-geometry encryption remain separate. The [operator commitment](../../lean/Protocol/Storage/OperatorCommitment.lean)
+now has canonical private matrix/nonce openings and actual collision
+alternatives. The [V2 native relation](../../lean/Protocol/Transfer/PathSignature/NativeCommitted.lean)
+retains the original bounded witness and three public names; its
+[context adapter](../../lean/Protocol/Transfer/PathSignature/NativeCommittedContext.lean)
+uses the original snapshot and approved owner checker. The
+[finite recovery reduction](../../lean/Protocol/Transfer/PathSignature/NativeCommittedPrivacy.lean)
+releases those actual instance bytes and full ciphertext and proves a bound
+of `2^-n` plus the advantage of an explicit chosen-operator commitment test. Public content hashes name encrypted material; operator
 fingerprints/nullifiers, full projectors/Plücker data and usable public
 transport are excluded from the intended private view. The exact artifact must
 be message-independent, and auxiliary/proof disclosures still need analysis.
@@ -343,6 +348,8 @@ refinement.
 | Coupled harmonic lattice and proved semantic class | [HCPCoupledFamily](../../lean/Sheaf/HCPCoupledFamily.lean), [CoupledCVP](../../lean/HCP/CoupledCVP.lean), [CoupledSemantics](../../lean/HCP/CoupledSemantics.lean) |
 | Completed geometry and full intrinsic lattice | [CoupledGeometry](../../lean/HCP/CoupledGeometry.lean), [CoupledLattice](../../lean/HCP/CoupledLattice.lean) |
 | Completed all-input refinement and direct byte recovery | [CoupledDecoding](../../lean/HCP/CoupledDecoding.lean), [CoupledRecovery](../../lean/Protocol/Storage/CoupledRecovery.lean), [execution example](../../lean/Protocol/Storage/CoupledRecovery/Demo.lean) |
+| Private operator opening and V2 original-context wiring | [OperatorCommitment](../../lean/Protocol/Storage/OperatorCommitment.lean), [NativeCommitted](../../lean/Protocol/Transfer/PathSignature/NativeCommitted.lean), [NativeCommittedContext](../../lean/Protocol/Transfer/PathSignature/NativeCommittedContext.lean) |
+| Finite public-instance recovery and hiding reduction | [NativeCommittedPrivacy](../../lean/Protocol/Transfer/PathSignature/NativeCommittedPrivacy.lean) |
 | Concrete presentation bytes and original snapshot | [CoupledCodec](../../lean/Protocol/Storage/CoupledCodec.lean), [CoupledBinding](../../lean/Protocol/Storage/CoupledBinding.lean) |
 | Original full Hodge ciphertext bytes | [HCPCoupledEncoding](../../lean/Sheaf/HCPCoupledEncoding.lean), [CoupledCiphertext](../../lean/Protocol/Storage/CoupledCiphertext.lean) |
 | Exact native execution and scoped token | [CoupledRational](../../lean/HCP/CoupledRational.lean), [TransportCodec](../../lean/Protocol/Storage/TransportCodec.lean), [ScopeCodec](../../lean/Protocol/Ephemeral/ScopeCodec.lean), [TransportToken](../../lean/Protocol/Ephemeral/TransportToken.lean), [NativeTransport](../../lean/Protocol/Ephemeral/NativeTransport.lean) |
@@ -381,11 +388,11 @@ PoV/reliability policy, oracle/coregulator attachment points and the legacy
 chain model are deferred or supporting families outside the bounded
 transition claim. Authenticated quorums do not supply rounds, locking or finality.
 
-The immediate privacy obligation is the new hiding operator-root profile and
-its actual opening/codec/context joins, followed by analysis of the complete
-public view and key-use policy. The ciphertext-only sign law does not close
-that obligation or justify a multi-use security theorem. The existing raw-root
-application remains a conditional integrity/recovery reference.
+The nonce-bearing operator opening, V2 codecs, original-context joins and
+finite public-instance recovery reduction are complete. The immediate privacy
+endpoint is a quantitative bound for its chosen-operator commitment test,
+followed by the proof/storage transcript and key-use policy. The existing
+raw-root adaptive CRS application remains a separate reference.
 
 The CRS reference reduction composes supplied algorithms; a secure proof
 primitive implementation, its message-bound extraction/simulation estimates,
