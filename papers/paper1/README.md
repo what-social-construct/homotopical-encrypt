@@ -29,6 +29,12 @@ On those same ciphertexts one CVP call with the supplied operative lattice
 recovers every message. The public bound remains in force for a decoder
 with the same fixed CVP oracle. [Lean comparison](../../lean/HCP/CoupledRecoverySeparation.lean)
 
+For each fixed ciphertext mask there are exactly `2^n` compatible messages
+and operative lattices. Each lattice has its own unique closest point. The
+basis-span lift also preserves all closest vectors for arbitrary CVP targets.
+The coupled lift gives a one-query reduction to nearest-point search on
+the specified harmonic lattice for rational CVP inputs. [Basis-span lift](../../lean/HCP/UnrestrictedCVPLift.lean) · [Coupled lift](../../lean/HCP/CoupledCVPLift.lean)
+
 The post-conclusion appendix maps these results to canonical Lean declarations.
 It also retains the earlier six-group Hodge/CVP table, whose
 [focused verification entry](../../lean/Palomar/PaperOne/README.md) selects

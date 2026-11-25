@@ -207,10 +207,63 @@ with the real subspace.
   This is exactly (iii).
 \end{proof}
 
-The continuous projection \(t_W=P_Wt\) is the closest harmonic vector to
-\(t\), but it need not lie in \(\Lambda_G\). Thus projection transports the
-target to the harmonic subspace while preserving the discrete minimizers; it
-does not perform the remaining lattice search.
+For an arbitrary CVP instance, take \(W=G\mathbb R^n\). This gives a harmonic
+target \(P_Wt\) for the same supplied lattice and preserves the full set of
+answers, including ties. For example, \(\Lambda_G=\mathbb Z\) and \(t=1/2\)
+give two closest points, \(0\) and \(1\), while the harmonic projection is
+\(1/2\). HCP recovers the projection itself. A generated ciphertext promises
+that this projection is an integer harmonic point, in which case it is the
+unique closest point of the operative lattice.
+
+\subsection{Arbitrary CVP targets in the coupled family}
+
+The lift can also use the actual graph lattice of the coupled sheaf. The
+oracle in the following proposition solves closest-vector search in a
+specified coupled harmonic lattice for an arbitrary target.
+
+\begin{proposition}[Reduction to closest-vector search in a coupled harmonic lattice]
+\label{prop:unrestricted-coupled-cvp-lift}
+For a full-column-rank rational basis \(G\) and rational target \(t\), one
+query to this oracle suffices to find an exact closest vector. Preparing the
+query and recovering the original answer use polynomial time in the bit
+length of \((G,t)\).
+\end{proposition}
+
+\begin{proof}
+Clear denominators by scaling \(G,t\) by the same positive integer, and use
+\(G,t\) for the resulting integer coordinates. Let \(L\) be a rational left
+inverse of \(G\), found by exact linear algebra. If \(z_*\) minimizes
+\(\|t-Gz\|^2\) over integer \(z\), the candidate zero gives
+\(\|t-Gz_*\|\leq\|t\|\), hence \(\|Gz_*\|\leq 2\|t\|\). Using
+\(z_*=LGz_*\) gives
+\[
+ \|z_*\|\leq 2\Bigl(\sum_{ij}|L_{ij}|\Bigr)\Bigl(\sum_i|t_i|\Bigr).
+\]
+The minimum exists by well-ordering of the nonnegative integer squared costs.
+Choose an integer \(M\) strictly larger than the displayed bound. The scale
+is computed from \(G,t\) alone. Set \(B=MG\) and query at \((0,0,Mt)\) in
+\(\Lambda_B\). By \cref{prop:coupled-harmonic-graph}, the squared cost at the
+point with information coordinates \(z\) is
+\[
+ M^2\|t-Gz\|^2+\|z\|^2.
+\]
+Any nonoptimal original coefficient vector raises the first term by at least
+\(M^2\). The point with coefficients \(z_*\) adds a penalty strictly below
+\(M^2\). Thus every lifted minimizer has original optimal coefficients. Read
+them from its information coordinates and multiply by the original rational
+basis to return a closest vector. The product of the input denominators has
+bit length bounded by the total input length. Exact rational elimination
+computes \(L\) in polynomial time, with numerator and denominator lengths
+bounded by the sizes of the relevant minors. The sums, ceiling and scaling
+then use polynomial bit complexity. The recovered coefficients also have
+norm below \(M\), so the original answer has polynomial bit length.
+\end{proof}
+
+This reduction specifies the operative lattice in its query. It allows the
+lifted cost to break ties among original minimizers. If the target is required
+to be harmonic, \cref{prop:hodge-projection-is-cvp} gives exactly the same
+lifted minimizers after projection. On arbitrary targets, the oracle still
+performs discrete minimization over \(\Lambda_B\).
 
 \subsection{Oracle Insufficiency}
 
@@ -411,6 +464,32 @@ CVP answer in its actual lattice.
 \end{proof}
 
 \subsection{Strict recovery separation on the native family}
+
+\begin{proposition}[One ciphertext, \texorpdfstring{\(2^n\)}{2^n} compatible answers]
+\label{prop:coupled-cvp-candidate-count}
+Fix the public matrix \(A\), scale \(d>0\) and exact opening of the fresh-sign
+family. For each fixed mask, its canonical ciphertext has exactly \(2^n\)
+compatible messages across the admitted sign keys. Each message is encoded
+by the unique closest point in its operative harmonic lattice.
+\end{proposition}
+
+\begin{proof}
+Write \(\tau\) for the fixed mask. Each sign key \(k\) with message signs
+\(s=k\mathbin\odot\tau\) gives mask \(k\mathbin\odot s=\tau\), hence the
+same ciphertext by the normal form in \cref{sec:coupled-sampling}.
+Multiplication by \(\tau\) permutes sign vectors, giving all \(2^n\) messages,
+with distinct coefficient vectors \(ds\). Their operative lattices are
+distinct. Each column of \(A\) is nonzero since \(A^{\mathsf T}A=dI\), so a
+change of key changes the operative matrix. The lattice determines the
+matrix by its unique graph vector over each unit information coordinate.
+For each key, the generated cochain projects to the encoded harmonic point,
+which is the unique closest lattice point by
+\cref{prop:hodge-projection-is-cvp}.
+\end{proof}
+
+The count concerns the ciphertext and its common public homotopy class.
+The experiment below also releases the nonce-bearing instance and measures
+what that additional data can reveal.
 
 We can compare the two recovery tasks on the same encrypted samples from
 \cref{thm:coupled-native-rom}. On the supplied-lattice side, the solver

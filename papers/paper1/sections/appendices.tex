@@ -125,6 +125,23 @@ lattice and a strict public recovery gap with the same fixed oracle.
 \lean{HE.HCP.CoupledRecoverySeparation.knownLattice_recovers_bits}\par
 \lean{HE.HCP.CoupledRecoverySeparation.recovery_comparison}\par
 \lean{HE.HCP.CoupledRecoverySeparation.strict_recovery_gap}
+\\\midrule
+\textbf{P1-N09. Harmonic lifts of arbitrary CVP targets.}\newline
+\Cref{prop:hodge-projection-is-cvp,prop:unrestricted-coupled-cvp-lift}.
+Lean checks the basis-span lift and the coupled cost transfer under the
+scale inequality. The paper derives that inequality from the rational input.
+&
+\lean{HarmonicCVPBridge.solution_iff_projectedInstance}\par
+\lean{HarmonicCVPBridge.oracleCorrect_of_harmonicTargets}\par
+\lean{HE.HCP.CoupledCVPLift.source_solution_of_scaled_solution}
+\\\midrule
+\textbf{P1-N10. Compatible answers at one ciphertext.}\newline
+\Cref{prop:coupled-cvp-candidate-count}; exact counts for coefficients and
+operative lattices, and actual CVP recovery for each matching key.
+&
+\lean{HE.HCP.CoupledRecoverySeparation.compatible_coefficients_card}\par
+\lean{HE.HCP.CoupledRecoverySeparation.compatible_lattices_card}\par
+\lean{HE.HCP.CoupledRecoverySeparation.knownLattice_recovers_masked_bits}
 \\
 \end{longtable}
 \endgroup

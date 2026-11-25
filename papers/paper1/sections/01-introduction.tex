@@ -59,9 +59,10 @@ We establish four connected results.
   at most \(2^{-n}+(Q+2)256^{-32}\), including partial integer coefficients
   for positive scaling. The constructor's two digest calls are counted.
   \item \textbf{A strict separation from supplied-lattice CVP.}
-  One correct CVP query recovers every generated message with its operative
-  lattice. With that lattice hidden, the same fixed CVP oracle leaves the
-  public recovery bound unchanged.
+  Unrestricted rational CVP lifts to nearest-point search in a coupled
+  harmonic lattice. A generated ciphertext has \(2^n\) compatible messages,
+  each the unique answer in its lattice. With the operative lattice hidden,
+  a fixed CVP oracle leaves the public recovery bound unchanged.
 \end{enumerate}
 
 Homomorphic correctness compares evaluation before and after encryption

@@ -33,10 +33,11 @@ recovery diagrams. For a uniform-message, fresh-sign-key family with private
 making at most \(Q\) public random-oracle
 queries recovers with probability at most
 \(2^{-n}+(Q+2)256^{-32}\); positive scaling gives the same bound for partial
-integer-coefficient extraction. With the operative lattice supplied, one
-exact CVP query recovers the message on every sample of this family. With
-that lattice hidden, the bound still holds with access to the same fixed
-CVP oracle, giving a strict recovery separation in the bounded-query model.
+integer-coefficient extraction. Unrestricted rational CVP lifts to closest
+point search in a coupled harmonic lattice. Supplying the operative lattice
+permits exact recovery of every generated message in one CVP query. With the
+lattice hidden, the bound still holds with the same fixed CVP oracle, giving
+a strict recovery separation in the bounded-query model.
 \end{abstract}
 
 \setcounter{tocdepth}{1}
