@@ -2,6 +2,7 @@ module
 
 public import HCP.AxisSignedSampler
 public import HCP.NoiseSpanAttack
+public import HCP.CoupledLattice
 public import Protocol.Evidence
 public import Protocol.Ephemeral
 public import Protocol.Oracle
@@ -15,6 +16,10 @@ public import Protocol.Transfer
 
 /-!
   Protocol-facing import surface.
+
+  The full intrinsic lattice, coefficient charts and inherited discrete
+  topology are exported here. The narrow byte-recovery module needs only
+  the exact decoder refinement, rather than the topological lattice machinery.
 
   This is the one-way Paper 2 layer. Protocol modules may consume the core
   HCP, proximity, gate, and proof-carrying mathematics; those core modules

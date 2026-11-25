@@ -2,7 +2,6 @@ module
 
 public import Protocol.Storage.CoupledCiphertext
 public import HCP.CoupledDecoding
-public import HCP.CoupledLattice
 
 @[expose] public section
 
