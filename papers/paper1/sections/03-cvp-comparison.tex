@@ -557,12 +557,41 @@ one nonzero integer difference, and changing one coordinate by one attains
 the stated gap.
 \end{proof}
 
-The scalar minimum is constant across the compatible keys. Subtracting the
-full residual vector from \(b\) gives the projected message.
+Subtracting the full residual vector from \(b\) gives the projected message.
 
-The count concerns the ciphertext and its common public homotopy class.
-The experiment below also releases the nonce-bearing instance and measures
-what that additional data can reveal.
+\begin{proposition}[Optimal recovery from finite disclosure]
+\label{prop:finite-disclosure}
+Draw a hidden state \(k\) uniformly from a nonempty finite set \(K\).
+Among deterministic decoders that receive \(\ell(k)\) and guess \(T(k)\),
+the highest exact-recovery probability is
+\[
+  \frac{1}{|K|}\sum_{v\in\ell(K)}\max_{t\in T(K)}
+    \bigl|\{k\in K:\ell(k)=v,\ T(k)=t\}\bigr|.
+\]
+For a fixed public observation and no additional disclosure, this reduces
+to the largest operative-target multiplicity divided by \(|K|\).
+\end{proposition}
+
+\begin{proof}
+For each disclosed value the decoder chooses one target. Its successful
+states in that fiber number at most the largest target multiplicity there.
+Choosing a most frequent target at every disclosed value attains the sum.
+Any CVP oracle fixed independently of the hidden state can be included in
+the decoder.
+\end{proof}
+
+Conditioning the uniform fresh-sign key and message on the fixed ciphertext
+leaves one equally likely compatible pair per key. The original coefficient
+target is injective in the key, so an additional deterministic disclosure
+\(\ell(k)\) gives optimal recovery probability \(|\ell(K)|/2^n\).
+A disclosure of \(r\) bits gives at most \(2^r/2^n\), with equality when
+revealing \(r\) distinct sign coordinates. Appending the minimum squared CVP
+cost leaves this probability unchanged because the cost is constant across
+compatible keys.
+
+The common public homotopy class is fixed throughout this count. The
+experiment below also releases the nonce-bearing instance and accounts for
+queries to the byte oracle.
 
 We can compare the two recovery tasks on the same encrypted samples from
 \cref{thm:coupled-native-rom}. On the supplied-lattice side, the solver

@@ -163,6 +163,23 @@ the exact next cost and the strict additive tolerance on the supplied lattice.
 \lean{cost_at_message}\par
 \lean{cost_gap_attained}\par
 \lean{recover_of_cost_lt}
+\\\midrule
+\textbf{P1-N13. Exact recovery under finite disclosure.}\newline
+\Cref{prop:finite-disclosure}; sharp target-multiplicity bound at a fixed
+observation and under deterministic disclosure. The canonical ciphertext
+fiber, sign-coordinate disclosures and constant minimum cost specialize
+the bound to the fresh-sign family.
+&
+\lean{HE.HCPBridge.fixedObservation_optimal_probability}\par
+\lean{HE.HCP.FiniteRecovery}\par
+\lean{optimalProbability}, \lean{successCount_le_optimalCount},\par
+\lean{exists_successCount_eq_optimalCount}\par
+\lean{HE.HCP.FiniteRecovery.Native}\par
+\lean{fixedMaskFiberEquiv}, \lean{uniformKey_success_eq},\par
+\lean{optimalProbability_eq_view_count},\par
+\lean{optimalProbability_le_bit_budget},\par
+\lean{optimalProbability_eq_coordinate_disclosure},\par
+\lean{optimalProbability_add_minimum_cost}
 \\
 \end{longtable}
 \endgroup

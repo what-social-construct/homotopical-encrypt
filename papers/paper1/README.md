@@ -42,6 +42,12 @@ ciphertext, every compatible key gives the same minimum squared cost, and
 the next larger cost is exactly `d+1` higher when `n>0`.
 [Residual split](../../lean/HCP/CoupledCVPResidual.lean) · [Fresh-sign gap](../../lean/HCP/CoupledSignResidual.lean)
 
+For a uniform finite family at one public observation, the most frequent
+operative target gives the exact optimal recovery rate. On the actual
+fresh-sign ciphertext, disclosing `r` distinct sign bits raises it to
+`2^r/2^n`. Appending the common minimum CVP cost leaves it unchanged.
+[Typed bound](../../lean/HCP/FiniteRecovery/Typed.lean) · [Native disclosure](../../lean/HCP/FiniteRecovery/Native.lean)
+
 The different operative planes in that one public class form a graph chart
 family. Their squared chordal distances are an explicit multiple of key
 Hamming distance. [Projector geometry](../../lean/HCP/CoupledProjectorMetric.lean)
@@ -67,3 +73,4 @@ Build the manuscript from this directory with
 `latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex`.
 Check the closing theorem from `lean/` with `lake build HCP.CoupledRecoverySeparation`.
 Check the residual and gap with `lake build HCP.CoupledSignResidual`.
+Check the disclosure results with `lake build HCP.FiniteRecovery.Typed HCP.FiniteRecovery.Native`.

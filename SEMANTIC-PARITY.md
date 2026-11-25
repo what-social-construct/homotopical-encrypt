@@ -241,6 +241,8 @@ no mathematical objects.
 | H134 | Chordal distance through full Plücker reconstruction | [ProjectorMetric](lean/Proximity/Concrete/GrassmannianPlucker/ProjectorMetric.lean), `projectiveChordalDistance_publicShadow`, `projectiveChordalDistance_publicShadow_eq_zero_iff`; [Mathlib projective point](lean/Proximity/Concrete/GrassmannianPlucker/ProjectivePoint.lean), `frameProjectivePoint_eq_iff_same_point` | **Exact pullback on genuine frames.** Recover the subspace from the existing full shadow and apply H133. On frame shadows, zero is equivalent to equality of the full projective point. The zero orbit of the raw quotient stays outside that separation statement. This uses projector distance; an exterior-line distance or a link to codeword distance would require its own comparison. | Paper 3 reconstruction consumer |
 | H135 | Sampled scalar round on the original transfer intent | [SampledMCA](lean/Protocol/Transfer/Certificates/SampledMCA.lean), `Pending.pair_eq_calibration`, `Round.checked_word`, `Pending.far_acceptance_le`, `Pending.far_acceptance_le_of_mca`, `Pending.capacity_acceptance_eq` | **Exact pair and one-draw bound.** The verifier fixes the original context, transfer and count radius before a uniform draw over `ZMod 12289`. The scalar polynomial must be strictly inside the radius and the same packet must pass every configured check. For a modularly far original cochain, the probability of any accepting response is at most the retained line's same-set MCA bad fraction. The diagonal capacity example attains `1/12289` when an original packet passes and `0 < r ≤ 3n/4`. Authenticated delivery, persistent sessions and response encoding remain runtime work. | Paper 2 protocol composition using the Paper 3 metric and MCA theorems |
 | H136 | Coupled CVP residual and coefficient error | [CoupledCVPResidual](lean/HCP/CoupledCVPResidual.lean), `squaredDistance_eq_residual_add_gram`; [CoupledSignResidual](lean/HCP/CoupledSignResidual.lean), `squaredDistance_fixed_mask`, `cost_at_message`, `cost_gap`, `cost_gap_attained`, `recover_of_cost_lt` | **Exact squared costs.** For arbitrary coupled targets the nonharmonic residual is independent of the candidate. In the fresh-sign profile every compatible key has minimum `a²+d(d+1)n` for the same ciphertext. A unit coefficient step attains the `d+1` gap when `n>0`, so strict squared-cost slack below that gap preserves exact recovery with the lattice supplied. | Paper 1 CVP comparison |
+| H137 | Exact finite recovery from public disclosure | [FiniteRecovery](lean/HCP/FiniteRecovery.lean), `optimalProbability`, `successProbability_le_optimalProbability`, `exists_successProbability_eq_optimalProbability`; [typed observation](lean/HCP/FiniteRecovery/Typed.lean), `fixedObservation_optimal_probability` | **Sharp uniform-family bound.** Sum the largest target multiplicity in each realized view and divide by the family size. For an actual fixed HCP observation this is the largest multiplicity of its operative projection among the uniformly indexed witnesses. The auxiliary input is fixed across witnesses. | Paper 1 finite public recovery |
+| H138 | Deterministic disclosure on the actual fresh-sign ciphertext | [Native](lean/HCP/FiniteRecovery/Native.lean), `fixedMaskFiberEquiv`, `uniformKey_success_eq`, `optimalProbability_eq_view_count`, `optimalProbability_le_bit_budget`, `optimalProbability_eq_coordinate_disclosure`, `optimalProbability_add_minimum_cost` | **Exact coefficient recovery rate.** Conditioning on the emitted bytes leaves one compatible message per key. With injective coefficient targets, one of the `2^n` keys can be correctly decoded for each disclosed value. An `r`-bit view gives at most `2^r/2^n`, attained by releasing `r` distinct signs. The common minimum CVP cost leaves the bound unchanged. The nonce-bearing experiment uses H128. | Paper 1 fresh-sign disclosure |
 
 The coupled construction, semantic/lattice equivalences, original-sample
 recovery, codec injectivity and snapshot/ciphertext joins above have focused
@@ -323,11 +325,11 @@ retains that payload and the corresponding pair before a single modeled draw.
 ## Further mathematical questions
 
 The focused Hodge/CVP selection uses a two-member ambiguity example.
-The native fresh-sign family has the separate sampled-oracle recovery theorem
-H128. For broader compatible fibers, a general target-multiplicity theorem
-remains a further question: under a declared uniform hidden-member experiment,
-the intended exact-success bound is the largest target multiplicity divided
-by family size.
+H137 gives exact recovery probabilities on uniformly indexed compatible
+families, and H138 measures deterministic additional disclosure on the
+fresh-sign ciphertext. The native nonce-bearing experiment has its own
+sampled-oracle recovery theorem H128. A complexity reduction to a public HCP
+task needs a precise recoverable promise or distributional contract.
 
 Paper 3’s coding and native modular claims do not assert a capacity-scale
 Euclidean/full-HCP distance bridge. Broader source profiles and exact
@@ -356,6 +358,7 @@ provide the finer crosswalks.
 | P1-F06: unrestricted CVP harmonic lifts | H130, H132 | `HCP/{UnrestrictedCVPLift,CoupledCVPLift}` |
 | P1-F07: chordal geometry of the fresh-sign family | H133 | `Laplacian/Grassmannian/Metric`, `HCP/CoupledProjectorMetric` |
 | P1-F08: residual, integer coefficient objective and sharp gap | H136 | `HCP/{CoupledCVPResidual,CoupledSignResidual}` |
+| P1-F09: finite recovery and deterministic disclosure | H137–H138 | `HCP/FiniteRecovery`, `HCP/FiniteRecovery/{Typed,Native}` |
 
 ### Paper 2 construction and consumption families
 
