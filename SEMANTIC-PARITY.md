@@ -302,14 +302,21 @@ review history. They do not alter the universal coding theorem hypotheses.
 | D29 | Recovered private-nonce operator precedent and completed native wire | H122–H124 now construct canonical private operator openings, V2 witness/program/instance codecs and original-context approved execution. H125 supplies the actual finite instance/ciphertext experiment and explicit chosen-operator hiding reduction. H126–H128 now prove the native bounded-query random-oracle theorem; the concrete implementation and proof/storage transcript remain. The [provenance trace](docs/SOURCE_LEDGER.md#operator-commitment-provenance) distinguishes this operator commitment from native cochain payloads and outer content hashes; no archived cut-and-open disclosure is reinstated. | Paper 1 operator construction; Paper 2 context/visibility |
 | D30 | Hidden-lattice recovery motivation and computational comparison | Paper 1's [CVP/LWE/HCP task comparison](papers/paper1/sections/recovery-comparison.tex) foregrounds the research question of hidden operative geometry. H119–H121 give the full intrinsic lattice and actual finite encryption/recovery implementation. H76 gives the generated-target known-lattice CVP promise; HT03 gives the exact public-information/oracle obstruction. H128 bounds one-use native recovery in a shared random oracle. H129 proves the strict comparison on the same samples with a supplied-lattice CVP oracle. H130 provides the arbitrary-target lifts and H131 counts native candidates. Regev's LWE definition is a motivating noise/recovery comparison, not an imported HCP assumption or reduction. | Paper 1 research motivation; public HCP reduction remains open |
 
-Paper 2’s bounded profile and its required joins are in
-[the protocol draft](papers/paper2/DRAFT.md). Its full transition implementation need not
-precede Paper 3. The selected modular commitment/extraction/metric
-profile for Paper 3 is already constructed; its completed Q08 theorem does not
-wait for the remaining finite protocol profile. A conditional protocol paper may
-state cryptographic primitives as explicit assumptions. A claimed new
-commitment or MAC scheme additionally needs the actual algorithms and
-security argument.
+### Completion checkpoints
+
+Paper 3's standalone coding results and canonical modular application can be
+finished alongside Paper 2. The application already has the original payload,
+systematic cellular source, complete layout and proved metric handoff. A live
+scalar test also needs Paper 2 to bind the actual pair before sampling its
+challenge, or to enforce the hypotheses of a proved fixed-challenge profile.
+
+| Workstream | Next checkpoint | Completion check |
+|---|---|---|
+| Paper 2 protocol manuscript | Trace one bounded owned transfer from the canonical packet through the manifest, authorization and ordered certificate checks to the successor state and scoped recipient recovery. | State the existing accepted-update, value-preservation, input-consumption, output-creation and replay-rejection results. Name the backend, context and delivery assumptions at the steps that use them. [Checked transfer](lean/Protocol/Transfer/Owned.lean), [native history and recovery](lean/Protocol/Transfer/Native.lean) |
+| Paper 2 executable reference | Specialize the same transaction to a finite owner, asset and epoch with decidable resource checks and fixture verifiers. | Prove agreement with the existing check on that profile. Run the accepted packet, a manifest or authorization mismatch, and replay after the accepted update. |
+| Paper 3 coding and application | Proofread the capacity and MCA statements and walk one original cochain payload through the modular calibration. Add the shared Plücker projector metric to the auxiliary proof crosswalk. | Keep the three field regimes distinct, state the decoder premise and fix the pair before drawing the random challenge, and confirm the existing 52 coding and 22 application targets against the revised manuscript. Prepare a slim package and run protected Linux preflight for the selected revision. [Paper 3 register](papers/paper3/SEMANTIC_PARITY.md), [application calibration](lean/Protocol/Storage/CanonicalCalibration.lean) |
+| Stronger protocol security | Finish the range, byte and hash circuit for the selected relation, instantiate the proof backend, and analyze the actual nonce-bearing signing, proof and storage view. | Connect the approved checker to the backend's setup and security experiment. Enforce authenticated issuance, delivery and retirement for the same context. Include a coefficient-to-action relation if the encrypted coefficients are meant to determine the ledger action. |
+| A stronger Paper 3 theorem | Choose one endpoint after the current scope closes: a sharper code-specific MCA spectrum, an intermediate list radius, or an independent geometric far comparison on a restricted source. | State the field, observation, metric, challenge and radius before strengthening any bound. For a small-field application seeking a `2^-128` error, prove a restricted challenge/profile bound or define and prove the encoding for a larger field. |
 
 
 ## Further mathematical questions
