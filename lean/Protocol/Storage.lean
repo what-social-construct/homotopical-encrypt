@@ -11,7 +11,7 @@ public import Protocol.Storage.CoupledRecovery
 public import Protocol.Storage.EncryptedCell
 public import Protocol.Storage.CellDirectory.Persistence
 public import Protocol.Storage.PublicStack.Release
-public import Protocol.Storage.PublicStack.Restore
+public import Protocol.Storage.PublicStack.History
 public import Protocol.Storage.OperatorCommitment
 public import Protocol.Storage.ThreeLevelMetrics
 public import Protocol.Storage.CanonicalThreeLevel
@@ -55,4 +55,7 @@ synchronization and reader privacy retain separate contracts.
 
 `Protocol.Storage.PublicStack` names the public release under one root and
 restores its complete set of digest-named records into a local store.
+The proof-packet profile reruns the original transfer checker on restored records.
+An ordered history index lets the reader replay several such records from one
+trusted initial state.
 -/

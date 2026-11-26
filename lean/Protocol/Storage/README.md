@@ -121,6 +121,8 @@ efficient PIR remain open.
 | [CellDirectory](CellDirectory.lean) | Checks canonical cell names against a trusted context and directory root. Verified fragments restrict and glue by their lookups, then resolve cell IDs for whole-record reads. |
 | [CellDirectory/Persistence](CellDirectory/Persistence.lean) | Publishes and reopens canonical cell directories and whole ciphertexts on a local filesystem using an independent checkpoint pin. |
 | [PublicStack/Manifest](PublicStack/Manifest.lean), [Release](PublicStack/Release.lean), [Restore](PublicStack/Restore.lean) | One independently authenticated root names the cell directory, public snapshot descriptor, original cochain and vote target. Restore verifies each referenced object and reuses verified local copies. |
+| [PublicStack/ProofRelease](PublicStack/ProofRelease.lean), [Replay](PublicStack/Replay.lean) | Archives the actual checked packet with its vote target and cell ID. A restored reader supplies the original prior state and verifier configuration, rechecks the packet against the restored ciphertext, and computes the historical successor. |
+| [PublicStack/HistoryIndex](PublicStack/HistoryIndex.lean), [History](PublicStack/History.lean) | A trusted index root binds the ordered archive addresses. Replay starts from one trusted ledger state and carries the checked successor into each following transfer under a fixed profile. |
 | [Retrieval/HodgeQuery](Retrieval/HodgeQuery.lean) | Actual harmonic-lattice query samples and exact/coexact `HodgeNoise` aggregation. The public integer-weighted answer is the same full observation as an original encrypted answer; the existing coefficient decoder and CVP comparison apply to it. |
 | [Retrieval/ContentAddress](Retrieval/ContentAddress.lean) | Executable client-local slot/digest lookup and hash checks against the existing fixed manifest directory, followed by parsing. Substitution for original content gives equality or an actual hash collision, without global injectivity. |
 | [Retrieval/Recovery](Retrieval/Recovery.lean) | Connects accepted byte lookup and full-target decoding to the existing `RecoveryDelivery`; the native theorem retains original `BoundHCPObservation` endpoints through `BoundSampleRotation` and gives source coefficients or collision. |
@@ -241,6 +243,36 @@ lake build Protocol.Storage.PublicStack.Restore Protocol.Storage.PublicStack.Rel
 stack_demo="$(mktemp -d)/stack"
 lake env lean --run Protocol/Storage/PublicStack/Demo.lean restore "$stack_demo"
 lake env lean --run Protocol/Storage/PublicStack/Demo.lean read "$stack_demo"
+```
+
+The [proof-packet release](PublicStack/ProofRelease.lean) names the original
+checked packet, its proposal and verdict, and the cell holding its complete
+ciphertext in one evidence object. [Replay](PublicStack/Replay.lean) checks the
+restored snapshot and cochain, uses the selected cell bytes to reconstruct the
+signed transfer manifest, and reruns the configured owner and payload checks
+from the trusted historical before-state. It compares the recomputed vote
+target and returns the resulting historical successor as a value.
+
+```sh
+lake build Protocol.Storage.PublicStack.ProofDemo
+proof_demo="$(mktemp -d)/stack"
+lake env lean --run Protocol/Storage/PublicStack/ProofDemo.lean write "$proof_demo"
+lake env lean --run Protocol/Storage/PublicStack/ProofDemo.lean verify "$proof_demo"
+```
+
+The [history index](PublicStack/HistoryIndex.lean) canonically encodes the
+ordered roots of the archived stacks. Given the trusted index root and
+initial ledger state, [history replay](PublicStack/History.lean) opens each
+named stack in the shared object store and checks its packet against the
+previous computed successor. The checker reconstructs the parent, source
+evidence root, and before-state binding. Replay returns the final historical
+state after every link checks under the fixed context and verifier profile.
+
+```sh
+lake build Protocol.Storage.PublicStack.HistoryDemo
+history_demo="$(mktemp -d)/history"
+lake env lean --run Protocol/Storage/PublicStack/HistoryDemo.lean write "$history_demo"
+lake env lean --run Protocol/Storage/PublicStack/HistoryDemo.lean verify "$history_demo"
 ```
 
 `UniformRead` supplies a complete lower-efficiency privacy reference within

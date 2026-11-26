@@ -38,6 +38,18 @@ def cochainBytes (cochain : Axioms.CochainCommitmentData) : Bytes :=
 /-- The public vote target records the proposal and verdict. -/
 def evidenceBytes (target : Consensus.VoteTarget) : Bytes := encodeVoteTarget target
 
+/-- Address the three public records alongside their pinned directory. -/
+def Manifest.ofRecords (pin : CellDirectory.CheckpointPin)
+    (snapshot cochain evidence : Bytes) : Manifest :=
+  let snapshotDigest := Sha256.digestBytes snapshot
+  let cochainDigest := Sha256.digestBytes cochain
+  let evidenceDigest := Sha256.digestBytes evidence
+  { context := pin.context
+    directoryRoot := pin.directoryRoot
+    snapshotAddress := Sha256.toHash32 snapshotDigest
+    cochainAddress := Sha256.toHash32 cochainDigest
+    evidenceAddress := Sha256.toHash32 evidenceDigest }
+
 /-- The selected public values used to compute the byte objects and manifest. -/
 structure Release where
   pin : CellDirectory.CheckpointPin
@@ -57,14 +69,7 @@ def cochain (release : Release) : Bytes := cochainBytes release.payload
 def evidence (release : Release) : Bytes := evidenceBytes release.target
 
 def manifest (release : Release) : Manifest :=
-  let snapshotDigest := Sha256.digestBytes release.snapshot
-  let cochainDigest := Sha256.digestBytes release.cochain
-  let evidenceDigest := Sha256.digestBytes release.evidence
-  { context := release.pin.context
-    directoryRoot := release.pin.directoryRoot
-    snapshotAddress := Sha256.toHash32 snapshotDigest
-    cochainAddress := Sha256.toHash32 cochainDigest
-    evidenceAddress := Sha256.toHash32 evidenceDigest }
+  Manifest.ofRecords release.pin release.snapshot release.cochain release.evidence
 
 /-- Compute the root bytes once for clients that compare or transmit the root. -/
 def rootDigest (release : Release) : Sha256.DigestBytes :=

@@ -1543,6 +1543,23 @@ fetches each missing or corrupt address once, and publishes the stack only
 when all selected objects verify. A fresh process can reopen the replica
 using the same trusted root.
 
+The [proof-packet profile](../../lean/Protocol/Storage/PublicStack/ProofRelease.lean)
+adds the actual checked packet bytes and its ciphertext cell ID to the vote
+target. A [historical replay](../../lean/Protocol/Storage/PublicStack/Replay.lean)
+uses the original before-state and verifier configuration, reconstructs the
+signed manifest using the restored ciphertext, and checks that the packet
+produces the named proposal and verdict. The result is the historical
+successor state. The reader supplies the trust anchor and verifier setup
+independently.
+
+An [ordered history index](../../lean/Protocol/Storage/PublicStack/HistoryIndex.lean)
+commits to all archived stack roots in replay order. The reader verifies it
+at an independently supplied root and begins from one trusted ledger state
+and verifier profile. Each checked successor supplies the next before-state,
+so the next packet must bind the preceding tip and evidence root. The
+[replay procedure](../../lean/Protocol/Storage/PublicStack/History.lean)
+returns the final computed state when every archived link checks.
+
 The indexed request exposes \(d\) to the responding server. The fixed-bucket
 profile below selects locally after a complete bucket download. A PIR
 backend would supply private selection while retaining the separate result

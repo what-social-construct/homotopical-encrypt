@@ -24,6 +24,8 @@ held transport token and available ciphertext bytes.
 | Checked cell directory | A trusted context and directory root bind the ordered cell IDs and ciphertext digests. Verified fragments agree on overlaps and resolve IDs for whole-record reads. |
 | Local restart reads | A writer verifies the directory and all referenced ciphertexts before atomically publishing the checkpoint. A fresh reader checks it against an independent pin and verifies the selected ciphertext. |
 | Incremental public stack restore | The accepted release root names the directory, public snapshot descriptor, original cochain, and vote target. A replica reuses verified objects and publishes the root once every reference verifies. |
+| Historical proof-packet replay | A fresh reader uses the restored packet and ciphertext with the original prior state and configured verifier. The checked packet must reproduce the accepted vote target. |
+| Ordered history replay | An authenticated list of archive roots and one trusted starting state let a fresh reader check successive transfers and recover the final historical state. |
 | Bounded native credentials | Canonical witness/program/instance codecs check the original matrix, message, opening and credential bounds. |
 | Approved execution | The owner checker uses the exact expected program, parsed verifier key, CRS, public names and full signing message. |
 | Raw-root CRS reference | Fresh completion inherits the conditional five-term adaptive forgery bound on the original sampled execution. |
@@ -81,6 +83,10 @@ objects and proved statements to Lean. Useful protocol entry points include:
 - [Public stack release](../../lean/Protocol/Storage/PublicStack/Release.lean),
   [incremental restore](../../lean/Protocol/Storage/PublicStack/Restore.lean),
   and [replica demo](../../lean/Protocol/Storage/PublicStack/Demo.lean).
+- [Historical proof-packet replay](../../lean/Protocol/Storage/PublicStack/Replay.lean)
+  and [cold verification demo](../../lean/Protocol/Storage/PublicStack/ProofDemo.lean).
+- [Ordered history replay](../../lean/Protocol/Storage/PublicStack/History.lean)
+  and [consecutive-transfer demo](../../lean/Protocol/Storage/PublicStack/HistoryDemo.lean).
 - [Certificate profiles](../../lean/Protocol/Transfer/Certificates/Profile.lean)
   and [profile authentication](../../lean/Protocol/Transfer/Certificates/ProfileAuthentication.lean).
 - [Sampled scalar transfer check](../../lean/Protocol/Transfer/Certificates/SampledMCA.lean)

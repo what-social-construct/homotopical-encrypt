@@ -67,12 +67,16 @@ def restore (target : FilePath) (root : TCB.Hash32)
     LocalObjects.writeAtomically (checkpointPath target) (List.ofFn root)
     return some counts
 
+/-- Open an archived stack at an independently authenticated address. -/
+def openNamedStack (store : FilePath) (root : TCB.Hash32) : IO (Option (Verified root)) := do
+  let some bytes ← LocalObjects.readFile (LocalObjects.objectPath store root) | return none
+  return verify root bytes
+
 /-- Reopen the active stack under a root accepted independently. -/
 def openStack (store : FilePath) (root : TCB.Hash32) : IO (Option (Verified root)) := do
   let pointer ← LocalObjects.readFile (checkpointPath store)
   unless pointer == some (List.ofFn root) do return none
-  let some bytes ← LocalObjects.readObject store root | return none
-  return verify root bytes
+  openNamedStack store root
 
 /-- A restored directory uses the original canonical cell-directory verifier. -/
 def openDirectory (store : FilePath) {root : TCB.Hash32} (stack : Verified root) :

@@ -114,6 +114,18 @@ Restore checks the manifest and directory, reuses verified local objects,
 fetches the remaining objects by digest, and activates the root only after
 all referenced objects verify.
 
+The proof-packet profile also publishes the checked packet bytes and their
+ciphertext cell ID. A reader with the historical before-state and verifier
+configuration uses the restored ciphertext to reconstruct the signed manifest.
+It rechecks the packet, compares the recomputed vote target, and returns the
+historical successor.
+
+A canonical history index binds the ordered archive roots. Starting from one
+trusted ledger state and fixed verifier profile, the reader opens each archive
+and uses its checked successor as the next before-state. The next packet must
+bind that state's tip and evidence root. Successful replay yields the final
+historical state.
+
 A remote direct lookup exposes the digest being requested. The fixed-bucket
 privacy profile downloads the entire public bucket and selects locally.
 Both delivery paths can use the same full-object digest check before
