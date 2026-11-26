@@ -117,6 +117,10 @@ efficient PIR remain open.
 | [CanonicalCalibration](CanonicalCalibration.lean) | Composes the existing source/plane/RS calibration contracts on original storage contexts. Far transfer has unit scale; the near contract uses `2*d_C`, and the factor two is sharp. |
 | [Core](Core.lean) | Aggregates `Context`, `Checkpoint`, `Projection`, `Calibration`, `HCP`, `PublicView`, the raw `CiphertextManifest`, `Anchor`, `ProjectionAnchor` and `CoordinateCodec`. Import `CanonicalRS` for the fixed canonical application or `Retrieval` for the optional query/read profiles. The separate transition kernel is [Protocol.Core](../Core.lean). |
 | [Retrieval](Retrieval.lean) | Optional facade over the native query, authenticated lookup, private recovery and privacy-reference leaves below. It is outside `Storage.Core` and also exported by the broader `Protocol.Storage` facade. |
+| [EncryptedCell](EncryptedCell.lean) | Direct SHA-256 index with verified reads of complete encrypted byte records. |
+| [CellDirectory](CellDirectory.lean) | Checks canonical cell names against a trusted context and directory root. Verified fragments restrict and glue by their lookups, then resolve cell IDs for whole-record reads. |
+| [CellDirectory/Persistence](CellDirectory/Persistence.lean) | Publishes and reopens canonical cell directories and whole ciphertexts on a local filesystem using an independent checkpoint pin. |
+| [PublicStack/Manifest](PublicStack/Manifest.lean), [Release](PublicStack/Release.lean), [Restore](PublicStack/Restore.lean) | One independently authenticated root names the cell directory, public snapshot descriptor, original cochain and vote target. Restore verifies each referenced object and reuses verified local copies. |
 | [Retrieval/HodgeQuery](Retrieval/HodgeQuery.lean) | Actual harmonic-lattice query samples and exact/coexact `HodgeNoise` aggregation. The public integer-weighted answer is the same full observation as an original encrypted answer; the existing coefficient decoder and CVP comparison apply to it. |
 | [Retrieval/ContentAddress](Retrieval/ContentAddress.lean) | Executable client-local slot/digest lookup and hash checks against the existing fixed manifest directory, followed by parsing. Substitution for original content gives equality or an actual hash collision, without global injectivity. |
 | [Retrieval/Recovery](Retrieval/Recovery.lean) | Connects accepted byte lookup and full-target decoding to the existing `RecoveryDelivery`; the native theorem retains original `BoundHCPObservation` endpoints through `BoundSampleRotation` and gives source coefficients or collision. |
@@ -176,6 +180,69 @@ The hidden-operator comparison in [Hardness](../../Hardness.lean) keeps its
 declared public-input and uniform-solver quantifiers. Selector privacy for a
 whole query additionally needs a specified joint sampler/view.
 
+[EncryptedCell](EncryptedCell.lean) stores one complete encrypted record
+under the SHA-256 digest of its bytes. The reference hash table fetches by
+that digest, then hashes the returned object before passing it to the
+recipient. Lean proves read-after-insert and the equality-or-collision
+alternative for a trusted address. The [demo](EncryptedCell/Demo.lean)
+uses two canonical full ciphertexts as its stored records.
+
+[CellDirectory](CellDirectory.lean) checks the complete context key and
+ordered natural-number cell IDs against a trusted SHA-256 directory root.
+It rejects duplicate IDs and checks the full directory once. A
+[fragment](CellDirectory/Patch.lean) checks each of its entries against that
+directory. Restriction drops entries outside a patch, and the glued lookup
+is unique on the union. This follows the overlap condition in
+[Ghrist–Hiraoka, Proposition 13](https://www2.math.upenn.edu/~ghrist/preprints/networkcodingshort.pdf).
+Two directories verified independently at the same context and root agree
+on any shared cell, or supply distinct canonical directory bytes with equal
+SHA-256. The reader resolves the cell ID through a checked fragment and
+fetches one entire ciphertext by its resolved digest.
+
+[CheckpointPin](CellDirectory/Checkpoint.lean) pairs the full context key
+with the directory root. An accepted transition anchor can supply that pin
+when its seal root is the SHA-256 digest of its canonical cell directory.
+The [local store](CellDirectory/Persistence.lean) names immutable ciphertext
+and directory files by their digests. A writer checks every referenced
+ciphertext before atomically replacing the checkpoint file. A fresh reader
+takes its expected pin independently, checks the checkpoint bytes and
+directory, and hashes each selected ciphertext before returning it. This
+reference covers process restarts on a local POSIX filesystem. Power-loss
+durability requires filesystem synchronization beyond a buffered flush.
+
+Run the [restart demo](CellDirectory/Persistence/Demo.lean) from `lean/`.
+The read phase temporarily changes the fixture files to test rejection.
+
+```sh
+lake build Protocol.Storage.CellDirectory.Persistence
+store="$(mktemp -d)/store"
+lake env lean --run Protocol/Storage/CellDirectory/Persistence/Demo.lean write "$store"
+lake env lean --run Protocol/Storage/CellDirectory/Persistence/Demo.lean read "$store"
+```
+
+A [public stack manifest](PublicStack/Manifest.lean) adds three fixed public
+roles to the cell directory. The [release profile](PublicStack/Release.lean)
+takes the public snapshot descriptor and original cochain from the storage
+context. Its evidence entry encodes the accepted proposal and verdict as a
+vote target. `Release.ofAnchor` ties those bytes and the directory to the
+actual accepted transition. The authority passes the resulting stack root
+independently, in its own domain from the proposal's block digest.
+
+[Restore](PublicStack/Restore.lean) verifies the manifest and directory before
+following their links. It reuses verified destination objects and requests
+only missing or corrupt digests, once per address. It sets the active stack
+pointer after every referenced byte object verifies. A rejected restore leaves
+the former pointer in place, so a retry can reuse objects already copied.
+The [demo](PublicStack/Demo.lean) restores a partial replica and reopens it
+in a fresh process.
+
+```sh
+lake build Protocol.Storage.PublicStack.Restore Protocol.Storage.PublicStack.Release
+stack_demo="$(mktemp -d)/stack"
+lake env lean --run Protocol/Storage/PublicStack/Demo.lean restore "$stack_demo"
+lake env lean --run Protocol/Storage/PublicStack/Demo.lean read "$stack_demo"
+```
+
 `UniformRead` supplies a complete lower-efficiency privacy reference within
 one fixed public bucket. It returns all labelled ciphertext bytes, with payload
 volume equal to their summed lengths and separate serialization overhead.
@@ -185,12 +252,11 @@ selected requests, authorization metadata or retries extend the transcript.
 under which a joint view reveals its selector, without claiming that all HCP
 samplers satisfy them or that efficient native retrieval is impossible.
 
-The retrieval functions reuse `PublicManifestView` and opaque byte rows,
-not a replacement database or fibration. Trust in the directory/root,
-availability, the hash implementation, finite full-ciphertext decoding and
-private delivery remain profile/runtime contracts. This layer establishes no
-efficient PIR/OMR protocol or public-key HCP encryption interface. The
-[Paper 2 account](../../../papers/paper2/DRAFT.md#67-harmonic-lattice-recovery-and-optional-encrypted-evaluation)
+Direct remote lookup exposes the requested address. The fixed-bucket
+profile downloads every record and lets the client select locally.
+The caller supplies pin authentication. Availability, private delivery,
+and efficient private querying retain separate contracts. The
+[Paper 2 account](../../../papers/paper2/DRAFT.md#67-retrieval-and-selector-privacy)
 and implementation map (archived reference: `archive/documentation/docs/PROTOCOL_PARITY_QUEUE.md`)
 record those boundaries.
 
@@ -399,6 +465,10 @@ lake build Protocol.Storage.Core Protocol.Storage.Examples
 lake build Protocol.Storage.AnchorExamples
 lake build Protocol.Storage.CanonicalRS Sheaf.ObservationQuotient
 lake build Protocol.Storage.Retrieval
+lake build Protocol.Storage.EncryptedCell.Demo
+lake env lean --run Protocol/Storage/EncryptedCell/Demo.lean
+lake build Protocol.Storage.CellDirectory.Demo
+lake env lean --run Protocol/Storage/CellDirectory/Demo.lean
 ```
 
 These commands describe validation targets; consult the shared parity record

@@ -18,6 +18,15 @@ application bridges:
   \item[\lean{Proximity/Core/Distance} and \lean{Proximity/Core/RadiusShell}]
     Attained minimum distances, closed and strict nearness, and the exact
     half-open real intervals between consecutive Hamming-count shells.
+  \item[\lean{Proximity/Core/PolynomialAgreement}]
+    Polynomial multiplier certificates and the whole-pair agreement bound.
+  \item[\lean{Proximity/Core/PolynomialAgreement/Boundary}]
+    Normalized coefficient-system equivalence, kernel translates of fixed
+    solution fibers, and upward closure of feasible response degrees.
+  \item[\lean{Proximity/Core/PolynomialAgreement/Completeness} and
+        \lean{Proximity/Core/PolynomialAgreement/Sharpness}]
+    Interpolation on the disagreement set, exactness through half the
+    minimum distance, and the sharp family on nonzero evaluation domains.
   \item[\lean{Proximity/Capacity/Parameters}]
     Explicit \(\epsstar\) and field-size inequalities.
   \item[\lean{Proximity/Capacity/Realization} and \lean{Proximity/Capacity/ListPhase}]
@@ -90,6 +99,10 @@ Their aggregate import target is \lean{lean/ProximityCoding.lean}.
 The detailed object dictionary, theorem correspondence, construction ownership
 and remaining mathematical extensions are recorded in
 \lean{papers/paper3/SEMANTIC_PARITY.md}.
+The polynomial agreement modules are in the standalone proof hierarchy.
+The 52 coding selections and 22 application selections use their existing
+target lists. The varying-data Zariski closure and Euclidean tensor price
+transfer in \cref{sec:polynomial-agreement} are mathematical arguments.
 
 \subsection{Auxiliary source and projective proofs}
 
@@ -156,6 +169,15 @@ Next-shell list lower bound & Lean-proved & Explicit \(|\F|^m\) injection\\
 Complete list phase split & Lean-proved & Three regimes and exact real interval\\
 Generic minimum-distance interpretation & Lean-proved & Attained minima,
   covering and good-challenge farness\\
+Polynomial agreement certificates & Lean-proved & Agreement at most \(D\)
+  and count bound \(n-D\)\\
+Polynomial certificate degree boundary & Lean-proved & Exact normalized
+  system, affine fibers, upward feasibility\\
+Polynomial certificate completeness and sharpness & Lean-proved & Exact
+  through half the minimum distance and sharp count \(\min(e,n-k+1-e)\)
+  on nonzero domains\\
+Varying-data closure and Euclidean prices & Mathematical & Elimination
+  closure and tensor price bound\\
 Pair-MCA certificate bound & Lean-proved &
   \(|\Bad_{\MCA}|\le\binom n{k+1}\)\\
 MCA target-fraction inequality & Lean-proved &

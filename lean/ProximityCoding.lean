@@ -6,6 +6,10 @@ public import Proximity.Core.InterleavedMetric
 public import Proximity.Core.Systematic
 public import Proximity.Core.DeepHole
 public import Proximity.Core.FixedChallenge
+public import Proximity.Core.PolynomialAgreement
+public import Proximity.Core.PolynomialAgreement.Boundary
+public import Proximity.Core.PolynomialAgreement.Completeness
+public import Proximity.Core.PolynomialAgreement.Sharpness
 public import Proximity.Core.MetricSharpness
 public import Proximity.Capacity
 public import Proximity.ListDecoding

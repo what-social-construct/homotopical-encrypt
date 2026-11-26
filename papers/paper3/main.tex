@@ -21,25 +21,25 @@ Reed--Solomon codes over smooth evaluation domains. A two-coordinate plane
 is exactly an interleaved pair word, equivalently the base--direction pair
 of a scalar affine line.
 
-At count radius \(n-k\), an agreement-set injection and a matching
-received-word construction prove
-\[
-  L_m\!\left(\mathcal C,\frac{n-k}{n}\right)=\binom nk
-\]
-for \(1\le k\le n\) and every positive interleaving width. A next-shell
-construction gives the three-regime fractional-list phase split. For pair
-mutual correlated agreement, compressed interpolation certificates give
-\[
-  |\Bad_{\MCA}|\le\binom n{k+1}
-\]
-at every radius. A smooth rate-\(1/4\) family over \(\mathbb F_{3^n}\)
-meets both \(2^{-128}\) fractional budgets: its list target holds at capacity
-and its pair-MCA target holds at every normalized radius.
+An agreement-set injection and a matching construction give the exact
+worst-case list size \(\binom nk\) at count radius \(n-k\) for
+\(1\le k\le n\) and every positive interleaving width. A next-shell
+construction gives the three-regime fractional-list phase split.
+Compressed interpolation certificates bound the number of bad pair-MCA
+challenges by \(\binom n{k+1}\) at every radius. A smooth rate-\(1/4\) family
+over \(\mathbb F_{3^n}\) meets both \(2^{-128}\) fractional budgets, for lists
+at capacity and pair MCA at every normalized radius.
 For the separate prime-field instance
 \((q,n,k)=(2^{128}+192513,4096,1024)\), the exact bad-count spectrum has
 \(B_{\mathcal C}(0)=1\) and \(B_{\mathcal C}(1)\ge2\). Its greatest safe MCA
 count radius is zero, its first unsafe count is one, and its real safe set
 is \([0,1/4096)\). The intermediate field-size list optimum remains open.
+
+Polynomial agreement certificates give a deterministic lower bound on the
+pair error count before the scalar challenge. Their normalized linear
+feasibility boundary certifies at least \(\min(e,n-k+1-e)\) errors for true
+count \(e\). The bound is exact through half the minimum distance and
+worst-case sharp on nonzero evaluation domains.
 
 For the shared systematic cellular cochain construction, we prove a
 quantitative comparison for its existing committed-cochain projection and
@@ -60,6 +60,7 @@ Euclidean and full-HCP source comparisons remain separate.
 \input{sections/05-list-decoding-target}
 \input{sections/06-mca-target}
 \input{sections/07-application-interface}
+\input{sections/07a-polynomial-agreement}
 \input{sections/08-formalization-plan}
 
 \bibliographystyle{alpha}

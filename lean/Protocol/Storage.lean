@@ -8,6 +8,10 @@ public import Protocol.Storage.CanonicalSystematic
 public import Protocol.Storage.DisclosureLeak
 public import Protocol.Storage.CoupledCiphertext.Disclosure
 public import Protocol.Storage.CoupledRecovery
+public import Protocol.Storage.EncryptedCell
+public import Protocol.Storage.CellDirectory.Persistence
+public import Protocol.Storage.PublicStack.Release
+public import Protocol.Storage.PublicStack.Restore
 public import Protocol.Storage.OperatorCommitment
 public import Protocol.Storage.ThreeLevelMetrics
 public import Protocol.Storage.CanonicalThreeLevel
@@ -44,4 +48,11 @@ reads: uniform whole-bucket transcript privacy, local content verification,
 original HCP recovery, native structured-noise/CVP query correctness and a
 conditional disclosure from joint one-hot query views. The six-stage manifest
 is not silently reinterpreted as an already implemented private database.
+
+`Protocol.Storage.CellDirectory.Persistence` implements local publication and
+process-restart reads under a caller-supplied checkpoint pin. Host disk
+synchronization and reader privacy retain separate contracts.
+
+`Protocol.Storage.PublicStack` names the public release under one root and
+restores its complete set of digest-named records into a local store.
 -/

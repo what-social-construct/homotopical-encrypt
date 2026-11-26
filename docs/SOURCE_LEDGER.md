@@ -1,6 +1,6 @@
 # Source ledger
 
-Updated 2026-11-25. This is the single source-reading register extracted from
+Updated 2026-11-26. This is the single source-reading register extracted from
 the chain/network working review; that review retains architecture provenance.
 Use source IDs as stable lookup keys. Full citation metadata stays in the
 [Paper 1 bibliography](../papers/paper1/references.bib),
@@ -76,6 +76,8 @@ source even though version 2 was posted on November 5.
 | 2608.22663 | `guruswamiLiSinghal2026averageRadius` | P3 | Random-code comparison; no ensemble transfer. |
 | 2609.18098 | `liuEtAl2026hyperDerivativeAG` | P3 | Alternative-codec candidate; no metric transfer. |
 | 2611.07607 | `alrabiahGoyalGuruswami2026` | P3 | Cited novelty comparison; no Lean adoption. |
+| Euclidean tensor prices 2026 | `openai2026euclideanTensorPrices` | P3 | Placed-wire prices and the direct-sum bound used for the agreement tensor. |
+| Computational Algebra 2019 | `setiabrata2019computationalAlgebra` | P3 | Elimination theorem used to identify the closure of the projected feasibility locus. |
 
 ### Quick topic and ID index
 
@@ -86,7 +88,7 @@ Search this file for an arXiv ID or `ePrint 2026/910` when working from a URL.
 |---|---|
 | Cellular sheaves, Hodge and categorical/family semantics | [1808.01513](#source-1808-01513), [1908.08944](#source-1908-08944), [2606.03861](#source-2606-03861), [2610.12384](#source-2610-12384), [2611.05209](#source-2611-05209), [2610.40746](#source-2610-40746) |
 | Multiplicative cohomology and richer logical profiles | [2611.11828](#source-2611-11828) |
-| Geometry, codes and reductions | [Micciancio 2001](#source-micciancio-2001), [2601.19830](#source-2601-19830), [0911.1298](#source-0911-1298), [2609.18098](#source-2609-18098), [2608.22663](#source-2608-22663), [1312.6454](#source-1312-6454), [2011.14057](#source-2011-14057), [1507.01653](#source-1507-01653), [ePrint 2025/2051](#source-eprint-2025-2051), [2611.07607](#source-2611-07607) |
+| Geometry, codes and reductions | [Micciancio 2001](#source-micciancio-2001), [2601.19830](#source-2601-19830), [0911.1298](#source-0911-1298), [2609.18098](#source-2609-18098), [2608.22663](#source-2608-22663), [1312.6454](#source-1312-6454), [2011.14057](#source-2011-14057), [1507.01653](#source-1507-01653), [ePrint 2025/2051](#source-eprint-2025-2051), [2611.07607](#source-2611-07607), [Euclidean tensor prices](#source-euclidean-tensor-prices), [Elimination](#source-setiabrata-2019) |
 | Network dynamics, metrics and learning | [2608.15397](#source-2608-15397), [2608.14556](#source-2608-14556), [2605.06395](#source-2605-06395), [2610.28455](#source-2610-28455), [2512.00242](#source-2512-00242), [2611.04670](#source-2611-04670), [2110.03789](#source-2110-03789) |
 | Ordered constraints and transitions | [2007.04099](#source-2007-04099), [2605.15778](#source-2605-15778), [2605.26883](#source-2605-26883) |
 | Cryptographic games and private retrieval | [CL06](#source-cl06), [BGPR2022](#source-bgpr2022), [VCVio](#source-vcvio), [2611.05136](#source-2611-05136), [2610.37061](#source-2610-37061), [ePrint 2026/910](#source-eprint-2026-910) |
@@ -126,6 +128,13 @@ charts and representability as further work.
 | <a id="source-1507-01653"></a>[Keti–Wan, *Deep Holes in Reed–Solomon Codes Based on Dickson Polynomials*, 1507.01653v4](https://arxiv.org/html/1507.01653v4#S2) | Primary §2 reviewed: the standard distance bounds give degree-`k` deep holes for proper RS codes. | Paper 3 §5 cites this classical witness. The exact interleaved multiplicity is the manuscript's interpolation deduction, rather than a formula attributed to this source. See the coding comparison (archived reference: `archive/documentation/docs/PROXIMITY_NOVELTY_COMPARISON.md`). |
 | <a id="source-eprint-2025-2051"></a>[Bordage–Chiesa–Guan–Manzur, *All Polynomial Generators Preserve Distance with Mutual Correlated Agreement*, CCC 2026 / ePrint 2025/2051](https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.CCC.2026.24) | Published primary introduction/§1.1 reviewed: broader polynomial-generator MCA formulations for linear codes. | Background citation in Paper 3 §6. No quantitative theorem, event identification or protocol reduction is imported by this citation; the comparison note (archived reference: `archive/documentation/docs/PROXIMITY_NOVELTY_COMPARISON.md`) records review depth. |
 | <a id="source-2611-07607"></a>[Alrabiah–Goyal–Guruswami, *Combinatorial limitations of list-decoding Reed–Solomon codes*, 2611.07607v1](https://arxiv.org/html/2611.07607v1), [ECCC TR26-304](https://eccc.weizmann.ac.il/report/2026/304/) | **Primary Theorems 1.1, 1.2, 1.4 and proof overviews reviewed; complete proof audit remains open.** Posted November 5, 2026. Full-length extension-field codes of length `N=q^(4t)` at rates `q^(-2)` or `(1-q^(-1))^2` have `N^(Ω_q(log N))` nearby words just beyond Johnson. Specified full-length prime-field families have growing polynomial lists at a constant gap below capacity. | Paper 3 comparison, with no contradiction identified in its selected claims: our explicit family uses `n=256*2^u` subgroup points in a field of size `3^n`, not full length; the boundary prime also has length `4096` distinct from its field size. The endpoint list `choose(n,k)` and fractional-field budget allow exponential-in-length lists and assert no polynomial-list capacity theorem. Single-word lists do not automatically identify our pair-MCA event. No Lean adoption and no prerequisite for Paper 1 submission. |
+
+### Polynomial agreement certificate sources
+
+| Source | Result examined | Role in Paper 3 |
+|---|---|---|
+| <a id="source-euclidean-tensor-prices"></a>[OpenAI, *Euclidean Geometry in the Asymptotic Spectrum of Tensors*](https://github.com/openai/math/blob/3344da59991ed94f9ba711217b29c1d760badfa6/preprints/Euclidean-geometry-in-the-asymptotic-spectrum-of-tensors-November-24-2026/paper.pdf) | Theorem 1.1 and the introduction give the Euclidean price of a wire, restriction monotonicity, and the sum bound from spectral-point additivity. | Paper 3 applies those price properties to a tagged agreement tensor. The finite-field certificate proofs are independent of the price construction. |
+| <a id="source-setiabrata-2019"></a>[Setiabrata, *Math 4370, Computational Algebra*](https://math.mit.edu/~setia/4370fa19.pdf) | Theorem 6.17.1 gives the Zariski closure of a projection over an algebraically closed field as the variety of the elimination ideal. | Eliminating the normalized witness coefficients gives the closure of the received-pair locus. The Lean checks concern the finite linear equations and their affine fibers. |
 
 ### Network computation, metrics and learning
 

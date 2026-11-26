@@ -10,6 +10,17 @@ smooth family constructs its field and subgroup domain for every parameter.
 A separate prime-field example proves an exact 128-bit MCA transition and the
 real safe interval `[0,1/4096)`.
 
+Section 8 constructs polynomial agreement certificates for the received pair
+before the scalar challenge. Coefficient elimination finds the first feasible
+response degree. If the true error count is `e` and `d_min = n-k+1`, the
+worst-case certified count on nonzero evaluation domains is exactly
+`min(e, d_min-e)`. The count is exact through half the minimum distance,
+including equality. Lean checks degree feasibility, affine solution fibers,
+completeness and sharpness. The manuscript also gives the Zariski closure
+construction and the conditional tensor-price bound as mathematical arguments.
+[Polynomial agreement modules](../../lean/Proximity/Core/PolynomialAgreement.lean) ·
+[Certificate notes](../../lean/Proximity/README.md#polynomial-agreement-certificates-and-tensor-prices)
+
 The selected application traces the existing cochain payload through its
 actual plane extraction. In the declared systematic cellular profile,
 modular validity is an integral coboundary plus coordinatewise modulus carry.

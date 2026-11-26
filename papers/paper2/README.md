@@ -20,6 +20,10 @@ held transport token and available ciphertext bytes.
 | Certificate subjects and gates | Canonical subjects retain the full intent and metadata; later verification consumes every predecessor check on the same seven-leaf bundle and database. |
 | Sampled scalar check | The retained intent fixes the pair before one uniform field challenge. Acceptance on a far modular cochain is bounded by the pair's MCA bad-challenge fraction. |
 | Scoped delivery and hash lookup | Canonical token/context checks join available bytes to original-coefficient recovery or an actual hash-collision alternative. |
+| Encrypted cell index | The SHA-256 address names the complete stored byte record. A direct lookup verifies the entire response before returning it. |
+| Checked cell directory | A trusted context and directory root bind the ordered cell IDs and ciphertext digests. Verified fragments agree on overlaps and resolve IDs for whole-record reads. |
+| Local restart reads | A writer verifies the directory and all referenced ciphertexts before atomically publishing the checkpoint. A fresh reader checks it against an independent pin and verifies the selected ciphertext. |
+| Incremental public stack restore | The accepted release root names the directory, public snapshot descriptor, original cochain, and vote target. A replica reuses verified objects and publishes the root once every reference verifies. |
 | Bounded native credentials | Canonical witness/program/instance codecs check the original matrix, message, opening and credential bounds. |
 | Approved execution | The owner checker uses the exact expected program, parsed verifier key, CRS, public names and full signing message. |
 | Raw-root CRS reference | Fresh completion inherits the conditional five-term adaptive forgery bound on the original sampled execution. |
@@ -68,6 +72,15 @@ objects and proved statements to Lean. Useful protocol entry points include:
   [checked owned transfers](../../lean/Protocol/Transfer/Native.lean).
 - [Scoped native delivery](../../lean/Protocol/Ephemeral/NativeDelivery.lean)
   and [native retrieval](../../lean/Protocol/Storage/Retrieval/Native.lean).
+- [Encrypted cell index](../../lean/Protocol/Storage/EncryptedCell.lean)
+  and [whole-record retrieval demo](../../lean/Protocol/Storage/EncryptedCell/Demo.lean).
+- [Checked directory and fragment reads](../../lean/Protocol/Storage/CellDirectory.lean)
+  and [directory demo](../../lean/Protocol/Storage/CellDirectory/Demo.lean).
+- [Local checkpoint publication](../../lean/Protocol/Storage/CellDirectory/Persistence.lean)
+  and [separate-process restart demo](../../lean/Protocol/Storage/CellDirectory/Persistence/Demo.lean).
+- [Public stack release](../../lean/Protocol/Storage/PublicStack/Release.lean),
+  [incremental restore](../../lean/Protocol/Storage/PublicStack/Restore.lean),
+  and [replica demo](../../lean/Protocol/Storage/PublicStack/Demo.lean).
 - [Certificate profiles](../../lean/Protocol/Transfer/Certificates/Profile.lean)
   and [profile authentication](../../lean/Protocol/Transfer/Certificates/ProfileAuthentication.lean).
 - [Sampled scalar transfer check](../../lean/Protocol/Transfer/Certificates/SampledMCA.lean)

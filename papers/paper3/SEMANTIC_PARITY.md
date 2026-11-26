@@ -12,7 +12,11 @@ storage contracts; Paper 3 owns the quantitative coding and native-distance
 comparisons. Full projective coordinates, their exact-real reconstruction and
 the induced chordal distance are an optional source for the projection chain.
 Those results and §7.3's exact-component residual obstruction are canonical
-auxiliary proofs outside the existing 52/22 configured selections.
+auxiliary proofs outside the existing 52/22 configured selections. Section 8
+adds auxiliary polynomial agreement certificates for received RS pairs. Lean
+checks their finite feasibility, closure under increasing response degree,
+and sharp error-count guarantee. The Zariski closure and spectral-price
+consequences are manuscript-level derivations.
 
 The [coding configuration](../../lean/Palomar/PaperThree/comparator.json)
 selects **52 targets (36 main, 16 support)**; the
@@ -30,9 +34,11 @@ records are maintained separately.
 | Native metrics, matching lifts, capacity families, no-wrap reflection and challenge analysis (O43–O45, O48, O53, O56–O61, O63–O66; T22–T34) | The source/codec profile is supplied by Paper 2; the metric and coding models are defined here | Paper 3 |
 | Exact-component residual obstruction (O50/C11; `prop:exact-component-obstruction`) | Paper 1 supplies the HCP/Hodge primitives | Paper 3; canonical proof in `Sheaf/ObservationQuotient`, auxiliary to 52/22. |
 | Full projective reconstruction (O51/T21/C15) | Genuine frames and any frame-to-payload codec are explicit source data. Paper 2 owns visibility. | Paper 3 proves reconstruction, operative-kernel recovery, chordal separation and the Mathlib projective-point correspondence as auxiliary results outside 52/22. |
+| Polynomial agreement certificates, search and sharp guarantee (O67–O70, T35–T39) | Paper 3 uses the existing RS pair code and its whole-pair distance. | Paper 3 proves the finite certificates and their frontier as auxiliary results outside 52/22. |
+| Zariski closure and tensor-price consequences (O71–O72, T40–T41) | The elimination theorem and Euclidean spectral-price laws are external mathematical inputs. | Paper 3 derives the consequences for the coefficient system and match tensors in prose. |
 | Typed checkpoints, sealing, evidence and consumption (C10) | Paper 2 | Paper 2; retained here as an imported protocol boundary, not a Paper 3 contribution. |
 
-All T01–T34 rows are Paper 3 mathematical correspondences. C01–C18 retain
+T01–T41 are Paper 3 mathematical correspondences. C01–C18 retain
 the construction/theorem split above: a context, binding, encoder or decoder
 witness is not constructed merely by composing mathematical maps. The
 `ProjectionChain` proves validity and near-side handoffs; a source-far claim
@@ -46,8 +52,8 @@ of a private valid-frame encoder.
 retains a displayed hypothesis. **Parameterized** means the interface accepts
 an input rather than constructing it. Roles distinguish ambient definitions
 (CORE), conversions (ADAPTER), displayed parameter sets (INSTANCE), proof
-witnesses (PROOF) and source-specific objects (APPLICATION). A bundled proof
-witness marked PROSE ONLY adds no independent mathematical object.
+witnesses (PROOF) and source-specific objects (APPLICATION). PROSE ONLY marks
+an argument or object given at the manuscript level.
 
 Paths in code notation are relative to `lean/Proximity/` unless their owning
 namespace indicates another folder. Generic declarations are in
@@ -126,6 +132,12 @@ O41–O66/C01–C18 use their linked canonical owners, generally within
 | O64 | Raw native-far rejection versus accepted exact anchors | `Storage.Context`; `CanonicalSystematic.pairCodeword_of_accepted`; O55–O63 | Positive native farness excludes modular validity; under the declared systematic realization/decoder, accepted real-exact anchors have zero native distance. Raw far witnesses are rejection inputs, not accepted ledger anchors. Arbitrary HCP or policy predicates are not identified by this boundary. | APPLICATION |
 | O65 | Sharp factor-two native near comparison on the actual RS code | `Core.MetricSharpness.zeroDirectionPowerLine`, `zeroDirectionPowerLine_flatDistance_eq_half_capacity`, `no_unit_pair_distance_bound_by_flat_distance` | **explicit witness** `(deep hole,0)`: pair distance is `(n-k)/n` and scalar-coordinate distance is half, for `0<k<n`. The global native unit near bound is false. | PROOF |
 | O66 | Existing source-calibration composition and near projection | `Storage.CanonicalCalibration.sourceModelFor`, `cochainToPlaneFor`, `planeToRSFor`, `calibrationFor`, `evaluationProjectionFor` | **proved instantiation**, not a new assumed inequality. Original raw contexts and native metrics populate `SourceToSourceCalibration`, `SourceToCodeCalibration.transCode` and `EvaluationProjection`. The near score is explicitly `2*d_C`; the legacy `GlobalSection` field here means degree-one modular validity, not cellular degree-zero sections. The canonical geometry uses its built-in systematic ordering; another geometric ordering needs explicit transport compatibility. | ADAPTER |
+| O67 | Polynomial multiplier certificate `(h₀,h₁,R,t)` for a received pair `w`, §8 | [PairAgreementCertificate](../../lean/Proximity/Core/PolynomialAgreement.lean#L25) | **exact** for the displayed hypotheses. Each multiplier has degree at most `t`, the response degree is at least `k+t`, and its evaluation at every site is `h₀(aᵢ)wᵢ₀+h₁(aᵢ)wᵢ₁`. | PROOF |
+| O68 | Monic response and coefficient system `A(w)x=b`, §8 | [normalize](../../lean/Proximity/Core/PolynomialAgreement/Boundary.lean#L43), [Coefficients and coefficientSystem](../../lean/Proximity/Core/PolynomialAgreement/Boundary.lean#L53) | **exact**. The response is `X^D` plus `D` lower coefficients, and each multiplier contributes `t+1` coefficients. Each equation evaluates on the original domain. | ADAPTER |
+| O69 | Informative degrees `k≤D<n` and strongest certified error count, §8 | [exists_at_larger_degree](../../lean/Proximity/Core/PolynomialAgreement/Boundary.lean#L170), [hammingDistanceToCode_ge](../../lean/Proximity/Core/PolynomialAgreement.lean#L76) | The first feasible `D` at budget `D-k` gives count `n-D`. An empty feasible set gives count zero by convention. | CORE |
+| O70 | Rational-power pair on a chosen agreement set `B`, §8 | [rationalPowerPair](../../lean/Proximity/Core/PolynomialAgreement/Sharpness.lean#L25) | **explicit** received pair on a nonzero evaluation domain. For `M=card B≥k`, its first column is `V_B(aᵢ)/aᵢ^(M-k+1)`, where `V_B` vanishes on `B`. Its second column is zero. | INSTANCE |
+| O71 | Received-word feasibility locus and Zariski closure, §8 | [Manuscript](sections/07a-polynomial-agreement.tex) | Over the algebraic closure, the coefficient equations define an incidence set. Eliminating the coefficient variables from its defining ideal gives the closure of its projection to received pairs. | PROSE ONLY |
+| O72 | Placed match tensors and spectral prices, §8 | [Manuscript](sections/07a-polynomial-agreement.tex) | The received pair and a codeword determine the wired sites in each summand. The spectral-price argument uses a fixed Euclidean placement and the cited price laws. | PROSE ONLY |
 
 ### Field and radius identities
 
@@ -176,6 +188,13 @@ O41–O66/C01–C18 use their linked canonical owners, generally within
 | T32 | §7 raw far inputs and accepted-context boundary | [Context](../../lean/Protocol/Storage/Context.lean); [CanonicalSystematic](../../lean/Protocol/Storage/CanonicalSystematic.lean) | Positive Euclidean farness rejects real exact acceptance; positive native modular farness rejects the modular source valid locus. In the declared systematic ordering and explicit stored-decoder equality, real accepted anchors also have zero native distance. These statements do not equate the two validity predicates globally. |
 | T33 | §7 sharpness of the factor-two near contract | [MetricSharpness](../../lean/Proximity/Core/MetricSharpness.lean) | Actual RS witness `(power word,0)` has pair distance exactly twice native scalar-coordinate distance, and refutes a global unit near bound when `0<k<n`. |
 | T34 | §7 existing application interfaces on the original context | [CanonicalCalibration](../../lean/Protocol/Storage/CanonicalCalibration.lean) | Composed far calibration reads the actual original pair; the existing near API consumes the explicit `2*d_C` budget. No source-to-target distance inequality is supplied as a premise. |
+| T35 | §8, `prop:poly-agreement-sound` | [agreement_card_le](../../lean/Proximity/Core/PolynomialAgreement.lean#L42), [count and relative-distance bounds](../../lean/Proximity/Core/PolynomialAgreement.lean#L76) | A response of degree `D` caps agreement with every valid pair at `D`. For `k>0`, the minimum whole-pair distance is at least `n-D` in counts, with the corresponding relative bound. |
+| T36 | §8 exact feasibility and affine fiber in `prop:poly-agreement-boundary` | [coefficientSystem_fiber](../../lean/Proximity/Core/PolynomialAgreement/Boundary.lean#L94), [exists_certificate_iff_coefficientSystem](../../lean/Proximity/Core/PolynomialAgreement/Boundary.lean#L102) | For `D>0` and `k+t≤D`, existence at exact budget `t` and degree `D` is equivalent to solvability of the normalized system. A nonempty solution fiber is a translate of the kernel for fixed input and fixed budgets. |
+| T37 | §8 maximal budget and monotone frontier in `prop:poly-agreement-boundary` | [exists_at_larger_degree](../../lean/Proximity/Core/PolynomialAgreement/Boundary.lean#L170) | A certificate at positive degree `D` gives one at each `E≥D` with budget `E-k`. At `E=D` this subsumes all smaller budgets. Feasible degrees form an upper interval in `k,…,n-1`. Its first degree gives the strongest certified count. Binary search and elimination specify the manuscript algorithm. |
+| T38 | §8 guarantee and closed half-distance exactness in `thm:poly-agreement-complete` | [exists_with_degree_of_codeword](../../lean/Proximity/Core/PolynomialAgreement/Completeness.lean#L26), [exists_with_distance_bound](../../lean/Proximity/Core/PolynomialAgreement/Completeness.lean#L106), [exists_exact_of_twice_distance_le](../../lean/Proximity/Core/PolynomialAgreement/Completeness.lean#L122) | For true positive error count `e`, a certificate with budget `e-1` attains `min(e,n-k+1-e)`. Exactness holds for `2e≤n-k+1`, including ties at equality. Completeness uses a nearest pair in the existence proof. The feasibility equations use only the received pair and the evaluation sites. |
+| T39 | §8 sharpness in `thm:poly-agreement-complete` | [rationalPowerPair_hammingDistanceToCode](../../lean/Proximity/Core/PolynomialAgreement/Sharpness.lean#L78), [rationalPowerPair_certificate_bound](../../lean/Proximity/Core/PolynomialAgreement/Sharpness.lean#L116) | For nonzero evaluation sites and `1≤k≤M=card B`, the constructed pair has true count `n-M`. Every certificate gives count at most `M-k+1`. Together with T35 and T38, this proves the sharp worst-case certified count for all `0≤e≤n-k`, with count zero at `e=0`. |
+| T40 | §8 Zariski closure over the algebraic closure | **Prose only.** [Manuscript](sections/07a-polynomial-agreement.tex) | The projected feasibility locus can acquire infeasible words under Zariski closure. The closure is the variety of the elimination ideal. T36 concerns each fixed-word fiber. |
+| T41 | §8 spectral-price bound from the agreement cap | **Prose only.** [Manuscript](sections/07a-polynomial-agreement.tex) | The cap bounds each summand by the price of the `D` longest hub wires. The direct-sum inequality gives a price bound for the match tensor with the stated overhead and cited spectral-price laws. |
 
 ## Concrete source and application parity
 

@@ -80,6 +80,45 @@ payload-envelope binding and agreement with the semantic classifier retain
 their selected contracts. Private presentation bytes are not included in the
 released storage view.
 
+\subsection{Content-addressed encrypted cells}
+
+The storage reference treats a complete encrypted byte record \(\beta\)
+as one cell value and indexes it by \(d=\operatorname{SHA256}(\beta)\).
+A direct read asks the index for \(d\), then hashes the entire returned
+value before returning it. Lean proves that a successful insertion
+can be read back under that address. At the address of a trusted original,
+acceptance gives its complete bytes or two distinct byte strings with the
+same digest.
+
+The directory codec binds the full context key and the ordered cell IDs
+and ciphertext digests under a trusted SHA-256 directory root. The verifier
+checks the complete directory once and rejects duplicate cell IDs. Verified
+fragments of that directory agree on common cells and give a unique merged
+lookup. For independently verified directories at the same context and
+root, differing digests for a common cell exhibit a collision on canonical
+directory bytes. Resolving a cell through a checked fragment supplies \(d\)
+for the whole-record check.
+
+A checkpoint pin pairs the context key with the directory root. An accepted
+transition anchor supplies it when the seal root equals the canonical cell
+directory's SHA-256 digest. The local store checks every immutable object
+named by the directory before publishing the checkpoint atomically. After
+a process restart, the reader uses an independent pin to check the checkpoint
+and directory, then verifies the full ciphertext before recovery. Power-loss
+durability requires filesystem synchronization.
+
+A public stack manifest binds the same directory to the public snapshot
+descriptor, original cochain, and accepted proposal and verdict. The authority
+passes the stack root independently. This root has its own preimage domain.
+Restore checks the manifest and directory, reuses verified local objects,
+fetches the remaining objects by digest, and activates the root only after
+all referenced objects verify.
+
+A remote direct lookup exposes the digest being requested. The fixed-bucket
+privacy profile downloads the entire public bucket and selects locally.
+Both delivery paths can use the same full-object digest check before
+decrypting. Efficient private selection requires a separate implementation.
+
 \subsection{Scoped token delivery and recipient recovery}
 
 One material-indexed scoped-delivery receipt supports both the earlier
@@ -645,7 +684,6 @@ instantiating the cryptographic primitives and enforcing the lifecycle
 remain steps toward a secure protocol implementation.
 
 \appendix
-\clearpage
 \section{Checked transfer in Lean}
 The accepted-update statement uses \path{Owned.check_implies_accepted_update}
 and the value, inventory and replay laws in \path{Owned.CheckedTransfer}.
@@ -654,22 +692,18 @@ The executable checker is related to the same specification by
 \path{Owned.Executable.successor_eq}. The original native history and
 recovery proof is \path{Owned.CheckedTransfer.native_history_recovery}.
 
-The sampled check in Proposition~\ref{prop:sampled-mca} and the diagonal
-example use these declarations.
-\begin{verbatim}
-SampledMCA.Pending.far_acceptance_le
-SampledMCA.Pending.far_acceptance_le_of_mca
-SampledMCA.Pending.capacity_acceptance_eq
-\end{verbatim}
+In \path{CellDirectory}, \path{verify_eq_some_iff} characterizes acceptance.
+The overlap and gluing laws are \path{Verified.overlap_agrees_or_collision}
+and \path{Patch.resolve_glue_unique}. The anchor bridge is
+\path{CheckpointPin.ofAnchor_verify}.
+\path{PublicStack.Release.ofAnchor_bound} identifies the released public
+roles with the original accepted transition.
 
-The V2 release proofs use these Lean declarations.
-\begin{verbatim}
-NativeCommittedRelease
-Inputs.assemble_eq_checked
-Inputs.signingInputAt_eq_checked
-simulated_recovery_probability_le
-recovery_probability_le_of_joint_prefix
-\end{verbatim}
+The sampled-check and diagonal results use \path{SampledMCA.Pending.far_acceptance_le},
+\path{far_acceptance_le_of_mca}, and \path{capacity_acceptance_eq}.
+The V2 release uses \path{Inputs.assemble_eq_checked},
+\path{Inputs.signingInputAt_eq_checked}, \path{simulated_recovery_probability_le},
+and \path{recovery_probability_le_of_joint_prefix} in \path{NativeCommittedRelease}.
 
 Run the fixed byte-owner example from \path{lean/} with the pinned toolchain.
 \begin{verbatim}

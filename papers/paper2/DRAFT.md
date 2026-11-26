@@ -1506,6 +1506,48 @@ obligations.
 
 #### 6.7. Retrieval and selector privacy
 
+For direct storage, a complete encrypted byte record \(\beta\) is stored
+under \(d=\operatorname{SHA256}(\beta)\). The
+[Lean reference index](../../lean/Protocol/Storage/EncryptedCell.lean) makes
+one lookup at \(d\) and hashes the entire returned record before use. A
+successful insertion addresses the original bytes and an immediate verified
+read returns them. At a trusted address for an original record, any different
+accepted bytes give an actual SHA-256 collision.
+
+The [directory verifier](../../lean/Protocol/Storage/CellDirectory.lean)
+checks the complete context key and ordered cell IDs and digests against
+the caller's trusted directory root. It rejects duplicate cell IDs.
+Checked fragments of one directory agree on shared cells and give a unique
+merged lookup. For independently verified directories at the same context
+and root, differing names for a shared cell exhibit a SHA-256 collision on
+canonical directory bytes. A checked cell lookup resolves \(d\) for the
+whole-record reader. This reference verifies the complete directory once.
+
+The [checkpoint pin](../../lean/Protocol/Storage/CellDirectory/Checkpoint.lean)
+pairs the full context key with the directory root. It projects from an
+accepted transition anchor when the seal root is the SHA-256 digest of the
+canonical cell directory. The [local store](../../lean/Protocol/Storage/CellDirectory/Persistence.lean)
+keeps digest-named ciphertexts and directories immutable and checks every
+referenced object before atomically publishing the checkpoint. After a
+process restart, the reader supplies its expected pin independently, checks
+the checkpoint and directory, and verifies the requested ciphertext bytes
+before recovery. Power-loss durability requires filesystem synchronization.
+
+The [public stack release](../../lean/Protocol/Storage/PublicStack/Release.lean)
+binds the public snapshot descriptor, original cochain, and accepted proposal
+and verdict to the cell directory under one canonical manifest root. The
+root is issued from the accepted release in its own domain. A reader passes
+that root independently to the [restore procedure](../../lean/Protocol/Storage/PublicStack/Restore.lean).
+The procedure verifies the directory, reuses verified objects in the replica,
+fetches each missing or corrupt address once, and publishes the stack only
+when all selected objects verify. A fresh process can reopen the replica
+using the same trusted root.
+
+The indexed request exposes \(d\) to the responding server. The fixed-bucket
+profile below selects locally after a complete bucket download. A PIR
+backend would supply private selection while retaining the separate result
+verification step.
+
 The [retrieval layer](../../lean/Protocol/Storage/Retrieval.lean) fetches
 the selected canonical ciphertext from the original manifest and passes it
 to recipient recovery. An optional
@@ -1616,7 +1658,7 @@ their stated profiles.
 | Public certificate bytes and calibration | [Codec](../../lean/Protocol/Transfer/Certificates/Codec.lean), [Calibration](../../lean/Protocol/Transfer/Certificates/Calibration.lean), [Evidence](../../lean/Protocol/Transfer/Certificates/Evidence.lean), [Bundle](../../lean/Protocol/Transfer/Certificates/Bundle.lean) | Canonical public subjects, actual proof-byte leaves, immutable seven-slot root and predecessor checks; exact rational realization identifies the selected real calibration. The generic packet codec has a concrete byte-owner specialization. |
 | Certificate reflection and consumption | [generic contract](../../lean/Protocol/Transfer/Certificates.lean), [Statement](../../lean/Protocol/Transfer/Certificates/Statement.lean), [Native](../../lean/Protocol/Transfer/Certificates/Native.lean), [Projection](../../lean/Protocol/Transfer/Certificates/Projection.lean) | Encoding reflection and operational algorithm agreement are constructed for the actual native/projection relations. Checking yields certification or actual backend/terminal-leaf false acceptance; circuit refinement, cryptographic soundness and knowledge remain open. |
 | Proof/TCB envelopes | [ProofCarrying](../../lean/TCB/ProofCarrying.lean), [SNARK](../../lean/TCB/SNARK.lean), [CompressionBoundary](../../lean/TCB/CompressionBoundary.lean), [WitnessVerifier](../../lean/TCB/WitnessVerifier.lean), [Runtime](../../lean/TCB/Runtime.lean) | Named proof/compression/runtime contracts. Legacy well-formedness includes statement truth and cannot establish independent concrete verifier soundness. |
-| Retrieval | [Retrieval](../../lean/Protocol/Storage/Retrieval.lean) | Original Hodge query/answer correctness, digest-check/collision recovery and whole-bucket selector privacy; efficient PIR and general native-query privacy remain open. |
+| Retrieval | [CellDirectory](../../lean/Protocol/Storage/CellDirectory.lean), [Retrieval](../../lean/Protocol/Storage/Retrieval.lean) | Checked cell naming under a trusted context and root, unique fragment lookup on the union, original Hodge query/answer correctness, digest-check/collision recovery and whole-bucket selector privacy. Efficient PIR and general native-query privacy remain open. |
 | Committee and quorum kernel | [Committee](../../lean/Protocol/Consensus/Committee.lean), [Vote](../../lean/Protocol/Consensus/Vote.lean), [Quorum](../../lean/Protocol/Consensus/Quorum.lean), [Certified](../../lean/Protocol/Ledger/Certified.lean) | Registered weights, authenticated proposal-bound votes, strict quorums and conditional intersection/safety; rounds, locks and finality are not supplied. |
 
 #### Deferred policy, compatibility and implementation families
