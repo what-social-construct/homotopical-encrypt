@@ -52,15 +52,22 @@ message for the event and the live cache for subsequent public queries. -/
 abbrev Prefix (cols : ℕ) (Owner Advice : Type) :=
   (Bits cols × ReleaseView Owner Advice) × publicOracle.QueryCache
 
-def simulateRelease (inputs : Advice → Inputs Owner) (simulate : EvidenceSimulator Owner Advice)
-    (advice : Advice) (view : View) : OracleComp PublicSpec (ReleaseView Owner Advice) :=
+/-- Both evidence producers run on the parsed instance and assemble the same
+public record. Parse failure produces no transfer release. -/
+def releaseWithEvidence (inputs : Inputs Owner) (advice : Advice) (view : View)
+    (produce : NativeCommitted.Instance → OracleComp PublicSpec (Option (List UInt8 × List UInt8))) :
+    OracleComp PublicSpec (ReleaseView Owner Advice) :=
   match NativeCommitted.decodeInstance view.1 with
   | none => pure (advice, view, none)
   | some instanceData =>
     (fun evidence => (advice, view, evidence.map fun bytes =>
-      (inputs advice).assemble instanceData bytes.1 bytes.2)) <$>
-      simulate advice ((inputs advice).intentAt instanceData)
-        ((inputs advice).signingInputAt instanceData) view.2
+      inputs.assemble instanceData bytes.1 bytes.2)) <$> produce instanceData
+
+def simulateRelease (inputs : Advice → Inputs Owner) (simulate : EvidenceSimulator Owner Advice)
+    (advice : Advice) (view : View) : OracleComp PublicSpec (ReleaseView Owner Advice) :=
+  releaseWithEvidence (inputs advice) advice view fun instanceData =>
+    simulate advice ((inputs advice).intentAt instanceData)
+      ((inputs advice).signingInputAt instanceData) view.2
 
 theorem simulateRelease_query_bound (inputs : Advice → Inputs Owner)
     (simulate : EvidenceSimulator Owner Advice) {s : ℕ}
@@ -68,7 +75,7 @@ theorem simulateRelease_query_bound (inputs : Advice → Inputs Owner)
       IsQueryBoundP (simulate advice intent signing ciphertext) publicOnly s)
     (advice : Advice) (view : View) :
     IsQueryBoundP (simulateRelease inputs simulate advice view) publicOnly s := by
-  unfold simulateRelease
+  unfold simulateRelease releaseWithEvidence
   split
   · simp
   · exact (isQueryBoundP_map_iff _ _ _).mpr (bounded _ _ _ _)

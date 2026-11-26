@@ -22,8 +22,11 @@ public import Protocol.Transfer.PathSignature.NativeSampler
 public import Protocol.Transfer.PathSignature.NativeCircuit
 public import Protocol.Transfer.PathSignature.NativeApplication
 public import Protocol.Transfer.PathSignature.NativeCircuitBounds
+public import Protocol.Transfer.PathSignature.NativeCircuitRanges
 public import Protocol.Transfer.PathSignature.NativeRecovery
 public import Protocol.Transfer.PathSignature.NativeSignSampler
+public import Protocol.Transfer.PathSignature.NativeSignSampler.CheckedRecovery
+public import Protocol.Transfer.PathSignature.NativeSignSampler.Reuse
 public import Protocol.Transfer.PathSignature.NativeSignPrivacy
 public import Protocol.Transfer.PathSignature.NativeOperatorGuessing
 public import Protocol.Transfer.PathSignature.NativeNoiseRefresh
@@ -31,7 +34,10 @@ public import Protocol.Transfer.PathSignature.NativeCommitted
 public import Protocol.Transfer.PathSignature.NativeCommittedContext
 public import Protocol.Transfer.PathSignature.NativeCommittedPrivacy
 public import Protocol.Transfer.PathSignature.NativeCommittedRandomOracle
+public import Protocol.Transfer.PathSignature.NativeCommittedRandomOracle.Indistinguishability
 public import Protocol.Transfer.PathSignature.NativeCommittedRelease.Simulation
+public import Protocol.Transfer.PathSignature.NativeCommittedRelease.Honest
+public import Protocol.Transfer.PathSignature.NativeCommittedRelease.Payload
 
 @[expose] public section
 

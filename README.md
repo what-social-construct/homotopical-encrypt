@@ -93,11 +93,16 @@ message coordinates and truncated encodings. A second run uses the dense
 fresh-sign profile to encrypt `(true,false)` to `(3,0,0,-6,0)` and recover
 the original bits through the same byte path.
 
-For the full workspace and independent verification entries:
+For the full workspace:
 
 ~~~sh
 lake build
-lake build Palomar.PaperOne.Solution Palomar.PaperThree.Solution Palomar.PaperThree.Application.Solution
+~~~
+
+For Paper 3's independent verification entries:
+
+~~~sh
+lake build Palomar.PaperThree.Solution Palomar.PaperThree.Application.Solution
 ~~~
 
 The [Lean guide](lean/README.md) describes the wider module map and proof
@@ -112,7 +117,7 @@ The random-oracle proofs use the pinned VCVio hidden-seed simulation library.
 |---|---|
 | Encryption privacy | Extend the proved native random-oracle experiment to proof/storage transcripts and key-use policy, and specify the concrete implementation profile. |
 | Computational comparison | The native family has a strict query separation and exactly `2^n` compatible operative lattices for a fixed ciphertext mask. The unrestricted-target lift uses a nearest-point solver with a specified lattice. A reduction to the public HCP solver would need its own construction. |
-| Concrete proof construction | Complete field-circuit refinement for ranges, bytes and hashes, and a secure CRS primitive with quantitative estimates. |
+| Concrete proof construction | Build on the bounded ciphertext range refinement to add credential, salt, nonce, byte and hash constraints, and instantiate a secure CRS primitive with quantitative estimates. |
 
 The [parity register](SEMANTIC-PARITY.md#what-remains-by-paper) and
 [construction ownership table](docs/SEMANTIC_OWNERSHIP.md) track these
@@ -130,8 +135,9 @@ Paper 3 develops the separate coding and proximity analysis.
 | Paper 2: Proof-Carrying Transactions for Homotopical Encryption | [Protocol PDF](papers/paper2/construction.pdf), [TeX](papers/paper2/construction.tex), [working inventory](papers/paper2/DRAFT.md). Payload commitments, contexts, manifests, certificates, approved execution and conditional protocol security. |
 | Paper 3: Capacity-Radius Proximity for Smooth-Domain Reed–Solomon Codes | [PDF](papers/paper3/main.pdf), [TeX](papers/paper3/main.tex), [coding](lean/Palomar/PaperThree/README.md) and [application](lean/Palomar/PaperThree/Application/README.md) verification entries. |
 
-Paper 1's appendix separates the current construction results from the
-[earlier focused 36-target Hodge/CVP selection](lean/Palomar/PaperOne/README.md).
+Paper 1's appendix leads with the current canonical Lean correspondence. Its
+[historical Palomar crosswalk](lean/Palomar/PaperOne/README.md) records the
+earlier 36-target Hodge/CVP selection.
 
 With a full TeX installation, rebuild the canonical PDFs
 from the repository root:

@@ -2,38 +2,19 @@
 
 \section{Statement--Lean Parity Tables}\label{app:selected-crosswalk}\label{app:formal-boundaries}
 
-\Cref{tab:paper1-parity,tab:paper1-support,tab:paper1-definitions} record the retained focused selection of six Hodge/CVP groups. The independent entry's
-configuration, \lean{lean/Palomar/PaperOne/comparator.json}, selects 16
-manuscript-facing and 20 supporting theorem declarations. Every declaration
-appears once below. These are coverage counts, not a count of independent
-research contributions. Definition rows name canonical implementation
-objects, not additional selected theorem targets. Canonical consequences
-identify derived implementation lemmas outside that configured selection.
-The main and supporting statements are proved under their stated premises.
-The final table records definitions, background, assumptions and application
-contracts separately.
+\subsection{Current Lean correspondence}
 
-\lean{Palomar.PaperOne.Challenge} states the comparison objects independently
-using Mathlib-only imports. \lean{Palomar.PaperOne.Solution} identifies them
-with the canonical development without importing Challenge. Challenge's 18
-deliberate theorem placeholders are comparison targets; the proved Solution
-has no holes.
+\Cref{tab:paper1-native} maps the current coupled construction and recovery
+results to their canonical Lean declarations in this repository. The table
+includes the encryption and byte decoders, finite-field ciphertext
+refinement, key reuse, and one-use random-oracle privacy. Write \lean{HE}
+for \lean{HomotopicalEncryption}. The historical Palomar comparison
+appears in \cref{app:historical-palomar}.
 
-Write \lean{HE} for \lean{HomotopicalEncryption} and
-\lean{E} for \lean{HE.Palomar.PaperOne},
-\lean{CS} for \lean{E.CellularSheaf},
-\lean{HB} for \lean{E.HCPBridge},
-and \lean{AF} for \lean{E.AxisFamily}. The abbreviated anchors expand to the
-exact configured declaration names.
-
-The coupled construction and quantitative recovery results have the separate
-canonical correspondence below. Their Lean proofs and axiom audits are
-complete; they are not part of the earlier 36-declaration comparator selection.
-
-To reproduce both byte round trips, run the following from \lean{lean/}
-with the pinned toolchain and dependencies.
+To build the native modules and reproduce both byte round trips, run the
+following from \lean{lean/} with this repository's toolchain and dependencies.
 \begin{verbatim}
-lake build Protocol.Storage.CoupledRecovery.Demo
+lake build Protocol.Transfer Protocol.Storage.CoupledRecovery.Demo
 lake env lean --run Protocol/Storage/CoupledRecovery/Demo.lean
 \end{verbatim}
 
@@ -90,8 +71,8 @@ original bits for positive scaling.
 \lean{HE.Protocol.Transfer.PathSignature.NativeSignSampler.recoverBitsWithKeyBytes_ciphertextBytes}
 \\\midrule
 \textbf{P1-N05. Fresh one-use family.}\newline
-\Cref{sec:coupled-sampling}; actual canonical ciphertext law and the original
-sampler's scalar recovery diagnostic.
+\Cref{sec:coupled-sampling,sec:coupled-finite-carrier}; actual canonical
+ciphertext law and the original sampler's scalar recovery diagnostic.
 &
 \lean{HE.Protocol.Transfer.PathSignature.NativeSignSampler.ciphertextDistribution_eq}\par
 \lean{HE.Protocol.Transfer.PathSignature.NativeSignPrivacy.ciphertext_guess_probability}\par
@@ -194,9 +175,56 @@ term.
 \lean{Disclosure.recovery_probability_le}\par
 \lean{Disclosure.partial_coeff_recovery_probability_le}\par
 \lean{Disclosure.bit_disclosure_recovery_probability_le}
+\\\midrule
+\textbf{P1-N15. Bounded ciphertext circuit.}\newline
+\Cref{prop:coupled-field-refinement}. Honest range assignments and a unique
+bounded lift of the core wires to the original integer equations.
+&
+\lean{HE.Protocol.Transfer.PathSignature}\par
+\lean{NativeCircuitRanges}\par
+\lean{nativeWitness_checked}, \lean{existsUnique_integer_assignment},\par
+\lean{exists_integer_observed}
+\\\midrule
+\textbf{P1-N16. Fresh-sign decryption and reuse.}\newline
+\Cref{prop:coupled-sign-checked-recovery,prop:coupled-sign-reuse}.
+Exact accepted byte language, messages under alternative valid keys,
+reused-key agreement and compatible-pair count, and known-message recovery.
+&
+\lean{HE.Protocol.Transfer.PathSignature.NativeSignSampler}\par
+\lean{CheckedRecovery.recover_eq_some_iff_ciphertextBytes}\par
+\lean{Reuse.recoverBitsWithKeyBytes_alternativeSignKey}\par
+\lean{Reuse.recoverAgreement_ciphertextBytes}\par
+\lean{Reuse.compatible_message_pairs_card}\par
+\lean{Reuse.recoverKnownKey_ciphertextBytes}\par
+\lean{Reuse.recoverReusedMessage_ciphertextBytes}
+\\\midrule
+\textbf{P1-N17. One-use chosen-message privacy.}\newline
+\Cref{thm:coupled-native-rom-challenge}. Fixed pair and adaptive postrelease
+queries to the native byte oracle.
+&
+\lean{HE.Protocol.Transfer.PathSignature.NativeCommittedRandomOracle}\par
+\lean{Indistinguishability.ideal_guess_probability}\par
+\lean{Indistinguishability.guess_probability_le}\par
+\lean{Indistinguishability.half_le_guess_probability_add}
 \\
 \end{longtable}
 \endgroup
+
+\subsection{Historical Palomar comparison}\label{app:historical-palomar}
+
+The Palomar submission used an earlier revision of the manuscript.
+Its archived comparator configuration selects 16 manuscript-facing and 20
+supporting declarations across six Hodge/CVP groups from that revision.
+\Cref{tab:paper1-parity,tab:paper1-support,tab:paper1-definitions} retain the
+submission's crosswalk, including canonical consequences and the premises of
+the selected statements. The source pin and verification record in
+\lean{lean/Palomar/PaperOne/README.md} apply to that historical selection.
+The recorded axiom audit for those declarations allows \lean{propext},
+\lean{Quot.sound} and \lean{Classical.choice}.
+
+In these tables, \lean{E} abbreviates \lean{HE.Palomar.PaperOne},
+\lean{CS} abbreviates \lean{E.CellularSheaf}, \lean{HB} abbreviates
+\lean{E.HCPBridge}, and \lean{AF} abbreviates \lean{E.AxisFamily}.
 
 \begingroup
 \small
@@ -439,7 +467,3 @@ is a separate sampled-query result.
 \end{longtable}
 
 \endgroup
-
-The checked declarations use only \lean{propext}, \lean{Quot.sound} and
-\lean{Classical.choice}, or subsets. Verification applies to the exact
-source and configuration checked.

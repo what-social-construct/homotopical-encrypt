@@ -2,6 +2,8 @@ module
 
 public import Protocol.Storage.CoupledRecovery
 meta import Protocol.Storage.CoupledRecovery
+public import Protocol.Transfer.PathSignature.NativeSignSampler.CheckedRecovery
+meta import Protocol.Transfer.PathSignature.NativeSignSampler.CheckedRecovery
 public import Protocol.Transfer.PathSignature.NativeSignSampler.Recovery
 meta import Protocol.Transfer.PathSignature.NativeSignSampler.Recovery
 
@@ -15,7 +17,8 @@ Run from `lean/` with:
 
 Two deterministic examples run the canonical byte encoder, private-key parser
 and exact rational recovery algorithm. The second uses the dense fresh-sign
-profile with fixed example signs and recovers the original Boolean message.
+profile with fixed example signs and also checks its exact ciphertext
+language.
 -/
 
 set_option autoImplicit false
@@ -48,14 +51,21 @@ def runFreshSign : IO Unit := do
   let coordinates := (CoupledCiphertext.decode 2 2 ciphertext).map CoupledCiphertext.entries
   let recovered := (recoverWithKeyBytes 2 2 keyBytes ciphertext).map List.ofFn
   let recoveredBits := (recoverBitsWithKeyBytes 2 2 keyBytes ciphertext).map List.ofFn
+  let checkedBits := (CheckedRecovery.recover hadamardTwo 2 3 signKey ciphertext).map List.ofFn
+  let wrongOpening := normalBytes hadamardTwo 2 4 (mask signKey bits)
+  let wrongOpeningRejected := (CheckedRecovery.recover hadamardTwo 2 3 signKey wrongOpening).isNone
   unless coordinates = some [3, 0, 0, -6, 0] do
     throw (IO.userError "The fresh-sign ciphertext did not retain the original Hodge coordinates")
   unless recovered = some [2, -2] && recoveredBits = some [true, false] do
     throw (IO.userError "Fresh-sign byte recovery did not return the original message")
+  unless checkedBits = some [true, false] && wrongOpeningRejected do
+    throw (IO.userError "Checked fresh-sign recovery did not enforce the declared profile")
   IO.println s!"Fresh-sign input bits: {List.ofFn bits}"
   IO.println s!"Fresh-sign ciphertext coordinates: {coordinates}"
   IO.println s!"Fresh-sign recovered coefficients: {recovered}"
   IO.println s!"Fresh-sign recovered bits: {recoveredBits}"
+  IO.println s!"Checked fresh-sign recovered bits: {checkedBits}"
+  IO.println s!"Canonical ciphertext with the wrong exact coordinate rejected: {wrongOpeningRejected}"
 
 def run : IO Unit := do
   let recovered := (recoverWithKeyBytes 1 2 privateKeyBytes ciphertextBytes).map List.ofFn

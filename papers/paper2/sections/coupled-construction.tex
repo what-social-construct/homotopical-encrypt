@@ -613,28 +613,15 @@ counts separately from actual list lengths, so malformed semantic data can
 parse and remain subject to the actual checks. This versioned Lean wire
 profile makes no compatibility claim for the archived Rust serializer.
 
-\begin{samepage}
-For \(C\in\mathbb Z^{m\times n}\), the generated rank-one arithmetic core
-enforces the integer sample equations with
-\[
- 2mn+n+m+1
-\]
-constraints: \(2mn\) matrix-coordinate products, \(n+m\) coordinate
-equations and one exact-coordinate equation. Every integer matrix, message
-and opening gives an explicit satisfying native assignment, both over the
-integers and modulo any chosen modulus. An executable range check bounds
-the integer input wires by \(K\), products by \(K^2\), and information/parity
-coordinates by \(K+mK^2\) and \(K+nK^2\). Every gate residual is at most
-\[
- M=\max\{2K^2,\,2(K+mK^2),\,2(K+nK^2),\,2K\}.
-\]
-Thus a modulus \(q>M\), modular satisfaction and these checked integer
-ranges imply the original integer ciphertext equations. Honest bounded
-witnesses pass the range check. This checks integer lifts; compiling the
-range/salt checks, byte parsing, canonical encodings and hashes into field
-constraints remains separate. General real
-projection certificates do not automatically yield this finite circuit.\par
-\end{samepage}
+The companion paper's finite-field refinement of the ciphertext
+equations~\cite{vanderVlugt2026hcp} supplies the arithmetic component of the
+native proof relation. Over a prime field satisfying its modulus bounds, the
+core and binary range gates give a unique bounded integer lift of the
+arithmetic wires and enforce the original ciphertext equations.
+The proof relation must also bind those lifted values to the canonical
+witness and public instance. Credential, salt, nonce, byte and hash constraints
+and the proof engine remain implementation obligations. A real projection
+certificate requires its own finite realization.
 
 \section{Conclusion}
 
@@ -658,6 +645,7 @@ instantiating the cryptographic primitives and enforcing the lifecycle
 remain steps toward a secure protocol implementation.
 
 \appendix
+\clearpage
 \section{Checked transfer in Lean}
 The accepted-update statement uses \path{Owned.check_implies_accepted_update}
 and the value, inventory and replay laws in \path{Owned.CheckedTransfer}.

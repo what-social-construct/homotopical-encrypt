@@ -8,6 +8,14 @@ and private decoder execute both the integer and fresh-sign round trips. The
 transport and projection laws preserve the same message through changes of
 presentation.
 
+The fresh-sign ciphertext encodes a public mask. With a fresh uniform key
+it has the same distribution for every message. If the key is reused, the
+masks reveal plaintext XORs and a known plaintext recovers the key. A
+valid ciphertext can be modified to flip selected plaintext bits. In the
+one-use view with a nonce-bearing operator commitment, the fixed-pair
+challenge-bit advantage over random guessing is at most
+\((Q+2)256^{-32}\) in the shared byte random oracle.
+
 The compatible fresh-sign planes occupy one public homotopy class, with
 squared chordal distances proportional to their key Hamming distances.
 One correct CVP query on the supplied lattice recovers every message.

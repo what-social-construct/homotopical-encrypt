@@ -1,16 +1,16 @@
 # Hidden Hodge targets and discrete closest vectors
 
-This entry formalizes six selected groups from *Homotopical Encryption:
+This is the historical Palomar submission entry. It formalizes six selected
+groups from *Homotopical Encryption:
 Hidden Hodge Operators and the Harmonic Cochain Problem*, organized in
 Sections 1–3 of the linked retained source revision: primitives, the HCP recovery problem, and comparison with the
 closest-vector problem. The constructed integral cellular families give
 concrete instances of the hidden-member recovery obstruction.
 [Manuscript source](https://github.com/what-social-construct/homotopical-encrypt-formalizations/blob/aabebed302d9e22da953983832346bde4648a922/papers/paper1/main.tex).
 
-The current Paper 1 manuscript additionally contains the coupled encryption,
-finite byte-recovery and bounded-query random-oracle results. Their canonical
-Lean proofs are mapped in its new construction table. This focused entry
-retains its checked six-group selection and does not select those additions.
+The current manuscript's appendix maps the coupled encryption, finite byte
+recovery, field refinement, key reuse, and bounded-query random-oracle results
+to their canonical Lean proofs. [Current Paper 1](../../../papers/paper1/README.md)
 
 [Comparator configuration](comparator.json) selects **36 declarations**:
 **16 manuscript-facing and 20 supporting**. [Challenge](Challenge.lean)
@@ -56,7 +56,7 @@ This classifies admitted representatives, while the matrix-level projection
 is constrained on realized operators. The semantic fragment uses
 nonzero-cohomology tests in the bounded-below real cochain model.
 
-The current 36-declaration entry passed its focused local build, statement
+The historical 36-declaration entry passed its focused local build, statement
 and definition comparison, and Lean/NanoDa replay. Exact verification scope
 is recorded in [metadata](formalization.yaml). From `lean/`:
 

@@ -30,6 +30,7 @@ Historical Python dependencies remain in the
 [earlier Python source archive](../../docs/archive/python/README.md).
 They are not restored into this tree, which may retain imports and assumptions
 from its original layout. The archive is not a supported Python package.
+Python fuzzing is planned after Papers 1–3.
 
 The optional `target/` and `.pytest_cache/` directories contain local cache
 data and remain ignored and untracked. They are not part of the source archive

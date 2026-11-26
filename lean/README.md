@@ -73,7 +73,7 @@ projection comparisons that consume those construction profiles.
 
 | Entry | Selected statements |
 |---|---|
-| [Paper 1](Palomar/PaperOne/README.md) | Six groups: 16 manuscript-facing and 20 supporting declarations, 36 targets. |
+| [Historical Paper 1 Palomar entry](Palomar/PaperOne/README.md) | Six groups with 16 manuscript-facing and 20 supporting declarations. The [current Paper 1 correspondence](../papers/paper1/README.md) includes the canonical construction and security results. |
 | [Paper 3 coding](Palomar/PaperThree/README.md) | 52 targets. |
 | [Paper 3 application](Palomar/PaperThree/Application/README.md) | 22 targets. |
 

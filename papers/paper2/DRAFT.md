@@ -1070,7 +1070,28 @@ instance, aligned public fields and original evidence bytes. Its shared-cache
 charges the simulator's `S` queries together with the decoder's `Q` queries
 and the two honest digests. A joint total-variation bound `ε` on the sampled
 message, release and live cache adds `ε` to the simulated recovery bound.
-The selected backend still needs to establish that joint simulation premise.
+
+The [honest evidence producer](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease/HonestEvidence.lean)
+uses the selected CRS prover on the full V2 signing input and original
+nonce-bearing witness, with proof randomness sampled inside the experiment.
+It also runs the supplied payload prover on the original intent and
+ciphertext. The [native payload producer](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease/Payload.lean)
+uses the canonical certificate subject and reads the ciphertext digest through
+the shared byte oracle. A cache hit returns the same digest and preserves the
+cache. For an original bound observation whose private encoding satisfies the
+selected payload relation, primitive correctness gives payload verification
+for every proof tape. With the matching V2 instance, approved owner prover,
+honest setups and structural prechecks, the two generated proofs pass the
+original operational checker on the exact assembled packet.
+
+The [common-prefix comparison](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease/Honest.lean)
+retains the same message, sign key, private nonce and live cache for both
+branches. An almost-everywhere conditional total-variation bound `ε` on the
+released view and resulting cache implies the joint-prefix premise and the
+honest recovery bound. Failed releases remain in both laws. The selected
+backend still needs to establish that conditional simulation estimate.
+The acceptance theorem uses explicit primitive correctness and relation
+refinement premises.
 
 The projection profile binds its proof to the original artifact through
 [ProjectionAnchor](../../lean/Protocol/Storage/ProjectionAnchor.lean). Its
@@ -1387,7 +1408,7 @@ groups, the selected matrix/kernel Diffie–Hellman assumptions and collision
 analysis for the complete subject tag. A Fiat–Shamir extractor that forks an
 oracle adversary has a different interface. No secure backend is instantiated.
 
-##### 6.6.4. Approved execution and finite arithmetic core
+##### 6.6.4. Approved execution and proof relation
 
 The [registration descriptor](../../lean/Protocol/Transfer/Certificates/Profile.lean)
 retains full proof metadata, public profile bytes, parameter-set hash,
@@ -1473,23 +1494,15 @@ payload counts separately from actual list lengths; malformed semantic data
 can parse and still fail the actual checks. This versioned Lean reference
 wire profile makes no compatibility claim for the archived Rust serializer.
 
-The [generated rank-one arithmetic core](../../lean/Protocol/Transfer/PathSignature/NativeCircuit.lean)
-has exactly \(2mn+n+m+1\) constraints: \(2mn\) matrix-coordinate products,
-\(n+m\) coordinate equations and one exact-coordinate equation. Every
-integer matrix, message and opening has an explicit satisfying assignment,
-both over the integers and modulo the chosen modulus. The
-[integer range checker](../../lean/Protocol/Transfer/PathSignature/NativeCircuitBounds.lean)
-bounds inputs by \(K\), products by \(K^2\), and information/parity outputs
-by \(K+mK^2\) and \(K+nK^2\). Every gate residual is at most
-\[
- M=\max\{2K^2,2(K+mK^2),2(K+nK^2),2K\}.
-\]
-A modulus \(q>M\), modular satisfaction and those checked ranges imply the
-original integer ciphertext equations. Honest bounded witnesses pass the
-range check. This checks integer lifts: compiling range/salt checks, canonical
-byte parsing and hashes into field constraints remains separate. General
-real projection certificates do not
-automatically become this finite circuit.
+The target arithmetic for the native proof relation comes from
+[Paper 1's finite-field refinement](../paper1/README.md). Over a prime field
+meeting its modulus bounds, a satisfying arithmetic assignment has a unique
+bounded integer lift that obeys the original ciphertext equations. To
+implement the full V2 relation, the proof circuit must also enforce the
+source credential, salt and nonce encoding, canonical parsing and hash
+checks, and bind the arithmetic outputs to the canonical ciphertext named by
+the instance. General real projection certificates retain separate circuit
+obligations.
 
 #### 6.7. Retrieval and selector privacy
 
@@ -1597,7 +1610,7 @@ their stated profiles.
 | Adaptive CRS reference reduction | [CRS](../../lean/Protocol/Transfer/PathSignature/CRS.lean), [NativeSecurity](../../lean/Protocol/Transfer/PathSignature/NativeSecurity.lean) | Supplied actual algorithms; response-dependent bounded oracle and generated logs; five-term reduction for the actual full-ciphertext view under the event-specific Boolean forgery-test hybrid. Primitive estimates and a secure implementation remain external. |
 | Approved parsed execution | [Profile](../../lean/Protocol/Transfer/Certificates/Profile.lean), [ProfileAuthentication](../../lean/Protocol/Transfer/Certificates/ProfileAuthentication.lean), [Registered](../../lean/Protocol/Transfer/PathSignature/Registered.lean), [NativeRegistered](../../lean/Protocol/Transfer/PathSignature/NativeRegistered.lean) | Exact quorum-approved program/key/CRS bytes; original metadata/scope/epoch and exact expected-code checks. The native key uses the owner's credential and actual context snapshot/ciphertext names. Honest completeness is conditional; no finality or secure setup generation. |
 | Original context and sampled application | [NativeContext](../../lean/Protocol/Transfer/PathSignature/NativeContext.lean), [NativeApplication](../../lean/Protocol/Transfer/PathSignature/NativeApplication.lean) | Actual credential/snapshot/sample/hash and parsed-setup joins; canonical completion of the generated fresh target into the original checked packet. The same-PMF application event inherits the native five-term bound. Arbitrary packet adversaries and general accepted-invalid integrity remain separate. |
-| Finite sample arithmetic | [NativeCircuit](../../lean/Protocol/Transfer/PathSignature/NativeCircuit.lean), [NativeCircuitBounds](../../lean/Protocol/Transfer/PathSignature/NativeCircuitBounds.lean) | Generated `2mn+n+m+1` core, honest assignments and actual integer-lift range check. An explicit residual/modulus bound gives integer observations. Compiling range/byte/hash checks into field constraints remains open. |
+| Finite sample arithmetic | [Paper 1 construction](../paper1/README.md), [NativeCircuitRanges](../../lean/Protocol/Transfer/PathSignature/NativeCircuitRanges.lean) | **Paper 1 source result.** The field constraints enforce the original integer ciphertext equations. Paper 2 must bind that arithmetic to the canonical V2 witness and instance bytes and to the proof backend. |
 | Canonical byte-owner packets | [TransferCodec](../../lean/Protocol/Evidence/TransferCodec.lean) | Exact existing metadata/intent/packet bytes and full vote targets; malformed semantic fields remain representable. This is a versioned Lean reference profile. |
 | Primitive failures and one-shot integrity | [PrimitiveChecks](../../lean/TCB/PrimitiveChecks.lean), [Primitives](../../lean/Protocol/Transfer/Primitives.lean), [Security](../../lean/Protocol/Transfer/Security.lean) | Actual verifier/history interfaces and conditional shared-PMF failure composition; this fixed-history theorem is separate from the bounded adaptive CRS reduction above. Primitive error estimates remain supplied. |
 | Public certificate bytes and calibration | [Codec](../../lean/Protocol/Transfer/Certificates/Codec.lean), [Calibration](../../lean/Protocol/Transfer/Certificates/Calibration.lean), [Evidence](../../lean/Protocol/Transfer/Certificates/Evidence.lean), [Bundle](../../lean/Protocol/Transfer/Certificates/Bundle.lean) | Canonical public subjects, actual proof-byte leaves, immutable seven-slot root and predecessor checks; exact rational realization identifies the selected real calibration. The generic packet codec has a concrete byte-owner specialization. |
@@ -1619,7 +1632,7 @@ completed bounded transition claim.
 | Coregulator | [Coregulator interface](../../lean/Axioms/Coregulator.lean), [protocol attachment](../../lean/Protocol/Coregulator.lean) | Named predict/observe/update obligations; no constructed settling controller. |
 | Legacy chain | [Chain](../../lean/Chain.lean) | Compatibility model with spectral identity, raw cochain-sum balance and cumulative-gap fork choice; not the bounded ledger's semantics or a complete consensus/security theorem. |
 | Future geometry and lifecycle | No canonical `TaskSheaf`, block-history cellular model or presentation-stack/descent package is constructed | Explicit maps, transport, descent, generation, retirement and global lifecycle policies remain future work. |
-| Concrete cryptography and execution | [ZKP](../../lean/Axioms/ZKP.lean), [Runtime](../../lean/TCB/Runtime.lean) | Secure primitive implementation, full hash/range/byte circuit refinement, setup generation, authenticated directories/state origin, secure channels, primitive budgets, corruption/privacy games and production/runtime refinement remain obligations. |
+| Concrete cryptography and execution | [ZKP](../../lean/Axioms/ZKP.lean), [Runtime](../../lean/TCB/Runtime.lean) | Secure primitive implementation, remaining credential, byte and hash constraints, setup generation, authenticated directories/state origin, secure channels, primitive budgets, corruption/privacy games and production/runtime refinement remain obligations. |
 
 The shared parity register links each interface to its source theorem and
 retains the required layout, observation and comparison hypotheses.

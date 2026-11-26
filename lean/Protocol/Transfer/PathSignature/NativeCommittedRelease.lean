@@ -84,9 +84,11 @@ structure MatchesConfig (inputs : Inputs Owner) (config : Operational.Config F O
   base : config.context.publicView =
     { inputs.base with key := { inputs.base.key with snapshotRoot := config.context.key.snapshotRoot } }
 
-private theorem checked_matches_at (inputs : Inputs Owner)
-    {config : Operational.Config F Owner Asset Receipt} {bytes : List UInt8}
-    (checked : Operational.CheckedTransfer config inputs.transfer bytes)
+/-- The structural snapshot check and parsed V2 key identify the names used
+by both the public assembly and the original configuration. -/
+theorem matches_at (inputs : Inputs Owner)
+    {config : Operational.Config F Owner Asset Receipt}
+    (prechecks : Operational.Prechecks config inputs.transfer)
     (aligned : MatchesConfig inputs config) (credentialFor : Owner → TCB.Hash32)
     (publicInput : NativeCommitted.Instance)
     (parsed : NativeCommitted.decodeInstance
@@ -103,10 +105,27 @@ private theorem checked_matches_at (inputs : Inputs Owner)
   have snapshot : config.context.key.snapshotRoot = publicInput.targetSnapshot :=
     congrArg (fun fields : NativeCommitted.Instance => fields.targetSnapshot) names
   have beforeSnapshot : config.before.snapshotRoot = publicInput.targetSnapshot :=
-    checked.prechecks.snapshotMatches.symm.trans snapshot
+    prechecks.snapshotMatches.symm.trans snapshot
   exact ⟨by simpa only [setupAt, beforeSnapshot] using aligned.setup,
     by simpa only [baseAt, snapshot] using aligned.base,
     congrArg (fun fields : NativeCommitted.Instance => fields.ciphertextDigest) names⟩
+
+/-- Before evidence verification, assembly already constructs the original
+configuration's public packet, proposal and manifest. -/
+theorem assemble_eq_config (inputs : Inputs Owner)
+    {config : Operational.Config F Owner Asset Receipt}
+    (prechecks : Operational.Prechecks config inputs.transfer)
+    (aligned : MatchesConfig inputs config) (credentialFor : Owner → TCB.Hash32)
+    (publicInput : NativeCommitted.Instance)
+    (parsed : NativeCommitted.decodeInstance
+      (NativeCommittedContext.contextKeyFor config credentialFor inputs.transfer.signer) =
+      some publicInput) (ownerSignature proofBytes : List UInt8) :
+    inputs.assemble publicInput ownerSignature proofBytes =
+      (Owned.PublicAssemblySetup.ofOperational config).view inputs.transfer
+        config.context.publicView config.ciphertextDigest ownerSignature proofBytes := by
+  obtain ⟨setup, base, digest⟩ := inputs.matches_at prechecks aligned credentialFor publicInput parsed
+  rw [setup, base, digest]
+  rfl
 
 /-- Reconstruct every released byte and name of the actual checked packet
 from the parsed V2 instance and the original public fields. -/
@@ -120,11 +139,44 @@ theorem assemble_eq_checked (inputs : Inputs Owner)
       some publicInput) :
     inputs.assemble publicInput checked.proof.packet.ownerSignature checked.proof.packet.proofBytes =
       Owned.PublicTransferView.ofOperational checked := by
-  obtain ⟨setup, base, digest⟩ :=
-    inputs.checked_matches_at checked aligned credentialFor publicInput parsed
-  rw [Owned.PublicTransferView.ofOperational_eq_assembled checked, setup, base, digest]
-  exact (Owned.PublicAssemblySetup.view_withArtifactHashes (inputs.setupAt publicInput)
-    config.hashes.ciphertext config.hashes.cochain _ _ _ _ _).symm
+  rw [Owned.PublicTransferView.ofOperational_eq_assembled checked]
+  exact inputs.assemble_eq_config checked.prechecks aligned credentialFor publicInput parsed _ _
+
+/-- The assembled intent is the original configuration's expected intent. -/
+theorem intentAt_eq_config (inputs : Inputs Owner)
+    {config : Operational.Config F Owner Asset Receipt}
+    (prechecks : Operational.Prechecks config inputs.transfer)
+    (aligned : MatchesConfig inputs config) (credentialFor : Owner → TCB.Hash32)
+    (publicInput : NativeCommitted.Instance)
+    (parsed : NativeCommitted.decodeInstance
+      (NativeCommittedContext.contextKeyFor config credentialFor inputs.transfer.signer) =
+      some publicInput) :
+    inputs.intentAt publicInput = config.intentFor inputs.transfer := by
+  obtain ⟨setup, base, digest⟩ := inputs.matches_at prechecks aligned credentialFor publicInput parsed
+  rw [← Owned.PublicAssemblySetup.ofOperational_intent, setup, base, digest]
+  rfl
+
+/-- The reconstructed signing input already matches the context-derived key
+and full expected signing subject before evidence verification. -/
+theorem signingInputAt_eq_config (inputs : Inputs Owner)
+    {config : Operational.Config F Owner Asset Receipt}
+    (prechecks : Operational.Prechecks config inputs.transfer)
+    (aligned : MatchesConfig inputs config) (credentialFor : Owner → TCB.Hash32)
+    (publicInput : NativeCommitted.Instance)
+    (parsed : NativeCommitted.decodeInstance
+      (NativeCommittedContext.contextKeyFor config credentialFor inputs.transfer.signer) =
+      some publicInput) :
+    inputs.signingInputAt publicInput =
+      Codec.encode (NativeCommittedContext.contextKeyFor config credentialFor inputs.transfer.signer)
+        (Signing.message config.codec config.metadata (config.intentFor inputs.transfer)) := by
+  have setup := (inputs.matches_at prechecks aligned credentialFor publicInput parsed).1
+  have key := (NativeCommitted.decodeInstance_eq_some_iff _ _).mp parsed
+  have codec : config.codec = inputs.setup.codec :=
+    congrArg Owned.PublicAssemblySetup.codec setup
+  have metadata : config.metadata = inputs.setup.metadata :=
+    congrArg Owned.PublicAssemblySetup.metadata setup
+  rw [signingInputAt, key, ← codec, ← metadata,
+    inputs.intentAt_eq_config prechecks aligned credentialFor publicInput parsed]
 
 /-- The reconstructed bytes sent to the V2 proof primitive match the original
 context-derived key and full signing subject used by the owner checker. -/
@@ -138,17 +190,8 @@ theorem signingInputAt_eq_checked (inputs : Inputs Owner)
       some publicInput) :
     inputs.signingInputAt publicInput =
       Codec.encode (NativeCommittedContext.contextKeyFor config credentialFor inputs.transfer.signer)
-        (Signing.message config.codec config.metadata (config.intentFor inputs.transfer)) := by
-  obtain ⟨setup, base, digest⟩ :=
-    inputs.checked_matches_at checked aligned credentialFor publicInput parsed
-  have key := (NativeCommitted.decodeInstance_eq_some_iff _ _).mp parsed
-  have codec : config.codec = inputs.setup.codec :=
-    congrArg Owned.PublicAssemblySetup.codec setup
-  have metadata : config.metadata = inputs.setup.metadata :=
-    congrArg Owned.PublicAssemblySetup.metadata setup
-  rw [signingInputAt, key, codec, metadata, ← Owned.PublicAssemblySetup.ofOperational_intent,
-    setup, base, digest]
-  rfl
+        (Signing.message config.codec config.metadata (config.intentFor inputs.transfer)) :=
+  inputs.signingInputAt_eq_config checked.prechecks aligned credentialFor publicInput parsed
 
 end Inputs
 end HomotopicalEncryption.Protocol.Transfer.PathSignature.NativeCommittedRelease

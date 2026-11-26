@@ -19,8 +19,9 @@ Adding exact and coexact Hodge noise to the harmonic message gives
 \[
  \operatorname{Enc}_B(z,a,u)=(a,z-B^{\mathsf T}u,Bz+u).
 \]
-The private presentation recovers \(z\) exactly. Canonical private-key and
-ciphertext bytes implement this recovery by exact rational arithmetic.
+The private presentation recovers \(z\) exactly, and the ciphertext and
+operator fix both openings. Canonical private-key and ciphertext bytes
+implement this recovery by exact rational arithmetic.
 
 Helfer's first-order homotopical logic \cite{helfer2019fol} provides the
 original semantic motivation. Equality is interpreted through path objects
@@ -52,12 +53,15 @@ We establish four connected results.
   input. Its accepted integer ciphertexts are exactly the original
   Hodge-encryption language. Constructed semantic equivalences, native
   ciphertext transport and harmonic recovery form commuting diagrams.
-  \item \textbf{A quantitative one-use recovery bound.}
+  \item \textbf{One-use privacy and the limits of key reuse.}
   The fresh-sign family and canonical private-nonce operator commitment give
-  an explicit fresh-cache shared-byte-random-oracle experiment. For a uniform message,
-  a public decoder with at most \(Q\) hash queries has recovery probability
-  at most \(2^{-n}+(Q+2)256^{-32}\), including partial integer coefficients
-  for positive scaling. The constructor's two digest calls are counted.
+  an explicit fresh-cache shared-byte-random-oracle experiment. With at most
+  \(Q\) public queries, full uniform-message recovery is at most
+  \(2^{-n}+(Q+2)256^{-32}\), including partial coefficient extraction for
+  positive scaling. A fixed-pair challenge-bit guess succeeds with
+  probability at most \(\tfrac12+(Q+2)256^{-32}\). Reusing the sign key
+  reveals message XORs from the ciphertext bytes, and one known message
+  recovers that key.
   \item \textbf{A strict separation from supplied-lattice CVP.}
   Unrestricted rational CVP lifts to nearest-point search in a specified
   coupled harmonic lattice, whose exact decision problem is NP-complete.

@@ -231,10 +231,9 @@ topology, metric, lattice or basis data; a derived Laplacian alone does not
 generically bind those choices. The current snapshot is indexed by the sheaf,
 with additional integral/decoder/profile bindings still explicit.
 
-For the selected fresh-geometry target, the nonce-hash prototype is the
-closest recovered implementation direction. It is not yet the active native
-wire or an established operator-hiding security model. In particular, the
-current native witness salt protects its source credential, while its target
-snapshot still hashes the bare matrix; a target-specific private opening and
-versioned context/codec joins must be constructed before using the new privacy
-profile. No archived runtime or proof system is reinstated by this review.
+The earlier V1 witness uses the salt for its source credential and hashes the
+bare target matrix for its snapshot root. V2 supplies a separate private
+target opening and the versioned context and codec joins described above.
+The shared byte random-oracle theorem covers its one-use public instance and
+ciphertext. The concrete proof backend and its released-view simulation
+estimate remain open.

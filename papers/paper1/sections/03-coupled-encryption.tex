@@ -320,6 +320,13 @@ the corresponding byte encoding. Conversely every such generated observation
 recovers \(z\) by the same inverse and integer check.
 \end{proof}
 
+For fixed \(B\), the ciphertext also fixes both openings. Its exact
+coordinate is \(a\), and \(u=y-Bz\). Two integer triples encrypted under the
+same \(B\) therefore give equal bytes only when all three entries agree.
+This fixed-key uniqueness concerns the ciphertext bytes directly. The
+prime-field refinement below concerns a supplied assignment to the circuit
+wires.
+
 \Needspace{10\baselineskip}
 \paragraph{Executing the byte round trip.}
 Take \(B=(1\ 1)\), \(z=(2,-1)\), \(a=3\) and \(u=4\). The encoder produces
@@ -333,6 +340,64 @@ The Lean executable returns these original coefficients and checks rejection
 of a truncated private key, a truncated ciphertext and a canonically encoded
 cochain with nonintegral projected coefficients. The command in
 \cref{app:formal-boundaries} reproduces the execution.
+
+\subsection{Finite-field refinement of the ciphertext equations}
+\label{sec:coupled-field-refinement}
+
+For bounded integer inputs, the same ciphertext map
+\eqref{eq:coupled-integer-encryption} has a rank-one constraint
+representation. The core uses \(2mn\) gates for the products
+\(B_{ij}u_i\) and \(B_{ij}z_j\), then \(n+m+1\) affine equations for the
+observed coordinates. The input wires \(B,z,a,u\) have absolute value at
+most \(K\). Product wires have bound \(K^2\), the observed exact coordinate
+has bound \(K\), and the information and parity coordinates have respective
+bounds \(K+mK^2\) and \(K+nK^2\).
+
+For a wire with field value \(x\) and bound \(K_w\), put
+\(t_w=\lfloor\log_2(2K_w)\rfloor+1\) when \(K_w>0\), and \(t_w=1\)
+when \(K_w=0\). Introduce two vectors of Boolean digits of length \(t_w\).
+Writing their binary sums as \(S^+\) and \(S^-\), impose
+\[
+ x+K_w=S^+,\qquad S^++S^-=2K_w .
+\]
+These are two affine equations. Each Boolean digit \(e\) has the rank-one
+equation \(e(e-1)=0\).
+
+\begin{proposition}[Exact lift of the bounded ciphertext circuit]
+\label{prop:coupled-field-refinement}
+Every bounded integer encryption sample gives an explicit satisfying
+assignment to the core and range gates over \(\mathbb F_p\). Conversely,
+suppose \(p\) is prime and
+\[
+ p\ge 2^{t_w+1}\quad\text{for every wire }w,\qquad
+ p>\max\{2K^2,\,2(K+mK^2),\,2(K+nK^2),\,2K\}.
+\]
+Every satisfying field assignment has a unique bounded integer lift of its
+core wires. The lifted observed coordinates obey the original integer
+ciphertext equations.
+\end{proposition}
+
+\begin{proof}
+Use the integer sample and its actual products for the core assignment.
+For every integer wire value \(v\), write \(v+K_w\) and \(K_w-v\) in
+binary. Both lie in \([0,2K_w]\), so the digits fit and satisfy the
+equations after reduction.
+
+In the converse direction, each field digit is \(0\) or \(1\).
+The sum of the two binary values is less than \(2^{t_w+1}\).
+The congruence with \(2K_w\) is therefore an integer equality.
+The difference \(S^+-K_w\), computed in the integers, is a lift of \(x\)
+in \([-K_w,K_w]\). Two such lifts differ by a multiple of \(p\) and have
+difference of absolute value at most \(2K_w<p\), so the lift is unique.
+The core gate residuals of these lifts are divisible by \(p\).
+The wire bounds give the displayed maximum as an upper bound on their
+absolute values. Hence the residuals vanish, giving the integer products
+and \eqref{eq:coupled-integer-encryption}.
+\end{proof}
+
+Uniqueness is relative to the full field assignment, including its private
+wires. Paper 2 uses the circuit as the arithmetic component of its proof
+relation and handles the public certificate and transfer checks.
 
 \subsection{A finite private carrier and canonical relation}
 \label{sec:coupled-finite-carrier}
@@ -376,9 +441,7 @@ selected bounds. An additional 32-byte nonce or fixed cryptographic tape
 can be sampled independently. The box law includes degenerate matrices and
 zero messages; its cardinality alone gives no recovery bound.
 
-\subsection{Sampling, disclosure and fresh operators}
-\label{sec:coupled-sampling}
-
+\paragraph{Scalar sampling diagnostic.}
 Uniform finite coordinates alone do not give a small recovery probability.
 In the original scalar sampler with bound one, a public predictor parses the
 canonical ciphertext and recovers \(z\) with probability exactly \(7/9\).
@@ -393,27 +456,81 @@ presentation and the exact opening. A known zero message with \(u\ne0\)
 also exposes a reused scalar operator through \(x=-Bu\), \(y=u\), hence
 \(B=-x/y\). These computations concern coefficient and operator recovery.
 
-The sign family correlates the coexact opening with the chosen message.
+\subsection{The fresh-sign encryption profile}
+\label{sec:coupled-sampling}
+
+\paragraph{Parameters and key generation.}
 Fix a public integer matrix \(A\in\mathbb Z^{m\times n}\) with
-\(A^{\mathsf T}A=dI\), \(d>0\). For independent fresh uniform key signs
-\(k\in\{-1,1\}^n\) and chosen message signs \(s\in\{-1,1\}^n\), set
+\(A^{\mathsf T}A=dI\), \(d>0\), and a public integer exact coordinate \(a\).
+Thus \(n\leq m\) and each column of \(A\) is nonzero. The payload is \(n\)
+bits, represented by signs \(s\in\{-1,1\}^n\) with \(0\) mapped to \(-1\)
+and \(1\) to \(1\). Sample \(n\) independent uniform secret signs \(k\) for
+one encryption. The signs determine the private presentation
+\(C_k=A\operatorname{diag}(k)\) injectively, and can be expanded to the
+canonical matrix bytes when needed. Sender and recipient need the same
+secret key. Setup for distributing it lies outside the mechanism. The
+separate commitment nonce in \cref{sec:native-random-oracle} is part of the
+operator commitment opening. Decryption takes the sign key and ciphertext.
+
+\paragraph{Encryption.}
+For message signs \(s\) and key \(k\), set
 \[
- C_k=A\operatorname{diag}(k),\qquad z=ds,\qquad u=C_ks.
+ z=ds,\qquad u=C_ks=A(k\mathbin\odot s),
 \]
-The original Hodge sample then has the exact normal form
+where \(\odot\) is coordinatewise multiplication. Encode the full original
+Hodge sample, which has the exact normal form
 \[
  \operatorname{Enc}_{C_k}(ds,a,C_ks)
    =\bigl(a,0,(d+1)A(k\mathbin\odot s)\bigr),
 \]
-where \(\odot\) is coordinatewise multiplication and \(a\) is fixed
-independently of the message and key. Multiplication by a fixed \(s\) permutes
-the finite uniform key space. Consequently the actual canonical full
-ciphertext-byte laws are equal for every pair of messages. Any deterministic
-digest of those ciphertext bytes preserves this equality. The private
-harmonic projection still recovers \((0,ds,C_kds)\), and \(d>0\) makes the
-Boolean message encoding injective. Both \(A=I\), \(d=1\), and the dense
+using the ciphertext codec above. Core encryption is deterministic given
+the public parameters, message and sign key. It records \(1+n+m\)
+integer coordinates as well as the dimension and domain framing. The first
+coordinate is \(a\), the next \(n\) vanish, and the final coordinates satisfy
+\(\lvert y_i\rvert\leq (d+1)\sum_j\lvert A_{ij}\rvert\). The versioned
+instance adds the three 32-byte names and their framing.
+
+\paragraph{Decryption and rejection.}
+Given \(C_k\), exact private recovery returns the integer coefficients
+\[
+ z=\frac{x+C_k^{\mathsf T}y}{d+1}.
+\]
+Taking the signs of \(z=ds\) gives the original bits. Equivalently, on fresh
+ciphertexts, compute the public mask and unmask it with the secret key:
+\begin{equation}
+ t=\frac{A^{\mathsf T}y}{d(d+1)}=k\mathbin\odot s,
+ \qquad s=k\mathbin\odot t.
+ \label{eq:fresh-sign-mask}
+\end{equation}
+The checked sign decoder parses the canonical bytes, uses the signs of
+\(A^{\mathsf T}y\) as a candidate \(t\), and checks that encoding
+\((a,0,(d+1)At)\) reproduces the input bytes. It returns \(k\mathbin\odot t\)
+on success. A failed parse or comparison returns failure.
+
+\begin{proposition}[Exact acceptance in the fresh-sign profile]
+\label{prop:coupled-sign-checked-recovery}
+For each fixed public profile with \(A^{\mathsf T}A=dI\) and \(d>0\),
+each sign key \(k\), and all byte strings \(\beta\), the checked decoder
+returns \(s\) if and only if \(\beta\) is exactly the canonical byte encoding
+of \(\operatorname{Enc}_{C_k}(ds,a,C_ks)\).
+\end{proposition}
+
+\begin{proof}
+On generated bytes the transpose calculation in \eqref{eq:fresh-sign-mask}
+recovers the mask. The normal form then re-encodes to the given bytes, and
+the key cancels in unmasking. Conversely, on success the parsed bytes were
+equal to the normal form for the candidate mask \(t\). The returned signs
+\(s=k\mathbin\odot t\) recreate that same mask and hence those exact bytes.
+\end{proof}
+
+For dense \(A\), computing each intermediate vector once gives
+\(O(mn)\) scalar arithmetic operations for encryption, checked decoding or
+the specialized coefficient formula in positive dimensions. These counts
+treat integer operations individually and omit byte encoding and parsing.
+The general recovery executable uses exact rational matrix inversion.
+Both \(A=I\), \(d=1\), and the dense
 matrix \(\left(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\right)\),
-\(d=2\), instantiate the construction.
+\(d=2\), instantiate the profile.
 
 \begin{proposition}[Chordal separation of the hidden planes]
 \label{prop:coupled-chordal-distance}
@@ -454,8 +571,22 @@ private matrix and ciphertext bytes and recovers \((2,-2)\). Testing which
 coefficients are positive produces \((1,0)\). For every \(d>0\), the same
 decoder returns the original bits on generated ciphertext bytes by
 \cref{prop:coupled-byte-recovery} and the sign rule for \(ds\). The executable
-uses fixed inputs to reproduce this trace. The probability laws below use
-fresh keys.
+also runs the checked sign decoder. It returns the same bits and rejects
+the canonical ciphertext with exact coordinate changed to \(4\) at the
+declared profile \(a=3\). The probability laws below use fresh keys.
+
+\subsection{Public ciphertext, integrity and key reuse}
+\label{sec:coupled-sign-reuse}
+
+The fresh-sign ciphertext discloses \(a\), \(u=y/(d+1)\) and the mask \(t\)
+in \eqref{eq:fresh-sign-mask}. Given the public profile, the mask determines
+the entire ciphertext. The ciphertext-only mechanism is therefore a
+one-time pad in a reversible Hodge encoding. For any fixed message,
+multiplication by its sign vector permutes the uniform key space. Thus the
+full canonical ciphertext bytes have the same distribution for every fixed message, as does
+any deterministic digest of those bytes. With independent fresh sign keys,
+the ciphertext-only law for a fixed sequence of messages is the product of
+these laws.
 
 For an independent uniform Boolean message and fresh uniform key, the actual
 joint law factors into a uniform message independent of ciphertext bytes.
@@ -464,25 +595,55 @@ Every total complete-message decoder succeeds with probability exactly
 or a deterministic ciphertext digest. Positive \(d\) identifies correct
 encoded coefficient recovery with bit-vector recovery. An arbitrary partial
 integer-coefficient extractor, allowing invalid outputs or failure, succeeds
-with probability at most \(2^{-n}\), also with the independent tape. The uniform-target
-hypothesis belongs to this guessing statement; equality of ciphertext laws
-for each pair of fixed messages does not need it.
+with probability at most \(2^{-n}\), also with the independent tape.
 
-This is a one-use ciphertext law. The same normal form exposes the masked
-vector
-\[
- t=\frac{A^{\mathsf T}y}{d(d+1)}=k\mathbin\odot s.
-\]
+Every sign key \(\ell\) decrypts a given valid ciphertext to the unique
+message \(\ell\mathbin\odot t\). For \(\ell\ne k\), this is a different
+message whose encryption under \(\ell\) produces the same bytes. Thus
+successful parsing and checked decoding provide no authentication. The
+core ciphertext is malleable. Anyone can replace
+\(t\) with \(r\mathbin\odot t\) in the normal form for a chosen sign
+vector \(r\), producing a valid ciphertext of \(r\mathbin\odot s\). The
+message bits at the negative entries of \(r\) are flipped.
+
+\begin{proposition}[Exact consequences of sign-key reuse]
+\label{prop:coupled-sign-reuse}
+For two fresh-sign ciphertexts with the same public \(A,d\) and the same
+secret sign key \(k\), let \(t_1,t_2\) be their public masks and \(s_1,s_2\)
+their respective messages. Their exact coordinates \(a_1,a_2\) may differ.
+The ciphertexts determine \(t_1\mathbin\odot t_2=s_1\mathbin\odot s_2\),
+which gives the bitwise XOR by mapping equal signs to zero. Exactly \(2^n\)
+ordered message pairs are compatible with the two byte strings under a
+common sign key. One known message recovers that key and every other message
+encrypted under it in the same profile.
+\end{proposition}
+
+\begin{proof}
+Apply \eqref{eq:fresh-sign-mask} to both byte strings and multiply. The key
+signs cancel since their squares are one. Conversely, for each candidate
+\(s_1'\), the key \(t_1\mathbin\odot s_1'\) and the second message
+\(s_1'\mathbin\odot t_1\mathbin\odot t_2\) give the two observed masks.
+Their canonical encryptions reproduce both original byte strings. These
+are all the compatible pairs and have distinct first messages. If \(s_1\)
+is known, the recovered key is \(t_1\mathbin\odot s_1\), and substitution
+in \eqref{eq:fresh-sign-mask} gives every other message.
+\end{proof}
+
+These computations take the two ciphertext byte strings alone. Changing
+the operator commitment nonce leaves the equations intact. A known or
+chosen message under a reused key therefore compromises other ciphertexts
+under that key. Two independently drawn uniform keys can coincide with
+probability \(2^{-n}\); the independent ciphertext law above averages over
+those draws.
+
 For two chosen candidate messages \(s_0,s_1\), compute
 \(k_i=t\mathbin\odot s_i\) and \(C_i=A\operatorname{diag}(k_i)\).
 A published raw operator digest \(H(\operatorname{enc}(C_k))\) permits testing both
 candidates with two forward hashes. The actual byte parser and public
 transpose/parity arithmetic recover the masked signs and construct each
 candidate's canonical operator bytes. The true plaintext passes; a wrong
-candidate that passes yields a collision between distinct canonical matrix bytes. Thus key entropy does not
-repair this public operator-digest view. Reusing the sign key also retains the usual
-one-time-mask limitation; the ciphertext-only law supplies no encryption-oracle
-or repeated-key security theorem.
+candidate that passes yields a collision between distinct canonical matrix
+bytes. This motivates the private-nonce commitment below.
 
 The released view studied below consists only of the versioned instance and
 its full ciphertext bytes. It excludes exposed projectors, kernel or

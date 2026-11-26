@@ -8,9 +8,11 @@ The main body has four parts:
 
 1. Cellular, semantic and Hodge primitives.
 2. The Harmonic Cochain Problem and its public homotopy classes.
-3. The coupled encryption construction: actual operators, entire intrinsic
-   lattice, finite encoding/recovery, transport diagrams, private operator
-   commitments and one-use random-oracle recovery.
+3. The coupled encryption construction, including the actual operators, entire
+   intrinsic lattice, finite encoding and recovery, a prime-field representation
+   of the bounded ciphertext equations, the fresh-sign encryption and
+   decryption algorithms, exact reuse consequences, transport diagrams,
+   private operator commitments and one-use random-oracle privacy.
 4. CVP comparison, ending with a strict recovery separation on the
    fresh-sign family.
 
@@ -20,10 +22,27 @@ the original coefficients. The manuscript walks through both runnable byte
 round trips, including recovery of the original Boolean message in the
 fresh-sign profile. [Lean demo](../../lean/Protocol/Storage/CoupledRecovery/Demo.lean)
 
+The checked fresh-sign decoder accepts exactly the canonical ciphertexts
+generated at its declared public parameters. The ciphertext reveals the
+one-time mask and provides no authentication. Every sign key decrypts a
+valid ciphertext to its own compatible message. Two ciphertexts under
+the same key reveal their plaintext XOR, and one known plaintext recovers
+that key and the other plaintext. [Checked decoder](../../lean/Protocol/Transfer/PathSignature/NativeSignSampler/CheckedRecovery.lean) · [Reuse theorems](../../lean/Protocol/Transfer/PathSignature/NativeSignSampler/Reuse.lean)
+
+For the bounded mechanism, the rank-one arithmetic equations and binary range
+gates give an explicit field assignment for every valid integer sample. Over
+a prime field satisfying the modulus bounds, a satisfying field assignment has
+a unique bounded integer lift of its native arithmetic wires that obeys the
+original ciphertext equations. Paper 2 builds on this refinement in its proof
+relation.
+[Lean range refinement](../../lean/Protocol/Transfer/PathSignature/NativeCircuitRanges.lean)
+
 The finite fresh-key instance has the proved
 classical query bound `2^-n+(Q+2)/256^32`, including partial coefficient
 recovery for positive scaling. The theorem specifies a fresh empty shared
-oracle cache and `Q` postrelease decoder queries.
+oracle cache and `Q` postrelease decoder queries. For every fixed pair of
+messages in the same experiment, the challenge-bit success bound is
+`1/2+(Q+2)/256^32`. [Chosen-message theorem](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRandomOracle/Indistinguishability.lean)
 
 On those same ciphertexts one CVP call with the supplied operative lattice
 recovers every message. The public bound remains in force for a decoder
@@ -57,12 +76,11 @@ The different operative planes in that one public class form a graph chart
 family. Their squared chordal distances are an explicit multiple of key
 Hamming distance. [Projector geometry](../../lean/HCP/CoupledProjectorMetric.lean)
 
-The post-conclusion appendix maps these results to canonical Lean declarations.
-It also retains the earlier six-group Hodge/CVP table, whose
-[focused verification entry](../../lean/Palomar/PaperOne/README.md) selects
-16 main and 20 supporting declarations. That checked selection is separate
-from the new coupled and random-oracle results; its source metadata pins the
-earlier revision.
+The appendix's current correspondence table maps these results to canonical
+Lean declarations in this repository. Its historical Palomar section
+preserves the six-group Hodge/CVP crosswalk from the submission. The source
+pin and verification record describe that earlier 36-declaration selection.
+[Historical Palomar entry](../../lean/Palomar/PaperOne/README.md)
 
 [Paper 2](../paper2/README.md) consumes this construction in payload, storage,
 certificate and transaction interfaces. [Paper 3](../paper3/README.md) owns

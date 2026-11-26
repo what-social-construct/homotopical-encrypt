@@ -25,6 +25,9 @@ held transport token and available ciphertext bytes.
 | Raw-root CRS reference | Fresh completion inherits the conditional five-term adaptive forgery bound on the original sampled execution. |
 | Nonce-bearing version | Its separate native relation and approved owner checker retain the original snapshot/context and actual private operator opening. |
 | Nonce-bearing release recovery | The original checked release factors through the public instance, matched template and two evidence byte strings. The recovery bound transfers under a simulation premise on the joint prefix, including the sampled message and live byte-oracle cache. |
+| Honest release experiment | The selected CRS prover uses the original nonce-bearing witness and full V2 signing input. A conditional comparison from the common native prefix implies the joint-prefix recovery premise. |
+| Generated release acceptance | The generated owner and payload proofs pass the original packet checker under the stated setup, approval, observation binding and primitive correctness hypotheses. |
+| Proof relation arithmetic | Paper 1 supplies the prime-field refinement of the bounded ciphertext equations for the native proof relation. |
 
 The adaptive CRS reduction uses the raw-root relation. The nonce-bearing
 version uses the private operator commitment and its own witness, program,
@@ -33,8 +36,12 @@ simulator receives the exact intent, signing input and full ciphertext.
 With `m` disclosure values and query budgets `S` for the simulator and `Q`
 for the decoder, the recovery bound is `m/2^n + (S+Q+2)/256^32 + ε` under a joint
 prefix simulation error of at most `ε`. The one-use experiment retains
-failed releases in its probability space. The chosen backend still needs
-a proof of the joint simulation premise.
+failed releases in its probability space. The honest branch samples proof
+randomness internally and runs the selected CRS prover alongside the supplied
+payload prover. Its common-prefix theorem reduces the joint simulation
+premise to a conditional comparison of the released view and resulting cache.
+The chosen backend still needs a quantitative simulation estimate and a
+proof that its circuit implements the canonical relations.
 
 The remaining protocol work is secure proof/signature primitive
 instantiation, semantic setup refinement, complete field-circuit byte/hash
@@ -71,6 +78,10 @@ objects and proved statements to Lean. Useful protocol entry points include:
   and [original-context owner checker](../../lean/Protocol/Transfer/PathSignature/NativeCommittedContext.lean).
 - [Nonce-bearing release assembly](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease.lean)
   and [joint-prefix recovery bound](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease/Simulation.lean).
+- [Honest evidence producer](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease/HonestEvidence.lean)
+  and [common-prefix comparison](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease/Honest.lean).
+- [Generated payload and packet acceptance](../../lean/Protocol/Transfer/PathSignature/NativeCommittedRelease/Payload.lean)
+  and [Paper 1's finite-field refinement](../paper1/README.md).
 
 Build the reading copy from this directory with
 `latexmk -pdf -interaction=nonstopmode -halt-on-error construction.tex`.

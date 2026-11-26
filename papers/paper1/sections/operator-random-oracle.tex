@@ -1,4 +1,4 @@
-\subsection{Bounded-query recovery in the shared byte random oracle}
+\subsection{One-use privacy in the shared byte random oracle}
 \label{sec:native-random-oracle}
 
 The public oracle accepts arbitrary byte strings and returns independent
@@ -80,6 +80,29 @@ positive scaling give success probability at most \(2^{-n}\); failure and
 invalid integer outputs cannot increase that event.
 \end{proof}
 
+\begin{theorem}[One-use chosen-message indistinguishability]
+\label{thm:coupled-native-rom-challenge}
+Fix any pair of Boolean messages before the experiment. Replace the uniform
+message draw above by a fair challenge bit \(b\) and encrypt the \(b\)-th
+message. The key, nonce, initial cache and released view are otherwise as
+above. A public adversary making at most \(Q\) adaptive byte-oracle queries
+after release has
+\[
+ \left|\Pr_{\mathrm{RO}}[\widehat b=b]-\tfrac12\right|
+ \leq \frac{Q+2}{256^{32}}.
+\]
+\end{theorem}
+
+\begin{proof}
+In the ideal experiment the operator root is independent and the uniform
+key can be reindexed by the mask for either chosen message. The complete
+public execution, including the adaptive query answers, therefore has the
+same law for \(b=0\) and \(b=1\). A Boolean guess is correct with probability
+\(\tfrac12\). Apply the same hidden-seed event comparison to a correct
+challenge-bit guess and then to its complementary event. The query budget
+remains \(Q+2\).
+\end{proof}
+
 \begin{corollary}[Native recovery with deterministic key disclosure]
 \label{cor:coupled-native-rom-disclosure}
 In the experiment of \cref{thm:coupled-native-rom}, also give the decoder
@@ -110,7 +133,11 @@ fiber contributes at most \(2^{-n}\). Sum over the \(M\) disclosed values
 and average over the mask.
 \end{proof}
 
-Both bounds average over one shared random oracle in the one-use
-instance/ciphertext experiment with no prechallenge query phase.
-Concrete hash instantiation, reused geometry and additional public proof
-or storage transcripts require corresponding security experiments.
+The bounds average over one shared random oracle in the one-use
+instance/ciphertext experiment. The opening nonce supplies the
+\(256^{32}=2^{256}\) address-guessing denominator. The payload length \(n\)
+sets the uniform-message guessing baseline. Concrete hash instantiation,
+prechallenge queries, repeated oracle challenges, and additional public
+proof or storage transcripts require corresponding security experiments.
+The key-reuse result above already applies to the commitment-bearing view
+because the ciphertext bytes are included in it.

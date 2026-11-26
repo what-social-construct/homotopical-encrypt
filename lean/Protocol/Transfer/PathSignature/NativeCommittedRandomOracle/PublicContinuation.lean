@@ -30,19 +30,58 @@ def realPrefix (program : OracleComp NativeSpec α) :
   let seed ← $ᵗ Seed
   (simulateQ (encoding.realImpl seed) program).run ∅
 
+/-- Keep the handler seed for an honest continuation that needs the private
+opening of the operator commitment. -/
+def realPrefixWithSeed (program : OracleComp NativeSpec α) :
+    ProbComp (Seed × (α × publicOracle.QueryCache)) := do
+  let seed ← $ᵗ Seed
+  (fun sampled => (seed, sampled)) <$> (simulateQ (encoding.realImpl seed) program).run ∅
+
+/-- A continuation that discards the private seed has the original real law. -/
+theorem realPrefixWithSeed_bind_ignore (program : OracleComp NativeSpec α)
+    (next : (α × publicOracle.QueryCache) → ProbComp β) :
+    (realPrefixWithSeed program >>= fun sampled => next sampled.2) =
+      (realPrefix program >>= next) := by
+  simp only [realPrefixWithSeed, realPrefix, bind_assoc, bind_map_left]
+
+/-- Continue a public program and retain the resulting cache for subsequent queries. -/
+def resumePublicState (program : OracleComp PublicSpec α) (cache : publicOracle.QueryCache) :
+    ProbComp (α × publicOracle.QueryCache) :=
+  (simulateQ publicOracle.romImpl program).run cache
+
 /-- Continue a public program with the cache already reached by the prefix. -/
 def resumePublic (program : OracleComp PublicSpec α) (cache : publicOracle.QueryCache) :
     ProbComp α :=
   (simulateQ publicOracle.romImpl program).run' cache
 
+private theorem real_liftPublic_run (program : OracleComp PublicSpec α)
+    (seed : Seed) (cache : publicOracle.QueryCache) :
+    (simulateQ (encoding.realImpl seed) (liftPublic program)).run cache =
+      resumePublicState program cache := by
+  unfold liftPublic resumePublicState
+  rw [SecretEncoding.realImpl, QueryImpl.simulateQ_compose,
+    ← QueryImpl.simulateQ_compose (encoding.deriveImpl seed),
+    SecretEncoding.deriveImpl_comp_withDerivationsLift, simulateQ_id']
+
 private theorem real_liftPublic_run' (program : OracleComp PublicSpec α)
     (seed : Seed) (cache : publicOracle.QueryCache) :
     (simulateQ (encoding.realImpl seed) (liftPublic program)).run' cache =
       resumePublic program cache := by
-  unfold liftPublic resumePublic
-  rw [SecretEncoding.realImpl, QueryImpl.simulateQ_compose,
-    ← QueryImpl.simulateQ_compose (encoding.deriveImpl seed),
-    SecretEncoding.deriveImpl_comp_withDerivationsLift, simulateQ_id']
+  simp only [resumePublic, StateT.run'_eq, real_liftPublic_run, resumePublicState]
+
+/-- Splitting the real execution at a public suffix preserves both the output
+and the final cache. -/
+theorem realPrefix_continue (beginProgram : OracleComp NativeSpec α)
+    (next : α → OracleComp PublicSpec β) (project : α → γ) :
+    realPrefix
+      (do let sampled ← beginProgram
+          let output ← liftPublic (next sampled)
+          pure (project sampled, output)) =
+    (do let sampled ← realPrefix beginProgram
+        (fun result => ((project sampled.1, result.1), result.2)) <$>
+          resumePublicState (next sampled.1) sampled.2) := by
+  simp only [realPrefix, bind_assoc, bind_pure_comp, simulateQ_bind, simulateQ_map,
+    StateT.run_bind, StateT.run_map, real_liftPublic_run]
 
 /-- Splitting the real execution immediately before a public suffix preserves
 the event probability with the original target and exact shared cache. -/
