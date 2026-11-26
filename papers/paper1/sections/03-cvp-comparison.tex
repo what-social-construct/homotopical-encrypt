@@ -422,31 +422,44 @@ For each key, the generated cochain projects to the encoded harmonic point,
 which is the unique closest lattice point by \cref{prop:coupled-cvp-residual}.
 \end{proof}
 
-\begin{proposition}[Equal residuals and the exact closest-vector gap]
+\begin{proposition}[Explicit residual and exact closest-vector gap]
 \label{prop:fresh-sign-cvp-residual}
 In the fresh-sign profile with \(A^{\mathsf T}A=dI\) and \(d>0\), fix
 a mask \(\tau\) and let \(b=(a,0,(d+1)A\tau)\) be its decoded ciphertext.
-For any sign key \(k\), write \(s=k\mathbin\odot\tau\).
+For any sign key \(k\), write \(s=k\mathbin\odot\tau\). The projection and
+its orthogonal residual are
+\[
+ P_{C_k}b=(0,ds,dA\tau),\qquad
+ r_k=b-P_{C_k}b=(a,-ds,A\tau).
+\]
 For every \(w\in\mathbb Z^n\),
 \[
   \|b-g_{C_k}(w)\|^2
   = a^2+d(d+1)n+(1+d)\sum_{i=1}^n(w_i-ds_i)^2.
 \]
-The minimum squared distance is \(a^2+d(d+1)n\) for every key.
+The minimum squared distance is \(\|r_k\|^2=a^2+d(d+1)n\) for every key.
 If \(n>0\), the next larger squared distance exceeds this minimum by
 exactly \(d+1\). Thus any point of the supplied lattice with squared cost
 strictly below the minimum plus \(d+1\) recovers the operative message.
 \end{proposition}
 
 \begin{proof}
-The Gram matrix is \((1+d)I\) and \(P_{C_k}b=g_{C_k}(ds)\).
-In the normal form, the residual is \((a,-ds,C_ks)\).
-Since \(C_k^{\mathsf T}C_k=dI\) and \(\|s\|^2=n\), its squared norm is
-\(a^2+d^2n+dn\). Substituting into \cref{prop:coupled-cvp-residual}
-gives the formula. A different integer coefficient vector gives at least
-one nonzero integer difference, and changing one coordinate by one attains
-the stated gap.
+Since \(C_ks=A\tau\), the recovery square in
+\cref{prop:coupled-recovery-square} gives the displayed projection.
+Subtracting it from \(b\) gives \(r_k\). The Gram matrix is \((1+d)I\)
+and \(\|A\tau\|^2=d\|\tau\|^2=dn\), so
+\(\|r_k\|^2=a^2+d^2n+dn\). Substitution into
+\cref{prop:coupled-cvp-residual} gives the distance formula. Changing any
+integer coefficient raises the squared cost by at least \(d+1\), and a
+unit change in one coordinate attains that gap.
 \end{proof}
+
+The two-bit example in \cref{sec:coupled-sampling} has
+\(b=(3,0,0,-6,0)\), projection \((0,2,-2,-4,0)\), and residual
+\((3,-2,2,-2,0)\) of squared norm \(21\). In general the minimum squared
+cost is a function of the public \(a,d,n\), so disclosing it leaves the
+recovery bounds unchanged. The full residual reveals \(ds\) through its
+information coordinates \(-ds\).
 
 \begin{proposition}[Optimal recovery from finite disclosure]
 \label{prop:finite-disclosure}
@@ -474,9 +487,7 @@ leaves one equally likely compatible pair per key. The original coefficient
 target is injective in the key, so an additional deterministic disclosure
 \(\ell(k)\) gives optimal recovery probability \(|\ell(K)|/2^n\).
 A disclosure of \(r\) bits gives at most \(2^r/2^n\). Revealing \(r\leq n\)
-distinct sign coordinates attains the bound. Appending the minimum squared CVP
-cost leaves this probability unchanged because the cost is constant across
-compatible keys.
+distinct sign coordinates attains the bound.
 
 The common public homotopy class is fixed throughout this count. The
 experiment below also releases the nonce-bearing instance and accounts for
