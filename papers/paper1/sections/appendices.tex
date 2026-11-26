@@ -163,10 +163,8 @@ the bound to the fresh-sign family.
 \lean{optimalProbability_add_minimum_cost}
 \\\midrule
 \textbf{P1-N14. Bounded-query recovery with key disclosure.}\newline
-\Cref{cor:coupled-native-rom-disclosure}; deterministic disclosure of the
-sign key in the same one-use byte-oracle experiment. The ideal guessing
-bound uses the number of disclosure values and retains the original nonce
-term.
+\Cref{cor:coupled-native-rom-disclosure}; the number of disclosure values
+bounds ideal guessing. The real experiment adds the nonce term.
 &
 \lean{HE.Protocol.Transfer.PathSignature.NativeCommittedRandomOracle}\par
 \lean{uniform_guess_with_disclosure_range_le}\par
@@ -194,11 +192,12 @@ reused-key agreement and compatible-pair count, and known-message recovery.
 \lean{CheckedRecovery.recover_eq_some_iff_ciphertextBytes}\par
 \lean{Reuse.recoverBitsWithKeyBytes_alternativeSignKey}\par
 \lean{Reuse.recoverAgreement_ciphertextBytes}\par
+\lean{Reuse.compatible_message_pair_iff}\par
 \lean{Reuse.compatible_message_pairs_card}\par
 \lean{Reuse.recoverKnownKey_ciphertextBytes}\par
 \lean{Reuse.recoverReusedMessage_ciphertextBytes}
 \\\midrule
-\textbf{P1-N17. One-use chosen-message privacy.}\newline
+\textbf{P1-N17. One-use fixed-pair privacy.}\newline
 \Cref{thm:coupled-native-rom-challenge}. Fixed pair and adaptive postrelease
 queries to the native byte oracle.
 &
@@ -456,13 +455,12 @@ family proves it for its homological tests. Full first-order invariance is
 not a theorem of this entry.
 \\\midrule
 
-\textbf{Assumption: computational hardness.}\newline
-\cref{sec:known-lattice-cvp}; distinct from the proved exact comparisons.
+\textbf{Scope of CVP complexity.}\newline
+\Cref{cor:coupled-cvp-np-complete,thm:strict-native-cvp-separation}.
 &
-Known-lattice CVP hardness is an external computational interface.
-The selected algebraic comparisons and non-identifiability examples retain
-their exact-recovery scope. The coupled native random-oracle theorem above
-is a separate sampled-query result.
+The complexity result concerns arbitrary targets in supplied coupled
+lattices. The native random-oracle result is a bound on recovery probability
+for a specific sampling and disclosure experiment.
 \\
 \end{longtable}
 

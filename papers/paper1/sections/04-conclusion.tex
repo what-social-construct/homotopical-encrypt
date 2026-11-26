@@ -1,35 +1,19 @@
 \section*{Conclusion and Further Work}
 \addcontentsline{toc}{section}{Conclusion and Further Work}
 
-The coupled cellular family gives a functioning harmonic-lattice encryption
-mechanism. Its private presentation determines the actual Hodge operator,
-entire intrinsic harmonic lattice and coefficient encoding. The byte encoder
-and private decoder execute both the integer and fresh-sign round trips. The
-transport and projection laws preserve the same message through changes of
-presentation.
+The coupled family makes the harmonic lattice part of the private
+presentation. Exact byte recovery and ciphertext transport use that same
+lattice encoding. In the fresh-sign profile a fresh message-length pad
+provides ciphertext privacy. The nonce-bearing random-oracle experiment
+bounds full-message recovery and fixed-pair distinguishing when the
+operator commitment is public. Supplying the operative lattice fixes the
+projection. The ciphertext and public class alone leave multiple
+compatible answers.
 
-The fresh-sign ciphertext encodes a public mask. With a fresh uniform key
-it has the same distribution for every message. If the key is reused, the
-masks reveal plaintext XORs and a known plaintext recovers the key. A
-valid ciphertext can be modified to flip selected plaintext bits. In the
-one-use view with a nonce-bearing operator commitment, the fixed-pair
-challenge-bit advantage over random guessing is at most
-\((Q+2)256^{-32}\) in the shared byte random oracle.
-
-The compatible fresh-sign planes occupy one public homotopy class, with
-squared chordal distances proportional to their key Hamming distances.
-One correct CVP query on the supplied lattice recovers every message.
-In the public experiment even a
-decoder using that same fixed CVP oracle has recovery probability at most
-\(2^{-n}+(Q+2)256^{-32}\). The separation measures the cost of recovering
-the operative answer from the public view.
-
-For arbitrary targets in a supplied coupled lattice, the exact distance
-decision problem is NP-complete. The generated-ciphertext promise makes
-the projection itself a closest lattice point. Richer geometric families
-and larger released views
-remain open. Discrete Morse reduction for cellular sheaf cohomology
-\cite{curryGhristNanda2015morse} suggests an algorithmic refinement, provided
-the retained lifts and metric comparison identify the original harmonic
-representative. Extension from the constructed homological fragment to a
-richer logical semantics is a further direction.
+A computational sampler with shorter keys or reusable keys would require
+a separate construction and security argument. Further questions include
+privacy for larger released views and extending the constructed homological
+fragment to richer logical semantics. Discrete Morse reduction
+\cite{curryGhristNanda2015morse} could reduce the cochain complex used in
+recovery if its lifts and metric comparison recover the original harmonic
+representative.

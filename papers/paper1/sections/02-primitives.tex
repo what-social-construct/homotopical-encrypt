@@ -16,9 +16,7 @@ For a realized public value \(\alpha\), write
   \alpha\in\image(\pi),\qquad
   A_\alpha=\pi^{-1}(\alpha)=\{x\in A:\pi(x)=\alpha\}.
 \]
-For \(x\in A\), we also write
-\([x]_\pi:=A_{\pi(x)}\). Thus, whenever \(\alpha=\pi(x)\), the two
-descriptions agree: \(A_\alpha=[x]_\pi\). We call the classifier
+For \(x\in A\), write \([x]_\pi=A_{\pi(x)}\). We call the classifier
 \emph{complete for the declared homotopy equivalence} when
 \(\pi(x)=\pi(y)\) implies \(x\simeq y\) for all \(x,y\in A\).
 
@@ -62,25 +60,14 @@ The algebraic cellular model above adapts the finite Hodge setup of
 realization for every admitted incidence structure. Such a realization and
 the separate simplicial-coherence conditions require additional data.
 
-\begin{definition}[Matrix harmonicity]\label{def:matrix-harmonicity}
-  For a hidden linear Hodge operator \(\Delta\), a cochain
-  \(h\in\mathbb R^N\)
-  is \(\Delta\)-harmonic when
-  \[
-    \Delta h=0.
-  \]
-  Thus the harmonic kernel is \(\ker(\Delta)\). In the projection model this
-  agrees with the condition \(h\in W\) for the kernel-normalized operator
-  \(\Delta_W=I-P_W\).
+\begin{definition}[Harmonicity and projection]
+\label{def:matrix-harmonicity}\label{def:projection-laplacian}
+  A cochain \(h\) is harmonic for \(\Delta\) when \(\Delta h=0\).
+  For a subspace \(W\le V\), let \(P_W\) denote its orthogonal projector.
+  The operator \(\Delta_W=I-P_W\) has kernel \(W\).
 \end{definition}
 
-\begin{definition}[Harmonic projection]\label{def:projection-laplacian}
-  For a subspace \(W\le V\), let \(P_W:V\to W\subset V\) denote the
-  orthogonal projection. Its associated kernel-normalized operator is
-  \(\Delta_W=I-P_W\), with \(\ker\Delta_W=W\).
-\end{definition}
-
-\begin{proposition}[Hodge decomposition surface]\label{prop:hodge-decomposition}
+\begin{proposition}[Hodge decomposition]\label{prop:hodge-decomposition}
   Let the three consecutive cochain spaces be finite-dimensional real inner
   product spaces, and let the displayed stars denote adjoints. Suppose
   \[
@@ -170,9 +157,8 @@ are inverse linear bijections. Orthogonality also gives
   \|h+e\|^2=\|h\|^2+\|e\|^2.
 \]
 
-This bijection is the algebraic encryption/decryption construction. Given a
-harmonic message \(h\in\mathcal H_x\), randomized Hodge encryption samples, or
-otherwise chooses, admissible noise \(e\in\mathcal E_x\) and sets
+Given a harmonic message \(h\in\mathcal H_x\) and admissible noise
+\(e\in\mathcal E_x\), set
 \[
   \mathsf{Enc}_x(h;e)=
   \operatorname{combine}_x(h,e)=h+e.
@@ -193,23 +179,7 @@ For every admissible noise value,
   \qquad
   \operatorname{split}_x\bigl(\operatorname{combine}_x(h,e)\bigr)=(h,e).
 \]
-The bijection concerns the full message--noise pair \((h,e)\). Choosing a
-noise distribution makes \(\mathsf{Enc}_x\) randomized, while
-\(\mathsf{Dec}_x\) recovers the message for every admissible noise value.
-Both maps depend on the operative representative \(x\).
-
-In the \HE{} public-sample model, a presentation \(x\) produces a cochain
-\[
-  b=h+e,
-  \qquad
-  h\in\mathcal H_x,
-  \qquad
-  e\in\image(\delta_{0,x})\oplus\image(\delta_{1,x}^\ast).
-\]
-The message \(h\) is a harmonic representative of its degree-one cohomology
-class, and \(e\) is Hodge-structured noise. When \(x\) is also equipped with
-an explicit harmonic-lattice presentation, write
-\(\Lambda_x\subseteq\mathcal H_x\) for its discrete lattice and choose
-\(h\in\Lambda_x\). In this integral profile, the public fiber indexes a
-family of possible embedded harmonic lattices; the operative hidden member
-selects one of them.
+Sampling \(e\) gives a randomized encoder. The displayed identities hold
+for every admissible \(e\). In the integral profile, the operative
+presentation also supplies a discrete lattice
+\(\Lambda_x\subseteq\mathcal H_x\), and messages lie in \(\Lambda_x\).

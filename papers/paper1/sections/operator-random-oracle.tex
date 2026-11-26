@@ -3,16 +3,11 @@
 
 The public oracle accepts arbitrary byte strings and returns independent
 uniform 32-byte digests on previously unseen inputs, caching each answer.
-The experiment starts with an empty cache. Before releasing any view, the
-constructor samples independent uniform Boolean vectors
-\(\mu,k\in\{0,1\}^n\) and an independent uniform 32-byte nonce \(r\).
-Here \(\varepsilon(0)=-1\), \(\varepsilon(1)=1\) coordinatewise, and
-\[
- B_k=A\operatorname{diag}(\varepsilon(k)),\qquad
- z=d\varepsilon(\mu),\qquad u=B_k\varepsilon(\mu).
-\]
-The source opening \((\rho,S)\), exact opening \(a\), and public matrix \(A\)
-are fixed independently of these samples. Choose a common descriptor with
+The experiment starts with an empty cache and generates one fresh-sign
+witness as in \cref{sec:private-operator-instance}. The message and key
+are independent uniform \(n\)-bit vectors, with a separate uniform
+32-byte nonce. The source opening \((\rho,S)\), exact opening \(a\), and
+public matrix \(A\) are fixed before sampling. Choose a common descriptor with
 \(\ell=|\rho|\) and a coordinate bound \(K\) satisfying
 \[
 \begin{gathered}
@@ -20,19 +15,19 @@ are fixed independently of these samples. Choose a common descriptor with
  \sum_j |A_{ij}|\leq K\qquad\text{for every row }i.
 \end{gathered}
 \]
-Every generated private carrier then satisfies the same bounded relation:
-the target entries have magnitude \(|A_{ij}|\), the message entries have
-magnitude \(|d|\), and the coexact entries are bounded by the row sums.
+These bounds cover the target entries of magnitude \(|A_{ij}|\), the
+message entries of magnitude \(|d|\), and the coexact entries bounded by
+the row sums.
 
 The constructor first obtains the operator root by querying this same byte
 oracle at the complete canonical preimage for
 \(\operatorname{Com}(B_k;r)\). It then queries the source-credential bytes
 and full ciphertext bytes, and releases
 \(\operatorname{encodeInstance}(x_w)\) together with that ciphertext.
-The decoder receives only this view, uniform random sampling and the public
-byte oracle. It has no private-derivation interface or earlier oracle
-transcript. Its query budget \(Q\) counts all of its postrelease byte-oracle
-queries, on every input view and every execution path.
+The decoder knows the public profile and receives the instance and
+ciphertext. It may use independent randomness and the shared public byte
+oracle. The budget \(Q\) counts postrelease queries on every input view
+and execution path.
 
 The proof uses the hidden-seed simulation theorem of the pinned VCVio
 library \cite{vcvio2026library}. The real handler shares one cache between
@@ -80,7 +75,8 @@ positive scaling give success probability at most \(2^{-n}\); failure and
 invalid integer outputs cannot increase that event.
 \end{proof}
 
-\begin{theorem}[One-use chosen-message indistinguishability]
+\Needspace{8\baselineskip}
+\begin{theorem}[One-use fixed-pair indistinguishability]
 \label{thm:coupled-native-rom-challenge}
 Fix any pair of Boolean messages before the experiment. Replace the uniform
 message draw above by a fair challenge bit \(b\) and encrypt the \(b\)-th
@@ -133,11 +129,9 @@ fiber contributes at most \(2^{-n}\). Sum over the \(M\) disclosed values
 and average over the mask.
 \end{proof}
 
-The bounds average over one shared random oracle in the one-use
-instance/ciphertext experiment. The opening nonce supplies the
-\(256^{32}=2^{256}\) address-guessing denominator. The payload length \(n\)
-sets the uniform-message guessing baseline. Concrete hash instantiation,
-prechallenge queries, repeated oracle challenges, and additional public
-proof or storage transcripts require corresponding security experiments.
-The key-reuse result above already applies to the commitment-bearing view
-because the ciphertext bytes are included in it.
+The disclosure bound concerns recovery of the entire message. A disclosed
+key sign immediately reveals the corresponding message sign through the
+public mask. The nonce provides the fixed \(256^{32}=2^{256}\) denominator,
+independent of the payload length. A concrete hash, prechallenge queries,
+encryption or decryption oracles, repeated challenges, and broader public
+views require separate security analyses.

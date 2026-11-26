@@ -31,37 +31,7 @@ Thus, for fixed dimensions, a CVP oracle \(O\) is correct when
   &\qquad \|t-O(G,t)\|^2\le \|t-w\|^2.
 \end{aligned}
 \]
-The weaker output condition is merely lattice membership:
-\[
-  \forall G,t,\ O(G,t)\in\Lambda_G .
-\]
-Fix a class \(\mathcal C\) of admissible algorithms, such as polynomial-time or
-probabilistic polynomial-time algorithms. The external CVP hardness assumption
-is the schema
-\[
-\begin{aligned}
-  \mathsf{CVP}_{\mathrm{hard}}(\mathcal C)
-  \quad\Longleftrightarrow\quad
-  \neg\exists O,\ 
-    O\in\mathcal C\wedge\mathsf{CVP}_{\mathrm{corr}}(O).
-\end{aligned}
-\]
-
 \subsection{Presented Linear Images}
-
-Let \(R\) be a field. The field-linear image of \(G\) is a different object:
-\[
-  \mathcal V_G(R)=GR^n=\{Gx:x\in R^n\}.
-\]
-Over a field this is a linear subspace, not the discrete lattice
-\(G\mathbb Z^n\).
-
-Let \(G\) present \(\mathcal V_G(R)\). If a matrix
-\(\Delta\) satisfies \(\ker(\Delta)=\mathcal V_G(R)\), then any solver satisfying
-\[
-  \Delta S(\Delta,t)=0
-\]
-returns \(S(\Delta,t)\in\mathcal V_G(R)\).
 
 \begin{proposition}[Kernel realization for explicit generated subspaces]\label{prop:hcp-to-cvp}
   Let \(G\in R^{n\times n}\) be an explicit square generator matrix over a
@@ -77,99 +47,24 @@ returns \(S(\Delta,t)\in\mathcal V_G(R)\).
 \end{proposition}
 
 \begin{proof}
-  Let \(G\in R^{n\times n}\) be an explicit generator matrix over a field
-  \(R\), set
-    \[
-      \mathcal V_G(R)=\{Gx:x\in R^n\}\subseteq R^n,
-    \]
-    and let \(t\in R^n\) be the solver input. We construct a matrix \(\Delta\)
-    with
-  \[
-    \ker(\Delta)=\mathcal V_G(R).
-  \]
-  Put \(V=\mathcal V_G(R)\). Since \(R^n\) is finite-dimensional over a field,
-  choose a complementary subspace \(W\) with
-  \[
-    V+W=R^n,
-    \qquad
-    V\cap W=0 .
-  \]
-  Thus every \(y\in R^n\) has a unique decomposition
-  \[
-    y=v+w,
-    \qquad
-    v\in V,\quad w\in W.
-  \]
-  Equivalently, there is a unique element \(w_y\in W\) such that
-  \(y-w_y\in V\). Define
-  \[
-    P(y)=w_y.
-  \]
-  The uniqueness of the \(V\oplus W\) decomposition gives linearity: for
-  \(y,z\in R^n\), the vector \(P(y)+P(z)\) lies in \(W\), and
-  \[
-    (y+z)-(P(y)+P(z))
-    =
-    (y-P(y))+(z-P(z))\in V,
-  \]
-  so \(P(y+z)=P(y)+P(z)\). Similarly, for \(a\in R\),
-  \(aP(y)\in W\) and
-  \[
-    ay-aP(y)=a(y-P(y))\in V,
-  \]
-  so \(P(ay)=aP(y)\).
-
-  We now compute the kernel. If \(y\in V\), then \(0\in W\) and \(y-0\in V\),
-  hence uniqueness gives \(P(y)=0\). Conversely, if \(P(y)=0\), then
-  \(y-P(y)=y\in V\). Therefore
-  \[
-    \ker P=V=\mathcal V_G(R).
-  \]
-  Let \(\Delta\) be the matrix of the linear map \(P\). Then, for every
-  \(y\in R^n\),
-  \[
-    \Delta y=0
-    \quad\Longleftrightarrow\quad
-    y\in\ker P
-    \quad\Longleftrightarrow\quad
-    y\in\mathcal V_G(R)
-    \quad\Longleftrightarrow\quad
-    \exists x,\ Gx=y .
-  \]
-
-    Let \(S:R^{n\times n}\times R^n\to R^n\) be a presented-operator Hodge
-  solver satisfying
-  \[
-    \forall \Delta\, b,\qquad
-    \Delta(S(\Delta,b))=0.
-  \]
-    Applying this to the \(\Delta\) constructed above and \(b=t\) gives
-  \[
-    \Delta(S(\Delta,t))=0.
-  \]
-  By the kernel calculation, there exists \(x\) with
-  \[
-    Gx=S(\Delta,t).
-  \]
-    Hence \(S(\Delta,t)\in\mathcal V_G(R)\).
+  Choose a complement \(W\) with \(R^n=\mathcal V_G(R)\oplus W\).
+  Take \(\Delta\) to be the matrix of the linear projection
+  \(v+w\mapsto w\) onto \(W\). It vanishes exactly on \(\mathcal V_G(R)\).
+  A \(\Delta\)-harmonic solver output therefore lies in that image.
 \end{proof}
 
-When \(R=\mathbb R\), if a presented-operator solver additionally minimizes
-Euclidean distance among \(\Delta\)-harmonic vectors, the same kernel equality
-says that it returns the continuous closest point of \(\mathcal V_G(\mathbb
-R)\). This is still not discrete CVP unless a separate lattice is supplied.
+Over \(\mathbb R\), minimizing distance over this kernel gives the
+continuous orthogonal projection onto \(\mathcal V_G(\mathbb R)\).
+Discrete CVP minimizes over a specified integer lattice.
 
 \subsection{Explicit Harmonic-Lattice Bridge}
 
-The discrete bridge requires both kinds of data: a real harmonic subspace and
-an integer lattice contained in it. Let \(W\subseteq\mathbb R^m\) be the
+Let \(W\subseteq\mathbb R^m\) be the
 operative harmonic subspace, let \(P_W\) be its orthogonal projection, and let
 \(\Lambda_G=G\mathbb Z^n\subseteq W\) be an explicitly presented lattice. Set
 \[
   \Delta_W=I-P_W.
 \]
-The inclusion \(\Lambda_G\subseteq W\) does not identify the discrete lattice
-with the real subspace.
 
 \begin{proposition}[Discrete CVP through harmonic projection]\label{prop:hodge-projection-is-cvp}
   For \(t\in\mathbb R^m\), put \(t_W=P_Wt\). Then:
@@ -310,6 +205,14 @@ the certificate length polynomially, and the verifier computes the
 integer squared distance exactly.
 \end{proof}
 
+\paragraph{Orthogonal fresh-sign lattices.}
+Given \(C_k\), the projection of any target \((a,x,y)\) has graph coordinates
+\((x+C_k^{\mathsf T}y)/(1+d)\). Since the graph Gram matrix is
+\((1+d)I\), \cref{prop:coupled-cvp-residual} reduces the discrete problem
+to rounding these coordinates independently to nearest integers. A
+half-integer allows either nearest integer. The NP-completeness result
+above uses unrestricted integer coupling matrices.
+
 \subsection{Oracle Insufficiency}
 
 Fix a typed HCP semantic realization as in \cref{def:typed-hcp-realization}.
@@ -396,15 +299,6 @@ The solver contracts below range over its admitted representatives.
   \(\Delta_yb=0\), contradicting the separation hypothesis.
 \end{proof}
 
-For every dimension at least two, consider the elementary matrix witness \(L=0\),
-\(L'=\operatorname{diag}(1,0,\ldots,0)\), and \(b=e_1\) under the constant
-projection to a one-point public type. This is a sanity example showing that
-the abstract ambiguity predicates are inhabited. It is not used as evidence
-that an arbitrary HCP realization admits the required semantic and Hodge
-extension witness. That witness remains an explicit hypothesis of
-\cref{prop:cvp-insufficient}; the following family constructs one for its
-stated semantic fragment.
-
 \subsection{A Constructed Integral Cellular Family}\label{sec:axis-family}
 
 The preceding implication has a concrete instantiation in a stated
@@ -459,20 +353,17 @@ theories is equivalent to typed homotopy equivalence.
   and coexact opening \(1\), producing noise \(e_0\). In the second use
   message \(e_0\), exact opening zero and coexact opening \(1\), producing
   noise \(e_1\). Both sums equal \(b\), and both messages belong to their
-  standard integral harmonic lattices. The actual Hodge projections recover
+  standard integral harmonic lattices. The Hodge projections recover
   those messages. Orthogonality gives the Pythagorean identity from
   \cref{prop:hodge-projection-is-cvp}; any other lattice point has strictly
   positive squared distance from the recovered message. Thus each message
   is the unique CVP answer in its presented lattice.
 \end{proof}
 
-For the same realization, the fixed coordinate \(e_1\) is harmonic for
-\(\Delta_0\) and not for \(\Delta_1\). This constructs the separation witness
-used in \cref{prop:cvp-insufficient}. Equality of the public theory is
-derived from the
-actual semantic equivalence, rather than imposed by a one-point classifier.
-The matrix-level public projection is extended from the two admitted
-operators; no semantic realization is asserted for other matrices.
+In this realization, \(e_1\) is harmonic for \(\Delta_0\) and
+nonharmonic for \(\Delta_1\), giving the witness in
+\cref{prop:cvp-insufficient}. The common public theory follows from the
+typed equivalence. The semantic realization covers these two operators.
 
 The displayed pair uses coefficient \(1\) in each presentation's own
 harmonic-lattice basis. Its distinct ambient targets therefore do not alone
@@ -483,7 +374,7 @@ coefficients in the same declared lattice presentations are \(2\) and \(1\).
 Both messages are nonzero, both exact components remain zero, and the public
 observation is again shared. No function of that observation can return the
 correct coefficient for both presentations. Each message remains the unique
-CVP answer in its actual lattice.
+CVP answer in its operative lattice.
 
 \Needspace{8\baselineskip}
 \begin{corollary}[Strict separation for hidden lattice recovery]
@@ -557,8 +448,6 @@ one nonzero integer difference, and changing one coordinate by one attains
 the stated gap.
 \end{proof}
 
-Subtracting the full residual vector from \(b\) gives the projected message.
-
 \begin{proposition}[Optimal recovery from finite disclosure]
 \label{prop:finite-disclosure}
 Draw a hidden state \(k\) uniformly from a nonempty finite set \(K\).
@@ -584,8 +473,8 @@ Conditioning the uniform fresh-sign key and message on the fixed ciphertext
 leaves one equally likely compatible pair per key. The original coefficient
 target is injective in the key, so an additional deterministic disclosure
 \(\ell(k)\) gives optimal recovery probability \(|\ell(K)|/2^n\).
-A disclosure of \(r\) bits gives at most \(2^r/2^n\), with equality when
-revealing \(r\) distinct sign coordinates. Appending the minimum squared CVP
+A disclosure of \(r\) bits gives at most \(2^r/2^n\). Revealing \(r\leq n\)
+distinct sign coordinates attains the bound. Appending the minimum squared CVP
 cost leaves this probability unchanged because the cost is constant across
 compatible keys.
 
@@ -595,7 +484,7 @@ queries to the byte oracle.
 
 We can compare the two recovery tasks on the same encrypted samples from
 \cref{thm:coupled-native-rom}. On the supplied-lattice side, the solver
-receives the actual graph basis \(G_{C_k}=[0;I;C_k]\) and the canonical
+receives the graph basis \(G_{C_k}=[0;I;C_k]\) and the canonical
 ciphertext. On the public HCP side, the solver receives the versioned
 instance and that same ciphertext. Fix a correct explicit-lattice CVP oracle
 \(O\) independently of the sampled byte oracle and the challenge coins.
@@ -633,7 +522,7 @@ The bound follows. For the stated regime, \(2^{-n}\leq 1/2\) and
 \((Q+2)/256^{32}<1/2\).
 \end{proof}
 
-In this classical query model, native HCP recovery is strictly harder than
-the corresponding supplied-lattice CVP task. The same oracle can solve
-candidate instances, while selecting the operative answer still requires
-information about the hidden presentation.
+This is a separation in recovery probability under two input views.
+The supplied lattice determines the operative answer. From the public
+view, the same oracle can solve individual candidate instances, which
+leaves the choice of operative presentation unresolved.

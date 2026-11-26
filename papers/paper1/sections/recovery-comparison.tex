@@ -6,7 +6,7 @@
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.14\linewidth}
   *{3}{>{\raggedright\arraybackslash}X}@{}}
 \toprule
-Feature & Explicit-lattice CVP & Search LWE & Native HCP profile \\
+Feature & Explicit-lattice CVP & Search LWE & HCP observation \\
 \midrule
 Public input & Basis \(G\) and target \(t\)
  & \((A,c)\), with \(c=As+e\bmod q\)
@@ -20,14 +20,13 @@ Geometric data & The lattice basis is supplied
 Error or residual & \(t-Gz\), with no Hodge promise
  & Independently sampled modular errors \(e\)
  & Exact/coexact opening \(\delta_0a+\delta_1^*u\), orthogonal to the harmonic space \\
-Result & The native generated message is the unique CVP answer when its lattice is supplied
- & Motivating comparison with a different noise model
- & Exact private recovery and a strict bounded-query separation from
- supplied-lattice recovery \\
+Scope here & The generated message is the unique closest point with its lattice supplied
+ & Comparison of public inputs and noise
+ & Different witnesses can give different targets for one observation \\
 \bottomrule
 \end{tabularx}
-\caption{The recovery tasks and their different public inputs. The HCP column
-names the declared mathematical observation; a cryptographic experiment must
-also include every released root, credential and proof.}
+\caption{Public inputs and targets for three recovery tasks. The native
+random-oracle experiment additionally supplies the versioned instance
+with the full ciphertext bytes.}
 \label{tab:recovery-comparison}
 \end{table}

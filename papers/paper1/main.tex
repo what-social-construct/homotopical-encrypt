@@ -16,23 +16,22 @@
 \maketitle
 
 \begin{abstract}
-We construct an encryption mechanism in which the private Hodge operator
-selects the message carried by an observed cochain. The Harmonic Cochain
-Problem (HCP) asks for that message from the observation and its public
-homotopy class. In our fresh-sign family the same ciphertext can encode
-\(2^n\) messages within one class. Each compatible harmonic plane gives a
-different message, and squared chordal distance between the planes is
-proportional to Hamming distance between their keys. We derive these planes
-and their intrinsic lattices from finite cellular sheaves and prove exact
-recovery from canonical private-key and ciphertext bytes.
-With the operative lattice supplied, one CVP query recovers every generated
-message. With the lattice hidden, even a decoder using that same fixed CVP
-oracle has success probability at most \(2^{-n}+(Q+2)256^{-32}\) in the
-one-use experiment with a uniform message, fresh sign key, private 32-byte
-operator nonce and \(Q\) public queries to an initially empty random oracle.
-For arbitrary targets, we lift unrestricted rational CVP to closest-vector
-search in a specified coupled harmonic lattice and prove NP-completeness
-of the exact decision problem there.
+We construct a family of cellular sheaves in which the private Hodge
+operator determines the harmonic message in a ciphertext. The Harmonic
+Cochain Problem (HCP) asks for that message from the ciphertext and its
+public homotopy class. The coupled construction gives an intrinsic integer
+harmonic lattice and exact recovery from canonical key and ciphertext bytes.
+The fresh-sign ciphertext is a reversible Hodge encoding of a one-time pad,
+with one shared random key bit per payload bit, drawn anew for each
+encryption. Each valid ciphertext admits
+\(2^n\) key--message pairs in a single public class.
+With a nonce-bearing operator commitment, the chance of recovering a uniform
+message from the public view is at most \(2^{-n}+(Q+2)256^{-32}\) in a one-use
+shared byte random-oracle experiment with an empty initial cache and \(Q\)
+adaptive postrelease queries. The bound also holds with access to a fixed CVP
+oracle. With the operative lattice supplied, one call to that oracle recovers the message,
+as does direct harmonic projection. For arbitrary targets and varying
+supplied coupled lattices, the exact distance decision problem is NP-complete.
 \end{abstract}
 
 \setcounter{tocdepth}{1}

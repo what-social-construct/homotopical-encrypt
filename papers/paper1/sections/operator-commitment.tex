@@ -14,7 +14,7 @@ and intrinsic harmonic lattice. Define
 The nonce is distinct from the source credential salt. Canonical decoding
 enforces the operator domain, original matrix codec, fixed nonce width and
 full consumption. Distinct accepted matrices with equal commitments give
-an actual hash collision between these complete preimages, allowing their
+a hash collision between the complete preimages, allowing their
 nonces to differ.
 
 For the private carrier \(w=(S,B,z,a,u,\rho,r)\) and fixed descriptor
@@ -25,15 +25,18 @@ For the private carrier \(w=(S,B,z,a,u,\rho,r)\) and fixed descriptor
  \qquad \beta=E_B(z,a,u).
  \label{eq:coupled-committed-instance}
 \end{equation}
-Only the instance and ciphertext bytes are released; neither matrix nor
-opening is serialized in the public instance. The common declared semantic
-class is fixed for these dimensions. The versioned private-witness,
+The public view contains the encoded instance and ciphertext bytes. The
+instance lists the three names. The operator nonce and matrices are private
+inputs. In the fresh-sign profile, both \(a\) and \(u=y/(d+1)\) are recoverable
+from the ciphertext. The public class depends only on the dimensions.
+The versioned private-witness,
 program and instance formats use the respective domains
 \texttt{HODGE\_NATIVE\_WITNESS\_V2},
 \texttt{HODGE\_NATIVE\_PROGRAM\_V2} and
 \texttt{HODGE\_NATIVE\_INSTANCE\_V2}. They retain the canonical matrix,
 integer and salt encodings and reject the earlier raw-operator-hash formats.
-The finite Boolean relation is
+For a decoded three-name tuple \(x\) and witness bytes \(\eta\), the Boolean
+checker satisfies
 \[
 \begin{aligned}
  R_{p,H}(x,\eta)=\mathsf{true}
@@ -48,11 +51,11 @@ acceptance and reflection of acceptance into the stated relation.
 
 \begin{proposition}[Committed-instance recovery or a hash collision]
 \label{prop:coupled-committed-recovery}
-Suppose an accepted witness \(w\) names an original target \(B_0\), with
-operator nonce \(r_0\), and the original ciphertext
-\(E_{B_0}(z_0,a_0,u_0)\). Then its message is \(z_0\), or there are distinct
-canonical operator preimages with equal hashes, or distinct canonical
-ciphertext byte strings with equal hashes.
+Suppose an accepted witness \(w\) gives the reference operator name
+\(\operatorname{Com}(B_0;r_0)\) and ciphertext name
+\(H(E_{B_0}(z_0,a_0,u_0))\). Then its message is \(z_0\), or there are
+distinct canonical operator preimages with equal hashes, or distinct
+canonical ciphertext byte strings with equal hashes.
 \end{proposition}
 
 \begin{proof}
@@ -64,10 +67,14 @@ Proposition~\ref{prop:coupled-byte-recovery} applied with this same private
 matrix recovers both messages from the same bytes, so \(z=z_0\).
 \end{proof}
 
-For the signed family, let \(\varepsilon(0)=-1\) and \(\varepsilon(1)=1\), applied
-coordinatewise to Boolean vectors, and put
+This comparison uses fixed reference names. A sender who replaces a
+ciphertext can compute its digest, so a digest check alone provides no
+authentication of a received instance.
+
+For the fresh-sign witness, let \(\varepsilon(0)=-1\) and
+\(\varepsilon(1)=1\), applied coordinatewise to Boolean vectors. Thus the
+presentation for key bits \(k\) is \(B_k=C_{\varepsilon(k)}\), and
 \[
- B_k=A\operatorname{diag}(\varepsilon(k)),\qquad
  z=d\varepsilon(\mu),\qquad u=B_k\varepsilon(\mu).
 \]
 Sample the Boolean message \(\mu\in\{0,1\}^n\), key \(k\in\{0,1\}^n\)
@@ -113,6 +120,5 @@ message. Its success event is therefore contained in the totalized decoder's
 success event.
 \end{proof}
 
-This is an algebraic transfer for a fixed byte hash, with the advantage of
-an explicit chosen-operator test. The next experiment instead samples one
-shared random oracle and bounds the actual recovery event directly.
+For a fixed hash, the bound depends on the advantage of the specified
+chosen-operator test. The sampled-oracle experiment gives a numerical bound.

@@ -1,85 +1,54 @@
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
 
-One ciphertext in our fresh-sign family can encode \(2^n\) distinct messages
-under the same public homotopy class. Each message lies in a different
-harmonic plane. The private Hodge operator picks out the operative plane,
-and projecting the ciphertext onto it gives the message exactly. We use
-this dependence to construct an encryption mechanism. Its recovery problem,
-the Harmonic Cochain Problem (HCP), supplies the observation and public
-class while keeping the operative presentation private.
-
-The coupled construction begins with an integer matrix
-\(B\in\mathbb Z^{m\times n}\). Its cellular face constraints are \(y=Bx\),
-and its intrinsic harmonic lattice is
-\[
- \Lambda_B=\{(0,z,Bz):z\in\mathbb Z^n\}.
-\]
-Adding exact and coexact Hodge noise to the harmonic message gives
+In the coupled construction, an integer matrix \(B\in\mathbb Z^{m\times n}\)
+defines the face constraints \(y=Bx\). The integral harmonic messages are
+\((0,z,Bz)\) for \(z\in\mathbb Z^n\). Adding exact and coexact terms gives
 \[
  \operatorname{Enc}_B(z,a,u)=(a,z-B^{\mathsf T}u,Bz+u).
 \]
-The private presentation recovers \(z\) exactly, and the ciphertext and
-operator fix both openings. Canonical private-key and ciphertext bytes
-implement this recovery by exact rational arithmetic.
+Projection for the private presentation recovers \((0,z,Bz)\). The
+Harmonic Cochain Problem (HCP) asks for this operative message when the
+public observation supplies the ciphertext and semantic class.
 
-Helfer's first-order homotopical logic \cite{helfer2019fol} provides the
-original semantic motivation. Equality is interpreted through path objects
-and, under its hypotheses, closed-formula truth is preserved by homotopy
-equivalence. Our constructed cellular interpretations use a homological
-test fragment. They share a public homotopy class while their embedded
-harmonic spaces and Hodge operators can differ. In this fixed profile,
-the source restriction maps determine the actual differential and Hodge
-operator; either the degree-one differential or the Hodge operator determines
-\(B\). The cochain shear preserves the declared semantic class, and a separate
-native map transports the full noisy ciphertext with its message intact.
+Helfer's homotopy invariance of closed-formula truth
+\cite{helfer2019fol} motivates the public classifier. The cellular
+interpretations here use a homological test fragment. They share one
+class for fixed dimensions, even when their embedded harmonic spaces differ.
+This lets us compare recovery under different private presentations in the
+same ciphertext coordinates.
 
-Learning with errors is a useful noisy-algebraic comparator. Search LWE
-publishes \((A,As+e\bmod q)\), with a uniformly sampled matrix and independently
-sampled errors, and asks for the hidden vector \(s\) \cite[Section~1]{regev2009lwe}.
-Here the message lies in a harmonic lattice and the noise lies in its
-geometry-dependent orthogonal complement.
-\input{sections/recovery-comparison.tex}
+The fresh-sign profile uses a shared, uniformly random sign vector with one
+secret bit per payload bit. Each key is sampled for one encryption. The
+ciphertext encodes the one-time pad through a reversible public map. The
+construction gives this masking law an explicit cellular realization and
+lets us analyze the view that also releases an operator commitment.
 
-We establish four connected results.
 \begin{enumerate}[label=(\roman*)]
-  \item \textbf{A derived cellular encryption construction.}
-  The private coupling matrix determines the sheaf, genuine Hodge operator
-  and entire intrinsic harmonic lattice. We construct its real and integer
-  coefficient charts. The compatible fresh-sign planes have exact chordal
-  distances in the Grassmannian chart.
-  \item \textbf{Exact finite recovery and coherent transport.}
-  The canonical byte decoder refines the harmonic-lattice decoder on every
-  input. Its accepted integer ciphertexts are exactly the original
-  Hodge-encryption language. Constructed semantic equivalences, native
-  ciphertext transport and harmonic recovery form commuting diagrams.
-  \item \textbf{One-use privacy and the limits of key reuse.}
-  The fresh-sign family and canonical private-nonce operator commitment give
-  an explicit fresh-cache shared-byte-random-oracle experiment. With at most
-  \(Q\) public queries, full uniform-message recovery is at most
-  \(2^{-n}+(Q+2)256^{-32}\), including partial coefficient extraction for
-  positive scaling. A fixed-pair challenge-bit guess succeeds with
-  probability at most \(\tfrac12+(Q+2)256^{-32}\). Reusing the sign key
-  reveals message XORs from the ciphertext bytes, and one known message
-  recovers that key.
-  \item \textbf{A strict separation from supplied-lattice CVP.}
-  Unrestricted rational CVP lifts to nearest-point search in a specified
-  coupled harmonic lattice, whose exact decision problem is NP-complete.
-  For generated samples, a CVP oracle recovers the unique message with its
-  lattice supplied. With that lattice hidden it leaves the public recovery
-  bound unchanged.
+  \item \textbf{Cellular construction and transport.}
+  We derive the Hodge operator and intrinsic harmonic lattice from \(B\)
+  and compute the distances between compatible fresh-sign planes.
+  We construct a semantic equivalence between presentations and a
+  ciphertext transport that commutes with harmonic recovery.
+  \item \textbf{Finite recovery.}
+  The canonical byte decoder accepts exactly the ciphertexts of the
+  integer construction. Each satisfying field assignment has a unique
+  bounded integer lift under explicit modulus bounds.
+  \item \textbf{One-use privacy and key reuse.}
+  We bound full-message recovery and fixed-pair distinguishing in a
+  shared byte random oracle. Reusing the sign key reveals message XORs,
+  and one known message recovers the key.
+  \item \textbf{CVP with a supplied lattice.}
+  A generated ciphertext has its projected message as the unique
+  closest vector in the operative lattice. The public recovery bound holds
+  even with a fixed CVP oracle. For arbitrary targets, a separate reduction
+  embeds exact rational CVP in the coupled family.
 \end{enumerate}
 
-Homomorphic correctness compares evaluation before and after encryption
-\cite[Definition~2.1.1]{gentry2009fullyHomomorphic}. Here the central commuting
-relation concerns a change of cellular presentation. Fully key-homomorphic
-encryption also translates ciphertexts across public keys while retaining
-plaintext \cite{bonehEtAl2014keyHomomorphic}; our construction specifies its
-own private geometry, admissible maps and recovery laws.
+The comparison with search LWE \cite[Section~1]{regev2009lwe} concerns the
+public inputs and noise models in \cref{tab:recovery-comparison}.
+\input{sections/recovery-comparison.tex}
 
 Finite Hodge theory follows the cellular-cochain framework of
-Hansen--Ghrist \cite{hansenGhrist2018sheaves}. Sections~\ref{sec:primitives}
-and~\ref{sec:hcp-definition} fix the primitives and recovery problem;
-\cref{sec:coupled-harmonic-construction} constructs the encryption family,
-followed by the CVP comparison. The correspondence tables after the
-conclusion identify the canonical Lean results.
+Hansen--Ghrist \cite{hansenGhrist2018sheaves}. \Cref{app:selected-crosswalk}
+maps the statements to their Lean declarations.

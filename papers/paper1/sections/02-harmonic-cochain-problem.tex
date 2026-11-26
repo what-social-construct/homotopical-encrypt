@@ -26,14 +26,14 @@
 \end{definition}
 
 \begin{definition}[Harmonic Cochain Problem]\label{def:hcp}
-  The \emph{Harmonic Cochain Problem} (HCP) asks, given the public observation
-  \((\alpha,b)\), to recover the operative harmonic component
+  An instance has an operative hidden witness \(x\in A_\alpha\).
+  The \emph{Harmonic Cochain Problem} (HCP) asks for
   \[
     h=h_x(b)\in\mathcal H_x,
   \]
-  equivalently the harmonic term in the orthogonal Hodge decomposition of
-  \(b\) for the operative hidden witness \(x\in A_\alpha\). The witness is
-  bound to the instance but is not part of the public input.
+  from the public observation \((\alpha,b)\). The target is the projection
+  for the witness used to generate the instance. Different witnesses
+  compatible with the same observation can give different targets.
 \end{definition}
 
 \begin{definition}[HCP solution]\label{def:hcp-solution}
@@ -78,7 +78,7 @@
 
 \begin{definition}[Public-compatible Hodge ambiguity]\label{def:public-compatible-hodge-ambiguity}
   Public-compatible Hodge ambiguity means that there exist publicly equivalent
-  operators \(\Delta,\Delta'\) and a cochain-facing observation \(b\) such that
+  operators \(\Delta,\Delta'\) and a cochain \(b\) such that
   \[
     \Delta b=0
     \qquad\text{but}\qquad
@@ -112,15 +112,14 @@
     \qquad
     \pi_\Delta(\Delta_x)=\pi(x).
   \]
-  The Laplacian \(\Delta_x\) is presentation-level Hodge data extending the
-  semantic core \(M_x\); it is not silently included among the symbols whose
-  closed theory is asserted to be homotopy invariant.
+  The semantic signature describes \(M_x\). The Laplacian \(\Delta_x\)
+  is additional data of the presentation.
 \end{definition}
 
 \begin{proposition}[Helfer-to-HCP classifier bridge]\label{prop:helfer-hcp-bridge}
-  Let \(x,y\in A\) belong to a typed HCP semantic realization. If
-  \(M_x\) and \(M_y\) are homotopy equivalent interpretations in the sense of
-  Helfer, then
+  Let \(x,y\in A\) belong to a typed HCP semantic realization whose closed
+  tests are invariant under the declared equivalences. If \(M_x\) and
+  \(M_y\) are homotopy equivalent in the sense of Helfer, then
   \[
     \pi(x)=\pi(y)
     \qquad\text{and}\qquad
@@ -212,8 +211,8 @@ equivalently
   \qquad
   b\notin U_1(\ker\Delta_x).
 \]
-It requires a nonstabilization witness in addition to the equivalence, with
-the private transport \(U_1\) neither revealed nor applied.
+Kernel separation compares the same \(b\) in the two presentations.
+Transporting \(b\) by \(U_1\) instead preserves harmonicity.
 
 \begin{proposition}[Ambiguity hierarchy]\label{prop:ambiguity-hierarchy}
   Public-compatible Hodge ambiguity implies kernel ambiguity, and kernel
@@ -230,10 +229,9 @@ the private transport \(U_1\) neither revealed nor applied.
 
 \subsection{Computational Scope}\label{sec:computational-scope}
 
-The coupled construction below fixes an encoded family, finite sampling
-law and public instance/ciphertext view. Its fresh one-use profile has a
-proved recovery bound for classical decoders with bounded access to a shared
-byte random oracle. The generic exact-recovery comparison and this sampled
-query theorem have distinct hypotheses. The closing comparison uses the
-same native experiment to separate public recovery from recovery with the
-operative lattice supplied.
+A public observation with two compatible witnesses and different targets
+already rules out uniform exact recovery. A fixed oracle independent of the
+witness gives the same answers in both cases. The probability of recovering
+the operative target is a separate question about sampling and disclosure.
+\Cref{sec:native-random-oracle} specifies that experiment for the coupled
+family.
