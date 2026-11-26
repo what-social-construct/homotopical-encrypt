@@ -38,11 +38,12 @@ lets us analyze the view that also releases an operator commitment.
   We bound full-message recovery and fixed-pair distinguishing in a
   shared byte random oracle. Reusing the sign key reveals message XORs,
   and one known message recovers the key.
-  \item \textbf{CVP with a supplied lattice.}
+  \item \textbf{Strict recovery separation in the query model.}
   A generated ciphertext has its projected message as the unique
-  closest vector in the operative lattice. The public recovery bound holds
-  even with a fixed CVP oracle. For arbitrary targets, a separate reduction
-  embeds exact rational CVP in the coupled family.
+  closest vector in the operative lattice. With the same fixed CVP oracle,
+  public recovery has strictly lower success at the stated query budgets.
+  For arbitrary targets, a separate reduction embeds exact rational CVP in
+  the coupled family.
 \end{enumerate}
 
 The comparison with search LWE \cite[Section~1]{regev2009lwe} concerns the

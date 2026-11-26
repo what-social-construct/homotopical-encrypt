@@ -494,16 +494,16 @@ The public homotopy class is common to all these presentations by
 \begin{theorem}[Supplied-lattice CVP versus hidden-lattice HCP]
 \label{thm:strict-native-cvp-separation}
 In the fresh-sign experiment of \cref{thm:coupled-native-rom}, let \(d>0\).
-With the operative graph lattice supplied, one query to \(O\) recovers the
-message for every generated ciphertext. From the public HCP view, every
+With the operative graph lattice supplied, one query to \(O\) and zero
+byte-oracle queries recover the message for every generated ciphertext.
+From the public HCP view, every
 decoder with access to the same fixed \(O\) and at most \(Q\) public byte-oracle
 queries has success probability at most
 \[
   2^{-n}+\frac{Q+2}{256^{32}}.
 \]
-Thus public HCP recovery has strictly smaller success probability whenever
-this bound is below one, for example when \(n\geq 1\) and
-\(Q+2<2^{255}\).
+Thus public HCP recovery has strictly smaller success probability when
+\(Q+2<(1-2^{-n})256^{32}\). This includes \(n\geq 1\) and \(Q+2<2^{255}\).
 \end{theorem}
 
 \begin{proof}
@@ -518,11 +518,12 @@ function is a deterministic operation on the decoder's current inputs and
 uses no byte-oracle query. This includes adaptive CVP calls made after
 seeing byte-oracle replies. The resulting decoder is among those quantified
 over in \cref{thm:coupled-native-rom} with the original query budget \(Q\).
-The bound follows. For the stated regime, \(2^{-n}\leq 1/2\) and
-\((Q+2)/256^{32}<1/2\).
+The stated query condition is equivalent to the public bound being below
+one. For \(n\geq 1\), its right-hand side is at least \(2^{255}\).
 \end{proof}
 
-This is a separation in recovery probability under two input views.
-The supplied lattice determines the operative answer. From the public
-view, the same oracle can solve individual candidate instances, which
-leaves the choice of operative presentation unresolved.
+In this regime, public HCP recovery is strictly harder in the query model,
+measured by success at the same byte-query budget with access to the same
+CVP oracle. To match the supplied-lattice success probability of one, a
+public decoder must have a budget of at least \((1-2^{-n})256^{32}-2\)
+byte-oracle queries.

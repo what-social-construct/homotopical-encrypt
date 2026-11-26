@@ -28,10 +28,11 @@ encryption. Each valid ciphertext admits
 With a nonce-bearing operator commitment, the chance of recovering a uniform
 message from the public view is at most \(2^{-n}+(Q+2)256^{-32}\) in a one-use
 shared byte random-oracle experiment with an empty initial cache and \(Q\)
-adaptive postrelease queries. The bound also holds with access to a fixed CVP
-oracle. With the operative lattice supplied, one call to that oracle recovers the message,
-as does direct harmonic projection. For arbitrary targets and varying
-supplied coupled lattices, the exact distance decision problem is NP-complete.
+adaptive postrelease queries. The bound holds even with a fixed CVP oracle.
+Supplying the operative lattice gives exact recovery by harmonic projection
+or one call to the same oracle. This gives a strict separation whenever the
+public bound is below one. For arbitrary targets and varying supplied
+coupled lattices, the exact distance decision problem is NP-complete.
 \end{abstract}
 
 \setcounter{tocdepth}{1}
