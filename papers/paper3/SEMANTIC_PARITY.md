@@ -39,7 +39,7 @@ records are maintained separately.
 | Projective syndrome incidence (O74, T43) | Paper 3 uses the RS code and the extracted pair in the existing projection chain. | Lean checks the incidence criterion and four-point maximum. The manuscript gives the finite-field feasibility procedure and marked point counts. |
 | Typed checkpoints, sealing, evidence and consumption (C10) | Paper 2 | Paper 2; retained here as an imported protocol boundary, not a Paper 3 contribution. |
 
-T01–T44 are Paper 3 mathematical correspondences. C01–C19 retain
+T01–T54 are Paper 3 mathematical correspondences. C01–C19 retain
 the construction/theorem split above: a context, binding, encoder or decoder
 witness is not constructed merely by composing mathematical maps. The
 `ProjectionChain` proves validity and near-side handoffs; a source-far claim
@@ -209,6 +209,8 @@ O41–O66/C01–C18 use their linked canonical owners, generally within
 | T50 | §5 List descent over the domain field | [SubfieldListDescent](../../lean/Proximity/Capacity/SubfieldListDescent.lean) | Lean checks the codeword and Hamming isometries, exact ball cardinalities, and list-bound equivalence under coefficient expansion. The support formula, dimension stabilization, and intersection-lattice count are proved in the manuscript. |
 | T51 | §6 Frobenius orbit of the length-8 matching | [Descent](../../lean/Proximity/MCA/Syndrome/Seventeen/Descent.lean) | Lean lifts the original parity map, verifies four distinct affine hits when `x²=11`, and checks `x^17=−x`. The reduced chart and orbit argument in the text give realization exactly in even extension degrees. |
 | T52 | §6 Uniform MCA spectrum on the eight-site domain | [RadiusThree](../../lean/Proximity/MCA/Syndrome/Seventeen/RadiusThree.lean), [manuscript](sections/06-mca-target.tex) | Lean checks the radius-three slope arithmetic over the base field and in the quadratic coefficient model. The manuscript proves the uniform spectrum `1,2,7,min(q,56),…` and its fractional list and MCA thresholds across the tower. |
+| T53 | §6 Finite étale part of the matching census | [MatchingCensus](../../lean/Proximity/MCA/Syndrome/Seventeen/MatchingCensus.lean), [MatchingField](../../lean/Proximity/MCA/Syndrome/Seventeen/MatchingField.lean) | Lean checks the kernel charts and the `36/36/28/5` arithmetic classification, and verifies the original quadratic's irreducibility, separability, and field degree. The manuscript identifies the reduced finite algebra as `F_17^108 × F_(17^2)^28` and gives the conic and rational-point contributions. |
+| T54 | §5 Exact support-rank list criterion | [ListSyndrome](../../lean/Proximity/Capacity/ListSyndrome.lean), [SupportRank](../../lean/Proximity/Capacity/SupportRank.lean) | Lean identifies budget failure with distinct exact supports whose common intersection escapes every one-site deletion, when `(B+1)r<q`. At the 128-bit budget and length below `2^127`, Lean proves the criterion at every grid count. The rank compression and half-rate budget-two formula are manuscript proofs. |
 
 ## Concrete source and application parity
 
@@ -251,7 +253,7 @@ additional mathematics.
 
 | Question | What remains to prove |
 |---|---|
-| Optimal list radius in the remaining intermediate field-size regime | General matching bounds for a supplied code when `2≤floor(2^-128*q)<floor(choose(n,k)/(k+1))`. The subfield construction in §5 gives some paired crossings in this range. |
+| Uniform list thresholds in the intermediate field-size regime | Evaluate or bound the support ranks in T54 when `2≤floor(2^-128*q)<floor(choose(n,k)/(k+1))`. Section 5 gives an exact rank computation and explicit crossings for selected families. |
 | Further code-specific MCA transitions | Matching in-budget bounds and over-budget lines, or a more general computation of `B_C(r)`. The uniform certificate bound and exact-budget criterion do not determine an arbitrary code's spectrum. |
 | A large-extension-field original-cochain application | An actual layout/coefficient codec and source-validity comparison into the constructed `GaloisField 3 n` family. Integer casts alone cannot realize its full alphabet. |
 | Beyond the sparse-noise Euclidean comparison | T42 covers the strict half-distance region. A capacity-scale full-HCP comparison needs quantitative control of the projected modulus carry to a nearest codeword beyond that region. The exact-component and canonical-lift obstructions retain their stated hypotheses. |

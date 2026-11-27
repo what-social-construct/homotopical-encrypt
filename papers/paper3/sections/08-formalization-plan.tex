@@ -126,8 +126,12 @@ criteria, the exterior-square test, the four-point maximum and the
 unit-ideal certificate for the specified matching over \(\mathbb F_{17}\).
 For that matching, \lean{Seventeen/Descent} checks the four distinct hits
 over a field with a root of \(x^2=11\), and checks the Frobenius action on
-the root. \lean{Seventeen/RadiusThree} checks the finite slope tables at
-count three. The uniform spectrum in \cref{prop:seventeen-full-spectrum}
+the root. \lean{Seventeen/MatchingField} proves that the chart polynomial
+is irreducible and separable and that its quotient field has degree two.
+\lean{Seventeen/MatchingCensus} verifies the matching kernel data and
+quadratic classifications. The decomposition of the matching schemes
+follows in the text. \lean{Seventeen/RadiusThree} checks the finite slope
+tables at count three. The uniform spectrum in \cref{prop:seventeen-full-spectrum}
 uses these certificates and the rank and counting arguments in the text.
 The Gr\"obner procedure and marked point counts in
 \cref{sec:mca-projective-incidence}, and the Zariski closure and tensor-price
@@ -300,9 +304,12 @@ non-collapse field. The distance-calibration module identifies the target
 model with the generic attained pair-code minimum. Pullback distance
 makes that field reflexive; an application choosing a different pre-existing
 source metric supplies one explicit comparison.
-The one-codeword and immediately sub-capacity budgets have exact
-thresholds. For prescribed domains with intermediate budgets below the
-packing cut, the general optimum remains open.
+The one-codeword and immediately sub-capacity budgets have explicit
+thresholds. \lean{Capacity/SupportRank} proves the exact rank criterion
+for all grid radii at the \(2^{-128}\) target when the code length is
+below \(2^{127}\). The shortened rank enumeration and the four-fiber
+construction are manuscript arguments. Uniform evaluation of the ranks
+for prescribed domains with intermediate budgets remains open.
 
 The concrete application hierarchy contains the extraction, plane/pair
 Hamming isometry, distance equality and pullback calibration of Section~7.

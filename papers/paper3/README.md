@@ -21,6 +21,12 @@ subfield prefix class and a separating pole for the first unsafe counts.
 [Jo's domains and list thresholds](../../lean/Proximity/Capacity/JoThresholds.lean) ·
 [Subfield domain and arithmetic](../../lean/Proximity/Capacity/SubfieldThresholdArithmetic.lean)
 
+The support-rank test determines the exact 128-bit list threshold for
+each prescribed domain of length below `2^127`, at every positive width.
+Lean proves the support criterion and budget specialization. The manuscript
+proves a shortened rank enumeration and the half-rate subgroup crossing
+at budget two. [Support ranks](../../lean/Proximity/Capacity/SupportRank.lean)
+
 Section 6 also expresses bad challenges as distinct projective incidences
 in syndrome space. Lean checks the syndrome and projective incidence
 criteria and the exact four-point maximum over `F_5`. The manuscript
@@ -30,12 +36,15 @@ question for the family of lines with marked hits.
 [Four-point maximum](../../lean/Proximity/MCA/Syndrome/Five.lean)
 
 For the eight-site code, a specified four-support matching is realized
-exactly over the even-degree extensions of `F_17`. The manuscript computes
+exactly over the even-degree extensions of `F_17`. The 105-matchings
+census gives reduced finite algebra `F_17^108 × F_(17^2)^28` and five smooth
+conics. The manuscript computes
 the full worst pair-MCA count `1, 2, 7, min(q,56), …` across the same tower.
 Section 5 expresses worst extension-field list sizes using a subspace
 lattice over the domain field.
 [Base-field exclusion](../../lean/Proximity/MCA/Syndrome/Seventeen.lean) ·
 [Extension hits](../../lean/Proximity/MCA/Syndrome/Seventeen/Descent.lean) ·
+[Matching census](../../lean/Proximity/MCA/Syndrome/Seventeen/MatchingCensus.lean) ·
 [List descent](../../lean/Proximity/Capacity/SubfieldListDescent.lean)
 
 Section 8 constructs polynomial agreement certificates for the received pair

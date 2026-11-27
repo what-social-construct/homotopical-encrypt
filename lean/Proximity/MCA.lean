@@ -14,6 +14,8 @@ public import Proximity.MCA.Syndrome.Exterior
 public import Proximity.MCA.Syndrome.Five
 public import Proximity.MCA.Syndrome.Seventeen
 public import Proximity.MCA.Syndrome.Seventeen.Descent
+public import Proximity.MCA.Syndrome.Seventeen.MatchingCensus
+public import Proximity.MCA.Syndrome.Seventeen.MatchingField
 public import Proximity.MCA.Syndrome.Seventeen.RadiusThree
 
 @[expose] public section

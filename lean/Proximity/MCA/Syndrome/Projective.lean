@@ -3,7 +3,6 @@ module
 public import Proximity.MCA.Syndrome
 public import Mathlib.LinearAlgebra.Projectivization.Basic
 public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-public import Mathlib.LinearAlgebra.Quotient.Basic
 
 @[expose] public section
 
@@ -143,18 +142,6 @@ theorem disjoint_common_support_iff
 section MCA
 
 variable {ι : Type*}
-
-/-- An additive scalar code gives the submodule used in the syndrome quotient. -/
-def codeSubmodule (C : FAdditiveCode F ι F) : Submodule F (ι → F) where
-  carrier := {w | C.Codeword w}
-  zero_mem' := C.zero_mem
-  add_mem' := C.add_mem
-  smul_mem' := C.smul_mem
-
-/-- The quotient by the code is a canonical choice of parity check. -/
-theorem quotient_zero_iff (C : FAdditiveCode F ι F) (w : Word ι F) :
-    (codeSubmodule C).mkQ w = 0 ↔ C.Codeword w :=
-  Submodule.Quotient.mk_eq_zero (codeSubmodule C)
 
 variable [Fintype ι] [DecidableEq ι] [Fintype F]
 variable (C : BlockCode ι F) (H : (ι → F) →ₗ[F] V)

@@ -23,6 +23,7 @@ public import Proximity.Capacity.JoThresholds
 public import Proximity.Capacity.SubfieldThresholdArithmetic
 public import Proximity.Capacity.SubfieldListDescent
 public import Proximity.Capacity.WidthReduction
+public import Proximity.Capacity.SupportRank
 
 @[expose] public section
 
@@ -44,5 +45,7 @@ certificate.  The certified boundary-field instance at
 fractional-list count transition `1536` to `1537` at every positive width.
 Agreement packing bounds lists by counting all agreement subsets and pins
 the threshold immediately below capacity for the corresponding budgets.
+The support-intersection criterion determines the 128-bit list threshold
+below length `2^127` at every positive width.
 Concrete cochain and runtime modules are not imported by this target.
 -/

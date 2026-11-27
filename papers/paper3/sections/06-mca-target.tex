@@ -408,6 +408,63 @@ are distinct. The two choices of \(x\) give all geometric solutions by
 the reduced chart, and \(x^{17}=x\cdot 11^8=-x\). Thus the two pencils
 form one Frobenius orbit, and the matching is realizable over
 \(\mathbb F_{17^e}\) exactly for even \(e\).
+Its normalized chart has coordinate algebra
+\(\mathbb F_{17}[X]/(X^2-11)\), a finite separable quadratic field.
+
+\paragraph{The finite \texorpdfstring{\'etale}{etale} part of the matching census.}
+Set \(K=\mathbb F_{17}\) and \(K_2=\mathbb F_{17^2}\). A perfect matching
+partitions the eight labelled sites into four unordered pairs. There are
+\(7\cdot5\cdot3=105\) matchings, by selecting the partner of the least
+remaining site at each step. For each matching \(M\), stack the four
+signed-minor rows of the annihilator pairs to give a matrix \(L_M\) on
+the six Pl\"ucker coordinates. With \(K_M=\ker L_M\), its incidence locus
+is the zero scheme of the Grassmann quadratic restricted to
+\(\mathbb P(K_M)\).
+
+Any four parity columns are independent. Thus different pairs in a
+matching have disjoint vector spans, and a plane meeting all four spans
+has a different one-dimensional intersection with each. This holds over
+the algebraic closure, so the open conditions for distinct single hits
+hold on the whole matching locus. Over a finite extension, the four hits
+are rational on each rational plane, and the affine chart can place its
+point at infinity outside them.
+
+Row reduction over \(K\) gives the following census. For a two-dimensional
+kernel, the discriminant of the restricted binary quadratic gives the
+first three cases. For a three-dimensional kernel the quadratic has rank
+three, and each conic has a \(K\)-point. Lean checks the kernel
+coordinates, the arithmetic tests, and the counts.
+
+\begin{center}
+\small
+\begin{tabular}{@{}rll@{}}
+\toprule
+Matchings & Restricted quadratic & Matching locus over \(K\)\\
+\midrule
+36 & Two distinct rational roots & \(\operatorname{Spec}(K\times K)\)\\
+36 & A double rational root & \(\operatorname{Spec}(K[\epsilon]/(\epsilon^2))\)\\
+28 & An irreducible binary quadratic & \(\operatorname{Spec}(K_2)\)\\
+5  & A nonsingular ternary quadratic & A smooth conic with a \(K\)-point\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Keeping the matching labels, the zero-dimensional part has coordinate
+algebra
+\[
+ A_{\mathrm{fin}}\simeq K^{72}\times
+       \bigl(K[\epsilon]/(\epsilon^2)\bigr)^{36}\times K_2^{28}.
+\]
+Its reduction is \(K^{108}\times K_2^{28}\), so it is finite \'etale over
+\(K\). Each conic is isomorphic to \(\mathbb P^1_K\) by projection from
+its rational point.
+
+Over \(q=17^e\), the number of rational matching--pencil pairs is
+\[
+ 108+56\,\mathbf 1_{2\mid e}+5(q+1)
+\,.
+\]
+A pencil can occur with several matching labels.
 
 \begin{proposition}[Uniform spectrum on the eight-site domain]
 \label{prop:seventeen-full-spectrum}

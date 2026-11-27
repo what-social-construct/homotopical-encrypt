@@ -2,6 +2,7 @@ module
 
 public import Proximity.MCA.Definitions
 public import Mathlib.LinearAlgebra.Pi
+public import Mathlib.LinearAlgebra.Quotient.Basic
 
 @[expose] public section
 
@@ -16,6 +17,18 @@ both components of an interleaved word.
 namespace ProximityCoding.BlockCode.Syndrome
 
 variable {ι F V : Type*} [Field F] [AddCommGroup V] [Module F V]
+
+/-- An additive scalar code gives the submodule used in the syndrome quotient. -/
+def codeSubmodule (C : FAdditiveCode F ι F) : Submodule F (ι → F) where
+  carrier := {w | C.Codeword w}
+  zero_mem' := C.zero_mem
+  add_mem' := C.add_mem
+  smul_mem' := C.smul_mem
+
+/-- The quotient by the code is a canonical choice of parity check. -/
+theorem quotient_zero_iff (C : FAdditiveCode F ι F) (w : Word ι F) :
+    (codeSubmodule C).mkQ w = 0 ↔ C.Codeword w :=
+  Submodule.Quotient.mk_eq_zero (codeSubmodule C)
 
 /-- Words vanishing outside the specified set of coordinates. -/
 def supportedWords (E : Finset ι) : Submodule F (ι → F) where
