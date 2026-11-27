@@ -123,6 +123,9 @@ efficient PIR remain open.
 | [PublicStack/Manifest](PublicStack/Manifest.lean), [Release](PublicStack/Release.lean), [Restore](PublicStack/Restore.lean) | One independently authenticated root names the cell directory, public snapshot descriptor, original cochain and vote target. Restore verifies each referenced object and reuses verified local copies. |
 | [PublicStack/ProofRelease](PublicStack/ProofRelease.lean), [Replay](PublicStack/Replay.lean) | Archives the actual checked packet with its vote target and cell ID. A restored reader supplies the original prior state and verifier configuration, rechecks the packet against the restored ciphertext, and computes the historical successor. |
 | [PublicStack/HistoryIndex](PublicStack/HistoryIndex.lean), [History](PublicStack/History.lean) | A trusted index root binds the ordered archive addresses. Replay starts from one trusted ledger state and carries the checked successor into each following transfer under a fixed profile. |
+| [PublicStack/HistorySync](PublicStack/HistorySync.lean) | Requests the index and missing archive objects by digest, reuses verified local objects, and activates the history only after ordered replay succeeds. |
+| [Ledger/StateCodec](../Ledger/StateCodec.lean), [PublicStack/CheckpointIO](PublicStack/CheckpointIO.lean) | Stores the complete checked successor under a separately authenticated digest. A reader verifies that checkpoint directly using its expected history and context. |
+| [PublicStack/Continuation](PublicStack/Continuation.lean) | Uses an authenticated checkpoint and the two history indices to verify an exact extension. It restores and checks the suffix and issues the next checkpoint. |
 | [Retrieval/HodgeQuery](Retrieval/HodgeQuery.lean) | Actual harmonic-lattice query samples and exact/coexact `HodgeNoise` aggregation. The public integer-weighted answer is the same full observation as an original encrypted answer; the existing coefficient decoder and CVP comparison apply to it. |
 | [Retrieval/ContentAddress](Retrieval/ContentAddress.lean) | Executable client-local slot/digest lookup and hash checks against the existing fixed manifest directory, followed by parsing. Substitution for original content gives equality or an actual hash collision, without global injectivity. |
 | [Retrieval/Recovery](Retrieval/Recovery.lean) | Connects accepted byte lookup and full-target decoding to the existing `RecoveryDelivery`; the native theorem retains original `BoundHCPObservation` endpoints through `BoundSampleRotation` and gives source coefficients or collision. |
@@ -273,6 +276,51 @@ lake build Protocol.Storage.PublicStack.HistoryDemo
 history_demo="$(mktemp -d)/history"
 lake env lean --run Protocol/Storage/PublicStack/HistoryDemo.lean write "$history_demo"
 lake env lean --run Protocol/Storage/PublicStack/HistoryDemo.lean verify "$history_demo"
+```
+
+[History replication](PublicStack/HistorySync.lean) uses the same verified
+object store across the whole index. It checks the index root, requests
+missing or corrupt objects by digest, and deduplicates addresses shared by
+different stacks. Each restored packet is checked against the previous
+computed state before the next step. The active history pointer is published
+atomically after the last successful step. A rejected attempt can leave
+verified objects available for retry. A fresh reader can reopen the active
+history using the original trusted root, state, and verifier profile.
+
+```sh
+replica_demo="$(mktemp -d)/history"
+lake env lean --run Protocol/Storage/PublicStack/HistoryDemo.lean replicate "$replica_demo"
+lake env lean --run Protocol/Storage/PublicStack/HistoryDemo.lean reopen "$replica_demo"
+```
+
+For a direct restart, [checkpoint issuance](PublicStack/CheckpointIO.lean)
+replays the active history from its trusted starting state and stores the
+exact successor under SHA-256. The canonical record carries the history
+root, context, full marking and spent set, both counters, and all state roots.
+The issuer authenticates the checkpoint digest for the reader independently
+of the replica. A fresh reader can check that object and recover the ledger
+state using just the checkpoint bytes. The history index and ledger
+checkpoint retain separate roots.
+
+```sh
+checkpoint_demo="$(mktemp -d)/checkpoint"
+lake env lean --run Protocol/Storage/PublicStack/HistoryDemo.lean checkpoint "$checkpoint_demo"
+lake env lean --run Protocol/Storage/PublicStack/HistoryDemo.lean open-checkpoint "$checkpoint_demo"
+```
+
+[Continuation](PublicStack/Continuation.lean) reads the authenticated
+checkpoint and verifies the prior and extended history indices. The prior
+ordered roots must be an exact prefix of the extension. The checkpoint state
+supplies the starting ledger state for the remaining transfers, and the caller
+supplies the original verifier profile. The replica fetches and checks the
+suffix, then stores its complete successor as a new named checkpoint. The
+prefix index is sufficient for the prefix comparison even if its archives
+are absent from the replica.
+
+```sh
+continuation_demo="$(mktemp -d)/continuation"
+lake env lean --run Protocol/Storage/PublicStack/HistoryDemo.lean continue "$continuation_demo"
+lake env lean --run Protocol/Storage/PublicStack/HistoryDemo.lean open-continuation "$continuation_demo"
 ```
 
 `UniformRead` supplies a complete lower-efficiency privacy reference within

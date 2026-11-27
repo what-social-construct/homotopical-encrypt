@@ -67,6 +67,13 @@ theorem ArchivedPacket.advance_sound [DecidableEq Asset] (archived : ArchivedPac
   obtain ⟨checked, stateEq⟩ := archived.record.successor_eq_checked _ _ _ verified
   exact ⟨decoded.intent.transfer, checked, by simpa only [materializeStateRoots_eq] using stateEq⟩
 
+/-- Verify and advance one archived step from an authenticated history link. -/
+def advanceNamedStack [DecidableEq Asset] (store : FilePath) (root : TCB.Hash32)
+    (current : Config F Bytes Asset Receipt) : IO (Option (Config F Bytes Asset Receipt)) := do
+  let some stack ← openNamedStack store root | return none
+  let some archived ← readArchivedPacket store stack current.context.publicView | return none
+  return archived.advance current
+
 /-- Replay the canonical index in order from the independently trusted state.
 The store supplies the named artifacts. A missing or rejected step fails the replay. -/
 def replayHistory [DecidableEq Asset] (store : FilePath) (historyRoot : TCB.Hash32)
@@ -76,9 +83,7 @@ def replayHistory [DecidableEq Asset] (store : FilePath) (historyRoot : TCB.Hash
   let some history := HistoryIndex.verify historyRoot bytes | return none
   let mut current := initial
   for root in history.roots do
-    let some stack ← openNamedStack store root | return none
-    let some archived ← readArchivedPacket store stack current.context.publicView | return none
-    let some next := archived.advance current | return none
+    let some next ← advanceNamedStack store root current | return none
     current := next
   return some current.before
 

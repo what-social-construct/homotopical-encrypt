@@ -73,6 +73,37 @@ theorem hammingDistanceToCode_le_of_codeword
     C.hammingDistanceToCode w ≤ hammingDistance c w :=
   Nat.sInf_le ⟨c, hc, rfl⟩
 
+/-- A codeword strictly within half the distance bound is uniquely nearest. -/
+theorem hammingDistanceToCode_eq_and_unique_of_twice_lt
+    (C : BlockCode ι α) {k : ℕ} (determined : CapacityList.DeterminedBy C k)
+    (hk : k ≤ Fintype.card ι) {w c : Word ι α} (hc : C.Codeword c)
+    (twice_lt : 2 * hammingDistance c w < Fintype.card ι - k + 1) :
+    C.hammingDistanceToCode w = hammingDistance c w ∧
+      ∀ ⦃other : Word ι α⦄, C.Codeword other →
+        hammingDistance other w ≤ hammingDistance c w → other = c := by
+  have unique : ∀ ⦃other : Word ι α⦄, C.Codeword other →
+      hammingDistance other w ≤ hammingDistance c w → other = c := by
+    intro other valid noFarther
+    classical
+    let left := Finset.univ.filter fun i => other i ≠ w i
+    let right := Finset.univ.filter fun i => c i ≠ w i
+    let agreed := Finset.univ \ (left ∪ right)
+    have partition : agreed.card + (left ∪ right).card = Fintype.card ι :=
+      (Finset.card_sdiff_add_card_eq_card (Finset.subset_univ _)).trans Finset.card_univ
+    have bound : (left ∪ right).card ≤ hammingDistance other w + hammingDistance c w :=
+      Finset.card_union_le left right
+    have enough : k ≤ agreed.card := by omega
+    obtain ⟨sites, contained, count⟩ := Finset.exists_subset_card_eq enough
+    refine determined valid hc sites count ?_
+    intro i member
+    have sameAt : other i = w i ∧ c i = w i := by
+      simpa [left, right] using (Finset.mem_sdiff.mp (contained member)).2
+    exact sameAt.1.trans sameAt.2.symm
+  obtain ⟨nearest, valid, attained⟩ := C.exists_nearest_codeword ⟨c, hc⟩ w
+  have nearestEq : nearest = c := unique valid
+    (attained.symm.le.trans (C.hammingDistanceToCode_le_of_codeword hc))
+  exact ⟨by simpa only [nearestEq] using attained, unique⟩
+
 theorem close_iff_hammingDistanceToCode_le
     (C : BlockCode ι α) (hC : ∃ c, C.Codeword c)
     (r : ℕ) (w : Word ι α) :

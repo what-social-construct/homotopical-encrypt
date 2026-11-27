@@ -29,11 +29,14 @@ Compressed interpolation certificates bound the number of bad pair-MCA
 challenges by \(\binom n{k+1}\) at every radius. A smooth rate-\(1/4\) family
 over \(\mathbb F_{3^n}\) meets both \(2^{-128}\) fractional budgets, for lists
 at capacity and pair MCA at every normalized radius.
-For the separate prime-field instance
-\((q,n,k)=(2^{128}+192513,4096,1024)\), the exact bad-count spectrum has
-\(B_{\mathcal C}(0)=1\) and \(B_{\mathcal C}(1)\ge2\). Its greatest safe MCA
-count radius is zero, its first unsafe count is one, and its real safe set
-is \([0,1/4096)\). The intermediate field-size list optimum remains open.
+At the same budget, the prime-field instance
+\((q,n,k)=(2^{128}+192513,4096,1024)\) has last safe and first unsafe
+count radii \(1536,1537\) for lists of every positive interleaving width
+and \(0,1\) for pair MCA. The corresponding real safe sets are
+\([0,1537/4096)\) and \([0,1/4096)\), respectively.
+On a length-\(128\) subgroup code over \(\mathbb F_{641^{26}}\), a subfield
+construction gives below-capacity list counts \(62,63\) and pair-MCA
+counts \(61,62\).
 
 Polynomial agreement certificates give a deterministic lower bound on the
 pair error count before the scalar challenge. Their normalized linear
@@ -46,9 +49,10 @@ quantitative comparison for its existing committed-cochain projection and
 intrinsic modular coboundary validity.
 Its independently defined native distances satisfy
 \(d_C\le d_P=D_2\le2d_C\), and a well-formed raw payload in the canonical
-\(q=12289\) instance attains \(3/4\) at all three levels. This application
-uses a separate field from the two fractional-budget instances above.
-Euclidean and full-HCP source comparisons remain separate.
+\(q=12289\) instance attains \(3/4\) at all three levels.
+For native Hodge ciphertext pairs on a systematic RS graph, we bound the
+squared full residual by pair-code distance under reflected error support
+and the unique-decoding condition.
 \end{abstract}
 
 \tableofcontents
@@ -62,8 +66,10 @@ Euclidean and full-HCP source comparisons remain separate.
 \input{sections/07-application-interface}
 \input{sections/07a-polynomial-agreement}
 \input{sections/08-formalization-plan}
+\input{sections/09-conclusion}
 
+\clearpage
 \bibliographystyle{alpha}
-\bibliography{references}
+{\small\raggedright\bibliography{references}}
 
 \end{document}

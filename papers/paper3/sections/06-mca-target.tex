@@ -1,6 +1,7 @@
 \section{Pair Mutual Correlated Agreement}
 
 \subsection{Bad challenges}
+\label{sec:mca-bad-challenges}
 
 Let \(p=(p_0,p_1)\in(\F^2)^I\), and write
 \[
@@ -17,9 +18,9 @@ Define \(\Bad_{\MCA}(\mathcal C,\delta,p)\) to be the set of
   \item the pair \(p\) does not agree on the same \(S\) with a codeword of
     \(\Cpair\).
 \end{enumerate}
-Fix \(p\) and draw \(\gamma\) uniformly from \(\F\). The failure probability is
-\(|\Bad_{\MCA}(\mathcal C,\delta,p)|/|\F|\). Maximizing over \(p\) gives
-the MCA error:
+For a fixed pair \(p\) and a uniform draw \(\gamma\in\F\), the failure
+probability is \(|\Bad_{\MCA}(\mathcal C,\delta,p)|/|\F|\).
+Maximizing over \(p\) gives the MCA error.
 \[
   \varepsilon_{\MCA}(\mathcal C,\delta)
   =
@@ -38,6 +39,10 @@ exceptional-challenge count linear in \(n\), generally much smaller than
 the binomial bound below. Broader polynomial-generator formulations of MCA
 for linear codes are studied by Bordage et al.
 \cite{bordageEtAl2026polynomialMCA}.
+Jo's local-test count for MDS codes implies the uniform binomial bound
+below and also gives a sharper radius-dependent bound
+\cite[Theorem~4.2]{jo2026beyondJohnson}. We give the RS interpolation proof
+underlying our Lean certificate map.
 
 \begin{theorem}[Uniform pair-MCA certificate bound]
 \label{thm:pair-mca}
@@ -116,6 +121,12 @@ Apply \cref{thm:pair-mca}.
 
 \subsection{An exact small-radius boundary instance}
 \label{sec:mca-boundary-field}
+
+Jo \cite{jo2026beyondJohnson} gives exact 128-bit MCA thresholds for four
+length-\(64\) smooth codes. Chojecki \cite{chojecki2026shortening,chojecki2026thresholds}
+gives exact finite small-radius counts and beyond-Johnson certificates.
+The example below certifies the field arithmetic, domain, and adjacent
+threshold witnesses for a length-\(4096\) code in Lean.
 
 The uniform certificate bound is sufficient but need not locate the first
 unsafe radius.  Write
@@ -266,14 +277,225 @@ code-specific problem of proving those matching bounds; smoothness by itself
 does not determine this incidence spectrum.
 
 The result is for the two-coordinate, same-set MCA experiment defined above.
-Broader notions or higher-dimensional challenge families require
-separate statements.
+Jo \cite{jo2026interleaving} proves that the affine-line MCA error itself
+is invariant under row-wise interleaving.
 
-The three concrete fields give different conclusions at the \(2^{-128}\)
-target. The smooth extension-field family \(q_u=3^{n_u}\) meets the list
+The smooth extension-field family \(q_u=3^{n_u}\) meets the list
 budget at capacity and the MCA budget at every normalized radius. In the
 prime field of size \(2^{128}+192513\), the exact MCA transition is between
-count radii zero and one. In the canonical application field of size
+count radii zero and one, and the list transition is between \(1536\) and
+\(1537\) (\cref{cor:boundary-field-list}). In the canonical application field of size
 \(12289\), the radius-zero unit-spike line already has one bad challenge.
 Since \(12289<2^{128}\), this last code has no safe count radius on its
 full pair space.
+\Cref{sec:jo-paired-thresholds,sec:subfield-crossings} gives additional
+exact crossings on the length-\(64\) and length-\(128\) domains.
+
+\subsection{Projective incidence of bad challenges}
+\label{sec:mca-projective-incidence}
+
+Write \(q=|\F|\). Let \(V=\F^I/\mathcal C\) be the syndrome space and let
+\(H:\F^I\to V\) be the quotient map. For an error support \(E\subseteq I\), put
+\(U_E=\operatorname{span}\{He_i:i\in E\}\), where \(e_i\) is the coordinate
+vector at site \(i\). A word agrees with a codeword on \(I\setminus E\)
+exactly when its syndrome belongs to \(U_E\). Syndrome-space formulations
+also appear in the study of correlated agreement for random codes
+\cite{yuanZhu2026syndromeSpace}. The event in \cref{sec:mca-bad-challenges}
+uses the same support \(E\) in the scalar and pair tests.
+
+Write \(s_j=Hp_j\) for the two syndromes of a received pair. At count
+radius \(r\), a challenge \(\gamma\) is bad exactly when some
+\(|E|\le r\) satisfies
+\[
+  s_0+\gamma s_1\in U_E,\qquad
+  \operatorname{span}(s_0,s_1)\nsubseteq U_E.
+\]
+The second condition excludes the case where both columns admit codeword
+comparisons on \(I\setminus E\). This is the full-field case of Chojecki's
+syndrome-line criterion \cite[Section~3]{chojecki2026shortening}.
+If the two syndromes span a space of
+dimension at most one, there is at most one bad challenge. Indeed, any
+nonzero combination generates their common line in the dimension-one
+case, so only a combination with zero syndrome can witness failure. A
+pair of zero syndromes satisfies both component agreement tests everywhere.
+
+If the syndromes are independent, the plane \(W=\operatorname{span}(s_0,s_1)\)
+defines a projective line \(\mathbb P(W)\). Each \(E\) with
+\(\dim(W\cap U_E)=1\) contributes one point. Count coincident points once
+and exclude the point \([s_1]\) at infinity. The affine coordinates
+\([s_0+\gamma s_1]\) of the remaining points give exactly the bad
+challenges. Write \(N_r(W)\) for the number of distinct contributed points
+before excluding infinity. Every basis of \(W\) lifts to a received pair,
+and its second vector can be chosen on any rational point of
+\(\mathbb P(W)\). Thus the maximum affine count over bases of \(W\) is
+\(\min(q,N_r(W))\).
+
+\paragraph{Equations for multiple hits.}
+For \(W\in\operatorname{Gr}(2,V)\), let \(\xi\) be a nonzero Pl\"ucker
+representative and let \(\pi_E:V\to V/U_E\). The incidence
+\(W\cap U_E\ne0\) is the linear equation in Pl\"ucker coordinates
+\[
+  (\wedge^2\pi_E)(\xi)=0.
+\]
+Remove the closed locus of planes contained in \(U_E\) to keep a single
+intersection point. For supports \(E,F\) satisfying this rank condition,
+their points are distinct exactly when
+\[
+  \bigl(\wedge^2(V\to V/(U_E\cap U_F))\bigr)(\xi)\ne0.
+\]
+Indeed the points coincide exactly when their common line lies in both
+syndrome subspaces. These tests use the intersection of the syndrome
+subspaces themselves.
+
+For a bad-count budget \(1\le T<q\), an upper bound of \(T\) is equivalent
+to the absence of a rational plane with \(T+1\) distinct contributed
+points. This gives a finite Gr\"obner-basis test on the Pl\"ucker charts.
+For each choice of supporting sets, impose the Grassmannian equations
+and the linear incidence equations, and encode the open conditions by
+inverse witnesses on charts where a specified coordinate is nonzero.
+Adjoining \(X^q-X=0\) for every variable makes the unit-ideal test a
+certificate of emptiness over \(\F\). Section~8 shows how an elimination
+closure can add points with empty fibers.
+
+\paragraph{A four-point example.}
+For \(\mathcal C=\RS[\mathbb F_5,\mathbb F_5^\times,2]\) at \(r=1\),
+take a parity-check matrix with column \((a,a^2)^{\mathsf T}\) at each
+\(a\in\mathbb F_5^\times\). The sums of the first three positive powers
+over the domain vanish, so the matrix annihilates affine evaluation
+words. Its rank is two. The singleton supports give four distinct
+directions \([1:a]\). Choosing \(s_0=(1,0)\), \(s_1=(0,1)\) places infinity
+outside those four directions, giving bad challenges \(1,2,3,4\). The
+four directions bound the count for independent syndromes, and the
+dependent case contributes at most one. Hence \(B_{\mathcal C}(1)=4\).
+
+\paragraph{An empty matching over \(\mathbb F_{17}\).}
+For the smooth \([8,4]\) code at the powers of \(9\) in \(\mathbb F_{17}\),
+the parity-check column at \(a\) is \((a,a^2,a^3,a^4)^{\mathsf T}\).
+For each of the supports \(\{1,9\},\{13,15\},\{16,8\},\{4,2\}\), the
+coefficients of \((X-a)(X-b)\) and \(X(X-a)(X-b)\) give two annihilating rows.
+The linear incidence equations in order \(01,02,03,12,13,23\) give
+\((13v,0,5u,u,0,v)\). The Pl\"ucker relation \(5u^2+13v^2=0\) gives
+\(v\ne0\) for any projective solution and \(x^2=11\) for \(x=u/v\).
+Set \(S(X)=\sum_{j=0}^{7}11^j X^{14-2j}\). In \(\mathbb F_{17}[X]\),
+\[
+  1=(7X^2S(X)+3)(X^2-11)+10X(X^{17}-X).
+\]
+Lean checks the reduction and this identity. Together with the field
+equation \(X^{17}-X=0\), they exclude the specified matching.
+
+\paragraph{The Frobenius orbit of the matching.}
+The coincidence locus of two support labels is the pullback of the
+diagonal under their contributed-point maps. Deleting those loci keeps
+only distinct points in the marked incidence space. If a resulting
+locally closed locus is finite and reduced over \(K=\mathbb F_b\), its
+geometric points form a finite set with a Frobenius action
+\cite{stacksEtalePoint}. An orbit of size \(d\) contributes \(d\) rational
+points over \(\mathbb F_{b^e}\) exactly when \(d\mid e\). For a pencil
+already rational over \(K\), every one-dimensional support intersection
+is rational over \(K\) by linear algebra. Extension changes which pencils
+can occur.
+
+For the four supports above, adjoining \(x\) with \(x^2=11\) gives
+the independent syndrome columns
+\[
+ s=(1,0,13x,0),\qquad t=(0,13,0,5x).
+\]
+Their Pl\"ucker vector is \((13,0,5x,x,0,1)\). The four affine
+parameters in the listed support order are \(7+12x,6+14x,10+5x,11+3x\).
+The vector \(s+\gamma t\) lies in the corresponding support span at
+each parameter, and \(t\) lies in none of those four spans. The parameters
+are distinct. The two choices of \(x\) give all geometric solutions by
+the reduced chart, and \(x^{17}=x\cdot 11^8=-x\). Thus the two pencils
+form one Frobenius orbit, and the matching is realizable over
+\(\mathbb F_{17^e}\) exactly for even \(e\).
+
+\begin{proposition}[Uniform spectrum on the eight-site domain]
+\label{prop:seventeen-full-spectrum}
+Keep the same evaluation sites and set \(q=17^e\), \(e\ge1\). The
+worst pair-MCA counts for the \([8,4]\) code over \(\mathbb F_q\) are
+\begin{gather*}
+ B_{\mathcal C}(0)=1,\qquad B_{\mathcal C}(1)=2,\qquad B_{\mathcal C}(2)=7,\\
+ B_{\mathcal C}(r)=\min(q,56)\qquad(r\ge3).
+\end{gather*}
+\end{proposition}
+
+\begin{proof}
+The zero-radius count follows by testing a line through the zero
+syndrome with nonzero direction. At count one each hit comes from a
+single parity column, and any three columns are independent. A pencil
+through two column directions realizes two hits with its point at
+infinity elsewhere.
+
+At count two, let \(W\) be a two-dimensional syndrome plane, and let
+\(b\le2\) be the number of parity columns it contains. Partition the
+other columns by their projective images in \(V/W\). Each class has size
+at most \(3-b\), since it and the \(b\) columns lie in a three-dimensional
+space and any four columns are independent. A pair of nonbase columns
+contributes one hit exactly when they lie in the same class. Two such
+pairs give distinct hits. Disjoint pairs span disjoint vector subspaces,
+and pairs sharing a site meet only in the direction of that column, which
+lies outside \(W\). None of these hits equals a base-column direction,
+by independence of any three columns. Pairs containing a base column
+give at most a direction already counted, and pairs of two base columns
+span \(W\). Hence, with class sizes \(g_j\),
+\[
+ N_2(W)=b+\sum_j\binom{g_j}{2}\le7.
+\]
+For \(b=0\) the bound is attained by class sizes \(3,3,2\), and for
+\(b=1,2\) the bounds are \(4,2\). As an explicit plane, take the common
+kernel of the two rows represented by \(A(X)=X^2+10X+2\) and
+\(B(X)=X^3-X+6\), using coefficient order from constant through cubic.
+On the eight sites in the listed support order the ratios \(A(a)/B(a)\)
+are \(5,13,13,\infty,13,\infty,5,5\), with no base columns. A point at
+infinity outside the seven hits gives seven affine challenges. This
+plane and its three classes persist in all extensions. Dependent
+syndrome columns contribute at most one at both counts.
+
+At count three, write \(R_E\) for the coefficient row of the monic
+cubic with roots at the sites in a triple \(E\). This annihilates the
+three parity columns, so the support span is \(\ker R_E\). Whenever
+\(R_Et\ne0\), the corresponding bad parameter is \(-R_Es/R_Et\).
+For \(e=1\), the columns \(s=(14,10,9,10)\), \(t=(12,12,2,2)\)
+give every element of \(\mathbb F_{17}\) after dropping triples with
+zero denominator. For \(e=2\), take
+\begin{align*}
+ s&=(15+16x,\ 8+x,\ 15x,\ 2),\\
+ t&=(13+11x,\ 14+14x,\ 13+16x,\ 8+2x),\qquad x^2=11.
+\end{align*}
+All 56 denominators are nonzero, and the resulting ratios are pairwise
+distinct, as checked by cross-multiplication in \(\mathbb F_{17}[x]/(x^2-11)\).
+For \(e\ge3\), choose \(t=(0,0,0,1)\), so every denominator is one.
+Avoid the \(\binom{56}{2}\) proper hyperplanes \((R_E-R_{E'})s=0\).
+They cannot cover the syndrome space because \(q>\binom{56}{2}\).
+These constructions attain \(\min(q,56)\), which is the upper bound
+at every radius from \cref{thm:pair-mca}. Monotonicity gives the same
+value for \(r\ge3\).
+\end{proof}
+
+\paragraph{The fractional cut across the tower.}
+For \(e\le31\), the 128-bit budget is below one, so there is no safe
+count for either problem. At \(e=32\) the budget allows six, so
+\cref{prop:seventeen-full-spectrum} gives MCA counts \((1,2)\).
+For lists the half-distance bound gives safety at count two. At count
+three the syndrome \((1,0,0,1)\) belongs to every triple span whose sites
+have product one. Multiplying all three sites by the same subgroup
+element multiplies the product by its cube, and cubing permutes the
+order-eight subgroup. Thus each product class has \(\binom{8}{3}/8=7\)
+triples. This syndrome lies in no pair span, since the constant coefficient of its annihilating
+quadratic is nonzero. Each triple therefore gives a distinct error
+support, and embedding in one component gives the list counts \((2,3)\)
+at every positive width. For \(e\ge33\) the budget is at least 118,
+so MCA is safe through the full grid and the list counts are \((4,5)\)
+by the capacity and next-shell theorems.
+
+\paragraph{Motivic point counting.}
+Let \(\mathcal I_{r,t}\) mark \(t\) ordered, distinct contributed points
+on each \(\mathbb P(W)\), regardless of how many supports give a point.
+Its fiber over \(W\) has \(\prod_{j=0}^{t-1}(N_r(W)-j)\) rational points.
+Thus \(\mathcal I_{r,T+1}\) has point count zero exactly when the budget
+\(1\le T<q\) holds. Point counting defines a motivic measure on the
+Grothendieck ring of varieties \cite{ellenbergLarsen2010counting}.
+In the four-point example the base is a point and all four directions
+are rational, so \([\mathcal I_{1,t}]\) is \(\prod_{j=0}^{t-1}(4-j)\)
+times the point class. For larger codes, stratifying the intersection
+patterns could give these counts across field extensions.

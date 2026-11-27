@@ -7,8 +7,36 @@ The universal coding results give the exact interleaved RS worst-list size
 `choose(n,k)` at count radius `n-k`, the next-shell lower bound and fractional
 phase split, and a uniform same-set pair-MCA certificate bound. The explicit
 smooth family constructs its field and subgroup domain for every parameter.
-A separate prime-field example proves an exact 128-bit MCA transition and the
-real safe interval `[0,1/4096)`.
+The boundary prime `2^128+192513` has exact 128-bit transitions for both
+problems. The list count goes from safe at `1536` to unsafe at `1537` at
+every positive interleaving width, with real safe interval `[0,1537/4096)`.
+The MCA count goes from safe at `0` to unsafe at `1`, with real safe interval
+`[0,1/4096)`. [Boundary list proof](../../lean/Proximity/Capacity/BoundaryList.lean)
+
+Agreement packing pins the list transitions on Jo's four length-64 codes.
+The same-domain list/MCA table appears in Section 5. A length-128 code over
+`F_(641^26)` has list counts `62,63` and pair-MCA counts `61,62`, using a
+subfield prefix class and a separating pole for the first unsafe counts.
+[Agreement packing](../../lean/Proximity/Capacity/AgreementPacking.lean) ·
+[Jo's domains and list thresholds](../../lean/Proximity/Capacity/JoThresholds.lean) ·
+[Subfield domain and arithmetic](../../lean/Proximity/Capacity/SubfieldThresholdArithmetic.lean)
+
+Section 6 also expresses bad challenges as distinct projective incidences
+in syndrome space. Lean checks the syndrome and projective incidence
+criteria and the exact four-point maximum over `F_5`. The manuscript
+describes a finite-field Gröbner feasibility test and a point-counting
+question for the family of lines with marked hits.
+[Syndrome projectivization](../../lean/Proximity/MCA/Syndrome/Projective.lean) ·
+[Four-point maximum](../../lean/Proximity/MCA/Syndrome/Five.lean)
+
+For the eight-site code, a specified four-support matching is realized
+exactly over the even-degree extensions of `F_17`. The manuscript computes
+the full worst pair-MCA count `1, 2, 7, min(q,56), …` across the same tower.
+Section 5 expresses worst extension-field list sizes using a subspace
+lattice over the domain field.
+[Base-field exclusion](../../lean/Proximity/MCA/Syndrome/Seventeen.lean) ·
+[Extension hits](../../lean/Proximity/MCA/Syndrome/Seventeen/Descent.lean) ·
+[List descent](../../lean/Proximity/Capacity/SubfieldListDescent.lean)
 
 Section 8 constructs polynomial agreement certificates for the received pair
 before the scalar challenge. Coefficient elimination finds the first feasible
@@ -31,6 +59,16 @@ interpretation and decoder equality. Paper 2 owns the cochain construction,
 codec/layout, visibility and storage contracts; this paper proves the coding
 and quantitative metric comparisons for that source.
 
+The restricted Hodge comparison uses a native coupling matrix whose
+harmonic graph reduces to the original systematic RS code. Two full
+ciphertext columns with zero exact components and structured integer errors
+have a unique nearest pair codeword when reduction preserves their error
+support and the support count is below half the minimum distance. A
+per-site squared error bound `M^2` then gives
+`rho_H^2 ≤ M^2 n D_2` for the squared full residual. Applying MCA requires
+its separate threshold inequality and the field and challenge assumptions
+of Section 6.
+
 Canonical proofs and selections:
 
 - [ProximityCoding.lean](../../lean/ProximityCoding.lean) and the
@@ -40,15 +78,16 @@ Canonical proofs and selections:
   and [CanonicalCalibration.lean](../../lean/Protocol/Storage/CanonicalCalibration.lean)
   connect the original payload and native metrics to the existing application
   interfaces.
-- The [coding configuration](../../lean/Palomar/PaperThree/README.md) selects
+- [HodgeRSCalibration.lean](../../lean/Protocol/Storage/HodgeRSCalibration.lean)
+  contains the restricted native Hodge construction.
+- The [Lean coding configuration](../../lean/Palomar/PaperThree/README.md) selects
   **52 targets (36 main, 16 support)**; the
-  [application configuration](../../lean/Palomar/PaperThree/Application/README.md)
-  selects **22 targets (10 main, 12 support)**. These are two configurations
-  for this one paper.
+  [Lean application configuration](../../lean/Palomar/PaperThree/Application/README.md)
+  selects **22 targets (10 main, 12 support)**. Both verify parts of this
+  paper.
 
-Keep the three fields distinct: the smooth family uses `q=3^n`; the boundary
-example uses `q=2^128+192513`; the canonical cochain application uses
-`q=12289`. The last has no unrestricted 128-bit pair-MCA budget. Its modular
+The canonical cochain application uses `q=12289`, which has no unrestricted
+128-bit pair-MCA budget. Its modular
 metric bridge does not imply a capacity-scale Euclidean or full-HCP radius,
 and arbitrary fixed nonzero scalar mixes can cancel a capacity-far pair.
 
@@ -59,13 +98,13 @@ and an extraction factoring through the exact component whose zero image
 has target distance zero. The canonical systematic sheaf has `δ₁=0`, so
 that nonzero-coexact premise is unavailable in this profile.
 
-That obstruction and the optional full-frame projective results are auxiliary
-to the **52/22** selections. Genuine exact-real frames recover their subspaces
-and projectors. The shared chordal distance separates their full shadows, whose
-equality agrees with the corresponding Mathlib projective points. Finite-byte
-recovery and digest inversion require separate constructions. The projection
-chain composes near-side maps, and source-far transfer uses the separately
-proved calibration.
+The Hodge comparison, exact-component obstruction, and full-frame projective
+results are auxiliary to the **52/22** selections. Genuine exact-real frames
+recover their subspaces and projectors. The shared chordal distance separates
+their full shadows, whose equality agrees with the corresponding Mathlib
+projective points. Finite-byte recovery and digest inversion require separate
+constructions. The projection chain composes near-side maps, and source-far
+transfer uses the separately proved calibration.
 
 The [semantic parity register](SEMANTIC_PARITY.md) gives the complete object
 dictionary, theorem correspondences and remaining mathematical extensions.

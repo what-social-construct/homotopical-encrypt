@@ -1,9 +1,10 @@
 \section{Introduction}
 
-The Grand List Decoding and Grand Mutual Correlated Agreement challenges ask
-for quantitative proximity guarantees for constant-rate Reed--Solomon codes
-over smooth evaluation domains \cite{arnonBonehFenzi2026}.  We work with the
-two-fold interleaving
+How large can a list of nearby interleaved codewords be, and how often does
+scalar agreement extend to a received pair on the same coordinates? We
+study these questions for constant-rate Reed--Solomon codes over smooth
+evaluation domains, using the list and correlated-agreement formulations of
+\cite{arnonBonehFenzi2026}. We work with the two-fold interleaving
 \(\Cpair\subseteq(\F^2)^n\).  Every received pair
 \(p=(p_0,p_1)\) determines the scalar affine line
 \[
@@ -45,8 +46,8 @@ grow exponentially in \(n\) while meeting a fraction-of-field budget.
 Neither that budget nor the separate pair-MCA event asserts polynomial-list
 decoding up to capacity.
 
-To resolve the first nontrivial MCA transition rather than only give a
-uniform sufficient bound, we define the exact spectrum
+For exact finite thresholds, we use the Hamming grid and the worst-case
+bad-challenge count
 \[
   B_{\mathcal C}(r)=\max_p
   |\Bad_{\MCA}(\mathcal C,r/n,p)|.
@@ -57,6 +58,16 @@ For the certified smooth prime-field instance
 is the greatest safe count radius and one the first unsafe count radius at
 the \(2^{-128}\) MCA error target. Over real radii the safe interval is
 \([0,1/4096)\), so its supremum is \(1/4096\) and is not itself safe.
+The same code has greatest safe list count \(1536\) and first unsafe list
+count \(1537\) at every positive interleaving width
+(\cref{cor:boundary-field-list}).
+On four length-\(64\) smooth codes with known exact MCA thresholds,
+agreement packing gives the matching list transitions
+(\cref{sec:jo-paired-thresholds}). The length-\(128\) subfield example
+in \cref{cor:subfield-128-thresholds} has both transitions below capacity.
+The prescribed-domain questions in \cite{arnonBonehFenzi2026} ask for
+exact thresholds at rates \(1/2,1/4,1/8,1/16\). The general thresholds
+remain open, including codes in the Johnson-to-capacity regime.
 
 The coding theorems quantify over the complete ambient received-word and
 affine-line spaces.  The simultaneous \(2^{-128}\) guarantee for capacity
@@ -90,7 +101,10 @@ global comparison is
 The factor two is necessary in the near direction; the far implication has
 unit scale. An actual well-formed raw payload at
 \((q,n,k)=(12289,4096,1024)\) has all three distances equal to \(3/4\).
-This is a modular source theorem. The Euclidean and full-HCP residuals have
-different comparison obligations, and positive-far raw payloads are distinct
-from already accepted exact storage anchors. The selected application field
-does not inherit the large-field family's \(2^{-128}\) guarantee.
+This comparison uses modular source distances on raw payloads.
+\Cref{prop:restricted-hodge-rs} supplies a separate full-Hodge comparison
+by taking the native coupling matrix from the systematic RS graph.
+With structured integer errors, reflected support and the unique-decoding
+condition, a sitewise error bound controls the squared Hodge residual by the
+pair-code distance. The large-field \(2^{-128}\) guarantee uses the field
+specified above.

@@ -126,6 +126,22 @@ and uses its checked successor as the next before-state. The next packet must
 bind that state's tip and evidence root. Successful replay yields the final
 historical state.
 
+A replica fetches missing or corrupt objects across the history by digest and
+reuses verified local bytes. It rechecks each transfer from the computed
+predecessor and atomically activates the history after the last successful
+step. Verified objects from a rejected attempt can be reused on retry.
+
+After checking the active history, an issuer can publish a ledger checkpoint
+under a separate SHA-256 digest. Its canonical bytes bind the history root,
+context, and complete successor, including the marking and spent set.
+A fresh reader obtains the checkpoint digest independently and uses the
+verified object to reopen the state directly.
+
+To resume from a checkpoint, the replica verifies both history indices and
+checks that the earlier ordered list is an exact prefix. It checks the suffix
+transfers from the checkpoint state and stores the new successor. The prefix
+index suffices for the comparison even when its archives are absent.
+
 A remote direct lookup exposes the digest being requested. The fixed-bucket
 privacy profile downloads the entire public bucket and selects locally.
 Both delivery paths can use the same full-object digest check before
@@ -717,8 +733,10 @@ The V2 release uses \path{Inputs.assemble_eq_checked},
 \path{Inputs.signingInputAt_eq_checked}, \path{simulated_recovery_probability_le},
 and \path{recovery_probability_le_of_joint_prefix} in \path{NativeCommittedRelease}.
 
+\begin{samepage}
 Run the fixed byte-owner example from \path{lean/} with the pinned toolchain.
 \begin{verbatim}
 lake build Protocol.Transfer.Owned.Demo
 lake env lean --run Protocol/Transfer/Owned/Demo.lean
 \end{verbatim}
+\end{samepage}

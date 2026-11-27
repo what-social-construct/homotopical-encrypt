@@ -22,6 +22,33 @@ open Protocol.Ephemeral.ScopeCodec (encodeFixed parseFixed)
 
 abbrev Roots := List TCB.Hash32
 
+/-- Return the remaining roots after matching the prior history in order. -/
+def continuation : Roots → Roots → Option Roots
+  | [], remaining => some remaining
+  | _ :: _, [] => none
+  | oldRoot :: prior, newRoot :: remaining =>
+    if List.ofFn oldRoot = List.ofFn newRoot then continuation prior remaining else none
+
+theorem continuation_eq_some_iff (prior extended suffix : Roots) :
+    continuation prior extended = some suffix ↔ extended = prior ++ suffix := by
+  induction prior generalizing extended with
+  | nil => simp [continuation]
+  | cons oldRoot prior ih =>
+    cases extended with
+    | nil => simp [continuation]
+    | cons newRoot remaining =>
+      by_cases same : oldRoot = newRoot
+      · subst newRoot
+        simp [continuation, ih]
+      · have differentBytes : List.ofFn oldRoot ≠ List.ofFn newRoot :=
+          fun equal => same (List.ofFn_injective equal)
+        rw [continuation, ite_eq_right differentBytes]
+        constructor
+        · intro impossible
+          cases impossible
+        · intro extendedEq
+          exact (same (List.cons.inj extendedEq).1.symm).elim
+
 def domain : Bytes := "HODGE_PUBLIC_STACK_HISTORY_V1".toUTF8.data.toList
 
 def encodeRoots : Roots → Bytes → Bytes

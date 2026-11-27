@@ -7,15 +7,16 @@ decoder/context and authentication contracts used by the application.
 | Modules | Mathematical role |
 |---|---|
 | `Core/` | Reed–Solomon/interleaved words, Hamming metrics, plane/pair/line equivalences, systematic interpolation and lift/metric obstructions. |
-| `Capacity/`, `ListDecoding/` | Constructed smooth family, capacity-grid equality, next-shell and fractional-list phase split. |
+| `Capacity/`, `ListDecoding/` | Constructed smooth family, capacity-grid equality, next-shell and fractional-list phase split, and the exact one-codeword list threshold. |
 | `MCA/` | Same-set agreement, bad-challenge certificates/spectra and finite/real thresholds. |
 | `Application/` | Explicit source-validity, calibration and distance comparisons. |
 | `Concrete/GrassmannianPlucker/` | Full projective subspace/projector reconstruction; encoded/digest recovery is separate. |
 | `Concrete/ProjectionChain/`, `Concrete/CochainPlane/` | Composition through the original cochain payload and actual extraction; near-side comparisons do not imply a far bound. |
 | `Concrete/CanonicalRS/` | Canonical application maps, profile comparisons and separate legacy cited-bound interfaces. |
 
-The standalone [ProximityCoding aggregate](../ProximityCoding.lean) has a
-37-module local closure. The independent [coding entry](../Palomar/PaperThree/README.md)
+The standalone [ProximityCoding aggregate](../ProximityCoding.lean) collects
+the generic coding proofs and smooth-domain instances.
+The independent [coding entry](../Palomar/PaperThree/README.md)
 selects 52 declarations; the [native application entry](../Palomar/PaperThree/Application/README.md)
 selects 22. Full projective reconstruction and the full-HCP exact-component
 obstruction remain canonical auxiliary results outside those selections.

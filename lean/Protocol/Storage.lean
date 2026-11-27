@@ -11,11 +11,12 @@ public import Protocol.Storage.CoupledRecovery
 public import Protocol.Storage.EncryptedCell
 public import Protocol.Storage.CellDirectory.Persistence
 public import Protocol.Storage.PublicStack.Release
-public import Protocol.Storage.PublicStack.History
+public import Protocol.Storage.PublicStack.Continuation
 public import Protocol.Storage.OperatorCommitment
 public import Protocol.Storage.ThreeLevelMetrics
 public import Protocol.Storage.CanonicalThreeLevel
 public import Protocol.Storage.CanonicalCalibration
+public import Protocol.Storage.HodgeRSCalibration
 public import Protocol.Storage.Retrieval
 
 @[expose] public section
@@ -58,4 +59,9 @@ restores its complete set of digest-named records into a local store.
 The proof-packet profile reruns the original transfer checker on restored records.
 An ordered history index lets the reader replay several such records from one
 trusted initial state.
+History replication stages missing objects and checks each transition before
+activating the replicated history.
+An independently authenticated ledger checkpoint can reopen the complete
+checked successor directly.
+Continuation matches the authenticated ordered prefix and resumes at that state.
 -/

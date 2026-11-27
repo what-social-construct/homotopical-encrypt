@@ -26,6 +26,9 @@ held transport token and available ciphertext bytes.
 | Incremental public stack restore | The accepted release root names the directory, public snapshot descriptor, original cochain, and vote target. A replica reuses verified objects and publishes the root once every reference verifies. |
 | Historical proof-packet replay | A fresh reader uses the restored packet and ciphertext with the original prior state and configured verifier. The checked packet must reproduce the accepted vote target. |
 | Ordered history replay | An authenticated list of archive roots and one trusted starting state let a fresh reader check successive transfers and recover the final historical state. |
+| Incremental history replication | A partial replica fetches objects by digest across all archived steps and activates the history after successful ordered replay. |
+| Ledger checkpoint | After checking the active history, an issuer names the complete successor by a separate authenticated digest. A fresh reader can reopen the state directly. |
+| Checkpoint continuation | The verified indices establish an exact ordered prefix. The replica checks the suffix from the checkpoint state and issues the successor checkpoint. |
 | Bounded native credentials | Canonical witness/program/instance codecs check the original matrix, message, opening and credential bounds. |
 | Approved execution | The owner checker uses the exact expected program, parsed verifier key, CRS, public names and full signing message. |
 | Raw-root CRS reference | Fresh completion inherits the conditional five-term adaptive forgery bound on the original sampled execution. |
@@ -87,6 +90,9 @@ objects and proved statements to Lean. Useful protocol entry points include:
   and [cold verification demo](../../lean/Protocol/Storage/PublicStack/ProofDemo.lean).
 - [Ordered history replay](../../lean/Protocol/Storage/PublicStack/History.lean)
   and [consecutive-transfer demo](../../lean/Protocol/Storage/PublicStack/HistoryDemo.lean).
+- [Incremental history replication](../../lean/Protocol/Storage/PublicStack/HistorySync.lean).
+- [Authenticated ledger checkpoint](../../lean/Protocol/Storage/PublicStack/CheckpointIO.lean).
+- [Checkpoint continuation](../../lean/Protocol/Storage/PublicStack/Continuation.lean).
 - [Certificate profiles](../../lean/Protocol/Transfer/Certificates/Profile.lean)
   and [profile authentication](../../lean/Protocol/Transfer/Certificates/ProfileAuthentication.lean).
 - [Sampled scalar transfer check](../../lean/Protocol/Transfer/Certificates/SampledMCA.lean)

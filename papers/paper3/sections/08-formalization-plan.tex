@@ -39,6 +39,29 @@ application bridges:
   \item[\lean{Proximity/ListDecoding/PhaseSplit}]
     All three fractional-target regimes, the exact endpoint-safe real
     interval, its excluded supremum, and the largest safe grid count.
+  \item[\lean{Proximity/Capacity/UniqueRadius} and \lean{Proximity/Capacity/BoundaryList}]
+    Exact uniqueness radius at every positive width, the one-codeword
+    fractional budget criterion and real safe interval, and the boundary
+    prime's count and real list thresholds.
+  \item[\lean{Proximity/Capacity/AgreementPacking}]
+    Finite-radius packing of all agreement subsets and the adjacent list
+    threshold for budgets immediately below capacity.
+  \item[\lean{Proximity/Capacity/JoThresholds}]
+    The four length-\(64\) prime fields and smooth evaluation domains
+    from Jo, with exact list thresholds at every positive width.
+  \item[\lean{Proximity/Capacity/WidthReduction}]
+    Scalar and interleaved list bounds agree when the number of candidate
+    pairs in a violating list is smaller than the field, including the
+    \(2^{-128}\) target for \(q<2^{256}\).
+  \item[\lean{Proximity/Capacity/SubfieldListDescent}]
+    Coefficient expansion is a count-ball isometry between RS codes
+    over an extension and their base-field interleavings, with equal
+    list cardinalities.
+  \item[\lean{Proximity/Capacity/SubfieldThresholdArithmetic}]
+    The length-\(128\) subgroup in \(\mathbb F_{641^{26}}\) and all integer
+    comparisons for the paired threshold certificate in
+    \cref{prop:subfield-crossings}, including the list safety theorem at
+    count \(62\).
   \item[\lean{Proximity/MCA/Definitions}]
     Arbitrary-block-code same-set MCA definitions at count and relative
     radii.
@@ -94,15 +117,23 @@ The generic family corollaries retain their parameterized forms. The
 realization module additionally constructs \(\mathbb F_{3^{n_u}}\), an
 exact-order \(n_u\) root, and its injectively indexed subgroup for every
 \(u\), and instantiates those corollaries without a realization hypothesis.
-The standalone modules listed above live under \lean{lean/Proximity}.
-Their aggregate import target is \lean{lean/ProximityCoding.lean}.
-The detailed object dictionary, theorem correspondence, construction ownership
-and remaining mathematical extensions are recorded in
-\lean{papers/paper3/SEMANTIC_PARITY.md}.
-The polynomial agreement modules are in the standalone proof hierarchy.
-The 52 coding selections and 22 application selections use their existing
-target lists. The varying-data Zariski closure and Euclidean tensor price
-transfer in \cref{sec:polynomial-agreement} are mathematical arguments.
+The standalone aggregate \lean{lean/ProximityCoding.lean} includes the
+polynomial agreement modules. Its proof and ownership register is
+\lean{papers/paper3/SEMANTIC_PARITY.md}. The 52 coding and 22 application
+selections retain their target lists.
+The \lean{Proximity/MCA/Syndrome} modules verify the projective incidence
+criteria, the exterior-square test, the four-point maximum and the
+unit-ideal certificate for the specified matching over \(\mathbb F_{17}\).
+For that matching, \lean{Seventeen/Descent} checks the four distinct hits
+over a field with a root of \(x^2=11\), and checks the Frobenius action on
+the root. \lean{Seventeen/RadiusThree} checks the finite slope tables at
+count three. The uniform spectrum in \cref{prop:seventeen-full-spectrum}
+uses these certificates and the rank and counting arguments in the text.
+The Gr\"obner procedure and marked point counts in
+\cref{sec:mca-projective-incidence}, and the Zariski closure and tensor-price
+arguments in \cref{sec:polynomial-agreement}, are given in the manuscript.
+The support-intersection formula and stabilization in \cref{sec:list-descent}
+are likewise mathematical arguments, using the checked ball equivalence.
 
 \subsection{Auxiliary source and projective proofs}
 
@@ -142,6 +173,7 @@ distinct from Paper 2's codec, visibility and authentication contracts.
 The projection-chain composition gives validity and near-side handoffs;
 source-far preservation requires the separately stated calibration.
 
+\pagebreak
 \subsection{Status ledger}
 
 \begingroup
@@ -167,6 +199,16 @@ Endpoint fractional criterion & Lean-proved & Target iff
   \(\binom nk\le\epsstar|\F|\)\\
 Next-shell list lower bound & Lean-proved & Explicit \(|\F|^m\) injection\\
 Complete list phase split & Lean-proved & Three regimes and exact real interval\\
+One-codeword list budget & Lean-proved & Safe iff \(2r<n-k+1\)\\
+Boundary-field list threshold & Lean-proved &
+  Greatest safe count \(1536\); first unsafe count \(1537\)\\
+Agreement-subset packing & Lean-proved & List bound at every count through capacity\\
+List thresholds on Jo's length-\(64\) codes & Lean-proved & Four rates,
+  certified prime fields and domains\\
+Subfield field, domain, and arithmetic & Lean-proved & Order \(128\) and
+  the budget comparisons, including list safety at count \(62\)\\
+Subfield witnesses for both thresholds & Mathematical & Prefix-class and
+  pole separation on the length-\(128\) code\\
 Generic minimum-distance interpretation & Lean-proved & Attained minima,
   covering and good-challenge farness\\
 Polynomial agreement certificates & Lean-proved & Agreement at most \(D\)
@@ -230,7 +272,7 @@ certificates; their dated dependency reports are historical evidence rather
 than the trust footprint of the present proofs. This arithmetic change does
 not construct a commitment protocol or a stronger source-metric comparison.
 
-\subsection{Submission boundary}
+\subsection{Verification criteria}
 
 A completed claim requires:
 \begin{enumerate}[label=(\roman*)]
@@ -258,16 +300,18 @@ non-collapse field. The distance-calibration module identifies the target
 model with the generic attained pair-code minimum. Pullback distance
 makes that field reflexive; an application choosing a different pre-existing
 source metric supplies one explicit comparison.
-Separately, the intermediate list-decoding regime still requires new ideas if
-one wants an optimal sub-endpoint radius for a supplied field that fails the
-binomial target inequality.
+The one-codeword and immediately sub-capacity budgets have exact
+thresholds. For prescribed domains with intermediate budgets below the
+packing cut, the general optimum remains open.
 
 The concrete application hierarchy contains the extraction, plane/pair
 Hamming isometry, distance equality and pullback calibration of Section~7.
 These constructions lie outside the standalone \lean{ProximityCoding}
 import closure. Section~7 instantiates them for the canonical modular
-profile. A separate comparison would be needed for an independent HCP or
-frame score.
+profile. The restricted native Hodge comparison in
+\cref{prop:restricted-hodge-rs} uses its own structured samples and a
+sitewise error bound. Other HCP or frame scores require their own
+source comparison.
 
 The explicit source realization lives in the \lean{Sheaf/SystematicCode}
 modules, including \lean{Modular}. Their actual integral cellular coboundary

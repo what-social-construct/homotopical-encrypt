@@ -1,39 +1,19 @@
-// Sheaf-Aware Storage: Functor F: Sh(X) → RocksDB
+// Persistence adapter for context-labelled stalk records.
 //
-// Storage does not "store sheaves" — it IS a sheaf, functorially embedded
-// into RocksDB. The functor F maps mathematical objects to persistence:
+// Each context selects a dimension convention and a RocksDB column family;
+// simplex keys identify the corresponding vertex, edge, or face records.
+// The current project_to_public operation copies the first private coordinate
+// into a one-dimensional public record. Its interpretation belongs to the
+// producer and verification profile.
 //
-//   F(Stalk)     = column family (stalks_private, stalks_public, stalks_zk)
-//   F(Vertex v)  = key "vertex:v"
-//   F(Edge e)    = key "edge:v0:v1"
-//   F(Section)   = batch write over vertex keys
-//   F(Projection) = query + context change
+// Mathematical sheaves, coboundaries and Hodge operators live in lean/Sheaf.
+// The projection stages and gate certificates live in lean/Proximity/Concrete.
+// Snapshot/payload identity and typed checkpoint manifests live in
+// lean/Protocol/Storage. A concrete persistence refinement must connect this
+// backend's bytes, reads and writes to those object-indexed contracts.
 //
-// THREE sheaves over the same base X (nerve of accounts), one per column family:
-//
-//   F_full  (Private, dim=256) — full credential, Laplacian, Hodge, restriction maps
-//   F_zk    (Zk, dim=32)      — Hodge projection + quantization (ZK intermediate)
-//   F_hash  (Public, dim=1)   — balance commitment (harmonic projection)
-//
-// Connected by two natural transformations:
-//
-//   η₁: F_full → F_zk    (Oracle computes this: Hodge project + quantize)
-//   η₂: F_zk  → F_hash   (Node applies this: hash + compress to commitment)
-//   η = η₂ ∘ η₁: F_full → F_hash  (full pipeline)
-//
-//   F_full (Private,256) ──η₁──→ F_zk (Zk,32) ──η₂──→ F_hash (Public,1)
-//        Python wallet            Oracle               Rust Node
-//
-// The Oracle IS η₁ — it receives FullStalk (Private) and outputs HashStalk (Zk).
-// The Node IS η₂ — it receives HashStalk (Zk) and stores the public commitment.
-//
-// Privacy via exact sequence: 0 → ker(η) → F_full → F_hash → 0
-//   ker(η) = private data (fibration secrets, restriction maps)
-//
-// Functoriality:
-//   F(id_X) = id_{F(X)}
-//   F(g ∘ f) = F(g) ∘ F(f)
-
+// The column-family mapping alone establishes no sheaf gluing, naturality,
+// exact-sequence privacy, or Hodge-to-CVP reduction.
 
 use anyhow::Result;
 use rocksdb::{DB, Options};
@@ -45,7 +25,7 @@ use tracing::{debug, info};
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum StalkContext {
     Private,  // dim=256, homotopical encryption (spectral structure)
-    Public,   // dim=1, harmonic projection (balance/commitment)
+    Public,   // dim=1, public scalar record
     Zk,       // dim=32, zero-knowledge intermediate
 }
 
@@ -234,21 +214,14 @@ impl SheafStore {
         Ok(section)
     }
     
-    /// Project from private to public (dim 256 → dim 1)
+    /// Copy the first private coordinate to a public scalar record.
     ///
-    /// This is η₂: F_zk → F_hash, implemented as COORDINATE EXTRACTION
-    /// (data[0] = spectral gap scalar), NOT as the Hodge projection π_H.
-    ///
-    /// The Hodge projection π_H: C^k → ker(Δ) is computed in Python
-    /// (geometry/hodge.py) and lives in the encryption/decryption path.
-    /// By the time data reaches Rust storage, the heavy geometry is done.
-    /// This η₂ just extracts the consensus-relevant scalar (spectral gap).
-    ///
-    /// See hardness_proof.lean: the Hodge→CVP reduction applies to π_H
-    /// (encryption), not to this storage projection.
+    /// The producer/profile supplies the coordinate's meaning and verification.
+    /// Hodge projection and cochain/plane/RS extraction are separate operations
+    /// specified by the mathematical pipeline and its runtime interfaces.
     pub fn project_to_public(&self, vertex_id: u64) -> Result<Option<Stalk>> {
         if let Some(private_stalk) = self.get_stalk(StalkContext::Private, vertex_id)? {
-            // Simple projection: take first component (or sum, or custom logic)
+            // Preserve the actual first-coordinate operation documented above.
             let public_value = private_stalk.data[0];
             let public_stalk = Stalk::from_value(public_value);
             

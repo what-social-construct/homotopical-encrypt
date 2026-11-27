@@ -1560,6 +1560,29 @@ so the next packet must bind the preceding tip and evidence root. The
 [replay procedure](../../lean/Protocol/Storage/PublicStack/History.lean)
 returns the final computed state when every archived link checks.
 
+For [incremental history replication](../../lean/Protocol/Storage/PublicStack/HistorySync.lean),
+the reader obtains the index and its archived stacks through a digest lookup.
+A replica reuses verified local bytes across the full index, fetches missing
+or corrupt objects, and rechecks each transfer from its computed predecessor.
+The writer atomically activates the history after all steps succeed. A rejected
+attempt preserves the previously active history and can leave verified objects
+available for retry.
+
+An issuer can produce a [ledger checkpoint](../../lean/Protocol/Storage/PublicStack/CheckpointIO.lean)
+after checking the active history. Its separate canonical SHA-256 commitment
+binds the history root, context, and entire computed successor, including the
+marking and spent set. A fresh reader obtains the authenticated checkpoint
+digest independently and opens the state from the named bytes. The
+configured proposal-state hash retains its original scope.
+
+A [checkpoint continuation](../../lean/Protocol/Storage/PublicStack/Continuation.lean)
+verifies the prior and proposed history indices and checks that the prior
+ordered list is an exact prefix. The authenticated checkpoint supplies the
+state at that boundary. The reader fetches the suffix archives and checks
+their transfers under the supplied verifier profile, then stores a new
+checkpoint for the extended history. The prior index supplies the prefix
+comparison even when its archives are absent.
+
 The indexed request exposes \(d\) to the responding server. The fixed-bucket
 profile below selects locally after a complete bucket download. A PIR
 backend would supply private selection while retaining the separate result

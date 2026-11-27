@@ -188,6 +188,9 @@ modulo \(q=12289\), with RS length \(n=4096\) and degree bound \(k=1024\):
 Thus one observed commitment supplies the full pair before the challenge is
 evaluated. The \lean{PublicCalibration} module implements this extraction
 and proves its equality with the observed-payload projection.
+The incidence in \cref{sec:mca-projective-incidence} starts from the
+syndromes of this extracted pair. Bounds specific to an upstream frame
+profile require its image in that syndrome space.
 
 On integer planes whose coordinates lie in \([0,q)\), coordinatewise
 reduction is a bijection onto the field-pair space. It preserves whole-pair
@@ -362,6 +365,66 @@ anchors. The constructed systematic sheaf is an explicit application model,
 not an automatic identification with an arbitrary HCP presentation, and no
 encryption-security claim follows from this construction.
 
+\subsection{Hodge residual on a systematic Reed--Solomon graph}
+\label{sec:restricted-hodge-rs}
+
+Take an injective evaluation domain over the prime field \(\mathbb F_q\)
+with \(0<k\le n\). The information set \(S\) and integer interpolation
+coefficients \(\widetilde A\) specify a presentation in Paper~1's native
+coupled sheaf. Split the sites into \(S\) and its complement and use the
+coupling matrix \(B_{i,t}=\widetilde A_{i,t}\) for \(i\notin S\) and
+\(t\in S\). The graph of \(B\) has the identity coordinates on \(S\).
+Under this split its reduction is the original systematic RS code.
+
+For columns \(j=0,1\), take integral graph coefficients \(z_j\) and
+integral coexact openings \(u_j\). The native full ciphertext has exact
+component zero and remaining coordinates
+\[
+  y_{\cdot,j}=g_j+e_j,\qquad
+  g_j=(z_j,Bz_j),\qquad e_j=(-B^{\mathsf T}u_j,u_j).
+\]
+Write \(b_j=(0,y_{\cdot,j})\) for the full ciphertext and
+\(\mathcal H_B\) for the native harmonic subspace. Let \(\bar y\) be the
+pair word obtained by reducing the two columns \(y_{\cdot,j}\) modulo \(q\).
+
+\begin{samepage}
+\begin{proposition}[Restricted Hodge-to-code comparison]
+\label{prop:restricted-hodge-rs}
+Let \(e_i=(e_{i,0},e_{i,1})\), let \(E=\{i:e_i\ne0\}\), and write
+\(s=|E|\). Assume that \(\bar e_i\ne0\) for every \(i\in E\), that
+\(2s<n-k+1\), and that \(\|e_i\|_2^2\le M^2\) at every site, with \(M>0\).
+The reduction of \((g_0,g_1)\) is the unique nearest pair codeword to
+\(\bar y\), and
+\[
+  D_2(\bar y)=\frac{s}{n},\qquad
+  \rho_{\mathrm H}^2
+  := \sum_{j=0}^1 \|P_{\mathcal H_B^\perp}b_j\|^2
+  \le M^2 n D_2(\bar y).
+\]
+\end{proposition}
+\end{samepage}
+
+\begin{proof}
+The native harmonic graph gives \(P_{\mathcal H_B^\perp}b_j=(0,e_j)\).
+Indeed, the two terms in the inner product of
+\((-B^{\mathsf T}u_j,u_j)\) with \((v,Bv)\) cancel for every \(v\).
+Reduction preserves the assumed error support, so the graph word differs
+from \(\bar y\) on exactly \(s\) sites. Any other pair codeword differs
+from the graph word on at least \(n-k+1\) sites, by applying the RS
+minimum-distance bound to a column on which they differ. Its mismatch
+count from \(\bar y\) is therefore at least \(n-k+1-s>s\).
+Finally \(\rho_{\mathrm H}^2=\sum_{i\in E}\|e_i\|_2^2\le M^2s\).
+\end{proof}
+
+A source threshold \(\rho_{\mathrm H}\ge r\) with \(r\ge0\) supports a
+coding threshold \(\delta\in[0,1]\) when
+\(\delta\le r^2/(M^2n)\). The independently fixed pair then satisfies
+\(D_2(\bar y)\ge\delta\). Under the challenge experiment and hypotheses of
+\cref{thm:pair-mca}, every MCA-good challenge gives scalar distance at least
+\(\delta\), with its field-specific bad-challenge bound.
+This comparison concerns the selected native samples with reflected error
+support inside the unique-decoding radius.
+
 \subsection{Three native metrics for modular cochains}
 
 The same shared cellular construction has a global comparison in its native
@@ -481,11 +544,11 @@ the original artifact and its actual extracted pair.
 
 An application to a different maintained sheaf must prove the corresponding
 source and coefficient identifications. An independently chosen HCP/frame
-score needs its own upstream comparison; the native modular theorem does not
-identify that score with edit distance. The global canonical-lift and
-fixed-challenge obstructions constrain such stronger claims. The restricted
-Euclidean theorem and the diagonal fixed-mix example retain their stated
-profiles.
+score needs its own upstream comparison. The native Hodge bound in
+\cref{prop:restricted-hodge-rs} uses the systematic graph and structured
+integer errors. The global canonical-lift and fixed-challenge obstructions
+constrain stronger claims. The decoded-exactness theorem and diagonal
+fixed-mix example retain their stated profiles.
 
 The selected profile gives a concrete relation for comparison with existing
 commitment interfaces. In its complete identity layout, reduce the original
