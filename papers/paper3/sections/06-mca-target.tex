@@ -189,6 +189,178 @@ Monotonicity preserves failure for larger radii, proving the real-radius
 claim.
 \end{proof}
 
+\subsection{Overlap and the first small-radius thresholds}
+\label{sec:mca-overlap}
+
+Write \(R=n-k\) and suppose \(1\le k<n\). The small-radius spectrum of
+Chojecki \cite{chojecki2026thresholds} follows from an overlap test.
+Suppose two distinct bad challenges have agreement witnesses that share
+at least \(k+r\) sites. The two scalar codewords witnessing them determine
+an affine line of codewords by interpolation in the challenge parameter.
+Every other bad witness has at least \(k\) sites in common with both of
+the first two. Its scalar codeword must therefore be the corresponding
+evaluation of this affine line, by \(k\)-point uniqueness.
+
+On each bad witness set, mark a site at which the affine codeword pair
+differs from the received pair. The scalar agreement at a marked site
+occurs at only one challenge, since the discrepancy is a nonzero affine
+function there. Thus for a fixed bad witness set every other challenge
+marks a different site in its complement. There are at most \(r\) such
+sites, so the bad count is at most \(r+1\). When \(3r\le R\), any two
+witnesses share at least \(k+r\) sites, and this bound holds on every line.
+
+For the lower bound, choose \(t\le\min\{q,r+1,R\}\) sites and assign
+distinct field elements \(\gamma_i\) to them. Use the word line that
+equals \(\gamma-\gamma_i\) on these sites and zero elsewhere. At
+\(\gamma=\gamma_i\) the scalar word agrees with zero outside the other
+\(t-1\) sites. A pair witness there would have a direction codeword
+vanishing outside all \(t\) sites, hence zero by \(k\)-point uniqueness,
+but it would have to take the value one at site \(i\). This gives \(t\)
+bad challenges on the same line.
+
+In particular \(B_{\mathcal C}(r)=r+1\) for \(3r\le R\). For integer
+budget \(T=\lfloor q/2^{128}\rfloor\ge1\), the last safe and first unsafe
+counts are \(T-1,T\) whenever \(3(T-1)\le R\) and \(T+1\le R\).
+Lean proves both the overlap test and the cancellation witness, and
+combines them into the exact grid statement.
+
+\paragraph{Support packing beyond the overlap bound.}
+Chojecki's overlap--packing upper bound \cite{chojecki2026thresholds}
+uses \(j=3r-R\) with \(1\le j\le r\). If a line has more than \(r+1\)
+bad challenges, the overlap test forces the union of any two chosen error
+supports to have at least \(R-r+1\) sites. Pad each support to size \(r\).
+The enlarged supports still satisfy the union bound, so their pairwise
+intersections have size at most \(j-1\). Counting their disjoint collections
+of \(j\)-subsets gives
+\[
+ B_{\mathcal C}(r)\le
+ \max\left\{r+1,\left\lfloor\frac{\binom{n}{j}}{\binom{r}{j}}\right\rfloor\right\}.
+\]
+At \(3r=R+1\), improving this bound requires controlling disjoint support
+families hit by a single syndrome pencil. Minimum-weight Reed--Solomon
+words turn that incidence problem into a condition on locator polynomials.
+
+\begin{theorem}[Locator pencils at the first disjoint-support shell]
+\label{thm:mca-locator-pencils}
+Suppose \(3r=n-k+1\). For \(m\ge4\) pairwise disjoint supports \(E_i\)
+of size \(r\), put \(g_i(X)=\prod_{a\in E_i}(X-a)\). One syndrome pencil
+has distinct single hits in all their support spaces if and only if the
+monic polynomials \(g_i\) lie on an affine line in coefficient space.
+For \(r\ge2\), let \(M\) be the largest size of such a disjoint collinear
+family, or zero if there is no such family. The exact spectrum at this shell is
+\[
+ B_{\mathcal C}(r)=\max\{r+1,M\}.
+\]
+\end{theorem}
+
+\begin{proof}
+Choose nonzero error words \(e_i\) supported on the \(E_i\) with syndromes
+representing the hits. Write \(G\) for the locator of the sites outside
+all the \(E_i\). For any three indices \(A\), their three hit vectors in a
+two-dimensional space have a relation with all coefficients nonzero.
+The same linear combination of the \(e_i\) is a nonzero codeword by
+disjointness. Its polynomial vanishes at the \(n-3r=k-1\) sites outside
+the three supports, so it is a nonzero scalar multiple of
+\(G\prod_{v\notin A}g_v\).
+
+Fix \(i\) and two different indices \(p,q\ne i\). Choose a fourth index
+\(j\). Compare the two codewords for \(\{i,j,p\}\) and \(\{i,j,q\}\) on
+\(E_i\), where both are proportional to \(e_i\). Cancel the common
+locator factors, which are nonzero there. It follows that \(g_p\) and
+\(g_q\) are proportional on \(E_i\). Thus \(g_p-g_i\) and \(g_q-g_i\)
+are proportional as polynomials. Their degrees are below \(r\) and the
+proportionality holds at \(r\) distinct sites. Holding \(i\) fixed proves
+collinearity.
+
+Conversely, write \(g_i=g_*+\lambda_i h\) with distinct \(\lambda_i\) and
+\(\deg h<r\). On each \(E_i\), all other locators are nonzero, so \(h\)
+is nonzero there. Let \(e_i\) equal \(Gh^{m-3}\) on \(E_i\) and zero
+elsewhere. For any triple \(A\), the degree-\((k-1)\) polynomial
+\(G\prod_{v\notin A}g_v\) evaluates to a linear combination of the three
+\(e_i\) with nonzero coefficients. Their syndromes therefore lie in one
+pencil. Any two support spaces intersect trivially, since the parity
+check is injective on their union of size \(2r\le n-k\). Hence the hits
+are distinct and single. There are at most \(n\le q\) of them, so one can
+choose the point at infinity away from all hits and lift the pencil to
+an affine received-word line.
+
+For \(r\ge2\), any line with more than \(r+1\) bad challenges has at
+least four hits. At this shell the overlap argument forces the witness
+supports to have size \(r\) and to be disjoint, since each pair must have
+union of size at least \(2r\). The cancellation construction attains
+\(r+1\), and the converse realizes every collinear disjoint family of size
+at least four. This gives the maximum.
+\end{proof}
+
+Each \(E_i\) is the split reduced fibre of the degree-\(r\) rational map
+\(g_*/h\) on \(\mathbb P^1\), at value \(-\lambda_i\). The numerator and
+denominator have no common root because two distinct locators have disjoint
+root sets. Chojecki counts moving roots in such one-parameter split
+pencils \cite[Moving-root bound]{chojecki2026grandeFinale}. At this shell,
+\cref{thm:mca-locator-pencils} derives the pencil from the bad supports
+and gives the converse. The test is the
+rank-one condition on the coefficient differences \(g_j-g_i\). These
+ranks are unchanged under base extension, so the maximum at this shell
+is determined over any subfield containing the evaluation sites.
+For a multiplicative coset of size \(n\) with \(r\mid n\), the fibres of
+\(X\mapsto X^r\) partition the domain into \(n/r\) disjoint supports, with
+locators \(X^r-\lambda\). Thus for \(r\ge2\) the formula simplifies to
+\(B_{\mathcal C}(r)=\max\{r+1,n/r\}\).
+
+For disjoint pencil hits at larger radii, set \(d=3r-R-1\).
+A three-hit relation factors into its complementary locator times a
+polynomial \(u_A\) of degree at most \(d\). Comparing the relations for
+\(\{i,j,p\}\) and \(\{i,j,q\}\) gives, up to a nonzero scalar, the congruence
+\(u_{\{i,j,p\}}g_q\equiv u_{\{i,j,q\}}g_p\pmod{g_i}\). At the first shell
+the weights are scalars and give the rank test above. At larger shells
+one must control these weights and the possibility of overlapping supports.
+
+\paragraph{Length sixteen and budget four.}
+For \((n,k,r)=(16,8,3)\) the maximum is either four or five. Over
+\(\mathbb F_{17}\), index the order-\(16\) domain by powers of \(3\).
+Chojecki uses the same code at count radius six
+\cite[Exact dyadic critical spread core]{chojecki2026grandeFinale}.
+The five exponent triples
+\[
+ \{1,10,13\},\quad \{2,8,14\},\quad \{3,6,15\},\quad
+ \{4,9,11\},\quad \{5,7,12\}
+\]
+give cubics \(X^3+sX^2+(14-s)X+1\) at
+\(s=11,7,3,0,14\), respectively. They realize five bad challenges.
+
+Over \(\mathbb F_{3617}\) use the order-\(16\) root \(26\). Five disjoint
+triples would exhaust all but one site. Scaling the omitted site to one
+preserves collinearity and leaves one of the five triples containing
+\(26\). There are \(\binom{14}{2}=91\) possible such anchors. For each
+anchor, compare its cubic coefficient vector with each of the
+\(\binom{12}{3}=220\) triples disjoint from it and avoiding one.
+Normalize the difference by making its first nonzero component one.
+For a fixed anchor, the resulting directions are distinct within each
+of the three classes of the minimum exponent modulo three. This finite
+check rules out four further triples in any one direction. The maximum
+is therefore four over every extension of \(\mathbb F_{3617}\).
+
+At \(q=3617^{11}\), the \(2^{-128}\) budget is exactly four. Count three
+is safe by the locator test, and the cancellation line with five sites
+shows failure at count four. Thus the grid crossing is \((3,4)\) and the
+real safe interval is \([0,4/16)\).
+
+The order-\(16\) subgroup has \(B_{\mathcal C}(3)=4\) in all but finitely
+many odd characteristics. To see this, form the locator minors over
+\(\mathbb Z[\zeta_{16}]\). For each disjoint five-tuple, the check at
+\(\zeta_{16}\mapsto26\) in \(\mathbb F_{3617}\) gives a nonzero minor,
+so its lift is a nonzero algebraic integer. Any odd characteristic in
+which that five-tuple is collinear must divide the norm of the lifted
+minor. Taking the union of these prime divisors over the finitely many
+five-tuples gives a finite exceptional set. Characteristic \(17\) is an
+actual exception.
+For any fixed coset length \(n\), the same norm argument in
+\(\mathbb Z[\zeta_n]\) gives the characteristic-zero locator maximum
+outside finitely many primes. Vanishing minors stay zero under reduction.
+For each noncollinear tuple, a nonzero minor rules it out away from the
+prime divisors of its norm. Scaling a coset to its subgroup acts by an
+invertible diagonal change of locator coefficients.
+
 \subsection{Distance interpretation}
 
 Let
@@ -197,16 +369,14 @@ Let
   \qquad
   D_1(y)=\Delta(y,\mathcal C).
 \]
-For a challenge outside the MCA bad set, scalar closeness on a large agreement
-set forces pair closeness on that same set. For \(\delta\in[0,1]\), this
-gives the distance implication
+For \(\delta\in[0,1]\) and every MCA-good \(\gamma\),
 \[
   D_2(p)\ge\delta
   \Longrightarrow
   D_1(y_\gamma)\ge\delta
 \]
-for every MCA-good \(\gamma\), with the fraction of excluded challenges bounded
-by \(\varepsilon_{\MCA}(\mathcal C,\delta)\).
+The fraction of excluded challenges is at most
+\(\varepsilon_{\MCA}(\mathcal C,\delta)\).
 
 To see the boundary convention explicitly, suppose that
 \(D_1(y_\gamma)<\delta\), and choose a closest scalar codeword \(c\).

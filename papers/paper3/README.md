@@ -17,9 +17,23 @@ Agreement packing pins the list transitions on Jo's four length-64 codes.
 The same-domain list/MCA table appears in Section 5. A length-128 code over
 `F_(641^26)` has list counts `62,63` and pair-MCA counts `61,62`, using a
 subfield prefix class and a separating pole for the first unsafe counts.
+Lean proves both sides of the length-128 MCA crossing and its real safe
+interval `[0,62/128)`.
 [Agreement packing](../../lean/Proximity/Capacity/AgreementPacking.lean) ·
 [Jo's domains and list thresholds](../../lean/Proximity/Capacity/JoThresholds.lean) ·
-[Subfield domain and arithmetic](../../lean/Proximity/Capacity/SubfieldThresholdArithmetic.lean)
+[Subfield MCA crossing](../../lean/Proximity/MCA/SubfieldThreshold.lean)
+
+The small-radius overlap theorem gives `B_C(r)=r+1` when `3r≤n−k`
+for a proper RS code. It bounds the count using two scalar witnesses with
+sufficient common agreement. A coordinate-cancellation line attains the
+bound. [Sparse pencil](../../lean/Proximity/MCA/SparsePencil.lean)
+
+At `3r=n-k+1`, four or more disjoint size-`r` supports meet one syndrome
+pencil exactly when their monic locators are collinear. For the length-16
+half-rate subgroup, the worst count at radius three is five in
+characteristic `17` and four over extensions of `F_3617`. The latter gives
+the `2^-128` crossing `(3,4)` over `F_(3617^11)`. Section 6 proves the
+locator criterion and the crossing using the finite coefficient check.
 
 The support-rank test determines the exact 128-bit list threshold for
 each prescribed domain of length below `2^127`, at every positive width.

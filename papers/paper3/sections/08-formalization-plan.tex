@@ -133,6 +133,22 @@ quadratic classifications. The decomposition of the matching schemes
 follows in the text. \lean{Seventeen/RadiusThree} checks the finite slope
 tables at count three. The uniform spectrum in \cref{prop:seventeen-full-spectrum}
 uses these certificates and the rank and counting arguments in the text.
+
+\lean{MCA/SparsePencil} proves the overlap upper bound and the exact
+small-radius crossing in \cref{sec:mca-overlap}, using the cancellation
+witness in \lean{MCA/CancellationWitness}. The support-packing bound
+that follows is proved in the manuscript.
+\lean{MCA/LocalObstructions} proves Jo's local-test bound. Together with
+\lean{MCA/PrefixFamily} and \lean{MCA/PoleWitness}, it gives the grid
+crossing and real safe interval in \lean{MCA/SubfieldThreshold}.
+\lean{MCA/DisjointBorder} extracts disjoint witnesses at the next shell,
+and \lean{MCA/LocatorPencil} proves their locator collinearity in
+\cref{thm:mca-locator-pencils}. The converse is proved in the text.
+The length-sixteen instance uses the normalized coefficient check in
+\lean{Sixteen/LocatorCensus} and the budget and endpoint implications in
+\lean{Sixteen/ThresholdField}. The scaling and indexing argument that
+applies the finite check to arbitrary five-tuples is given in Section~6.
+
 The Gr\"obner procedure and marked point counts in
 \cref{sec:mca-projective-incidence}, and the Zariski closure and tensor-price
 arguments in \cref{sec:polynomial-agreement}, are given in the manuscript.

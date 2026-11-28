@@ -91,25 +91,37 @@ theorem pairMCAErrorBoundAt_invPow_iff_secureAtBits_of_mem_shell
 def pairMCASafeRelativeRadii (C : BlockCode ι F) (bits : ℕ) : Set ℝ :=
   {δ | 0 ≤ δ ∧ C.PairMCAErrorBoundAt δ ((1 : ℝ) / 2 ^ bits)}
 
+/-- Adjacent safe and unsafe count radii determine the entire real safe set. -/
+theorem pairMCASafeRelativeRadii_eq_Ico_of_safe_next_unsafe
+    [Nonempty F] (C : BlockCode ι F) {bits r : ℕ}
+    (hn : 0 < Fintype.card ι)
+    (safe : C.PairMCASecureAtBits bits r)
+    (unsafeNext : ¬ C.PairMCASecureAtBits bits (r + 1)) :
+    C.pairMCASafeRelativeRadii bits = Set.Ico 0 (relativeRadius (ι := ι) (r + 1)) := by
+  ext δ
+  constructor
+  · rintro ⟨hδ, hsafe⟩
+    refine ⟨hδ, ?_⟩
+    by_contra hnext
+    apply unsafeNext
+    apply (C.pairMCAErrorBoundAt_relativeRadius_invPow_iff_secureAtBits hn).mp
+    exact C.pairMCAErrorBoundAt_antitone _ (le_of_not_gt hnext) hsafe
+  · rintro ⟨hδ, hnext⟩
+    refine ⟨hδ, ?_⟩
+    by_cases earlier : δ ≤ relativeRadius (ι := ι) r
+    · exact C.pairMCAErrorBoundAt_antitone _ earlier
+        ((C.pairMCAErrorBoundAt_relativeRadius_invPow_iff_secureAtBits hn).mpr safe)
+    · exact (C.pairMCAErrorBoundAt_invPow_iff_secureAtBits_of_mem_shell
+        hn (le_of_not_ge earlier) hnext).mpr safe
+
 /-- Adjacent count-zero/one certificates determine the entire real safe set. -/
 theorem pairMCASafeRelativeRadii_eq_Ico_of_zero_one
     [Nonempty F] (C : BlockCode ι F) {bits : ℕ}
     (hn : 0 < Fintype.card ι)
     (hzero : C.PairMCASecureAtBits bits 0)
     (hone : ¬ C.PairMCASecureAtBits bits 1) :
-    C.pairMCASafeRelativeRadii bits = Set.Ico 0 (relativeRadius (ι := ι) 1) := by
-  ext δ
-  constructor
-  · rintro ⟨hδ, hsafe⟩
-    refine ⟨hδ, ?_⟩
-    by_contra hnext
-    apply hone
-    apply (C.pairMCAErrorBoundAt_relativeRadius_invPow_iff_secureAtBits hn).mp
-    exact C.pairMCAErrorBoundAt_antitone _ (le_of_not_gt hnext) hsafe
-  · rintro ⟨hδ, hnext⟩
-    refine ⟨hδ, ?_⟩
-    exact (C.pairMCAErrorBoundAt_invPow_iff_secureAtBits_of_mem_shell
-      (r := 0) hn (by simpa using hδ) (by simpa using hnext)).mpr hzero
+    C.pairMCASafeRelativeRadii bits = Set.Ico 0 (relativeRadius (ι := ι) 1) :=
+  C.pairMCASafeRelativeRadii_eq_Ico_of_safe_next_unsafe hn hzero hone
 
 end BlockCode
 

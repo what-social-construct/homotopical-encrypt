@@ -5,6 +5,10 @@ public import Proximity.MCA.Threshold
 public import Proximity.MCA.SpectrumCertificate
 public import Proximity.MCA.Pair
 public import Proximity.MCA.SmallRadius
+public import Proximity.MCA.SparsePencil
+public import Proximity.MCA.DisjointBorder
+public import Proximity.MCA.LocatorPencil
+public import Proximity.MCA.SubfieldThreshold
 public import Proximity.MCA.BoundaryField
 public import Proximity.MCA.RealThreshold
 public import Proximity.MCA.ZeroDirection
@@ -17,6 +21,7 @@ public import Proximity.MCA.Syndrome.Seventeen.Descent
 public import Proximity.MCA.Syndrome.Seventeen.MatchingCensus
 public import Proximity.MCA.Syndrome.Seventeen.MatchingField
 public import Proximity.MCA.Syndrome.Seventeen.RadiusThree
+public import Proximity.MCA.Syndrome.Sixteen.ThresholdField
 
 @[expose] public section
 
